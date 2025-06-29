@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { apiFetch } from "@/utils/api";
@@ -18,6 +18,8 @@ export default function TemplateEditPage(){
   const [questions,setQuestions] = useState<QuestionDraft[]>([]);
   const [error,setError] = useState<string|null>(null);
   const [loading,setLoading] = useState(true);
+  const [genOpen,setGenOpen]=useState(false);
+  const [genCount,setGenCount]=useState(5);
 
   useEffect(()=>{
     apiFetch(`${API_BASE}/api/admin/templates/${id}`)
@@ -37,10 +39,22 @@ export default function TemplateEditPage(){
     if(res.ok){ window.location.replace(`/hr/template/${id}`); } else { setError('Ошибка'); }
   }
 
+  async function generate(){
+    const cnt=Math.max(1,Math.min(20,genCount));
+    const res=await apiFetch(`${API_BASE}/api/admin/templates/${id}/suggest`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({count:cnt})});
+    if(res.ok){ const d=await res.json();
+      setQuestions(q=>[...q,...(d.questions||[]).map((t:string,i:number)=>({text:t,type:'text',maxTime:120,position:q.length+i}))]);
+    }
+    setGenOpen(false);
+  }
+
   if(loading) return (<Box sx={{p:4}}><Typography>Загрузка…</Typography></Box>);
 
   return (<Box sx={{p:4,maxWidth:800,mx:'auto'}}>
-    <Typography variant="h4" gutterBottom>Редактирование шаблона</Typography>
+    <Box sx={{display:'flex',justifyContent:'space-between',alignItems:'center',mb:2}}>
+      <Typography variant="h4">Редактирование шаблона</Typography>
+      <Button variant="outlined" onClick={()=>setGenOpen(true)}>Сгенерировать вопросы</Button>
+    </Box>
     <TextField label="Название" fullWidth sx={{mb:2}} value={title} onChange={e=>setTitle(e.target.value)}/>
     <TextField label="Описание" fullWidth multiline minRows={3} sx={{mb:2}} value={description} onChange={e=>setDescription(e.target.value)}/>
     <Paper sx={{p:2,mb:2}}>
@@ -48,12 +62,22 @@ export default function TemplateEditPage(){
       <Table size="small">
         <TableHead><TableRow><TableCell>#</TableCell><TableCell>Текст</TableCell><TableCell>Время, сек</TableCell><TableCell></TableCell></TableRow></TableHead>
         <TableBody>
-          {questions.map((q,idx)=>(<TableRow key={idx}><TableCell>{idx+1}</TableCell><TableCell><TextField fullWidth value={q.text} onChange={e=>updateQuestion(idx,'text',e.target.value)}/></TableCell><TableCell><TextField type="number" value={q.maxTime} sx={{width:100}} onChange={e=>updateQuestion(idx,'maxTime',Number(e.target.value))}/></TableCell><TableCell><IconButton onClick={()=>removeQuestion(idx)}><DeleteIcon/></IconButton></TableCell></TableRow>))}
+          {questions.map((q,idx)=>(<TableRow key={idx}><TableCell>{idx+1}</TableCell><TableCell><TextField fullWidth multiline minRows={2} value={q.text} onChange={e=>updateQuestion(idx,'text',e.target.value)}/></TableCell><TableCell><TextField type="number" value={q.maxTime} sx={{width:100}} onChange={e=>updateQuestion(idx,'maxTime',Number(e.target.value))}/></TableCell><TableCell><IconButton onClick={()=>removeQuestion(idx)}><DeleteIcon/></IconButton></TableCell></TableRow>))}
         </TableBody>
       </Table>
       <Button startIcon={<AddIcon/>} onClick={addQuestion} sx={{mt:1}}>Добавить вопрос</Button>
     </Paper>
     {error && <Typography color="error" sx={{mb:2}}>{error}</Typography>}
     <Button variant="contained" onClick={save} disabled={!title || questions.length===0}>Сохранить</Button>
+    <Dialog open={genOpen} onClose={()=>setGenOpen(false)}>
+      <DialogTitle>Сгенерировать вопросы</DialogTitle>
+      <DialogContent>
+        <TextField type="number" label="Количество" fullWidth sx={{mt:1}} inputProps={{min:1,max:20}} value={genCount} onChange={e=>setGenCount(Number(e.target.value))}/>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={()=>setGenOpen(false)}>Отмена</Button>
+        <Button variant="contained" onClick={generate}>Создать</Button>
+      </DialogActions>
+    </Dialog>
   </Box>);
 } 

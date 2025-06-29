@@ -183,6 +183,7 @@ export default function HrPage() {
         <Box sx={{display:'flex',gap:2}}>
           <Button href="/hr" color="primary" variant="outlined" size="small">Кандидаты</Button>
           <Button href="/hr/templates" color="primary" variant="outlined" size="small">Шаблоны</Button>
+          <Button href="/hr/vacancies" color="primary" variant="outlined" size="small">Вакансии</Button>
         </Box>
       </Box>
 
