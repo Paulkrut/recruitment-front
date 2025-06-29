@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,8 +21,12 @@ export default function TemplateNewPage(){
   const [genCount,setGenCount]=useState(5);
   const [templateId,setTemplateId]=useState<number|null>(null);
 
-  const search = useSearchParams();
-  const vacancyId = search.get('vacancy');
+  const [vacancyId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search).get('vacancy');
+    }
+    return null;
+  });
   const router = useRouter();
 
   function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120}]); }
