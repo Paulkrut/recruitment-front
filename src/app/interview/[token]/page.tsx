@@ -250,9 +250,8 @@ export default function CandidateInterviewPage() {
     return (
       <Box sx={{p:4,maxWidth:600,mx:'auto'}}>
         <Typography variant="h4" gutterBottom>Перед началом</Typography>
-        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов и займет примерно {min} мин.</Typography>
-        <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу и повторять вопросы.
-        Отвечайте последовательно и не перегружайте страницу.</Typography>
+        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
+        <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
         <Button variant="contained" onClick={startInterview}>Начать</Button>
       </Box>
     );

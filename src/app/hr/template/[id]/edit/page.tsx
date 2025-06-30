@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { apiFetch } from "@/utils/api";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-interface QuestionDraft{ id?:number; position?:number; text:string; type:string; maxTime?:number; }
+interface QuestionDraft{ id?:number; position?:number; text:string; type:string; maxTime?:number; allowFollowups?:boolean; followupsMax?:number; }
 
 export default function TemplateEditPage(){
   const {id} = useParams<{id:string}>();
@@ -28,7 +28,7 @@ export default function TemplateEditPage(){
       .finally(()=>setLoading(false));
   },[id]);
 
-  function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120}]); }
+  function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120,allowFollowups:false,followupsMax:0}]); }
   function updateQuestion(idx:number,field:string,value:any){ setQuestions(q=>q.map((it,i)=>i===idx?{...it,[field]:value}:it)); }
   function removeQuestion(idx:number){ setQuestions(q=>q.filter((_,i)=>i!==idx)); }
 
@@ -43,7 +43,7 @@ export default function TemplateEditPage(){
     const cnt=Math.max(1,Math.min(20,genCount));
     const res=await apiFetch(`${API_BASE}/api/admin/templates/${id}/suggest`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({count:cnt})});
     if(res.ok){ const d=await res.json();
-      setQuestions(q=>[...q,...(d.questions||[]).map((t:string,i:number)=>({text:t,type:'text',maxTime:120,position:q.length+i}))]);
+      setQuestions(q=>[...q,...(d.questions||[]).map((t:string,i:number)=>({text:t,type:'text',maxTime:120,allowFollowups:false,followupsMax:0,position:q.length+i}))]);
     }
     setGenOpen(false);
   }
@@ -60,9 +60,9 @@ export default function TemplateEditPage(){
     <Paper sx={{p:2,mb:2}}>
       <Typography variant="h6" gutterBottom>Вопросы</Typography>
       <Table size="small">
-        <TableHead><TableRow><TableCell>#</TableCell><TableCell>Текст</TableCell><TableCell>Время, сек</TableCell><TableCell></TableCell></TableRow></TableHead>
+        <TableHead><TableRow><TableCell>#</TableCell><TableCell>Текст</TableCell><TableCell>Время, сек</TableCell><TableCell>Уточнения</TableCell><TableCell></TableCell></TableRow></TableHead>
         <TableBody>
-          {questions.map((q,idx)=>(<TableRow key={idx}><TableCell>{idx+1}</TableCell><TableCell><TextField fullWidth multiline minRows={2} value={q.text} onChange={e=>updateQuestion(idx,'text',e.target.value)}/></TableCell><TableCell><TextField type="number" value={q.maxTime} sx={{width:100}} onChange={e=>updateQuestion(idx,'maxTime',Number(e.target.value))}/></TableCell><TableCell><IconButton onClick={()=>removeQuestion(idx)}><DeleteIcon/></IconButton></TableCell></TableRow>))}
+          {questions.map((q,idx)=>(<TableRow key={idx}><TableCell>{idx+1}</TableCell><TableCell><TextField fullWidth multiline minRows={2} value={q.text} onChange={e=>updateQuestion(idx,'text',e.target.value)}/></TableCell><TableCell><TextField type="number" value={q.maxTime} sx={{width:100}} onChange={e=>updateQuestion(idx,'maxTime',Number(e.target.value))}/></TableCell><TableCell><Checkbox checked={q.allowFollowups||false} onChange={e=>updateQuestion(idx,'allowFollowups',e.target.checked)} /><TextField type="number" value={q.followupsMax||0} sx={{width:80,ml:1}} disabled={!q.allowFollowups} onChange={e=>updateQuestion(idx,'followupsMax',Number(e.target.value))}/></TableCell><TableCell><IconButton onClick={()=>removeQuestion(idx)}><DeleteIcon/></IconButton></TableCell></TableRow>))}
         </TableBody>
       </Table>
       <Button startIcon={<AddIcon/>} onClick={addQuestion} sx={{mt:1}}>Добавить вопрос</Button>
