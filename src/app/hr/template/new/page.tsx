@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -21,13 +21,8 @@ export default function TemplateNewPage(){
   const [genCount,setGenCount]=useState(5);
   const [templateId,setTemplateId]=useState<number|null>(null);
 
-  const [vacancyId] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const val = new URLSearchParams(window.location.search).get('vacancy');
-      return val ? Number(val) : null;
-    }
-    return null;
-  });
+  const searchParams = useSearchParams();
+  const vacancyId = searchParams ? (searchParams.get('vacancy') ? Number(searchParams.get('vacancy')!) : null) : null;
   const router = useRouter();
 
   function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120,allowFollowups:false,followupsMax:0}]); }
@@ -69,6 +64,7 @@ export default function TemplateNewPage(){
   async function ensureTemplate():Promise<number|null>{
     if(templateId) return templateId;
     if(!title.trim()) { alert('Введите название перед генерацией'); return null; }
+    if(vacancyId===null){ alert('Шаблон должен быть привязан к вакансии. Откройте страницу создания через /hr/template/new?vacancy={id}'); return null; }
     const res=await apiFetch(`${API_BASE}/api/admin/templates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,description,vacancyId,questions:[]})});
     if(res.ok){ const d=await res.json(); setTemplateId(d.id); return d.id; }
     alert('Ошибка создания шаблона'); return null; }
