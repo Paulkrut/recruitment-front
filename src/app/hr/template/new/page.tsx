@@ -21,9 +21,10 @@ export default function TemplateNewPage(){
   const [genCount,setGenCount]=useState(5);
   const [templateId,setTemplateId]=useState<number|null>(null);
 
-  const [vacancyId] = useState<string | null>(() => {
+  const [vacancyId] = useState<number | null>(() => {
     if (typeof window !== 'undefined') {
-      return new URLSearchParams(window.location.search).get('vacancy');
+      const val = new URLSearchParams(window.location.search).get('vacancy');
+      return val ? Number(val) : null;
     }
     return null;
   });
@@ -35,21 +36,40 @@ export default function TemplateNewPage(){
 
   async function save(){
     if(!title){ setError('Введите название'); return; }
-    const res = await apiFetch(`${API_BASE}/api/admin/templates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,description,questions})});
-    if(res.ok){ const d=await res.json();
-      if(vacancyId){
-        await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({templateId:d.id})});
-        router.replace(`/hr/vacancy/${vacancyId}`);
+    if (templateId) {
+      const res = await apiFetch(`${API_BASE}/api/admin/templates/${templateId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, questions }),
+      });
+      if (res.ok) {
+        if (vacancyId) {
+          router.replace(`/hr/vacancy/${vacancyId}`);
+        } else {
+          router.replace(`/hr/template/${templateId}`);
+        }
       } else {
-        router.replace(`/hr/template/${d.id}`);
+        setError('Ошибка');
       }
-    } else { setError('Ошибка'); }
+    } else {
+      const payload:any = { title, description, questions };
+      if (vacancyId !== null) payload.vacancyId = vacancyId;
+      const res = await apiFetch(`${API_BASE}/api/admin/templates`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if(res.ok){ const d=await res.json();
+        if(vacancyId){
+          await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({templateId:d.id})});
+          router.replace(`/hr/vacancy/${vacancyId}`);
+        } else {
+          router.replace(`/hr/template/${d.id}`);
+        }
+      } else { setError('Ошибка'); }
+    }
   }
 
   async function ensureTemplate():Promise<number|null>{
     if(templateId) return templateId;
     if(!title.trim()) { alert('Введите название перед генерацией'); return null; }
-    const res=await apiFetch(`${API_BASE}/api/admin/templates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,description,vacancyId: vacancyId||undefined, questions:[]})});
+    const res=await apiFetch(`${API_BASE}/api/admin/templates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,description,vacancyId,questions:[]})});
     if(res.ok){ const d=await res.json(); setTemplateId(d.id); return d.id; }
     alert('Ошибка создания шаблона'); return null; }
 
