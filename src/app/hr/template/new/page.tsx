@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -11,7 +11,7 @@ const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.
 
 interface QuestionDraft{ text:string; type:string; maxTime?:number; allowFollowups?:boolean; followupsMax?:number; }
 
-export default function TemplateNewPage(){
+function TemplateNewContent(){
   const [title,setTitle] = useState('');
   const [description,setDescription] = useState('');
   const [questions,setQuestions] = useState<QuestionDraft[]>([]);
@@ -22,7 +22,7 @@ export default function TemplateNewPage(){
   const [templateId,setTemplateId]=useState<number|null>(null);
 
   const searchParams = useSearchParams();
-  const vacancyId = searchParams ? (searchParams.get('vacancy') ? Number(searchParams.get('vacancy')!) : null) : null;
+  const vacancyId = searchParams.get('vacancy') ? Number(searchParams.get('vacancy')!) : null;
   const router = useRouter();
 
   function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120,allowFollowups:false,followupsMax:0}]); }
@@ -110,4 +110,12 @@ export default function TemplateNewPage(){
         <Button variant="contained" onClick={generate}>Создать</Button>
       </DialogActions>
     </Dialog>
-  </Box>); } 
+  </Box>); }
+
+export default function TemplateNewPage(){
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TemplateNewContent/>
+    </Suspense>
+  );
+} 
