@@ -94,8 +94,7 @@ export default function CandidateInterviewPage() {
       const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
-      const AudioCtx = (window.AudioContext || (window as any).webkitAudioContext) as any;
-      const audioCtx = new AudioCtx();
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize=256;
