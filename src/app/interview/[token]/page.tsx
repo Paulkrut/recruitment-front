@@ -18,6 +18,9 @@ import {
 import PersonIcon from "@mui/icons-material/Person";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { keyframes } from "@mui/system";
+import GraphicEqIcon from "@mui/icons-material/GraphicEq";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import MicIcon from "@mui/icons-material/Mic";
 
 interface Question {
   id: number;
@@ -45,6 +48,14 @@ export default function CandidateInterviewPage() {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
+  const [testStream, setTestStream] = useState<MediaStream|null>(null);
+  const testVideoRef = useRef<HTMLVideoElement>(null);
+  const [micLevel,setMicLevel] = useState(0);
+  const [micReady,setMicReady] = useState(false);
+  const analyserRef = useRef<AnalyserNode|null>(null);
+  const rafRef = useRef<number>();
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
@@ -78,7 +89,49 @@ export default function CandidateInterviewPage() {
     fetch(`${API_BASE}/api/public/interview/${token}/prepare`).then(r=>r.json()).then(setPrepared);
   },[token]);
 
+  const startDeviceTest = async () => {
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
+      setTestStream(stream);
+      if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
+      const AudioCtx = (window.AudioContext || (window as any).webkitAudioContext) as any;
+      const audioCtx = new AudioCtx();
+      const source = audioCtx.createMediaStreamSource(stream);
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize=256;
+      source.connect(analyser);
+      analyserRef.current = analyser;
+      const data = new Uint8Array(analyser.frequencyBinCount);
+      const tick = ()=>{
+        analyser.getByteFrequencyData(data);
+        let sum=0; for(let i=0;i<data.length;i++){sum+=data[i];}
+        const lvl=Math.round(sum/data.length);
+        setMicLevel(lvl);
+        if(!micReady && lvl>1){ setMicReady(true); }
+        rafRef.current=requestAnimationFrame(tick);
+      };
+      tick();
+    }catch(e){alert('Не удалось получить доступ к камере/микрофону');}
+  };
+
+  function stopDeviceTest(){
+    if(testStream){ testStream.getTracks().forEach(t=>t.stop()); setTestStream(null); }
+    if(analyserRef.current){ analyserRef.current.disconnect(); analyserRef.current=null; }
+    setMicReady(false);
+    if(rafRef.current){ cancelAnimationFrame(rafRef.current); }
+  }
+
+  useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
+
+  // auto start device test when prepared screen shown
+  useEffect(()=>{
+    if(!question && prepared && !testStream){
+       startDeviceTest();
+    }
+  },[prepared, question]);
+
   async function startInterview(){
+    stopDeviceTest();
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
     const d = await r.json();
@@ -111,11 +164,9 @@ export default function CandidateInterviewPage() {
   /* ------------ запись аудио ------------- */
   async function startRecording() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
-      const mr = new MediaRecorder(stream, { mimeType: mime });
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { width: 640, height: 480 } });
+      setPreviewStream(stream);
+      const mr = new MediaRecorder(stream);
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) {
@@ -127,13 +178,15 @@ export default function CandidateInterviewPage() {
           alert("Запись не содержит данных. Попробуйте ещё раз.");
           setRecording(false);
           stream.getTracks().forEach((t) => t.stop());
+          setPreviewStream(null);
           return;
         }
-        const blob = new Blob(chunks, { type: mime });
+        const blob = new Blob(chunks, { type: 'video/webm' });
         /* при завершении записи сразу отправляем ответ */
-        sendAudioAnswer(blob);
+        sendBlobAnswer(blob);
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
+        setPreviewStream(null);
       };
       mr.start();
       setMediaRecorder(mr);
@@ -164,8 +217,15 @@ export default function CandidateInterviewPage() {
     }
   }, [timeLeft, recording]);
 
+  // useEffect to bind srcObject
+  useEffect(()=>{
+    if(videoRef.current){
+      videoRef.current.srcObject = previewStream || null;
+    }
+  },[previewStream]);
+
   /* ---------------- handlers ---------------- */
-  async function sendAudioAnswer(blob: Blob) {
+  async function sendBlobAnswer(blob: Blob) {
     if (!question) return;
 
     // optimistic UI update (показываем, что ответ дан)
@@ -178,7 +238,7 @@ export default function CandidateInterviewPage() {
 
     const fd = new FormData();
     fd.append("questionId", String(question.id));
-    fd.append("audio", new File([blob], "answer.webm", { type: blob.type }));
+    fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
     await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
       body: fd,
@@ -252,7 +312,33 @@ export default function CandidateInterviewPage() {
         <Typography variant="h4" gutterBottom>Перед началом</Typography>
         <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
         <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
-        <Button variant="contained" onClick={startInterview}>Начать</Button>
+        <Box sx={{display:'flex',gap:2}}>
+          <Button variant="contained" onClick={startInterview}>Начать</Button>
+        </Box>
+
+        {/* Device test preview */}
+        {testStream && (
+          <Box sx={{mt:3}}>
+            <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
+            <video ref={testVideoRef} width={320} height={240} autoPlay muted playsInline style={{border:'1px solid #ccc',borderRadius:4}} />
+            <Box sx={{display:'flex',alignItems:'center',mt:1,width:220}}>
+              <GraphicEqIcon sx={{mr:1}}/>
+              <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:5,overflow:'hidden'}}>
+                <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
+              </Box>
+            </Box>
+            <Box sx={{display:'flex',gap:2,mt:1}}>
+              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                <VideocamIcon color={testStream?"success":"error" as any}/>
+                <Typography variant="body2" color={testStream?"success.main":"error.main"}>{testStream?"Камера OK":"Камера выкл."}</Typography>
+              </Box>
+              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                <MicIcon color={micReady?"success":"error" as any}/>
+                <Typography variant="body2" color={micReady?"success.main":"error.main"}>{micReady?"Микрофон OK":"Микрофон выкл."}</Typography>
+              </Box>
+            </Box>
+          </Box>
+        )}
       </Box>
     );
   }
@@ -327,6 +413,11 @@ export default function CandidateInterviewPage() {
           </Button>
         )}
       </Box>
+
+      {/* preview */}
+      {previewStream && (
+        <video ref={videoRef} width={320} height={240} autoPlay muted playsInline style={{ marginBottom: 8, border:'1px solid #ccc', borderRadius:4 }} />
+      )}
     </Box>
   );
 }
