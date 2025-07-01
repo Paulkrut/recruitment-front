@@ -55,7 +55,7 @@ export default function CandidateInterviewPage() {
   const [micLevel,setMicLevel] = useState(0);
   const [micReady,setMicReady] = useState(false);
   const analyserRef = useRef<AnalyserNode|null>(null);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number>(null);
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
