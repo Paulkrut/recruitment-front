@@ -22,7 +22,7 @@ export default function TemplateDetailPage(){
 
   async function handleDelete(){
     const res = await apiFetch(`${API_BASE}/api/admin/templates/${id}`,{method:'DELETE'});
-    if(res.ok){ window.location.replace('/hr/templates'); }
+    if(res.ok){ window.location.replace('/hr/tests'); }
   }
 
   return (<Box sx={{p:4}}>

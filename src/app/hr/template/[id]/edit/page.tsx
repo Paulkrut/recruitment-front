@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Box, Typography, TextField, Button, Paper, IconButton, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Typography, TextField, Button, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { apiFetch } from "@/utils/api";
+import SortableQuestions, { QuestionDraft } from "@/components/SortableQuestions";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
-
-interface QuestionDraft{ id?:number; position?:number; text:string; type:string; maxTime?:number; allowFollowups?:boolean; followupsMax?:number; }
 
 export default function TemplateEditPage(){
   const {id} = useParams<{id:string}>();
@@ -29,8 +27,6 @@ export default function TemplateEditPage(){
   },[id]);
 
   function addQuestion(){ setQuestions(q=>[...q,{text:'',type:'text',maxTime:120,allowFollowups:false,followupsMax:0}]); }
-  function updateQuestion(idx:number,field:string,value:any){ setQuestions(q=>q.map((it,i)=>i===idx?{...it,[field]:value}:it)); }
-  function removeQuestion(idx:number){ setQuestions(q=>q.filter((_,i)=>i!==idx)); }
 
   async function save(){
     if(!title){ setError('Введите название'); return; }
@@ -58,14 +54,11 @@ export default function TemplateEditPage(){
     <TextField label="Название" fullWidth sx={{mb:2}} value={title} onChange={e=>setTitle(e.target.value)}/>
     <TextField label="Описание" fullWidth multiline minRows={3} sx={{mb:2}} value={description} onChange={e=>setDescription(e.target.value)}/>
     <Paper sx={{p:2,mb:2}}>
-      <Typography variant="h6" gutterBottom>Вопросы</Typography>
-      <Table size="small">
-        <TableHead><TableRow><TableCell>#</TableCell><TableCell>Текст</TableCell><TableCell>Время, сек</TableCell><TableCell>Уточнения</TableCell><TableCell></TableCell></TableRow></TableHead>
-        <TableBody>
-          {questions.map((q,idx)=>(<TableRow key={idx}><TableCell>{idx+1}</TableCell><TableCell><TextField fullWidth multiline minRows={2} value={q.text} onChange={e=>updateQuestion(idx,'text',e.target.value)}/></TableCell><TableCell><TextField type="number" value={q.maxTime} sx={{width:100}} onChange={e=>updateQuestion(idx,'maxTime',Number(e.target.value))}/></TableCell><TableCell><Checkbox checked={q.allowFollowups||false} onChange={e=>updateQuestion(idx,'allowFollowups',e.target.checked)} /><TextField type="number" value={q.followupsMax||0} sx={{width:80,ml:1}} disabled={!q.allowFollowups} onChange={e=>updateQuestion(idx,'followupsMax',Number(e.target.value))}/></TableCell><TableCell><IconButton onClick={()=>removeQuestion(idx)}><DeleteIcon/></IconButton></TableCell></TableRow>))}
-        </TableBody>
-      </Table>
-      <Button startIcon={<AddIcon/>} onClick={addQuestion} sx={{mt:1}}>Добавить вопрос</Button>
+      <Box sx={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+        <Typography variant="h6">Вопросы</Typography>
+        <Button startIcon={<AddIcon/>} size="small" onClick={addQuestion}>Добавить</Button>
+      </Box>
+      <SortableQuestions questions={questions} onChange={setQuestions} />
     </Paper>
     {error && <Typography color="error" sx={{mb:2}}>{error}</Typography>}
     <Button variant="contained" onClick={save} disabled={!title || questions.length===0}>Сохранить</Button>
