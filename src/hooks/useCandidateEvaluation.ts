@@ -1,0 +1,37 @@
+import { useEffect, useState } from 'react';
+import { apiFetch } from '@/utils/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+
+export interface AiEvaluationResult {
+  overallScore: number;
+  skillMatches: { skill:string; level:'low'|'medium'|'high'; proof:string }[];
+  strengths: string[];
+  weaknesses: string[];
+  summary: string;
+}
+
+interface AiEvalResponse {
+  status: 'pending'|'done'|'error'|'not_requested';
+  result?: AiEvaluationResult;
+  error?: string;
+}
+
+export function useCandidateEvaluation(id:number){
+  const [data,setData]=useState<AiEvalResponse>();
+
+  useEffect(()=>{
+    let timer: NodeJS.Timeout;
+    const load= async ()=>{
+      const res = await apiFetch(`${API_BASE}/api/admin/candidates/${id}/evaluation`);
+      if(res.ok){ setData(await res.json()); }
+    };
+    load();
+    timer = setInterval(()=>{
+      if(data?.status==='pending'){ load(); }
+    },5000);
+    return ()=> clearInterval(timer);
+  },[id,data?.status]);
+
+  return { data, refresh:()=>apiFetch(`${API_BASE}/api/admin/candidates/${id}/evaluation`).then(r=>r.json()).then(setData) };
+} 

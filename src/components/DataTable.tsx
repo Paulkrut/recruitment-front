@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableSortLabel,
   Paper,
+  Checkbox,
 } from "@mui/material";
 
 export interface Column<T = any> {
@@ -23,6 +24,9 @@ interface Props<T = any> {
   rows: T[];
   rowsPerPageOptions?: number[];
   defaultRowsPerPage?: number;
+  selectable?: boolean;
+  onSelectionChange?: (ids:(number|string)[])=>void;
+  getRowId?: (row:T)=>number|string;
 }
 
 export default function DataTable<T = any>({
@@ -30,11 +34,15 @@ export default function DataTable<T = any>({
   rows,
   rowsPerPageOptions = [10, 25, 50],
   defaultRowsPerPage = 10,
+  selectable = false,
+  onSelectionChange,
+  getRowId = (r:any)=> (r.id ?? r.ID ?? r.key ?? Math.random()),
 }: Props<T>) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [orderBy, setOrderBy] = useState<keyof T | null>(null);
   const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [selected,setSelected] = useState<(number|string)[]>([]);
 
   const handleRequestSort = (property: keyof T) => {
     const isAsc = orderBy === property && order === "asc";
@@ -75,6 +83,22 @@ export default function DataTable<T = any>({
       <Table size="small">
         <TableHead>
           <TableRow>
+            {selectable && (
+              <TableCell padding="checkbox">
+                <Checkbox
+                  indeterminate={selected.length>0 && selected.length<rows.length}
+                  checked={rows.length>0 && selected.length===rows.length}
+                  onChange={(_,checked)=>{
+                    const allIds = rows.map(getRowId);
+                    const newSel = checked?allIds:[];
+                    setSelected(newSel);
+                    onSelectionChange?.(newSel);
+                  }}
+                  inputProps={{"aria-label":"select all"}}
+                  size="small"
+                />
+              </TableCell>
+            )}
             {columns.map((col) => (
               <TableCell key={String(col.field)}>
                 <TableSortLabel
@@ -89,15 +113,33 @@ export default function DataTable<T = any>({
           </TableRow>
         </TableHead>
         <TableBody>
-          {paginated.map((row, idx) => (
-            <TableRow key={idx} hover>
-              {columns.map((col) => (
-                <TableCell key={String(col.field)}>
-                  {col.render ? col.render(row) : (row as any)[col.field]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {paginated.map((row, idx) => {
+            const idVal = getRowId(row);
+            const isSel = selected.includes(idVal);
+            return (
+              <TableRow key={idx} hover selected={isSel} onClick={()=>{
+                if(!selectable) return;
+                const newSel = isSel? selected.filter(i=>i!==idVal): [...selected,idVal];
+                setSelected(newSel);
+                onSelectionChange?.(newSel);
+              }}>
+                {selectable && (
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={isSel}
+                      size="small"
+                      onChange={()=>{}}
+                    />
+                  </TableCell>
+                )}
+                {columns.map((col) => (
+                  <TableCell key={String(col.field)}>
+                    {col.render ? col.render(row) : (row as any)[col.field]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <TablePagination

@@ -12,8 +12,11 @@ import {
   TableBody,
   Button,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import { apiFetch } from "@/utils/api";
+import EvaluationResult from "@/components/EvaluationResult";
+import { useCandidateEvaluation } from "@/hooks/useCandidateEvaluation";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -30,6 +33,7 @@ export default function CandidateDetailPage() {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [name, setName] = useState<string>("");
   const [candToken, setCandToken] = useState<string>("");
+  const { data: aiData } = useCandidateEvaluation(Number(id));
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -88,6 +92,18 @@ export default function CandidateDetailPage() {
           </TableBody>
         </Table>
       </Paper>
+
+      {/* AI evaluation */}
+      {aiData?.status==='done' && aiData.result ? (
+        <EvaluationResult {...aiData.result} />
+      ): aiData?.status==='pending' ? (
+        <Box sx={{mt:3,display:'flex',alignItems:'center',gap:1}}>
+          <CircularProgress size={20}/>
+          <Typography>AI-оценка выполняется…</Typography>
+        </Box>
+      ): (
+        <Typography sx={{mt:3}}>AI-оценка ещё не запущена (ожидаем завершения интервью).</Typography>
+      )}
     </Box>
   );
 

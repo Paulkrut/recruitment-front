@@ -32,6 +32,7 @@ export default function CandidatesPage(){
   const [email,setEmail] = useState('');
   const [phoneCand,setPhoneCand] = useState('');
   const [templateId,setTemplateId] = useState<number|''>('');
+  const [selectedIds,setSelectedIds]=useState<number[]>([]);
   const [generatedLink,setGeneratedLink] = useState<string|null>(null);
 
   /* effects */
@@ -93,7 +94,12 @@ export default function CandidatesPage(){
       </Paper>
 
       {/* table */}
-      <DataTable columns={[
+      <Button variant="contained" sx={{mb:2}} disabled={selectedIds.length<2} onClick={()=>{
+        const qs = selectedIds.join(',');
+        window.location.href = `/hr/candidates/compare?ids=${qs}`; }}>
+        Сравнить {selectedIds.length}
+      </Button>
+      <DataTable selectable onSelectionChange={(ids)=>setSelectedIds(ids as number[])} columns={[
         {field:'id',header:'ID',render:r=>(<a href={`/hr/candidates/${r.id}`}>{r.id}</a>)},
         {field:'name',header:'Имя',render:r=>(<a href={`/hr/candidates/${r.id}`}>{r.name}</a>)},
         {field:'status',header:'Статус'},
