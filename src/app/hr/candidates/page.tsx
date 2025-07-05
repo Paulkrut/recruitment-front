@@ -16,7 +16,7 @@ import DataTable from "@/components/DataTable";
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 interface Template { id:number; title:string; }
-interface Candidate { id:number; name:string; token:string; status:string; }
+interface Candidate { id:number; name:string; token:string; status:string; aiStatus?:string; }
 
 export default function CandidatesPage(){
   const [token,setToken] = useState<string|null>(null);
@@ -34,6 +34,11 @@ export default function CandidatesPage(){
   const [templateId,setTemplateId] = useState<number|''>('');
   const [selectedIds,setSelectedIds]=useState<number[]>([]);
   const [generatedLink,setGeneratedLink] = useState<string|null>(null);
+
+  const selectedReady = selectedIds.length>=2 && selectedIds.every(id=>{
+    const cand = candidates.find(c=>c.id===id);
+    return cand?.aiStatus==='done';
+  });
 
   /* effects */
   useEffect(()=>{ const saved=localStorage.getItem('recruitment_token'); if(saved){ setToken(saved);} },[]);
@@ -94,7 +99,7 @@ export default function CandidatesPage(){
       </Paper>
 
       {/* table */}
-      <Button variant="contained" sx={{mb:2}} disabled={selectedIds.length<2} onClick={()=>{
+      <Button variant="contained" sx={{mb:2}} disabled={!selectedReady} onClick={()=>{
         const qs = selectedIds.join(',');
         window.location.href = `/hr/candidates/compare?ids=${qs}`; }}>
         Сравнить {selectedIds.length}
@@ -103,7 +108,8 @@ export default function CandidatesPage(){
         {field:'id',header:'ID',render:r=>(<a href={`/hr/candidates/${r.id}`}>{r.id}</a>)},
         {field:'name',header:'Имя',render:r=>(<a href={`/hr/candidates/${r.id}`}>{r.name}</a>)},
         {field:'status',header:'Статус'},
-        {field:'token',header:'Токен',render:r=>(<a href={`/interview/${r.token}`} target="_blank" rel="noreferrer">{r.token}</a>)}
+        {field:'token',header:'Токен',render:r=>(<a href={`/interview/${r.token}`} target="_blank" rel="noreferrer">{r.token}</a>)},
+        {field:'aiStatus',header:'AI',render:r=>(r.aiStatus==='done'?'✓':r.aiStatus==='pending'?'…':'')}
       ]} rows={candidates} />
 
     </Box>
