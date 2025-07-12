@@ -3,22 +3,17 @@ import { apiFetch } from '@/utils/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
-export interface AiEvaluationResult {
-  overallScore: number;
-  skillMatches: { skill:string; level:'low'|'medium'|'high'; proof:string }[];
-  strengths: string[];
-  weaknesses: string[];
-  summary: string;
-}
-
-interface AiEvalResponse {
+export interface AiEvaluation {
   status: 'pending'|'done'|'error'|'not_requested';
-  result?: AiEvaluationResult;
+  summary?: string;
+  strengths?: string[];
+  weaknesses?: string[];
+  metrics?: Record<string,number>;
   error?: string;
 }
 
 export function useCandidateEvaluation(id:number){
-  const [data,setData]=useState<AiEvalResponse>();
+  const [data,setData]=useState<AiEvaluation>();
 
   useEffect(()=>{
     let timer: NodeJS.Timeout;

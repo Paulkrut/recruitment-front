@@ -1,11 +1,26 @@
-export async function apiFetch(path:string, init:RequestInit = {}){
-  const token = typeof window!=='undefined'?localStorage.getItem('recruitment_token'):null;
-  const headers = new Headers(init.headers||{});
-  if(token){ headers.set('Authorization', `Bearer ${token}`); }
-  const res = await fetch(path,{...init,headers});
-  if(res.status===401){
-    localStorage.removeItem('recruitment_token');
-    if(typeof window!=='undefined') window.location.href='/login';
+export async function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("recruitment_token") : null;
+
+  const headers = new Headers(options.headers || {});
+
+  // По умолчанию ожидаем и отправляем JSON
+  if (!headers.has("Accept")) {
+    headers.set("Accept", "application/json");
   }
-  return res;
+  if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  // Добавляем токен авторизации, если есть
+  if (token && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  // Вызываем fetch с объединёнными настройками
+  return fetch(url, {
+    ...options,
+    headers,
+    credentials: "include", // чтобы куки тоже отправлялись при необходимости
+  });
 } 

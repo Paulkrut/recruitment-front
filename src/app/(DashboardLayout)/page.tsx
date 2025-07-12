@@ -11,7 +11,6 @@ import Products from "@/app/components/dashboards/dashboard1/Products";
 import LatestDeals from "@/app/components/dashboards/dashboard1/LatestDeals";
 import Customers from "@/app/components/dashboards/dashboard1/Customers";
 import ProductTable from "@/app/components/dashboards/dashboard1/ProductTable";
-import VisitUsa from "@/app/components/dashboards/dashboard1/VisitUsa";
 import LatestReviews from "@/app/components/dashboards/dashboard1/LatestReviews";
 import Welcome from "@/app/(DashboardLayout)/layout/shared/welcome/Welcome";
 
@@ -49,13 +48,11 @@ export default function Dashboard() {
             </Grid>
           </Grid>
           {/* column */}
-          <Grid item xs={12} lg={4}>
-            <VisitUsa />
-          </Grid>
+
           <Grid item xs={12} lg={8}>
             <ProductTable />
           </Grid>
-          
+
           <Grid item xs={12}>
             <LatestReviews />
           </Grid>

@@ -2,6 +2,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import React from 'react';
+import { Providers } from "@/store/providers";
 
 const theme = createTheme({
   palette: {
@@ -11,9 +12,11 @@ const theme = createTheme({
 
 export default function MuiProvider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
-    </ThemeProvider>
+    <Providers>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </Providers>
   );
 } 

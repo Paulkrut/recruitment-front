@@ -10,6 +10,7 @@ import { Stack } from '@mui/system';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { AppState } from '@/store/store';
+import '@/utils/i18n';
 
 const Languages = [
   {
