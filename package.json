@@ -22,7 +22,7 @@
     "@mui/material-nextjs": "^7.2.0",
     "@mui/x-data-grid": "^6.17.0",
     "@reduxjs/toolkit": "^1.9.5",
-    "@tabler/icons-react": "^2.30.0",
+    "@tabler/icons-react": "^3.34.0",
     "apexcharts": "^3.54.1",
     "axios": "^1.6.0",
     "axios-mock-adapter": "^2.1.0",

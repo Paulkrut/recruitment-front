@@ -38,6 +38,31 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     navlabel: true,
+    subheader: "HR Management",
+  },
+  {
+    id: uniqueId(),
+    title: "HR Dashboard",
+    icon: 'briefcase-line-duotone',
+    href: "/hr-dashboard",
+    bgcolor: "primary",
+  },
+  {
+    id: uniqueId(),
+    title: "Candidates",
+    icon: 'users-group-line-duotone',
+    href: "/hr-candidates",
+    bgcolor: "success",
+  },
+  {
+    id: uniqueId(),
+    title: "Vacancies",
+    icon: 'work-line-duotone',
+    href: "/hr-vacancies",
+    bgcolor: "warning",
+  },
+  {
+    navlabel: true,
     subheader: "Apps",
   },
   {
