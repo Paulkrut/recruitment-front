@@ -41,6 +41,7 @@
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^13.0.0",
+    "react-qr-code": "^2.0.18",
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.0",
     "recharts": "^2.7.2",

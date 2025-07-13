@@ -1,53 +1,25 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box,
-  Typography,
-  Button,
-  Paper,
-  IconButton,
-  Menu,
-  MenuItem,
+  Box, Card, CardContent, Typography, Button, Paper, Chip, Divider, Grid, CircularProgress
 } from "@mui/material";
-import { apiFetch } from "@/utils/api";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import TextField from "@mui/material/TextField";
-import AddIcon from "@mui/icons-material/Add";
+import {
+  IconBriefcase, IconFileText, IconSettings, IconUsers, IconEdit, IconDeviceFloppy, IconArrowLeft
+} from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import PageContainer from "@/app/components/container/PageContainer";
+import { apiFetch } from "@/utils/api";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-interface Vacancy {
-  id: number;
-  title: string;
-  description?: string;
-  templateId?: number | null;
-}
-
-interface TemplateRow {
-  id: number;
-  title: string;
-  questionsCount?: number;
-  actions?: any;
-}
-
-export default function VacancyPage() {
+export default function HRVacancyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
-  const [vac, setVac] = useState<Vacancy | null>(null);
-  const [copyOpen, setCopyOpen] = useState(false);
-  const [templates, setTemplates] = useState<TemplateRow[]>([]);
-  const [tplSearch, setTplSearch] = useState("");
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [data, setData] = useState<any>(null);
+  const [candidates, setCandidates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -55,132 +27,102 @@ export default function VacancyPage() {
   }, []);
 
   useEffect(() => {
-    if (!token) return;
-    apiFetch(`${API_BASE}/api/admin/vacancies/${id}`)
-      .then((r) => r.json())
-      .then(setVac);
+    if (!token || !id) return;
+    setLoading(true);
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`).then(r => r.json()).then(setData).finally(()=>setLoading(false));
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates);
   }, [token, id]);
 
-  useEffect(() => {
-    if (!token || !copyOpen) return;
-    apiFetch(`${API_BASE}/api/admin/templates?limit=1000`)
-      .then((r) => r.json())
-      .then((d) => setTemplates(Array.isArray(d) ? d : d.items || []));
-  }, [token, copyOpen]);
+  if (!token) return <PageContainer title="Вакансия"><Box sx={{p:4}}><Typography>Нет доступа</Typography></Box></PageContainer>;
+  if (loading || !data) return <PageContainer title="Вакансия"><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
 
-  if (!token) {
-    return (
-      <Box sx={{ p: 4 }}>
-        <Typography>Нет доступа</Typography>
-      </Box>
-    );
-  }
-
-  if (!vac) return null;
-
-  const { title, description, templateId } = vac;
-
-  async function onSelectTemplate(tid: number) {
-    if (templateId) {
-      if (!confirm('Новый шаблон заменит текущий. Продолжить?')) return;
-    }
-    await apiFetch(`${API_BASE}/api/admin/vacancies/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ templateId: tid })
-    });
-    setCopyOpen(false);
-    // reload vacancy
-    apiFetch(`${API_BASE}/api/admin/vacancies/${id}`)
-      .then(r => r.json())
-      .then(setVac);
-  }
+  const { title, description, template, questions } = data;
 
   return (
-    <Box sx={{ p: 4, maxWidth: 800, mx: "auto" }}>
-      <Typography variant="h4" gutterBottom>
-        {title}
-      </Typography>
-      {description && (
-        <Typography sx={{ mb: 2 }} whiteSpace="pre-line">
-          {description}
-        </Typography>
-      )}
+    <PageContainer title={`Вакансия: ${title}`}> 
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {/* Информация о вакансии */}
+        <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+          <Box sx={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', zIndex: 0 }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+            <Box display="flex" alignItems="center" gap={2} mb={3}>
+              <Box sx={{ p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
+                <IconBriefcase size={32} color="white" />
+              </Box>
+              <Box>
+                <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>Информация о вакансии</Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>{title}</Typography>
+              </Box>
+            </Box>
+            <Typography variant="body2" sx={{ mb: 2, opacity: 0.9 }}>{description}</Typography>
+            <Box display="flex" gap={2} mt={2}>
+              <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
+                Редактировать
+              </Button>
+              <Button variant="outlined" color="inherit" startIcon={<IconUsers size={20}/>} onClick={()=>router.push(`/hr/vacancies/${id}/candidates`)} sx={{color:'white',borderColor:'white'}}>
+                Кандидаты
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Box sx={{display:'flex',alignItems:'center',justifyContent:'space-between',mb:1}}>
-          <Typography variant="h6">Тест</Typography>
-          <IconButton onClick={(e)=>setMenuAnchor(e.currentTarget)} size="small">
-            <MoreVertIcon />
-          </IconButton>
-        </Box>
-        <Box>
-          {templateId && (
-            <Typography sx={{ mb: 1 }}>
-              Шаблон: <a href={`/hr/template/${templateId}`}>{templateId}</a>
-            </Typography>
-          )}
+        {/* Тест и вопросы */}
+        <Card sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+          <Box sx={{ position: 'absolute', bottom: -30, left: -30, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', zIndex: 0 }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+            <Box display="flex" alignItems="center" gap={2} mb={3}>
+              <Box sx={{ p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
+                <IconFileText size={32} color="white" />
+              </Box>
+              <Box>
+                <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>Тест для кандидатов</Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>{template?.title || 'Без шаблона'}</Typography>
+              </Box>
+            </Box>
+            {template?.description && <Typography variant="body2" sx={{ mb: 2, opacity: 0.9 }}>{template.description}</Typography>}
+            <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
+            <Typography variant="h6" sx={{ mb: 2 }}>Вопросы теста</Typography>
+            <DataTable columns={[
+              { field: 'position', header: '#', render: (q:any) => q.position+1 },
+              { field: 'text', header: 'Вопрос' },
+              { field: 'type', header: 'Тип', render: (q:any) => <Chip label={q.type} size="small" /> },
+              { field: 'maxTime', header: 'Время, сек' },
+            ]} rows={questions || []} defaultRowsPerPage={5} />
+            <Box mt={2}>
+              <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
+                Редактировать тест
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
-          <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={()=>setMenuAnchor(null)}>
-            {templateId && (
-              <MenuItem onClick={()=>{setMenuAnchor(null);router.push(`/hr/template/${templateId}/edit`);}}>
-                <EditIcon fontSize="small" sx={{mr:1}}/> Редактировать текущий тест
-              </MenuItem>
-            )}
-            <MenuItem onClick={()=>{setMenuAnchor(null);router.push(`/hr/template/new?vacancy=${id}`);}}>
-              <AddIcon fontSize="small" sx={{mr:1}}/> Новый тест
-            </MenuItem>
-            <MenuItem onClick={()=>{setMenuAnchor(null);setCopyOpen(true);}}>
-              <ContentCopyIcon fontSize="small" sx={{mr:1}}/> Заменить (копировать…)
-            </MenuItem>
-          </Menu>
-        </Box>
-      </Paper>
-
-      <Box sx={{ display: "flex", gap: 2 }}>
-        <Button
-          variant="outlined"
-          href={`/hr/vacancies/${id}/edit`}
-          size="small"
-        >
-          Редактировать вакансию
-        </Button>
-        <Button
-          variant="outlined"
-          href={`/hr/vacancies/${id}/candidates`}
-          size="small"
-        >
-          Кандидаты
-        </Button>
+        {/* Кандидаты */}
+        <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+          <Box sx={{ position: 'absolute', top: -20, right: -20, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', zIndex: 0 }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+            <Box display="flex" alignItems="center" gap={2} mb={3}>
+              <Box sx={{ p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
+                <IconUsers size={32} color="white" />
+              </Box>
+              <Box>
+                <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>Кандидаты</Typography>
+                <Typography variant="body1" sx={{ opacity: 0.9 }}>Все отклики на вакансию</Typography>
+              </Box>
+            </Box>
+            <DataTable columns={[
+              {field:'id',header:'ID',render:(r:any)=>(<a href={`/hr/candidates/${r.id}`}>{r.id}</a>)},
+              {field:'name',header:'Имя',render:(r:any)=>(<a href={`/hr/candidates/${r.id}`}>{r.name}</a>)},
+              {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={r.status}/>)} ,
+              {field:'token',header:'Токен',render:(r:any)=>(<a href={`/interview/${r.token}`} target="_blank" rel="noreferrer">{r.token}</a>)}
+            ]} rows={candidates} defaultRowsPerPage={5} />
+            <Box mt={2}>
+              <Button variant="outlined" color="inherit" startIcon={<IconUsers size={20}/>} onClick={()=>router.push(`/hr/vacancies/${id}/candidates`)} sx={{color:'white',borderColor:'white'}}>
+                Все кандидаты
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
-
-      {/* Copy template dialog */}
-      <Dialog open={copyOpen} onClose={() => setCopyOpen(false)} fullWidth maxWidth="md">
-        <DialogTitle>Выберите шаблон для копирования</DialogTitle>
-        <DialogContent>
-          <TextField
-            placeholder="Поиск..."
-            fullWidth
-            size="small"
-            sx={{ mb: 2 }}
-            value={tplSearch}
-            onChange={(e) => setTplSearch(e.target.value)}
-          />
-          <DataTable
-            columns={[
-              { field: "id", header: "ID", render: (r: TemplateRow) => r.id },
-              { field: "title", header: "Название" },
-              { field: "questionsCount", header: "Вопросов" },
-              { field: "actions", header: "", render: (r: TemplateRow) => (<Button size="small" onClick={() => onSelectTemplate(r.id)}>Выбрать</Button>) }
-            ]}
-            rows={templates.filter((t) => t.title.toLowerCase().includes(tplSearch.toLowerCase()))}
-            defaultRowsPerPage={5}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCopyOpen(false)}>Отмена</Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+    </PageContainer>
   );
 } 
