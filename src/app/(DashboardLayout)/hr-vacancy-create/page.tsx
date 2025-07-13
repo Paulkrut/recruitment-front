@@ -222,28 +222,37 @@ export default function HRVacancyCreatePage() {
           mb={4}
           sx={{
             p: 3,
-            background: '#f5f7fa',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             borderRadius: 3,
-            color: '#1a1a1a',
-            border: '1px solid #e0e3e7',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            color: 'white',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          <Box display="flex" alignItems="center" gap={3}>
+          <Box sx={{
+            position: 'absolute',
+            top: -20,
+            right: -20,
+            width: 100,
+            height: 100,
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%',
+            zIndex: 0
+          }} />
+          <Box display="flex" alignItems="center" gap={3} sx={{ zIndex: 1 }}>
             <Box sx={{
               p: 2,
               borderRadius: 2,
-              background: '#e9ecef',
+              background: 'rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(10px)'
             }}>
-              <IconBriefcase size={40} color="#1976d2" />
+              <IconBriefcase size={40} color="white" />
             </Box>
             <Box>
-              <Typography variant="h3" fontWeight="700" sx={{ mb: 1, color: '#1a1a1a' }}>
+              <Typography variant="h3" fontWeight="700" sx={{ mb: 1 }}>
                 Создание вакансии с тестом
               </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.8, fontWeight: 400, color: '#444' }}>
+              <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 400 }}>
                 Создайте привлекательную вакансию и эффективный тест для кандидатов
               </Typography>
             </Box>
@@ -252,15 +261,16 @@ export default function HRVacancyCreatePage() {
             variant="outlined"
             onClick={() => router.push("/hr-vacancies")}
             sx={{
-              color: '#1976d2',
-              borderColor: '#b0b8c1',
+              color: 'white',
+              borderColor: 'rgba(255,255,255,0.5)',
               fontSize: '1rem',
               fontWeight: 600,
               px: 3,
               py: 1.5,
+              zIndex: 1,
               '&:hover': {
-                borderColor: '#1976d2',
-                backgroundColor: '#e3eafc',
+                borderColor: 'white',
+                backgroundColor: 'rgba(255,255,255,0.1)',
               }
             }}
           >
@@ -271,10 +281,8 @@ export default function HRVacancyCreatePage() {
         <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
           {/* Vacancy Information */}
           <Card sx={{ 
-            background: '#fff',
-            color: '#1a1a1a',
-            border: '1px solid #e0e3e7',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -293,15 +301,16 @@ export default function HRVacancyCreatePage() {
                 <Box sx={{
                   p: 2,
                   borderRadius: 2,
-                  background: '#e9ecef',
+                  background: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)'
                 }}>
-                  <IconBriefcase size={32} color="#1976d2" />
+                  <IconBriefcase size={32} color="white" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: '#1a1a1a' }}>
+                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
                     Информация о вакансии
                   </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9, color: '#444' }}>
+                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
                     Создайте привлекательное описание для кандидатов
                   </Typography>
                 </Box>
@@ -311,9 +320,9 @@ export default function HRVacancyCreatePage() {
                 <CustomFormLabel 
                   htmlFor="vacancy-title"
                   sx={{ 
-                    color: '#333', 
+                    color: 'white', 
                     fontSize: '1.1rem',
-                    fontWeight: 500,
+                    fontWeight: 600,
                     mb: 2
                   }}
                 >
@@ -328,7 +337,9 @@ export default function HRVacancyCreatePage() {
                     setVacancyData({ ...vacancyData, title: e.target.value })
                   }
                   helperText="Введите название вакансии, которое будет видно кандидатам"
-                  FormHelperTextProps={{ sx: { color: '#666', opacity: 0.9 } }}
+                  FormHelperTextProps={{
+                    sx: { color: 'white', opacity: 0.9 }
+                  }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
                       backgroundColor: 'rgba(255,255,255,0.9)',
@@ -352,7 +363,7 @@ export default function HRVacancyCreatePage() {
                 <CustomFormLabel 
                   htmlFor="vacancy-description"
                   sx={{ 
-                    color: '#333', 
+                    color: 'white', 
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     mb: 2
@@ -372,7 +383,7 @@ export default function HRVacancyCreatePage() {
                   }
                   helperText="Опишите требования, обязанности и условия работы"
                   FormHelperTextProps={{
-                    sx: { color: '#666', opacity: 0.9 }
+                    sx: { color: 'white', opacity: 0.9 }
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -397,10 +408,8 @@ export default function HRVacancyCreatePage() {
 
           {/* Test Settings */}
           <Card sx={{ 
-            background: '#fff',
-            color: '#1a1a1a',
-            border: '1px solid #e0e3e7',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+            color: 'white',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -419,15 +428,16 @@ export default function HRVacancyCreatePage() {
                 <Box sx={{
                   p: 2,
                   borderRadius: 2,
-                  background: '#e9ecef',
+                  background: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)'
                 }}>
-                  <IconSettings size={32} color="#1976d2" />
+                  <IconSettings size={32} color="white" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: '#1a1a1a' }}>
+                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
                     Настройки теста
                   </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9, color: '#444' }}>
+                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
                     Настройте параметры тестирования кандидатов
                   </Typography>
                 </Box>
@@ -436,7 +446,7 @@ export default function HRVacancyCreatePage() {
               <Box>
                 <CustomFormLabel 
                   sx={{ 
-                    color: '#333', 
+                    color: 'white', 
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     mb: 2
@@ -447,7 +457,7 @@ export default function HRVacancyCreatePage() {
                 
                 {/* Preset buttons */}
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" sx={{ color: '#666', opacity: 0.9, mb: 2 }}>
+                  <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
                     Быстрый выбор:
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
@@ -465,7 +475,7 @@ export default function HRVacancyCreatePage() {
                           backgroundColor: templateData.questionTime === time 
                             ? 'rgba(255,255,255,0.3)' 
                             : 'rgba(255,255,255,0.1)',
-                          color: '#1a1a1a',
+                          color: 'white',
                           border: '1px solid rgba(255,255,255,0.3)',
                           '&:hover': {
                             backgroundColor: templateData.questionTime === time 
@@ -489,10 +499,10 @@ export default function HRVacancyCreatePage() {
                 {/* Slider */}
                 <Box sx={{ px: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: '#666', opacity: 0.8 }}>
+                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
                       1 мин
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', opacity: 0.8 }}>
+                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
                       5 мин
                     </Typography>
                   </Box>
@@ -526,30 +536,30 @@ export default function HRVacancyCreatePage() {
                     <Typography 
                       variant="h5" 
                       sx={{ 
-                        color: '#1a1a1a', 
+                        color: 'white', 
                         fontWeight: 700,
                         textShadow: '0 2px 4px rgba(0,0,0,0.3)'
                       }}
                     >
                       {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', opacity: 0.8, mt: 0.5 }}>
+                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mt: 0.5 }}>
                       {templateData.questionTime} секунд
                     </Typography>
                   </Box>
                 </Box>
                 
-                <Typography variant="body2" sx={{ color: '#666', opacity: 0.9, mt: 2, textAlign: 'center' }}>
+                <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mt: 2, textAlign: 'center' }}>
                   Время, отведенное на ответ на каждый вопрос
                 </Typography>
               </Box>
 
-              <Divider sx={{ my: 4, borderColor: '#e0e3e7' }} />
+              <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.3)' }} />
 
               <Box>
                 <CustomFormLabel 
                   sx={{ 
-                    color: '#333', 
+                    color: 'white', 
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     mb: 2
@@ -571,9 +581,16 @@ export default function HRVacancyCreatePage() {
                           followupsMax: e.target.checked ? 3 : 0
                         })));
                       }}
-                      color="primary"
+                      sx={{
+                        '& .MuiSwitch-switchBase.Mui-checked': {
+                          color: 'white',
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                          backgroundColor: 'rgba(255,255,255,0.5)',
+                        },
+                      }}
                     />
-                    <Typography variant="body1" sx={{ color: '#1a1a1a', fontWeight: 600 }}>
+                    <Typography variant="body1" sx={{ color: 'white', fontWeight: 600 }}>
                       Разрешить дополнительные вопросы
                     </Typography>
                   </Box>
@@ -585,16 +602,16 @@ export default function HRVacancyCreatePage() {
                       borderRadius: 2,
                       border: '1px solid rgba(255,255,255,0.2)'
                     }}>
-                      <Typography variant="body2" sx={{ color: '#666', opacity: 0.9, mb: 2 }}>
+                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
                         <strong>Как это работает:</strong>
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', opacity: 0.8, mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
                         • Максимум 3 дополнительных вопроса на каждый основной вопрос
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', opacity: 0.8, mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
                         • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
                       </Typography>
-                      <Typography variant="body2" sx={{ color: '#666', opacity: 0.8 }}>
+                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
                         • Вопросы генерируются AI на основе ответа кандидата
                       </Typography>
                     </Box>
@@ -606,10 +623,8 @@ export default function HRVacancyCreatePage() {
 
           {/* Questions */}
           <Card sx={{ 
-            background: '#f5f7fa',
-            color: '#1a1a1a',
-            border: '1px solid #e0e3e7',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+            color: 'white',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -629,15 +644,16 @@ export default function HRVacancyCreatePage() {
                   <Box sx={{
                     p: 2,
                     borderRadius: 2,
-                    background: '#e9ecef',
+                    background: 'rgba(255,255,255,0.2)',
+                    backdropFilter: 'blur(10px)'
                   }}>
-                    <IconFileText size={32} color="#1976d2" />
+                    <IconFileText size={32} color="white" />
                   </Box>
                   <Box>
-                    <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: '#1a1a1a' }}>
+                    <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
                       Вопросы теста
                     </Typography>
-                    <Typography variant="body1" sx={{ opacity: 0.9, color: '#444' }}>
+                    <Typography variant="body1" sx={{ opacity: 0.9 }}>
                       Создайте вопросы для оценки навыков кандидатов
                     </Typography>
                   </Box>
@@ -645,7 +661,7 @@ export default function HRVacancyCreatePage() {
                     label={questions.length} 
                     sx={{ 
                       backgroundColor: 'rgba(255,255,255,0.2)',
-                      color: '#1a1a1a',
+                      color: 'white',
                       fontSize: '1.1rem',
                       fontWeight: 600,
                       height: 32
@@ -660,8 +676,8 @@ export default function HRVacancyCreatePage() {
                     sx={{
                       background: 'rgba(255,255,255,0.2)',
                       backdropFilter: 'blur(10px)',
-                      color: '#1976d2',
-                      border: '1px solid #b0b8c1',
+                      color: 'white',
+                      border: '1px solid rgba(255,255,255,0.3)',
                       fontSize: '1rem',
                       fontWeight: 600,
                       px: 3,
@@ -678,14 +694,16 @@ export default function HRVacancyCreatePage() {
                     startIcon={<IconPlus size={24} />}
                     onClick={addQuestion}
                     sx={{
-                      background: '#1976d2',
-                      color: '#fff',
+                      background: 'rgba(255,255,255,0.2)',
+                      backdropFilter: 'blur(10px)',
+                      color: 'white',
+                      border: '1px solid rgba(255,255,255,0.3)',
+                      fontSize: '1rem',
                       fontWeight: 600,
                       px: 3,
                       py: 1.5,
-                      boxShadow: 'none',
                       '&:hover': {
-                        background: '#1565c0',
+                        background: 'rgba(255,255,255,0.3)',
                       }
                     }}
                   >
@@ -698,17 +716,17 @@ export default function HRVacancyCreatePage() {
                   <Paper key={qIndex} sx={{ 
                     p: 3, 
                     mb: 3, 
-                    background: '#f5f7fa',
+                    background: 'rgba(255,255,255,0.95)',
                     borderRadius: 3,
-                    border: '1px solid #e0e3e7',
-                    color: '#1a1a1a',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.2)'
                   }}>
                     <Box display="flex" alignItems="center" gap={2} mb={3}>
                       <Chip 
                         label={`Вопрос ${qIndex + 1}`} 
                         sx={{ 
                           backgroundColor: 'rgba(255,255,255,0.3)',
-                          color: '#1a1a1a',
+                          color: 'white',
                           fontSize: '1rem',
                           fontWeight: 600,
                           height: 28
@@ -721,7 +739,7 @@ export default function HRVacancyCreatePage() {
                           onClick={() => moveQuestion(qIndex, "up")}
                           disabled={qIndex === 0}
                           sx={{
-                            color: '#1a1a1a',
+                            color: 'white',
                             backgroundColor: 'rgba(255,255,255,0.2)',
                             '&:hover': {
                               backgroundColor: 'rgba(255,255,255,0.3)',
@@ -737,7 +755,7 @@ export default function HRVacancyCreatePage() {
                           onClick={() => moveQuestion(qIndex, "down")}
                           disabled={qIndex === questions.length - 1}
                           sx={{
-                            color: '#1a1a1a',
+                            color: 'white',
                             backgroundColor: 'rgba(255,255,255,0.2)',
                             '&:hover': {
                               backgroundColor: 'rgba(255,255,255,0.3)',
@@ -752,7 +770,7 @@ export default function HRVacancyCreatePage() {
                           size="large"
                           onClick={() => removeQuestion(qIndex)}
                           sx={{
-                            color: '#1a1a1a',
+                            color: 'white',
                             backgroundColor: 'rgba(255,107,107,0.8)',
                             '&:hover': {
                               backgroundColor: 'rgba(255,107,107,1)',
@@ -836,12 +854,12 @@ export default function HRVacancyCreatePage() {
                       backdropFilter: 'blur(10px)',
                       mb: 3
                     }}>
-                      <IconFileText size={64} color="#1976d2" />
+                      <IconFileText size={64} color="white" />
                     </Box>
-                    <Typography variant="h5" sx={{ color: '#1a1a1a', mb: 2, fontWeight: 600 }}>
+                    <Typography variant="h5" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
                       Нет вопросов
                     </Typography>
-                    <Typography variant="body1" sx={{ color: '#1a1a1a', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}>
+                    <Typography variant="body1" sx={{ color: 'white', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}>
                       Добавьте вопросы для тестирования кандидатов. Вы можете создать их вручную или использовать AI для генерации.
                     </Typography>
                     <Box display="flex" gap={3}>
@@ -852,15 +870,15 @@ export default function HRVacancyCreatePage() {
                         sx={{
                           background: 'rgba(255,255,255,0.2)',
                           backdropFilter: 'blur(10px)',
-                          color: '#1976d2',
-                          border: '2px solid #b0b8c1',
+                          color: 'white',
+                          border: '2px solid rgba(255,255,255,0.3)',
                           fontSize: '1.1rem',
                           fontWeight: 600,
                           px: 4,
                           py: 2,
                           '&:hover': {
                             background: 'rgba(255,255,255,0.3)',
-                            border: '2px solid #b0b8c1',
+                            border: '2px solid rgba(255,255,255,0.5)',
                           }
                         }}
                       >
@@ -871,16 +889,17 @@ export default function HRVacancyCreatePage() {
                         startIcon={<IconPlus size={24} />}
                         onClick={addQuestion}
                         sx={{
-                          background: '#1976d2',
-                          color: '#fff',
-                          border: '2px solid #b0b8c1',
+                          background: 'rgba(255,255,255,0.2)',
+                          backdropFilter: 'blur(10px)',
+                          color: 'white',
+                          border: '2px solid rgba(255,255,255,0.3)',
                           fontSize: '1.1rem',
                           fontWeight: 600,
                           px: 4,
                           py: 2,
                           '&:hover': {
-                            background: '#1565c0',
-                            border: '2px solid #b0b8c1',
+                            background: 'rgba(255,255,255,0.3)',
+                            border: '2px solid rgba(255,255,255,0.5)',
                           }
                         }}
                       >
@@ -907,15 +926,15 @@ export default function HRVacancyCreatePage() {
                       sx={{
                         background: 'rgba(255,255,255,0.2)',
                         backdropFilter: 'blur(10px)',
-                        color: '#1976d2',
-                        border: '2px solid #b0b8c1',
+                        color: 'white',
+                        border: '2px solid rgba(255,255,255,0.3)',
                         fontSize: '1rem',
                         fontWeight: 600,
                         px: 3,
                         py: 1.5,
                         '&:hover': {
                           background: 'rgba(255,255,255,0.3)',
-                          border: '2px solid #b0b8c1',
+                          border: '2px solid rgba(255,255,255,0.5)',
                         }
                       }}
                     >
@@ -926,16 +945,17 @@ export default function HRVacancyCreatePage() {
                       startIcon={<IconPlus size={24} />}
                       onClick={addQuestion}
                       sx={{
-                        background: '#1976d2',
-                        color: '#fff',
-                        border: '2px solid #b0b8c1',
+                        background: 'rgba(255,255,255,0.2)',
+                        backdropFilter: 'blur(10px)',
+                        color: 'white',
+                        border: '2px solid rgba(255,255,255,0.3)',
                         fontSize: '1rem',
                         fontWeight: 600,
                         px: 3,
                         py: 1.5,
                         '&:hover': {
-                          background: '#1565c0',
-                          border: '2px solid #b0b8c1',
+                          background: 'rgba(255,255,255,0.3)',
+                          border: '2px solid rgba(255,255,255,0.5)',
                         }
                       }}
                     >
@@ -948,10 +968,8 @@ export default function HRVacancyCreatePage() {
 
           {/* Create Button */}
           <Card sx={{ 
-            background: '#1976d2',
-            color: '#fff',
-            borderRadius: 3,
-            boxShadow: '0 4px 12px rgba(25, 118, 210, 0.2)',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -977,15 +995,15 @@ export default function HRVacancyCreatePage() {
                   variant="outlined"
                   onClick={() => router.push("/hr-vacancies")}
                   sx={{
-                    color: '#1976d2',
-                    borderColor: '#b0b8c1',
+                    color: 'white',
+                    borderColor: 'rgba(255,255,255,0.5)',
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     px: 4,
                     py: 2,
                     '&:hover': {
-                      borderColor: '#1976d2',
-                      backgroundColor: '#e3eafc',
+                      borderColor: 'white',
+                      backgroundColor: 'rgba(255,255,255,0.1)',
                     }
                   }}
                 >
@@ -997,17 +1015,17 @@ export default function HRVacancyCreatePage() {
                   disabled={!vacancyData.title || isLoading}
                   startIcon={<IconPlus size={24} />}
                   sx={{
-                    background: '#1976d2',
-                    color: '#fff',
-                    borderRadius: 3,
-                    boxShadow: '0 4px 12px rgba(25, 118, 210, 0.2)',
+                    background: 'rgba(255,255,255,0.2)',
+                    backdropFilter: 'blur(10px)',
+                    color: 'white',
+                    border: '2px solid rgba(255,255,255,0.3)',
                     fontSize: '1.2rem',
                     fontWeight: 700,
                     px: 5,
                     py: 2.5,
                     '&:hover': {
-                      background: '#1565c0',
-                      boxShadow: '0 6px 16px rgba(25, 118, 210, 0.3)',
+                      background: 'rgba(255,255,255,0.3)',
+                      border: '2px solid rgba(255,255,255,0.5)',
                     },
                     '&:disabled': {
                       background: 'rgba(255,255,255,0.1)',
