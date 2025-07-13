@@ -62,6 +62,13 @@ const Menuitems: MenuitemsType[] = [
     bgcolor: "warning",
   },
   {
+    id: uniqueId(),
+    title: "Create Vacancy",
+    icon: 'plus-line-duotone',
+    href: "/hr-vacancy-create",
+    bgcolor: "success",
+  },
+  {
     navlabel: true,
     subheader: "Apps",
   },

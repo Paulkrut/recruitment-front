@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Grid,
@@ -55,6 +56,7 @@ interface Template {
 }
 
 export default function HRVacanciesPage() {
+  const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [rows, setRows] = useState<VacancyRow[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -96,13 +98,63 @@ export default function HRVacanciesPage() {
   async function createVacancy() {
     if (!token || !newVacancy.title) return;
     
+    let templateId = newVacancy.templateId ? parseInt(newVacancy.templateId) : null;
+    
+    // Если шаблон не выбран, создаем новый с базовыми вопросами
+    if (!templateId) {
+      const basicQuestions = [
+        {
+          text: "Расскажите о своем опыте работы",
+          type: "text",
+          maxTime: 120,
+          allowFollowups: false,
+          followupsMax: 0,
+          position: 0
+        },
+        {
+          text: "Почему вы хотите работать в нашей компании?",
+          type: "text", 
+          maxTime: 120,
+          allowFollowups: false,
+          followupsMax: 0,
+          position: 1
+        },
+        {
+          text: "Какие у вас сильные стороны?",
+          type: "text",
+          maxTime: 120,
+          allowFollowups: false,
+          followupsMax: 0,
+          position: 2
+        }
+      ];
+
+      const templateRes = await apiFetch(`${API_BASE}/api/admin/templates`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: `Тест для вакансии: ${newVacancy.title}`,
+          description: `Автоматически созданный тест для вакансии "${newVacancy.title}"`,
+          questions: basicQuestions
+        }),
+      });
+
+      if (templateRes.ok) {
+        const templateData = await templateRes.json();
+        templateId = templateData.id;
+      } else {
+        console.error("Ошибка создания шаблона");
+        return;
+      }
+    }
+    
     const res = await apiFetch(`${API_BASE}/api/admin/vacancies`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: newVacancy.title,
         description: newVacancy.description,
-        templateId: newVacancy.templateId ? parseInt(newVacancy.templateId) : null,
+        templateId: templateId,
       }),
     });
 
@@ -110,6 +162,7 @@ export default function HRVacanciesPage() {
       setShowCreateDialog(false);
       setNewVacancy({ title: "", description: "", templateId: "" });
       fetchVacancies();
+      fetchTemplates(); // Обновляем список шаблонов
     }
   }
 
@@ -216,7 +269,11 @@ export default function HRVacanciesPage() {
                           </IconButton>
                         </Tooltip>
                         <Tooltip title="Редактировать">
-                          <IconButton size="small" color="warning">
+                          <IconButton 
+                            size="small" 
+                            color="warning"
+                            onClick={() => router.push(`/hr-vacancy-edit/${vacancy.id}`)}
+                          >
                             <IconEdit size={16} />
                           </IconButton>
                         </Tooltip>
@@ -306,42 +363,71 @@ export default function HRVacanciesPage() {
         )}
 
         {/* Create Vacancy Dialog */}
-        <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Создать новую вакансию</DialogTitle>
+        <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="md" fullWidth>
+          <DialogTitle>Создать вакансию с тестом</DialogTitle>
           <DialogContent>
-            <TextField
-              label="Название вакансии"
-              fullWidth
-              sx={{ mb: 2, mt: 1 }}
-              value={newVacancy.title}
-              onChange={(e) => setNewVacancy({ ...newVacancy, title: e.target.value })}
-            />
-            <TextField
-              label="Описание"
-              fullWidth
-              multiline
-              rows={4}
-              sx={{ mb: 2 }}
-              value={newVacancy.description}
-              onChange={(e) => setNewVacancy({ ...newVacancy, description: e.target.value })}
-            />
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel>Шаблон теста</InputLabel>
-              <Select
-                value={newVacancy.templateId}
-                onChange={(e) => setNewVacancy({ ...newVacancy, templateId: e.target.value })}
-                label="Шаблон теста"
-              >
-                <MenuItem value="">
-                  <em>Без теста</em>
-                </MenuItem>
-                {templates.map((template) => (
-                  <MenuItem key={template.id} value={template.id}>
-                    {template.title}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Информация о вакансии
+              </Typography>
+              <TextField
+                label="Название вакансии"
+                fullWidth
+                sx={{ mb: 2, mt: 1 }}
+                value={newVacancy.title}
+                onChange={(e) => setNewVacancy({ ...newVacancy, title: e.target.value })}
+              />
+              <TextField
+                label="Описание вакансии"
+                fullWidth
+                multiline
+                rows={3}
+                sx={{ mb: 2 }}
+                value={newVacancy.description}
+                onChange={(e) => setNewVacancy({ ...newVacancy, description: e.target.value })}
+              />
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Тест для кандидатов
+              </Typography>
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel>Выберите существующий шаблон или создайте новый</InputLabel>
+                <Select
+                  value={newVacancy.templateId}
+                  onChange={(e) => setNewVacancy({ ...newVacancy, templateId: e.target.value })}
+                  label="Выберите существующий шаблон или создайте новый"
+                >
+                  <MenuItem value="">
+                    <em>Создать новый шаблон</em>
                   </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                  {templates.map((template) => (
+                    <MenuItem key={template.id} value={template.id}>
+                      {template.title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {!newVacancy.templateId && (
+                <Box sx={{ p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
+                  <Typography variant="body2" color="textSecondary" gutterBottom>
+                    Будет создан новый шаблон теста с базовыми вопросами
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={() => {
+                      setShowCreateDialog(false);
+                      router.push("/hr-vacancy-create");
+                    }}
+                  >
+                    Расширенное создание
+                  </Button>
+                </Box>
+              )}
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setShowCreateDialog(false)}>Отмена</Button>
@@ -350,7 +436,7 @@ export default function HRVacanciesPage() {
               onClick={createVacancy}
               disabled={!newVacancy.title}
             >
-              Создать вакансию
+              Создать вакансию с тестом
             </Button>
           </DialogActions>
         </Dialog>
