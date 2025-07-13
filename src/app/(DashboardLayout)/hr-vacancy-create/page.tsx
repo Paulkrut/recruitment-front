@@ -462,22 +462,16 @@ export default function HRVacancyCreatePage() {
                           py: 1,
                           fontSize: '0.9rem',
                           fontWeight: 600,
-                          backgroundColor: templateData.questionTime === time 
-                            ? 'rgba(255,255,255,0.3)' 
-                            : 'rgba(255,255,255,0.1)',
-                          color: '#1a1a1a',
-                          border: '1px solid rgba(255,255,255,0.3)',
+                          backgroundColor: templateData.questionTime === time ? '#1976d2' : '#fff',
+                          color: templateData.questionTime === time ? '#fff' : '#1976d2',
+                          border: '1px solid',
+                          borderColor: templateData.questionTime === time ? '#1976d2' : '#b0b8c1',
+                          boxShadow: 'none',
                           '&:hover': {
-                            backgroundColor: templateData.questionTime === time 
-                              ? 'rgba(255,255,255,0.4)' 
-                              : 'rgba(255,255,255,0.2)',
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                            borderColor: '#1976d2',
                           },
-                          '&.MuiButton-contained': {
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,0.4)',
-                            }
-                          }
                         }}
                       >
                         {time} сек
@@ -504,20 +498,20 @@ export default function HRVacancyCreatePage() {
                     step={30}
                     sx={{
                       '& .MuiSlider-track': {
-                        backgroundColor: 'rgba(255,255,255,0.8)',
+                        backgroundColor: '#1976d2',
                         border: 'none',
                       },
                       '& .MuiSlider-rail': {
-                        backgroundColor: 'rgba(255,255,255,0.3)',
+                        backgroundColor: '#b0b8c1',
                       },
                       '& .MuiSlider-thumb': {
-                        backgroundColor: 'white',
-                        border: '2px solid rgba(255,255,255,0.8)',
+                        backgroundColor: '#1976d2',
+                        border: '2px solid #fff',
                         '&:hover': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
+                          boxShadow: '0 0 0 8px rgba(25,118,210,0.1)',
                         },
                         '&.Mui-focusVisible': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
+                          boxShadow: '0 0 0 8px rgba(25,118,210,0.15)',
                         },
                       },
                     }}
@@ -979,13 +973,15 @@ export default function HRVacancyCreatePage() {
                   sx={{
                     color: '#1976d2',
                     borderColor: '#b0b8c1',
+                    background: '#fff',
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     px: 4,
                     py: 2,
                     '&:hover': {
                       borderColor: '#1976d2',
-                      backgroundColor: '#e3eafc',
+                      backgroundColor: '#f5f7fa',
+                      color: '#1976d2',
                     }
                   }}
                 >
