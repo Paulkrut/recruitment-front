@@ -61,12 +61,6 @@ export default function HRVacanciesPage() {
   const [rows, setRows] = useState<VacancyRow[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [search, setSearch] = useState("");
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [newVacancy, setNewVacancy] = useState({
-    title: "",
-    description: "",
-    templateId: "",
-  });
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -92,77 +86,6 @@ export default function HRVacanciesPage() {
     if (res.ok) {
       const data = await res.json();
       setTemplates(Array.isArray(data) ? data : data.items || []);
-    }
-  }
-
-  async function createVacancy() {
-    if (!token || !newVacancy.title) return;
-    
-    let templateId = newVacancy.templateId ? parseInt(newVacancy.templateId) : null;
-    
-    // Если шаблон не выбран, создаем новый с базовыми вопросами
-    if (!templateId) {
-      const basicQuestions = [
-        {
-          text: "Расскажите о своем опыте работы",
-          type: "text",
-          maxTime: 120,
-          allowFollowups: false,
-          followupsMax: 0,
-          position: 0
-        },
-        {
-          text: "Почему вы хотите работать в нашей компании?",
-          type: "text", 
-          maxTime: 120,
-          allowFollowups: false,
-          followupsMax: 0,
-          position: 1
-        },
-        {
-          text: "Какие у вас сильные стороны?",
-          type: "text",
-          maxTime: 120,
-          allowFollowups: false,
-          followupsMax: 0,
-          position: 2
-        }
-      ];
-
-      const templateRes = await apiFetch(`${API_BASE}/api/admin/templates`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: `Тест для вакансии: ${newVacancy.title}`,
-          description: `Автоматически созданный тест для вакансии "${newVacancy.title}"`,
-          questions: basicQuestions
-        }),
-      });
-
-      if (templateRes.ok) {
-        const templateData = await templateRes.json();
-        templateId = templateData.id;
-      } else {
-        console.error("Ошибка создания шаблона");
-        return;
-      }
-    }
-    
-    const res = await apiFetch(`${API_BASE}/api/admin/vacancies`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: newVacancy.title,
-        description: newVacancy.description,
-        templateId: templateId,
-      }),
-    });
-
-    if (res.ok) {
-      setShowCreateDialog(false);
-      setNewVacancy({ title: "", description: "", templateId: "" });
-      fetchVacancies();
-      fetchTemplates(); // Обновляем список шаблонов
     }
   }
 
@@ -208,7 +131,7 @@ export default function HRVacanciesPage() {
           <Button
             variant="contained"
             startIcon={<IconPlus size={20} />}
-            onClick={() => setShowCreateDialog(true)}
+            onClick={() => router.push('/hr-vacancy-create')}
           >
             Создать вакансию
           </Button>
@@ -361,85 +284,6 @@ export default function HRVacanciesPage() {
             </Typography>
           </Box>
         )}
-
-        {/* Create Vacancy Dialog */}
-        <Dialog open={showCreateDialog} onClose={() => setShowCreateDialog(false)} maxWidth="md" fullWidth>
-          <DialogTitle>Создать вакансию с тестом</DialogTitle>
-          <DialogContent>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Информация о вакансии
-              </Typography>
-              <TextField
-                label="Название вакансии"
-                fullWidth
-                sx={{ mb: 2, mt: 1 }}
-                value={newVacancy.title}
-                onChange={(e) => setNewVacancy({ ...newVacancy, title: e.target.value })}
-              />
-              <TextField
-                label="Описание вакансии"
-                fullWidth
-                multiline
-                rows={3}
-                sx={{ mb: 2 }}
-                value={newVacancy.description}
-                onChange={(e) => setNewVacancy({ ...newVacancy, description: e.target.value })}
-              />
-            </Box>
-
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Тест для кандидатов
-              </Typography>
-              <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel>Выберите существующий шаблон или создайте новый</InputLabel>
-                <Select
-                  value={newVacancy.templateId}
-                  onChange={(e) => setNewVacancy({ ...newVacancy, templateId: e.target.value })}
-                  label="Выберите существующий шаблон или создайте новый"
-                >
-                  <MenuItem value="">
-                    <em>Создать новый шаблон</em>
-                  </MenuItem>
-                  {templates.map((template) => (
-                    <MenuItem key={template.id} value={template.id}>
-                      {template.title}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              {!newVacancy.templateId && (
-                <Box sx={{ p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
-                  <Typography variant="body2" color="textSecondary" gutterBottom>
-                    Будет создан новый шаблон теста с базовыми вопросами
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => {
-                      setShowCreateDialog(false);
-                      router.push("/hr-vacancy-create");
-                    }}
-                  >
-                    Расширенное создание
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setShowCreateDialog(false)}>Отмена</Button>
-            <Button
-              variant="contained"
-              onClick={createVacancy}
-              disabled={!newVacancy.title}
-            >
-              Создать вакансию с тестом
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Box>
     </PageContainer>
   );

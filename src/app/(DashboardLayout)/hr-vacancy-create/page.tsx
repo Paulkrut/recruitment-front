@@ -739,11 +739,14 @@ export default function HRVacancyCreatePage() {
                           onClick={() => moveQuestion(qIndex, "up")}
                           disabled={qIndex === 0}
                           sx={{
-                            color: 'white',
-                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            color: '#1976d2',
+                            backgroundColor: '#fff',
+                            border: '1px solid #1976d2',
                             '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,0.3)',
-                            }
+                              backgroundColor: '#1976d2',
+                              color: '#fff',
+                            },
+                            mr: 1
                           }}
                         >
                           <IconArrowUp size={20} />
@@ -755,11 +758,14 @@ export default function HRVacancyCreatePage() {
                           onClick={() => moveQuestion(qIndex, "down")}
                           disabled={qIndex === questions.length - 1}
                           sx={{
-                            color: 'white',
-                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            color: '#1976d2',
+                            backgroundColor: '#fff',
+                            border: '1px solid #1976d2',
                             '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,0.3)',
-                            }
+                              backgroundColor: '#1976d2',
+                              color: '#fff',
+                            },
+                            mr: 1
                           }}
                         >
                           <IconArrowDown size={20} />
@@ -770,10 +776,12 @@ export default function HRVacancyCreatePage() {
                           size="large"
                           onClick={() => removeQuestion(qIndex)}
                           sx={{
-                            color: 'white',
-                            backgroundColor: 'rgba(255,107,107,0.8)',
+                            color: '#e53935',
+                            backgroundColor: '#fff',
+                            border: '1px solid #e53935',
                             '&:hover': {
-                              backgroundColor: 'rgba(255,107,107,1)',
+                              backgroundColor: '#e53935',
+                              color: '#fff',
                             }
                           }}
                         >

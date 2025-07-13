@@ -850,11 +850,14 @@ export default function HRVacancyEditPage() {
                             onClick={() => moveQuestion(qIndex, "up")}
                             disabled={qIndex === 0}
                             sx={{
-                              color: 'white',
-                              backgroundColor: 'rgba(255,255,255,0.2)',
+                              color: '#1976d2',
+                              backgroundColor: '#fff',
+                              border: '1px solid #1976d2',
                               '&:hover': {
-                                backgroundColor: 'rgba(255,255,255,0.3)',
-                              }
+                                backgroundColor: '#1976d2',
+                                color: '#fff',
+                              },
+                              mr: 1
                             }}
                           >
                             <IconArrowUp size={20} />
@@ -866,11 +869,14 @@ export default function HRVacancyEditPage() {
                             onClick={() => moveQuestion(qIndex, "down")}
                             disabled={qIndex === questions.length - 1}
                             sx={{
-                              color: 'white',
-                              backgroundColor: 'rgba(255,255,255,0.2)',
+                              color: '#1976d2',
+                              backgroundColor: '#fff',
+                              border: '1px solid #1976d2',
                               '&:hover': {
-                                backgroundColor: 'rgba(255,255,255,0.3)',
-                              }
+                                backgroundColor: '#1976d2',
+                                color: '#fff',
+                              },
+                              mr: 1
                             }}
                           >
                             <IconArrowDown size={20} />
@@ -881,11 +887,12 @@ export default function HRVacancyEditPage() {
                             size="large"
                             onClick={() => removeQuestion(qIndex)}
                             sx={{
-                              color: 'white',
-                              backgroundColor: 'rgba(255,255,255,0.2)',
+                              color: '#e53935',
+                              backgroundColor: '#fff',
+                              border: '1px solid #e53935',
                               '&:hover': {
-                                backgroundColor: 'rgba(255,255,255,0.3)',
-                                color: '#ff6b6b'
+                                backgroundColor: '#e53935',
+                                color: '#fff',
                               }
                             }}
                           >
@@ -972,6 +979,79 @@ export default function HRVacancyEditPage() {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Save/Cancel Buttons */}
+        <Card sx={{ 
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden',
+          mt: 4
+        }}>
+          <Box sx={{
+            position: 'absolute',
+            bottom: -30,
+            right: -30,
+            width: 150,
+            height: 150,
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%',
+            zIndex: 0
+          }} />
+          <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3, backgroundColor: 'rgba(255,255,255,0.9)' }}>
+                {error}
+              </Alert>
+            )}
+            <Box display="flex" gap={3} justifyContent="flex-end" alignItems="center">
+              <Button
+                variant="outlined"
+                onClick={() => router.push("/hr-vacancies")}
+                sx={{
+                  color: 'white',
+                  borderColor: 'rgba(255,255,255,0.5)',
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  px: 4,
+                  py: 2,
+                  '&:hover': {
+                    borderColor: 'white',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                  }
+                }}
+              >
+                Отмена
+              </Button>
+              <Button
+                variant="contained"
+                onClick={updateVacancyWithTemplate}
+                disabled={!vacancyData.title || isSaving}
+                startIcon={<IconDeviceFloppy size={24} />}
+                sx={{
+                  background: 'rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(10px)',
+                  color: 'white',
+                  border: '2px solid rgba(255,255,255,0.3)',
+                  fontSize: '1.2rem',
+                  fontWeight: 700,
+                  px: 5,
+                  py: 2.5,
+                  '&:hover': {
+                    background: 'rgba(255,255,255,0.3)',
+                    border: '2px solid rgba(255,255,255,0.5)',
+                  },
+                  '&:disabled': {
+                    background: 'rgba(255,255,255,0.1)',
+                    color: 'rgba(255,255,255,0.5)',
+                  }
+                }}
+              >
+                {isSaving ? "Сохранение..." : "Сохранить изменения"}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
     </PageContainer>
   );
