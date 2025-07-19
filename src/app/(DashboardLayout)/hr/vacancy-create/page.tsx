@@ -147,7 +147,7 @@ export default function HRVacancyCreatePage() {
       const result = await response.json();
       
       // Перенаправляем на страницу вакансии
-      router.push(`/hr-vacancies`);
+      router.push(`/hr/vacancies`);
       
     } catch (err: any) {
       setError(err.message);
@@ -259,7 +259,7 @@ export default function HRVacancyCreatePage() {
           </Box>
           <Button
             variant="outlined"
-            onClick={() => router.push("/hr-vacancies")}
+            onClick={() => router.push("/hr/vacancies")}
             sx={{
               color: 'white',
               borderColor: 'rgba(255,255,255,0.5)',
@@ -1001,7 +1001,7 @@ export default function HRVacancyCreatePage() {
               <Box display="flex" gap={3} justifyContent="flex-end" alignItems="center">
                 <Button
                   variant="outlined"
-                  onClick={() => router.push("/hr-vacancies")}
+                  onClick={() => router.push("/hr/vacancies")}
                   sx={{
                     color: 'white',
                     borderColor: 'rgba(255,255,255,0.5)',

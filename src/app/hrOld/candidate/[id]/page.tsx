@@ -74,7 +74,7 @@ export default function CandidateDetailPage() {
           <TableBody>
             {sessions.map((s) => (
               <TableRow key={s.sessionId}>
-                <TableCell><a href={`/hr/session/${s.sessionId}`}>{s.sessionId}</a></TableCell>
+                <TableCell><a href={`/(DashboardLayout)/hr/session/${s.sessionId}`}>{s.sessionId}</a></TableCell>
                 <TableCell>{s.status}</TableCell>
                 <TableCell>{s.createdAt}</TableCell>
                 <TableCell>
@@ -94,8 +94,8 @@ export default function CandidateDetailPage() {
       </Paper>
 
       {/* AI evaluation */}
-      {aiData?.status==='done' && aiData.result ? (
-        <EvaluationResult {...aiData.result} />
+      {aiData?.status==='done' ? (
+        <EvaluationResult {...aiData} />
       ): aiData?.status==='pending' ? (
         <Box sx={{mt:3,display:'flex',alignItems:'center',gap:1}}>
           <CircularProgress size={20}/>

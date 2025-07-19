@@ -210,7 +210,7 @@ export default function HRVacancyEditPage() {
       const result = await response.json();
       
       // Перенаправляем на страницу вакансий
-      router.push(`/hr-vacancies`);
+      router.push(`/hr/vacancies`);
       
     } catch (err: any) {
       setError(err.message);
@@ -316,7 +316,7 @@ export default function HRVacancyEditPage() {
             <Button
               variant="outlined"
               startIcon={<IconArrowLeft size={20} />}
-              onClick={() => router.push("/hr-vacancies")}
+              onClick={() => router.push("/hr/vacancies")}
               sx={{
                 fontSize: '1rem',
                 fontWeight: 600,
@@ -1007,7 +1007,7 @@ export default function HRVacancyEditPage() {
             <Box display="flex" gap={3} justifyContent="flex-end" alignItems="center">
               <Button
                 variant="outlined"
-                onClick={() => router.push("/hr-vacancies")}
+                onClick={() => router.push("/hr/vacancies")}
                 sx={{
                   color: 'white',
                   borderColor: 'rgba(255,255,255,0.5)',

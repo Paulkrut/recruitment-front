@@ -48,21 +48,21 @@ export default function HRVacancyDetailPage() {
             <Box display="flex" alignItems="center" gap={2} mb={3}>
               <Box sx={{ p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
                 <IconBriefcase size={32} color="white" />
-              </Box>
-              <Box>
+        </Box>
+        <Box>
                 <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>Информация о вакансии</Typography>
                 <Typography variant="body1" sx={{ opacity: 0.9 }}>{title}</Typography>
               </Box>
-            </Box>
+        </Box>
             <Typography variant="body2" sx={{ mb: 2, opacity: 0.9 }}>{description}</Typography>
             <Box display="flex" gap={2} mt={2}>
               <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
                 Редактировать
-              </Button>
+        </Button>
               <Button variant="outlined" color="inherit" startIcon={<IconUsers size={20}/>} onClick={()=>router.push(`/hr/vacancies/${id}/candidates`)} sx={{color:'white',borderColor:'white'}}>
-                Кандидаты
-              </Button>
-            </Box>
+          Кандидаты
+        </Button>
+      </Box>
           </CardContent>
         </Card>
 
@@ -122,7 +122,7 @@ export default function HRVacancyDetailPage() {
             </Box>
           </CardContent>
         </Card>
-      </Box>
+    </Box>
     </PageContainer>
   );
 } 

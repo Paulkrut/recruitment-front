@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Box,
   Grid,
@@ -131,7 +132,7 @@ export default function HRVacanciesPage() {
           <Button
             variant="contained"
             startIcon={<IconPlus size={20} />}
-            onClick={() => router.push('/hr-vacancy-create')}
+            onClick={() => router.push('/hr/vacancy-create')}
           >
             Создать вакансию
           </Button>
@@ -183,19 +184,21 @@ export default function HRVacanciesPage() {
                       </Typography>
                       <Box display="flex" gap={1}>
                         <Tooltip title="Просмотреть">
-                          <IconButton
-                            size="small"
-                            color="primary"
-                            onClick={() => window.open(`/hr/vacancies/${vacancy.id}`, "_blank")}
-                          >
-                            <IconEye size={16} />
-                          </IconButton>
+                          <Link href={`/hr/vacancies/${vacancy.id}`} passHref legacyBehavior>
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              component="a"
+                            >
+                              <IconEye size={16} />
+                            </IconButton>
+                          </Link>
                         </Tooltip>
                         <Tooltip title="Редактировать">
                           <IconButton 
                             size="small" 
                             color="warning"
-                            onClick={() => router.push(`/hr-vacancy-edit/${vacancy.id}`)}
+                            onClick={() => router.push(`/hr/vacancy-edit/${vacancy.id}`)}
                           >
                             <IconEdit size={16} />
                           </IconButton>

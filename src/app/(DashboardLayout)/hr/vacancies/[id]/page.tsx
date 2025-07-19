@@ -27,6 +27,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Link from "next/link";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -76,7 +77,7 @@ export default function HRVacancyDetailPage() {
           <Typography variant="body2" sx={{ opacity: 0.7 }}>Создана: {createdAt}</Typography>
         </Box>
         <Box display="flex" gap={2}>
-          <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)}>
+          <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}>
             Редактировать
           </Button>
         </Box>
@@ -130,8 +131,8 @@ export default function HRVacancyDetailPage() {
                     ))}
                   </Box>
                   <DataTable columns={[
-                    {field:'id',header:'ID',render:(r:any)=>(<a href={`/hr/candidates/${r.id}`}>{r.id}</a>)},
-                    {field:'name',header:'Имя',render:(r:any)=>(<a href={`/hr/candidates/${r.id}`}>{r.name}</a>)},
+                    {field:'id',header:'ID',render:(r:any)=>(<Link href={`/hr/candidates/${r.id}`}>{r.id}</Link>)},
+                    {field:'name',header:'Имя',render:(r:any)=>(<Link href={`/hr/candidates/${r.id}`}>{r.name}</Link>)},
                     {field:'email',header:'Email',render:(r:any)=>r.email||'-'},
                     {field:'phone',header:'Телефон',render:(r:any)=>r.phone||'-'},
                     {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={r.status}/>)} ,
@@ -170,7 +171,7 @@ export default function HRVacancyDetailPage() {
                   <Typography variant="body2" sx={{ opacity: 0.8, mb: 1 }}>Создана: {createdAt}</Typography>
                   <Typography variant="body2" sx={{ opacity: 0.8 }}>{description}</Typography>
                   <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
-                  <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
+                  <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
                     Редактировать
                   </Button>
                 </CardContent>
@@ -201,7 +202,7 @@ export default function HRVacancyDetailPage() {
                       </Box>
                     ))}
                   </Box>
-                  <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr-vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
+                  <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{color:'white',borderColor:'white'}}>
                     Редактировать тест
                   </Button>
                 </CardContent>
