@@ -262,6 +262,9 @@ export default function CandidateDetailPage() {
                       <AccordionDetails>
                         <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text || <i>нет ответа</i>}</Typography>
                         <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i>нет</i>}</Typography>
+                        {a.aiComment && (
+                          <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><b>AI-характеристика:</b> {a.aiComment}</Typography>
+                        )}
                         {a.audio && (
                           <Box mb={1}>
                             <IconMicrophone size={18} style={{verticalAlign:'middle'}} />{' '}
