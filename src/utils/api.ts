@@ -17,10 +17,19 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  // Вызываем fetch с объединёнными настройками
-  return fetch(url, {
+  const response = await fetch(url, {
     ...options,
     headers,
     credentials: "include", // чтобы куки тоже отправлялись при необходимости
   });
+
+  if (response.status === 401) {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("recruitment_token");
+      window.location.href = "/auth/auth1/login";
+    }
+    throw new Error("Unauthorized");
+  }
+
+  return response;
 } 
