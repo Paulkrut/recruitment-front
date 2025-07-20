@@ -11,7 +11,7 @@ interface Props {
   steps: any[];
   activeStep: number;
   handleReset: (event: React.SyntheticEvent | Event) => void;
-  finalStep: JSX.Element | JSX.Element[];
+  finalStep: React.ReactNode;
 }
 
 const HorizontalStepper = ({ children, steps, activeStep, handleReset, finalStep }: Props) => {
