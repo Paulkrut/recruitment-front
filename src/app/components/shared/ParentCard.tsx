@@ -11,7 +11,7 @@ import { AppState } from '@/store/store';
 type Props = {
   title: string;
   footer?: string | JSX.Element;
-  children: JSX.Element;
+  children: React.ReactNode;
 };
 
 const ParentCard = ({ title, children, footer }: Props) => {

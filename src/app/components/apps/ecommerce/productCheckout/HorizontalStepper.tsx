@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Link from 'next/link';
 
 interface Props {
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
   steps: any[];
   activeStep: number;
   handleReset: (event: React.SyntheticEvent | Event) => void;

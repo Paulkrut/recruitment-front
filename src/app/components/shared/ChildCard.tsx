@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 
 type Props = {
   title?: string;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
 };
 
 const ChildCard = ({ title, children }: Props) => (

@@ -15,7 +15,7 @@ type Props = {
   cardheading?: string | JSX.Element;
   headtitle?: string | JSX.Element;
   headsubtitle?: string | JSX.Element;
-  children?: JSX.Element;
+  children?: React.ReactNode;
   middlecontent?: string | JSX.Element;
 };
 
