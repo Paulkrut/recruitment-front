@@ -6,15 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import PageContainer from "@/app/components/container/PageContainer";
 
-// components
-import CongratulationsCard from "@/app/components/dashboards/dashboard1/CongratulationsCard";
-import Payments from "@/app/components/dashboards/dashboard1/Payments";
-import Products from "@/app/components/dashboards/dashboard1/Products";
-import LatestDeals from "@/app/components/dashboards/dashboard1/LatestDeals";
-import Customers from "@/app/components/dashboards/dashboard1/Customers";
-import ProductTable from "@/app/components/dashboards/dashboard1/ProductTable";
-import LatestReviews from "@/app/components/dashboards/dashboard1/LatestReviews";
-import Welcome from "@/app/(DashboardLayout)/layout/shared/welcome/Welcome";
+import Welcome from "@/app/(DashboardLayout)/hr/layout/shared/welcome/Welcome";
 
 // HR specific components
 import OpenVacanciesCard from "@/app/components/hr/OpenVacanciesCard";
@@ -85,4 +77,4 @@ export default function HRDashboard() {
       </Box>
     </PageContainer>
   );
-} 
+}
