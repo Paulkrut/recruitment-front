@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import PageContainer from "@/app/components/container/PageContainer";
 
-import Welcome from "@/app/(DashboardLayout)/hr/layout/shared/welcome/Welcome";
+import Welcome from "@/app/(DashboardLayout)/layout/shared/welcome/Welcome";
 
 // HR specific components
 import OpenVacanciesCard from "@/app/components/hr/OpenVacanciesCard";
