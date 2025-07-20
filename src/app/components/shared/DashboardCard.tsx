@@ -10,13 +10,13 @@ import { AppState } from '@/store/store';
 type Props = {
   title?: string;
   subtitle?: string;
-  action?: JSX.Element | any;
-  footer?: JSX.Element;
-  cardheading?: string | JSX.Element;
-  headtitle?: string | JSX.Element;
-  headsubtitle?: string | JSX.Element;
+  action?: React.ReactNode | any;
+  footer?: React.ReactNode;
+  cardheading?: string | React.ReactNode;
+  headtitle?: string | React.ReactNode;
+  headsubtitle?: string | React.ReactNode;
   children?: React.ReactNode;
-  middlecontent?: string | JSX.Element;
+  middlecontent?: string | React.ReactNode;
 };
 
 const DashboardCard = ({

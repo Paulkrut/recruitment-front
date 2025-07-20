@@ -20,8 +20,8 @@ import Image from "next/image";
 
 const ProductCarousel = () => {
   const [state, setState] = React.useState<any>({ nav1: null, nav2: null });
-  const slider1 = useRef();
-  const slider2 = useRef();
+  const slider1 = useRef(null);
+  const slider2 = useRef(null);
   const dispatch = useDispatch();
   const pathName = usePathname();
   const searchParams = useSearchParams();

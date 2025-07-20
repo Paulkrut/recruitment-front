@@ -41,8 +41,11 @@ const FVCheckbox = () => {
           <CustomCheckbox value="error" name="color" color="error" onChange={formik.handleChange} />
           {formik.errors.color && (
             <FormHelperText error id="standard-weight-helper-text-email-login">
-              {' '}
-              {formik.errors.color}{' '}
+              {Array.isArray(formik.errors.color)
+                ? formik.errors.color.join(", ")
+                : typeof formik.errors.color === "string"
+                ? formik.errors.color
+                : ""}
             </FormHelperText>
           )}
         </Box>

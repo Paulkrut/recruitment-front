@@ -10,7 +10,7 @@ import { AppState } from '@/store/store';
 
 type Props = {
   title: string;
-  footer?: string | JSX.Element;
+  footer?: string | React.ReactNode;
   children: React.ReactNode;
 };
 
