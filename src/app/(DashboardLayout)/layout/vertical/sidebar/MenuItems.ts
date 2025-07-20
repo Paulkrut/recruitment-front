@@ -18,32 +18,32 @@ interface MenuitemsType {
 const Menuitems: MenuitemsType[] = [
   {
     navlabel: true,
-    subheader: "HR Management",
+    subheader: "Управление HR",
   },
   {
     id: uniqueId(),
-    title: "HR Dashboard",
+    title: "Главная",
     icon: 'briefcase-line-duotone',
-    href: "/hr/dashboard",
+    href: "/hr/",
     bgcolor: "primary",
   },
   {
     id: uniqueId(),
-    title: "Candidates",
+    title: "Кандидаты",
     icon: 'users-group-line-duotone',
     href: "/hr/candidates",
     bgcolor: "success",
   },
   {
     id: uniqueId(),
-    title: "Vacancies",
+    title: "Вакансии",
     icon: 'work-line-duotone',
     href: "/hr/vacancies",
     bgcolor: "warning",
   },
   {
     id: uniqueId(),
-    title: "Create Vacancy",
+    title: "Создать вакансию",
     icon: 'plus-line-duotone',
     href: "/hr/vacancy-create",
     bgcolor: "success",
