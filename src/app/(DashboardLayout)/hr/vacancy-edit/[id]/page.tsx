@@ -40,6 +40,9 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Stack from '@mui/material/Stack';
+import Link from 'next/link';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -96,6 +99,7 @@ export default function HRVacancyEditPage() {
 
   // Questions
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
+  const titleInputRef = React.useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -107,6 +111,12 @@ export default function HRVacancyEditPage() {
       loadVacancyData();
     }
   }, [token, vacancyId]);
+
+  useEffect(() => {
+    if (titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, [isLoadingData]);
 
   const loadVacancyData = async () => {
     if (!token || !vacancyId) return;
@@ -292,480 +302,304 @@ export default function HRVacancyEditPage() {
   return (
     <PageContainer title="Редактирование вакансии" description="Редактирование вакансии с тестом">
       <Box>
-        {/* Header */}
-        <Box display="flex" alignItems="center" justifyContent="space-between" mb={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Box sx={{
-              p: 2,
-              borderRadius: 2,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white'
-            }}>
-              <IconBriefcase size={32} />
-            </Box>
-            <Box>
-              <Typography variant="h3" fontWeight="700" sx={{ mb: 1 }}>
+        {/* Breadcrumbs и Header */}
+        <Stack spacing={2} mb={4}>
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+            <Typography color="text.primary">Редактирование</Typography>
+          </Breadcrumbs>
+          <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
+            <Box display="flex" alignItems="center" gap={2}>
+              <IconBriefcase size={40} color="#1976d2" />
+              <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}>
                 Редактирование вакансии
               </Typography>
-              <Typography variant="body1" color="textSecondary">
-                Обновите информацию о вакансии и тесте
-              </Typography>
             </Box>
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                startIcon={<IconArrowLeft size={20} />}
+                onClick={() => router.push("/hr/vacancies")}
+                sx={{ fontWeight: 500, borderWidth: 2 }}
+              >
+                Назад
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<IconDeviceFloppy size={24} />}
+                onClick={updateVacancyWithTemplate}
+                disabled={isSaving || !vacancyData.title || questions.length === 0}
+                sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
+              >
+                {isSaving ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
+                {isSaving ? "Сохранение..." : "Сохранить"}
+              </Button>
+            </Stack>
           </Box>
-          <Box display="flex" gap={2}>
-            <Button
-              variant="outlined"
-              startIcon={<IconArrowLeft size={20} />}
-              onClick={() => router.push("/hr/vacancies")}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                px: 3,
-                py: 1.5,
-                borderWidth: 2
-              }}
-            >
-              Назад к списку
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<IconDeviceFloppy size={20} />}
-              onClick={updateVacancyWithTemplate}
-              disabled={isSaving || !vacancyData.title || questions.length === 0}
-              sx={{
-                fontSize: '1rem',
-                fontWeight: 600,
-                px: 4,
-                py: 1.5,
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                '&:hover': {
-                  background: 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                }
-              }}
-            >
-              {isSaving ? "Сохранение..." : "Сохранить изменения"}
-            </Button>
-          </Box>
-        </Box>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 4 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        </Stack>
+        {/* Основной контент */}
+        <Stack spacing={4}>
           {/* Vacancy Information */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              top: -20,
-              right: -20,
-              width: 120,
-              height: 120,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" alignItems="center" gap={2} mb={4}>
-                <Box sx={{
-                  p: 2,
-                  borderRadius: 2,
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <IconBriefcase size={32} color="white" />
+              <Stack spacing={3}>
+                <Box>
+                  <CustomFormLabel 
+                    htmlFor="vacancy-title"
+                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+                  >
+                    Название вакансии
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="vacancy-title"
+                    inputRef={titleInputRef}
+                    variant="outlined"
+                    fullWidth
+                    value={vacancyData.title}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, title: e.target.value })}
+                    placeholder="Например: Frontend-разработчик"
+                    error={!vacancyData.title}
+                    helperText={!vacancyData.title ? "Название обязательно" : "Введите название вакансии, которое будет видно кандидатам"}
+                    FormHelperTextProps={{ sx: { color: !vacancyData.title ? 'error.main' : 'text.secondary', opacity: 0.9 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#f7f7f7',
+                        borderRadius: 2,
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '1.1rem',
+                        padding: '16px 20px'
+                      }
+                    }}
+                  />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
-                    Информация о вакансии
-                  </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Обновите привлекательное описание для кандидатов
-                  </Typography>
+                  <CustomFormLabel 
+                    htmlFor="vacancy-description"
+                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+                  >
+                    Описание вакансии
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="vacancy-description"
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    rows={5}
+                    value={vacancyData.description}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, description: e.target.value })}
+                    placeholder="Опишите требования, обязанности и условия работы"
+                    helperText="Опишите требования, обязанности и условия работы"
+                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#f7f7f7',
+                        borderRadius: 2,
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '1.1rem',
+                        padding: '16px 20px'
+                      }
+                    }}
+                  />
                 </Box>
-              </Box>
-              
-              <Box sx={{ mb: 4 }}>
-                <CustomFormLabel 
-                  htmlFor="vacancy-title"
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Название вакансии
-                </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-title"
-                  variant="outlined"
-                  fullWidth
-                  value={vacancyData.title}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, title: e.target.value })}
-                  helperText="Введите название вакансии, которое будет видно кандидатам"
-                  FormHelperTextProps={{
-                    sx: { color: 'white', opacity: 0.9 }
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                      borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,1)',
-                      },
-                      '&.Mui-focused': {
-                        backgroundColor: 'white',
-                      }
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
-                />
-              </Box>
-              
-              <Box>
-                <CustomFormLabel 
-                  htmlFor="vacancy-description"
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Описание вакансии
-                </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-description"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={5}
-                  value={vacancyData.description}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, description: e.target.value })}
-                  helperText="Опишите требования, обязанности и условия работы"
-                  FormHelperTextProps={{
-                    sx: { color: 'white', opacity: 0.9 }
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                      borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,1)',
-                      },
-                      '&.Mui-focused': {
-                        backgroundColor: 'white',
-                      }
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
-                />
-              </Box>
+              </Stack>
             </CardContent>
           </Card>
-
+          <Divider sx={{ my: 0 }} />
           {/* Test Settings */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              bottom: -30,
-              left: -30,
-              width: 150,
-              height: 150,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" alignItems="center" gap={2} mb={4}>
-                <Box sx={{
-                  p: 2,
-                  borderRadius: 2,
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <IconSettings size={32} color="white" />
-                </Box>
-                <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
+              <Stack spacing={3}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <IconSettings size={32} color="#1976d2" />
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
                     Настройки теста
                   </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Настройте параметры тестирования кандидатов
-                  </Typography>
-                </Box>
-              </Box>
-              
-              <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Время на один вопрос
-                </CustomFormLabel>
-                
-                {/* Preset buttons */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
-                    Быстрый выбор:
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
-                      <Button
-                        key={time}
-                        variant={templateData.questionTime === time ? "contained" : "outlined"}
-                        onClick={() => {
-                          setTemplateData({ ...templateData, questionTime: time });
-                          // Обновляем время для всех вопросов
-                          setQuestions(questions.map(q => ({ ...q, maxTime: time })));
-                        }}
-                        sx={{
-                          minWidth: 'auto',
-                          px: 2,
-                          py: 1,
-                          fontSize: '0.9rem',
-                          fontWeight: 600,
-                          backgroundColor: templateData.questionTime === time 
-                            ? 'rgba(255,255,255,0.3)' 
-                            : 'rgba(255,255,255,0.1)',
-                          color: 'white',
-                          border: '1px solid rgba(255,255,255,0.3)',
-                          '&:hover': {
-                            backgroundColor: templateData.questionTime === time 
-                              ? 'rgba(255,255,255,0.4)' 
-                              : 'rgba(255,255,255,0.2)',
-                          },
-                          '&.MuiButton-contained': {
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,0.4)',
-                            }
-                          }
-                        }}
-                      >
-                        {time} сек
-                      </Button>
-                    ))}
-                  </Box>
+                  <Tooltip title="Здесь вы можете задать параметры теста для кандидатов" placement="right">
+                    <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
+                  </Tooltip>
                 </Box>
                 
-                {/* Slider */}
-                <Box sx={{ px: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                      1 мин
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                      5 мин
-                    </Typography>
-                  </Box>
-                  <Slider
-                    value={templateData.questionTime}
-                    onChange={(_, value) => {
-                      setTemplateData({ ...templateData, questionTime: value as number });
-                      // Обновляем время для всех вопросов
-                      setQuestions(questions.map(q => ({ ...q, maxTime: value as number })));
-                    }}
-                    min={60}
-                    max={300}
-                    step={30}
-                    sx={{
-                      '& .MuiSlider-track': {
-                        backgroundColor: 'rgba(255,255,255,0.8)',
-                        border: 'none',
-                      },
-                      '& .MuiSlider-rail': {
-                        backgroundColor: 'rgba(255,255,255,0.3)',
-                      },
-                      '& .MuiSlider-thumb': {
-                        backgroundColor: 'white',
-                        border: '2px solid rgba(255,255,255,0.8)',
-                        '&:hover': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
-                        },
-                        '&.Mui-focusVisible': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
-                        },
-                      },
-                    }}
-                  />
-                  <Box sx={{ textAlign: 'center', mt: 2 }}>
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        color: 'white', 
-                        fontWeight: 700,
-                        textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                      }}
-                    >
-                      {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mt: 0.5 }}>
-                      {templateData.questionTime} секунд
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mt: 2, textAlign: 'center' }}>
-                  Время, отведенное на ответ на каждый вопрос
-                </Typography>
-              </Box>
-
-              <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.3)' }} />
-
-              <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Дополнительные вопросы
-                </CustomFormLabel>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <Switch
-                      checked={templateData.allowFollowups}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setTemplateData({ ...templateData, allowFollowups: e.target.checked });
-                        // Обновляем настройки для всех вопросов
-                        setQuestions(questions.map(q => ({ 
-                          ...q, 
-                          allowFollowups: e.target.checked,
-                          followupsMax: e.target.checked ? 3 : 0
-                        })));
-                      }}
-                      sx={{
-                        '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: 'white',
-                        },
-                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: 'rgba(255,255,255,0.5)',
-                        },
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ color: 'white', fontWeight: 600 }}>
-                      Разрешить дополнительные вопросы
-                    </Typography>
-                  </Box>
-                  
-                  {templateData.allowFollowups && (
-                    <Box sx={{ 
-                      p: 3, 
-                      backgroundColor: 'rgba(255,255,255,0.1)', 
-                      borderRadius: 2,
-                      border: '1px solid rgba(255,255,255,0.2)'
-                    }}>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
-                        <strong>Как это работает:</strong>
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
-                        • Максимум 3 дополнительных вопроса на каждый основной вопрос
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
-                        • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                        • Вопросы генерируются AI на основе ответа кандидата
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          {/* Questions */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              top: -20,
-              right: -20,
-              width: 120,
-              height: 120,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
-            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Box sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    background: 'rgba(255,255,255,0.2)',
-                    backdropFilter: 'blur(10px)'
-                  }}>
-                    <IconFileText size={32} color="white" />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
-                      Вопросы теста
-                    </Typography>
-                    <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                      Редактируйте вопросы для оценки навыков кандидатов
-                    </Typography>
-                  </Box>
-                  <Chip 
-                    label={questions.length} 
+                <Box>
+                  <CustomFormLabel 
                     sx={{ 
-                      backgroundColor: 'rgba(255,255,255,0.2)',
-                      color: 'white',
+                      color: 'text.primary', 
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      height: 32
-                    }} 
+                      mb: 2
+                    }}
+                  >
+                    Время на один вопрос
+                  </CustomFormLabel>
+                  
+                  {/* Preset buttons */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
+                      Быстрый выбор:
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                      {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
+                        <Button
+                          key={time}
+                          variant={templateData.questionTime === time ? "contained" : "outlined"}
+                          onClick={() => {
+                            setTemplateData({ ...templateData, questionTime: time });
+                            // Обновляем время для всех вопросов
+                            setQuestions(questions.map(q => ({ ...q, maxTime: time })));
+                          }}
+                          sx={{
+                            backgroundColor: templateData.questionTime === time ? "#e3f2fd" : "#fff",
+                            color: "#1976d2",
+                            borderColor: "#1976d2",
+                            fontWeight: 600,
+                            minWidth: 'auto',
+                            px: 2,
+                            py: 1,
+                            fontSize: '0.9rem',
+                            '&:hover': { backgroundColor: "#bbdefb" }
+                          }}
+                        >
+                          {time} сек
+                        </Button>
+                      ))}
+                    </Box>
+                  </Box>
+                  
+                  {/* Slider */}
+                  <Box sx={{ px: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                        1 мин
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                        5 мин
+                      </Typography>
+                    </Box>
+                    <Slider
+                      value={templateData.questionTime}
+                      onChange={(_, value) => {
+                        setTemplateData({ ...templateData, questionTime: value as number });
+                        // Обновляем время для всех вопросов
+                        setQuestions(questions.map(q => ({ ...q, maxTime: value as number })));
+                      }}
+                      min={60}
+                      max={300}
+                      step={30}
+                      color="primary"
+                      sx={{
+                        '& .MuiSlider-track': { backgroundColor: '#1976d2' },
+                        '& .MuiSlider-thumb': { backgroundColor: '#1976d2' },
+                        '& .MuiSlider-rail': { backgroundColor: '#eee' }
+                      }}
+                    />
+                    <Box sx={{ textAlign: 'center', mt: 2 }}>
+                      <Typography 
+                        variant="h5" 
+                        sx={{ 
+                          color: 'text.primary', 
+                          fontWeight: 700,
+                          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+                        }}
+                      >
+                        {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mt: 0.5 }}>
+                        {templateData.questionTime} секунд
+                      </Typography>
+                    </Box>
+                  </Box>
+                  
+                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
+                    Время, отведенное на ответ на каждый вопрос
+                  </Typography>
+                </Box>
+
+                <Divider sx={{ my: 0, borderColor: '#eee' }} />
+
+                <Box>
+                  <CustomFormLabel 
+                    sx={{ 
+                      color: 'text.primary', 
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      mb: 2
+                    }}
+                  >
+                    Дополнительные вопросы
+                  </CustomFormLabel>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Box display="flex" alignItems="center" gap={2} mb={2}>
+                      <Switch
+                        checked={templateData.allowFollowups}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          setTemplateData({ ...templateData, allowFollowups: e.target.checked });
+                          // Обновляем настройки для всех вопросов
+                          setQuestions(questions.map(q => ({ 
+                            ...q, 
+                            allowFollowups: e.target.checked,
+                            followupsMax: e.target.checked ? 3 : 0
+                          })));
+                        }}
+                        color="primary"
+                        sx={{
+                          '& .MuiSwitch-switchBase.Mui-checked': { color: '#1976d2' },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#1976d2' }
+                        }}
+                      />
+                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
+                        Разрешить дополнительные вопросы
+                      </Typography>
+                    </Box>
+                    
+                    {templateData.allowFollowups && (
+                      <Box sx={{ 
+                        p: 3, 
+                        backgroundColor: '#e3f2fd', 
+                        borderRadius: 2,
+                        border: '1px solid #90caf9'
+                      }}>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
+                          <strong>Как это работает:</strong>
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mb: 1 }}>
+                          • Максимум 3 дополнительных вопроса на каждый основной вопрос
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mb: 1 }}>
+                          • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                          • Вопросы генерируются AI на основе ответа кандидата
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+          <Divider sx={{ my: 0 }} />
+          {/* Questions */}
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
+            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+              <Stack spacing={3}>
+                <Box display="flex" alignItems="center" gap={2} mb={2}>
+                  <IconFileText size={32} color="#1976d2" />
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
+                    Вопросы теста
+                  </Typography>
+                  <Chip 
+                    label={questions.length} 
+                    sx={{ backgroundColor: '#f5f5f5', color: '#1976d2', fontSize: '1.1rem', fontWeight: 600, height: 32 }} 
                   />
                 </Box>
-                <Box display="flex" gap={2}>
+                <Stack direction="row" spacing={2} mb={2}>
                   <Button
                     variant="contained"
                     startIcon={<IconWand size={24} />}
                     onClick={() => setGenOpen(true)}
-                    sx={{
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1.5,
-                      '&:hover': {
-                        background: 'rgba(255,255,255,0.3)',
-                      }
-                    }}
+                    sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
                   >
                     Сгенерировать AI
                   </Button>
@@ -773,178 +607,64 @@ export default function HRVacancyEditPage() {
                     variant="contained"
                     startIcon={<IconPlus size={24} />}
                     onClick={addQuestion}
-                    sx={{
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1.5,
-                      '&:hover': {
-                        background: 'rgba(255,255,255,0.3)',
-                      }
-                    }}
+                    sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
                   >
                     Добавить вопрос
                   </Button>
-                </Box>
-              </Box>
-
-              {questions.length === 0 ? (
-                <Box textAlign="center" py={6}>
-                  <Typography variant="h5" sx={{ color: 'white', mb: 2, opacity: 0.9 }}>
-                    Нет вопросов
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: 'white', opacity: 0.7, mb: 3 }}>
-                    Добавьте вопросы вручную или сгенерируйте их автоматически
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    startIcon={<IconPlus size={20} />}
-                    onClick={addQuestion}
-                    sx={{
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      px: 4,
-                      py: 1.5,
-                      '&:hover': {
-                        background: 'rgba(255,255,255,0.3)',
-                      }
-                    }}
-                  >
-                    Добавить первый вопрос
-                  </Button>
-                </Box>
-              ) : (
-                <Box>
-                  {questions.map((question, qIndex) => (
-                    <Paper key={qIndex} sx={{ 
-                      p: 3, 
-                      mb: 3, 
-                      background: 'rgba(255,255,255,0.95)',
-                      borderRadius: 3,
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255,255,255,0.2)'
-                    }}>
-                      <Box display="flex" alignItems="center" gap={2} mb={3}>
-                        <Chip 
-                          label={`Вопрос ${qIndex + 1}`} 
-                          sx={{ 
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            color: 'white',
-                            fontSize: '1rem',
-                            fontWeight: 600,
-                            height: 28
-                          }} 
-                        />
-                        <Box flexGrow={1} />
-                        <Tooltip title="Переместить вверх">
-                          <IconButton
-                            size="large"
-                            onClick={() => moveQuestion(qIndex, "up")}
-                            disabled={qIndex === 0}
+                </Stack>
+                {questions.length === 0 ? (
+                  <Box textAlign="center" py={6}>
+                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, opacity: 0.9 }}>
+                      Нет вопросов
+                    </Typography>
+                    <Typography variant="body1" sx={{ color: 'text.secondary', opacity: 0.7, mb: 3 }}>
+                      Добавьте вопросы вручную или сгенерируйте их автоматически
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Stack spacing={3}>
+                    {questions.map((question, qIndex) => (
+                      <Paper key={qIndex} sx={{ p: 3, mb: 0, background: '#f7f7f7', borderRadius: 3, border: '1px solid #eee' }}>
+                        <Stack direction="row" alignItems="center" spacing={2} mb={2}>
+                          <Box sx={{ width: 36, height: 36, borderRadius: '50%', background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem' }}>{qIndex + 1}</Box>
+                          <Typography variant="subtitle1" fontWeight={700} color="text.primary">Вопрос {qIndex + 1}</Typography>
+                          <Box flexGrow={1} />
+                          <Stack direction="row" spacing={1}>
+                            <Tooltip title="Вверх"><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "up")} disabled={qIndex === 0}><IconArrowUp size={18} /></IconButton></span></Tooltip>
+                            <Tooltip title="Вниз"><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "down")} disabled={qIndex === questions.length - 1}><IconArrowDown size={18} /></IconButton></span></Tooltip>
+                            <Tooltip title="Удалить"><span><IconButton size="small" onClick={() => removeQuestion(qIndex)}><IconTrash size={18} color="#e53935" /></IconButton></span></Tooltip>
+                          </Stack>
+                        </Stack>
+                        <Box>
+                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 1 }}>Текст вопроса</CustomFormLabel>
+                          <CustomTextField
+                            variant="outlined"
+                            fullWidth
+                            multiline
+                            rows={3}
+                            value={question.text}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuestion(qIndex, "text", e.target.value)}
+                            placeholder="Введите текст вопроса"
                             sx={{
-                              color: '#1976d2',
-                              backgroundColor: '#fff',
-                              border: '1px solid #1976d2',
-                              '&:hover': {
-                                backgroundColor: '#1976d2',
-                                color: '#fff',
+                              '& .MuiOutlinedInput-root': {
+                                backgroundColor: '#fff',
+                                borderRadius: 2,
                               },
-                              mr: 1
-                            }}
-                          >
-                            <IconArrowUp size={20} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Переместить вниз">
-                          <IconButton
-                            size="large"
-                            onClick={() => moveQuestion(qIndex, "down")}
-                            disabled={qIndex === questions.length - 1}
-                            sx={{
-                              color: '#1976d2',
-                              backgroundColor: '#fff',
-                              border: '1px solid #1976d2',
-                              '&:hover': {
-                                backgroundColor: '#1976d2',
-                                color: '#fff',
-                              },
-                              mr: 1
-                            }}
-                          >
-                            <IconArrowDown size={20} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Удалить вопрос">
-                          <IconButton
-                            size="large"
-                            onClick={() => removeQuestion(qIndex)}
-                            sx={{
-                              color: '#e53935',
-                              backgroundColor: '#fff',
-                              border: '1px solid #e53935',
-                              '&:hover': {
-                                backgroundColor: '#e53935',
-                                color: '#fff',
+                              '& .MuiInputBase-input': {
+                                fontSize: '1rem',
+                                padding: '16px 20px'
                               }
                             }}
-                          >
-                            <IconTrash size={20} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-
-                      <Box sx={{ mb: 3 }}>
-                        <CustomFormLabel 
-                          sx={{ 
-                            fontSize: '1.1rem',
-                            fontWeight: 600,
-                            mb: 2
-                          }}
-                        >
-                          Текст вопроса
-                        </CustomFormLabel>
-                        <CustomTextField
-                          variant="outlined"
-                          fullWidth
-                          multiline
-                          rows={3}
-                          value={question.text}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuestion(qIndex, "text", e.target.value)}
-                          sx={{
-                            '& .MuiOutlinedInput-root': {
-                              backgroundColor: 'rgba(255,255,255,0.9)',
-                              borderRadius: 2,
-                              '&:hover': {
-                                backgroundColor: 'rgba(255,255,255,1)',
-                              },
-                              '&.Mui-focused': {
-                                backgroundColor: 'white',
-                              }
-                            },
-                            '& .MuiInputBase-input': {
-                              fontSize: '1rem',
-                              padding: '16px 20px'
-                            }
-                          }}
-                        />
-                      </Box>
-
-
-                    </Paper>
-                  ))}
-                </Box>
-              )}
+                          />
+                        </Box>
+                      </Paper>
+                    ))}
+                  </Stack>
+                )}
+              </Stack>
             </CardContent>
           </Card>
-        </Box>
+        </Stack>
 
         {/* Generate Questions Dialog */}
         <Dialog open={genOpen} onClose={() => setGenOpen(false)} maxWidth="sm" fullWidth>
@@ -982,72 +702,37 @@ export default function HRVacancyEditPage() {
 
         {/* Save/Cancel Buttons */}
         <Card sx={{ 
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          color: 'white',
+          background: '#fff',
+          color: 'text.primary',
           position: 'relative',
           overflow: 'hidden',
-          mt: 4
+          mt: 4,
+          boxShadow: 1
         }}>
-          <Box sx={{
-            position: 'absolute',
-            bottom: -30,
-            right: -30,
-            width: 150,
-            height: 150,
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '50%',
-            zIndex: 0
-          }} />
           <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
             {error && (
               <Alert severity="error" sx={{ mb: 3, backgroundColor: 'rgba(255,255,255,0.9)' }}>
                 {error}
               </Alert>
             )}
-            <Box display="flex" gap={3} justifyContent="flex-end" alignItems="center">
+            <Box display="flex" gap={2} justifyContent="flex-end" alignItems="center">
               <Button
                 variant="outlined"
+                startIcon={<IconArrowLeft size={20} />}
                 onClick={() => router.push("/hr/vacancies")}
-                sx={{
-                  color: 'white',
-                  borderColor: 'rgba(255,255,255,0.5)',
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  px: 4,
-                  py: 2,
-                  '&:hover': {
-                    borderColor: 'white',
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                  }
-                }}
+                sx={{ fontWeight: 500, borderWidth: 2 }}
               >
-                Отмена
+                Назад
               </Button>
               <Button
                 variant="contained"
+                startIcon={<IconDeviceFloppy size={24} />}
                 onClick={updateVacancyWithTemplate}
                 disabled={!vacancyData.title || isSaving}
-                startIcon={<IconDeviceFloppy size={24} />}
-                sx={{
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(10px)',
-                  color: 'white',
-                  border: '2px solid rgba(255,255,255,0.3)',
-                  fontSize: '1.2rem',
-                  fontWeight: 700,
-                  px: 5,
-                  py: 2.5,
-                  '&:hover': {
-                    background: 'rgba(255,255,255,0.3)',
-                    border: '2px solid rgba(255,255,255,0.5)',
-                  },
-                  '&:disabled': {
-                    background: 'rgba(255,255,255,0.1)',
-                    color: 'rgba(255,255,255,0.5)',
-                  }
-                }}
+                sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
               >
-                {isSaving ? "Сохранение..." : "Сохранить изменения"}
+                {isSaving ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
+                {isSaving ? "Сохранение..." : "Сохранить"}
               </Button>
             </Box>
           </CardContent>

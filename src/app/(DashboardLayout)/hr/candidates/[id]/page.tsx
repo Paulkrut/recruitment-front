@@ -31,8 +31,50 @@ import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ShareIcon from '@mui/icons-material/Share';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import Link from 'next/link';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import CommentIcon from '@mui/icons-material/Comment';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
+
+function getStatusLabel(status: string) {
+  switch (status) {
+    case "completed":
+    case "finished":
+      return "Завершено";
+    case "in_progress":
+      return "В процессе";
+    case "pending":
+      return "Ожидает";
+    case "ready":
+      return "Готов к интервью";
+    case "failed":
+      return "Ошибка";
+    case "canceled":
+      return "Отменено";
+    case "new":
+      return "Новый";
+    case "rejected":
+      return "Отклонён";
+    case "active":
+      return "Активен";
+    default:
+      return status;
+  }
+}
 
 export default function CandidateDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,6 +88,9 @@ export default function CandidateDetailPage() {
   // HR заметки (MVP: localStorage)
   const [hrNote, setHrNote] = useState<string>("");
   const [tab, setTab] = useState('results');
+  const [compareOpen, setCompareOpen] = useState(false);
+  const [allCandidates, setAllCandidates] = useState<any[]>([]);
+  const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -81,6 +126,12 @@ export default function CandidateDetailPage() {
   };
   // PDF экспорт
   // Удалить функцию exportPDF
+
+  useEffect(() => {
+    if (!token) return;
+    // Получаем всех кандидатов для сравнения
+    apiFetch(`${API_BASE}/api/admin/candidates`).then(r=>r.json()).then(setAllCandidates);
+  }, [token]);
 
   if (!token)
     return (
@@ -133,107 +184,99 @@ export default function CandidateDetailPage() {
 
   return (
     <PageContainer title={`Кандидат: ${candidate}`}> 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-        {/* Информация о кандидате (цветная карточка, всегда сверху) */}
-        <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
-          <Box sx={{ position: 'absolute', top: -30, right: -30, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', zIndex: 0 }} />
+      <Stack spacing={3}>
+        {/* Breadcrumbs */}
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link href="/hr/candidates" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Кандидаты</Link>
+          <Typography color="text.primary">{candidate}</Typography>
+        </Breadcrumbs>
+        {/* Информация о кандидате */}
+        <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
           <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-            <Box display="flex" alignItems="center" gap={2} mb={3}>
-              <Box sx={{ p: 2, borderRadius: 2, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}>
-                <IconUsers size={32} color="white" />
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems="center" mb={3}>
+              <Avatar sx={{ width: 64, height: 64, bgcolor: '#1976d2', fontWeight: 700, fontSize: 32 }}>
+                {candidate ? candidate.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}
+              </Avatar>
+              <Box flexGrow={1}>
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <Typography variant="h4" fontWeight="700">{candidate}</Typography>
+                  {candidateStatus && <Chip label={getStatusLabel(candidateStatus)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
+                  {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mt={1} flexWrap="wrap">
+                  <Typography variant="body2" color="text.secondary">Email: {candidateEmail || '-'}</Typography>
+                  <Typography variant="body2" color="text.secondary">Телефон: {candidatePhone || '-'}</Typography>
+                  <Typography variant="body2" color="text.secondary">Вопросов: {sessionDetail?.answers?.length || 0}</Typography>
+                  <Typography variant="body2" color="text.secondary">Оценка: {sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'}</Typography>
+                  <Typography variant="body2" color="text.secondary">Создано: {createdAt || '-'}</Typography>
+                  <Typography variant="body2" color="text.secondary">Завершено: {sessionDetail?.finishedAt || '-'}</Typography>
+                </Stack>
               </Box>
-              <Box>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>{candidate}</Typography>
-                  {candidateStatus && <Chip label={candidateStatus} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" />}
-                  {sessionDetail?.status && <Chip label={sessionDetail.status==='completed'?'Завершено':'В процессе'} color={sessionDetail.status==='completed'?'success':'warning'} size="medium" />}
-                </Box>
-                <Box display="flex" gap={2} mt={1} flexWrap="wrap">
-                  <Typography variant="body2">Email: {candidateEmail || '-'}</Typography>
-                  <Typography variant="body2">Телефон: {candidatePhone || '-'}</Typography>
-                  <Typography variant="body2">Вопросов: {sessionDetail?.answers?.length || 0}</Typography>
-                  <Typography variant="body2">Оценка: {sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'}</Typography>
-                  <Typography variant="body2">Создано: {createdAt || '-'}</Typography>
-                  <Typography variant="body2">Завершено: {sessionDetail?.finishedAt || '-'}</Typography>
-                </Box>
-              </Box>
-            </Box>
-            <Grid container spacing={2} mb={2}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <IconLink size={18} color="white" />
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>Токен: {candidateToken}</Typography>
-                  <Tooltip title="Скопировать токен">
-                    <IconButton size="small" onClick={()=>{navigator.clipboard.writeText(candidateToken); setCopyMsg('Токен скопирован!');}}><IconCopy size={16} color="white" /></IconButton>
-                  </Tooltip>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <IconEye size={18} color="white" />
-                  <Button variant="outlined" color="inherit" size="small" sx={{color:'white',borderColor:'white'}} onClick={()=>{if(interviewLink) window.open(interviewLink, '_blank')}}>Интервью</Button>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <IconCheck size={18} color="white" />
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>ID: {candId}</Typography>
-                </Box>
-              </Grid>
-            </Grid>
-            <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
-            <Box display="flex" gap={2} flexWrap="wrap">
-              <Button variant="outlined" color="inherit" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push('/hr/candidates')} sx={{color:'white',borderColor:'white'}}>
-                Назад к списку
-              </Button>
-              <Button variant="outlined" color="inherit" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/candidates/${id}/edit`)} sx={{color:'white',borderColor:'white'}}>
-                Редактировать
-              </Button>
-              <Button variant="outlined" color="inherit" startIcon={<IconArrowsDiff size={20}/>} onClick={()=>router.push(`/hr/candidates/compare?ids=${candId}`)} sx={{color:'white',borderColor:'white'}}>
-                Сравнить
-              </Button>
-              <Button variant="outlined" color="primary" startIcon={<ContentCopyIcon />} onClick={copyInterviewUrl} sx={{borderColor:'white',color:'white'}}>Скопировать ссылку</Button>
-            </Box>
+              <Stack direction="row" spacing={1}>
+                <Tooltip title="Скопировать ссылку на интервью">
+                  <IconButton color="primary" onClick={copyInterviewUrl}><ContentCopyIcon /></IconButton>
+                </Tooltip>
+                <Tooltip title="Открыть интервью">
+                  <Link href={interviewLink || '#'} target="_blank" rel="noopener" passHref legacyBehavior>
+                    <Button variant="contained" color="primary" size="small" component="a">Интервью</Button>
+                  </Link>
+                </Tooltip>
+              </Stack>
+            </Stack>
+            <Divider sx={{ my: 2, borderColor: '#eee' }} />
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flexWrap="wrap">
+              <Tooltip title="Назад к вакансии">
+                <Button variant="outlined" color="primary" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push(sessionDetail?.vacancy?.id ? `/hr/vacancies/${sessionDetail.vacancy.id}` : '/hr/vacancies')}>
+                  Назад
+                </Button>
+              </Tooltip>
+              <Tooltip title="Сравнить с другими">
+                <Button variant="outlined" color="primary" startIcon={<IconArrowsDiff size={20}/>} onClick={()=>setCompareOpen(true)}>
+                  Сравнить
+                </Button>
+              </Tooltip>
+            </Stack>
           </CardContent>
         </Card>
+        {/* Табы с иконками */}
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
             <Tabs value={tab} onChange={(_,v)=>setTab(v)} variant="scrollable" scrollButtons="auto">
-              <Tab label="Результаты собеседования" value="results" />
-              <Tab label="Комментарии" value="comments" />
-              <Tab label="Письма" value="letters" />
-              <Tab label="Отзыв кандидата" value="feedback" />
+              <Tab icon={<AssignmentTurnedInIcon />} iconPosition="start" label="Результаты" value="results" />
+              <Tab icon={<CommentIcon />} iconPosition="start" label="Комментарии" value="comments" />
+              <Tab icon={<MailOutlineIcon />} iconPosition="start" label="Письма" value="letters" />
+              <Tab icon={<FeedbackIcon />} iconPosition="start" label="Отзыв" value="feedback" />
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
             {/* Детальная информация по сессии интервью */}
             {sessionDetail && (
-              <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', position: 'relative', overflow: 'hidden', mb:3 }}>
+              <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <IconFileText size={32} color="white" />
+                  <Stack direction="row" alignItems="center" spacing={2} mb={2}>
+                    <IconFileText size={32} color="#1976d2" />
                     <Typography variant="h4" fontWeight="700">Детали интервью-сессии</Typography>
-                    <Chip label={sessionDetail.status} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
-                  </Box>
+                    <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
+                  </Stack>
                   <Grid container spacing={2} mb={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Начата:</b> {sessionDetail.startedAt || '-'}</Typography>
+                      <Typography variant="body2"><b>Начата:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.startedAt || '-'}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Завершена:</b> {sessionDetail.finishedAt || '-'}</Typography>
+                      <Typography variant="body2"><b>Завершена:</b> <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.finishedAt || '-'}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<MuiLink href={`/hr-tests/${sessionDetail.template.id}`} sx={{color:'#fff',ml:1,textDecoration:'underline'}}>Открыть</MuiLink>)}</Typography>
+                      <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary" sx={{ml:1}}>Открыть</Button>)}</Typography>
                     </Grid>
                     {sessionDetail.vacancy && (
                       <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b>Вакансия:</b> {sessionDetail.vacancy.title}{sessionDetail.vacancy.id && (<MuiLink href={`/hr/vacancies/${sessionDetail.vacancy.id}`} sx={{color:'#fff',ml:1,textDecoration:'underline'}}>Открыть</MuiLink>)}</Typography>
+                        <Typography variant="body2"><b>Вакансия:</b> {sessionDetail.vacancy.title}{sessionDetail.vacancy.id && (<Button component={Link} href={`/hr/vacancies/${sessionDetail.vacancy.id}`} size="small" color="primary" sx={{ml:1}}>Открыть</Button>)}</Typography>
                       </Grid>
                     )}
                     {/* Длительность интервью */}
                     {sessionDetail.startedAt && (sessionDetail.finishedAt || (sessionDetail.answers && sessionDetail.answers.length > 0)) && (
                       <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b>Длительность:</b> {(() => {
+                        <Typography variant="body2"><b>Длительность:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {(() => {
                           const start = sessionDetail.startedAt ? new Date(sessionDetail.startedAt) : null;
                           let end = sessionDetail.finishedAt ? new Date(sessionDetail.finishedAt) : null;
                           if (!end && sessionDetail.answers && sessionDetail.answers.length > 0) {
@@ -251,43 +294,52 @@ export default function CandidateDetailPage() {
                       </Grid>
                     )}
                   </Grid>
-                  <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
+                  <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Ответы на вопросы</Typography>
                   {/* Accordion для длинных списков */}
                   {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
-                    <Accordion key={a.id} defaultExpanded={idx<3} sx={{background:'rgba(255,255,255,0.08)', color:'#fff', mb:2}}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#fff'}} />}>
-                        <Typography variant="subtitle1"><b>Вопрос {idx+1}:</b> {a.question}</Typography>
+                    <Accordion key={a.id} defaultExpanded={idx<3} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
+                        <Stack direction="row" alignItems="center" spacing={2}>
+                          <Typography variant="subtitle1"><b>Вопрос {idx+1}:</b> {a.question}</Typography>
+                          {a.score !== undefined && a.score !== null && (
+                            <Chip 
+                              label={`Оценка: ${a.score}`} 
+                              color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'} 
+                              size="small" 
+                            />
+                          )}
+                        </Stack>
                       </AccordionSummary>
                       <AccordionDetails>
-                        <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text || <i>нет ответа</i>}</Typography>
-                        <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i>нет</i>}</Typography>
+                        <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}>Нет ответа</i>}</Typography>
+                        <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}>нет</i>}</Typography>
                         {a.aiComment && (
                           <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><b>AI-характеристика:</b> {a.aiComment}</Typography>
                         )}
                         {a.audio && (
-                          <Box mb={1}>
-                            <IconMicrophone size={18} style={{verticalAlign:'middle'}} />{' '}
-                            <MuiLink href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}>Аудио</MuiLink>
+                          <Box mb={1} display="flex" alignItems="center" gap={1}>
+                            <IconMicrophone size={18} style={{verticalAlign:'middle'}} />
+                            <Button component={Link} href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconMicrophone />}>Аудио</Button>
                           </Box>
                         )}
                         {a.video && (
-                          <Box mb={1}>
-                            <IconVideo size={18} style={{verticalAlign:'middle'}} />{' '}
-                            <MuiLink href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}>Видео</MuiLink>
+                          <Box mb={1} display="flex" alignItems="center" gap={1}>
+                            <IconVideo size={18} style={{verticalAlign:'middle'}} />
+                            <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}>Видео</Button>
                           </Box>
                         )}
                         <Typography variant="caption" sx={{opacity:0.7}}>Время ответа: {a.createdAt || '-'}</Typography>
                       </AccordionDetails>
                     </Accordion>
                   )) : (
-                    <Typography>Нет ответов</Typography>
+                    <Typography color="text.secondary">Нет ответов</Typography>
                   )}
                   {sessionDetail.result && (
                     <Box mt={3}>
                       <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Итог интервью</Typography>
-                      <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i>нет</i>}</Typography>
-                      <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i>нет</i>}</Typography>
+                      <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}>нет</i>}</Typography>
+                      <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i style={{color:'#888'}}>нет</i>}</Typography>
                     </Box>
                   )}
                 </CardContent>
@@ -295,59 +347,65 @@ export default function CandidateDetailPage() {
             )}
             {/* AI-оценка */}
             {evalData && (
-              <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
-                <Box sx={{ position: 'absolute', top: -20, right: -20, width: 120, height: 120, background: 'rgba(255,255,255,0.1)', borderRadius: '50%', zIndex: 0 }} />
+              <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-                  <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>AI-оценка кандидата</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>Статус: <Chip label={aiStatus || 'нет данных'} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" /></Typography>
-                  {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}>Резюме: {aiSummary}</Typography>}
-                  {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
-                    <Box mb={1}>
-                      <Typography variant="subtitle2">Сильные стороны:</Typography>
-                      <ul style={{margin:0,paddingLeft:18}}>
-                        {aiStrengths.map((s:string,i:number)=>(<li key={i}>{s}</li>))}
-                      </ul>
-                    </Box>
-                  )}
-                  {aiWeaknesses && Array.isArray(aiWeaknesses) && aiWeaknesses.length > 0 && (
-                    <Box mb={1}>
-                      <Typography variant="subtitle2">Слабые стороны:</Typography>
-                      <ul style={{margin:0,paddingLeft:18}}>
-                        {aiWeaknesses.map((s:string,i:number)=>(<li key={i}>{s}</li>))}
-                      </ul>
-                    </Box>
-                  )}
-                  {aiMetrics && (
-                    <Box mb={1}>
-                      <Typography variant="subtitle2">Метрики:</Typography>
-                      <pre style={{background:'rgba(0,0,0,0.1)',padding:8,borderRadius:4}}>{JSON.stringify(aiMetrics,null,2)}</pre>
-                    </Box>
-                  )}
-                  {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}>Обновлено: {aiUpdatedAt}</Typography>}
+                  <Stack spacing={2}>
+                    <Typography variant="h5" fontWeight="700">AI-оценка кандидата</Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip label={aiStatus || 'нет данных'} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}>Обновлено: {aiUpdatedAt}</Typography>}
+                    </Stack>
+                    {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><b>Резюме:</b> {aiSummary}</Typography>}
+                    {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
+                      <Box mb={1}>
+                        <Typography variant="subtitle2">Сильные стороны:</Typography>
+                        <Stack component="ul" spacing={0.5} sx={{pl:2}}>
+                          {aiStrengths.map((s:string,i:number)=>(<li key={i}><CheckCircleIcon color="success" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
+                        </Stack>
+                      </Box>
+                    )}
+                    {aiWeaknesses && Array.isArray(aiWeaknesses) && aiWeaknesses.length > 0 && (
+                      <Box mb={1}>
+                        <Typography variant="subtitle2">Слабые стороны:</Typography>
+                        <Stack component="ul" spacing={0.5} sx={{pl:2}}>
+                          {aiWeaknesses.map((s:string,i:number)=>(<li key={i}><HourglassEmptyIcon color="warning" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
+                        </Stack>
+                      </Box>
+                    )}
+                    {aiMetrics && (
+                      <Box mb={1}>
+                        <Typography variant="subtitle2">Метрики:</Typography>
+                        <pre style={{background:'#f5f5f5',padding:8,borderRadius:4}}>{JSON.stringify(aiMetrics,null,2)}</pre>
+                      </Box>
+                    )}
+                  </Stack>
                 </CardContent>
               </Card>
             )}
           </TabPanel>
           {/* Tab: Комментарии */}
           <TabPanel value="comments" sx={{p:0}}>
-            <Card sx={{ background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)', color: '#222', position: 'relative', overflow: 'hidden', mb:3 }}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
                 <Typography variant="h6" sx={{mb:1}}>Заметки HR</Typography>
                 <textarea
                   value={hrNote}
                   onChange={e=>setHrNote(e.target.value)}
                   rows={6}
-                  style={{width:'100%',borderRadius:8,padding:8,fontSize:16,marginBottom:8}}
+                  style={{width:'100%',borderRadius:8,padding:8,fontSize:16,marginBottom:8,border:'1px solid #eee'}}
                   placeholder="Введите заметку или комментарий..."
                 />
-                <Button variant="contained" color="secondary" onClick={saveNote} sx={{mb:2}}>Сохранить заметку</Button>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Button variant="contained" color="primary" onClick={saveNote}>Сохранить заметку</Button>
+                  {copyMsg && <Typography color="success.main">Сохранено!</Typography>}
+                </Stack>
                 <Typography variant="body2" sx={{opacity:0.7}}>Заметка хранится только локально в браузере (MVP).</Typography>
               </CardContent>
             </Card>
           </TabPanel>
           {/* Tab: Письма */}
           <TabPanel value="letters" sx={{p:0}}>
-            <Card sx={{ background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)', color: '#222', position: 'relative', overflow: 'hidden', mb:3 }}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
                 <Typography variant="h6" sx={{mb:1}}>Письма кандидату</Typography>
                 <Typography variant="body2" sx={{opacity:0.7}}>Здесь появится история писем и уведомлений кандидату (в будущем).</Typography>
@@ -356,7 +414,7 @@ export default function CandidateDetailPage() {
           </TabPanel>
           {/* Tab: Отзыв кандидата */}
           <TabPanel value="feedback" sx={{p:0}}>
-            <Card sx={{ background: 'linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%)', color: '#222', position: 'relative', overflow: 'hidden', mb:3 }}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
                   <Typography variant="h6" sx={{mb:1}}>Отзыв кандидата</Typography>
                   <Typography variant="body2" sx={{opacity:0.7}}>Здесь появится обратная связь от кандидата (в будущем).</Typography>
@@ -364,8 +422,34 @@ export default function CandidateDetailPage() {
             </Card>
           </TabPanel>
         </TabContext>
+        {/* Попап сравнения кандидатов */}
+        <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="sm" fullWidth>
+          <DialogTitle>Сравнить с другими кандидатами</DialogTitle>
+          <DialogContent>
+            <Typography variant="body2" sx={{mb:2}}>Выберите кандидатов для сравнения (минимум 1):</Typography>
+            <Stack spacing={1}>
+              {allCandidates.filter(c=>c.id!==candId).map(c=>(
+                <FormControlLabel
+                  key={c.id}
+                  control={<Checkbox checked={selectedCompare.includes(c.id)} onChange={e=>{
+                    setSelectedCompare(e.target.checked ? [...selectedCompare, c.id] : selectedCompare.filter(id=>id!==c.id));
+                  }} />}
+                  label={c.name}
+                />
+              ))}
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={()=>setCompareOpen(false)}>Отмена</Button>
+            <Button variant="contained" color="primary" disabled={selectedCompare.length===0} onClick={()=>{
+              setCompareOpen(false);
+              // Реализовать переход на сравнение или показать сравнение в попапе
+              // Например, router.push(`/hr/candidates/compare?ids=${candId},${selectedCompare.join(',')}`)
+            }}>Сравнить</Button>
+          </DialogActions>
+        </Dialog>
         <Snackbar open={!!copyMsg} autoHideDuration={2000} onClose={()=>setCopyMsg(null)} message={copyMsg} />
-      </Box>
+      </Stack>
     </PageContainer>
   );
 } 

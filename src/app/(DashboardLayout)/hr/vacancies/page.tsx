@@ -56,6 +56,162 @@ interface Template {
   title: string;
 }
 
+// Новый компонент карточки вакансии
+function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
+  vacancy: VacancyRow;
+  templates: Template[];
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
+}) {
+  const router = useRouter();
+  const total = vacancy.candidatesTotal || 0;
+  const finished = vacancy.candidatesFinished || 0;
+  const inProgress = vacancy.candidatesInProgress || 0;
+  const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
+  const templateTitle = vacancy.templateId ? (templates.find(t => t.id === vacancy.templateId)?.title || vacancy.templateId) : null;
+
+  const getProgressColor = (percent: number) => {
+    if (percent === 0) return "info"; // Было 'default', теперь 'info' для совместимости с MUI
+    if (percent >= 80) return "success";
+    if (percent >= 50) return "warning";
+    return "error";
+  };
+  const getProgressLabel = (percent: number) => {
+    if (percent === 0) return "Не начато";
+    if (percent >= 80) return "Отлично";
+    if (percent >= 50) return "Хорошо";
+    if (percent >= 20) return "В процессе";
+    return "Начато";
+  };
+
+  return (
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        p: 2,
+        transition: "all 0.2s",
+        '&:hover': { transform: 'translateY(-2px)', boxShadow: 4 },
+      }}
+    >
+      {/* Верхняя часть: название и статус */}
+      <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+        <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            fontWeight={700}
+            sx={{
+              flexGrow: 1,
+              cursor: 'pointer',
+              color: 'primary.main',
+              transition: 'color 0.2s',
+              '&:hover': { color: 'primary.dark', textDecoration: 'underline' },
+            }}
+          >
+            {vacancy.title}
+          </Typography>
+        </Link>
+        <Chip
+          label={getProgressLabel(percent)}
+          size="small"
+          color={getProgressColor(percent) as any}
+          sx={{ fontWeight: 600 }}
+        />
+      </Box>
+
+      {/* Метрики */}
+      <Box mb={1}>
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
+            <Box textAlign="center">
+              <Typography variant="h5" fontWeight={700}>{total}</Typography>
+              <Typography variant="caption" color="textSecondary">Всего</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={4}>
+            <Box textAlign="center">
+              <Typography variant="h5" fontWeight={700} color="success.main">{finished}</Typography>
+              <Typography variant="caption" color="textSecondary">Завершили</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={4}>
+            <Box textAlign="center">
+              <Typography variant="h5" fontWeight={700} color="warning.main">{inProgress}</Typography>
+              <Typography variant="caption" color="textSecondary">В процессе</Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Прогресс */}
+      <Box mb={1}>
+        <LinearProgress
+          variant="determinate"
+          value={percent}
+          color={getProgressColor(percent) as any}
+          sx={{ height: 8, borderRadius: 4 }}
+        />
+        <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5}>
+          <Typography variant="caption" color="textSecondary">Прогресс</Typography>
+          <Typography variant="caption" color="textSecondary">{percent}%</Typography>
+        </Box>
+      </Box>
+
+      {/* Тест/шаблон */}
+      {templateTitle && (
+        <Box display="flex" alignItems="center" gap={1} mb={1}>
+          <IconTarget size={16} color="#666" />
+          <Typography variant="body2" color="textSecondary">
+            Тест: {templateTitle}
+          </Typography>
+        </Box>
+      )}
+
+      {/* Описание */}
+      {vacancy.description && (
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{
+            mb: 2,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {vacancy.description}
+        </Typography>
+      )}
+
+      {/* Кнопки действий */}
+      <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
+        <Tooltip title="Просмотреть">
+          <Link href={`/hr/vacancies/${vacancy.id}`} passHref legacyBehavior>
+            <IconButton size="small" color="primary" component="a">
+              <IconEye size={18} />
+            </IconButton>
+          </Link>
+        </Tooltip>
+        <Tooltip title="Редактировать">
+          <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
+            <IconButton size="small" color="warning" component="a">
+              <IconEdit size={18} />
+            </IconButton>
+          </Link>
+        </Tooltip>
+        <Tooltip title="Удалить">
+          <IconButton size="small" color="error" onClick={() => onDelete(vacancy.id)}>
+            <IconTrash size={18} />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    </Card>
+  );
+}
+
 export default function HRVacanciesPage() {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
@@ -90,19 +246,6 @@ export default function HRVacanciesPage() {
     }
   }
 
-  const getProgressColor = (percent: number) => {
-    if (percent >= 80) return "success";
-    if (percent >= 50) return "warning";
-    return "error";
-  };
-
-  const getProgressLabel = (percent: number) => {
-    if (percent >= 80) return "Отлично";
-    if (percent >= 50) return "Хорошо";
-    if (percent >= 20) return "В процессе";
-    return "Начато";
-  };
-
   if (!token) {
     return (
       <PageContainer title="Вакансии" description="Управление вакансиями">
@@ -129,13 +272,15 @@ export default function HRVacanciesPage() {
             </Typography>
             <Chip label={rows.length} color="primary" />
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<IconPlus size={20} />}
-            onClick={() => router.push('/hr/vacancy-create')}
-          >
-            Создать вакансию
-          </Button>
+          <Link href="/hr/vacancy-create" passHref legacyBehavior>
+            <Button
+              variant="contained"
+              startIcon={<IconPlus size={20} />}
+              component="a"
+            >
+              Создать вакансию
+            </Button>
+          </Link>
         </Box>
 
         {/* Search */}
@@ -157,124 +302,16 @@ export default function HRVacanciesPage() {
 
         {/* Vacancies Grid */}
         <Grid container spacing={3}>
-          {filtered.map((vacancy) => {
-            const total = vacancy.candidatesTotal || 0;
-            const finished = vacancy.candidatesFinished || 0;
-            const inProgress = vacancy.candidatesInProgress || 0;
-            const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
-
-            return (
-              <Grid item xs={12} sm={6} md={4} key={vacancy.id}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    transition: "all 0.2s",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: 4,
-                    },
-                  }}
-                >
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                      <Typography variant="h6" fontWeight="600" sx={{ flexGrow: 1 }}>
-                        {vacancy.title}
-                      </Typography>
-                      <Box display="flex" gap={1}>
-                        <Tooltip title="Просмотреть">
-                          <Link href={`/hr/vacancies/${vacancy.id}`} passHref legacyBehavior>
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              component="a"
-                            >
-                              <IconEye size={16} />
-                            </IconButton>
-                          </Link>
-                        </Tooltip>
-                        <Tooltip title="Редактировать">
-                          <IconButton 
-                            size="small" 
-                            color="warning"
-                            onClick={() => router.push(`/hr/vacancy-edit/${vacancy.id}`)}
-                          >
-                            <IconEdit size={16} />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Удалить">
-                          <IconButton size="small" color="error">
-                            <IconTrash size={16} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </Box>
-
-                    {vacancy.description && (
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{
-                          mb: 2,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
-                        }}
-                      >
-                        {vacancy.description}
-                      </Typography>
-                    )}
-
-                    <Box mb={2}>
-                      <Box display="flex" alignItems="center" gap={1} mb={1}>
-                        <IconUsers size={16} color="#666" />
-                        <Typography variant="body2" color="textSecondary">
-                          Кандидаты: {finished}/{total}
-                        </Typography>
-                      </Box>
-                      <LinearProgress
-                        variant="determinate"
-                        value={percent}
-                        color={getProgressColor(percent) as any}
-                        sx={{ height: 8, borderRadius: 4 }}
-                      />
-                      <Box display="flex" justifyContent="space-between" alignItems="center" mt={1}>
-                        <Chip
-                          label={getProgressLabel(percent)}
-                          size="small"
-                          color={getProgressColor(percent) as any}
-                          variant="outlined"
-                        />
-                        <Typography variant="caption" color="textSecondary">
-                          {percent}%
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {vacancy.templateId && (
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <IconTarget size={16} color="#666" />
-                        <Typography variant="body2" color="textSecondary">
-                          Тест: {templates.find(t => t.id === vacancy.templateId)?.title || vacancy.templateId}
-                        </Typography>
-                      </Box>
-                    )}
-
-                    {inProgress > 0 && (
-                      <Box display="flex" alignItems="center" gap={1} mt={1}>
-                        <IconCheck size={16} color="#4caf50" />
-                        <Typography variant="body2" color="success.main">
-                          {inProgress} в процессе
-                        </Typography>
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
+          {filtered.map((vacancy) => (
+            <Grid item xs={12} sm={6} md={4} key={vacancy.id}>
+              <VacancyCard
+                vacancy={vacancy}
+                templates={templates}
+                onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
+                onDelete={(id) => {/* TODO: реализовать удаление */}}
+              />
+            </Grid>
+          ))}
         </Grid>
 
         {filtered.length === 0 && (
@@ -290,4 +327,4 @@ export default function HRVacanciesPage() {
       </Box>
     </PageContainer>
   );
-} 
+}

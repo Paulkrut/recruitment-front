@@ -17,10 +17,6 @@ interface MenuitemsType {
 
 const Menuitems: MenuitemsType[] = [
   {
-    navlabel: true,
-    subheader: "Управление HR",
-  },
-  {
     id: uniqueId(),
     title: "Главная",
     icon: 'briefcase-line-duotone',
@@ -29,24 +25,10 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     id: uniqueId(),
-    title: "Кандидаты",
-    icon: 'users-group-line-duotone',
-    href: "/hr/candidates",
-    bgcolor: "success",
-  },
-  {
-    id: uniqueId(),
     title: "Вакансии",
     icon: 'work-line-duotone',
     href: "/hr/vacancies",
     bgcolor: "warning",
-  },
-  {
-    id: uniqueId(),
-    title: "Создать вакансию",
-    icon: 'plus-line-duotone',
-    href: "/hr/vacancy-create",
-    bgcolor: "success",
   },
 ];
 
