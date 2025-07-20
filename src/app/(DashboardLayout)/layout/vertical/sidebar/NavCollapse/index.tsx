@@ -171,9 +171,9 @@ export default function NavCollapse({
           color:
             open && level < 2
               ? menu.bgcolor + ".main"
-              : `inherit` && level > 1 && open
+              : level > 1 && open
               ? menu.bgcolor + ".main"
-              : `inherit`,
+              : "inherit",
           ".MuiListItemIcon-root": {
             color: open && level < 2 ? menu.bgcolor + ".main" : "",
           },
