@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -12,86 +13,134 @@ import CustomTextField from "@/app/components/forms/theme-elements/CustomTextFie
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import AuthSocialButtons from "./AuthSocialButtons";
 
-const AuthLogin = ({ title, subtitle, subtext }: loginType) => (
-  <>
-    {title ? (
-      <Typography fontWeight="700" variant="h2" mb={1}>
-        {title}
-      </Typography>
-    ) : null}
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-    {subtext}
+const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-    <AuthSocialButtons title="Sign in with" />
-    <Box mt={3}>
-      <Divider>
-        <Typography
-          component="span"
-          color="textSecondary"
-          variant="h6"
-          fontWeight="400"
-          position="relative"
-          px={2}
-        >
-          or sign in with
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, password })
+      });
+      if (!res.ok) throw new Error('Неверный телефон или пароль');
+      const d = await res.json();
+      localStorage.setItem('recruitment_token', d.token);
+      window.location.replace('/hr');
+    } catch (e: any) {
+      setError(e.message || 'Ошибка авторизации');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <>
+      {title ? (
+        <Typography fontWeight="700" variant="h2" mb={1}>
+          {title}
         </Typography>
-      </Divider>
-    </Box>
+      ) : null}
 
-    <Stack>
-      <Box>
-        <CustomFormLabel htmlFor="username">Username</CustomFormLabel>
-        <CustomTextField id="username" variant="outlined" fullWidth />
+      {subtext}
+
+      <AuthSocialButtons title="Sign in with" />
+      <Box mt={3}>
+        <Divider>
+          <Typography
+            component="span"
+            color="textSecondary"
+            variant="h6"
+            fontWeight="400"
+            position="relative"
+            px={2}
+          >
+            or sign in with
+          </Typography>
+        </Divider>
       </Box>
-      <Box>
-        <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
-        <CustomTextField
-          id="password"
-          type="password"
-          variant="outlined"
-          fullWidth
-        />
-      </Box>
-      <Stack
-        justifyContent="space-between"
-        direction={{ xs: 'column', sm: 'row' }}
-        alignItems="center"
-        my={2}
-      >
-        <FormGroup>
-          <FormControlLabel
-            control={<CustomCheckbox defaultChecked />}
-            label="Remeber this Device"
-          />
-        </FormGroup>
-        <Typography
-          component={Link}
-          href="/auth/auth1/forgot-password"
-          fontWeight="500"
-          sx={{
-            textDecoration: "none",
-            color: "primary.main",
-          }}
-        >
-          Forgot Password ?
-        </Typography>
-      </Stack>
-    </Stack>
-    <Box>
-      <Button
-        color="primary"
-        variant="contained"
-        size="large"
-        fullWidth
-        component={Link}
-        href="/"
-        type="submit"
-      >
-        Sign In
-      </Button>
-    </Box>
-    {subtitle}
-  </>
-);
+
+      <form onSubmit={handleLogin}>
+        <Stack>
+          <Box>
+            <CustomFormLabel htmlFor="phone">Телефон</CustomFormLabel>
+            <CustomTextField
+              id="phone"
+              variant="outlined"
+              fullWidth
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              autoComplete="username"
+              required
+            />
+          </Box>
+          <Box>
+            <CustomFormLabel htmlFor="password">Пароль</CustomFormLabel>
+            <CustomTextField
+              id="password"
+              type="password"
+              variant="outlined"
+              fullWidth
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </Box>
+          <Stack
+            justifyContent="space-between"
+            direction={{ xs: 'column', sm: 'row' }}
+            alignItems="center"
+            my={2}
+          >
+            <FormGroup>
+              <FormControlLabel
+                control={<CustomCheckbox defaultChecked />}
+                label="Запомнить меня"
+              />
+            </FormGroup>
+            <Typography
+              component={Link}
+              href="/auth/auth1/forgot-password"
+              fontWeight="500"
+              sx={{
+                textDecoration: "none",
+                color: "primary.main",
+              }}
+            >
+              Забыли пароль?
+            </Typography>
+          </Stack>
+        </Stack>
+        <Box>
+          <Button
+            color="primary"
+            variant="contained"
+            size="large"
+            fullWidth
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Вход..." : "Войти"}
+          </Button>
+        </Box>
+        {error && (
+          <Typography color="error" sx={{ mt: 2 }}>
+            {error}
+          </Typography>
+        )}
+      </form>
+      {subtitle}
+    </>
+  );
+};
 
 export default AuthLogin;
