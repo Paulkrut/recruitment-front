@@ -14,6 +14,14 @@ import {
   ListItemAvatar,
   ListItemText,
   LinearProgress,
+  Card,
+  CardContent,
+  Grid,
+  CircularProgress,
+  Tooltip,
+  IconButton,
+  Divider,
+  Chip,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -21,6 +29,8 @@ import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
+import { IconMicrophone, IconVideo, IconClock, IconCheck } from "@tabler/icons-react";
+import Scrollbar from "@/app/components/custom-scroll/Scrollbar"; // Assuming this is available as in chat component
 
 interface Question {
   id: number;
@@ -56,6 +66,8 @@ export default function CandidateInterviewPage() {
   const [micReady,setMicReady] = useState(false);
   const analyserRef = useRef<AnalyserNode|null>(null);
   const rafRef = useRef<number|null>(null);
+  const [transcription, setTranscription] = useState<string>(''); // New state for live transcription
+  const speechRecognitionRef = useRef<SpeechRecognition | null>(null);
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
@@ -216,6 +228,38 @@ export default function CandidateInterviewPage() {
     }
   }, [timeLeft, recording]);
 
+  // Initialize speech recognition
+  useEffect(() => {
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      speechRecognitionRef.current = new SpeechRecognition();
+      speechRecognitionRef.current.continuous = true;
+      speechRecognitionRef.current.interimResults = true;
+      speechRecognitionRef.current.lang = 'ru-RU'; // Assuming Russian based on UI text
+
+      speechRecognitionRef.current.onresult = (event) => {
+        const transcript = Array.from(event.results)
+          .map(result => result[0].transcript)
+          .join('');
+        setTranscription(transcript);
+      };
+
+      speechRecognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error', event.error);
+      };
+    }
+  }, []);
+
+  // Start/stop transcription with recording
+  useEffect(() => {
+    if (recording && speechRecognitionRef.current) {
+      speechRecognitionRef.current.start();
+    } else if (!recording && speechRecognitionRef.current) {
+      speechRecognitionRef.current.stop();
+      setTranscription('');
+    }
+  }, [recording]);
+
   // useEffect to bind srcObject
   useEffect(()=>{
     if(videoRef.current){
@@ -227,10 +271,10 @@ export default function CandidateInterviewPage() {
   async function sendBlobAnswer(blob: Blob) {
     if (!question) return;
 
-    // optimistic UI update (показываем, что ответ дан)
+    // optimistic UI update
     setChat((p) => [
       ...p,
-      { role: "user", text: "(аудио-ответ)" },
+      { role: "user", text: transcription || "(видео-ответ)" }, // Use transcription if available
       { role: "bot", text: "typing" },
     ]);
     const typingIdx = chat.length + 1;
@@ -277,146 +321,172 @@ export default function CandidateInterviewPage() {
   /* ---------------- render ---------------- */
   if (result) {
     return (
-      <Box sx={{ p: 4, maxWidth: 600, mx: "auto", textAlign:"center" }}>
-        <Typography variant="h4" gutterBottom>
-          Спасибо за прохождение интервью!
-        </Typography>
-        <Typography sx={{mb:3}}>
-          Наш менеджер свяжется с вами после проверки ответов.
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Вы можете закрыть эту страницу.
-        </Typography>
+      <Box sx={{ p: 4, maxWidth: 800, mx: "auto" }}>
+        <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
+          <CardContent sx={{ textAlign: "center" }}>
+            <Typography variant="h4" gutterBottom>
+              Спасибо за прохождение интервью!
+            </Typography>
+            <Typography sx={{mb:3}}>
+              Наш менеджер свяжется с вами после проверки ответов.
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Вы можете закрыть эту страницу.
+            </Typography>
+          </CardContent>
+        </Card>
       </Box>
     );
   }
 
   if (!question) {
-    // если еще не стартовали, показываем подготовительный экран
     if(!prepared){
-      return (<Box sx={{p:4}}><Typography>Загрузка…</Typography></Box>);
+      return (<Box sx={{p:4,textAlign:'center'}}><CircularProgress /></Box>);
     }
     if(prepared.status==='finished'){
       return (
-        <Box sx={{p:4,maxWidth:600,mx:'auto',textAlign:'center'}}>
-          <Typography variant="h4" gutterBottom>Интервью уже пройдено</Typography>
-          <Typography>Наш менеджер свяжется с вами для дальнейшего шага.</Typography>
+        <Box sx={{p:4,maxWidth:800,mx:'auto'}}>
+          <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white' }}>
+            <CardContent sx={{textAlign:'center'}}>
+              <Typography variant="h4" gutterBottom>Интервью уже пройдено</Typography>
+              <Typography>Наш менеджер свяжется с вами для дальнейшего шага.</Typography>
+            </CardContent>
+          </Card>
         </Box>
       );
     }
 
     const min = Math.ceil(prepared.durationSec/60);
     return (
-      <Box sx={{p:4,maxWidth:600,mx:'auto'}}>
-        <Typography variant="h4" gutterBottom>Перед началом</Typography>
-        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
-        <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
-        <Box sx={{display:'flex',gap:2}}>
-          <Button variant="contained" onClick={startInterview}>Начать</Button>
-        </Box>
+      <Box sx={{p:4,maxWidth:800,mx:'auto'}}>
+        <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white' }}>
+          <CardContent>
+            <Typography variant="h4" gutterBottom>Перед началом</Typography>
+            <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
+            <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
+            <Button variant="contained" color="secondary" onClick={startInterview}>Начать</Button>
+          </CardContent>
+        </Card>
 
         {/* Device test preview */}
         {testStream && (
-          <Box sx={{mt:3}}>
-            <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
-            <video ref={testVideoRef} width={320} height={240} autoPlay muted playsInline style={{border:'1px solid #ccc',borderRadius:4}} />
-            <Box sx={{display:'flex',alignItems:'center',mt:1,width:220}}>
-              <GraphicEqIcon sx={{mr:1}}/>
-              <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:5,overflow:'hidden'}}>
-                <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
+          <Card sx={{mt:3, background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white' }}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
+              <video ref={testVideoRef} width={320} height={240} autoPlay muted playsInline style={{border:'1px solid #fff',borderRadius:4, backgroundColor: 'rgba(0,0,0,0.2)'}} />
+              <Box sx={{display:'flex',alignItems:'center',mt:1,width:320}}>
+                <GraphicEqIcon sx={{mr:1}}/>
+                <Box sx={{flexGrow:1,height:10,bgcolor:'rgba(255,255,255,0.2)',borderRadius:5,overflow:'hidden'}}>
+                  <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'white',transition:'width 0.1s linear'}} />
+                </Box>
               </Box>
-            </Box>
-            <Box sx={{display:'flex',gap:2,mt:1}}>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                <VideocamIcon color={testStream?"success":"error" as any}/>
-                <Typography variant="body2" color={testStream?"success.main":"error.main"}>{testStream?"Камера OK":"Камера выкл."}</Typography>
-              </Box>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                <MicIcon color={micReady?"success":"error" as any}/>
-                <Typography variant="body2" color={micReady?"success.main":"error.main"}>{micReady?"Микрофон OK":"Микрофон выкл."}</Typography>
-              </Box>
-            </Box>
-          </Box>
+              <Grid container spacing={2} mt={1}>
+                <Grid item xs={6}>
+                  <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                    <VideocamIcon color={testStream?"success":"error" as any}/>
+                    <Typography variant="body2" color={testStream?"success.main":"error.main"}>{testStream?"Камера OK":"Камера выкл."}</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                    <MicIcon color={micReady?"success":"error" as any}/>
+                    <Typography variant="body2" color={micReady?"success.main":"error.main"}>{micReady?"Микрофон OK":"Микрофон выкл."}</Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
         )}
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 4, maxWidth: 600, mx: "auto" }}>
-      {/* header */}
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h5">Интервью</Typography>
-        {total && (
-          <Typography>
-            {question.position + 1}/{total}
-          </Typography>
-        )}
-      </Box>
+    <Box sx={{ p: 4, maxWidth: 800, mx: "auto" }}>
+      <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', mb: 3 }}>
+        <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Typography variant="h5">Интервью</Typography>
+          {total && (
+            <Chip label={`${question.position + 1}/${total}`} color="secondary" />
+          )}
+        </CardContent>
+      </Card>
 
       {/* chat list */}
-      <Paper
-        ref={chatRef}
-        sx={{ height: 400, overflowY: "auto", p: 2, my: 2 }}
-      >
-        <List>
-          {chat.map((m, i) => (
-            <ListItem key={i} alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ bgcolor: m.role === "bot" ? "primary.main" : "secondary.main" }}
-                >
-                  {m.role === "bot" ? <SmartToyIcon /> : <PersonIcon />}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  m.text === "typing" ? (
-                    <Box
-                      component="span"
-                      sx={{ animation: `${blink} 1s infinite step-start` }}
-                    >
-                      •••
-                    </Box>
-                  ) : (
-                    m.text
-                  )
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
+      <Card sx={{ height: 400, overflow: "hidden", mb: 2, background: 'rgba(255,255,255,0.05)' }}>
+        <Scrollbar>
+          <List>
+            {chat.map((m, i) => (
+              <ListItem key={i} alignItems="flex-start" sx={{ justifyContent: m.role === 'bot' ? 'flex-start' : 'flex-end' }}>
+                {m.role === 'bot' && (
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: 'primary.main' }}>
+                      <SmartToyIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                )}
+                <ListItemText
+                  primary={
+                    m.text === "typing" ? (
+                      <Box component="span" sx={{ animation: `${blink} 1s infinite step-start` }}>
+                        •••
+                      </Box>
+                    ) : (
+                      <Paper sx={{ p: 2, bgcolor: m.role === 'bot' ? 'primary.light' : 'secondary.light', maxWidth: '70%' }}>
+                        {m.text}
+                      </Paper>
+                    )
+                  }
+                />
+                {m.role === 'user' && (
+                  <ListItemAvatar sx={{ ml: 1 }}>
+                    <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                )}
+              </ListItem>
+            ))}
+          </List>
+        </Scrollbar>
+      </Card>
 
       {/* progress */}
       {total && (
-        <LinearProgress
-          variant="determinate"
-          value={(question.position / total) * 100}
-          sx={{ mb: 1 }}
-        />
+        <LinearProgress variant="determinate" value={(question.position / total) * 100} sx={{ mb: 1, height: 8, borderRadius: 4 }} />
       )}
       {timeLeft !== null && (
-        <Typography variant="caption">{timeLeft} сек</Typography>
+        <Typography variant="caption" display="block" gutterBottom>{timeLeft} сек</Typography>
       )}
 
-      {/* answer input – только аудио */}
-      <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-        {!recording ? (
-          <Button variant="contained" onClick={startRecording} disabled={recording}>
-            Записать ответ
-          </Button>
-        ) : (
-          <Button variant="outlined" color="error" onClick={stopRecording}>
-            Стоп
-          </Button>
-        )}
-      </Box>
+      {/* answer input – video recording */}
+      <Card sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white' }}>
+        <CardContent>
+          <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+            {!recording ? (
+              <Button variant="contained" color="secondary" startIcon={<IconVideo />} onClick={startRecording} disabled={recording}>
+                Записать видео-ответ
+              </Button>
+            ) : (
+              <Button variant="outlined" color="error" startIcon={<IconVideo />} onClick={stopRecording}>
+                Стоп
+              </Button>
+            )}
+          </Box>
 
-      {/* preview */}
-      {previewStream && (
-        <video ref={videoRef} width={320} height={240} autoPlay muted playsInline style={{ marginBottom: 8, border:'1px solid #ccc', borderRadius:4 }} />
-      )}
+          {/* preview */}
+          {previewStream && (
+            <Box sx={{ position: 'relative' }}>
+              <video ref={videoRef} width={480} height={360} autoPlay muted playsInline style={{ border:'2px solid white', borderRadius:8, backgroundColor: 'rgba(0,0,0,0.2)' }} />
+              {recording && (
+                <Box sx={{ position: 'absolute', bottom: 10, left: 10, bgcolor: 'rgba(0,0,0,0.5)', p: 1, borderRadius: 4, color: 'white' }}>
+                  <Typography variant="body2">Live transcription: {transcription}</Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+        </CardContent>
+      </Card>
     </Box>
   );
 }
