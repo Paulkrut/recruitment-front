@@ -30,6 +30,13 @@ const Menuitems: MenuitemsType[] = [
     href: "/hr/vacancies",
     bgcolor: "warning",
   },
+  {
+    id: uniqueId(),
+    title: "Настройки",
+    icon: 'settings-linear',
+    href: "/hr/settings",
+    bgcolor: "grey",
+  },
 ];
 
 export default Menuitems;

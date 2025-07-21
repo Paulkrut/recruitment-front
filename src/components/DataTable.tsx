@@ -27,6 +27,7 @@ interface Props<T = any> {
   selectable?: boolean;
   onSelectionChange?: (ids:(number|string)[])=>void;
   getRowId?: (row:T)=>number|string;
+  onRowClick?: (row:T)=>void;
 }
 
 export default function DataTable<T = any>({
@@ -37,6 +38,7 @@ export default function DataTable<T = any>({
   selectable = false,
   onSelectionChange,
   getRowId = (r:any)=> (r.id ?? r.ID ?? r.key ?? Math.random()),
+  onRowClick,
 }: Props<T>) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
@@ -118,6 +120,7 @@ export default function DataTable<T = any>({
             const isSel = selected.includes(idVal);
             return (
               <TableRow key={idx} hover selected={isSel} onClick={()=>{
+                if(onRowClick){ onRowClick(row); return; }
                 if(!selectable) return;
                 const newSel = isSel? selected.filter(i=>i!==idVal): [...selected,idVal];
                 setSelected(newSel);

@@ -20,6 +20,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -100,8 +101,7 @@ export default function HRVacancyDetailPage() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [qrDialog, setQrDialog] = useState<{open: boolean, url: string}>({open: false, url: ''});
   const [copyMsg, setCopyMsg] = useState<string|null>(null);
-  const [newCandidate, setNewCandidate] = useState({ name: '', email: '', phone: '' });
-  const [adding, setAdding] = useState(false);
+  // moved adding state into dialog component
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [tab, setTab] = useState('1');
   const [snackbar, setSnackbar] = useState<string|null>(null);
@@ -219,8 +219,14 @@ export default function HRVacancyDetailPage() {
                         color="primary"
                       />
                     )},
-                    {field:'id',header:'ID',render:(r:any)=>(null)},
-                    {field:'name',header:'Имя',render:(r:any)=>(<Box display="flex" alignItems="center" gap={1}><Avatar sx={{ width: 32, height: 32, bgcolor: '#1976d2', fontWeight: 700 }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar><Typography sx={{color:'#1976d2',fontWeight:700}}>{r.name}</Typography></Box>)},
+                    {field:'name',header:'Имя',render:(r:any)=>(
+                      <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Avatar sx={{ width: 32, height: 32, bgcolor: '#1976d2', fontWeight: 700 }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
+                          <Typography sx={{color:'#1976d2',fontWeight:700}}>{r.name}</Typography>
+                        </Box>
+                      </Link>
+                    )},
                     {field:'email',header:'Email',render:(r:any)=>r.email||'-'},
                     {field:'phone',header:'Телефон',render:(r:any)=>r.phone||'-'},
                     {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
@@ -243,7 +249,7 @@ export default function HRVacancyDetailPage() {
                         </Tooltip>
                       </Box>
                     )},
-                  ]} rows={filteredCandidates} defaultRowsPerPage={7} onRowClick={(row:any)=>router.push(`/hr/candidates/${row.id}`)} />
+                  ]} rows={filteredCandidates} defaultRowsPerPage={7} />
                   {filteredCandidates.length === 0 && (
                     <Box textAlign="center" py={4}>
                       <Typography variant="h6" color="textSecondary" gutterBottom>
@@ -315,23 +321,9 @@ export default function HRVacancyDetailPage() {
         </TabPanel>
       </TabContext>
       {/* Диалоги и QR-код — как было */}
-      <Dialog open={addDialogOpen} onClose={()=>setAddDialogOpen(false)}>
-        <DialogTitle>Добавить кандидата</DialogTitle>
-        <DialogContent>
-          <TextField label="Имя" fullWidth sx={{mb:2}} value={newCandidate.name} onChange={e=>setNewCandidate({...newCandidate, name: e.target.value})} />
-          <TextField label="Email" fullWidth sx={{mb:2}} value={newCandidate.email} onChange={e=>setNewCandidate({...newCandidate, email: e.target.value})} />
-          <TextField label="Телефон" fullWidth sx={{mb:2}} value={newCandidate.phone} onChange={e=>setNewCandidate({...newCandidate, phone: e.target.value})} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={()=>setAddDialogOpen(false)}>Отмена</Button>
-          <Button variant="contained" disabled={adding||!newCandidate.name} onClick={async()=>{
-            setAdding(true);
-            const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...newCandidate, vacancyId: id})});
-            if(res.ok){ setAddDialogOpen(false); setNewCandidate({name:'',email:'',phone:''}); apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates); }
-            setAdding(false);
-          }}>Добавить</Button>
-        </DialogActions>
-      </Dialog>
+      <AddCandidateDialog open={addDialogOpen} vacancyId={id} onClose={()=>setAddDialogOpen(false)} onAdded={()=>{
+        apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates);
+      }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
         <DialogTitle>QR-код для прохождения теста</DialogTitle>
         <DialogContent>
@@ -395,5 +387,34 @@ export default function HRVacancyDetailPage() {
         </DialogActions>
       </Dialog>
     </PageContainer>
+  );
+} 
+
+// --- AddCandidateDialog component ---
+function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; onClose:()=>void; vacancyId:string; onAdded:()=>void}){
+  const [form,setForm] = React.useState({name:'',email:'',phone:''});
+  const [loading,setLoading]=React.useState(false);
+  const canSubmit = form.name.trim()!=='' && !loading;
+  const handleChange=(field:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>setForm({...form,[field]:e.target.value});
+  const handleSubmit=async()=>{
+    if(!canSubmit) return;
+    setLoading(true);
+    const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,vacancyId})});
+    setLoading(false);
+    if(res.ok){ setForm({name:'',email:'',phone:''}); onClose(); onAdded(); }
+  };
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>Добавить кандидата</DialogTitle>
+      <DialogContent>
+        <TextField label="Имя" fullWidth sx={{mb:2}} value={form.name} onChange={handleChange('name')} autoFocus />
+        <TextField label="Email" fullWidth sx={{mb:2}} value={form.email} onChange={handleChange('email')} />
+        <TextField label="Телефон" fullWidth sx={{mb:2}} value={form.phone} onChange={handleChange('phone')} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Отмена</Button>
+        <Button variant="contained" disabled={!canSubmit} onClick={handleSubmit}>{loading?'Добавление…':'Добавить'}</Button>
+      </DialogActions>
+    </Dialog>
   );
 } 

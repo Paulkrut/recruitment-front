@@ -19,6 +19,8 @@ import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
 import PauseIcon from "@mui/icons-material/PauseCircleOutline";
+import ChatBubble from "@/app/components/apps/chats/ChatBubble";
+import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 
 interface Question {
   id: number;
@@ -76,7 +78,7 @@ export default function CandidateInterviewPage() {
   /* ---------------- helpers ---------------- */
   function scrollToBottom() {
     if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+      chatRef.current.scrollTo({top: chatRef.current.scrollHeight, behavior:'smooth'});
     }
   }
 
@@ -91,10 +93,10 @@ export default function CandidateInterviewPage() {
   }
   function startCountdown(totalSec:number){
     clearCountdown();
-    setTimeLeft(totalSec);
+      setTimeLeft(totalSec);
     intervalRef.current = setInterval(()=>
       setTimeLeft(prev=> (prev!==null && prev>0)? prev-1 : 0),
-    1000);
+        1000);
     setPaused(false);
   }
 
@@ -431,7 +433,7 @@ export default function CandidateInterviewPage() {
       <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
         <Typography variant="h6" fontWeight={700}>Интервью</Typography>
         <Box sx={{display:'flex',alignItems:'center',gap:2}}>
-          {total && (
+        {total && (
             <Typography variant="body2">{question.position + 1}/{total}</Typography>
           )}
           {timeLeft !== null && question?.maxTime && (
@@ -451,38 +453,29 @@ export default function CandidateInterviewPage() {
               >
                 <Typography variant="caption" component="div" color="text.secondary">
                   {timeLeft}
-                </Typography>
+          </Typography>
               </Box>
             </Box>
-          )}
+        )}
           {paused && <PauseIcon color="action" fontSize="small" />}
         </Box>
       </Box>
 
       {/* chat list */}
-      <Paper ref={chatRef} sx={{ height: 400, overflowY: "auto", p: 2, my: 2, bgcolor:'background.default' }}>
-        <Stack spacing={1}>
-          {chat.map((m, i) => (
-            <Box key={i} display="flex" justifyContent={m.role === 'user' ? 'flex-end' : 'flex-start'}>
-              <Box sx={{
-                px: 2,
-                py: 1,
-                bgcolor: m.role === 'user' ? 'primary.main' : 'grey.100',
-                color: m.role === 'user' ? 'primary.contrastText' : 'text.primary',
-                borderRadius: m.role === 'user' ? '16px 16px 0 16px' : '16px 16px 16px 0',
-                maxWidth: '80%',
-                typography: 'body1',
-                whiteSpace: 'pre-wrap',
-              }}>
-                {m.text === 'typing' ? (
+      <Paper ref={chatRef} sx={{ height: 400, p:0, my: 2, bgcolor:'background.default' }}>
+        <Scrollbar sx={{maxHeight:400, p:2}}>
+          <Stack spacing={1}>
+            {chat.map((m,i)=>(
+              m.text=== 'typing' ? (
+                <ChatBubble key={i} role={m.role} time={undefined}>
                   <Box component="span" sx={{ animation: `${blink} 1s infinite step-start` }}>•••</Box>
-                ) : (
-                  m.text
-                )}
-              </Box>
-            </Box>
-          ))}
-        </Stack>
+                </ChatBubble>
+              ) : (
+                <ChatBubble key={i} role={m.role} text={m.text} time={new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} />
+              )
+            ))}
+          </Stack>
+        </Scrollbar>
       </Paper>
 
       {/* progress */}
