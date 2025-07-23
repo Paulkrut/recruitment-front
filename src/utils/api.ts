@@ -26,7 +26,7 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
   if (response.status === 401) {
     if (typeof window !== "undefined") {
       localStorage.removeItem("recruitment_token");
-      window.location.href = "/auth/auth1/login";
+      window.location.href = "/auth/phone";
     }
     throw new Error("Unauthorized");
   }

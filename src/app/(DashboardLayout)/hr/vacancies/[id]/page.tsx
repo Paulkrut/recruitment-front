@@ -20,7 +20,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
-import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -157,7 +156,7 @@ export default function HRVacancyDetailPage() {
   );
 
   return (
-    <PageContainer title={`Вакансия: ${title}`}> 
+    <PageContainer title={`Вакансия: ${title}`}>
       {header}
       <TabContext value={tab}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -388,7 +387,7 @@ export default function HRVacancyDetailPage() {
       </Dialog>
     </PageContainer>
   );
-} 
+}
 
 // --- AddCandidateDialog component ---
 function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; onClose:()=>void; vacancyId:string; onAdded:()=>void}){
@@ -417,4 +416,4 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
       </DialogActions>
     </Dialog>
   );
-} 
+}

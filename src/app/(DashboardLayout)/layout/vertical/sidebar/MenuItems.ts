@@ -19,14 +19,14 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "Главная",
-    icon: 'briefcase-line-duotone',
+    icon: 'home-2-linear',
     href: "/hr/",
     bgcolor: "primary",
   },
   {
     id: uniqueId(),
     title: "Вакансии",
-    icon: 'work-line-duotone',
+    icon: 'checklist-linear',
     href: "/hr/vacancies",
     bgcolor: "warning",
   },

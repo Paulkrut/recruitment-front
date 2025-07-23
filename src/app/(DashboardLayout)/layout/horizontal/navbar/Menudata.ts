@@ -325,7 +325,7 @@ const Menuitems = [
           {
             id: uniqueId(),
             title: 'Login',
-            href: '/auth/auth1/login',
+            href: '/auth/phone',
             children: [
               {
                 id: uniqueId(),

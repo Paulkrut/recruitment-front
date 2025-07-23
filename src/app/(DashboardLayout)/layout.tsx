@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { styled, useTheme } from "@mui/material/styles";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "./layout/vertical/header/Header";
 import Sidebar from "./layout/vertical/sidebar/Sidebar";
 import Customizer from "./layout/shared/customizer/Customizer";
@@ -33,6 +34,14 @@ export default function RootLayout({
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const customizer = useSelector((state: AppState) => state.customizer);
   const theme = useTheme();
+  const router = useRouter();
+
+  React.useEffect(()=>{
+    if(typeof window!=='undefined'){
+      const t = localStorage.getItem('recruitment_token');
+      if(!t){ router.replace('/auth/phone'); }
+    }
+  },[router]);
 
   const MainWrapper = styled("div")(() => ({
     display: "flex",

@@ -171,7 +171,7 @@ const Profile = () => {
         ))}
         <Box mt={2}>
           <Button
-            href="/auth/auth1/login"
+            href="/auth/phone"
             variant="contained"
             color="primary"
             component={Link}
