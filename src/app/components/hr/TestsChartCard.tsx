@@ -120,8 +120,8 @@ export default function TestsChartCard({ data }: TestsChartCardProps) {
   const avgTests = data.length > 0 ? Math.round(totalTests / data.length) : 0;
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconTrendingUp size={24} color="#2196f3" />

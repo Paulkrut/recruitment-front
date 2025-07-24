@@ -66,8 +66,9 @@ export default function PhoneAuthPage(){
     setLoading(false);
     if(r.ok){ 
       const {token}=await r.json(); 
-      localStorage.setItem('recruitment_token',token); 
-      window.location.href='/hr'; 
+      localStorage.setItem('recruitment_token',token);
+      localStorage.removeItem('current_company');
+      window.location.href='/hr/choose-company'; 
     } else {
       setError('Неверный или истекший код подтверждения.');
     }

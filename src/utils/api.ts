@@ -17,6 +17,12 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
     headers.set("Authorization", `Bearer ${token}`);
   }
 
+  // Добавляем текущую компанию
+  if (typeof window !== 'undefined') {
+    const cid = localStorage.getItem('current_company');
+    if (cid && !headers.has('X-Company-ID')) headers.set('X-Company-ID', cid);
+  }
+
   const response = await fetch(url, {
     ...options,
     headers,

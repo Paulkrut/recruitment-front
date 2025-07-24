@@ -17,13 +17,16 @@ import {
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import { AppState } from "@/store/store";
 import { Icon } from "@iconify/react";
-import { Button } from "@mui/material";
+import { Button, MenuItem, Select } from "@mui/material";
 import { apiFetch } from "@/utils/api";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import MailIcon from "@mui/icons-material/Mail";
+import Badge from "@mui/material/Badge";
+import { useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
@@ -122,6 +125,8 @@ export default function Sidebar() {
               {/* ------------------------------------------- */}
               <Box px={2}>
                 <Logo />
+                <CompanySwitcher />
+                <InviteIndicator />
               </Box>
               <Scrollbar
                 sx={{
@@ -228,5 +233,56 @@ function ProfileDialog({open,onClose,onUpdated}:{open:boolean;onClose:()=>void;o
         <Button onClick={save} disabled={loading}>Сохранить</Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+function CompanySwitcher() {
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [current, setCurrent] = useState<string | null>(null);
+  const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+  useEffect(() => {
+    apiFetch(`${API_BASE}/api/user/companies`).then(r => r.json()).then(setCompanies);
+    setCurrent(typeof window !== 'undefined' ? localStorage.getItem("current_company") : null);
+  }, []);
+  const handleChange = (e: any) => {
+    localStorage.setItem("current_company", e.target.value);
+    setCurrent(e.target.value);
+    window.location.reload();
+  };
+  if (companies.length < 2) return null;
+  return (
+    <Box mb={2} mt={2}>
+      <Select
+        value={current || ""}
+        onChange={handleChange}
+        size="small"
+        fullWidth
+        displayEmpty
+        renderValue={selected => selected ? companies.find(c => c.id == selected)?.name : 'Выберите компанию'}
+      >
+        <MenuItem value="" disabled>Выберите компанию</MenuItem>
+        {companies.map((c: any) => (
+          <MenuItem key={c.id} value={c.id}>{c.name} ({c.role})</MenuItem>
+        ))}
+      </Select>
+    </Box>
+  );
+}
+
+function InviteIndicator() {
+  const [count, setCount] = useState(0);
+  const router = useRouter();
+  const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+  useEffect(() => {
+    apiFetch(`${API_BASE}/api/user/invites`).then(r => r.json()).then((d: any[]) => setCount(d.length));
+  }, []);
+  if (count === 0) return null;
+  return (
+    <IconButton color="primary" onClick={() => router.push("/hr/choose-company")}
+      sx={{ ml: 1 }}>
+      <Badge badgeContent={count} color="error">
+        <MailIcon />
+      </Badge>
+    </IconButton>
   );
 }

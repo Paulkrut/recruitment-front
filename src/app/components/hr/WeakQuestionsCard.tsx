@@ -40,8 +40,8 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
   };
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconAlertTriangle size={24} color="#ff9800" />

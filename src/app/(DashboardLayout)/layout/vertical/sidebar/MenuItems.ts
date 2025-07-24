@@ -32,11 +32,26 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     id: uniqueId(),
+    title: "Сотрудники",
+    icon: 'users-group-rounded-linear',
+    href: "/hr/employees",
+    bgcolor: "info",
+  },
+
+  {
+    id: uniqueId(),
+    title: "Брендирование",
+    icon: 'palette-linear',
+    href: "/hr/settings?tab=branding",
+    bgcolor: "success",
+  },
+  {
+    id: uniqueId(),
     title: "Настройки",
     icon: 'settings-linear',
     href: "/hr/settings",
     bgcolor: "grey",
-  },
+  }
 ];
 
 export default Menuitems;

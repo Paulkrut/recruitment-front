@@ -40,6 +40,12 @@ export default function RootLayout({
     if(typeof window!=='undefined'){
       const t = localStorage.getItem('recruitment_token');
       if(!t){ router.replace('/auth/phone'); }
+      const cid = localStorage.getItem('current_company');
+      if(!cid && !window.location.pathname.includes('/hr/choose-company')){
+         if(window.location.pathname.startsWith('/hr')){
+           router.replace('/hr/choose-company');
+         }
+      }
     }
   },[router]);
 

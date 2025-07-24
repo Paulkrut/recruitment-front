@@ -37,8 +37,8 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
   };
 
   return (
-    <Card>
-      <CardContent>
+    <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Typography variant="h5" fontWeight="600">
             Открытые вакансии

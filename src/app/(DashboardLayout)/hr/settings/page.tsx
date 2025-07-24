@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import PageContainer from '@/app/components/container/PageContainer';
 import { Box, Typography, Tab, Tabs, TextField, Button, Paper, Stack } from '@mui/material';
+import { useEffect } from 'react';
+import { apiFetch } from '@/utils/api';
+import { SketchPicker } from 'react-color';
 
 export default function SettingsPage(){
   const [tab,setTab]=useState('users');
@@ -14,11 +17,13 @@ export default function SettingsPage(){
           <Tab label="Пользователи & роли" value="users" />
           <Tab label="Интеграции" value="integrations" />
           <Tab label="Интервью" value="interview" />
+          <Tab label="Брендирование" value="branding" />
         </Tabs>
 
         {tab==='users' && <UsersTab/>}
         {tab==='integrations' && <IntegrationsTab/>}
         {tab==='interview' && <InterviewTab/>}
+        {tab==='branding' && <BrandingTab/>}
       </Box>
     </PageContainer>
   );
@@ -60,6 +65,80 @@ function InterviewTab(){
       <Typography variant="h6" gutterBottom>Параметры интервью</Typography>
       <TextField label="Дефолтное время ответа (сек)" type="number" value={maxTime} onChange={e=>setMaxTime(parseInt(e.target.value))} fullWidth sx={{mb:2}} />
       <Button variant="contained" disabled>Сохранить (demo)</Button>
+    </Paper>
+  );
+}
+
+/* ------------ Branding ------------ */
+function BrandingTab() {
+  const [form, setForm] = useState({ name: '', logo: '' });
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLead, setIsLead] = useState(false);
+
+  useEffect(() => {
+    const companyId = localStorage.getItem('current_company');
+    if (!companyId) return;
+    apiFetch(`/api/company/${companyId}`).then(r => r.json()).then((d:any) => {
+      setForm(f => ({ ...f, name: d.name, logo: d.logo }));
+    });
+    apiFetch(`/api/user/companies`).then(r => r.json()).then((list: any[]) => {
+      const found = list.find(c => String(c.id) === String(companyId));
+      setIsLead(found?.role === 'HR_LEAD');
+    });
+  }, []);
+
+  const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) setLogoFile(e.target.files[0]);
+  };
+  const handleSave = async () => {
+    setError(null); setSuccess(null);
+    const companyId = localStorage.getItem('current_company');
+    if (!companyId) return;
+    let logoUrl = form.logo;
+    if (logoFile) {
+      const data = new FormData();
+      data.append('logo', logoFile);
+      const res = await apiFetch(`/api/company/${companyId}/logo`, { method: 'POST', body: data });
+      const d = await res.json();
+      if (d.logo) logoUrl = d.logo;
+    }
+    const res = await apiFetch(`/api/company/${companyId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: form.name, logo: logoUrl })
+    });
+    const d = await res.json();
+    if (d.ok) setSuccess('Сохранено!'); else setError(d.error || 'Ошибка');
+  };
+
+  return (
+    <Paper sx={{ p: 3, maxWidth: 500 }}>
+      <Typography variant="h6" gutterBottom>Брендирование компании</Typography>
+      <Stack spacing={2}>
+        <TextField
+          label="Название компании"
+          value={form.name}
+          onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+          fullWidth
+          InputProps={{ readOnly: !isLead }}
+        />
+        <Box>
+          <Typography variant="body2">Логотип</Typography>
+          <Stack direction="row" spacing={2} alignItems="center">
+            {form.logo && <img src={form.logo} alt="logo" style={{ width: 64, height: 64, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />}
+            {isLead && (
+              <Button variant="outlined" component="label">Загрузить
+                <input type="file" accept="image/*" hidden onChange={handleLogo} />
+              </Button>
+            )}
+          </Stack>
+        </Box>
+        {isLead && <Button variant="contained" onClick={handleSave}>Сохранить</Button>}
+        {success && <Typography color="success.main">{success}</Typography>}
+        {error && <Typography color="error.main">{error}</Typography>}
+      </Stack>
     </Paper>
   );
 } 
