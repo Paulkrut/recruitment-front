@@ -4,7 +4,6 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { Box, Typography, Tab, Tabs, TextField, Button, Paper, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { apiFetch } from '@/utils/api';
-import { SketchPicker } from 'react-color';
 
 export default function SettingsPage(){
   const [tab,setTab]=useState('users');
@@ -141,4 +140,4 @@ function BrandingTab() {
       </Stack>
     </Paper>
   );
-} 
+}
