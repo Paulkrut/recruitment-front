@@ -24,6 +24,8 @@
     "@mui/x-date-pickers": "^8.8.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@tabler/icons-react": "^3.34.0",
+    "@tsparticles/engine": "^3.8.1",
+    "@tsparticles/react": "^3.0.0",
     "apexcharts": "^3.54.1",
     "axios": "^1.6.0",
     "axios-mock-adapter": "^2.1.0",
@@ -58,6 +60,7 @@
     "simplebar-react": "^3.3.2",
     "swiper": "^11.1.0",
     "swr": "^2.3.0",
+    "tsparticles": "^3.8.1",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
   },

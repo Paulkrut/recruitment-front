@@ -111,24 +111,24 @@ export default function HRDashboard() {
             </Stack>
           </Box>
         ) : (
-          <Grid container spacing={3}>
-            {/* Open Vacancies */}
-            <Grid item xs={12} lg={6}>
-              <OpenVacanciesCard data={data.openVacancies} />
-            </Grid>
-            {/* Tests Chart */}
-            <Grid item xs={12} lg={6}>
-              <TestsChartCard data={data.testsPerDay} />
-            </Grid>
-            {/* Weak Questions */}
-            <Grid item xs={12} lg={6}>
-              <WeakQuestionsCard data={data.weakQuestions} />
-            </Grid>
-            {/* Overdue Candidates */}
-            <Grid item xs={12} lg={6}>
-              <OverdueCandidatesCard data={data.overdueCandidates} />
-            </Grid>
+        <Grid container spacing={3}>
+          {/* Open Vacancies */}
+          <Grid item xs={12} lg={6}>
+            <OpenVacanciesCard data={data.openVacancies} />
           </Grid>
+          {/* Tests Chart */}
+          <Grid item xs={12} lg={6}>
+            <TestsChartCard data={data.testsPerDay} />
+          </Grid>
+          {/* Weak Questions */}
+          <Grid item xs={12} lg={6}>
+            <WeakQuestionsCard data={data.weakQuestions} />
+          </Grid>
+          {/* Overdue Candidates */}
+          <Grid item xs={12} lg={6}>
+            <OverdueCandidatesCard data={data.overdueCandidates} />
+          </Grid>
+        </Grid>
         )}
       </Box>
     </PageContainer>
