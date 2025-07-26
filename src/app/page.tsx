@@ -15,10 +15,10 @@ import HeroParticles from "./components/HeroParticles";
 
 
 const pages = [
-  "О платформе",
-  "Блог",
-  { name: "Возможности", isNew: true },
-  "Dashboard",
+  "Главная",
+  "Преимущества", 
+  "Как это работает",
+  "Отзывы",
   "Тарифы",
   "Контакты",
 ];
@@ -32,6 +32,31 @@ export default function LandingPage() {
 
   const handlePrevSlide = () => setCurrentSlide((prev) => prev === 0 ? testimonials.length - 1 : prev - 1);
   const handleNextSlide = () => setCurrentSlide((prev) => prev === testimonials.length - 1 ? 0 : prev + 1);
+
+  // Функция плавной прокрутки к секциям
+  const scrollToSection = (sectionName: string) => {
+    handleCloseNavMenu();
+    
+    const sectionMap: { [key: string]: string } = {
+      "Главная": "hero-section",
+      "Преимущества": "advantages-section", 
+      "Как это работает": "how-it-works-section",
+      "Отзывы": "testimonials-section",
+      "Тарифы": "pricing-section",
+      "Контакты": "cta-section",
+    };
+
+    const sectionId = sectionMap[sectionName];
+    if (sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -146,12 +171,9 @@ export default function LandingPage() {
                   </IconButton>
                   <Menu id="menu-appbar" anchorEl={anchorElNav} anchorOrigin={{ vertical: "bottom", horizontal: "left" }} keepMounted transformOrigin={{ vertical: "top", horizontal: "left" }} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: "block", md: "none" } }}>
                     {pages.map((page) => (
-                      <MenuItem key={typeof page === "string" ? page : page.name} onClick={handleCloseNavMenu}>
+                      <MenuItem key={page} onClick={() => scrollToSection(page)}>
                         <Typography textAlign="center">
-                          {typeof page === "string" ? page : page.name}
-                          {typeof page !== "string" && page.isNew && (
-                            <Chip label="New" size="small" sx={{ ml: 1, bgcolor: "#e3f2fd", color: "#0095ff" }} />
-                          )}
+                          {page}
                         </Typography>
                       </MenuItem>
                     ))}
@@ -179,11 +201,8 @@ export default function LandingPage() {
                 {/* Desktop menu */}
                 <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, justifyContent: "center", gap: 2 }}>
                   {pages.map((page) => (
-                    <Button key={typeof page === "string" ? page : page.name} onClick={handleCloseNavMenu} sx={{ color: "text.primary", display: "flex", alignItems: "center", gap: 1 }}>
-                      {typeof page === "string" ? page : page.name}
-                      {typeof page !== "string" && page.isNew && (
-                        <Chip label="New" size="small" sx={{ bgcolor: "#CDDFF8", color: "#0A98FF" }} />
-                      )}
+                    <Button key={page} onClick={() => scrollToSection(page)} sx={{ color: "text.primary", display: "flex", alignItems: "center", gap: 1 }}>
+                      {page}
                     </Button>
                   ))}
                 </Box>
@@ -196,7 +215,7 @@ export default function LandingPage() {
           </Container>
         </Box>
         {/* Контент Hero поверх */}
-        <Container maxWidth="lg" sx={{ pt: { xs: 12, sm: 10, md: 8 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
+        <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 12, sm: 10, md: 8 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", gap: 4 }}>
             <Box sx={{ flex: 1 }}>
               <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "3.5rem" }, fontWeight: 700, mb: 2, lineHeight: 1.2 }}>
@@ -302,7 +321,7 @@ export default function LandingPage() {
       </Box>
 
       {/* Второй экран - Преимущества */}
-      <Box sx={{ bgcolor: "white", py: 8, position: 'relative', zIndex: 2 }}>
+      <Box id="advantages-section" sx={{ bgcolor: "white", py: 8, position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
         <Container maxWidth="lg">
 
           {/* Заголовок раздела */}
@@ -533,7 +552,7 @@ export default function LandingPage() {
       </Box>
 
       {/* Третий экран - Как это работает */}
-      <Box sx={{ width: "100%", bgcolor: "white", position: 'relative', zIndex: 2 }}>
+      <Box id="how-it-works-section" sx={{ bgcolor: '#f8fafc', py: 12, position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
         <Box sx={{ py: 8, bgcolor: "#f8fafc", position: 'relative', zIndex: 2 }}>
           <Container maxWidth="lg">
             {/* Заголовок */}
@@ -692,7 +711,7 @@ export default function LandingPage() {
       </Box>
 
       {/* Четвёртый экран - Кейсы и отзывы клиентов */}
-      <Box sx={{ py: 12, bgcolor: '#f8fafc', position: 'relative', zIndex: 2 }}>
+      <Box id="testimonials-section" sx={{ bgcolor: '#f8fafc', py: 12, position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
         <Container maxWidth="lg">
           {/* Заголовок с градиентом */}
           <Box sx={{ textAlign: 'center', mb: 8 }}>
@@ -1096,7 +1115,7 @@ export default function LandingPage() {
 
 
       {/* Пятый экран - Тарифы и цены */}
-      <Box sx={{ py: 12, bgcolor: 'white', position: 'relative', zIndex: 2 }}>
+      <Box id="pricing-section" sx={{ py: 12, bgcolor: 'white', position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
         <Container maxWidth="lg">
           {/* Заголовок */}
           <Box sx={{ textAlign: 'center', mb: 8 }}>
@@ -1332,7 +1351,7 @@ export default function LandingPage() {
       </Box>
 
       {/* Шестой экран - CTA */}
-      <Box sx={{ py: 16, bgcolor: '#f8fafc', position: 'relative', zIndex: 2 }}>
+      <Box id="cta-section" sx={{ py: 16, bgcolor: '#f8fafc', position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
         <Container maxWidth="lg">
           <Box sx={{ textAlign: 'center' }}>
             {/* Заголовок */}
