@@ -2,7 +2,7 @@ import { useSelector } from "@/store/hooks";
 import Link from "next/link";
 import { styled } from '@mui/material/styles';
 import { AppState } from "@/store/store";
-import Image from "next/image";
+import { Typography } from "@mui/material";
 
 export default function Logo() {
   const customizer = useSelector((state: AppState) => state.customizer);
@@ -10,52 +10,32 @@ export default function Logo() {
     height: customizer.TopbarHeight,
     width: customizer.isCollapse && !customizer.isSidebarHover ? "40px" : "180px",
     overflow: "hidden",
-    display: "block",
+    display: "flex",
+    alignItems: "center",
+    textDecoration: "none",
   }));
-
-  if (customizer.activeDir === "ltr") {
-    return (
-      <LinkStyled href="/">
-        {customizer.activeMode === "dark" ? (
-          <Image
-            src="/images/logos/logo-light.svg"
-            alt="logo"
-            height={customizer.TopbarHeight}
-            width={174}
-            priority
-          />
-        ) : (
-          <Image
-            src={"/images/logos/logo-dark.svg"}
-            alt="logo"
-            height={customizer.TopbarHeight}
-            width={174}
-            priority
-          />
-        )}
-      </LinkStyled>
-    );
-  }
 
   return (
     <LinkStyled href="/">
-      {customizer.activeMode === "dark" ? (
-        <Image
-          src="/images/logos/logo-light-rtl.svg"
-          alt="logo"
-          height={customizer.TopbarHeight}
-          width={174}
-          priority
-        />
-      ) : (
-        <Image
-          src="/images/logos/logo-dark-rtl.svg"
-          alt="logo"
-          height={customizer.TopbarHeight}
-          width={174}
-          priority
-        />
-      )}
+      <Typography
+        variant="h5"
+        fontWeight={900}
+        sx={{
+          color: customizer.activeMode === "dark" ? "white" : "primary.main",
+          letterSpacing: 2,
+          fontFamily: 'Montserrat, Roboto, Arial',
+          textShadow: customizer.activeMode === "dark" 
+            ? '0 2px 12px rgba(255, 255, 255, 0.1)' 
+            : '0 2px 12px rgba(76, 175, 80, 0.08)',
+          userSelect: 'none',
+          fontSize: customizer.isCollapse && !customizer.isSidebarHover ? '1rem' : '1.25rem',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        SofiHR Panel
+      </Typography>
     </LinkStyled>
   );
 }
