@@ -20,6 +20,8 @@ import {
   DialogActions,
   Switch,
   Slider,
+  Stack,
+  CircularProgress,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
@@ -34,6 +36,7 @@ import {
   IconSettings,
   IconEye,
   IconArrowsShuffle,
+  IconArrowLeft,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
@@ -215,518 +218,336 @@ export default function HRVacancyCreatePage() {
   return (
     <PageContainer title="Создание вакансии" description="Создание новой вакансии с тестом">
       <Box>
-        <Box 
-          display="flex" 
-          alignItems="center" 
-          justifyContent="space-between" 
-          mb={4}
-          sx={{
-            p: 3,
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderRadius: 3,
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          <Box sx={{
-            position: 'absolute',
-            top: -20,
-            right: -20,
-            width: 100,
-            height: 100,
-            background: 'rgba(255,255,255,0.1)',
-            borderRadius: '50%',
-            zIndex: 0
-          }} />
-          <Box display="flex" alignItems="center" gap={3} sx={{ zIndex: 1 }}>
-            <Box sx={{
-              p: 2,
-              borderRadius: 2,
-              background: 'rgba(255,255,255,0.2)',
-              backdropFilter: 'blur(10px)'
-            }}>
-              <IconBriefcase size={40} color="white" />
-            </Box>
-            <Box>
-              <Typography variant="h3" fontWeight="700" sx={{ mb: 1 }}>
-                Создание вакансии с тестом
-              </Typography>
-              <Typography variant="h6" sx={{ opacity: 0.9, fontWeight: 400 }}>
-                Создайте привлекательную вакансию и эффективный тест для кандидатов
-              </Typography>
-            </Box>
+        {/* Header */}
+        <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2} mb={4}>
+          <Box display="flex" alignItems="center" gap={2}>
+            <IconBriefcase size={40} color="#1976d2" />
+            <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}>
+              Создание вакансии
+            </Typography>
           </Box>
-          <Button
-            variant="outlined"
-            onClick={() => router.push("/hr/vacancies")}
-            sx={{
-              color: 'white',
-              borderColor: 'rgba(255,255,255,0.5)',
-              fontSize: '1rem',
-              fontWeight: 600,
-              px: 3,
-              py: 1.5,
-              zIndex: 1,
-              '&:hover': {
-                borderColor: 'white',
-                backgroundColor: 'rgba(255,255,255,0.1)',
-              }
-            }}
-          >
-            Назад к вакансиям
-          </Button>
+          <Stack direction="row" spacing={2}>
+            <Button
+              variant="outlined"
+              startIcon={<IconArrowLeft size={20} />}
+              onClick={() => router.push("/hr/vacancies")}
+              sx={{ fontWeight: 500, borderWidth: 2 }}
+            >
+              Назад
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<IconPlus size={24} />}
+              onClick={createVacancyWithTemplate}
+              disabled={isLoading || !vacancyData.title || questions.length === 0}
+              sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
+            >
+              {isLoading ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
+              {isLoading ? "Создание..." : "Создать вакансию"}
+            </Button>
+          </Stack>
         </Box>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+        {/* Основной контент */}
+        <Stack spacing={4}>
           {/* Vacancy Information */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              top: -50,
-              right: -50,
-              width: 200,
-              height: 200,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" alignItems="center" gap={2} mb={4}>
-                <Box sx={{
-                  p: 2,
-                  borderRadius: 2,
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <IconBriefcase size={32} color="white" />
+              <Stack spacing={3}>
+                <Box>
+                  <CustomFormLabel 
+                    htmlFor="vacancy-title"
+                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+                  >
+                    Название вакансии
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="vacancy-title"
+                    variant="outlined"
+                    fullWidth
+                    value={vacancyData.title}
+                    onChange={(e: any) =>
+                      setVacancyData({ ...vacancyData, title: e.target.value })
+                    }
+                    placeholder="Например: Frontend-разработчик"
+                    error={!vacancyData.title}
+                    helperText={!vacancyData.title ? "Название обязательно" : "Введите название вакансии, которое будет видно кандидатам"}
+                    FormHelperTextProps={{ sx: { color: !vacancyData.title ? 'error.main' : 'text.secondary', opacity: 0.9 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#f7f7f7',
+                        borderRadius: 2,
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '1.1rem',
+                        padding: '16px 20px'
+                      }
+                    }}
+                  />
                 </Box>
                 <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
-                    Информация о вакансии
-                  </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Создайте привлекательное описание для кандидатов
-                  </Typography>
+                  <CustomFormLabel 
+                    htmlFor="vacancy-description"
+                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+                  >
+                    Описание вакансии
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="vacancy-description"
+                    variant="outlined"
+                    fullWidth
+                    multiline
+                    rows={5}
+                    value={vacancyData.description}
+                    onChange={(e: any) =>
+                      setVacancyData({ ...vacancyData, description: e.target.value })
+                    }
+                    placeholder="Опишите требования, обязанности и условия работы"
+                    helperText="Опишите требования, обязанности и условия работы"
+                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#f7f7f7',
+                        borderRadius: 2,
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '1.1rem',
+                        padding: '16px 20px'
+                      }
+                    }}
+                  />
                 </Box>
-              </Box>
-              
-              <Box sx={{ mb: 4 }}>
-                <CustomFormLabel 
-                  htmlFor="vacancy-title"
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Название вакансии
-                </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-title"
-                  variant="outlined"
-                  fullWidth
-                  value={vacancyData.title}
-                  onChange={(e: any) =>
-                    setVacancyData({ ...vacancyData, title: e.target.value })
-                  }
-                  helperText="Введите название вакансии, которое будет видно кандидатам"
-                  FormHelperTextProps={{
-                    sx: { color: 'white', opacity: 0.9 }
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                      borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,1)',
-                      },
-                      '&.Mui-focused': {
-                        backgroundColor: 'white',
-                      }
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
-                />
-              </Box>
-              
-              <Box>
-                <CustomFormLabel 
-                  htmlFor="vacancy-description"
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Описание вакансии
-                </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-description"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={5}
-                  value={vacancyData.description}
-                  onChange={(e: any) =>
-                    setVacancyData({ ...vacancyData, description: e.target.value })
-                  }
-                  helperText="Опишите требования, обязанности и условия работы"
-                  FormHelperTextProps={{
-                    sx: { color: 'white', opacity: 0.9 }
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                      borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,1)',
-                      },
-                      '&.Mui-focused': {
-                        backgroundColor: 'white',
-                      }
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
-                />
-              </Box>
+              </Stack>
             </CardContent>
           </Card>
-
+          <Divider sx={{ my: 0 }} />
           {/* Test Settings */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              bottom: -30,
-              left: -30,
-              width: 150,
-              height: 150,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" alignItems="center" gap={2} mb={4}>
-                <Box sx={{
-                  p: 2,
-                  borderRadius: 2,
-                  background: 'rgba(255,255,255,0.2)',
-                  backdropFilter: 'blur(10px)'
-                }}>
-                  <IconSettings size={32} color="white" />
-                </Box>
-                <Box>
-                  <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
+              <Stack spacing={3}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <IconSettings size={32} color="#1976d2" />
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
                     Настройки теста
                   </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Настройте параметры тестирования кандидатов
-                  </Typography>
-                </Box>
-              </Box>
-              
-              <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Время на один вопрос
-                </CustomFormLabel>
-                
-                {/* Preset buttons */}
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
-                    Быстрый выбор:
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
-                      <Button
-                        key={time}
-                        variant={templateData.questionTime === time ? "contained" : "outlined"}
-                        onClick={() => setTemplateData({ ...templateData, questionTime: time })}
-                        sx={{
-                          minWidth: 'auto',
-                          px: 2,
-                          py: 1,
-                          fontSize: '0.9rem',
-                          fontWeight: 600,
-                          backgroundColor: templateData.questionTime === time 
-                            ? 'rgba(255,255,255,0.3)' 
-                            : 'rgba(255,255,255,0.1)',
-                          color: 'white',
-                          border: '1px solid rgba(255,255,255,0.3)',
-                          '&:hover': {
-                            backgroundColor: templateData.questionTime === time 
-                              ? 'rgba(255,255,255,0.4)' 
-                              : 'rgba(255,255,255,0.2)',
-                          },
-                          '&.MuiButton-contained': {
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,0.4)',
-                            }
-                          }
-                        }}
-                      >
-                        {time} сек
-                      </Button>
-                    ))}
-                  </Box>
+                  <Tooltip title="Здесь вы можете задать параметры теста для кандидатов" placement="right">
+                    <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
+                  </Tooltip>
                 </Box>
                 
-                {/* Slider */}
-                <Box sx={{ px: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                      1 мин
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                      5 мин
-                    </Typography>
-                  </Box>
-                  <Slider
-                    value={templateData.questionTime}
-                    onChange={(_, value) => setTemplateData({ ...templateData, questionTime: value as number })}
-                    min={60}
-                    max={300}
-                    step={30}
-                    sx={{
-                      '& .MuiSlider-track': {
-                        backgroundColor: 'rgba(255,255,255,0.8)',
-                        border: 'none',
-                      },
-                      '& .MuiSlider-rail': {
-                        backgroundColor: 'rgba(255,255,255,0.3)',
-                      },
-                      '& .MuiSlider-thumb': {
-                        backgroundColor: 'white',
-                        border: '2px solid rgba(255,255,255,0.8)',
-                        '&:hover': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
-                        },
-                        '&.Mui-focusVisible': {
-                          boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
-                        },
-                      },
-                    }}
-                  />
-                  <Box sx={{ textAlign: 'center', mt: 2 }}>
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        color: 'white', 
-                        fontWeight: 700,
-                        textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                      }}
-                    >
-                      {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mt: 0.5 }}>
-                      {templateData.questionTime} секунд
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mt: 2, textAlign: 'center' }}>
-                  Время, отведенное на ответ на каждый вопрос
-                </Typography>
-              </Box>
-
-              <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.3)' }} />
-
-              <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                    color: 'white', 
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  Дополнительные вопросы
-                </CustomFormLabel>
-                
-                <Box sx={{ mb: 3 }}>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <Switch
-                      checked={templateData.allowFollowups}
-                      onChange={(e: any) => {
-                        setTemplateData({ ...templateData, allowFollowups: e.target.checked });
-                        // Обновляем настройки для всех вопросов
-                        setQuestions(questions.map(q => ({ 
-                          ...q, 
-                          allowFollowups: e.target.checked,
-                          followupsMax: e.target.checked ? 3 : 0
-                        })));
-                      }}
-                      sx={{
-                        '& .MuiSwitch-switchBase.Mui-checked': {
-                          color: 'white',
-                        },
-                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                          backgroundColor: 'rgba(255,255,255,0.5)',
-                        },
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ color: 'white', fontWeight: 600 }}>
-                      Разрешить дополнительные вопросы
-                    </Typography>
-                  </Box>
-                  
-                  {templateData.allowFollowups && (
-                    <Box sx={{ 
-                      p: 3, 
-                      backgroundColor: 'rgba(255,255,255,0.1)', 
-                      borderRadius: 2,
-                      border: '1px solid rgba(255,255,255,0.2)'
-                    }}>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.9, mb: 2 }}>
-                        <strong>Как это работает:</strong>
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
-                        • Максимум 3 дополнительных вопроса на каждый основной вопрос
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8, mb: 1 }}>
-                        • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'white', opacity: 0.8 }}>
-                        • Вопросы генерируются AI на основе ответа кандидата
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          {/* Questions */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              top: -20,
-              right: -20,
-              width: 120,
-              height: 120,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
-            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <Box sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    background: 'rgba(255,255,255,0.2)',
-                    backdropFilter: 'blur(10px)'
-                  }}>
-                    <IconFileText size={32} color="white" />
-                  </Box>
-                  <Box>
-                    <Typography variant="h4" fontWeight="700" sx={{ mb: 1 }}>
-                      Вопросы теста
-                    </Typography>
-                    <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                      Создайте вопросы для оценки навыков кандидатов
-                    </Typography>
-                  </Box>
-                  <Chip 
-                    label={questions.length} 
+                <Box>
+                  <CustomFormLabel 
                     sx={{ 
-                      backgroundColor: 'rgba(255,255,255,0.2)',
-                      color: 'white',
+                      color: 'text.primary', 
                       fontSize: '1.1rem',
                       fontWeight: 600,
-                      height: 32
-                    }} 
-                  />
-                </Box>
-                <Box display="flex" gap={2}>
-                  <Button
-                    variant="contained"
-                    startIcon={<IconWand size={24} />}
-                    onClick={() => setGenOpen(true)}
-                    sx={{
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1.5,
-                      '&:hover': {
-                        background: 'rgba(255,255,255,0.3)',
-                      }
+                      mb: 2
                     }}
                   >
-                    Сгенерировать AI
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<IconPlus size={24} />}
-                    onClick={addQuestion}
-                    sx={{
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
-                      color: 'white',
-                      border: '1px solid rgba(255,255,255,0.3)',
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      px: 3,
-                      py: 1.5,
-                      '&:hover': {
-                        background: 'rgba(255,255,255,0.3)',
-                      }
-                    }}
-                  >
-                    Добавить вопрос
-                  </Button>
+                    Время на один вопрос
+                  </CustomFormLabel>
+                  
+                  {/* Preset buttons */}
+                  <Box sx={{ mb: 3 }}>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
+                      Быстрый выбор:
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                      {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
+                        <Button
+                          key={time}
+                          variant={templateData.questionTime === time ? "contained" : "outlined"}
+                          onClick={() => setTemplateData({ ...templateData, questionTime: time })}
+                          sx={{
+                            backgroundColor: templateData.questionTime === time ? "#e3f2fd" : "#fff",
+                            color: "#1976d2",
+                            borderColor: "#1976d2",
+                            fontWeight: 600,
+                            minWidth: 'auto',
+                            px: 2,
+                            py: 1,
+                            fontSize: '0.9rem',
+                            '&:hover': { backgroundColor: "#bbdefb" }
+                          }}
+                        >
+                          {time} сек
+                        </Button>
+                      ))}
+                    </Box>
+                  </Box>
+                  
+                  {/* Slider */}
+                  <Box sx={{ px: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                        1 мин
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                        5 мин
+                      </Typography>
+                    </Box>
+                    <Slider
+                      value={templateData.questionTime}
+                      onChange={(_, value) => setTemplateData({ ...templateData, questionTime: value as number })}
+                      min={60}
+                      max={300}
+                      step={30}
+                      color="primary"
+                      sx={{
+                        '& .MuiSlider-track': { backgroundColor: '#1976d2' },
+                        '& .MuiSlider-thumb': { backgroundColor: '#1976d2' },
+                        '& .MuiSlider-rail': { backgroundColor: '#eee' }
+                      }}
+                    />
+                    <Box sx={{ textAlign: 'center', mt: 2 }}>
+                      <Typography 
+                        variant="h5" 
+                        sx={{ 
+                          color: 'text.primary', 
+                          fontWeight: 700,
+                        }}
+                      >
+                        {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mt: 0.5 }}>
+                        {templateData.questionTime} секунд
+                      </Typography>
+                    </Box>
+                  </Box>
+                  
+                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
+                    Время, отведенное на ответ на каждый вопрос
+                  </Typography>
                 </Box>
-              </Box>
 
-                              {questions.map((question, qIndex) => (
+                <Divider sx={{ my: 2 }} />
+
+                <Box>
+                  <CustomFormLabel 
+                    sx={{ 
+                      color: 'text.primary', 
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                      mb: 2
+                    }}
+                  >
+                    Дополнительные вопросы
+                  </CustomFormLabel>
+                  
+                  <Box sx={{ mb: 3 }}>
+                    <Box display="flex" alignItems="center" gap={2} mb={2}>
+                      <Switch
+                        checked={templateData.allowFollowups}
+                        onChange={(e: any) => {
+                          setTemplateData({ ...templateData, allowFollowups: e.target.checked });
+                          // Обновляем настройки для всех вопросов
+                          setQuestions(questions.map(q => ({ 
+                            ...q, 
+                            allowFollowups: e.target.checked,
+                            followupsMax: e.target.checked ? 3 : 0
+                          })));
+                        }}
+                        color="primary"
+                      />
+                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
+                        Разрешить дополнительные вопросы
+                      </Typography>
+                    </Box>
+                    
+                    {templateData.allowFollowups && (
+                      <Box sx={{ 
+                        p: 3, 
+                        backgroundColor: '#f5f5f5', 
+                        borderRadius: 2,
+                        border: '1px solid #e0e0e0'
+                      }}>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+                          <strong>Как это работает:</strong>
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                          • Максимум 3 дополнительных вопроса на каждый основной вопрос
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                          • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                          • Вопросы генерируются AI на основе ответа кандидата
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Stack>
+            </CardContent>
+          </Card>
+          <Divider sx={{ my: 0 }} />
+          {/* Questions */}
+          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
+            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+              <Stack spacing={3}>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <IconFileText size={32} color="#1976d2" />
+                    <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
+                      Вопросы теста
+                    </Typography>
+                    <Chip 
+                      label={questions.length} 
+                      sx={{ 
+                        backgroundColor: '#e3f2fd',
+                        color: '#1976d2',
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                        height: 32
+                      }} 
+                    />
+                  </Box>
+                  <Box display="flex" gap={2}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<IconWand size={20} />}
+                      onClick={() => setGenOpen(true)}
+                      sx={{
+                        color: '#1976d2',
+                        borderColor: '#1976d2',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: '#e3f2fd',
+                        }
+                      }}
+                    >
+                      Сгенерировать AI
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<IconPlus size={20} />}
+                      onClick={addQuestion}
+                      sx={{
+                        backgroundColor: '#1976d2',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: '#1565c0',
+                        }
+                      }}
+                    >
+                      Добавить вопрос
+                    </Button>
+                  </Box>
+                </Box>
+
+                {questions.map((question, qIndex) => (
                   <Paper key={qIndex} sx={{ 
                     p: 3, 
-                    mb: 3, 
-                    background: 'rgba(255,255,255,0.95)',
-                    borderRadius: 3,
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)'
+                    background: '#fafafa',
+                    borderRadius: 2,
+                    border: '1px solid #e0e0e0'
                   }}>
                     <Box display="flex" alignItems="center" gap={2} mb={3}>
                       <Chip 
                         label={`Вопрос ${qIndex + 1}`} 
                         sx={{ 
-                          backgroundColor: 'rgba(255,255,255,0.3)',
-                          color: 'white',
+                          backgroundColor: '#e3f2fd',
+                          color: '#1976d2',
                           fontSize: '1rem',
                           fontWeight: 600,
                           height: 28
@@ -812,19 +633,20 @@ export default function HRVacancyCreatePage() {
                         onChange={(e: any) =>
                           updateQuestion(qIndex, "text", e.target.value)
                         }
+                        placeholder="Введите вопрос, на который должен ответить кандидат"
                         helperText="Введите вопрос, на который должен ответить кандидат"
                         FormHelperTextProps={{
                           sx: { color: '#333', opacity: 0.9 }
                         }}
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            backgroundColor: 'rgba(255,255,255,0.8)',
+                            backgroundColor: '#fff',
                             borderRadius: 2,
                             '&:hover': {
-                              backgroundColor: 'rgba(255,255,255,1)',
+                              backgroundColor: '#fafafa',
                             },
                             '&.Mui-focused': {
-                              backgroundColor: 'white',
+                              backgroundColor: '#fff',
                             }
                           },
                           '& .MuiInputBase-input': {
@@ -834,12 +656,10 @@ export default function HRVacancyCreatePage() {
                         }}
                       />
                     </Box>
-
-
                   </Paper>
                 ))}
 
-                              {questions.length === 0 && (
+                {questions.length === 0 && (
                   <Box
                     display="flex"
                     flexDirection="column"
@@ -848,45 +668,40 @@ export default function HRVacancyCreatePage() {
                     py={6}
                     px={4}
                     sx={{
-                      border: "3px dashed rgba(255,255,255,0.3)",
-                      borderRadius: 4,
-                      backgroundColor: "rgba(255,255,255,0.1)",
-                      backdropFilter: 'blur(10px)',
+                      border: "2px dashed #e0e0e0",
+                      borderRadius: 2,
+                      backgroundColor: "#fafafa",
                       minHeight: 300
                     }}
                   >
                     <Box sx={{
                       p: 3,
                       borderRadius: 3,
-                      background: 'rgba(255,255,255,0.2)',
-                      backdropFilter: 'blur(10px)',
+                      background: '#e3f2fd',
                       mb: 3
                     }}>
-                      <IconFileText size={64} color="white" />
+                      <IconFileText size={64} color="#1976d2" />
                     </Box>
-                    <Typography variant="h5" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>
+                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
                       Нет вопросов
                     </Typography>
-                    <Typography variant="body1" sx={{ color: 'white', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}>
+                    <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}>
                       Добавьте вопросы для тестирования кандидатов. Вы можете создать их вручную или использовать AI для генерации.
                     </Typography>
                     <Box display="flex" gap={3}>
                       <Button
-                        variant="contained"
+                        variant="outlined"
                         startIcon={<IconWand size={24} />}
                         onClick={() => setGenOpen(true)}
                         sx={{
-                          background: 'rgba(255,255,255,0.2)',
-                          backdropFilter: 'blur(10px)',
-                          color: 'white',
-                          border: '2px solid rgba(255,255,255,0.3)',
+                          color: '#1976d2',
+                          borderColor: '#1976d2',
                           fontSize: '1.1rem',
                           fontWeight: 600,
                           px: 4,
                           py: 2,
                           '&:hover': {
-                            background: 'rgba(255,255,255,0.3)',
-                            border: '2px solid rgba(255,255,255,0.5)',
+                            backgroundColor: '#e3f2fd',
                           }
                         }}
                       >
@@ -897,17 +712,13 @@ export default function HRVacancyCreatePage() {
                         startIcon={<IconPlus size={24} />}
                         onClick={addQuestion}
                         sx={{
-                          background: 'rgba(255,255,255,0.2)',
-                          backdropFilter: 'blur(10px)',
-                          color: 'white',
-                          border: '2px solid rgba(255,255,255,0.3)',
+                          backgroundColor: '#1976d2',
                           fontSize: '1.1rem',
                           fontWeight: 600,
                           px: 4,
                           py: 2,
                           '&:hover': {
-                            background: 'rgba(255,255,255,0.3)',
-                            border: '2px solid rgba(255,255,255,0.5)',
+                            backgroundColor: '#1565c0',
                           }
                         }}
                       >
@@ -922,27 +733,21 @@ export default function HRVacancyCreatePage() {
                   <Box sx={{ 
                     mt: 4, 
                     pt: 3, 
-                    borderTop: '1px solid rgba(255,255,255,0.2)',
+                    borderTop: '1px solid #e0e0e0',
                     display: 'flex',
                     justifyContent: 'center',
                     gap: 2
                   }}>
                     <Button
-                      variant="contained"
-                      startIcon={<IconWand size={24} />}
+                      variant="outlined"
+                      startIcon={<IconWand size={20} />}
                       onClick={() => setGenOpen(true)}
                       sx={{
-                        background: 'rgba(255,255,255,0.2)',
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                        border: '2px solid rgba(255,255,255,0.3)',
-                        fontSize: '1rem',
+                        color: '#1976d2',
+                        borderColor: '#1976d2',
                         fontWeight: 600,
-                        px: 3,
-                        py: 1.5,
                         '&:hover': {
-                          background: 'rgba(255,255,255,0.3)',
-                          border: '2px solid rgba(255,255,255,0.5)',
+                          backgroundColor: '#e3f2fd',
                         }
                       }}
                     >
@@ -950,20 +755,13 @@ export default function HRVacancyCreatePage() {
                     </Button>
                     <Button
                       variant="contained"
-                      startIcon={<IconPlus size={24} />}
+                      startIcon={<IconPlus size={20} />}
                       onClick={addQuestion}
                       sx={{
-                        background: 'rgba(255,255,255,0.2)',
-                        backdropFilter: 'blur(10px)',
-                        color: 'white',
-                        border: '2px solid rgba(255,255,255,0.3)',
-                        fontSize: '1rem',
+                        backgroundColor: '#1976d2',
                         fontWeight: 600,
-                        px: 3,
-                        py: 1.5,
                         '&:hover': {
-                          background: 'rgba(255,255,255,0.3)',
-                          border: '2px solid rgba(255,255,255,0.5)',
+                          backgroundColor: '#1565c0',
                         }
                       }}
                     >
@@ -971,82 +769,10 @@ export default function HRVacancyCreatePage() {
                     </Button>
                   </Box>
                 )}
+              </Stack>
             </CardContent>
           </Card>
-
-          {/* Create Button */}
-          <Card sx={{ 
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            <Box sx={{
-              position: 'absolute',
-              bottom: -30,
-              right: -30,
-              width: 150,
-              height: 150,
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '50%',
-              zIndex: 0
-            }} />
-            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              {error && (
-                <Alert severity="error" sx={{ mb: 3, backgroundColor: 'rgba(255,255,255,0.9)' }}>
-                  {error}
-                </Alert>
-              )}
-
-              <Box display="flex" gap={3} justifyContent="flex-end" alignItems="center">
-                <Button
-                  variant="outlined"
-                  onClick={() => router.push("/hr/vacancies")}
-                  sx={{
-                    color: 'white',
-                    borderColor: 'rgba(255,255,255,0.5)',
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    px: 4,
-                    py: 2,
-                    '&:hover': {
-                      borderColor: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                    }
-                  }}
-                >
-                  Отмена
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={createVacancyWithTemplate}
-                  disabled={!vacancyData.title || isLoading}
-                  startIcon={<IconPlus size={24} />}
-                  sx={{
-                    background: 'rgba(255,255,255,0.2)',
-                    backdropFilter: 'blur(10px)',
-                    color: 'white',
-                    border: '2px solid rgba(255,255,255,0.3)',
-                    fontSize: '1.2rem',
-                    fontWeight: 700,
-                    px: 5,
-                    py: 2.5,
-                    '&:hover': {
-                      background: 'rgba(255,255,255,0.3)',
-                      border: '2px solid rgba(255,255,255,0.5)',
-                    },
-                    '&:disabled': {
-                      background: 'rgba(255,255,255,0.1)',
-                      color: 'rgba(255,255,255,0.5)',
-                    }
-                  }}
-                >
-                  {isLoading ? "Создание..." : "Создать вакансию с тестом"}
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
+        </Stack>
 
         {/* Generate Questions Dialog */}
         <Dialog 
@@ -1056,9 +782,8 @@ export default function HRVacancyCreatePage() {
           fullWidth
           PaperProps={{
             sx: {
-              borderRadius: 3,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              color: 'white'
+              borderRadius: 2,
+              background: '#fff'
             }
           }}
         >
@@ -1067,16 +792,15 @@ export default function HRVacancyCreatePage() {
               <Box sx={{
                 p: 1.5,
                 borderRadius: 2,
-                background: 'rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(10px)'
+                background: '#e3f2fd'
               }}>
-                <IconWand size={28} color="white" />
+                <IconWand size={28} color="#1976d2" />
               </Box>
               <Box>
-                <Typography variant="h5" fontWeight="700">
+                <Typography variant="h5" fontWeight="700" sx={{ color: 'text.primary' }}>
                   Сгенерировать вопросы с помощью AI
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9, mt: 0.5 }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                   AI создаст релевантные вопросы для вашей вакансии
                 </Typography>
               </Box>
@@ -1087,7 +811,7 @@ export default function HRVacancyCreatePage() {
               <CustomFormLabel 
                 htmlFor="gen-count"
                 sx={{ 
-                  color: 'white', 
+                  color: 'text.primary', 
                   fontSize: '1.1rem',
                   fontWeight: 600,
                   mb: 2
@@ -1104,18 +828,18 @@ export default function HRVacancyCreatePage() {
                 onChange={(e: any) => setGenCount(Number(e.target.value))}
                 inputProps={{ min: 1, max: 20 }}
                 helperText="Выберите количество вопросов от 1 до 20"
-              FormHelperTextProps={{
-                sx: { color: 'white', opacity: 0.9 }
-              }}
+                FormHelperTextProps={{
+                  sx: { color: 'text.secondary', opacity: 0.9 }
+                }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    backgroundColor: '#f7f7f7',
                     borderRadius: 2,
                     '&:hover': {
-                      backgroundColor: 'rgba(255,255,255,1)',
+                      backgroundColor: '#f0f0f0',
                     },
                     '&.Mui-focused': {
-                      backgroundColor: 'white',
+                      backgroundColor: '#fff',
                     }
                   },
                   '& .MuiInputBase-input': {
@@ -1127,7 +851,7 @@ export default function HRVacancyCreatePage() {
             </Box>
 
             {error && (
-              <Alert severity="error" sx={{ mt: 2, backgroundColor: 'rgba(255,255,255,0.9)' }}>
+              <Alert severity="error" sx={{ mt: 2 }}>
                 {error}
               </Alert>
             )}
@@ -1137,15 +861,10 @@ export default function HRVacancyCreatePage() {
               onClick={() => setGenOpen(false)} 
               disabled={isGenerating}
               sx={{
-                color: 'white',
-                borderColor: 'rgba(255,255,255,0.5)',
-                fontSize: '1rem',
+                color: 'text.secondary',
                 fontWeight: 600,
-                px: 3,
-                py: 1.5,
                 '&:hover': {
-                  borderColor: 'white',
-                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backgroundColor: '#f5f5f5',
                 }
               }}
             >
@@ -1157,21 +876,14 @@ export default function HRVacancyCreatePage() {
               disabled={isGenerating || !vacancyData.title}
               startIcon={<IconWand size={20} />}
               sx={{
-                background: 'rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(10px)',
-                color: 'white',
-                border: '2px solid rgba(255,255,255,0.3)',
-                fontSize: '1.1rem',
+                backgroundColor: '#1976d2',
                 fontWeight: 600,
-                px: 4,
-                py: 1.5,
                 '&:hover': {
-                  background: 'rgba(255,255,255,0.3)',
-                  border: '2px solid rgba(255,255,255,0.5)',
+                  backgroundColor: '#1565c0',
                 },
                 '&:disabled': {
-                  background: 'rgba(255,255,255,0.1)',
-                  color: 'rgba(255,255,255,0.5)',
+                  backgroundColor: '#e0e0e0',
+                  color: '#9e9e9e',
                 }
               }}
             >
