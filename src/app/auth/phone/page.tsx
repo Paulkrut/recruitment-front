@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Stack, Paper, InputAdornment } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
 import { IMaskInput } from 'react-imask';
 import PageContainer from '@/app/components/container/PageContainer';
+import { useRouter } from 'next/navigation';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -40,6 +41,18 @@ export default function PhoneAuthPage(){
   const [error, setError] = useState('');
   const [timer, setTimer] = useState(300);
   const theme = useTheme();
+  const router = useRouter();
+
+  // Проверка авторизации при загрузке страницы
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('recruitment_token');
+      if (token) {
+        // Если пользователь уже авторизован, перенаправляем на HR панель
+        router.replace('/hr/');
+      }
+    }
+  }, [router]);
 
   React.useEffect(() => {
     if (step === 'code' && timer > 0) {
@@ -68,7 +81,8 @@ export default function PhoneAuthPage(){
       const {token}=await r.json(); 
       localStorage.setItem('recruitment_token',token);
       localStorage.removeItem('current_company');
-      window.location.href='/hr/choose-company'; 
+      // Перенаправляем на HR панель, layout сам определит нужна ли выборка компании
+      window.location.href='/hr/'; 
     } else {
       setError('Неверный или истекший код подтверждения.');
     }
