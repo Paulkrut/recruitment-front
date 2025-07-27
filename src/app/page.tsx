@@ -12,6 +12,8 @@ import user3 from "@/../public/images/profile/user3.jpg";
 import {loadFull} from "tsparticles";
 import Particles from "@tsparticles/react";
 import HeroParticles from "./components/HeroParticles";
+import MobileMenu from "./components/MobileMenu";
+import DesktopMenu from "./components/DesktopMenu";
 
 
 const pages = [
@@ -24,18 +26,13 @@ const pages = [
 ];
 
 export default function LandingPage() {
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [currentSlide, setCurrentSlide] = React.useState(0);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorElNav(event.currentTarget);
-  const handleCloseNavMenu = () => setAnchorElNav(null);
 
   const handlePrevSlide = () => setCurrentSlide((prev) => prev === 0 ? testimonials.length - 1 : prev - 1);
   const handleNextSlide = () => setCurrentSlide((prev) => prev === testimonials.length - 1 ? 0 : prev + 1);
 
   // Функция плавной прокрутки к секциям
-  const scrollToSection = (sectionName: string) => {
-    handleCloseNavMenu();
+  const scrollToSection = React.useCallback((sectionName: string) => {
     
     const sectionMap: { [key: string]: string } = {
       "Главная": "hero-section",
@@ -56,7 +53,7 @@ export default function LandingPage() {
         });
       }
     }
-  };
+  }, []);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -165,20 +162,7 @@ export default function LandingPage() {
                   </Typography>
                 </Box>
                 {/* Mobile menu */}
-                <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", p: 0 }}>
-                  <IconButton size="large" aria-controls="menu-appbar" aria-haspopup="true" onClick={handleOpenNavMenu} color="inherit" sx={{ p: 0, mr: 1 }}>
-                    <Icon icon="material-symbols:menu" />
-                  </IconButton>
-                  <Menu id="menu-appbar" anchorEl={anchorElNav} anchorOrigin={{ vertical: "bottom", horizontal: "left" }} keepMounted transformOrigin={{ vertical: "top", horizontal: "left" }} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu} sx={{ display: { xs: "block", md: "none" } }}>
-                    {pages.map((page) => (
-                      <MenuItem key={page} onClick={() => scrollToSection(page)}>
-                        <Typography textAlign="center">
-                          {page}
-                        </Typography>
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </Box>
+                <MobileMenu pages={pages} onScrollToSection={scrollToSection} />
                 {/* Logo - Mobile */}
                 <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", gap: 1, flexGrow: 1 }}>
                   <Typography
@@ -199,13 +183,7 @@ export default function LandingPage() {
                   </Typography>
                 </Box>
                 {/* Desktop menu */}
-                <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" }, justifyContent: "center", gap: 2 }}>
-                  {pages.map((page) => (
-                    <Button key={page} onClick={() => scrollToSection(page)} sx={{ color: "text.primary", display: "flex", alignItems: "center", gap: 1 }}>
-                      {page}
-                    </Button>
-                  ))}
-                </Box>
+                <DesktopMenu pages={pages} onScrollToSection={scrollToSection} />
                 {/* Login button */}
                 <Box>
                   <Button variant="contained" color="primary" href="/auth/phone">Войти</Button>
@@ -1474,3 +1452,4 @@ export default function LandingPage() {
     </Box>
   );
 }
+ 
