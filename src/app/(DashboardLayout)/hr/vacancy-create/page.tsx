@@ -130,6 +130,12 @@ export default function HRVacancyCreatePage() {
     setError(null);
 
     try {
+      // Получаем текущую компанию
+      const currentCompanyId = localStorage.getItem("current_company");
+      if (!currentCompanyId) {
+        throw new Error("Не выбрана компания");
+      }
+
       // Создаем вакансию с тестом в одном запросе
       const response = await apiFetch(`${API_BASE}/api/admin/vacancies/with-template`, {
         method: "POST",
@@ -140,6 +146,7 @@ export default function HRVacancyCreatePage() {
           templateTitle: `Тест для вакансии: ${vacancyData.title}`,
           templateDescription: `Тест для вакансии "${vacancyData.title}"`,
           questions: questions,
+          companyId: currentCompanyId, // Добавляем ID компании
         }),
       });
 
@@ -773,6 +780,44 @@ export default function HRVacancyCreatePage() {
             </CardContent>
           </Card>
         </Stack>
+
+        {/* Save/Cancel Buttons */}
+        <Card sx={{ 
+          background: '#fff',
+          color: 'text.primary',
+          position: 'relative',
+          overflow: 'hidden',
+          mt: 4,
+          boxShadow: 1
+        }}>
+          <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 3, backgroundColor: 'rgba(255,255,255,0.9)' }}>
+                {error}
+              </Alert>
+            )}
+            <Box display="flex" gap={2} justifyContent="flex-end" alignItems="center">
+              <Button
+                variant="outlined"
+                startIcon={<IconArrowLeft size={20} />}
+                onClick={() => router.push("/hr/vacancies")}
+                sx={{ fontWeight: 500, borderWidth: 2 }}
+              >
+                Назад
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<IconBriefcase size={24} />}
+                onClick={createVacancyWithTemplate}
+                disabled={!vacancyData.title || isLoading}
+                sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
+              >
+                {isLoading ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
+                {isLoading ? "Создание..." : "Создать вакансию"}
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
 
         {/* Generate Questions Dialog */}
         <Dialog 
