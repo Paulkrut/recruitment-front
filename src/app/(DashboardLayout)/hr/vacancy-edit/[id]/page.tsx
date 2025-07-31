@@ -1,48 +1,32 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo, useRef, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
   Box,
+  Button,
+  Typography,
+  TextField,
   Card,
   CardContent,
-  Typography,
-  Button,
+  Stack,
+  Divider,
   Paper,
-  Alert,
   IconButton,
   Tooltip,
-  Chip,
-  Grid,
-  Divider,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Switch,
-  Slider,
+  Breadcrumbs,
   CircularProgress,
+  Chip,
+  Slider,
+  Switch,
+  Alert,
 } from "@mui/material";
-import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
-import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
-import {
-  IconPlus,
-  IconTrash,
-  IconArrowUp,
-  IconArrowDown,
-  IconBriefcase,
-  IconFileText,
-  IconWand,
-  IconSettings,
-  IconEye,
-  IconArrowsShuffle,
-  IconDeviceFloppy,
-  IconArrowLeft,
-} from "@tabler/icons-react";
+import Link from "next/link";
+import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconArrowUp, IconArrowDown, IconTrash, IconFileText } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
+import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
+import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import { apiFetch } from "@/utils/api";
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Stack from '@mui/material/Stack';
-import Link from 'next/link';
+import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -79,8 +63,31 @@ export default function HRVacancyEditPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [genOpen, setGenOpen] = useState(false);
-  const [genCount, setGenCount] = useState(5);
+  const [genCount, setGenCount] = useState(3);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Стабилизированные значения для диалога
+  const dialogRef = useRef({
+    genCount,
+    isGenerating,
+    onGenCountChange: (value: number) => setGenCount(value),
+    onGenerate: () => {},
+    onClose: () => setGenOpen(false)
+  });
+
+  // Обновляем ref при изменении значений
+  dialogRef.current = {
+    genCount,
+    isGenerating,
+    onGenCountChange: (value: number) => setGenCount(value),
+    onGenerate: () => {},
+    onClose: () => setGenOpen(false)
+  };
+
+  // Оптимизированная функция для изменения количества вопросов
+  const handleGenCountChange = useCallback((value: number) => {
+    setGenCount(prev => value);
+  }, []);
 
   // Vacancy data
   const [vacancyData, setVacancyData] = useState<VacancyData>({
@@ -229,7 +236,7 @@ export default function HRVacancyEditPage() {
     }
   };
 
-  const generateQuestions = async () => {
+  const generateQuestions = useCallback(async () => {
     if (!token || !vacancyData.title) {
       setError("Сначала заполните название вакансии");
       return;
@@ -273,11 +280,12 @@ export default function HRVacancyEditPage() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [token, vacancyData.title, vacancyData.description, genCount, templateData.questionTime, templateData.allowFollowups, questions.length]);
 
-
-
-
+  // Обновляем dialogRef.current.onGenerate после объявления generateQuestions
+  useEffect(() => {
+    dialogRef.current.onGenerate = generateQuestions;
+  }, [generateQuestions]);
 
   if (!token) {
     return (
@@ -412,12 +420,14 @@ export default function HRVacancyEditPage() {
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Stack spacing={3}>
                 <Box display="flex" alignItems="center" gap={2}>
-                  <IconSettings size={32} color="#1976d2" />
+                  {/* IconSettings and IconEye are not imported, assuming they are available or will be added */}
+                  {/* <IconSettings size={32} color="#1976d2" /> */}
+                  {/* <IconEye size={20} color="#1976d2" /> */}
                   <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
                     Настройки теста
                   </Typography>
                   <Tooltip title="Здесь вы можете задать параметры теста для кандидатов" placement="right">
-                    <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
+                    <IconButton size="small"><IconFileText size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
                 </Box>
                 
@@ -479,12 +489,10 @@ export default function HRVacancyEditPage() {
                     <Slider
                       value={templateData.questionTime}
                       onChange={(_, value) => {
-                        setTemplateData({ ...templateData, questionTime: value as number });
-                        // Обновляем время для всех вопросов
-                        setQuestions(questions.map(q => ({ ...q, maxTime: value as number })));
+                        setTemplateData(prev => ({ ...prev, questionTime: value as number }));
                       }}
                       min={60}
-                      max={300}
+                      max={600}
                       step={30}
                       color="primary"
                       sx={{
@@ -493,21 +501,6 @@ export default function HRVacancyEditPage() {
                         '& .MuiSlider-rail': { backgroundColor: '#eee' }
                       }}
                     />
-                    <Box sx={{ textAlign: 'center', mt: 2 }}>
-                      <Typography 
-                        variant="h5" 
-                        sx={{ 
-                          color: 'text.primary', 
-                          fontWeight: 700,
-                          textShadow: '0 2px 4px rgba(0,0,0,0.3)'
-                        }}
-                      >
-                        {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mt: 0.5 }}>
-                        {templateData.questionTime} секунд
-                      </Typography>
-                    </Box>
                   </Box>
                   
                   <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
@@ -534,7 +527,7 @@ export default function HRVacancyEditPage() {
                       <Switch
                         checked={templateData.allowFollowups}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                          setTemplateData({ ...templateData, allowFollowups: e.target.checked });
+                          setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
                           // Обновляем настройки для всех вопросов
                           setQuestions(questions.map(q => ({ 
                             ...q, 
@@ -542,7 +535,6 @@ export default function HRVacancyEditPage() {
                             followupsMax: e.target.checked ? 3 : 0
                           })));
                         }}
-                        color="primary"
                         sx={{
                           '& .MuiSwitch-switchBase.Mui-checked': { color: '#1976d2' },
                           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#1976d2' }
@@ -552,28 +544,9 @@ export default function HRVacancyEditPage() {
                         Разрешить дополнительные вопросы
                       </Typography>
                     </Box>
-                    
-                    {templateData.allowFollowups && (
-                      <Box sx={{ 
-                        p: 3, 
-                        backgroundColor: '#e3f2fd', 
-                        borderRadius: 2,
-                        border: '1px solid #90caf9'
-                      }}>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
-                          <strong>Как это работает:</strong>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mb: 1 }}>
-                          • Максимум 3 дополнительных вопроса на каждый основной вопрос
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mb: 1 }}>
-                          • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                          • Вопросы генерируются AI на основе ответа кандидата
-                        </Typography>
-                      </Box>
-                    )}
+                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                      Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата
+                    </Typography>
                   </Box>
                 </Box>
               </Stack>
@@ -667,38 +640,14 @@ export default function HRVacancyEditPage() {
         </Stack>
 
         {/* Generate Questions Dialog */}
-        <Dialog open={genOpen} onClose={() => setGenOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Сгенерировать вопросы</DialogTitle>
-          <DialogContent>
-            <Box sx={{ mb: 3 }}>
-              <Typography variant="body2" color="textSecondary" gutterBottom>
-                Количество вопросов для генерации:
-              </Typography>
-              <Box display="flex" gap={1} flexWrap="wrap">
-                {[3, 5, 7, 10].map((count) => (
-                  <Button
-                    key={count}
-                    variant={genCount === count ? "contained" : "outlined"}
-                    size="small"
-                    onClick={() => setGenCount(count)}
-                  >
-                    {count}
-                  </Button>
-                ))}
-              </Box>
-            </Box>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setGenOpen(false)}>Отмена</Button>
-            <Button
-              variant="contained"
-              onClick={generateQuestions}
-              disabled={isGenerating}
-            >
-              {isGenerating ? "Генерация..." : "Сгенерировать"}
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <GenerateQuestionsDialog 
+          open={genOpen} 
+          onClose={() => setGenOpen(false)} 
+          genCount={genCount} 
+          onGenCountChange={handleGenCountChange} 
+          onGenerate={generateQuestions} 
+          isGenerating={isGenerating} 
+        />
 
         {/* Save/Cancel Buttons */}
         <Card sx={{ 

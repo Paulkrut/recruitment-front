@@ -43,7 +43,7 @@ const MaxWidthDialog = () => {
       </Button>
       <Dialog fullWidth={fullWidth} maxWidth={maxWidth} open={open} onClose={handleClose}>
         <DialogTitle>Optional sizes</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ pt: '16px !important' }}>
           <DialogContentText>
             You can set my maximum width and whether to adapt or not.
           </DialogContentText>

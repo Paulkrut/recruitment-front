@@ -11,6 +11,8 @@ import CustomTextField from "../../forms/theme-elements/CustomTextField";
 
 const FormDialog = () => {
     const [open, setOpen] = React.useState(false);
+    const [email, setEmail] = React.useState('');
+    const [error, setError] = React.useState('');
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -18,6 +20,37 @@ const FormDialog = () => {
 
     const handleClose = () => {
         setOpen(false);
+        setEmail('');
+        setError('');
+    };
+    
+    // Валидация email
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+    
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setEmail(value);
+        setError('');
+        
+        if (value && !validateEmail(value)) {
+            setError('Введите корректный email адрес');
+        }
+    };
+    
+    const handleSubmit = () => {
+        if (!email.trim()) {
+            setError('Email обязателен');
+            return;
+        }
+        if (!validateEmail(email)) {
+            setError('Введите корректный email адрес');
+            return;
+        }
+        // Здесь можно добавить логику подписки
+        handleClose();
     };
 
     return (
@@ -27,7 +60,7 @@ const FormDialog = () => {
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Subscribe</DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{ pt: '16px !important' }}>
                     <DialogContentText>
                         To subscribe to this website, please enter your email address here. We
                         will send updates occasionally.
@@ -37,15 +70,20 @@ const FormDialog = () => {
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Email Address"
+                            label="Email Address *"
                             type="email"
                             fullWidth
+                            value={email}
+                            onChange={handleEmailChange}
+                            error={!!error}
+                            helperText={error || 'Например: example@mail.ru'}
+                            placeholder="example@mail.ru"
                         />
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button color="error" onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Subscribe</Button>
+                    <Button onClick={handleSubmit} disabled={!email.trim() || !!error}>Subscribe</Button>
                 </DialogActions>
             </Dialog>
         </>

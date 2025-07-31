@@ -21,6 +21,7 @@ const AddNotes = ({ colors }: Props) => {
   const [scolor, setScolor] = React.useState<string>('primary');
   const id = useSelector((state) => state.notesReducer.notes.length + 1);
   const [title, setTitle] = React.useState('');
+  const [error, setError] = React.useState('');
 
   const setColor = (e: string) => {
     setScolor(e);
@@ -32,6 +33,19 @@ const AddNotes = ({ colors }: Props) => {
 
   const handleClose = () => {
     setOpen(false);
+    setTitle('');
+    setError('');
+  };
+  
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTitle(value);
+    setError('');
+    
+    // Валидация: описание не должно быть пустым
+    if (value.trim().length < 3) {
+      setError('Описание должно содержать минимум 3 символа');
+    }
   };
 
   return (
@@ -40,7 +54,7 @@ const AddNotes = ({ colors }: Props) => {
         Add Note
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
+        <DialogContent sx={{ pt: '16px !important' }}>
           <Typography variant="h5" mb={2} fontWeight={700}>
             Add New Note
           </Typography>
@@ -52,14 +66,17 @@ const AddNotes = ({ colors }: Props) => {
             multiline
             rows={5}
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
             margin="normal"
             id="description"
-            label="Add Note Description"
+            label="Add Note Description *"
             type="text"
             fullWidth
             size="small"
             variant="outlined"
+            error={!!error}
+            helperText={error || 'Минимум 3 символа'}
+            placeholder="Введите описание заметки..."
           />
           <Typography variant="h6" my={2}>
             Choose Color
@@ -83,12 +100,17 @@ const AddNotes = ({ colors }: Props) => {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
-            disabled={title === ''}
+            disabled={title.trim().length < 3 || !!error}
             onClick={(e) => {
               e.preventDefault();
+              if (title.trim().length < 3) {
+                setError('Описание должно содержать минимум 3 символа');
+                return;
+              }
               dispatch(addNote(id, title, scolor));
               setOpen(false);
               setTitle('');
+              setError('');
             }}
             variant="contained"
           >

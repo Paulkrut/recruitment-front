@@ -130,7 +130,21 @@ export default function CandidateDetailPage() {
   useEffect(() => {
     if (!token) return;
     // Получаем всех кандидатов для сравнения
-    apiFetch(`${API_BASE}/api/admin/candidates`).then(r=>r.json()).then(setAllCandidates);
+    apiFetch(`${API_BASE}/api/admin/candidates`).then(r=>r.json()).then(data => {
+      // Проверяем что data это массив
+      if (Array.isArray(data)) {
+        setAllCandidates(data);
+      } else if (data && Array.isArray(data.items)) {
+        // Если API возвращает объект с полем items
+        setAllCandidates(data.items);
+      } else {
+        // Если что-то пошло не так, устанавливаем пустой массив
+        setAllCandidates([]);
+      }
+    }).catch(() => {
+      // В случае ошибки устанавливаем пустой массив
+      setAllCandidates([]);
+    });
   }, [token]);
 
   if (!token)
@@ -187,7 +201,14 @@ export default function CandidateDetailPage() {
       <Stack spacing={3}>
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb">
-          <Link href="/hr/candidates" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Кандидаты</Link>
+          <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+          {sessionDetail?.vacancy ? (
+            <Link href={`/hr/vacancies/${sessionDetail.vacancy.id}`} style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>
+              {sessionDetail.vacancy.title}
+            </Link>
+          ) : (
+            <Typography color="text.primary">Вакансия</Typography>
+          )}
           <Typography color="text.primary">{candidate}</Typography>
         </Breadcrumbs>
         {/* Информация о кандидате */}
@@ -425,10 +446,10 @@ export default function CandidateDetailPage() {
         {/* Попап сравнения кандидатов */}
         <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="sm" fullWidth>
           <DialogTitle>Сравнить с другими кандидатами</DialogTitle>
-          <DialogContent>
+          <DialogContent sx={{ pt: '16px !important' }}>
             <Typography variant="body2" sx={{mb:2}}>Выберите кандидатов для сравнения (минимум 1):</Typography>
             <Stack spacing={1}>
-              {allCandidates.filter(c=>c.id!==candId).map(c=>(
+              {Array.isArray(allCandidates) && allCandidates.filter(c=>c.id!==candId).map(c=>(
                 <FormControlLabel
                   key={c.id}
                   control={<Checkbox checked={selectedCompare.includes(c.id)} onChange={e=>{

@@ -170,6 +170,12 @@ export default function HRVacancyDetailPage() {
           {/* Кандидаты — основной блок, как было, но с улучшениями */}
           <Grid container spacing={4}>
             <Grid item xs={12}>
+              {/* Breadcrumbs для кандидатов */}
+              <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+                <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+                <Typography color="text.primary">{title}</Typography>
+                <Typography color="text.primary">Кандидаты</Typography>
+              </Breadcrumbs>
               <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb: 3, boxShadow: 1 }}>
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
                   <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
@@ -325,7 +331,7 @@ export default function HRVacancyDetailPage() {
       }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
         <DialogTitle>QR-код для прохождения теста</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ pt: '16px !important' }}>
           <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
             <QRCode value={qrDialog.url} size={200} />
             <Button variant="outlined" onClick={()=>{
@@ -354,7 +360,7 @@ export default function HRVacancyDetailPage() {
       {/* Попап сравнения двух кандидатов */}
       <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>Сравнение кандидатов</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ pt: '16px !important' }}>
           {selectedCandidates.length === 2 ? (
             <Grid container spacing={2}>
               {selectedCandidates.map((id, idx) => {
@@ -393,22 +399,97 @@ export default function HRVacancyDetailPage() {
 function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; onClose:()=>void; vacancyId:string; onAdded:()=>void}){
   const [form,setForm] = React.useState({name:'',email:'',phone:''});
   const [loading,setLoading]=React.useState(false);
-  const canSubmit = form.name.trim()!=='' && !loading;
-  const handleChange=(field:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>setForm({...form,[field]:e.target.value});
+  const [errors, setErrors] = React.useState({name:'',email:'',phone:''});
+  
+  // Валидация email
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
+  // Валидация телефона (российский формат)
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  };
+  
+  const canSubmit = form.name.trim()!=='' && !loading && !errors.name && !errors.email && !errors.phone;
+  
+  const handleChange=(field:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>{
+    const value = e.target.value;
+    setForm({...form,[field]:value});
+    
+    // Очищаем ошибку при вводе
+    setErrors(prev => ({...prev, [field]: ''}));
+    
+    // Валидация в реальном времени
+    if (field === 'email' && value && !validateEmail(value)) {
+      setErrors(prev => ({...prev, email: 'Введите корректный email адрес'}));
+    }
+    if (field === 'phone' && value && !validatePhone(value)) {
+      setErrors(prev => ({...prev, phone: 'Введите корректный номер телефона'}));
+    }
+  };
+  
   const handleSubmit=async()=>{
     if(!canSubmit) return;
+    
+    // Финальная валидация перед отправкой
+    const newErrors = {name:'',email:'',phone:''};
+    if (!form.name.trim()) newErrors.name = 'Имя обязательно';
+    if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
+    if (form.phone && !validatePhone(form.phone)) newErrors.phone = 'Введите корректный номер телефона';
+    
+    if (newErrors.name || newErrors.email || newErrors.phone) {
+      setErrors(newErrors);
+      return;
+    }
+    
     setLoading(true);
     const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,vacancyId})});
     setLoading(false);
-    if(res.ok){ setForm({name:'',email:'',phone:''}); onClose(); onAdded(); }
+    if(res.ok){ 
+      setForm({name:'',email:'',phone:''}); 
+      setErrors({name:'',email:'',phone:''});
+      onClose(); 
+      onAdded(); 
+    }
   };
+  
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Добавить кандидата</DialogTitle>
-      <DialogContent>
-        <TextField label="Имя" fullWidth sx={{mb:2}} value={form.name} onChange={handleChange('name')} autoFocus />
-        <TextField label="Email" fullWidth sx={{mb:2}} value={form.email} onChange={handleChange('email')} />
-        <TextField label="Телефон" fullWidth sx={{mb:2}} value={form.phone} onChange={handleChange('phone')} />
+      <DialogContent sx={{ pt: '16px !important' }}>
+        <TextField 
+          label="Имя *" 
+          fullWidth 
+          sx={{mb:2}} 
+          value={form.name} 
+          onChange={handleChange('name')} 
+          autoFocus 
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField 
+          label="Email" 
+          fullWidth 
+          sx={{mb:2}} 
+          value={form.email} 
+          onChange={handleChange('email')} 
+          error={!!errors.email}
+          helperText={errors.email || 'Например: example@mail.ru'}
+          placeholder="example@mail.ru"
+        />
+        <TextField 
+          label="Телефон" 
+          fullWidth 
+          sx={{mb:2}} 
+          value={form.phone} 
+          onChange={handleChange('phone')} 
+          error={!!errors.phone}
+          helperText={errors.phone || 'Например: +7 (999) 123-45-67'}
+          placeholder="+7 (999) 123-45-67"
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Отмена</Button>

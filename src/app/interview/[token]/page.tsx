@@ -13,6 +13,10 @@ import {
   Step,
   StepLabel,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -53,6 +57,7 @@ export default function CandidateInterviewPage() {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [answered,setAnswered] = useState(false);
   const [paused,setPaused] = useState(false);
+  const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
   const [testStream, setTestStream] = useState<MediaStream|null>(null);
@@ -61,11 +66,38 @@ export default function CandidateInterviewPage() {
   const [micReady,setMicReady] = useState(false);
   const analyserRef = useRef<AnalyserNode|null>(null);
   const rafRef = useRef<number|null>(null);
+  const [skipDialogOpen, setSkipDialogOpen] = useState(false);
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
 
   const activeStep = result ? 3 : question ? 2 : prepared ? 1 : 0;
+
+  // Функция для форматирования номера вопроса
+  const formatQuestionNumber = (position: number) => {
+    // Если position имеет десятичную часть (например, 0.01, 0.02, 3.01, 3.02), 
+    // то это дополнительный вопрос
+    const mainQuestion = Math.floor(position);
+    const decimalPart = position - mainQuestion;
+    
+    if (decimalPart > 0) {
+      // Дополнительный вопрос: 1.1, 1.2, 1.3 или 3.1, 3.2, 3.3
+      const followUpNumber = Math.round(decimalPart * 100); // 1, 2, 3
+      // Если mainQuestion = 0, то это дополнительный вопрос к первому основному вопросу
+      const actualMainQuestion = mainQuestion === 0 ? 1 : mainQuestion + 1;
+      return `${actualMainQuestion}.${followUpNumber}`;
+    } else {
+      // Основной вопрос: 1, 2, 3, 4
+      return `${position + 1}`;
+    }
+  };
+
+  // Функция для определения типа вопроса
+  const isFollowUpQuestion = (position: number) => {
+    const mainQuestion = Math.floor(position);
+    const decimalPart = position - mainQuestion;
+    return decimalPart > 0;
+  };
 
   const stepperComp = (
     <Stepper activeStep={activeStep} alternativeLabel sx={{mb:2}}>
@@ -266,7 +298,7 @@ export default function CandidateInterviewPage() {
     if (!question) return;
 
     clearCountdown();
-
+    setLoadingNextQuestion(true);
     setAnswered(true);
 
     // optimistic UI update (показываем, что ответ дан)
@@ -294,6 +326,7 @@ export default function CandidateInterviewPage() {
         `${API_BASE}/api/public/interview/${token}/result`
       );
       setResult(await res.json());
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -305,6 +338,7 @@ export default function CandidateInterviewPage() {
         `${API_BASE}/api/public/interview/${token}/result`
       );
       setResult(await res.json());
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -314,10 +348,13 @@ export default function CandidateInterviewPage() {
       cp[typingIdx] = { role: "bot", text: d.question.text };
       return cp;
     });
+    setLoadingNextQuestion(false);
+    setAnswered(false);
   }
 
   async function sendEmptyAnswer(){
     clearCountdown();
+    setLoadingNextQuestion(true);
     setAnswered(true);
     if(!question) return;
 
@@ -339,12 +376,14 @@ export default function CandidateInterviewPage() {
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
+      setLoadingNextQuestion(false);
       return;
     }
     const d = await r.json();
     if(!d.question){
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
+      setLoadingNextQuestion(false);
       return;
     }
     setQuestion(d.question);
@@ -353,6 +392,13 @@ export default function CandidateInterviewPage() {
       cp[typingIdx]={role:'bot',text:d.question.text};
       return cp;
     });
+    setLoadingNextQuestion(false);
+    setAnswered(false);
+  }
+
+  async function skipQuestion() {
+    setSkipDialogOpen(false);
+    await sendEmptyAnswer();
   }
 
   /* ---------------- render ---------------- */
@@ -434,7 +480,14 @@ export default function CandidateInterviewPage() {
         <Typography variant="h6" fontWeight={700}>Интервью</Typography>
         <Box sx={{display:'flex',alignItems:'center',gap:2}}>
         {total && (
-            <Typography variant="body2">{question.position + 1}/{total}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2">Вопрос {formatQuestionNumber(question.position)} из {total}</Typography>
+              {isFollowUpQuestion(question.position) && (
+                <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600 }}>
+                  (дополнительный)
+                </Typography>
+              )}
+            </Box>
           )}
           {timeLeft !== null && question?.maxTime && (
             <Box position="relative" display="inline-flex">
@@ -468,7 +521,11 @@ export default function CandidateInterviewPage() {
             {chat.map((m,i)=>(
               m.text=== 'typing' ? (
                 <ChatBubble key={i} role={m.role} time={undefined}>
-                  <Box component="span" sx={{ animation: `${blink} 1s infinite step-start` }}>•••</Box>
+                  <Box component="span" sx={{ 
+                    animation: `${blink} 1s infinite step-start`
+                  }}>
+                    •••
+                  </Box>
                 </ChatBubble>
               ) : (
                 <ChatBubble key={i} role={m.role} text={m.text} time={new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} />
@@ -491,11 +548,43 @@ export default function CandidateInterviewPage() {
       )}
 
       {/* answer input – только аудио */}
-      <Box sx={{ display: "flex", gap: 1, mt: 1, position:'sticky', bottom:0, bgcolor:'background.default', py:1 }}>
+      <Box sx={{ display: "flex", gap: 1, mt: 1, position:'sticky', bottom:0, bgcolor:'background.default', py:1, justifyContent: 'space-between' }}>
         {!recording ? (
-          <Button variant="contained" onClick={startRecording} disabled={recording}>
-            Записать ответ
+          <>
+            <Button 
+              variant="contained" 
+              onClick={startRecording} 
+              disabled={recording || loadingNextQuestion}
+              sx={{
+                fontWeight: 600,
+                '&:disabled': {
+                  opacity: 0.6,
+                }
+              }}
+            >
+              {loadingNextQuestion ? 'Обработка ответа...' : 'Записать ответ'}
+            </Button>
+            <Button 
+              variant="outlined" 
+              onClick={() => setSkipDialogOpen(true)}
+              disabled={recording || loadingNextQuestion}
+              color="primary"
+              sx={{
+                borderColor: 'primary.main',
+                color: 'primary.main',
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'primary.contrastText',
+                  borderColor: 'primary.main',
+                },
+                '&:disabled': {
+                  opacity: 0.6,
+                }
+              }}
+            >
+              Пропустить вопрос
           </Button>
+          </>
         ) : (
           <Button variant="outlined" color="error" onClick={stopRecording}>
             Стоп
@@ -507,6 +596,28 @@ export default function CandidateInterviewPage() {
       {previewStream && (
         <video ref={videoRef} width={320} height={240} autoPlay muted playsInline style={{ marginBottom: 8, border:'1px solid #ccc', borderRadius:4 }} />
       )}
+
+      {/* Диалог подтверждения пропуска вопроса */}
+      <Dialog open={skipDialogOpen} onClose={() => setSkipDialogOpen(false)}>
+        <DialogTitle>
+          Пропустить вопрос?
+        </DialogTitle>
+        <DialogContent sx={{ pt: '16px !important' }}>
+          <Typography>
+            Вы уверены, что хотите пропустить этот вопрос? 
+            <br />
+            <strong>Внимание:</strong> Пропущенный вопрос будет засчитан как отсутствие ответа.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSkipDialogOpen(false)} color="primary">
+            Отмена
+          </Button>
+          <Button onClick={skipQuestion} color="warning" variant="contained">
+            Пропустить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

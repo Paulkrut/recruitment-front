@@ -208,29 +208,83 @@ export default function Sidebar() {
 function ProfileDialog({open,onClose,onUpdated}:{open:boolean;onClose:()=>void;onUpdated:(u:any)=>void}){
   const [form,setForm]=useState({name:'',email:'',position:''});
   const [loading,setLoading]=useState(false);
+  const [errors, setErrors] = useState({name:'',email:'',position:''});
+  
+  // Валидация email
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  
   useEffect(()=>{
     if(!open) return;
     const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
     apiFetch(`${API_BASE}/api/user/me`).then(r=>r.json()).then(setForm);
   },[open]);
+  
   const save=async ()=>{
+    // Валидация перед сохранением
+    const newErrors = {name:'',email:'',position:''};
+    if (!form.name.trim()) newErrors.name = 'Имя обязательно';
+    if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
+    
+    if (newErrors.name || newErrors.email || newErrors.position) {
+      setErrors(newErrors);
+      return;
+    }
+    
     setLoading(true);
     const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
     await apiFetch(`${API_BASE}/api/user/me`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});
-    setLoading(false); onUpdated(form); onClose();
+    setLoading(false); 
+    onUpdated(form); 
+    onClose();
   };
-  const h=(f:keyof typeof form)=>(e:any)=>setForm({...form,[f]:e.target.value});
+  
+  const h=(f:keyof typeof form)=>(e:any)=>{
+    const value = e.target.value;
+    setForm({...form,[f]:value});
+    // Очищаем ошибку при вводе
+    setErrors(prev => ({...prev, [f]: ''}));
+    // Валидация email в реальном времени
+    if (f === 'email' && value && !validateEmail(value)) {
+      setErrors(prev => ({...prev, email: 'Введите корректный email адрес'}));
+    }
+  };
+  
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Мой профиль</DialogTitle>
-      <DialogContent sx={{display:'flex',flexDirection:'column',gap:2,mt:1}}>
-        <TextField label="Имя" value={form.name||''} onChange={h('name')} fullWidth />
-        <TextField label="Email" value={form.email||''} onChange={h('email')} fullWidth />
-        <TextField label="Должность" value={form.position||''} onChange={h('position')} fullWidth />
+      <DialogContent sx={{display:'flex',flexDirection:'column',gap:2,pt:'16px !important'}}>
+        <TextField 
+          label="Имя *" 
+          value={form.name||''} 
+          onChange={h('name')} 
+          fullWidth 
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField 
+          label="Email" 
+          value={form.email||''} 
+          onChange={h('email')} 
+          fullWidth 
+          error={!!errors.email}
+          helperText={errors.email || 'Например: example@mail.ru'}
+          placeholder="example@mail.ru"
+        />
+        <TextField 
+          label="Должность" 
+          value={form.position||''} 
+          onChange={h('position')} 
+          fullWidth 
+          error={!!errors.position}
+          helperText={errors.position}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Отмена</Button>
-        <Button onClick={save} disabled={loading}>Сохранить</Button>
+        <Button onClick={save} disabled={loading || !form.name.trim()}>Сохранить</Button>
       </DialogActions>
     </Dialog>
   );
