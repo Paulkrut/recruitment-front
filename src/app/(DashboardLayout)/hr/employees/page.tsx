@@ -29,11 +29,43 @@ export default function EmployeesPage() {
 
   const load = async () => {
     setLoading(true);
-    const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
-    setInvites(await res.json());
-    const res2 = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employees`);
-    setEmployees(await res2.json());
-    setLoading(false);
+    setError(null);
+    
+    try {
+      const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
+      if (!res.ok) {
+        if (res.status === 403) {
+          setError("Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.");
+          setInvites([]);
+        } else {
+          setError("Ошибка загрузки приглашений");
+          setInvites([]);
+        }
+      } else {
+        const invitesData = await res.json();
+        setInvites(Array.isArray(invitesData) ? invitesData : []);
+      }
+
+      const res2 = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employees`);
+      if (!res2.ok) {
+        if (res2.status === 403) {
+          setError("Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.");
+          setEmployees([]);
+        } else {
+          setError("Ошибка загрузки сотрудников");
+          setEmployees([]);
+        }
+      } else {
+        const employeesData = await res2.json();
+        setEmployees(Array.isArray(employeesData) ? employeesData : []);
+      }
+    } catch (err: any) {
+      setError("Ошибка загрузки данных");
+      setInvites([]);
+      setEmployees([]);
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => { load(); }, []);
 
@@ -145,6 +177,16 @@ export default function EmployeesPage() {
   return (
     <PageContainer title="Сотрудники компании">
       <Box minHeight="100vh" display="flex" flexDirection="column" alignItems="center" pt={6} gap={4}>
+        {error && (
+          <Alert severity="error" sx={{ width: "100%", maxWidth: 1100 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ width: "100%", maxWidth: 1100 }}>
+            {success}
+          </Alert>
+        )}
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h5">Сотрудники компании</Typography>
@@ -182,15 +224,13 @@ export default function EmployeesPage() {
             </TextField>
             <Button variant="contained" onClick={sendInvite} disabled={!phone.trim()}>Отправить</Button>
           </Stack>
-          {error && <Alert severity="error">{error}</Alert>}
-          {success && <Alert severity="success">{success}</Alert>}
         </Paper>
 
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
           <Typography variant="h6" gutterBottom>Отправленные приглашения</Typography>
           <Box sx={{ height: 300, width: "100%" }}>
             <DataGrid
-              rows={invites.map((inv: any, idx: number) => ({
+              rows={(Array.isArray(invites) ? invites : []).map((inv: any, idx: number) => ({
                 id: inv.id,
                 phone: inv.phone,
                 role: inv.role,

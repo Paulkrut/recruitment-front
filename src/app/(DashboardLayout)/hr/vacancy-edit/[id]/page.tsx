@@ -226,8 +226,8 @@ export default function HRVacancyEditPage() {
 
       const result = await response.json();
       
-      // Перенаправляем на страницу вакансий
-      router.push(`/hr/vacancies`);
+      // Перенаправляем на детальную страницу вакансии
+      router.push(`/hr/vacancies/${vacancyId}`);
       
     } catch (err: any) {
       setError(err.message);

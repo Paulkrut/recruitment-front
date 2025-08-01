@@ -27,6 +27,7 @@ import TextField from '@mui/material/TextField';
 import MailIcon from "@mui/icons-material/Mail";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
+import { IconBriefcase } from "@tabler/icons-react";
 
 export default function Sidebar() {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
@@ -294,31 +295,271 @@ function CompanySwitcher() {
   const [companies, setCompanies] = useState<any[]>([]);
   const [current, setCurrent] = useState<string | null>(null);
   const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+  
   useEffect(() => {
     apiFetch(`${API_BASE}/api/user/companies`).then(r => r.json()).then(setCompanies);
     setCurrent(typeof window !== 'undefined' ? localStorage.getItem("current_company") : null);
   }, []);
+  
   const handleChange = (e: any) => {
     localStorage.setItem("current_company", e.target.value);
     setCurrent(e.target.value);
     window.location.reload();
   };
-  if (companies.length < 2) return null;
+
+  // Если компаний нет, не показываем селект
+  if (companies.length === 0) return null;
+
+  const currentCompany = companies.find(c => c.id == current);
+  const isSingleCompany = companies.length === 1;
+
   return (
     <Box mb={2} mt={2}>
-      <Select
-        value={current || ""}
-        onChange={handleChange}
-        size="small"
-        fullWidth
-        displayEmpty
-        renderValue={selected => selected ? companies.find(c => c.id == selected)?.name : 'Выберите компанию'}
-      >
-        <MenuItem value="" disabled>Выберите компанию</MenuItem>
-        {companies.map((c: any) => (
-          <MenuItem key={c.id} value={c.id}>{c.name} ({c.role})</MenuItem>
-        ))}
-      </Select>
+      {isSingleCompany ? (
+        // Если компания одна - показываем как элегантный блок
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            p: 2.5,
+            borderRadius: 3,
+            backgroundColor: '#f8fafc',
+            border: '2px solid #e2e8f0',
+            color: '#1e293b',
+            fontWeight: 600,
+            fontSize: '0.9rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+            transition: 'all 0.2s ease-in-out',
+            '&:hover': {
+              borderColor: '#cbd5e1',
+              backgroundColor: '#f1f5f9',
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+            }
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              backgroundColor: '#3b82f6',
+              color: '#fff',
+              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+            }}
+          >
+            <IconBriefcase size={20} color="#fff" />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                fontWeight: 700, 
+                color: '#1e293b',
+                fontSize: '0.95rem',
+                lineHeight: 1.2
+              }}
+            >
+              {currentCompany?.name || 'Компания'}
+            </Typography>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                color: '#64748b',
+                fontSize: '0.75rem',
+                fontWeight: 500
+              }}
+            >
+              Текущая компания
+            </Typography>
+          </Box>
+        </Box>
+      ) : (
+        // Если компаний несколько - показываем красивый селект
+        <Box
+          sx={{
+            position: 'relative',
+            '& .MuiSelect-select': {
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              p: 2.5,
+              borderRadius: 3,
+              backgroundColor: '#f8fafc',
+              border: '2px solid #e2e8f0',
+              color: '#1e293b',
+              fontWeight: 600,
+              fontSize: '0.9rem',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                borderColor: '#cbd5e1',
+                backgroundColor: '#f1f5f9',
+                transform: 'translateY(-1px)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+              },
+              '&.Mui-focused': {
+                borderColor: '#3b82f6',
+                backgroundColor: '#f0f9ff',
+                boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)'
+              }
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              border: 'none'
+            },
+            '& .MuiSelect-icon': {
+              color: '#3b82f6',
+              fontSize: '1.2rem'
+            }
+          }}
+        >
+          <Select
+            value={current || ""}
+            onChange={handleChange}
+            size="small"
+            fullWidth
+            displayEmpty
+            renderValue={selected => {
+              const company = companies.find(c => c.id == selected);
+              return company ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 36,
+                      height: 36,
+                      borderRadius: '50%',
+                      backgroundColor: '#3b82f6',
+                      color: '#fff',
+                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+                    }}
+                  >
+                    <IconBriefcase size={20} color="#fff" />
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: 700, 
+                        color: '#1e293b',
+                        fontSize: '0.95rem',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      {company.name}
+                    </Typography>
+                    <Typography 
+                      variant="caption" 
+                      sx={{ 
+                        color: '#64748b',
+                        fontSize: '0.75rem',
+                        fontWeight: 500
+                      }}
+                    >
+                      {company.role}
+                    </Typography>
+                  </Box>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 36,
+                      height: 36,
+                      borderRadius: '50%',
+                      backgroundColor: '#e2e8f0',
+                      color: '#64748b'
+                    }}
+                  >
+                    <IconBriefcase size={20} />
+                  </Box>
+                  <Typography sx={{ color: '#64748b', fontWeight: 600 }}>
+                    Выберите компанию
+                  </Typography>
+                </Box>
+              );
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  mt: 1,
+                  borderRadius: 3,
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  border: '1px solid #e2e8f0',
+                  '& .MuiMenuItem-root': {
+                    borderRadius: 2,
+                    mx: 1,
+                    mb: 0.5,
+                    '&:hover': {
+                      backgroundColor: '#f1f5f9'
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: '#dbeafe',
+                      color: '#1e40af',
+                      fontWeight: 600
+                    }
+                  }
+                }
+              }
+            }}
+          >
+            <MenuItem value="" disabled sx={{ color: '#64748b', fontStyle: 'italic' }}>
+              Выберите компанию
+            </MenuItem>
+            {companies.map((c: any) => (
+              <MenuItem key={c.id} value={c.id}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 32,
+                      height: 32,
+                      borderRadius: '50%',
+                      backgroundColor: c.id == current ? '#3b82f6' : '#e2e8f0',
+                      color: c.id == current ? '#fff' : '#64748b'
+                    }}
+                  >
+                    <IconBriefcase size={16} color={c.id == current ? "#fff" : "#64748b"} />
+                  </Box>
+                  <Box sx={{ flex: 1 }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: c.id == current ? 700 : 600,
+                        color: c.id == current ? '#1e40af' : '#1e293b',
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {c.name}
+                    </Typography>
+                    <Typography 
+                      variant="caption" 
+                      sx={{ 
+                        color: '#64748b',
+                        fontSize: '0.75rem',
+                        fontWeight: 500
+                      }}
+                    >
+                      {c.role}
+                    </Typography>
+                  </Box>
+                </Box>
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      )}
     </Box>
   );
 }
