@@ -82,7 +82,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if (!currentCompany && companiesData.length > 0) {
           const storedCompanyId = localStorage.getItem('current_company');
           if (storedCompanyId) {
-            const storedCompany = companiesData.find((c: Company) => c.id == storedCompanyId);
+            const storedCompany = companiesData.find((c: Company) => c.id === Number(storedCompanyId));
             if (storedCompany) {
               setCurrentCompany(storedCompany);
             } else {
