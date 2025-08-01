@@ -37,6 +37,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -252,6 +253,31 @@ export default function HRVacancyDetailPage() {
                             <QrCodeIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
+                        <Tooltip title="Удалить кандидата">
+                          <IconButton size="small" color="error" onClick={() => {
+                            if (window.confirm('Вы уверены, что хотите удалить этого кандидата?')) {
+                              apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' })
+                                .then(response => {
+                                  if (response.ok) {
+                                    setSnackbar('Кандидат удален!');
+                                    // Обновляем список кандидатов
+                                    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`)
+                                      .then(r => r.json())
+                                      .then(setCandidates);
+                                  } else {
+                                    return response.json().then(data => {
+                                      throw new Error(data.error || 'Ошибка удаления');
+                                    });
+                                  }
+                                })
+                                .catch(e => {
+                                  setSnackbar(`Ошибка удаления: ${e.message}`);
+                                });
+                            }
+                          }}>
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     )},
                   ]} rows={filteredCandidates} defaultRowsPerPage={7} />
@@ -265,7 +291,13 @@ export default function HRVacancyDetailPage() {
                       </Typography>
                     </Box>
                   )}
-                  <Snackbar open={!!snackbar} autoHideDuration={2000} onClose={()=>setSnackbar(null)} message={snackbar} />
+                  <Snackbar 
+                    open={!!snackbar} 
+                    autoHideDuration={2000} 
+                    onClose={()=>setSnackbar(null)} 
+                    message={snackbar}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  />
                 </CardContent>
               </Card>
             </Grid>

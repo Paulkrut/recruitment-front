@@ -469,7 +469,13 @@ export default function CandidateDetailPage() {
             }}>Сравнить</Button>
           </DialogActions>
         </Dialog>
-        <Snackbar open={!!copyMsg} autoHideDuration={2000} onClose={()=>setCopyMsg(null)} message={copyMsg} />
+        <Snackbar 
+          open={!!copyMsg} 
+          autoHideDuration={2000} 
+          onClose={()=>setCopyMsg(null)} 
+          message={copyMsg}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        />
       </Stack>
     </PageContainer>
   );

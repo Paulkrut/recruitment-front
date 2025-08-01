@@ -544,9 +544,9 @@ export default function HRVacancyEditPage() {
                         Разрешить дополнительные вопросы
                       </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
                       Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата
-                    </Typography>
+                        </Typography>
                   </Box>
                 </Box>
               </Stack>

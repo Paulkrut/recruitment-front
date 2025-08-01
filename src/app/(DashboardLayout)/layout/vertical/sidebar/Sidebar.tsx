@@ -137,7 +137,7 @@ export default function Sidebar() {
                 sx={{
                   height: customizer.isCollapse
                     ? "calc(100% - 90px)"
-                    : "calc(100% - 200px)",
+                    : "calc(100% - 375px)",
                 }}
               >
                 {/* ------------------------------------------- */}
@@ -147,7 +147,7 @@ export default function Sidebar() {
               </Scrollbar>
               {customizer.isCollapse ? null : (
                 <>
-                <Box px={3} py={2} m={3} bgcolor="primary.light">
+                <Box px={3} py={1.5} m={2} bgcolor="primary.light">
                   <Stack
                     direction="row"
                     gap={2}
@@ -155,7 +155,7 @@ export default function Sidebar() {
                     alignItems="center"
                   >
                     <Box display="flex" alignItems="center">
-                      <Avatar sx={{ width:45,height:45,bgcolor:stringToColor(initials),cursor:'pointer' }} onClick={()=>setOpenProfile(true)}>
+                      <Avatar sx={{ width:40,height:40,bgcolor:stringToColor(initials),cursor:'pointer' }} onClick={()=>setOpenProfile(true)}>
                         {initials}
                       </Avatar>
                       <Box ml={2} onClick={()=>setOpenProfile(true)} sx={{cursor:'pointer'}}>
