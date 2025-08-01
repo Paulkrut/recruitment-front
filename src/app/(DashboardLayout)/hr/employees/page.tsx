@@ -26,12 +26,28 @@ export default function EmployeesPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState<string>("HR");
+  const [isLead, setIsLead] = useState(false);
 
   const load = async () => {
     setLoading(true);
     setError(null);
     
     try {
+      // Определяем роль пользователя в текущей компании
+      const currentCompanyId = localStorage.getItem("current_company");
+      if (currentCompanyId) {
+        const userCompaniesRes = await apiFetch(`${API_BASE}/api/user/companies`);
+        if (userCompaniesRes.ok) {
+          const userCompanies = await userCompaniesRes.json();
+          const currentCompany = userCompanies.find((c: any) => c.id == currentCompanyId);
+          if (currentCompany) {
+            setUserRole(currentCompany.role);
+            setIsLead(currentCompany.role === 'HR_LEAD');
+          }
+        }
+      }
+
       const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
       if (!res.ok) {
         if (res.status === 403) {
@@ -163,10 +179,12 @@ export default function EmployeesPage() {
       width: 180,
       renderCell: (params) => (
         <Stack direction="row" spacing={1}>
-          {params.row.role === "HR" && (
+          {isLead && params.row.role === "HR" && (
             <Tooltip title="Сделать лидером"><IconButton color="primary" onClick={() => handleMakeLead(params.row.id)}><StarIcon /></IconButton></Tooltip>
           )}
-          <Tooltip title="Удалить"><IconButton color="error" onClick={() => handleDelete(params.row.id)}><DeleteIcon /></IconButton></Tooltip>
+          {isLead && (
+            <Tooltip title="Удалить"><IconButton color="error" onClick={() => handleDelete(params.row.id)}><DeleteIcon /></IconButton></Tooltip>
+          )}
         </Stack>
       ),
       sortable: false,
@@ -190,7 +208,9 @@ export default function EmployeesPage() {
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h5">Сотрудники компании</Typography>
-            <Button startIcon={<DownloadIcon />} onClick={exportCSV} variant="outlined">Экспорт в CSV</Button>
+            {isLead && (
+              <Button startIcon={<DownloadIcon />} onClick={exportCSV} variant="outlined">Экспорт в CSV</Button>
+            )}
           </Stack>
           <Box sx={{ height: 480, width: "100%" }}>
             <DataGrid
@@ -214,17 +234,19 @@ export default function EmployeesPage() {
           </Box>
         </Paper>
 
-        <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
-          <Typography variant="h6" gutterBottom>Пригласить сотрудника</Typography>
-          <Stack direction="row" spacing={1} mb={2}>
-            <TextField value={phone} onChange={e => setPhone(e.target.value)} size="small" label="Телефон" />
-            <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label="Роль" sx={{ width: 120 }}>
-              <MenuItem value="HR">HR</MenuItem>
-              <MenuItem value="HR_LEAD">HR-Лидер</MenuItem>
-            </TextField>
-            <Button variant="contained" onClick={sendInvite} disabled={!phone.trim()}>Отправить</Button>
-          </Stack>
-        </Paper>
+        {isLead && (
+          <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
+            <Typography variant="h6" gutterBottom>Пригласить сотрудника</Typography>
+            <Stack direction="row" spacing={1} mb={2}>
+              <TextField value={phone} onChange={e => setPhone(e.target.value)} size="small" label="Телефон" />
+              <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label="Роль" sx={{ width: 120 }}>
+                <MenuItem value="HR">HR</MenuItem>
+                <MenuItem value="HR_LEAD">HR-Лидер</MenuItem>
+              </TextField>
+              <Button variant="contained" onClick={sendInvite} disabled={!phone.trim()}>Отправить</Button>
+            </Stack>
+          </Paper>
+        )}
 
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
           <Typography variant="h6" gutterBottom>Отправленные приглашения</Typography>
@@ -247,7 +269,9 @@ export default function EmployeesPage() {
                   headerName: "Действия",
                   width: 120,
                   renderCell: (params) => (
-                    <Button color="error" onClick={() => handleRevokeInvite(params.row.id)}>Отозвать</Button>
+                    isLead ? (
+                      <Button color="error" onClick={() => handleRevokeInvite(params.row.id)}>Отозвать</Button>
+                    ) : null
                   ),
                   sortable: false,
                   filterable: false,
