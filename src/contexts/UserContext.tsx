@@ -1,0 +1,167 @@
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { apiFetch } from '@/utils/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+
+interface User {
+  name: string;
+  phone: string;
+  position?: string;
+}
+
+interface Company {
+  id: number;
+  name: string;
+  role: string;
+}
+
+interface Invite {
+  id: number;
+  company: {
+    id: number;
+    name: string;
+  };
+  role: string;
+}
+
+interface UserContextType {
+  user: User | null;
+  companies: Company[];
+  invites: Invite[];
+  currentCompany: Company | null;
+  isLoading: boolean;
+  error: string | null;
+  refreshUser: () => Promise<void>;
+  refreshCompanies: () => Promise<void>;
+  refreshInvites: () => Promise<void>;
+  setCurrentCompany: (company: Company | null) => void;
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
+};
+
+interface UserProviderProps {
+  children: ReactNode;
+}
+
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [invites, setInvites] = useState<Invite[]>([]);
+  const [currentCompany, setCurrentCompany] = useState<Company | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refreshUser = async () => {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/user/me`);
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      }
+    } catch (err) {
+      console.error('Error loading user:', err);
+    }
+  };
+
+  const refreshCompanies = async () => {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/user/companies`);
+      if (response.ok) {
+        const companiesData = await response.json();
+        setCompanies(companiesData);
+        
+        // Устанавливаем текущую компанию если её нет
+        if (!currentCompany && companiesData.length > 0) {
+          const storedCompanyId = localStorage.getItem('current_company');
+          if (storedCompanyId) {
+            const storedCompany = companiesData.find((c: Company) => c.id == storedCompanyId);
+            if (storedCompany) {
+              setCurrentCompany(storedCompany);
+            } else {
+              setCurrentCompany(companiesData[0]);
+            }
+          } else {
+            setCurrentCompany(companiesData[0]);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error loading companies:', err);
+    }
+  };
+
+  const refreshInvites = async () => {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/user/invites`);
+      if (response.ok) {
+        const invitesData = await response.json();
+        setInvites(invitesData);
+      }
+    } catch (err) {
+      console.error('Error loading invites:', err);
+    }
+  };
+
+  const handleSetCurrentCompany = (company: Company | null) => {
+    setCurrentCompany(company);
+    if (company) {
+      localStorage.setItem('current_company', company.id.toString());
+    } else {
+      localStorage.removeItem('current_company');
+    }
+  };
+
+  useEffect(() => {
+    const loadInitialData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        await Promise.all([
+          refreshUser(),
+          refreshCompanies(),
+          refreshInvites()
+        ]);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Проверяем наличие токена
+    const token = localStorage.getItem('recruitment_token');
+    if (token) {
+      loadInitialData();
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const value: UserContextType = {
+    user,
+    companies,
+    invites,
+    currentCompany,
+    isLoading,
+    error,
+    refreshUser,
+    refreshCompanies,
+    refreshInvites,
+    setCurrentCompany: handleSetCurrentCompany,
+  };
+
+  return (
+    <UserContext.Provider value={value}>
+      {children}
+    </UserContext.Provider>
+  );
+}; 

@@ -7,6 +7,7 @@ import StarIcon from "@mui/icons-material/Star";
 import DownloadIcon from "@mui/icons-material/Download";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import { useUser } from "@/contexts/UserContext";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -19,6 +20,7 @@ function stringAvatar(name: string) {
 }
 
 export default function EmployeesPage() {
+  const { currentCompany } = useUser();
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("HR");
   const [invites, setInvites] = useState<any[]>([]);
@@ -35,17 +37,9 @@ export default function EmployeesPage() {
     
     try {
       // Определяем роль пользователя в текущей компании
-      const currentCompanyId = localStorage.getItem("current_company");
-      if (currentCompanyId) {
-        const userCompaniesRes = await apiFetch(`${API_BASE}/api/user/companies`);
-        if (userCompaniesRes.ok) {
-          const userCompanies = await userCompaniesRes.json();
-          const currentCompany = userCompanies.find((c: any) => c.id == currentCompanyId);
-          if (currentCompany) {
-            setUserRole(currentCompany.role);
-            setIsLead(currentCompany.role === 'HR_LEAD');
-          }
-        }
+      if (currentCompany) {
+        setUserRole(currentCompany.role);
+        setIsLead(currentCompany.role === 'HR_LEAD');
       }
 
       const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);

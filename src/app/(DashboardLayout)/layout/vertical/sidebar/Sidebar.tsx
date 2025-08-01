@@ -28,12 +28,15 @@ import MailIcon from "@mui/icons-material/Mail";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
 import { IconBriefcase } from "@tabler/icons-react";
+import { useUser } from "@/contexts/UserContext";
 
 export default function Sidebar() {
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
   const customizer = useSelector((state: AppState) => state.customizer);
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { user, companies, invites, currentCompany, setCurrentCompany } = useUser();
+  
   const toggleWidth =
     customizer.isCollapse && !customizer.isSidebarHover
       ? customizer.MiniSidebarWidth
@@ -49,10 +52,11 @@ export default function Sidebar() {
         const payload=JSON.parse(atob(t.split('.')[1]||''));
         setAuth({name:payload.name||'',phone:payload.phone||'',role:(payload.roles&&payload.roles[0])||'RECRUITER',position:''});
       }catch(e){/* ignore */}
-      // fetch full profile to get latest name/email/position
-      const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
-      apiFetch(`${API_BASE}/api/user/me`).then(r=>r.json()).then(p=>setAuth(a=>({...a, name:p.name||a.name, position:p.position||'' })));
-  },[]);
+      // Обновляем auth из контекста пользователя
+      if (user) {
+        setAuth(a=>({...a, name:user.name||a.name, position:user.position||'' }));
+      }
+  },[user]);
 
   const initials = auth.name? auth.name.split(' ').map(n=>n[0]).join('').toUpperCase(): auth.phone? auth.phone.slice(-2):'U';
   const stringToColor=(s:string)=>{
@@ -292,25 +296,17 @@ function ProfileDialog({open,onClose,onUpdated}:{open:boolean;onClose:()=>void;o
 }
 
 function CompanySwitcher() {
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [current, setCurrent] = useState<string | null>(null);
-  const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
-  
-  useEffect(() => {
-    apiFetch(`${API_BASE}/api/user/companies`).then(r => r.json()).then(setCompanies);
-    setCurrent(typeof window !== 'undefined' ? localStorage.getItem("current_company") : null);
-  }, []);
+  const { companies, currentCompany, setCurrentCompany } = useUser();
   
   const handleChange = (e: any) => {
-    localStorage.setItem("current_company", e.target.value);
-    setCurrent(e.target.value);
+    const selectedCompany = companies.find(c => c.id == e.target.value);
+    setCurrentCompany(selectedCompany || null);
     window.location.reload();
   };
 
   // Если компаний нет, не показываем селект
   if (companies.length === 0) return null;
 
-  const currentCompany = companies.find(c => c.id == current);
   const isSingleCompany = companies.length === 1;
 
   return (
@@ -418,7 +414,7 @@ function CompanySwitcher() {
           }}
         >
           <Select
-            value={current || ""}
+            value={currentCompany?.id?.toString() || ""}
             onChange={handleChange}
             size="small"
             fullWidth
@@ -526,18 +522,18 @@ function CompanySwitcher() {
                       width: 32,
                       height: 32,
                       borderRadius: '50%',
-                      backgroundColor: c.id == current ? '#3b82f6' : '#e2e8f0',
-                      color: c.id == current ? '#fff' : '#64748b'
+                      backgroundColor: c.id == currentCompany?.id ? '#3b82f6' : '#e2e8f0',
+                      color: c.id == currentCompany?.id ? '#fff' : '#64748b'
                     }}
                   >
-                    <IconBriefcase size={16} color={c.id == current ? "#fff" : "#64748b"} />
+                    <IconBriefcase size={16} color={c.id == currentCompany?.id ? "#fff" : "#64748b"} />
                   </Box>
                   <Box sx={{ flex: 1 }}>
                     <Typography 
                       variant="body2" 
                       sx={{ 
-                        fontWeight: c.id == current ? 700 : 600,
-                        color: c.id == current ? '#1e40af' : '#1e293b',
+                        fontWeight: c.id == currentCompany?.id ? 700 : 600,
+                        color: c.id == currentCompany?.id ? '#1e40af' : '#1e293b',
                         fontSize: '0.9rem'
                       }}
                     >
@@ -565,17 +561,15 @@ function CompanySwitcher() {
 }
 
 function InviteIndicator() {
-  const [count, setCount] = useState(0);
+  const { invites } = useUser();
   const router = useRouter();
-  const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
-  useEffect(() => {
-    apiFetch(`${API_BASE}/api/user/invites`).then(r => r.json()).then((d: any[]) => setCount(d.length));
-  }, []);
-  if (count === 0) return null;
+  
+  if (invites.length === 0) return null;
+  
   return (
     <IconButton color="primary" onClick={() => router.push("/hr/choose-company")}
       sx={{ ml: 1 }}>
-      <Badge badgeContent={count} color="error">
+      <Badge badgeContent={invites.length} color="error">
         <MailIcon />
       </Badge>
     </IconButton>
