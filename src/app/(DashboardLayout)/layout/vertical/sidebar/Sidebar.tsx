@@ -420,7 +420,7 @@ function CompanySwitcher() {
             fullWidth
             displayEmpty
             renderValue={selected => {
-              const company = companies.find(c => c.id == selected);
+              const company = companies.find(c => c.id == Number(selected));
               return company ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
                   <Box
