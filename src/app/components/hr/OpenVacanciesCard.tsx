@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { IconEye, IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface Vacancy {
   id: number;
@@ -65,9 +66,23 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
                 return (
                   <TableRow key={vacancy.id} hover>
                     <TableCell>
-                      <Typography variant="body2" fontWeight="500">
-                        {vacancy.title}
-                      </Typography>
+                      <Link href={`/hr/vacancies/${vacancy.id}`} style={{ textDecoration: 'none' }}>
+                        <Typography 
+                          variant="body2" 
+                          fontWeight="500"
+                          sx={{
+                            cursor: 'pointer',
+                            color: 'primary.main',
+                            '&:hover': {
+                              color: 'primary.dark',
+                              textDecoration: 'underline'
+                            },
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          {vacancy.title}
+                        </Typography>
+                      </Link>
                       <Typography variant="caption" color="textSecondary">
                         {vacancy.finished} из {vacancy.total} кандидатов
                       </Typography>
@@ -89,11 +104,16 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <Tooltip title="Просмотреть детали">
-                        <IconButton size="small" color="primary">
-                          <IconEye size={16} />
-                        </IconButton>
-                      </Tooltip>
+                      <Link href={`/hr/vacancies/${vacancy.id}`} style={{ textDecoration: 'none' }}>
+                        <Tooltip title="Просмотреть детали">
+                          <IconButton 
+                            size="small" 
+                            color="primary"
+                          >
+                            <IconEye size={16} />
+                          </IconButton>
+                        </Tooltip>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 );
