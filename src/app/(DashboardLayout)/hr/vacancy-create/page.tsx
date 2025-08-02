@@ -22,6 +22,8 @@ import {
   Slider,
   Stack,
   CircularProgress,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
@@ -71,6 +73,7 @@ export default function HRVacancyCreatePage() {
   const [templateData, setTemplateData] = useState({
     questionTime: 180, // время на один вопрос в секундах
     allowFollowups: false, // разрешить дополнительные вопросы
+    followupsMax: 1, // количество дополнительных вопросов
   });
 
   // Questions
@@ -87,7 +90,7 @@ export default function HRVacancyCreatePage() {
       type: "text",
       maxTime: templateData.questionTime,
       allowFollowups: templateData.allowFollowups,
-      followupsMax: templateData.allowFollowups ? 3 : 0,
+      followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
       position: questions.length,
     };
     setQuestions([...questions, newQuestion]);
@@ -195,7 +198,7 @@ export default function HRVacancyCreatePage() {
           type: "text",
           maxTime: templateData.questionTime,
           allowFollowups: templateData.allowFollowups,
-          followupsMax: templateData.allowFollowups ? 3 : 0,
+          followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
           position: questions.length + i,
         }));
         
@@ -445,20 +448,46 @@ export default function HRVacancyCreatePage() {
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
                     <Switch
                       checked={templateData.allowFollowups}
-                      onChange={(e: any) => {
-                        setTemplateData({ ...templateData, allowFollowups: e.target.checked });
+                      onChange={(e) => {
+                        setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
                         // Обновляем настройки для всех вопросов
                         setQuestions(questions.map(q => ({ 
                           ...q, 
                           allowFollowups: e.target.checked,
-                          followupsMax: e.target.checked ? 3 : 0
+                          followupsMax: e.target.checked ? 1 : 0
                         })));
                       }}
-                        color="primary"
-                      />
-                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
+                      color="primary"
+                    />
+                    <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
                       Разрешить дополнительные вопросы
                     </Typography>
+                    {templateData.allowFollowups && (
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography variant="body2" color="textSecondary">
+                          Количество:
+                        </Typography>
+                        <TextField
+                          select
+                          value={templateData.followupsMax || 1}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            setTemplateData(prev => ({ ...prev, followupsMax: value }));
+                            // Обновляем настройки для всех вопросов
+                            setQuestions(questions.map(q => ({ 
+                              ...q, 
+                              followupsMax: value
+                            })));
+                          }}
+                          sx={{ width: 80 }}
+                          size="small"
+                        >
+                          <MenuItem value={1}>1</MenuItem>
+                          <MenuItem value={2}>2</MenuItem>
+                          <MenuItem value={3}>3</MenuItem>
+                        </TextField>
+                      </Box>
+                    )}
                   </Box>
                   
                   {templateData.allowFollowups && (

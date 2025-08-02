@@ -19,6 +19,7 @@ import {
   Slider,
   Switch,
   Alert,
+  MenuItem,
 } from "@mui/material";
 import Link from "next/link";
 import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconArrowUp, IconArrowDown, IconTrash, IconFileText } from "@tabler/icons-react";
@@ -102,6 +103,7 @@ export default function HRVacancyEditPage() {
   const [templateData, setTemplateData] = useState({
     questionTime: 180, // время на один вопрос в секундах
     allowFollowups: false, // разрешить дополнительные вопросы
+    followupsMax: 1, // количество дополнительных вопросов
   });
 
   // Questions
@@ -148,6 +150,7 @@ export default function HRVacancyEditPage() {
         setTemplateData({
           questionTime: data.questions[0].maxTime || 180,
           allowFollowups: data.questions[0].allowFollowups || false,
+          followupsMax: data.questions[0].followupsMax || 1,
         });
       }
       
@@ -164,7 +167,7 @@ export default function HRVacancyEditPage() {
       type: "text",
       maxTime: templateData.questionTime,
       allowFollowups: templateData.allowFollowups,
-      followupsMax: templateData.allowFollowups ? 3 : 0,
+      followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
       position: questions.length,
     };
     setQuestions([...questions, newQuestion]);
@@ -265,7 +268,7 @@ export default function HRVacancyEditPage() {
           type: "text",
           maxTime: templateData.questionTime,
           allowFollowups: templateData.allowFollowups,
-          followupsMax: templateData.allowFollowups ? 3 : 0,
+          followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
           position: questions.length + i,
         }));
         
@@ -526,13 +529,13 @@ export default function HRVacancyEditPage() {
                     <Box display="flex" alignItems="center" gap={2} mb={2}>
                       <Switch
                         checked={templateData.allowFollowups}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        onChange={(e) => {
                           setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
                           // Обновляем настройки для всех вопросов
                           setQuestions(questions.map(q => ({ 
                             ...q, 
                             allowFollowups: e.target.checked,
-                            followupsMax: e.target.checked ? 3 : 0
+                            followupsMax: e.target.checked ? 1 : 0
                           })));
                         }}
                         sx={{
@@ -543,6 +546,32 @@ export default function HRVacancyEditPage() {
                       <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
                         Разрешить дополнительные вопросы
                       </Typography>
+                      {templateData.allowFollowups && (
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Typography variant="body2" color="textSecondary">
+                            Количество:
+                          </Typography>
+                          <TextField
+                            select
+                            value={templateData.followupsMax || 1}
+                            onChange={(e) => {
+                              const value = Number(e.target.value);
+                              setTemplateData(prev => ({ ...prev, followupsMax: value }));
+                              // Обновляем настройки для всех вопросов
+                              setQuestions(questions.map(q => ({ 
+                                ...q, 
+                                followupsMax: value
+                              })));
+                            }}
+                            sx={{ width: 80 }}
+                            size="small"
+                          >
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                          </TextField>
+                        </Box>
+                      )}
                     </Box>
                         <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
                       Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата
