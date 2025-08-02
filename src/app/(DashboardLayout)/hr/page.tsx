@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import PageContainer from "@/app/components/container/PageContainer";
 import { Button, Stack, Typography, Stepper, Step, StepLabel } from "@mui/material";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import Welcome from "@/app/(DashboardLayout)/layout/shared/welcome/Welcome";
 
@@ -25,7 +25,6 @@ export default function HRDashboard() {
   const [isLoading, setLoading] = useState(true);
   const [user, setUser] = useState<{ name?: string }>({});
   const [companies, setCompanies] = useState<any[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
     apiFetch(`${API_BASE}/api/dashboard`)
@@ -42,10 +41,10 @@ export default function HRDashboard() {
   const hasVacancy = data && data.openVacancies && data.openVacancies.length > 0;
   const hasCandidate = data && data.overdueCandidates && data.overdueCandidates.length > 0;
   const steps = [
-    { label: "Создайте компанию", done: hasCompany, action: () => router.push("/hr/choose-company") },
-    { label: "Пригласите коллег", done: hasColleagues, action: () => router.push("/hr/employees") },
-    { label: "Создайте вакансию", done: hasVacancy, action: () => router.push("/hr/vacancy-create") },
-    { label: "Пригласите кандидата", done: hasCandidate, action: () => router.push("/hr/candidates") },
+    { label: "Создайте компанию", done: hasCompany, href: "/hr/choose-company" },
+    { label: "Пригласите коллег", done: hasColleagues, href: "/hr/employees" },
+    { label: "Создайте вакансию", done: hasVacancy, href: "/hr/vacancy-create" },
+    { label: "Пригласите кандидата", done: hasCandidate, href: "/hr/vacancies" },
   ];
   const activeStep = steps.findIndex(s => !s.done);
 
@@ -92,7 +91,9 @@ export default function HRDashboard() {
           <Stepper activeStep={activeStep === -1 ? steps.length : activeStep} alternativeLabel>
             {steps.map((step, idx) => (
               <Step key={step.label} completed={step.done}>
-                <StepLabel onClick={step.action} style={{ cursor: 'pointer' }}>{step.label}</StepLabel>
+                <Link href={step.href} style={{ textDecoration: 'none' }}>
+                  <StepLabel style={{ cursor: 'pointer' }}>{step.label}</StepLabel>
+                </Link>
               </Step>
             ))}
           </Stepper>
@@ -105,9 +106,15 @@ export default function HRDashboard() {
               Для начала работы воспользуйтесь шагами выше или быстрыми действиями ниже.
             </Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-              <Button variant="contained" size="large" onClick={() => router.push('/hr/vacancy-create')}>Создать вакансию</Button>
-              <Button variant="outlined" size="large" onClick={() => router.push('/hr/employees')}>Пригласить сотрудника</Button>
-              <Button variant="outlined" size="large" onClick={() => router.push('/hr/choose-company')}>Добавить компанию</Button>
+              <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
+                <Button variant="contained" size="large">Создать вакансию</Button>
+              </Link>
+              <Link href="/hr/employees" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" size="large">Пригласить сотрудника</Button>
+              </Link>
+              <Link href="/hr/choose-company" style={{ textDecoration: 'none' }}>
+                <Button variant="outlined" size="large">Добавить компанию</Button>
+              </Link>
             </Stack>
           </Box>
         ) : (
