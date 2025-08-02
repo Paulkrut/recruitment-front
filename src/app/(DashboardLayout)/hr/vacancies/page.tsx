@@ -24,6 +24,15 @@ import {
   Select,
   MenuItem,
   TextareaAutosize,
+  ToggleButton,
+  ToggleButtonGroup,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import {
   IconPlus,
@@ -35,6 +44,8 @@ import {
   IconUsers,
   IconTarget,
   IconCheck,
+  IconCards,
+  IconTable,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
@@ -45,7 +56,8 @@ interface VacancyRow {
   id: number;
   title: string;
   description?: string;
-  templateId?: number | null;
+  createdAt: string;
+  createdBy: string;
   candidatesTotal?: number;
   candidatesFinished?: number;
   candidatesInProgress?: number;
@@ -54,6 +66,271 @@ interface VacancyRow {
 interface Template {
   id: number;
   title: string;
+}
+
+// Компонент таблицы вакансий
+function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
+  vacancies: VacancyRow[];
+  templates: Template[];
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
+}) {
+  const router = useRouter();
+
+  const getProgressColor = (percent: number) => {
+    if (percent === 0) return "info";
+    if (percent >= 80) return "success";
+    if (percent >= 50) return "warning";
+    return "error";
+  };
+
+  const getProgressLabel = (percent: number) => {
+    if (percent === 0) return "Не начато";
+    if (percent >= 80) return "Отлично";
+    if (percent >= 50) return "Хорошо";
+    if (percent >= 20) return "В процессе";
+    return "Начато";
+  };
+
+  // Функция для сокращения текста
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  // Функция для форматирования даты
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+  };
+
+  // Функция для получения короткого имени
+  const getShortName = (fullName: string) => {
+    const parts = fullName.split(' ');
+    if (parts.length >= 2) {
+      return `${parts[0]} ${parts[1]}`;
+    }
+    return fullName;
+  };
+
+  return (
+    <TableContainer component={Paper} sx={{ boxShadow: 1, borderRadius: 2 }}>
+      <Table>
+        <TableHead>
+          <TableRow sx={{ 
+            backgroundColor: 'grey.50',
+            borderBottom: '2px solid',
+            borderColor: 'primary.main'
+          }}>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '35%'
+            }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconBriefcase size={16} />
+                Название
+              </Box>
+            </TableCell>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '12%'
+            }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconTarget size={16} />
+                Создано
+              </Box>
+            </TableCell>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '12%'
+            }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconUsers size={16} />
+                Кто создал
+              </Box>
+            </TableCell>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '18%'
+            }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconUsers size={16} />
+                Кандидаты
+              </Box>
+            </TableCell>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '15%'
+            }}>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconCheck size={16} />
+                Прогресс
+              </Box>
+            </TableCell>
+            <TableCell sx={{ 
+              fontWeight: 600, 
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '8%',
+              textAlign: 'center'
+            }}>
+              Действия
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {vacancies.map((vacancy) => {
+            const total = vacancy.candidatesTotal || 0;
+            const finished = vacancy.candidatesFinished || 0;
+            const inProgress = vacancy.candidatesInProgress || 0;
+            const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
+
+            return (
+              <TableRow 
+                key={vacancy.id} 
+                sx={{ 
+                  '&:hover': { 
+                    backgroundColor: 'action.hover',
+                    transform: 'scale(1.001)',
+                    transition: 'all 0.2s ease'
+                  }
+                }}
+              >
+                <TableCell>
+                  <Box>
+                    <Typography 
+                      variant="subtitle2" 
+                      fontWeight={600} 
+                      color="primary.main"
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          color: 'primary.dark',
+                          textDecoration: 'underline'
+                        },
+                        transition: 'all 0.2s ease'
+                      }}
+                      onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
+                    >
+                      {truncateText(vacancy.title, 50)}
+                    </Typography>
+                    {vacancy.description && (
+                      <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
+                        {truncateText(vacancy.description, 60)}
+                      </Typography>
+                    )}
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body2" color="textSecondary">
+                    {formatDate(vacancy.createdAt)}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body2" color="textSecondary">
+                    {getShortName(vacancy.createdBy)}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography variant="body2" fontWeight={600}>
+                      {finished}/{total}
+                    </Typography>
+                    {inProgress > 0 && (
+                      <Chip 
+                        label={`${inProgress}`} 
+                        size="small" 
+                        color="warning" 
+                        sx={{ fontSize: '0.7rem', height: 20 }}
+                      />
+                    )}
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box sx={{ width: '100%', maxWidth: 120 }}>
+                    <Box display="flex" justifyContent="space-between" mb={0.5}>
+                      <Typography variant="caption" color="textSecondary">
+                        {getProgressLabel(percent)}
+                      </Typography>
+                      <Typography variant="caption" fontWeight={600}>
+                        {percent}%
+                      </Typography>
+                    </Box>
+                    <LinearProgress
+                      variant="determinate"
+                      value={percent}
+                      color={getProgressColor(percent) as any}
+                      sx={{ 
+                        height: 6, 
+                        borderRadius: 3,
+                        backgroundColor: 'grey.200'
+                      }}
+                    />
+                  </Box>
+                </TableCell>
+                <TableCell>
+                  <Box display="flex" gap={0.5} justifyContent="center">
+                    <Tooltip title="Просмотр">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
+                        sx={{ 
+                          width: 28, 
+                          height: 28,
+                          '&:hover': { backgroundColor: 'primary.light' }
+                        }}
+                      >
+                        <IconEye size={14} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Редактировать">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => onEdit(vacancy.id)}
+                        sx={{ 
+                          width: 28, 
+                          height: 28,
+                          '&:hover': { backgroundColor: 'primary.light' }
+                        }}
+                      >
+                        <IconEdit size={14} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Удалить">
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => onDelete(vacancy.id)}
+                        sx={{ 
+                          width: 28, 
+                          height: 28,
+                          '&:hover': { backgroundColor: 'error.light' }
+                        }}
+                      >
+                        <IconTrash size={14} />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
 
 // Новый компонент карточки вакансии
@@ -68,7 +345,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
   const finished = vacancy.candidatesFinished || 0;
   const inProgress = vacancy.candidatesInProgress || 0;
   const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
-  const templateTitle = vacancy.templateId ? (templates.find(t => t.id === vacancy.templateId)?.title || vacancy.templateId) : null;
+  const createdDate = new Date(vacancy.createdAt).toLocaleDateString('ru-RU');
 
   const getProgressColor = (percent: number) => {
     if (percent === 0) return "info"; // Было 'default', теперь 'info' для совместимости с MUI
@@ -121,6 +398,18 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
         />
       </Box>
 
+      {/* Информация о создании */}
+      <Box mb={1}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
+          <Typography variant="caption" color="textSecondary">
+            Создано: {createdDate}
+          </Typography>
+          <Typography variant="caption" color="textSecondary">
+            {vacancy.createdBy}
+          </Typography>
+        </Box>
+      </Box>
+
       {/* Метрики */}
       <Box mb={1}>
         <Grid container spacing={1}>
@@ -154,20 +443,14 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
           sx={{ height: 8, borderRadius: 4 }}
         />
         <Box display="flex" justifyContent="space-between" alignItems="center" mt={0.5}>
-          <Typography variant="caption" color="textSecondary">Прогресс</Typography>
-          <Typography variant="caption" color="textSecondary">{percent}%</Typography>
-        </Box>
-      </Box>
-
-      {/* Тест/шаблон */}
-      {templateTitle && (
-        <Box display="flex" alignItems="center" gap={1} mb={1}>
-          <IconTarget size={16} color="#666" />
-          <Typography variant="body2" color="textSecondary">
-            Тест: {templateTitle}
+          <Typography variant="caption" color="textSecondary">
+            {getProgressLabel(percent)}
+          </Typography>
+          <Typography variant="caption" fontWeight={600}>
+            {percent}%
           </Typography>
         </Box>
-      )}
+      </Box>
 
       {/* Описание */}
       {vacancy.description && (
@@ -218,10 +501,17 @@ export default function HRVacanciesPage() {
   const [rows, setRows] = useState<VacancyRow[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [search, setSearch] = useState("");
+  const [viewMode, setViewMode] = useState<'card' | 'table'>('table');
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
     if (t) setToken(t);
+    
+    // Загружаем сохраненный режим просмотра
+    const savedViewMode = localStorage.getItem("vacancy_view_mode") as 'card' | 'table';
+    if (savedViewMode) {
+      setViewMode(savedViewMode);
+    }
   }, []);
 
   useEffect(() => {
@@ -272,15 +562,39 @@ export default function HRVacanciesPage() {
             </Typography>
             <Chip label={rows.length} color="primary" />
           </Box>
-          <Link href="/hr/vacancy-create" passHref legacyBehavior>
-            <Button
-              variant="contained"
-              startIcon={<IconPlus size={20} />}
-              component="a"
+          <Box display="flex" alignItems="center" gap={2}>
+            <ToggleButtonGroup
+              value={viewMode}
+              exclusive
+              onChange={(event, newViewMode) => {
+                if (newViewMode !== null) {
+                  setViewMode(newViewMode);
+                  localStorage.setItem("vacancy_view_mode", newViewMode);
+                }
+              }}
+              aria-label="vacancy view mode"
             >
-              Создать вакансию
-            </Button>
-          </Link>
+              <Tooltip title="Карточки">
+                <ToggleButton value="card" aria-label="card view">
+                  <IconCards size={20} />
+                </ToggleButton>
+              </Tooltip>
+              <Tooltip title="Таблица">
+                <ToggleButton value="table" aria-label="table view">
+                  <IconTable size={20} />
+                </ToggleButton>
+              </Tooltip>
+            </ToggleButtonGroup>
+            <Link href="/hr/vacancy-create" passHref legacyBehavior>
+              <Button
+                variant="contained"
+                startIcon={<IconPlus size={20} />}
+                component="a"
+              >
+                Создать вакансию
+              </Button>
+            </Link>
+          </Box>
         </Box>
 
         {/* Search */}
@@ -301,18 +615,27 @@ export default function HRVacanciesPage() {
         </Box>
 
         {/* Vacancies Grid */}
-        <Grid container spacing={3}>
-          {filtered.map((vacancy) => (
-            <Grid item xs={12} sm={6} md={4} key={vacancy.id}>
-              <VacancyCard
-                vacancy={vacancy}
-                templates={templates}
-                onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
-                onDelete={(id) => {/* TODO: реализовать удаление */}}
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {viewMode === 'card' ? (
+          <Grid container spacing={3}>
+            {filtered.map((vacancy) => (
+              <Grid item xs={12} sm={6} md={4} key={vacancy.id}>
+                <VacancyCard
+                  vacancy={vacancy}
+                  templates={templates}
+                  onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
+                  onDelete={(id) => {/* TODO: реализовать удаление */}}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <VacancyTable
+            vacancies={filtered}
+            templates={templates}
+            onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
+            onDelete={(id) => {/* TODO: реализовать удаление */}}
+          />
+        )}
 
         {filtered.length === 0 && (
           <Box textAlign="center" py={4}>
