@@ -234,10 +234,25 @@ export default function CandidateInterviewPage() {
   async function startRecording() {
     console.log('startRecording called');
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { width: 640, height: 480 } });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: { 
+          sampleRate: 16000,
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true
+        }, 
+        video: { 
+          width: 640, 
+          height: 480,
+          frameRate: { ideal: 15, max: 30 }
+        } 
+      });
       console.log('Media stream obtained');
       setPreviewStream(stream);
-      const mr = new MediaRecorder(stream);
+      const mr = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp8,opus',
+        videoBitsPerSecond: 500000 // 500 kbps
+      });
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
         console.log('Data available:', e.data.size);
@@ -256,8 +271,35 @@ export default function CandidateInterviewPage() {
         }
         const blob = new Blob(chunks, { type: 'video/webm' });
         console.log('Blob created:', blob.size);
-        /* при завершении записи сразу отправляем ответ */
-        sendBlobAnswer(blob);
+        
+        // Сжимаем видео если оно слишком большое
+        if (blob.size > 5 * 1024 * 1024) { // больше 5MB
+          console.log('Video too large, compressing...');
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const video = document.createElement('video');
+          
+          video.onloadedmetadata = () => {
+            canvas.width = 640;
+            canvas.height = 480;
+            ctx?.drawImage(video, 0, 0, 640, 480);
+            canvas.toBlob((compressedBlob) => {
+              if (compressedBlob) {
+                console.log('Compressed blob size:', compressedBlob.size);
+                sendBlobAnswer(compressedBlob);
+              } else {
+                sendBlobAnswer(blob);
+              }
+            }, 'video/webm', 0.5);
+          };
+          
+          video.src = URL.createObjectURL(blob);
+          video.play();
+        } else {
+          /* при завершении записи сразу отправляем ответ */
+          sendBlobAnswer(blob);
+        }
+        
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
         setPreviewStream(null);
