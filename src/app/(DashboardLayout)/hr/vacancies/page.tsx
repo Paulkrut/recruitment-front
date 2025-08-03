@@ -370,6 +370,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
         justifyContent: "space-between",
         p: 2,
         transition: "all 0.2s",
+        overflow: "hidden", // Предотвращаем появление скроллбара
         '&:hover': { transform: 'translateY(-2px)', boxShadow: 4 },
       }}
     >
@@ -463,6 +464,8 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
+            textOverflow: "ellipsis",
+            wordBreak: "break-word",
           }}
         >
           {vacancy.description}
@@ -552,7 +555,14 @@ export default function HRVacanciesPage() {
 
   return (
     <PageContainer title="Вакансии" description="Управление вакансиями">
-      <Box>
+      <Box sx={{ 
+        overflow: "hidden", // Предотвращаем скроллбар на уровне страницы
+        "& *": { // Применяем ко всем элементам
+          "&::-webkit-scrollbar": { display: "none" }, // Скрываем скроллбар в WebKit браузерах
+          "scrollbarWidth": "none", // Скрываем скроллбар в Firefox
+          "msOverflowStyle": "none", // Скрываем скроллбар в IE/Edge
+        }
+      }}>
         {/* Header */}
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
           <Box display="flex" alignItems="center" gap={2}>
@@ -616,7 +626,7 @@ export default function HRVacanciesPage() {
 
         {/* Vacancies Grid */}
         {viewMode === 'card' ? (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ overflow: "hidden" }}>
             {filtered.map((vacancy) => (
               <Grid item xs={12} sm={6} md={4} key={vacancy.id}>
                 <VacancyCard

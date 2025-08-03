@@ -232,17 +232,21 @@ export default function CandidateInterviewPage() {
 
   /* ------------ запись аудио ------------- */
   async function startRecording() {
+    console.log('startRecording called');
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: { width: 640, height: 480 } });
+      console.log('Media stream obtained');
       setPreviewStream(stream);
       const mr = new MediaRecorder(stream);
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
+        console.log('Data available:', e.data.size);
         if (e.data && e.data.size > 0) {
           chunks.push(e.data);
         }
       };
       mr.onstop = () => {
+        console.log('Recording stopped, chunks:', chunks.length);
         if (chunks.length === 0) {
           alert("Запись не содержит данных. Попробуйте ещё раз.");
           setRecording(false);
@@ -251,6 +255,7 @@ export default function CandidateInterviewPage() {
           return;
         }
         const blob = new Blob(chunks, { type: 'video/webm' });
+        console.log('Blob created:', blob.size);
         /* при завершении записи сразу отправляем ответ */
         sendBlobAnswer(blob);
         setRecording(false);
@@ -258,10 +263,11 @@ export default function CandidateInterviewPage() {
         setPreviewStream(null);
       };
       mr.start();
+      console.log('MediaRecorder started');
       setMediaRecorder(mr);
       setRecording(true);
     } catch (err: any) {
-      console.error(err);
+      console.error('startRecording error:', err);
       let msg = "Не удалось получить доступ к микрофону.";
       if (typeof window !== "undefined" && !window.isSecureContext) {
         msg += "\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.";
@@ -275,6 +281,7 @@ export default function CandidateInterviewPage() {
   }
 
   function stopRecording() {
+    console.log('stopRecording called');
     mediaRecorder?.stop();
   }
 
@@ -297,6 +304,8 @@ export default function CandidateInterviewPage() {
   async function sendBlobAnswer(blob: Blob) {
     if (!question) return;
 
+    console.log('sendBlobAnswer called', { questionId: question.id, blobSize: blob.size });
+
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
@@ -312,12 +321,16 @@ export default function CandidateInterviewPage() {
     const fd = new FormData();
     fd.append("questionId", String(question.id));
     fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
-    await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
+    
+    console.log('Sending answer to server...');
+    const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
       body: fd,
     });
+    console.log('Answer response:', answerResponse.status, answerResponse.ok);
 
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+    console.log('Next question response:', r.status, r.ok);
 
     if (!r.ok) {
       // interview finished
@@ -331,6 +344,7 @@ export default function CandidateInterviewPage() {
     }
 
     const d = await r.json();
+    console.log('Next question data:', d);
 
     // if server returns no question – finish
     if (!d.question) {
@@ -358,6 +372,8 @@ export default function CandidateInterviewPage() {
     setAnswered(true);
     if(!question) return;
 
+    console.log('sendEmptyAnswer called', { questionId: question.id });
+
     // optimistic UI
     setChat((p)=>[
       ...p,
@@ -369,9 +385,14 @@ export default function CandidateInterviewPage() {
     const fd = new FormData();
     fd.append('questionId', String(question.id));
     fd.append('text','');
-    await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
+    
+    console.log('Sending empty answer to server...');
+    const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
+    console.log('Empty answer response:', answerResponse.status, answerResponse.ok);
 
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+    console.log('Next question response (empty):', r.status, r.ok);
+    
     if(!r.ok){
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
@@ -380,6 +401,8 @@ export default function CandidateInterviewPage() {
       return;
     }
     const d = await r.json();
+    console.log('Next question data (empty):', d);
+    
     if(!d.question){
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
