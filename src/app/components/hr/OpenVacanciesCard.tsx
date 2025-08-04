@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -15,6 +15,7 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  Pagination,
 } from "@mui/material";
 import { IconEye, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
@@ -31,10 +32,21 @@ interface OpenVacanciesCardProps {
 }
 
 export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = data.slice(startIndex, endIndex);
+
   const getProgressColor = (progress: number) => {
     if (progress >= 80) return "success";
     if (progress >= 50) return "warning";
     return "error";
+  };
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   return (
@@ -51,7 +63,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
           </Tooltip>
         </Box>
 
-        <TableContainer>
+        <TableContainer sx={{ flex: 1 }}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -61,7 +73,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((vacancy) => {
+              {currentData.map((vacancy) => {
                 const progress = vacancy.total ? (vacancy.finished / vacancy.total) * 100 : 0;
                 return (
                   <TableRow key={vacancy.id} hover>
@@ -127,6 +139,20 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
             <Typography variant="body2" color="textSecondary">
               Нет открытых вакансий
             </Typography>
+          </Box>
+        )}
+
+        {totalPages > 1 && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              size="small"
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
           </Box>
         )}
       </CardContent>

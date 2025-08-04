@@ -99,14 +99,47 @@ export default function HRVacancyDetailPage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [qrDialog, setQrDialog] = useState<{open: boolean, url: string}>({open: false, url: ''});
-  const [copyMsg, setCopyMsg] = useState<string|null>(null);
-  // moved adding state into dialog component
-  const [statusFilter, setStatusFilter] = useState<string>('');
-  const [tab, setTab] = useState('1');
-  const [snackbar, setSnackbar] = useState<string|null>(null);
-  const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
+  const [qrDialog, setQrDialog] = useState({ open: false, url: '' });
   const [compareOpen, setCompareOpen] = useState(false);
+  const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [snackbar, setSnackbar] = useState('');
+  const [tab, setTab] = useState('1');
+
+  // Получаем параметры из URL
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setSearchParams(params);
+      
+      // Устанавливаем вкладку из URL
+      const tabParam = params.get('tab');
+      if (tabParam) {
+        setTab(tabParam);
+      }
+    }
+  }, []);
+
+  // Скролл к вопросу после загрузки данных
+  useEffect(() => {
+    if (data && searchParams) {
+      const scrollToQuestion = searchParams.get('scrollToQuestion');
+      if (scrollToQuestion && tab === '3') {
+        setTimeout(() => {
+          const questionElement = document.querySelector(`[data-question-id="${scrollToQuestion}"]`);
+          if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            questionElement.classList.add('highlight-question');
+            setTimeout(() => {
+              questionElement.classList.remove('highlight-question');
+            }, 3000);
+          }
+        }, 500);
+      }
+    }
+  }, [data, searchParams, tab]);
 
   // Перемещаем хуки useMemo выше любых return и условий
   const filteredCandidates = useMemo(() => statusFilter ? candidates.filter(c => c.status === statusFilter) : candidates, [candidates, statusFilter]);
@@ -158,6 +191,14 @@ export default function HRVacancyDetailPage() {
 
   return (
     <PageContainer title={`Вакансия: ${title}`}>
+      <style jsx global>{`
+        .highlight-question {
+          background-color: #fff3cd !important;
+          border: 2px solid #ffc107 !important;
+          box-shadow: 0 0 10px rgba(255, 193, 7, 0.3) !important;
+          transition: all 0.3s ease;
+        }
+      `}</style>
       {header}
       <TabContext value={tab}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -236,7 +277,33 @@ export default function HRVacancyDetailPage() {
                     {field:'email',header:'Email',render:(r:any)=>r.email||'-'},
                     {field:'phone',header:'Телефон',render:(r:any)=>r.phone||'-'},
                     {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
-                    {field:'score',header:'Оценка',render:(r:any)=>r.score !== undefined && r.score !== null ? (<Chip label={r.score} color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'} size="small" />) : '-'},
+                    {field:'score',header:'Оценка',render:(r:any)=>{
+                      if (r.score !== undefined && r.score !== null) {
+                        return (
+                          <Chip 
+                            label={`${r.score}/10`} 
+                            color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'} 
+                            size="small" 
+                          />
+                        );
+                      } else if (r.status === 'finished') {
+                        return (
+                          <Chip 
+                            label="Обрабатывается" 
+                            color="info" 
+                            size="small" 
+                          />
+                        );
+                      } else {
+                        return (
+                          <Chip 
+                            label="Не завершено" 
+                            color="default" 
+                            size="small" 
+                          />
+                        );
+                      }
+                    }},
                     {field:'createdAt',header:'Дата добавления',render:(r:any)=>r.createdAt ? format(new Date(r.createdAt), 'dd.MM.yyyy HH:mm') : '-'},
                     {field:'actions',header:'',render:(r:any)=>(
                       <Box display="flex" gap={1} alignItems="center">
@@ -344,8 +411,17 @@ export default function HRVacancyDetailPage() {
                     {(questions||[]).length === 0 ? (
                       <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Вопросы не добавлены</Typography>
                     ) : (
-                      (questions||[]).map((q:any)=>(
-                        <Box key={q.position} sx={{ mb: 1, p: 1, borderRadius: 1, background: '#f5f5f5' }}>
+                      (questions||[]).map((q:any, index:number)=>(
+                        <Box 
+                          key={q.position} 
+                          sx={{ mb: 1, p: 1, borderRadius: 1, background: '#f5f5f5', cursor: 'pointer' }}
+                          onClick={() => {
+                            const newSearchParams = new URLSearchParams(window.location.search);
+                            newSearchParams.set('scrollToQuestion', q.position.toString());
+                            router.push(`${window.location.pathname}?${newSearchParams.toString()}`);
+                          }}
+                          data-question-id={q.position}
+                        >
                           <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 500 }}>{q.position+1}. {q.text}</Typography>
                         </Box>
                       ))

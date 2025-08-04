@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -7,6 +7,7 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 import { IconRefresh, IconTrendingUp } from "@tabler/icons-react";
 import { Line } from "react-chartjs-2";
@@ -40,9 +41,23 @@ interface TestData {
 
 interface TestsChartCardProps {
   data: TestData[];
+  onRefresh?: () => void;
 }
 
-export default function TestsChartCard({ data }: TestsChartCardProps) {
+export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = async () => {
+    if (isRefreshing || !onRefresh) return;
+    
+    setIsRefreshing(true);
+    try {
+      await onRefresh();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const chartData = {
     labels: data.map((d) => d.date),
     datasets: [
@@ -130,8 +145,8 @@ export default function TestsChartCard({ data }: TestsChartCardProps) {
             </Typography>
           </Box>
           <Tooltip title="Обновить данные">
-            <IconButton size="small" color="primary">
-              <IconRefresh size={20} />
+            <IconButton size="small" color="primary" onClick={handleRefresh} disabled={isRefreshing}>
+              {isRefreshing ? <CircularProgress size={20} color="inherit" /> : <IconRefresh size={20} />}
             </IconButton>
           </Tooltip>
         </Box>

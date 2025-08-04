@@ -26,11 +26,18 @@ export default function HRDashboard() {
   const [user, setUser] = useState<{ name?: string }>({});
   const [companies, setCompanies] = useState<any[]>([]);
 
+  const fetchDashboardData = async () => {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/dashboard`);
+      const dashboardData = await response.json();
+      setData(dashboardData);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
+
   useEffect(() => {
-    apiFetch(`${API_BASE}/api/dashboard`)
-      .then(r => r.json())
-      .then(setData)
-      .finally(() => setLoading(false));
+    fetchDashboardData().finally(() => setLoading(false));
     apiFetch(`${API_BASE}/api/user/me`).then(r => r.json()).then(setUser);
     apiFetch(`${API_BASE}/api/user/companies`).then(r => r.json()).then(setCompanies);
   }, []);
@@ -123,13 +130,13 @@ export default function HRDashboard() {
           <Grid item xs={12} lg={6}>
             <OpenVacanciesCard data={data.openVacancies} />
           </Grid>
-          {/* Tests Chart */}
-          <Grid item xs={12} lg={6}>
-            <TestsChartCard data={data.testsPerDay} />
-          </Grid>
           {/* Weak Questions */}
           <Grid item xs={12} lg={6}>
             <WeakQuestionsCard data={data.weakQuestions} />
+          </Grid>
+          {/* Tests Chart */}
+          <Grid item xs={12} lg={6}>
+            <TestsChartCard data={data.testsPerDay} onRefresh={fetchDashboardData} />
           </Grid>
           {/* Overdue Candidates */}
           <Grid item xs={12} lg={6}>

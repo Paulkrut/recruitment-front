@@ -15,10 +15,15 @@ import {
   Divider,
 } from "@mui/material";
 import { IconAlertTriangle, IconEdit, IconEye } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface WeakQuestion {
+  questionId: number;
   questionText: string;
   avgScore: number;
+  answerCount: number;
+  vacancyId: number;
+  vacancyTitle: string;
 }
 
 interface WeakQuestionsCardProps {
@@ -27,16 +32,27 @@ interface WeakQuestionsCardProps {
 
 export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "success";
-    if (score >= 60) return "warning";
+    if (score >= 4) return "success";
+    if (score >= 3) return "warning";
     return "error";
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 80) return "Отлично";
-    if (score >= 60) return "Хорошо";
-    if (score >= 40) return "Удовлетворительно";
+    if (score >= 4) return "Хорошо";
+    if (score >= 3) return "Удовлетворительно";
     return "Плохо";
+  };
+
+  const handleViewClick = (questionId: number, vacancyId: number) => {
+    // Переходим на страницу вакансии и открываем вкладку с вопросами
+    const url = `/hr/vacancies/${vacancyId}?tab=3&scrollToQuestion=${questionId}`;
+    window.location.href = url;
+  };
+
+  const handleEditClick = (questionId: number, vacancyId: number) => {
+    // Переходим на страницу редактирования и скроллим к вопросу
+    const url = `/hr/vacancy-edit/${vacancyId}?scrollToQuestion=${questionId}`;
+    window.location.href = url;
   };
 
   return (
@@ -57,9 +73,17 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
           />
         </Box>
 
+        {data.length > 0 && (
+          <Box mb={2} p={1.5} bgcolor="rgba(255, 152, 0, 0.08)" borderRadius={1} border="1px solid rgba(255, 152, 0, 0.2)">
+            <Typography variant="body2" color="warning.main" fontWeight="500" sx={{ fontSize: '0.875rem' }}>
+              💡 Рекомендация: Рассмотрите возможность пересмотра вопросов с низким средним баллом
+            </Typography>
+          </Box>
+        )}
+
         <List sx={{ p: 0 }}>
           {data.map((question, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={question.questionId}>
               <ListItem
                 sx={{
                   px: 0,
@@ -71,13 +95,21 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
                 }}
                 secondaryAction={
                   <Box display="flex" gap={1}>
-                    <Tooltip title="Просмотреть детали">
-                      <IconButton size="small" color="primary">
+                    <Tooltip title="Просмотреть в вакансии">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => handleViewClick(question.questionId, question.vacancyId)}
+                      >
                         <IconEye size={16} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Редактировать вопрос">
-                      <IconButton size="small" color="warning">
+                    <Tooltip title="Редактировать">
+                      <IconButton
+                        size="small"
+                        color="warning"
+                        onClick={() => handleEditClick(question.questionId, question.vacancyId)}
+                      >
                         <IconEdit size={16} />
                       </IconButton>
                     </Tooltip>
@@ -117,13 +149,16 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
                   secondary={
                     <Box display="flex" alignItems="center" gap={1} mt={0.5}>
                       <Chip
-                        label={`${question.avgScore}%`}
+                        label={`${question.avgScore}/5`}
                         size="small"
                         color={getScoreColor(question.avgScore) as any}
                         variant="outlined"
                       />
                       <Typography variant="caption" color="textSecondary">
-                        {getScoreLabel(question.avgScore)}
+                        {getScoreLabel(question.avgScore)} • {question.answerCount} ответов
+                      </Typography>
+                      <Typography variant="caption" color="primary.main" fontWeight="500">
+                        {question.vacancyTitle}
                       </Typography>
                     </Box>
                   }
@@ -138,14 +173,6 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
           <Box textAlign="center" py={3}>
             <Typography variant="body2" color="textSecondary">
               Нет слабых вопросов
-            </Typography>
-          </Box>
-        )}
-
-        {data.length > 0 && (
-          <Box mt={2} p={2} bgcolor="rgba(255, 152, 0, 0.1)" borderRadius={1}>
-            <Typography variant="body2" color="warning.main" fontWeight="500">
-              💡 Рекомендация: Рассмотрите возможность пересмотра вопросов с низким средним баллом
             </Typography>
           </Box>
         )}

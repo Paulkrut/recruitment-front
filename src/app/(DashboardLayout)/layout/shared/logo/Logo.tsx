@@ -16,7 +16,7 @@ export default function Logo() {
   }));
 
   return (
-    <LinkStyled href="/">
+    <LinkStyled href="/hr">
       <Typography
         variant="h5"
         fontWeight={900}

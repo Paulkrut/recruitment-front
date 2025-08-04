@@ -67,6 +67,44 @@ export default function HRVacancyEditPage() {
   const [genCount, setGenCount] = useState(3);
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Vacancy data
+  const [vacancyData, setVacancyData] = useState<VacancyData>({
+    id: 0,
+    title: "",
+    description: "",
+    template: undefined,
+    questions: [],
+  });
+
+  // Получаем параметры из URL для скролла
+  const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setSearchParams(params);
+    }
+  }, []);
+
+  // Скролл к вопросу после загрузки данных
+  useEffect(() => {
+    if (vacancyData.questions.length > 0 && searchParams) {
+      const scrollToQuestion = searchParams.get('scrollToQuestion');
+      if (scrollToQuestion) {
+        setTimeout(() => {
+          const questionElement = document.querySelector(`[data-question-id="${scrollToQuestion}"]`);
+          if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            questionElement.classList.add('highlight-question');
+            setTimeout(() => {
+              questionElement.classList.remove('highlight-question');
+            }, 3000);
+          }
+        }, 500);
+      }
+    }
+  }, [vacancyData.questions, searchParams]);
+
   // Стабилизированные значения для диалога
   const dialogRef = useRef({
     genCount,
@@ -89,15 +127,6 @@ export default function HRVacancyEditPage() {
   const handleGenCountChange = useCallback((value: number) => {
     setGenCount(prev => value);
   }, []);
-
-  // Vacancy data
-  const [vacancyData, setVacancyData] = useState<VacancyData>({
-    id: 0,
-    title: "",
-    description: "",
-    template: undefined,
-    questions: [],
-  });
 
   // Template data
   const [templateData, setTemplateData] = useState({
@@ -626,7 +655,22 @@ export default function HRVacancyEditPage() {
                 ) : (
                   <Stack spacing={3}>
                     {questions.map((question, qIndex) => (
-                      <Paper key={qIndex} sx={{ p: 3, mb: 0, background: '#f7f7f7', borderRadius: 3, border: '1px solid #eee' }}>
+                      <Paper 
+                        key={qIndex} 
+                        sx={{ 
+                          p: 3, 
+                          mb: 0, 
+                          background: '#f7f7f7', 
+                          borderRadius: 3, 
+                          border: '1px solid #eee',
+                          '&.highlight-question': {
+                            backgroundColor: '#e3f2fd',
+                            borderColor: '#1976d2',
+                            boxShadow: '0 0 10px rgba(25, 118, 210, 0.5)',
+                          }
+                        }}
+                        data-question-id={question.id || qIndex}
+                      >
                         <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                           <Box sx={{ width: 36, height: 36, borderRadius: '50%', background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem' }}>{qIndex + 1}</Box>
                           <Typography variant="subtitle1" fontWeight={700} color="text.primary">Вопрос {qIndex + 1}</Typography>

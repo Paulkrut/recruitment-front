@@ -102,7 +102,7 @@ export default function SortableQuestions({ questions, onChange }: Props) {
     }
 
     return (
-      <TableRow ref={setNodeRef} style={style} {...attributes}>
+      <TableRow ref={setNodeRef} style={style} {...attributes} data-question-id={q.id || idx}>
         <TableCell {...listeners} style={{ cursor: "grab", width: 40 }}>
           <DragIndicatorIcon />
         </TableCell>

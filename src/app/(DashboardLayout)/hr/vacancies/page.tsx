@@ -161,10 +161,12 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               color: 'text.secondary',
               width: '18%'
             }}>
-              <Box display="flex" alignItems="center" gap={1}>
-                <IconUsers size={16} />
-                Кандидаты
-              </Box>
+              <Tooltip title="Показывает общее количество кандидатов, завершивших интервью и находящихся в процессе">
+                <Box display="flex" alignItems="center" gap={1}>
+                  <IconUsers size={16} />
+                  Статистика кандидатов
+                </Box>
+              </Tooltip>
             </TableCell>
             <TableCell sx={{ 
               fontWeight: 600, 
@@ -242,17 +244,32 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Typography variant="body2" fontWeight={600}>
-                      {finished}/{total}
-                    </Typography>
+                  <Box display="flex" flexDirection="column" gap={0.5}>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Typography variant="body2" fontWeight={600} color="primary.main">
+                        {total}
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        всего
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Typography variant="body2" fontWeight={600} color="success.main">
+                        {finished}
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary">
+                        завершили
+                      </Typography>
+                    </Box>
                     {inProgress > 0 && (
-                      <Chip 
-                        label={`${inProgress}`} 
-                        size="small" 
-                        color="warning" 
-                        sx={{ fontSize: '0.7rem', height: 20 }}
-                      />
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Typography variant="body2" fontWeight={600} color="warning.main">
+                          {inProgress}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary">
+                          в процессе
+                        </Typography>
+                      </Box>
                     )}
                   </Box>
                 </TableCell>
@@ -413,10 +430,13 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
 
       {/* Метрики */}
       <Box mb={1}>
+        <Typography variant="caption" color="textSecondary" sx={{ mb: 1, display: 'block' }}>
+          Статистика кандидатов:
+        </Typography>
         <Grid container spacing={1}>
           <Grid item xs={4}>
             <Box textAlign="center">
-              <Typography variant="h5" fontWeight={700}>{total}</Typography>
+              <Typography variant="h5" fontWeight={700} color="primary.main">{total}</Typography>
               <Typography variant="caption" color="textSecondary">Всего</Typography>
             </Box>
           </Grid>
