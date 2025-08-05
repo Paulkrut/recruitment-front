@@ -252,7 +252,6 @@ export default function CandidateInterviewPage() {
           frameRate: { ideal: 15, max: 30 }
         } 
       });
-      console.log('Media stream obtained');
       setPreviewStream(stream);
       const mr = new MediaRecorder(stream, {
         mimeType: 'video/webm;codecs=vp8,opus',
@@ -260,7 +259,6 @@ export default function CandidateInterviewPage() {
       });
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
-        console.log('Data available:', e.data.size);
         if (e.data && e.data.size > 0) {
           chunks.push(e.data);
         }
@@ -277,76 +275,21 @@ export default function CandidateInterviewPage() {
         const blob = new Blob(chunks, { type: 'video/webm' });
         console.log('Blob created:', blob.size);
         
-        // Сжимаем видео если оно слишком большое
-        if (blob.size > 5 * 1024 * 1024) { // больше 5MB
-          console.log('Video compression started:', {
-            originalSize: blob.size,
-            originalSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
-            threshold: '5 MB'
-          });
-          
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          const video = document.createElement('video');
-          
-          video.onloadedmetadata = () => {
-            console.log('Video metadata loaded:', {
-              videoWidth: video.videoWidth,
-              videoHeight: video.videoHeight,
-              duration: video.duration
-            });
-            
-            canvas.width = 640;
-            canvas.height = 480;
-            ctx?.drawImage(video, 0, 0, 640, 480);
-            
-            canvas.toBlob((compressedBlob) => {
-              if (compressedBlob) {
-                const compressionRatio = ((blob.size - compressedBlob.size) / blob.size * 100).toFixed(1);
-                console.log('Video compression completed:', {
-                  originalSize: blob.size,
-                  originalSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
-                  compressedSize: compressedBlob.size,
-                  compressedSizeMB: (compressedBlob.size / (1024 * 1024)).toFixed(2) + ' MB',
-                  compressionRatio: compressionRatio + '%',
-                  sizeReduction: (blob.size - compressedBlob.size) / (1024 * 1024) + ' MB'
-                });
-                
-                // Проверяем эффективность сжатия
-                if (compressedBlob.size >= blob.size) {
-                  console.warn('Compression ineffective - using original blob');
-                  sendBlobAnswer(blob);
-                } else {
-                  console.log('Using compressed blob');
-                  sendBlobAnswer(compressedBlob);
-                }
-              } else {
-                console.error('Compression failed - using original blob');
-                sendBlobAnswer(blob);
-              }
-            }, 'video/webm', 0.5);
-          };
-          
-          video.src = URL.createObjectURL(blob);
-          // Убираем автоматическое проигрывание
-          video.muted = true;
-          video.load(); // Загружаем метаданные без проигрывания
-        } else {
-          console.log('Video size OK, no compression needed:', {
-            size: blob.size,
-            sizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
-            threshold: '5 MB'
-          });
-          /* при завершении записи сразу отправляем ответ */
-          sendBlobAnswer(blob);
-        }
+        // Отправляем оригинальный blob без сжатия на фронте
+        console.log('Sending original video blob:', {
+          size: blob.size,
+          sizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
+          type: blob.type
+        });
+        
+        /* при завершении записи сразу отправляем ответ */
+        sendBlobAnswer(blob);
         
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
         setPreviewStream(null);
       };
       mr.start();
-      console.log('MediaRecorder started');
       setMediaRecorder(mr);
       setRecording(true);
     } catch (err: any) {
@@ -365,7 +308,9 @@ export default function CandidateInterviewPage() {
 
   function stopRecording() {
     console.log('stopRecording called');
-    mediaRecorder?.stop();
+    if (mediaRecorder && recording) {
+      mediaRecorder.stop();
+    }
   }
 
   // useEffect to bind srcObject
@@ -382,8 +327,7 @@ export default function CandidateInterviewPage() {
     console.log('sendBlobAnswer called', { 
       questionId: question.id, 
       blobSize: blob.size,
-      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
-      blobType: blob.type
+      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
     });
 
     clearCountdown();
@@ -402,10 +346,6 @@ export default function CandidateInterviewPage() {
     fd.append("questionId", String(question.id));
     fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
     
-    console.log('Sending answer to server...', {
-      fileSize: blob.size,
-      fileSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
-    });
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
       body: fd,
@@ -451,12 +391,18 @@ export default function CandidateInterviewPage() {
 
   async function sendEmptyAnswer(){
     if (!question || answered) return; // Защита от дублирования
+
+    console.log('sendEmptyAnswer called', { questionId: question.id });
     
+    // Дополнительная проверка - если запись активна, не отправляем пустой ответ
+    if (recording) {
+      console.log('Recording is active, skipping empty answer');
+      return;
+    }
+
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
-
-    console.log('sendEmptyAnswer called', { questionId: question.id });
 
     // optimistic UI
     setChat((p)=>[
