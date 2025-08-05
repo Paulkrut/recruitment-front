@@ -143,15 +143,20 @@ export default function CandidateInterviewPage() {
 
   /* ---------- auto-submit on timeout ----------- */
   useEffect(()=>{
-    if(timeLeft===0 && question && !answered){
-      if(recording){
-        stopRecording(); // onstop will send answer
-      } else {
-        sendEmptyAnswer();
-      }
+    if(timeLeft===0 && question && !answered && !recording){
+      // Отправляем пустой ответ только если не записываем
+      sendEmptyAnswer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[timeLeft,recording,answered,question]);
+
+  // auto-stop по таймеру
+  useEffect(() => {
+    if (!recording) return;
+    if (timeLeft === 0) {
+      stopRecording();
+    }
+  }, [timeLeft, recording]);
 
   // prepare
   useEffect(()=>{
@@ -274,28 +279,64 @@ export default function CandidateInterviewPage() {
         
         // Сжимаем видео если оно слишком большое
         if (blob.size > 5 * 1024 * 1024) { // больше 5MB
-          console.log('Video too large, compressing...');
+          console.log('Video compression started:', {
+            originalSize: blob.size,
+            originalSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
+            threshold: '5 MB'
+          });
+          
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
           const video = document.createElement('video');
           
           video.onloadedmetadata = () => {
+            console.log('Video metadata loaded:', {
+              videoWidth: video.videoWidth,
+              videoHeight: video.videoHeight,
+              duration: video.duration
+            });
+            
             canvas.width = 640;
             canvas.height = 480;
             ctx?.drawImage(video, 0, 0, 640, 480);
+            
             canvas.toBlob((compressedBlob) => {
               if (compressedBlob) {
-                console.log('Compressed blob size:', compressedBlob.size);
-                sendBlobAnswer(compressedBlob);
+                const compressionRatio = ((blob.size - compressedBlob.size) / blob.size * 100).toFixed(1);
+                console.log('Video compression completed:', {
+                  originalSize: blob.size,
+                  originalSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
+                  compressedSize: compressedBlob.size,
+                  compressedSizeMB: (compressedBlob.size / (1024 * 1024)).toFixed(2) + ' MB',
+                  compressionRatio: compressionRatio + '%',
+                  sizeReduction: (blob.size - compressedBlob.size) / (1024 * 1024) + ' MB'
+                });
+                
+                // Проверяем эффективность сжатия
+                if (compressedBlob.size >= blob.size) {
+                  console.warn('Compression ineffective - using original blob');
+                  sendBlobAnswer(blob);
+                } else {
+                  console.log('Using compressed blob');
+                  sendBlobAnswer(compressedBlob);
+                }
               } else {
+                console.error('Compression failed - using original blob');
                 sendBlobAnswer(blob);
               }
             }, 'video/webm', 0.5);
           };
           
           video.src = URL.createObjectURL(blob);
-          video.play();
+          // Убираем автоматическое проигрывание
+          video.muted = true;
+          video.load(); // Загружаем метаданные без проигрывания
         } else {
+          console.log('Video size OK, no compression needed:', {
+            size: blob.size,
+            sizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
+            threshold: '5 MB'
+          });
           /* при завершении записи сразу отправляем ответ */
           sendBlobAnswer(blob);
         }
@@ -327,14 +368,6 @@ export default function CandidateInterviewPage() {
     mediaRecorder?.stop();
   }
 
-  // auto-stop по таймеру
-  useEffect(() => {
-    if (!recording) return;
-    if (timeLeft === 0) {
-      stopRecording();
-    }
-  }, [timeLeft, recording]);
-
   // useEffect to bind srcObject
   useEffect(()=>{
     if(videoRef.current){
@@ -344,9 +377,14 @@ export default function CandidateInterviewPage() {
 
   /* ---------------- handlers ---------------- */
   async function sendBlobAnswer(blob: Blob) {
-    if (!question) return;
+    if (!question || answered) return; // Защита от дублирования
 
-    console.log('sendBlobAnswer called', { questionId: question.id, blobSize: blob.size });
+    console.log('sendBlobAnswer called', { 
+      questionId: question.id, 
+      blobSize: blob.size,
+      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
+      blobType: blob.type
+    });
 
     clearCountdown();
     setLoadingNextQuestion(true);
@@ -364,7 +402,10 @@ export default function CandidateInterviewPage() {
     fd.append("questionId", String(question.id));
     fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
     
-    console.log('Sending answer to server...');
+    console.log('Sending answer to server...', {
+      fileSize: blob.size,
+      fileSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
+    });
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
       body: fd,
@@ -409,10 +450,11 @@ export default function CandidateInterviewPage() {
   }
 
   async function sendEmptyAnswer(){
+    if (!question || answered) return; // Защита от дублирования
+    
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
-    if(!question) return;
 
     console.log('sendEmptyAnswer called', { questionId: question.id });
 
