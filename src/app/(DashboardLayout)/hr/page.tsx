@@ -17,36 +17,44 @@ import WeakQuestionsCard from "@/app/components/hr/WeakQuestionsCard";
 import OverdueCandidatesCard from "@/app/components/hr/OverdueCandidatesCard";
 
 import { apiFetch } from "@/utils/api";
+import { useUser } from "@/contexts/UserContext";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function HRDashboard() {
+  const { currentCompany, companies, user } = useUser();
   const [data, setData] = useState<any | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const [user, setUser] = useState<{ name?: string }>({});
-  const [companies, setCompanies] = useState<any[]>([]);
 
   const fetchDashboardData = async () => {
+    if (!currentCompany) {
+      setData(null);
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await apiFetch(`${API_BASE}/api/dashboard`);
       const dashboardData = await response.json();
       setData(dashboardData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      setData(null);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchDashboardData().finally(() => setLoading(false));
-    apiFetch(`${API_BASE}/api/user/me`).then(r => r.json()).then(setUser);
-    apiFetch(`${API_BASE}/api/user/companies`).then(r => r.json()).then(setCompanies);
-  }, []);
+    fetchDashboardData();
+  }, [currentCompany]);
 
   // Stepper logic
   const hasCompany = companies.length > 0;
-  const hasColleagues = hasCompany && companies.some((c:any) => c.role === 'HR_LEAD' || c.role === 'HR'); // упрощённо
+  const hasColleagues = hasCompany && companies.some((c:any) => c.role === 'HR_LEAD' || c.role === 'HR');
   const hasVacancy = data && data.openVacancies && data.openVacancies.length > 0;
   const hasCandidate = data && data.overdueCandidates && data.overdueCandidates.length > 0;
+  const hasSelectedCompany = !!currentCompany;
   const steps = [
     { label: "Создайте компанию", done: hasCompany, href: "/hr/choose-company" },
     { label: "Пригласите коллег", done: hasColleagues, href: "/hr/employees" },
@@ -60,6 +68,16 @@ export default function HRDashboard() {
       <PageContainer title="HR Dashboard" description="HR Dashboard">
         <Box sx={{ p: 4 }}>
           <div>Загрузка...</div>
+        </Box>
+      </PageContainer>
+    );
+  }
+
+  if (!currentCompany) {
+    return (
+      <PageContainer title="HR Dashboard" description="HR Dashboard">
+        <Box sx={{ p: 4 }}>
+          <div>Пожалуйста, выберите компанию</div>
         </Box>
       </PageContainer>
     );
@@ -87,62 +105,138 @@ export default function HRDashboard() {
         {/* Персональное приветствие */}
         <Box sx={{ mb: 4, textAlign: 'center' }}>
           <Typography variant="h4" fontWeight={700} gutterBottom>
-            Добро пожаловать{user.name ? `, ${user.name}` : ''}!
+            Добро пожаловать{user?.name ? `, ${user.name}` : ''}!
           </Typography>
           <Typography variant="body1" color="text.secondary" mb={2}>
             Это ваша HR-панель. Здесь вы управляете вакансиями, сотрудниками и кандидатами.
           </Typography>
+          {hasVacancy && hasSelectedCompany && (
+            <Box sx={{ mt: 3 }}>
+              <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
+                <Button 
+                  variant="contained" 
+                  size="large"
+                  sx={{ 
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    color: 'white',
+                    fontWeight: 600,
+                    px: 4,
+                    py: 1.5,
+                    fontSize: '1.1rem',
+                    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+                    '&:hover': {
+                      boxShadow: '0 12px 35px rgba(102, 126, 234, 0.4)',
+                      transform: 'translateY(-2px)'
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  ✨ Создать новую вакансию
+                </Button>
+              </Link>
+            </Box>
+          )}
         </Box>
-        {/* Stepper онбординга */}
-        <Box sx={{ maxWidth: 700, mx: 'auto', mb: 6 }}>
-          <Stepper activeStep={activeStep === -1 ? steps.length : activeStep} alternativeLabel>
-            {steps.map((step, idx) => (
+
+        {/* Hero кнопка создания вакансии */}
+        {!hasVacancy && hasSelectedCompany && (
+          <Box sx={{ 
+            mb: 6, 
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: 3,
+            p: 4,
+            color: 'white',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+              opacity: 0.3
+            }
+          }}>
+            <Typography variant="h5" fontWeight={600} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
+              🚀 Готовы создать первую вакансию?
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3, opacity: 0.9, position: 'relative', zIndex: 1 }}>
+              Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня
+            </Typography>
+            <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
+              <Button 
+                variant="contained" 
+                size="large"
+                sx={{ 
+                  backgroundColor: 'white',
+                  color: '#667eea',
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1.1rem',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
+                    transform: 'translateY(-2px)'
+                  },
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  zIndex: 1
+                }}
+              >
+                ✨ Создать вакансию
+              </Button>
+            </Link>
+          </Box>
+        )}
+
+        {/* Stepper */}
+        <Box sx={{ mb: 4 }}>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((step, index) => (
               <Step key={step.label} completed={step.done}>
-                <Link href={step.href} style={{ textDecoration: 'none' }}>
-                  <StepLabel style={{ cursor: 'pointer' }}>{step.label}</StepLabel>
-                </Link>
+                <StepLabel>
+                  <Link href={step.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    {step.label}
+                  </Link>
+                </StepLabel>
               </Step>
             ))}
           </Stepper>
         </Box>
-        {isEmpty ? (
-          <Box textAlign="center" py={8}>
-            <img src="/images/empty-dashboard.svg" alt="empty" style={{ width: 120, marginBottom: 24, opacity: 0.7 }} />
-            <Typography variant="h5" gutterBottom>Здесь появятся ваши вакансии и кандидаты</Typography>
-            <Typography variant="body1" color="text.secondary" mb={4}>
-              Для начала работы воспользуйтесь шагами выше или быстрыми действиями ниже.
+
+        {/* Dashboard Cards */}
+        {!isEmpty && (
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={6}>
+              <OpenVacanciesCard data={data.openVacancies || []} />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TestsChartCard data={data.testsPerDay || []} onRefresh={fetchDashboardData} />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <WeakQuestionsCard data={data.weakQuestions || []} />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <OverdueCandidatesCard data={data.overdueCandidates || []} />
+            </Grid>
+          </Grid>
+        )}
+
+        {/* Empty State */}
+        {isEmpty && (
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              Пока нет данных для отображения
             </Typography>
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
-              <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
-                <Button variant="contained" size="large">Создать вакансию</Button>
-              </Link>
-              <Link href="/hr/employees" style={{ textDecoration: 'none' }}>
-                <Button variant="outlined" size="large">Пригласить сотрудника</Button>
-              </Link>
-              <Link href="/hr/choose-company" style={{ textDecoration: 'none' }}>
-                <Button variant="outlined" size="large">Добавить компанию</Button>
-              </Link>
-            </Stack>
+            <Typography variant="body2" color="text.secondary">
+              Создайте вакансию и пригласите кандидатов, чтобы увидеть статистику
+            </Typography>
           </Box>
-        ) : (
-        <Grid container spacing={3}>
-          {/* Open Vacancies */}
-          <Grid item xs={12} lg={6}>
-            <OpenVacanciesCard data={data.openVacancies} />
-          </Grid>
-          {/* Weak Questions */}
-          <Grid item xs={12} lg={6}>
-            <WeakQuestionsCard data={data.weakQuestions} />
-          </Grid>
-          {/* Tests Chart */}
-          <Grid item xs={12} lg={6}>
-            <TestsChartCard data={data.testsPerDay} onRefresh={fetchDashboardData} />
-          </Grid>
-          {/* Overdue Candidates */}
-          <Grid item xs={12} lg={6}>
-            <OverdueCandidatesCard data={data.overdueCandidates} />
-          </Grid>
-        </Grid>
         )}
       </Box>
     </PageContainer>

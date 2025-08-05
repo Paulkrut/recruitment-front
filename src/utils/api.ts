@@ -17,10 +17,30 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  // Добавляем текущую компанию
+  // Добавляем текущую компанию (кроме определенных эндпоинтов)
   if (typeof window !== 'undefined') {
     const cid = localStorage.getItem('current_company');
-    if (cid && !headers.has('X-Company-ID')) headers.set('X-Company-ID', cid);
+    const urlObj = new URL(url, window.location.origin);
+    const path = urlObj.pathname;
+    
+    // Эндпоинты которые не требуют X-Company-ID
+    const excludedPaths = [
+      '/api/user/me',
+      '/api/user/companies', 
+      '/api/user/invites',
+      '/api/auth',
+      '/api/public',
+      '/api/company', // Операции создания/управления компаниями
+      '/api/company/invite' // Операции с приглашениями
+    ];
+    
+    const shouldExcludeCompanyHeader = excludedPaths.some(excludedPath => 
+      path.startsWith(excludedPath)
+    );
+    
+    if (cid && !headers.has('X-Company-ID') && !shouldExcludeCompanyHeader) {
+      headers.set('X-Company-ID', cid);
+    }
   }
 
   const response = await fetch(url, {

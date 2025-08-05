@@ -11,6 +11,7 @@ import Navigation from "./layout/horizontal/navbar/Navigation";
 import HorizontalHeader from "./layout/horizontal/header/Header";
 import { useSelector } from "@/store/hooks";
 import { AppState } from "@/store/store";
+import CompanyGuard from "@/components/CompanyGuard";
 
 const PageWrapper = styled("div")(() => ({
   display: "flex",
@@ -39,12 +40,9 @@ export default function RootLayout({
   React.useEffect(()=>{
     if(typeof window!=='undefined'){
       const t = localStorage.getItem('recruitment_token');
-      if(!t){ router.replace('/auth/phone'); }
-      const cid = localStorage.getItem('current_company');
-      if(!cid && !window.location.pathname.includes('/hr/choose-company')){
-         if(window.location.pathname.startsWith('/hr')){
-           router.replace('/hr/choose-company');
-         }
+      if(!t){ 
+        router.replace('/auth/phone'); 
+        return;
       }
     }
   },[router]);
@@ -101,23 +99,13 @@ export default function RootLayout({
             {/* ------------------------------------------- */}
             {/* PageContent */}
             {/* ------------------------------------------- */}
-
-            <Box
-              sx={{
-                minHeight: "calc(100vh - 170px)",
-                py: { sm: 3 },
-              }}
-            >
+            <CompanyGuard excludePaths={['/hr/choose-company', '/auth']}>
               {children}
-            </Box>
-
-            {/* ------------------------------------------- */}
-            {/* End Page */}
-            {/* ------------------------------------------- */}
+            </CompanyGuard>
           </Container>
-          <Customizer />
         </PageWrapper>
       </Box>
+      <Customizer />
     </MainWrapper>
   );
 }

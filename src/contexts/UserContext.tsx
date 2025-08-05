@@ -78,7 +78,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const companiesData = await response.json();
         setCompanies(companiesData);
         
-        // Устанавливаем текущую компанию если её нет
         if (!currentCompany && companiesData.length > 0) {
           const storedCompanyId = localStorage.getItem('current_company');
           if (storedCompanyId) {
@@ -127,8 +126,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       try {
         await Promise.all([
           refreshUser(),
-          refreshCompanies(),
-          refreshInvites()
+          refreshCompanies()
         ]);
       } catch (err: any) {
         setError(err.message);
@@ -137,7 +135,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     };
 
-    // Проверяем наличие токена
     const token = localStorage.getItem('recruitment_token');
     if (token) {
       loadInitialData();

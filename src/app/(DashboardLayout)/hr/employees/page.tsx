@@ -20,7 +20,7 @@ function stringAvatar(name: string) {
 }
 
 export default function EmployeesPage() {
-  const { currentCompany } = useUser();
+  const { currentCompany, refreshInvites } = useUser();
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("HR");
   const [invites, setInvites] = useState<any[]>([]);
@@ -41,6 +41,9 @@ export default function EmployeesPage() {
         setUserRole(currentCompany.role);
         setIsLead(currentCompany.role === 'HR_LEAD');
       }
+
+      // Загружаем приглашения через UserContext
+      await refreshInvites();
 
       const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
       if (!res.ok) {
