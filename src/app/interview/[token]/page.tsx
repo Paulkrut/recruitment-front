@@ -55,9 +55,10 @@ export default function CandidateInterviewPage() {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [answered,setAnswered] = useState(false);
-  const [paused,setPaused] = useState(false);
+  const [answered, setAnswered] = useState(false);
+  const [lastAnswerTime, setLastAnswerTime] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
+  const [paused,setPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
   const [testStream, setTestStream] = useState<MediaStream|null>(null);
@@ -144,11 +145,28 @@ export default function CandidateInterviewPage() {
   /* ---------- auto-submit on timeout ----------- */
   useEffect(()=>{
     if(timeLeft===0 && question && !answered && !recording){
+      // Дополнительная проверка - не отправляем пустой ответ если таймер только что истек
+      // и мы получили новый вопрос (это означает, что предыдущий ответ был успешно отправлен)
+      const timeSinceLastAnswer = Date.now() - (lastAnswerTime || 0);
+      if (timeSinceLastAnswer < 2000) { // 2 секунды
+        console.log('Skipping auto-submit - recent answer detected:', {
+          timeSinceLastAnswer,
+          questionId: question.id
+        });
+        return;
+      }
+      
       // Отправляем пустой ответ только если не записываем
+      console.log('Auto-submit triggered:', {
+        timeLeft,
+        questionId: question.id,
+        answered,
+        recording
+      });
       sendEmptyAnswer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[timeLeft,recording,answered,question]);
+  },[timeLeft,recording,answered,question,lastAnswerTime]);
 
   // auto-stop по таймеру
   useEffect(() => {
@@ -333,6 +351,7 @@ export default function CandidateInterviewPage() {
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
+    setLastAnswerTime(Date.now()); // Запоминаем время отправки ответа
 
     // optimistic UI update (показываем, что ответ дан)
     setChat((p) => [
@@ -403,6 +422,7 @@ export default function CandidateInterviewPage() {
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
+    setLastAnswerTime(Date.now()); // Запоминаем время отправки пустого ответа
 
     // optimistic UI
     setChat((p)=>[
