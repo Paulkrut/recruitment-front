@@ -57,6 +57,7 @@ export default function CandidateInterviewPage() {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [answered, setAnswered] = useState(false);
   const [lastAnswerTime, setLastAnswerTime] = useState<number | null>(null);
+  const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
   const [paused,setPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
@@ -145,28 +146,50 @@ export default function CandidateInterviewPage() {
   /* ---------- auto-submit on timeout ----------- */
   useEffect(()=>{
     if(timeLeft===0 && question && !answered && !recording){
+      // Дополнительная проверка - не отправляем пустой ответ если вопрос только что изменился
+      // (это означает, что предыдущий ответ был успешно отправлен)
+      if (previousQuestionId && question.id !== previousQuestionId) {
+        return;
+      }
+      
       // Дополнительная проверка - не отправляем пустой ответ если таймер только что истек
       // и мы получили новый вопрос (это означает, что предыдущий ответ был успешно отправлен)
-      const timeSinceLastAnswer = Date.now() - (lastAnswerTime || 0);
-      if (timeSinceLastAnswer < 2000) { // 2 секунды
-        console.log('Skipping auto-submit - recent answer detected:', {
-          timeSinceLastAnswer,
-          questionId: question.id
-        });
+      if (lastAnswerTime) {
+        const timeSinceLastAnswer = Date.now() - lastAnswerTime;
+        if (timeSinceLastAnswer < 2000) { // 2 секунды
+          return;
+        }
+      }
+      
+      // Дополнительная проверка - отправляем пустой ответ только если таймер действительно истек
+      // для текущего вопроса (не для нового вопроса, который только что получен)
+      if (question.maxTime && timeLeft !== 0) {
+        return;
+      }
+      
+      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
+      // для текущего вопроса (не для нового вопроса, который только что получен)
+      if (!paused) {
+        return;
+      }
+      
+      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
+      // для текущего вопроса (не для нового вопроса, который только что получен)
+      if (question.maxTime === null || question.maxTime === undefined) {
+        return;
+      }
+      
+      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
+      // для текущего вопроса (не для нового вопроса, который только что получен)
+      if (question.maxTime > 0 && timeLeft === question.maxTime) {
         return;
       }
       
       // Отправляем пустой ответ только если не записываем
-      console.log('Auto-submit triggered:', {
-        timeLeft,
-        questionId: question.id,
-        answered,
-        recording
-      });
       sendEmptyAnswer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[timeLeft,recording,answered,question,lastAnswerTime]);
+  },[timeLeft,recording,answered,question,lastAnswerTime,previousQuestionId,paused]);
 
   // auto-stop по таймеру
   useEffect(() => {
@@ -228,6 +251,7 @@ export default function CandidateInterviewPage() {
     if(!r.ok) return;
     const d = await r.json();
     setQuestion(d.question);
+    setPreviousQuestionId(d.question.id);
     setTotal(d.total);
     setChat([{role:'bot',text:d.question.text}]);
   }
@@ -342,12 +366,6 @@ export default function CandidateInterviewPage() {
   async function sendBlobAnswer(blob: Blob) {
     if (!question || answered) return; // Защита от дублирования
 
-    console.log('sendBlobAnswer called', { 
-      questionId: question.id, 
-      blobSize: blob.size,
-      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
-    });
-
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
@@ -399,6 +417,7 @@ export default function CandidateInterviewPage() {
     }
 
     setQuestion(d.question);
+    setPreviousQuestionId(d.question.id);
     setChat((p) => {
       const cp = [...p];
       cp[typingIdx] = { role: "bot", text: d.question.text };
@@ -411,11 +430,8 @@ export default function CandidateInterviewPage() {
   async function sendEmptyAnswer(){
     if (!question || answered) return; // Защита от дублирования
 
-    console.log('sendEmptyAnswer called', { questionId: question.id });
-    
     // Дополнительная проверка - если запись активна, не отправляем пустой ответ
     if (recording) {
-      console.log('Recording is active, skipping empty answer');
       return;
     }
 
@@ -460,6 +476,7 @@ export default function CandidateInterviewPage() {
       return;
     }
     setQuestion(d.question);
+    setPreviousQuestionId(d.question.id);
     setChat((p)=>{
       const cp=[...p];
       cp[typingIdx]={role:'bot',text:d.question.text};
