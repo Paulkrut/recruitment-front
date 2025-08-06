@@ -231,7 +231,7 @@ function ProfileDialog({open,onClose,onUpdated}:{open:boolean;onClose:()=>void;o
   const save=async ()=>{
     // Валидация перед сохранением
     const newErrors = {name:'',email:'',position:''};
-    if (!form.name.trim()) newErrors.name = 'Имя обязательно';
+    if (!(form.name && form.name.trim())) newErrors.name = 'Имя обязательно';
     if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
     
     if (newErrors.name || newErrors.email || newErrors.position) {
@@ -290,7 +290,7 @@ function ProfileDialog({open,onClose,onUpdated}:{open:boolean;onClose:()=>void;o
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Отмена</Button>
-        <Button onClick={save} disabled={loading || !form.name.trim()}>Сохранить</Button>
+        <Button onClick={save} disabled={loading || !(form.name && form.name.trim())}>Сохранить</Button>
       </DialogActions>
     </Dialog>
   );
