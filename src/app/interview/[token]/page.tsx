@@ -47,6 +47,9 @@ export default function CandidateInterviewPage() {
   const [question, setQuestion] = useState<Question | null>(null);
   const [total, setTotal] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [paused, setPaused] = useState(false);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [currentQuestionTimerStarted, setCurrentQuestionTimerStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout|null>(null);
   const [chat, setChat] = useState<{ role: "bot" | "user"; text: string }[]>(
     []
@@ -59,7 +62,6 @@ export default function CandidateInterviewPage() {
   const [lastAnswerTime, setLastAnswerTime] = useState<number | null>(null);
   const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
-  const [paused,setPaused] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
   const [testStream, setTestStream] = useState<MediaStream|null>(null);
@@ -126,78 +128,105 @@ export default function CandidateInterviewPage() {
     setPaused(true);
   }
   function startCountdown(totalSec:number){
+    console.log('startCountdown called:', { totalSec, questionId: question?.id });
     clearCountdown();
-      setTimeLeft(totalSec);
+    setTimeLeft(totalSec);
     intervalRef.current = setInterval(()=>
       setTimeLeft(prev=> (prev!==null && prev>0)? prev-1 : 0),
         1000);
     setPaused(false);
+    setTimerStarted(true);
+    setCurrentQuestionTimerStarted(true);
   }
 
   useEffect(()=>{
+    console.log('Question changed, starting countdown:', { 
+      questionId: question?.id, 
+      maxTime: question?.maxTime,
+      timeLeft 
+    });
     clearCountdown();
+    setTimerStarted(false); // Сбрасываем флаг для нового вопроса
+    setCurrentQuestionTimerStarted(false); // Сбрасываем флаг для текущего вопроса
     if(question){ startCountdown(question.maxTime || 120); }
     return clearCountdown;
-  },[question]);
+  },[question?.id]); // Используем question?.id вместо question
 
   // reset answered flag when question changes
-  useEffect(()=>{ setAnswered(false); }, [question]);
+  useEffect(()=>{ 
+    if (answered) {
+      console.log('Resetting answered flag for new question:', { 
+        questionId: question?.id, 
+        answered 
+      });
+      setAnswered(false); 
+    }
+  }, [question?.id]); // Используем question?.id вместо question
 
   /* ---------- auto-submit on timeout ----------- */
   useEffect(()=>{
-    if(timeLeft===0 && question && !answered && !recording){
-      // Дополнительная проверка - не отправляем пустой ответ если вопрос только что изменился
-      // (это означает, что предыдущий ответ был успешно отправлен)
-      if (previousQuestionId && question.id !== previousQuestionId) {
-        return;
-      }
+    if(timeLeft===0 && timeLeft !== null && question && !answered && !recording && currentQuestionTimerStarted){
+      console.log('Auto-submit useEffect triggered:', {
+        timeLeft,
+        questionId: question.id,
+        answered,
+        recording,
+        currentQuestionTimerStarted,
+        lastAnswerTime,
+        previousQuestionId,
+        paused
+      });
       
-      // Дополнительная проверка - не отправляем пустой ответ если таймер только что истек
-      // и мы получили новый вопрос (это означает, что предыдущий ответ был успешно отправлен)
+      // Проверка - не отправляем пустой ответ если недавно был отправлен ответ
       if (lastAnswerTime) {
         const timeSinceLastAnswer = Date.now() - lastAnswerTime;
+        console.log('Time since last answer check:', {
+          timeSinceLastAnswer,
+          questionId: question.id,
+          threshold: 2000
+        });
         if (timeSinceLastAnswer < 2000) { // 2 секунды
+          console.log('Skipping auto-submit - recent answer detected:', {
+            timeSinceLastAnswer,
+            questionId: question.id
+          });
           return;
         }
       }
       
-      // Дополнительная проверка - отправляем пустой ответ только если таймер действительно истек
-      // для текущего вопроса (не для нового вопроса, который только что получен)
-      if (question.maxTime && timeLeft !== 0) {
+      // Проверка - отправляем пустой ответ только если у вопроса есть таймер
+      if (question.maxTime === null || question.maxTime === undefined || question.maxTime === 0) {
+        console.log('Skipping auto-submit - no max time for current question:', {
+          questionId: question.id,
+          maxTime: question.maxTime
+        });
         return;
       }
       
-      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
-      // для текущего вопроса (не для нового вопроса, который только что получен)
-      if (!paused) {
-        return;
-      }
-      
-      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
-      // для текущего вопроса (не для нового вопроса, который только что получен)
-      if (question.maxTime === null || question.maxTime === undefined) {
-        return;
-      }
-      
-      // Дополнительная проверка - отправляем пустой ответ только если таймер был запущен
-      // для текущего вопроса (не для нового вопроса, который только что получен)
-      if (question.maxTime > 0 && timeLeft === question.maxTime) {
-        return;
-      }
-      
-      // Отправляем пустой ответ только если не записываем
+      // Отправляем пустой ответ
+      console.log('Auto-submit triggered:', {
+        timeLeft,
+        questionId: question.id,
+        answered,
+        recording,
+        currentQuestionTimerStarted,
+        lastAnswerTime,
+        previousQuestionId,
+        paused
+      });
       sendEmptyAnswer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[timeLeft,recording,answered,question,lastAnswerTime,previousQuestionId,paused]);
+  },[timeLeft,recording,answered,question?.id,currentQuestionTimerStarted,lastAnswerTime,previousQuestionId,paused]);
 
   // auto-stop по таймеру
   useEffect(() => {
     if (!recording) return;
-    if (timeLeft === 0) {
+    if (timeLeft === 0 && !answered) {
+      console.log('Auto-stop triggered by timer');
       stopRecording();
     }
-  }, [timeLeft, recording]);
+  }, [timeLeft, recording, answered]);
 
   // prepare
   useEffect(()=>{
@@ -349,9 +378,16 @@ export default function CandidateInterviewPage() {
   }
 
   function stopRecording() {
-    console.log('stopRecording called');
-    if (mediaRecorder && recording) {
+    console.log('stopRecording called', { answered, recording });
+    if (mediaRecorder && recording && !answered) {
+      console.log('Stopping media recorder');
       mediaRecorder.stop();
+    } else {
+      console.log('Not stopping recorder:', { 
+        hasMediaRecorder: !!mediaRecorder, 
+        recording, 
+        answered 
+      });
     }
   }
 
@@ -364,7 +400,30 @@ export default function CandidateInterviewPage() {
 
   /* ---------------- handlers ---------------- */
   async function sendBlobAnswer(blob: Blob) {
-    if (!question || answered) return; // Защита от дублирования
+    console.log('=== sendBlobAnswer START ===', {
+      questionId: question?.id,
+      answered,
+      recording,
+      timeLeft,
+      timerStarted
+    });
+
+    if (!question || answered) {
+      console.log('=== sendBlobAnswer EARLY RETURN ===', { 
+        hasQuestion: !!question, 
+        answered 
+      });
+      return; // Защита от дублирования
+    }
+
+    // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
+    setTimeLeft(null);
+
+    console.log('sendBlobAnswer called', { 
+      questionId: question.id, 
+      blobSize: blob.size,
+      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
+    });
 
     clearCountdown();
     setLoadingNextQuestion(true);
@@ -428,10 +487,30 @@ export default function CandidateInterviewPage() {
   }
 
   async function sendEmptyAnswer(){
-    if (!question || answered) return; // Защита от дублирования
+    console.log('=== sendEmptyAnswer START ===', {
+      questionId: question?.id,
+      answered,
+      recording,
+      timeLeft,
+      timerStarted
+    });
 
+    if (!question || answered) {
+      console.log('=== sendEmptyAnswer EARLY RETURN ===', { 
+        hasQuestion: !!question, 
+        answered 
+      });
+      return; // Защита от дублирования
+    }
+
+    // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
+    setTimeLeft(null);
+
+    console.log('sendEmptyAnswer called', { questionId: question.id });
+    
     // Дополнительная проверка - если запись активна, не отправляем пустой ответ
     if (recording) {
+      console.log('Recording is active, skipping empty answer');
       return;
     }
 
