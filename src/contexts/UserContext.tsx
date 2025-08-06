@@ -76,19 +76,43 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       const response = await apiFetch(`${API_BASE}/api/user/companies`);
       if (response.ok) {
         const companiesData = await response.json();
+        console.log('UserContext: Загружены компании:', companiesData);
         setCompanies(companiesData);
         
         if (!currentCompany && companiesData.length > 0) {
           const storedCompanyId = localStorage.getItem('current_company');
+          console.log('UserContext: Сохраненная компания в localStorage:', storedCompanyId);
+          
           if (storedCompanyId) {
             const storedCompany = companiesData.find((c: Company) => c.id === Number(storedCompanyId));
             if (storedCompany) {
+              console.log('UserContext: Найдена сохраненная компания:', storedCompany.name);
               setCurrentCompany(storedCompany);
             } else {
-              setCurrentCompany(companiesData[0]);
+              // Если сохраненная компания не найдена
+              if (companiesData.length === 1) {
+                // Если компания одна - выбираем её автоматически
+                const firstCompany = companiesData[0];
+                console.log('UserContext: Сохраненная компания не найдена, но компания одна - выбираем:', firstCompany.name);
+                setCurrentCompany(firstCompany);
+                localStorage.setItem('current_company', firstCompany.id.toString());
+              } else {
+                // Если компаний несколько - НЕ выбираем автоматически, пусть пользователь выберет
+                console.log('UserContext: Компаний несколько, сохраненная не найдена - не выбираем автоматически');
+              }
             }
           } else {
-            setCurrentCompany(companiesData[0]);
+            // Если нет сохраненной компании
+            if (companiesData.length === 1) {
+              // Если компания одна - выбираем её автоматически
+              const firstCompany = companiesData[0];
+              console.log('UserContext: Нет сохраненной компании, но компания одна - выбираем:', firstCompany.name);
+              setCurrentCompany(firstCompany);
+              localStorage.setItem('current_company', firstCompany.id.toString());
+            } else {
+              // Если компаний несколько - НЕ выбираем автоматически, пусть пользователь выберет
+              console.log('UserContext: Компаний несколько, нет сохраненной - не выбираем автоматически');
+            }
           }
         }
       }
@@ -110,11 +134,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   const handleSetCurrentCompany = (company: Company | null) => {
+    console.log('UserContext: Устанавливаем текущую компанию:', company?.name || 'null');
     setCurrentCompany(company);
     if (company) {
       localStorage.setItem('current_company', company.id.toString());
+      console.log('UserContext: Сохранена компания в localStorage:', company.id);
     } else {
       localStorage.removeItem('current_company');
+      console.log('UserContext: Удалена компания из localStorage');
     }
   };
 

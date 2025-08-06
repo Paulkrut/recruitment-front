@@ -46,6 +46,13 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     id: uniqueId(),
+    title: "Компании",
+    icon: 'buildings-3-linear',
+    href: "/hr/choose-company",
+    bgcolor: "warning",
+  },
+  {
+    id: uniqueId(),
     title: "Сотрудники",
     icon: 'users-group-rounded-linear',
     href: "/hr/employees",

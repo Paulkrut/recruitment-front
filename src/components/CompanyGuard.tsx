@@ -22,10 +22,20 @@ export default function CompanyGuard({ children, excludePaths = [] }: CompanyGua
       return;
     }
 
-    if (companies.length === 0 || !currentCompany) {
+    // Проверяем, есть ли компании и выбрана ли текущая компания
+    if (companies.length === 0) {
+      console.log('CompanyGuard: Нет компаний, перенаправляем на выбор компании');
       router.push('/hr/choose-company');
       return;
     }
+
+    if (!currentCompany) {
+      console.log('CompanyGuard: Компании есть, но текущая компания не выбрана, перенаправляем на выбор компании');
+      router.push('/hr/choose-company');
+      return;
+    }
+
+    console.log('CompanyGuard: Все проверки пройдены, компания выбрана:', currentCompany.name);
   }, [currentCompany, companies, isLoading, router, excludePaths, pathname]);
 
   if (isLoading) {
