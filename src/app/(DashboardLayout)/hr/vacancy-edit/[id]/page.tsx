@@ -628,19 +628,19 @@ export default function HRVacancyEditPage() {
                 <Stack direction="row" spacing={2} mb={2}>
                   <Button
                     variant="contained"
-                    startIcon={<IconWand size={24} />}
-                    onClick={() => setGenOpen(true)}
-                    sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
-                  >
-                    Сгенерировать AI
-                  </Button>
-                  <Button
-                    variant="contained"
                     startIcon={<IconPlus size={24} />}
                     onClick={addQuestion}
                     sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
                   >
                     Добавить вопрос
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<IconWand size={24} />}
+                    onClick={() => setGenOpen(true)}
+                    sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
+                  >
+                    Сгенерировать AI
                   </Button>
                 </Stack>
                 {questions.length === 0 ? (

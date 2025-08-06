@@ -204,7 +204,7 @@ function EnhancedCandidateTable({
       sx={{ 
         cursor: 'pointer',
         userSelect: 'none',
-        '&:hover': { backgroundColor: 'action.hover' }
+        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }
       }}
       onClick={() => onSort(field)}
     >
@@ -266,7 +266,7 @@ function EnhancedCandidateTable({
               key={candidate.id} 
               hover
               sx={{ 
-                '&:hover': { backgroundColor: 'action.hover' },
+                '&:hover': { backgroundColor: 'rgba(25, 118, 210, 0.04)' },
                 transition: 'background-color 0.2s'
               }}
             >

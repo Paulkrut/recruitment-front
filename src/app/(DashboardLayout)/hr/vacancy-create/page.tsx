@@ -540,6 +540,20 @@ export default function HRVacancyCreatePage() {
                 </Box>
                 <Box display="flex" gap={2}>
                   <Button
+                    variant="contained"
+                      startIcon={<IconPlus size={20} />}
+                    onClick={addQuestion}
+                    sx={{
+                        backgroundColor: '#1976d2',
+                      fontWeight: 600,
+                      '&:hover': {
+                          backgroundColor: '#1565c0',
+                      }
+                    }}
+                  >
+                    Добавить вопрос
+                  </Button>
+                  <Button
                       variant="outlined"
                       startIcon={<IconWand size={20} />}
                     onClick={() => setGenOpen(true)}
@@ -553,20 +567,6 @@ export default function HRVacancyCreatePage() {
                     }}
                   >
                     Сгенерировать AI
-                  </Button>
-                  <Button
-                    variant="contained"
-                      startIcon={<IconPlus size={20} />}
-                    onClick={addQuestion}
-                    sx={{
-                        backgroundColor: '#1976d2',
-                      fontWeight: 600,
-                      '&:hover': {
-                          backgroundColor: '#1565c0',
-                      }
-                    }}
-                  >
-                    Добавить вопрос
                   </Button>
                 </Box>
               </Box>
@@ -775,6 +775,20 @@ export default function HRVacancyCreatePage() {
                     gap: 2
                   }}>
                     <Button
+                      variant="contained"
+                      startIcon={<IconPlus size={20} />}
+                      onClick={addQuestion}
+                      sx={{
+                        backgroundColor: '#1976d2',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: '#1565c0',
+                        }
+                      }}
+                    >
+                      Добавить вопрос
+                    </Button>
+                    <Button
                       variant="outlined"
                       startIcon={<IconWand size={20} />}
                       onClick={() => setGenOpen(true)}
@@ -788,20 +802,6 @@ export default function HRVacancyCreatePage() {
                       }}
                     >
                       Сгенерировать AI
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<IconPlus size={20} />}
-                      onClick={addQuestion}
-                      sx={{
-                        backgroundColor: '#1976d2',
-                        fontWeight: 600,
-                        '&:hover': {
-                          backgroundColor: '#1565c0',
-                        }
-                      }}
-                    >
-                      Добавить вопрос
                     </Button>
                   </Box>
                 )}
