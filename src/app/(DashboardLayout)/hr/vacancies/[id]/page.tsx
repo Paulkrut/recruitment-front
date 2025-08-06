@@ -383,7 +383,17 @@ export default function HRVacancyDetailPage() {
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{title}</Typography>
                   <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.8, color: 'text.secondary' }}>{description || <span style={{opacity:0.6}}>Описание не заполнено</span>}</Typography>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      opacity: 0.8, 
+                      color: 'text.secondary',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
+                    }}
+                  >
+                    {description || <span style={{opacity:0.6}}>Описание не заполнено</span>}
+                  </Typography>
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
                     Редактировать
@@ -404,7 +414,20 @@ export default function HRVacancyDetailPage() {
                     <Typography variant="h6" fontWeight="700" color="text.primary">Вопросы теста</Typography>
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || 'Без шаблона'}</Typography>
-                  {template?.description && <Typography variant="body2" sx={{ mb: 1, opacity: 0.9, color: 'text.secondary' }}>{template.description}</Typography>}
+                  {template?.description && (
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        mb: 1, 
+                        opacity: 0.9, 
+                        color: 'text.secondary',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word'
+                      }}
+                    >
+                      {template.description}
+                    </Typography>
+                  )}
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>Вопросы:</Typography>
                   <Box sx={{ maxHeight: 320, overflowY: 'auto', mb: 2 }}>

@@ -123,6 +123,8 @@ export default function Sidebar() {
             <Box
               sx={{
                 height: "100%",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               {/* ------------------------------------------- */}
@@ -135,9 +137,8 @@ export default function Sidebar() {
               </Box>
               <Scrollbar
                 sx={{
-                  height: customizer.isCollapse
-                    ? "calc(100% - 90px)"
-                    : "calc(100% - 375px)",
+                  flex: 1,
+                  minHeight: 0,
                 }}
               >
                 {/* ------------------------------------------- */}
@@ -147,7 +148,7 @@ export default function Sidebar() {
               </Scrollbar>
               {customizer.isCollapse ? null : (
                 <>
-                <Box px={3} py={1.5} m={2} bgcolor="primary.light">
+                <Box px={3} py={1.5} m={2} bgcolor="primary.light" sx={{ mt: "auto" }}>
                   <Stack
                     direction="row"
                     gap={2}
