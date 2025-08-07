@@ -25,10 +25,10 @@ export default function NotFound() {
           style={{ width: "100%", maxWidth: "500px", maxHeight: "500px" }}
         />
         <Typography align="center" variant="h1" mb={4}>
-          Opps!!!
+          Упс!!!
         </Typography>
         <Typography align="center" variant="h4" mb={4}>
-          This page you are looking for could not be found.
+          Страница, которую вы ищете, не найдена.
         </Typography>
         <Button
           color="primary"
@@ -37,7 +37,7 @@ export default function NotFound() {
           href="/"
           disableElevation
         >
-          Go Back to Home
+          Вернуться на главную
         </Button>
       </Container>
     </Box>

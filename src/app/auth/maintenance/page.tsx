@@ -18,14 +18,14 @@ const Maintenance = () => (
     <Container maxWidth="md">
       <Image
         src={"/images/backgrounds/maintenance2.svg"}
-        alt="404" width={500} height={500}
+        alt="Техническое обслуживание" width={500} height={500}
         style={{ width: "100%", maxWidth: "500px", maxHeight: "500px" }}
       />
       <Typography align="center" variant="h1" mb={4}>
-        Maintenance Mode!!!
+        Техническое обслуживание!!!
       </Typography>
       <Typography align="center" variant="h4" mb={4}>
-        Website is Under Construction. Check back later!
+        Сайт находится на техническом обслуживании. Загляните позже!
       </Typography>
       <Button
         color="primary"
@@ -34,7 +34,7 @@ const Maintenance = () => (
         href="/"
         disableElevation
       >
-        Go Back to Home
+        Вернуться на главную
       </Button>
     </Container>
   </Box>
