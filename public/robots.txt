@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.sofihr.ru/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /hr/
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /dashboard/
+Disallow: /profile/
+Disallow: /settings/
+Disallow: /login
+Disallow: /auth/
+Disallow: /interview/
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1 
