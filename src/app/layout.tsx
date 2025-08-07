@@ -2,7 +2,7 @@ import React from "react";
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
 import "./global.css";
-
+import YandexMetrika from "@/components/YandexMetrika";
 
 export const metadata = {
   title: "Spike Dark Demo",
@@ -20,6 +20,7 @@ export default function RootLayout({
         <Providers>
           <MyApp>{children}</MyApp>
         </Providers>
+        <YandexMetrika />
       </body>
     </html>
   );
