@@ -306,14 +306,20 @@ export default function CandidateInterviewPage() {
 
   const startDeviceTest = async () => {
     try{
+      // Проверяем разрешения перед запросом потока
+      const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+      
+      console.log('Device test permissions:', {
+        camera: permissions.state,
+        microphone: micPermissions.state
+      });
+      
       const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
       
       // Проверяем разрешения
-      const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      
       setPermissionsGranted({
         camera: permissions.state === 'granted',
         microphone: micPermissions.state === 'granted'
@@ -338,6 +344,14 @@ export default function CandidateInterviewPage() {
       tick();
     }catch(e){
       console.error('Ошибка доступа к камере/микрофону:', e);
+      
+      // Специальная обработка для Safari
+      let errorMessage = 'Ошибка доступа к камере/микрофону';
+      if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+        errorMessage += '\n\nВ Safari:\n1. Убедитесь, что сайт открыт по HTTPS\n2. Разрешите доступ к камере и микрофону\n3. Проверьте настройки в Safari > Настройки > Веб-сайты';
+      }
+      
+      console.error(errorMessage);
       setPermissionsGranted({ camera: false, microphone: false });
       setPermissionsRequested(true);
     }
@@ -409,7 +423,29 @@ export default function CandidateInterviewPage() {
   /* ------------ запись аудио ------------- */
   async function startRecording() {
     console.log('startRecording called');
+    
+    // Проверяем поддержку getUserMedia
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.');
+      return;
+    }
+    
     try {
+      // Сначала проверяем разрешения для Safari
+      const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+      const cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      
+      console.log('Permissions status:', {
+        microphone: permissions.state,
+        camera: cameraPermissions.state
+      });
+
+      // Если разрешения не предоставлены, запрашиваем их
+      if (permissions.state === 'denied' || cameraPermissions.state === 'denied') {
+        alert('Для записи необходимо разрешить доступ к камере и микрофону. Пожалуйста, разрешите доступ в настройках браузера.');
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: { 
           sampleRate: 16000,
@@ -423,6 +459,22 @@ export default function CandidateInterviewPage() {
           frameRate: { ideal: 15, max: 30 }
         } 
       });
+
+      // Проверяем, что поток действительно содержит треки
+      if (!stream.getAudioTracks().length || !stream.getVideoTracks().length) {
+        throw new Error('Не удалось получить доступ к камере или микрофону');
+      }
+
+      // Дополнительная проверка для Safari - убеждаемся, что треки активны
+      const audioTrack = stream.getAudioTracks()[0];
+      const videoTrack = stream.getVideoTracks()[0];
+      
+      if (!audioTrack.enabled || !videoTrack.enabled) {
+        console.warn('Tracks are disabled, trying to enable them');
+        audioTrack.enabled = true;
+        videoTrack.enabled = true;
+      }
+
       setPreviewStream(stream);
       
       // Сбрасываем состояние загрузки видео
@@ -434,10 +486,42 @@ export default function CandidateInterviewPage() {
         { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
       ]);
       
-      const mr = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=vp8,opus',
-        videoBitsPerSecond: 500000 // 500 kbps
-      });
+      // Проверяем поддержку MediaRecorder и создаем с подходящим форматом
+      let mr: MediaRecorder;
+      
+      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
+        mr = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp8,opus',
+          videoBitsPerSecond: 500000
+        });
+      } else {
+        console.warn('WebM with VP8/Opus not supported, trying alternative formats');
+        // Попробуем альтернативные форматы для Safari
+        const alternativeFormats = [
+          'video/mp4',
+          'video/webm',
+          'video/webm;codecs=h264,opus',
+          'video/webm;codecs=vp9,opus'
+        ];
+        
+        let supportedFormat = null;
+        for (const format of alternativeFormats) {
+          if (MediaRecorder.isTypeSupported(format)) {
+            supportedFormat = format;
+            break;
+          }
+        }
+        
+        if (supportedFormat) {
+          console.log('Using alternative format:', supportedFormat);
+          mr = new MediaRecorder(stream, {
+            mimeType: supportedFormat,
+            videoBitsPerSecond: 500000
+          });
+        } else {
+          throw new Error('Ваш браузер не поддерживает запись видео');
+        }
+      }
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) {
@@ -489,22 +573,68 @@ export default function CandidateInterviewPage() {
     } catch (err: any) {
       console.error('startRecording error:', err);
       let msg = "Не удалось получить доступ к микрофону.";
-      if (typeof window !== "undefined" && !window.isSecureContext) {
+      
+      // Специальная обработка для Safari
+      if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
+        msg += "\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон";
+        
+        // В Safari иногда ошибка показывается, но запись все равно работает
+        // Проверяем, есть ли активный поток
+        if (previewStream && previewStream.active) {
+          console.log('Safari error but stream is active, continuing with recording');
+          return; // Не показываем ошибку, если поток активен
+        }
+      } else if (typeof window !== "undefined" && !window.isSecureContext) {
         msg += "\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.";
       } else if (err?.name === "NotAllowedError") {
         msg += "\nРазрешите доступ к микрофону в настройках браузера (значок камеры/микрофона в адресной строке).";
       } else if (err?.name === "NotFoundError") {
         msg += "\nУстройство микрофона не найдено.";
+      } else if (err?.name === "NotSupportedError") {
+        msg += "\nВаш браузер не поддерживает запись видео.";
+      } else if (err?.name === "NotReadableError") {
+        msg += "\nКамера или микрофон уже используются другим приложением.";
       }
+      
       alert(msg);
+      
+      // Удаляем видео-сообщение при ошибке
+      setChat((p) => {
+        const newChat = [...p];
+        // Удаляем последнее видео-сообщение пользователя
+        for (let i = newChat.length - 1; i >= 0; i--) {
+          if (newChat[i].role === 'user' && newChat[i].video) {
+            newChat.splice(i, 1);
+            break;
+          }
+        }
+        return newChat;
+      });
     }
   }
 
   function stopRecording() {
-    console.log('stopRecording called', { answered, recording });
-    if (mediaRecorder && recording && !answered) {
+    console.log('stopRecording called', { answered, recording, hasMediaRecorder: !!mediaRecorder });
+    
+    // Проверяем, что запись действительно активна
+    if (!recording) {
+      console.log('Recording is not active, nothing to stop');
+      return;
+    }
+    
+    if (mediaRecorder && !answered) {
       console.log('Stopping media recorder');
-      mediaRecorder.stop();
+      try {
+        mediaRecorder.stop();
+      } catch (error) {
+        console.error('Error stopping media recorder:', error);
+        // Если не удалось остановить через mediaRecorder, принудительно останавливаем
+        setRecording(false);
+        if (previewStream) {
+          previewStream.getTracks().forEach((t) => t.stop());
+          setPreviewStream(null);
+        }
+      }
     } else {
       console.log('Not stopping recorder:', { 
         hasMediaRecorder: !!mediaRecorder, 
