@@ -17,6 +17,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -41,6 +43,8 @@ const steps = ["Подготовка", "Тест оборудования", "О�
 
 export default function CandidateInterviewPage() {
   const { token } = useParams<{ token: string }>();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   /* ---------------- state ---------------- */
   const [prepared, setPrepared] = useState<{total:number;durationSec:number;status:string}|null>(null);
@@ -51,9 +55,12 @@ export default function CandidateInterviewPage() {
   const [timerStarted, setTimerStarted] = useState(false);
   const [currentQuestionTimerStarted, setCurrentQuestionTimerStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout|null>(null);
-  const [chat, setChat] = useState<{ role: "bot" | "user"; text: string }[]>(
-    []
-  );
+  const [chat, setChat] = useState<{ 
+    role: "bot" | "user"; 
+    text: string; 
+    video?: string;
+    timestamp?: number;
+  }[]>([]);
   const [result, setResult] = useState<any>(null);
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -63,6 +70,7 @@ export default function CandidateInterviewPage() {
   const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
+  const chatVideoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
   const [testStream, setTestStream] = useState<MediaStream|null>(null);
   const testVideoRef = useRef<HTMLVideoElement|null>(null);
@@ -71,11 +79,28 @@ export default function CandidateInterviewPage() {
   const analyserRef = useRef<AnalyserNode|null>(null);
   const rafRef = useRef<number|null>(null);
   const [skipDialogOpen, setSkipDialogOpen] = useState(false);
+  const [permissionsGranted, setPermissionsGranted] = useState<{
+    camera: boolean;
+    microphone: boolean;
+  }>({ camera: false, microphone: false });
+  const [permissionsRequested, setPermissionsRequested] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(false);
 
   const chatRef = useRef<HTMLDivElement | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
+  const pulse = keyframes`0%{opacity:1}50%{opacity:0.5}100%{opacity:1}`;
 
   const activeStep = result ? 3 : question ? 2 : prepared ? 1 : 0;
+
+  // Функция для форматирования времени сообщения
+  const formatMessageTime = (timestamp?: number) => {
+    const time = timestamp ? new Date(timestamp) : new Date();
+    return time.toLocaleTimeString('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
   // Функция для форматирования номера вопроса
   const formatQuestionNumber = (position: number) => {
@@ -113,14 +138,53 @@ export default function CandidateInterviewPage() {
 
   /* ---------------- helpers ---------------- */
   function scrollToBottom() {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({top: chatRef.current.scrollHeight, behavior:'smooth'});
+    if (chatScrollRef.current) {
+      // Добавляем небольшую задержку для полной загрузки контента
+      setTimeout(() => {
+        if (chatScrollRef.current) {
+          chatScrollRef.current.scrollTo({
+            top: chatScrollRef.current.scrollHeight + 100, // Добавляем дополнительный отступ
+            behavior: 'smooth'
+          });
+        }
+      }, 100); // 100ms задержка
+    }
+  }
+
+  function forceScrollToBottom() {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTo({
+        top: chatScrollRef.current.scrollHeight + 200, // Больший отступ для принудительного скролла
+        behavior: 'auto' // Мгновенный скролл без анимации
+      });
     }
   }
 
   /* ---------------- effects ---------------- */
   // autoscroll
-  useEffect(scrollToBottom, [chat]);
+  useEffect(() => {
+    scrollToBottom();
+    // Дополнительный скролл через небольшую задержку
+    const timer = setTimeout(() => scrollToBottom(), 50);
+    // Принудительный скролл в самом конце
+    const forceTimer = setTimeout(() => forceScrollToBottom(), 300);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(forceTimer);
+    };
+  }, [chat]);
+
+  // Очистка URL объектов при размонтировании
+  useEffect(() => {
+    return () => {
+      // Очищаем все URL объекты при размонтировании компонента
+      chat.forEach(message => {
+        if (message.video && message.video !== "live") {
+          URL.revokeObjectURL(message.video);
+        }
+      });
+    };
+  }, [chat]);
 
   /* -------- countdown logic -------- */
   function clearCountdown(){
@@ -148,7 +212,13 @@ export default function CandidateInterviewPage() {
     clearCountdown();
     setTimerStarted(false); // Сбрасываем флаг для нового вопроса
     setCurrentQuestionTimerStarted(false); // Сбрасываем флаг для текущего вопроса
-    if(question){ startCountdown(question.maxTime || 120); }
+    if(question){ 
+      startCountdown(question.maxTime || 120); 
+      // Дополнительный скролл к новому вопросу
+      setTimeout(() => scrollToBottom(), 200);
+      // Принудительный скролл в конце
+      setTimeout(() => forceScrollToBottom(), 500);
+    }
     return clearCountdown;
   },[question?.id]); // Используем question?.id вместо question
 
@@ -239,6 +309,17 @@ export default function CandidateInterviewPage() {
       const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
+      
+      // Проверяем разрешения
+      const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+      
+      setPermissionsGranted({
+        camera: permissions.state === 'granted',
+        microphone: micPermissions.state === 'granted'
+      });
+      setPermissionsRequested(true);
+      
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
@@ -255,7 +336,11 @@ export default function CandidateInterviewPage() {
         rafRef.current=requestAnimationFrame(tick);
       };
       tick();
-    }catch(e){alert('Не удалось получить доступ к камере/микрофону');}
+    }catch(e){
+      console.error('Ошибка доступа к камере/микрофону:', e);
+      setPermissionsGranted({ camera: false, microphone: false });
+      setPermissionsRequested(true);
+    }
   };
 
   function stopDeviceTest(){
@@ -264,6 +349,15 @@ export default function CandidateInterviewPage() {
     setMicReady(false);
     if(rafRef.current){ cancelAnimationFrame(rafRef.current); }
   }
+
+  const requestPermissions = async () => {
+    try {
+      setPermissionsRequested(false);
+      await startDeviceTest();
+    } catch (e) {
+      console.error('Ошибка при запросе разрешений:', e);
+    }
+  };
 
   useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
 
@@ -275,6 +369,12 @@ export default function CandidateInterviewPage() {
   },[prepared, question]);
 
   async function startInterview(){
+    // Проверяем разрешения перед началом интервью
+    if (!permissionsGranted.camera || !permissionsGranted.microphone) {
+      alert('Для начала интервью необходимо разрешить доступ к камере и микрофону');
+      return;
+    }
+    
     stopDeviceTest();
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
@@ -282,7 +382,7 @@ export default function CandidateInterviewPage() {
     setQuestion(d.question);
     setPreviousQuestionId(d.question.id);
     setTotal(d.total);
-    setChat([{role:'bot',text:d.question.text}]);
+    setChat([{role:'bot',text:d.question.text, timestamp: Date.now()}]);
   }
 
   /* ------------ блокировка выхода/обновления ------------- */
@@ -324,6 +424,16 @@ export default function CandidateInterviewPage() {
         } 
       });
       setPreviewStream(stream);
+      
+      // Сбрасываем состояние загрузки видео
+      setVideoLoading(true);
+      
+      // Добавляем видео-сообщение в чат с live-потоком
+      setChat((p) => [
+        ...p,
+        { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
+      ]);
+      
       const mr = new MediaRecorder(stream, {
         mimeType: 'video/webm;codecs=vp8,opus',
         videoBitsPerSecond: 500000 // 500 kbps
@@ -341,6 +451,19 @@ export default function CandidateInterviewPage() {
           setRecording(false);
           stream.getTracks().forEach((t) => t.stop());
           setPreviewStream(null);
+          
+          // Удаляем видео-сообщение при ошибке записи
+          setChat((p) => {
+            const newChat = [...p];
+            // Удаляем последнее видео-сообщение пользователя
+            for (let i = newChat.length - 1; i >= 0; i--) {
+              if (newChat[i].role === 'user' && newChat[i].video) {
+                newChat.splice(i, 1);
+                break;
+              }
+            }
+            return newChat;
+          });
           return;
         }
         const blob = new Blob(chunks, { type: 'video/webm' });
@@ -389,12 +512,38 @@ export default function CandidateInterviewPage() {
         answered 
       });
     }
+    
+    // Удаляем видео-сообщение только если запись была отменена вручную
+    // При успешном завершении записи видео-сообщение обновится в sendBlobAnswer
+    if (recording && !answered && !mediaRecorder) {
+      setChat((p) => {
+        const newChat = [...p];
+        // Удаляем последнее видео-сообщение пользователя только при отмене
+        for (let i = newChat.length - 1; i >= 0; i--) {
+          if (newChat[i].role === 'user' && newChat[i].video) {
+            if (newChat[i].video !== "live") {
+              URL.revokeObjectURL(newChat[i].video);
+            }
+            newChat.splice(i, 1);
+            break;
+          }
+        }
+        return newChat;
+      });
+    }
   }
 
   // useEffect to bind srcObject
   useEffect(()=>{
     if(videoRef.current){
       videoRef.current.srcObject = previewStream || null;
+    }
+  },[previewStream]);
+
+  // useEffect to bind srcObject for chat video
+  useEffect(()=>{
+    if(chatVideoRef.current){
+      chatVideoRef.current.srcObject = previewStream || null;
     }
   },[previewStream]);
 
@@ -419,22 +568,50 @@ export default function CandidateInterviewPage() {
     // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
     setTimeLeft(null);
 
-    console.log('sendBlobAnswer called', { 
-      questionId: question.id, 
-      blobSize: blob.size,
-      blobSizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB'
-    });
+    console.log('sendBlobAnswer called', { questionId: question.id });
+    
+    // Дополнительная проверка - если запись активна, не отправляем пустой ответ
+    if (recording) {
+      console.log('Recording is active, skipping empty answer');
+      return;
+    }
 
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
     setLastAnswerTime(Date.now()); // Запоминаем время отправки ответа
 
-    // optimistic UI update (показываем, что ответ дан)
+    // Обновляем последнее видео-сообщение с финальным видео
+    const finalVideoUrl = URL.createObjectURL(blob);
+    
+    // Небольшая задержка для лучшего UX - пользователь видит процесс обработки
+    setTimeout(() => {
+      setChat((p) => {
+        const newChat = [...p];
+        // Находим последнее видео-сообщение пользователя и обновляем его
+        for (let i = newChat.length - 1; i >= 0; i--) {
+          if (newChat[i].role === 'user' && newChat[i].video) {
+            // Очищаем старый URL если он был
+            if (newChat[i].video !== "live") {
+              URL.revokeObjectURL(newChat[i].video);
+            }
+            newChat[i] = { 
+              ...newChat[i], 
+              video: finalVideoUrl, 
+              text: "🎥 Видео ответ отправлен",
+              timestamp: newChat[i].timestamp || Date.now()
+            };
+            break;
+          }
+        }
+        return newChat;
+      });
+    }, 500); // 500ms задержка
+
+    // Добавляем индикатор обработки
     setChat((p) => [
       ...p,
-      { role: "user", text: "(аудио-ответ)" },
-      { role: "bot", text: "typing" },
+      { role: "bot", text: "typing", timestamp: Date.now() },
     ]);
     const typingIdx = chat.length + 1;
 
@@ -479,7 +656,8 @@ export default function CandidateInterviewPage() {
     setPreviousQuestionId(d.question.id);
     setChat((p) => {
       const cp = [...p];
-      cp[typingIdx] = { role: "bot", text: d.question.text };
+      // Заменяем typing индикатор на новый вопрос, сохраняя видео-сообщение
+      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
       return cp;
     });
     setLoadingNextQuestion(false);
@@ -522,8 +700,8 @@ export default function CandidateInterviewPage() {
     // optimistic UI
     setChat((p)=>[
       ...p,
-      {role:'user',text:'(нет ответа)'},
-      {role:'bot',text:'typing'},
+      {role:'user',text:'(нет ответа)', timestamp: Date.now()},
+      {role:'bot',text:'typing', timestamp: Date.now()},
     ]);
     const typingIdx = chat.length + 1;
 
@@ -558,7 +736,7 @@ export default function CandidateInterviewPage() {
     setPreviousQuestionId(d.question.id);
     setChat((p)=>{
       const cp=[...p];
-      cp[typingIdx]={role:'bot',text:d.question.text};
+      cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now()};
       return cp;
     });
     setLoadingNextQuestion(false);
@@ -573,7 +751,19 @@ export default function CandidateInterviewPage() {
   /* ---------------- render ---------------- */
   if (result) {
     return (
-      <Box sx={{ p: 4, maxWidth: 600, mx: "auto", textAlign:"center" }}>
+      <Box sx={{ 
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        p: isMobile ? 2 : 4,
+        textAlign: "center",
+        maxWidth: '1200px', // Ограничение ширины для больших мониторов
+        mx: 'auto', // Центрирование на больших экранах
+        width: '100%', // Полная ширина на мобильных
+        px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+      }}>
         {stepperComp}
         <Typography variant="h4" gutterBottom>
           Спасибо за прохождение интервью!
@@ -591,11 +781,39 @@ export default function CandidateInterviewPage() {
   if (!question) {
     // если еще не стартовали, показываем подготовительный экран
     if(!prepared){
-      return (<Box sx={{p:4}}>{stepperComp}<Typography>Загрузка…</Typography></Box>);
+      return (
+        <Box sx={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: isMobile ? 2 : 4,
+          maxWidth: '1200px', // Ограничение ширины для больших мониторов
+          mx: 'auto', // Центрирование на больших экранах
+          width: '100%', // Полная ширина на мобильных
+          px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+        }}>
+          {stepperComp}
+          <Typography>Загрузка…</Typography>
+        </Box>
+      );
     }
     if(prepared.status==='finished'){
       return (
-        <Box sx={{p:4,maxWidth:600,mx:'auto',textAlign:'center'}}>
+        <Box sx={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: isMobile ? 2 : 4,
+          textAlign: 'center',
+          maxWidth: '1200px', // Ограничение ширины для больших мониторов
+          mx: 'auto', // Центрирование на больших экранах
+          width: '100%', // Полная ширина на мобильных
+          px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+        }}>
           {stepperComp}
           <Typography variant="h4" gutterBottom>Интервью уже пройдено</Typography>
           <Typography>Наш менеджер свяжется с вами для дальнейшего шага.</Typography>
@@ -605,184 +823,748 @@ export default function CandidateInterviewPage() {
 
     const min = Math.ceil(prepared.durationSec/60);
     return (
-      <Box sx={{p:4,maxWidth:600,mx:'auto'}}>
-        {stepperComp}
-        <Typography variant="h4" gutterBottom>Перед началом</Typography>
-        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
-        <Typography sx={{mb:4}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
-        <Box sx={{display:'flex',gap:2}}>
-          <Button variant="contained" onClick={startInterview}>Начать</Button>
+      <Box sx={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        maxWidth: '1200px', // Ограничение ширины для больших мониторов
+        mx: 'auto', // Центрирование на больших экранах
+        width: '100%', // Полная ширина на мобильных
+        px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+      }}>
+        {/* Fixed Header */}
+        <Box sx={{ 
+          p: isMobile ? 2 : 4, 
+          pb: isMobile ? 1 : 4,
+          bgcolor: 'background.default',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          flexShrink: 0
+        }}>
+          {stepperComp}
+          <Typography variant="h4" gutterBottom>Перед началом</Typography>
+          <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
+          <Typography sx={{mb:2}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
         </Box>
 
-        {/* Device test preview */}
-        {testStream && (
-          <Box sx={{mt:3}}>
-            <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
-            <video ref={testVideoRef} width={320} height={240} autoPlay muted playsInline style={{border:'1px solid #ccc',borderRadius:4}} />
-            <Box sx={{display:'flex',alignItems:'center',mt:1,width:220}}>
-              <GraphicEqIcon sx={{mr:1}}/>
-              <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:5,overflow:'hidden'}}>
-                <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
+        {/* Scrollable Content */}
+        <Box sx={{ 
+          flex: 1, 
+          overflow: 'auto',
+          p: isMobile ? 2 : 4
+        }}>
+          {/* Проверка разрешений */}
+          {permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone) && (
+            <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
+              <Typography variant="h6" color="warning.dark" gutterBottom>
+                ⚠️ Требуется доступ к камере и микрофону
+              </Typography>
+              <Typography variant="body2" sx={{mb:2}}>
+                Для прохождения интервью необходимо разрешить доступ к камере и микрофону. 
+                {!permissionsGranted.camera && !permissionsGranted.microphone && ' Камера и микрофон заблокированы.'}
+                {!permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
+                {permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
+              </Typography>
+              <Button 
+                variant="contained" 
+                color="warning" 
+                onClick={requestPermissions}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+              >
+                Разрешить камеру и микрофон
+              </Button>
+            </Box>
+          )}
+
+          {/* Device test preview */}
+          {testStream && (
+            <Box sx={{mt:3}}>
+              <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
+              <Box sx={{ textAlign: 'center', mb: 2 }}>
+                <video 
+                  ref={testVideoRef} 
+                  width={isMobile ? 280 : 320} 
+                  height={isMobile ? 210 : 240} 
+                  autoPlay 
+                  muted 
+                  playsInline 
+                  style={{
+                    border:'1px solid #ccc',
+                    borderRadius:0,
+                    maxWidth: '100%'
+                  }} 
+                />
+              </Box>
+              <Box sx={{display:'flex',alignItems:'center',mt:1,width:220, mx: 'auto'}}>
+                <GraphicEqIcon sx={{mr:1}}/>
+                <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:0,overflow:'hidden'}}>
+                  <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
+                </Box>
+              </Box>
+              <Box sx={{
+                display:'flex',
+                gap:2,
+                mt:1,
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'center' : 'flex-start'
+              }}>
+                <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                  <VideocamIcon color={permissionsGranted.camera?"success":"error" as any}/>
+                  <Typography variant="body2" color={permissionsGranted.camera?"success.main":"error.main"}>
+                    {permissionsGranted.camera?"Камера OK":"Камера заблокирована"}
+                  </Typography>
+                </Box>
+                <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+                  <MicIcon color={permissionsGranted.microphone?"success":"error" as any}/>
+                  <Typography variant="body2" color={permissionsGranted.microphone?"success.main":"error.main"}>
+                    {permissionsGranted.microphone?"Микрофон OK":"Микрофон заблокирован"}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
-            <Box sx={{display:'flex',gap:2,mt:1}}>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                <VideocamIcon color={testStream?"success":"error" as any}/>
-                <Typography variant="body2" color={testStream?"success.main":"error.main"}>{testStream?"Камера OK":"Камера выкл."}</Typography>
-              </Box>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                <MicIcon color={micReady?"success":"error" as any}/>
-                <Typography variant="body2" color={micReady?"success.main":"error.main"}>{micReady?"Микрофон OK":"Микрофон выкл."}</Typography>
-              </Box>
-            </Box>
-          </Box>
-        )}
+          )}
+        </Box>
+
+        {/* Fixed Bottom Button */}
+        <Box sx={{ 
+          p: isMobile ? 2 : 4,
+          pt: isMobile ? 1 : 4,
+          bgcolor: 'background.default',
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          flexShrink: 0
+        }}>
+          <Button 
+            variant="contained" 
+            onClick={startInterview}
+            disabled={permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone)}
+            fullWidth={isMobile}
+            size={isMobile ? 'large' : 'medium'}
+          >
+            Начать
+          </Button>
+        </Box>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 4, maxWidth: 600, mx: "auto", pb:8 }}>
-      {stepperComp}
-      {/* header */}
-      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
-        <Typography variant="h6" fontWeight={700}>Интервью</Typography>
-        <Box sx={{display:'flex',alignItems:'center',gap:2}}>
-        {total && (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2">Вопрос {formatQuestionNumber(question.position)} из {total}</Typography>
-              {isFollowUpQuestion(question.position) && (
-                <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600 }}>
-                  (дополнительный)
+    <Box sx={{ 
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      maxWidth: '1200px', // Ограничение ширины для больших мониторов
+      mx: 'auto', // Центрирование на больших экранах
+      width: '100%', // Полная ширина на мобильных
+      px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+    }}>
+      {/* Fixed Header - WhatsApp Style */}
+      <Box sx={{ 
+        p: isMobile ? 2 : 3, 
+        pb: isMobile ? 1 : 3,
+        bgcolor: '#ffffff',
+        borderBottom: '1px solid #e0e0e0',
+        flexShrink: 0,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+      }}>
+        {stepperComp}
+        {/* header */}
+        <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              bgcolor: '#25d366',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mr: 1
+            }}>
+              <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '16px' }}>
+                🤖
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="h6" fontWeight={600} sx={{ color: '#000' }}>
+                Интервью
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#666' }}>
+                AI-ассистент
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{display:'flex',alignItems:'center',gap:2}}>
+          {total && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
+                  {formatQuestionNumber(question.position)} из {total}
                 </Typography>
-              )}
-            </Box>
-          )}
-          {timeLeft !== null && question?.maxTime && (
-            <Box position="relative" display="inline-flex">
-              <CircularProgress variant="determinate" value={(timeLeft / (question.maxTime || 1)) * 100} size={36} />
-              <Box
-                sx={{
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                  position: 'absolute',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Typography variant="caption" component="div" color="text.secondary">
-                  {timeLeft}
-          </Typography>
+                {isFollowUpQuestion(question.position) && (
+                  <Typography variant="caption" sx={{ color: '#25d366', fontWeight: 600, fontSize: '11px' }}>
+                    (доп.)
+                  </Typography>
+                )}
               </Box>
-            </Box>
+            )}
+            {timeLeft !== null && question?.maxTime && (
+              <Box position="relative" display="inline-flex">
+                <CircularProgress 
+                  variant="determinate" 
+                  value={(timeLeft / (question.maxTime || 1)) * 100} 
+                  size={32} 
+                  sx={{ color: '#25d366' }}
+                />
+                <Box
+                  sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Typography variant="caption" component="div" sx={{ color: '#666', fontSize: '10px' }}>
+                    {timeLeft}
+                  </Typography>
+                </Box>
+              </Box>
+          )}
+            {paused && <PauseIcon sx={{ color: '#666', fontSize: '20px' }} />}
+          </Box>
+        </Box>
+
+        {/* progress */}
+        {total && (
+          <LinearProgress
+            variant="determinate"
+            value={(question.position / total) * 100}
+            sx={{ 
+              mb: 1,
+              height: 3,
+              borderRadius: 2,
+              bgcolor: '#e0e0e0',
+              '& .MuiLinearProgress-bar': {
+                bgcolor: '#25d366'
+              }
+            }}
+          />
         )}
-          {paused && <PauseIcon color="action" fontSize="small" />}
+        {timeLeft !== null && (
+          <Typography variant="caption" sx={{ color: '#666', fontSize: '11px' }}>
+            {timeLeft} сек
+          </Typography>
+        )}
+      </Box>
+
+      {/* Chat Area - WhatsApp/Telegram Style */}
+      <Box sx={{ 
+        flex: 1, 
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: '#f0f2f5', // WhatsApp-like background
+        position: 'relative'
+      }}>
+        {/* Chat Container */}
+        <Box 
+          ref={chatScrollRef}
+          sx={{
+            height: '100%',
+            overflow: 'auto',
+            p: { xs: 1, sm: 2 },
+            // WhatsApp-like scrolling
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'thin',
+            '&::-webkit-scrollbar': {
+              width: '4px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'transparent',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: 'rgba(0,0,0,0.1)',
+              borderRadius: '2px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: 'rgba(0,0,0,0.2)',
+            },
+          }}
+        >
+          <Box sx={{ 
+            display: 'flex', 
+            flexDirection: 'column',
+            gap: 1,
+            minHeight: '100%',
+            justifyContent: 'flex-end'
+          }}>
+            {chat.map((m,i)=>(
+              m.text=== 'typing' ? (
+                <Box key={i} sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  mb: 1
+                }}>
+                  <Box sx={{
+                    maxWidth: '70%',
+                    bgcolor: '#ffffff',
+                    p: 2,
+                    borderRadius: '18px 18px 18px 4px',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                    position: 'relative'
+                  }}>
+                    <Box component="span" sx={{ 
+                      animation: `${blink} 1s infinite step-start`,
+                      fontSize: '20px',
+                      color: '#666'
+                    }}>
+                      •••
+                    </Box>
+                    {/* Время для typing индикатора */}
+                    <Typography sx={{
+                      fontSize: '11px',
+                      color: '#999',
+                      textAlign: 'left',
+                      mt: 0.5
+                    }}>
+                      {formatMessageTime(m.timestamp)}
+                    </Typography>
+                  </Box>
+                </Box>
+              ) : (
+                <Box key={i} sx={{
+                  display: 'flex',
+                  justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
+                  mb: 1
+                }}>
+                  <Box sx={{
+                    maxWidth: '70%',
+                    bgcolor: m.role === 'user' ? '#dcf8c6' : '#ffffff',
+                    p: 2,
+                    borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                    position: 'relative',
+                    wordBreak: 'break-word'
+                  }}>
+                    {/* Видео сообщение */}
+                    {m.video && (
+                      <Box sx={{ mb: 1, borderRadius: '8px', overflow: 'hidden' }}>
+                        {m.video === "live" ? (
+                          // Live-поток во время записи
+                          <Box sx={{
+                            width: '100%',
+                            maxWidth: '280px',
+                            height: '160px',
+                            bgcolor: '#000',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#fff',
+                            fontSize: '14px',
+                            position: 'relative',
+                            overflow: 'hidden'
+                          }}>
+                            {/* Live-видео поток */}
+                            {previewStream ? (
+                              <video 
+                                ref={chatVideoRef}
+                                autoPlay
+                                muted
+                                playsInline
+                                onLoadStart={() => setVideoLoading(true)}
+                                onCanPlay={() => setVideoLoading(false)}
+                                onError={(e) => {
+                                  console.error('Chat video error:', e);
+                                  setVideoLoading(false);
+                                }}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                  borderRadius: '8px'
+                                }}
+                              />
+                            ) : (
+                              // Fallback если поток не загрузился
+                              <Box sx={{
+                                width: '100%',
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                gap: 1
+                              }}>
+                                <Typography sx={{ fontSize: '24px' }}>🎥</Typography>
+                                <Typography sx={{ fontSize: '12px', opacity: 0.8 }}>
+                                  Подключение к камере...
+                                </Typography>
+                              </Box>
+                            )}
+                            {/* Индикатор загрузки видео */}
+                            {videoLoading && (
+                              <Box sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                color: 'white',
+                                px: 2,
+                                py: 1,
+                                borderRadius: '4px',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                zIndex: 2
+                              }}>
+                                Загрузка видео...
+                              </Box>
+                            )}
+                            {/* Наложение с индикатором записи */}
+                            <Box sx={{
+                              position: 'absolute',
+                              top: 8,
+                              right: 8,
+                              bgcolor: 'rgba(255, 0, 0, 0.8)',
+                              color: 'white',
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: '4px',
+                              fontSize: '10px',
+                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                              zIndex: 1
+                            }}>
+                              <Box sx={{
+                                width: 6,
+                                height: 6,
+                                borderRadius: '50%',
+                                bgcolor: '#fff',
+                                animation: `${pulse} 1s infinite`
+                              }} />
+                              ЗАПИСЬ
+                            </Box>
+                            {/* Индикатор времени записи */}
+                            {timeLeft !== null && question?.maxTime && (
+                              <Box sx={{
+                                position: 'absolute',
+                                bottom: 8,
+                                left: 8,
+                                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                color: 'white',
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: '4px',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                zIndex: 1
+                              }}>
+                                {timeLeft}s
+                              </Box>
+                            )}
+                            {/* Индикатор качества записи */}
+                            {recording && (
+                              <Box sx={{
+                                position: 'absolute',
+                                bottom: 8,
+                                right: 8,
+                                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                color: 'white',
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: '4px',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                zIndex: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5
+                              }}>
+                                <Box sx={{
+                                  width: 4,
+                                  height: 4,
+                                  borderRadius: '50%',
+                                  bgcolor: '#4caf50'
+                                }} />
+                                HD
+                              </Box>
+                            )}
+                            {/* Индикатор уровня звука */}
+                            {recording && micLevel > 0 && (
+                              <Box sx={{
+                                position: 'absolute',
+                                top: 8,
+                                left: 8,
+                                bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                color: 'white',
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: '4px',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                zIndex: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5
+                              }}>
+                                <Box sx={{
+                                  width: 8,
+                                  height: 2,
+                                  bgcolor: '#fff',
+                                  borderRadius: '1px',
+                                  position: 'relative',
+                                  overflow: 'hidden'
+                                }}>
+                                  <Box sx={{
+                                    width: `${Math.min(micLevel * 2, 100)}%`,
+                                    height: '100%',
+                                    bgcolor: '#4caf50',
+                                    transition: 'width 0.1s ease'
+                                  }} />
+                                </Box>
+                                🔊
+                              </Box>
+                            )}
+                          </Box>
+                        ) : (
+                          // Финальное видео с контролами
+                          <video 
+                            src={m.video}
+                            controls
+                            style={{ 
+                              width: '100%',
+                              maxWidth: '280px',
+                              borderRadius: '8px'
+                            }}
+                          />
+                        )}
+                      </Box>
+                    )}
+                    
+                    {/* Текстовое сообщение */}
+                    {m.text && (
+                      <Typography sx={{
+                        fontSize: '14px',
+                        lineHeight: 1.4,
+                        color: '#000',
+                        mb: 0.5
+                      }}>
+                        {m.text}
+                      </Typography>
+                    )}
+                    
+                    {/* Время сообщения */}
+                    <Typography sx={{
+                      fontSize: '11px',
+                      color: '#999',
+                      textAlign: m.role === 'user' ? 'right' : 'left',
+                      mt: 0.5
+                    }}>
+                      {formatMessageTime(m.timestamp)}
+                    </Typography>
+                  </Box>
+                </Box>
+              )
+            ))}
+          </Box>
         </Box>
       </Box>
 
-      {/* chat list */}
-      <Paper ref={chatRef} sx={{ height: 400, p:0, my: 2, bgcolor:'background.default' }}>
-        <Scrollbar sx={{maxHeight:400, p:2}}>
-          <Stack spacing={1}>
-            {chat.map((m,i)=>(
-              m.text=== 'typing' ? (
-                <ChatBubble key={i} role={m.role} time={undefined}>
-                  <Box component="span" sx={{ 
-                    animation: `${blink} 1s infinite step-start`
-                  }}>
-                    •••
-                  </Box>
-                </ChatBubble>
-              ) : (
-                <ChatBubble key={i} role={m.role} text={m.text} time={new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} />
-              )
-            ))}
-          </Stack>
-        </Scrollbar>
-      </Paper>
-
-      {/* progress */}
-      {total && (
-        <LinearProgress
-          variant="determinate"
-          value={(question.position / total) * 100}
-          sx={{ mb: 1 }}
-        />
-      )}
-      {timeLeft !== null && (
-        <Typography variant="caption">{timeLeft} сек</Typography>
-      )}
-
-      {/* answer input – только аудио */}
-      <Box sx={{ display: "flex", gap: 1, mt: 1, position:'sticky', bottom:0, bgcolor:'background.default', py:1, justifyContent: 'space-between' }}>
-        {!recording ? (
-          <>
+      {/* Fixed Bottom Controls - WhatsApp Style */}
+      <Box sx={{ 
+        p: isMobile ? 2 : 3,
+        bgcolor: '#ffffff',
+        borderTop: '1px solid #e0e0e0',
+        flexShrink: 0,
+        boxShadow: '0 -1px 3px rgba(0,0,0,0.1)'
+      }}>
+        {/* answer input – только аудио */}
+        <Box sx={{ 
+          display: "flex", 
+          gap: 2, 
+          justifyContent: 'space-between',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'center'
+        }}>
+          {!recording ? (
+            <>
+              <Button 
+                variant="contained" 
+                onClick={startRecording} 
+                disabled={recording || loadingNextQuestion}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                sx={{
+                  fontWeight: 600,
+                  bgcolor: '#25d366', // WhatsApp green
+                  '&:hover': {
+                    bgcolor: '#128c7e',
+                  },
+                  '&:disabled': {
+                    opacity: 0.6,
+                    bgcolor: '#25d366',
+                  },
+                  borderRadius: '24px',
+                  textTransform: 'none',
+                  fontSize: '14px',
+                  px: 3
+                }}
+              >
+                {loadingNextQuestion ? 'Обработка ответа...' : '🎤 Записать ответ'}
+              </Button>
+              <Button 
+                variant="outlined" 
+                onClick={() => setSkipDialogOpen(true)}
+                disabled={recording || loadingNextQuestion}
+                color="primary"
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                sx={{
+                  borderColor: '#666',
+                  color: '#666',
+                  '&:hover': {
+                    backgroundColor: '#f5f5f5',
+                    borderColor: '#333',
+                    color: '#333',
+                  },
+                  '&:disabled': {
+                    opacity: 0.6,
+                  },
+                  borderRadius: '24px',
+                  textTransform: 'none',
+                  fontSize: '14px',
+                  px: 3
+                }}
+              >
+                ⏭️ Пропустить
+              </Button>
+            </>
+          ) : (
             <Button 
               variant="contained" 
-              onClick={startRecording} 
-              disabled={recording || loadingNextQuestion}
+              color="error" 
+              onClick={stopRecording}
+              fullWidth={isMobile}
+              size={isMobile ? 'large' : 'medium'}
               sx={{
-                fontWeight: 600,
-                '&:disabled': {
-                  opacity: 0.6,
-                }
-              }}
-            >
-              {loadingNextQuestion ? 'Обработка ответа...' : 'Записать ответ'}
-            </Button>
-            <Button 
-              variant="outlined" 
-              onClick={() => setSkipDialogOpen(true)}
-              disabled={recording || loadingNextQuestion}
-              color="primary"
-              sx={{
-                borderColor: 'primary.main',
-                color: 'primary.main',
+                bgcolor: '#ff4444',
                 '&:hover': {
-                  backgroundColor: 'primary.main',
-                  color: 'primary.contrastText',
-                  borderColor: 'primary.main',
+                  bgcolor: '#cc0000',
                 },
-                '&:disabled': {
-                  opacity: 0.6,
-                }
+                borderRadius: '24px',
+                textTransform: 'none',
+                fontSize: '14px',
+                px: 3
               }}
             >
-              Пропустить вопрос
-          </Button>
-          </>
-        ) : (
-          <Button variant="outlined" color="error" onClick={stopRecording}>
-            Стоп
-          </Button>
-        )}
+              ⏹️ Стоп
+            </Button>
+          )}
+        </Box>
       </Box>
 
-      {/* preview */}
-      {previewStream && (
-        <video ref={videoRef} width={320} height={240} autoPlay muted playsInline style={{ marginBottom: 8, border:'1px solid #ccc', borderRadius:4 }} />
-      )}
-
-      {/* Диалог подтверждения пропуска вопроса */}
-      <Dialog open={skipDialogOpen} onClose={() => setSkipDialogOpen(false)}>
-        <DialogTitle>
-          Пропустить вопрос?
+      {/* Диалог подтверждения пропуска вопроса - WhatsApp Style */}
+      <Dialog 
+        open={skipDialogOpen} 
+        onClose={() => setSkipDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            bgcolor: '#ffffff',
+            borderRadius: '12px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            maxWidth: '400px',
+            width: '90%'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          pb: 1,
+          textAlign: 'center',
+          borderBottom: '1px solid #e0e0e0'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+            <Box sx={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              bgcolor: '#ff9800',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 1
+            }}>
+              <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '20px' }}>
+                ⚠️
+              </Typography>
+            </Box>
+          </Box>
+          <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}>
+            Пропустить вопрос?
+          </Typography>
         </DialogTitle>
-        <DialogContent sx={{ pt: '16px !important' }}>
-          <Typography>
-            Вы уверены, что хотите пропустить этот вопрос? 
+        <DialogContent sx={{ pt: 2, pb: 1 }}>
+          <Typography sx={{ 
+            color: '#666', 
+            lineHeight: 1.5,
+            textAlign: 'center',
+            fontSize: '14px'
+          }}>
+            Вы уверены, что хотите пропустить этот вопрос?
             <br />
-            <strong>Внимание:</strong> Пропущенный вопрос будет засчитан как отсутствие ответа.
+            <Box component="span" sx={{ 
+              color: '#ff9800', 
+              fontWeight: 600,
+              fontSize: '13px'
+            }}>
+              Внимание:
+            </Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setSkipDialogOpen(false)} color="primary">
+        <DialogActions sx={{ 
+          p: 2, 
+          pt: 1,
+          gap: 1,
+          justifyContent: 'center'
+        }}>
+          <Button 
+            onClick={() => setSkipDialogOpen(false)} 
+            sx={{
+              color: '#666',
+              borderColor: '#ddd',
+              '&:hover': {
+                bgcolor: '#f5f5f5',
+                borderColor: '#ccc'
+              },
+              borderRadius: '20px',
+              textTransform: 'none',
+              px: 3
+            }}
+            variant="outlined"
+          >
             Отмена
           </Button>
-          <Button onClick={skipQuestion} color="warning" variant="contained">
+          <Button 
+            onClick={skipQuestion} 
+            sx={{
+              bgcolor: '#ff9800',
+              '&:hover': {
+                bgcolor: '#f57c00',
+              },
+              borderRadius: '20px',
+              textTransform: 'none',
+              px: 3
+            }}
+            variant="contained"
+          >
             Пропустить
           </Button>
         </DialogActions>
