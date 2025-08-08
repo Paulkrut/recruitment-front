@@ -47,6 +47,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { exportCandidateToPDFWithFont } from '@/utils/pdfExportWithFont';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -196,6 +197,27 @@ export default function CandidateDetailPage() {
     }
   };
 
+  // Функция экспорта в PDF
+  const handleExportPDF = async () => {
+    try {
+      const pdfData = {
+        candidate,
+        email: candidateEmail,
+        phone: candidatePhone,
+        status: candidateStatus,
+        createdAt,
+        finishedAt: sessionDetail?.finishedAt,
+        sessionDetail,
+        evalData
+      };
+      
+      await exportCandidateToPDFWithFont(pdfData);
+    } catch (error) {
+      console.error('Ошибка при экспорте PDF:', error);
+      setCopyMsg('Ошибка при создании PDF');
+    }
+  };
+
   return (
     <PageContainer title={`Кандидат: ${candidate}`}> 
       <Stack spacing={3}>
@@ -241,6 +263,17 @@ export default function CandidateDetailPage() {
                   <Link href={interviewLink || '#'} target="_blank" rel="noopener" passHref legacyBehavior>
                     <Button variant="contained" color="primary" size="small" component="a">Интервью</Button>
                   </Link>
+                </Tooltip>
+                <Tooltip title="Экспорт в PDF">
+                  <Button 
+                    variant="outlined" 
+                    color="primary" 
+                    size="small" 
+                    startIcon={<PictureAsPdfIcon />}
+                    onClick={handleExportPDF}
+                  >
+                    PDF
+                  </Button>
                 </Tooltip>
               </Stack>
             </Stack>
