@@ -15,7 +15,7 @@ import {
   IconButton,
   Snackbar,
 } from "@mui/material";
-import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff } from "@tabler/icons-react";
+import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import MuiLink from '@mui/material/Link';
@@ -48,6 +48,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { exportCandidateToPDFWithFont } from '@/utils/pdfExportWithFont';
+import Rating from '@mui/material/Rating';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -245,6 +246,18 @@ export default function CandidateDetailPage() {
                   <Typography variant="h4" fontWeight="700">{candidate}</Typography>
                   {candidateStatus && <Chip label={getStatusLabel(candidateStatus)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
                   {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
+                  {statusData?.candidateOpinion && (
+                    <Tooltip title="Кандидат оставил мнение о результатах">
+                      <Chip 
+                        label="Есть мнение" 
+                        color="info" 
+                        size="small" 
+                        icon={<IconMoodHappy size={16} />}
+                        onClick={() => setTab('opinion')}
+                        sx={{ cursor: 'pointer' }}
+                      />
+                    </Tooltip>
+                  )}
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mt={1} flexWrap="wrap">
                   <Typography variant="body2" color="text.secondary">Email: {candidateEmail || '-'}</Typography>
@@ -300,6 +313,7 @@ export default function CandidateDetailPage() {
               <Tab icon={<CommentIcon />} iconPosition="start" label="Комментарии" value="comments" />
               <Tab icon={<MailOutlineIcon />} iconPosition="start" label="Письма" value="letters" />
               <Tab icon={<FeedbackIcon />} iconPosition="start" label="Отзыв" value="feedback" />
+              <Tab icon={<IconMoodHappy />} iconPosition="start" label="Мнение кандидата" value="opinion" />
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
@@ -553,8 +567,147 @@ export default function CandidateDetailPage() {
           <TabPanel value="feedback" sx={{p:0}}>
             <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
-                  <Typography variant="h6" sx={{mb:1}}>Отзыв кандидата</Typography>
-                  <Typography variant="body2" sx={{opacity:0.7}}>Здесь появится обратная связь от кандидата (в будущем).</Typography>
+                <Stack direction="row" alignItems="center" spacing={2} mb={2}>
+                  <FeedbackIcon sx={{ fontSize: 32, color: '#1976d2' }} />
+                  <Typography variant="h6" fontWeight="700">Обратная связь, полученная кандидатом</Typography>
+                </Stack>
+                {statusData?.candidateFeedback ? (
+                  <>
+                    {(() => {
+                      try {
+                        const feedback = JSON.parse(statusData.candidateFeedback);
+                        return (
+                          <Box>
+                            <Typography variant="body2" color="text.secondary" gutterBottom>
+                              Это та же обратная связь, которую видит кандидат после интервью
+                            </Typography>
+                            
+                            {feedback.average_score > 0 && (
+                              <Box sx={{ textAlign: 'center', mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+                                <Typography variant="h6" gutterBottom>
+                                  Общая оценка: {feedback.average_score}/10
+                                </Typography>
+                                <Rating value={feedback.average_score / 2} readOnly />
+                              </Box>
+                            )}
+
+                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                              📝 Краткий итог
+                            </Typography>
+                            <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                              {feedback.summary}
+                            </Typography>
+
+                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                              💡 Развивающая обратная связь
+                            </Typography>
+                            <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                              {feedback.feedback}
+                            </Typography>
+
+                            {feedback.strengths && feedback.strengths.length > 0 && (
+                              <>
+                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="success.main">
+                                  ✅ Сильные стороны (по мнению AI)
+                                </Typography>
+                                <Stack spacing={1}>
+                                  {feedback.strengths.map((strength: string, index: number) => (
+                                    <Chip key={index} label={strength} color="success" variant="outlined" />
+                                  ))}
+                                </Stack>
+                              </>
+                            )}
+
+                            {feedback.weaknesses && feedback.weaknesses.length > 0 && (
+                              <>
+                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="warning.main">
+                                  🎯 Области для развития (по мнению AI)
+                                </Typography>
+                                <Stack spacing={1}>
+                                  {feedback.weaknesses.map((weakness: string, index: number) => (
+                                    <Chip key={index} label={weakness} color="warning" variant="outlined" />
+                                  ))}
+                                </Stack>
+                              </>
+                            )}
+
+                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                              🚀 Рекомендации для кандидата
+                            </Typography>
+                            <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                              {feedback.next_level}
+                            </Typography>
+
+                            <Divider sx={{ my: 3 }} />
+                            
+                            <Typography variant="caption" color="text.secondary" align="center" display="block">
+                              {feedback.disclaimer}
+                            </Typography>
+                          </Box>
+                        );
+                      } catch (e) {
+                        return (
+                          <Typography color="error">
+                            Ошибка при отображении обратной связи
+                          </Typography>
+                        );
+                      }
+                    })()}
+                  </>
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <FeedbackIcon sx={{ fontSize: 48, color: '#ccc', mb: 2 }} />
+                    <Typography variant="body1" color="text.secondary" gutterBottom>
+                      Кандидат еще не запросил обратную связь
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Обратная связь появится после того, как кандидат нажмет соответствующую кнопку на странице результатов
+                    </Typography>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </TabPanel>
+
+          {/* Tab: Мнение кандидата */}
+          <TabPanel value="opinion" sx={{p:0}}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
+              <CardContent sx={{ p: 4 }}>
+                <Stack direction="row" alignItems="center" spacing={2} mb={2}>
+                  <IconMoodHappy size={32} color="#1976d2" />
+                  <Typography variant="h6" fontWeight="700">Мнение кандидата о своей оценке</Typography>
+                </Stack>
+                {statusData?.candidateOpinion ? (
+                  <Box sx={{ 
+                    bgcolor: 'grey.50', 
+                    p: 3, 
+                    borderRadius: 2, 
+                    border: '1px solid', 
+                    borderColor: 'grey.200',
+                    mt: 2
+                  }}>
+                    <Typography variant="body1" sx={{ 
+                      whiteSpace: 'pre-wrap',
+                      lineHeight: 1.6,
+                      fontStyle: 'italic'
+                    }}>
+                      "{statusData.candidateOpinion}"
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+                      💭 Мнение кандидата о результатах интервью
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <IconMoodHappy size={48} color="#ccc" style={{ marginBottom: 16 }} />
+                    <Typography variant="body1" color="text.secondary" gutterBottom>
+                      Кандидат еще не оставил свое мнение о результатах
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Мнение появится после того, как кандидат получит обратную связь
+                    </Typography>
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </TabPanel>

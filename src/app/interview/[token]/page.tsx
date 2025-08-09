@@ -19,6 +19,12 @@ import {
   DialogActions,
   useMediaQuery,
   useTheme,
+  TextField,
+  Divider,
+  Chip,
+  Rating,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -85,6 +91,22 @@ export default function CandidateInterviewPage() {
   }>({ camera: false, microphone: false });
   const [permissionsRequested, setPermissionsRequested] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
+
+  // Состояния для обратной связи
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [feedbackData, setFeedbackData] = useState<any>(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const [sendingFeedback, setSendingFeedback] = useState(false);
+  const [feedbackEmail, setFeedbackEmail] = useState("");
+  const [candidateOpinion, setCandidateOpinion] = useState("");
+  const [opinionSubmitted, setOpinionSubmitted] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+
+  // Состояния для прогресса генерации
+  const [generationStep, setGenerationStep] = useState(0);
+  const [estimatedTime, setEstimatedTime] = useState(60);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
@@ -491,7 +513,7 @@ export default function CandidateInterviewPage() {
       
       if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
         mr = new MediaRecorder(stream, {
-          mimeType: 'video/webm;codecs=vp8,opus',
+        mimeType: 'video/webm;codecs=vp8,opus',
           videoBitsPerSecond: 500000
         });
       } else {
@@ -625,7 +647,7 @@ export default function CandidateInterviewPage() {
     if (mediaRecorder && !answered) {
       console.log('Stopping media recorder');
       try {
-        mediaRecorder.stop();
+      mediaRecorder.stop();
       } catch (error) {
         console.error('Error stopping media recorder:', error);
         // Если не удалось остановить через mediaRecorder, принудительно останавливаем
@@ -878,8 +900,475 @@ export default function CandidateInterviewPage() {
     await sendEmptyAnswer();
   }
 
+  // Функции для работы с обратной связью
+  async function loadFeedback() {
+    setFeedbackLoading(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/feedback`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status === 'ready') {
+          setFeedbackData(data);
+          setShowFeedback(true);
+        } else {
+          // Обратная связь не готова
+          throw new Error('Обратная связь еще не сгенерирована');
+        }
+      } else {
+        throw new Error('Обратная связь пока не готова');
+      }
+    } catch (error) {
+      console.error('Error loading feedback:', error);
+      // Показываем сообщение о том, что нужно начать генерацию
+      alert('Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.');
+    } finally {
+      setFeedbackLoading(false);
+    }
+  }
+
+  async function sendFeedbackToEmail() {
+    if (!feedbackEmail.trim()) return;
+    
+    setSendingFeedback(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/send-feedback`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          email: feedbackEmail,
+          feedback: JSON.stringify(feedbackData.feedback)
+        })
+      });
+      
+      if (response.ok) {
+        alert('Обратная связь отправлена на ваш email!');
+        setShowEmailForm(false);
+        setFeedbackEmail('');
+      } else {
+        throw new Error('Ошибка отправки');
+      }
+    } catch (error) {
+      console.error('Error sending feedback:', error);
+      alert('Произошла ошибка при отправке. Попробуйте позже.');
+    } finally {
+      setSendingFeedback(false);
+    }
+  }
+
+  async function submitCandidateOpinion() {
+    if (!candidateOpinion.trim() || candidateOpinion.length < 10) {
+      alert('Пожалуйста, напишите ваше мнение (минимум 10 символов)');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/candidate-opinion`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          opinion: candidateOpinion
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setOpinionSubmitted(true);
+        if (data.moderated) {
+          alert('Ваше мнение отправлено. Некоторые слова были заменены для соблюдения этики общения.');
+        } else {
+          alert('Спасибо за ваше мнение! Оно отправлено HR-менеджеру.');
+        }
+      } else {
+        throw new Error('Ошибка отправки мнения');
+      }
+    } catch (error) {
+      console.error('Error submitting opinion:', error);
+      alert('Произошла ошибка при отправке мнения. Попробуйте позже.');
+    }
+  }
+
+  // Сообщения для прогресса генерации
+  const progressMessages = [
+    "🔍 Анализируем ваши ответы...",
+    "🤖 Запускаем AI-анализ качества ответов...",
+    "📊 Вычисляем персональную оценку...",
+    "💪 Определяем ваши сильные стороны...",
+    "🎯 Выявляем области для развития...",
+    "📝 Формируем развивающую обратную связь...",
+    "🚀 Создаем план персонального роста...",
+    "✨ Финализируем результаты..."
+  ];
+
+  async function startFeedbackGeneration() {
+    setFeedbackLoading(true);
+    setGenerationStep(0);
+    setElapsedTime(0);
+    setEstimatedTime(60); // 60 секунд примерное время
+
+    // Запускаем генерацию
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/generate-feedback`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status === 'already_exists') {
+          // Обратная связь уже существует, пробуем загрузить
+          await loadFeedback();
+          return;
+        }
+        
+        // Запускаем поллинг и прогресс
+        startProgressAnimation();
+        startPolling();
+      } else {
+        throw new Error('Ошибка запуска генерации');
+      }
+    } catch (error) {
+      console.error('Error starting generation:', error);
+      alert('Произошла ошибка при запуске генерации. Попробуйте позже.');
+      setFeedbackLoading(false);
+    }
+  }
+
+  function startProgressAnimation() {
+    const progressInterval = setInterval(() => {
+      setElapsedTime(prev => {
+        const newTime = prev + 1;
+        
+        // Обновляем шаг каждые 7-8 секунд
+        const newStep = Math.min(Math.floor(newTime / 7), progressMessages.length - 1);
+        setGenerationStep(newStep);
+        
+        // Если прошло больше минуты, останавливаем прогресс
+        if (newTime > 90) {
+          clearInterval(progressInterval);
+        }
+        
+        return newTime;
+      });
+    }, 1000);
+
+    return progressInterval;
+  }
+
+  function startPolling() {
+    const interval = setInterval(async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/public/interview/${token}/feedback`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.status === 'ready') {
+            // Готово!
+            clearInterval(interval);
+            setFeedbackData(data);
+            setFeedbackLoading(false);
+            setShowFeedback(true);
+            setPollingInterval(null);
+          }
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+      }
+    }, 10000); // Каждые 10 секунд
+
+    setPollingInterval(interval);
+  }
+
+  // Очистка при размонтировании
+  useEffect(() => {
+    return () => {
+      if (pollingInterval) {
+        clearInterval(pollingInterval);
+      }
+    };
+  }, [pollingInterval]);
+
+  // Функция для загрузки начальных данных интервью
+  async function fetchPrepared() {
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/prepare`);
+      if (response.ok) {
+        const data = await response.json();
+        setPrepared(data);
+      } else {
+        console.error('Error fetching prepared data:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching prepared data:', error);
+    }
+  }
+
+  useEffect(() => {
+    if (token) {
+      fetchPrepared();
+    }
+  }, [token]);
+
+  // Проверяем готовность обратной связи при загрузке для завершенных интервью
+  useEffect(() => {
+    if (prepared?.status === 'finished') {
+      checkExistingFeedback();
+    }
+  }, [prepared]);
+
+  async function checkExistingFeedback() {
+    try {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/feedback`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.status === 'ready') {
+          setFeedbackData(data);
+          setShowFeedback(true);
+        }
+      }
+    } catch (error) {
+      // Обратная связь еще не готова, ничего не делаем
+      console.log('Feedback not ready yet');
+    }
+  }
+
   /* ---------------- render ---------------- */
   if (result) {
+    if (showFeedback && feedbackData) {
+      // Экран обратной связи
+    return (
+        <Box sx={{ 
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          p: isMobile ? 2 : 4,
+          maxWidth: '1200px',
+          mx: 'auto',
+          width: '100%',
+          px: { xs: 2, sm: 3, md: 4 }
+        }}>
+          {stepperComp}
+          
+          <Box sx={{ flex: 1, mt: 3 }}>
+            <Card sx={{ mb: 3 }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom align="center" color="primary">
+                  🎯 Ваши результаты интервью
+                </Typography>
+                
+                {feedbackData.feedback.average_score > 0 && (
+                  <Box sx={{ textAlign: 'center', mb: 3 }}>
+                    <Typography variant="h5" gutterBottom>
+                      Общая оценка: {feedbackData.feedback.average_score}/10
+                    </Typography>
+                    <Rating value={feedbackData.feedback.average_score / 2} readOnly size="large" />
+                  </Box>
+                )}
+
+                <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                  📝 Краткий итог
+                </Typography>
+                <Typography paragraph>
+                  {feedbackData.feedback.summary}
+                </Typography>
+
+                <Divider sx={{ my: 3 }} />
+
+                <Typography variant="h6" gutterBottom>
+                  💡 Развивающая обратная связь
+                </Typography>
+                <Typography paragraph>
+                  {feedbackData.feedback.feedback}
+                </Typography>
+
+                {feedbackData.feedback.scores_table && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="h6" gutterBottom>
+                      📊 Таблица оценок
+                    </Typography>
+                    <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                      <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                        {feedbackData.feedback.scores_table}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+
+                <Divider sx={{ my: 3 }} />
+
+                <Typography variant="h6" gutterBottom>
+                  🚀 Что нужно для следующего уровня
+                </Typography>
+                <Typography paragraph>
+                  {feedbackData.feedback.next_level}
+                </Typography>
+
+                {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="h6" gutterBottom color="success.main">
+                      ✅ Ваши сильные стороны
+                    </Typography>
+                    <Stack spacing={1}>
+                      {feedbackData.feedback.strengths.map((strength: string, index: number) => (
+                        <Chip 
+                          key={index} 
+                          label={strength} 
+                          color="success" 
+                          variant="filled"
+                          sx={{
+                            backgroundColor: '#2e7d32',
+                            color: 'white',
+                            fontWeight: 500,
+                            '& .MuiChip-label': {
+                              color: 'white'
+                            }
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </>
+                )}
+
+                {feedbackData.feedback.weaknesses && feedbackData.feedback.weaknesses.length > 0 && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="h6" gutterBottom color="warning.main">
+                      🎯 Области для развития
+                    </Typography>
+                    <Stack spacing={1}>
+                      {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
+                        <Chip 
+                          key={index} 
+                          label={weakness} 
+                          color="warning" 
+                          variant="filled"
+                          sx={{
+                            backgroundColor: '#f57c00',
+                            color: 'white',
+                            fontWeight: 500,
+                            '& .MuiChip-label': {
+                              color: 'white'
+                            }
+                          }}
+                        />
+                      ))}
+                    </Stack>
+                  </>
+                )}
+
+                <Divider sx={{ my: 3 }} />
+                
+                <Typography variant="caption" color="text.secondary" align="center" display="block">
+                  {feedbackData.feedback.disclaimer}
+                </Typography>
+              </CardContent>
+            </Card>
+
+            {/* Форма отправки на email */}
+            {showEmailForm ? (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    📧 Отправить результаты на email
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    type="email"
+                    label="Ваш email"
+                    value={feedbackEmail}
+                    onChange={(e) => setFeedbackEmail(e.target.value)}
+                    sx={{ mb: 2 }}
+                  />
+                  <Stack direction="row" spacing={2}>
+                    <Button 
+                      variant="contained" 
+                      onClick={sendFeedbackToEmail}
+                      disabled={sendingFeedback || !feedbackEmail.trim()}
+                    >
+                      {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
+                    </Button>
+                    <Button 
+                      variant="outlined" 
+                      onClick={() => setShowEmailForm(false)}
+                    >
+                      Отмена
+                    </Button>
+                  </Stack>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Button 
+                    variant="outlined" 
+                    fullWidth 
+                    onClick={() => setShowEmailForm(true)}
+                    sx={{ mb: 2 }}
+                  >
+                    📧 Отправить результаты на email
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Форма мнения кандидата */}
+            {!opinionSubmitted && (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    💬 Поделитесь своим мнением
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Что вы думаете о данной оценке? Ваше мнение поможет нам улучшить процесс интервью.
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    label="Ваше мнение"
+                    value={candidateOpinion}
+                    onChange={(e) => setCandidateOpinion(e.target.value)}
+                    placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
+                    sx={{ mb: 2 }}
+                  />
+                  <Button 
+                    variant="contained" 
+                    onClick={submitCandidateOpinion}
+                    disabled={candidateOpinion.length < 10}
+                  >
+                    Отправить мнение
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {opinionSubmitted && (
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography color="success.main" align="center">
+                    ✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.
+                  </Typography>
+                </CardContent>
+              </Card>
+            )}
+
+            <Box sx={{ textAlign: 'center', mt: 4 }}>
+              <Button 
+                variant="outlined" 
+                onClick={() => setShowFeedback(false)}
+                sx={{ mr: 2 }}
+              >
+                ← Назад к результатам
+              </Button>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Вы можете закрыть эту страницу
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+      );
+    }
+
+    // Основной экран результата с кнопкой получения обратной связи
     return (
       <Box sx={{ 
         height: '100vh',
@@ -889,10 +1378,10 @@ export default function CandidateInterviewPage() {
         alignItems: 'center',
         p: isMobile ? 2 : 4,
         textAlign: "center",
-        maxWidth: '1200px', // Ограничение ширины для больших мониторов
-        mx: 'auto', // Центрирование на больших экранах
-        width: '100%', // Полная ширина на мобильных
-        px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+        maxWidth: '1200px',
+        mx: 'auto',
+        width: '100%',
+        px: { xs: 0, sm: 2, md: 4 }
       }}>
         {stepperComp}
         <Typography variant="h4" gutterBottom>
@@ -901,8 +1390,59 @@ export default function CandidateInterviewPage() {
         <Typography sx={{mb:3}}>
           Наш менеджер свяжется с вами после проверки ответов.
         </Typography>
+
+        {/* Hero кнопка для получения обратной связи */}
+        <Button
+          variant="contained"
+          size="large"
+          onClick={startFeedbackGeneration}
+          disabled={feedbackLoading}
+          sx={{
+            minHeight: 60,
+            px: 6,
+            py: 2,
+            fontSize: '1.2rem',
+            mb: 3,
+            background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+            boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+            '&:hover': {
+              background: 'linear-gradient(45deg, #1976D2 30%, #1976D2 90%)',
+            }
+          }}
+        >
+          {feedbackLoading ? (
+            <>
+              <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
+              {progressMessages[generationStep]}
+            </>
+          ) : (
+            '🎯 Получить персональную обратную связь'
+          )}
+        </Button>
+
+        {feedbackLoading && (
+          <Box sx={{ width: '100%', maxWidth: 400, mb: 3 }}>
+            <LinearProgress 
+              variant="determinate" 
+              value={Math.min((elapsedTime / estimatedTime) * 100, 95)} 
+              sx={{ height: 8, borderRadius: 4 }}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+              <Typography variant="caption" color="text.secondary">
+                Прогресс: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
+              </Typography>
+            </Box>
+          </Box>
+        )}
+
         <Typography variant="body2" color="text.secondary">
-          Вы можете закрыть эту страницу.
+          {feedbackLoading 
+            ? "Система AI анализирует ваши ответы для создания персональных рекомендаций" 
+            : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
+          }
         </Typography>
       </Box>
     );
@@ -930,23 +1470,321 @@ export default function CandidateInterviewPage() {
       );
     }
     if(prepared.status==='finished'){
+      // Показываем ту же страницу с кнопкой обратной связи, что и после завершения интервью
+      // Имитируем состояние result = true
+      
+      if (showFeedback && feedbackData) {
+        // Если обратная связь уже загружена, показываем её
       return (
-        <Box sx={{
+          <Box sx={{ 
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            p: isMobile ? 2 : 4,
+            maxWidth: '1200px',
+            mx: 'auto',
+            width: '100%',
+            px: { xs: 2, sm: 3, md: 4 }
+          }}>
+          {stepperComp}
+            
+            <Box sx={{ flex: 1, mt: 3 }}>
+              <Card sx={{ mb: 3 }}>
+                <CardContent>
+                  <Typography variant="h4" gutterBottom align="center" color="primary">
+                    🎯 Ваши результаты интервью
+                  </Typography>
+                  
+                  {feedbackData.feedback.average_score > 0 && (
+                    <Box sx={{ textAlign: 'center', mb: 3 }}>
+                      <Typography variant="h5" gutterBottom>
+                        Общая оценка: {feedbackData.feedback.average_score}/10
+                      </Typography>
+                      <Rating value={feedbackData.feedback.average_score / 2} readOnly size="large" />
+                    </Box>
+                  )}
+
+                  <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+                    📝 Краткий итог
+                  </Typography>
+                  <Typography paragraph>
+                    {feedbackData.feedback.summary}
+                  </Typography>
+
+                  <Divider sx={{ my: 3 }} />
+
+                  <Typography variant="h6" gutterBottom>
+                    💡 Развивающая обратная связь
+                  </Typography>
+                  <Typography paragraph>
+                    {feedbackData.feedback.feedback}
+                  </Typography>
+
+                  {feedbackData.feedback.scores_table && (
+                    <>
+                      <Divider sx={{ my: 3 }} />
+                      <Typography variant="h6" gutterBottom>
+                        📊 Таблица оценок
+                      </Typography>
+                      <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                        <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                          {feedbackData.feedback.scores_table}
+                        </Typography>
+                      </Box>
+                    </>
+                  )}
+
+                  <Divider sx={{ my: 3 }} />
+
+                  <Typography variant="h6" gutterBottom>
+                    🚀 Что нужно для следующего уровня
+                  </Typography>
+                  <Typography paragraph>
+                    {feedbackData.feedback.next_level}
+                  </Typography>
+
+                  {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
+                    <>
+                      <Divider sx={{ my: 3 }} />
+                      <Typography variant="h6" gutterBottom color="success.main">
+                        ✅ Ваши сильные стороны
+                      </Typography>
+                      <Stack spacing={1}>
+                        {feedbackData.feedback.strengths.map((strength: string, index: number) => (
+                          <Chip 
+                            key={index} 
+                            label={strength} 
+                            color="success" 
+                            variant="filled"
+                            sx={{
+                              backgroundColor: '#2e7d32',
+                              color: 'white',
+                              fontWeight: 500,
+                              '& .MuiChip-label': {
+                                color: 'white'
+                              }
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    </>
+                  )}
+
+                  {feedbackData.feedback.weaknesses && feedbackData.feedback.weaknesses.length > 0 && (
+                    <>
+                      <Divider sx={{ my: 3 }} />
+                      <Typography variant="h6" gutterBottom color="warning.main">
+                        🎯 Области для развития
+                      </Typography>
+                      <Stack spacing={1}>
+                        {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
+                          <Chip 
+                            key={index} 
+                            label={weakness} 
+                            color="warning" 
+                            variant="filled"
+                            sx={{
+                              backgroundColor: '#f57c00',
+                              color: 'white',
+                              fontWeight: 500,
+                              '& .MuiChip-label': {
+                                color: 'white'
+                              }
+                            }}
+                          />
+                        ))}
+                      </Stack>
+                    </>
+                  )}
+
+                  <Divider sx={{ my: 3 }} />
+                  
+                  <Typography variant="caption" color="text.secondary" align="center" display="block">
+                    {feedbackData.feedback.disclaimer}
+                  </Typography>
+                </CardContent>
+              </Card>
+
+              {/* Форма отправки на email */}
+              {showEmailForm ? (
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      📧 Отправить результаты на email
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      type="email"
+                      label="Ваш email"
+                      value={feedbackEmail}
+                      onChange={(e) => setFeedbackEmail(e.target.value)}
+                      sx={{ mb: 2 }}
+                    />
+                    <Stack direction="row" spacing={2}>
+                      <Button 
+                        variant="contained" 
+                        onClick={sendFeedbackToEmail}
+                        disabled={sendingFeedback || !feedbackEmail.trim()}
+                      >
+                        {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
+                      </Button>
+                      <Button 
+                        variant="outlined" 
+                        onClick={() => setShowEmailForm(false)}
+                      >
+                        Отмена
+                      </Button>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Button 
+                      variant="outlined" 
+                      fullWidth 
+                      onClick={() => setShowEmailForm(true)}
+                      sx={{ mb: 2 }}
+                    >
+                      📧 Отправить результаты на email
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Форма мнения кандидата */}
+              {!opinionSubmitted && (
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      💬 Поделитесь своим мнением
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph>
+                      Что вы думаете о данной оценке? Ваше мнение поможет нам улучшить процесс интервью.
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      label="Ваше мнение"
+                      value={candidateOpinion}
+                      onChange={(e) => setCandidateOpinion(e.target.value)}
+                      placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
+                      sx={{ mb: 2 }}
+                    />
+                    <Button 
+                      variant="contained" 
+                      onClick={submitCandidateOpinion}
+                      disabled={candidateOpinion.length < 10}
+                    >
+                      Отправить мнение
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {opinionSubmitted && (
+                <Card sx={{ mb: 3 }}>
+                  <CardContent>
+                    <Typography color="success.main" align="center">
+                      ✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
+
+              <Box sx={{ textAlign: 'center', mt: 4 }}>
+                <Button 
+                  variant="outlined" 
+                  onClick={() => setShowFeedback(false)}
+                  sx={{ mr: 2 }}
+                >
+                  ← Назад к результатам
+                </Button>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                  Вы можете закрыть эту страницу
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        );
+      }
+      
+      return (
+        <Box sx={{ 
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           p: isMobile ? 2 : 4,
-          textAlign: 'center',
-          maxWidth: '1200px', // Ограничение ширины для больших мониторов
-          mx: 'auto', // Центрирование на больших экранах
-          width: '100%', // Полная ширина на мобильных
-          px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
+          textAlign: "center",
+          maxWidth: '1200px',
+          mx: 'auto',
+          width: '100%',
+          px: { xs: 0, sm: 2, md: 4 }
         }}>
           {stepperComp}
-          <Typography variant="h4" gutterBottom>Интервью уже пройдено</Typography>
-          <Typography>Наш менеджер свяжется с вами для дальнейшего шага.</Typography>
+          <Typography variant="h4" gutterBottom>
+            Спасибо за прохождение интервью!
+          </Typography>
+          <Typography sx={{mb:3}}>
+            Наш менеджер свяжется с вами после проверки ответов.
+          </Typography>
+
+          {/* Hero кнопка для получения обратной связи */}
+          <Button
+            variant="contained"
+            size="large"
+            onClick={startFeedbackGeneration}
+            disabled={feedbackLoading}
+            sx={{
+              minHeight: 60,
+              px: 6,
+              py: 2,
+              fontSize: '1.2rem',
+              mb: 3,
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+              '&:hover': {
+                background: 'linear-gradient(45deg, #1976D2 30%, #1976D2 90%)',
+              }
+            }}
+          >
+            {feedbackLoading ? (
+              <>
+                <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
+                {progressMessages[generationStep]}
+              </>
+            ) : (
+              '🎯 Получить персональную обратную связь'
+            )}
+          </Button>
+
+          {feedbackLoading && (
+            <Box sx={{ width: '100%', maxWidth: 400, mb: 3 }}>
+              <LinearProgress 
+                variant="determinate" 
+                value={Math.min((elapsedTime / estimatedTime) * 100, 95)} 
+                sx={{ height: 8, borderRadius: 4 }}
+              />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
+                <Typography variant="caption" color="text.secondary">
+                  Прогресс: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
+                </Typography>
+              </Box>
+            </Box>
+          )}
+
+          <Typography variant="body2" color="text.secondary">
+            {feedbackLoading 
+              ? "Система AI анализирует ваши ответы для создания персональных рекомендаций" 
+              : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
+            }
+          </Typography>
         </Box>
       );
     }
@@ -972,9 +1810,9 @@ export default function CandidateInterviewPage() {
           borderColor: 'divider',
           flexShrink: 0
         }}>
-          {stepperComp}
-          <Typography variant="h4" gutterBottom>Перед началом</Typography>
-          <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
+        {stepperComp}
+        <Typography variant="h4" gutterBottom>Перед началом</Typography>
+        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
           <Typography sx={{mb:2}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
         </Box>
 
@@ -1008,10 +1846,10 @@ export default function CandidateInterviewPage() {
             </Box>
           )}
 
-          {/* Device test preview */}
-          {testStream && (
-            <Box sx={{mt:3}}>
-              <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
+        {/* Device test preview */}
+        {testStream && (
+          <Box sx={{mt:3}}>
+            <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
               <Box sx={{ textAlign: 'center', mb: 2 }}>
                 <video 
                   ref={testVideoRef} 
@@ -1028,11 +1866,11 @@ export default function CandidateInterviewPage() {
                 />
               </Box>
               <Box sx={{display:'flex',alignItems:'center',mt:1,width:220, mx: 'auto'}}>
-                <GraphicEqIcon sx={{mr:1}}/>
+              <GraphicEqIcon sx={{mr:1}}/>
                 <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:0,overflow:'hidden'}}>
-                  <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
-                </Box>
+                <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
               </Box>
+            </Box>
               <Box sx={{
                 display:'flex',
                 gap:2,
@@ -1040,21 +1878,21 @@ export default function CandidateInterviewPage() {
                 flexDirection: isMobile ? 'column' : 'row',
                 alignItems: isMobile ? 'center' : 'flex-start'
               }}>
-                <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
                   <VideocamIcon color={permissionsGranted.camera?"success":"error" as any}/>
                   <Typography variant="body2" color={permissionsGranted.camera?"success.main":"error.main"}>
                     {permissionsGranted.camera?"Камера OK":"Камера заблокирована"}
                   </Typography>
-                </Box>
-                <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
+              </Box>
+              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
                   <MicIcon color={permissionsGranted.microphone?"success":"error" as any}/>
                   <Typography variant="body2" color={permissionsGranted.microphone?"success.main":"error.main"}>
                     {permissionsGranted.microphone?"Микрофон OK":"Микрофон заблокирован"}
                   </Typography>
-                </Box>
               </Box>
             </Box>
-          )}
+          </Box>
+        )}
         </Box>
 
         {/* Fixed Bottom Button */}
@@ -1100,9 +1938,9 @@ export default function CandidateInterviewPage() {
         flexShrink: 0,
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
-        {stepperComp}
-        {/* header */}
-        <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+      {stepperComp}
+      {/* header */}
+      <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box sx={{
               width: 40,
@@ -1127,48 +1965,48 @@ export default function CandidateInterviewPage() {
               </Typography>
             </Box>
           </Box>
-          <Box sx={{display:'flex',alignItems:'center',gap:2}}>
-          {total && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{display:'flex',alignItems:'center',gap:2}}>
+        {total && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
                   {formatQuestionNumber(question.position)} из {total}
                 </Typography>
-                {isFollowUpQuestion(question.position) && (
+              {isFollowUpQuestion(question.position) && (
                   <Typography variant="caption" sx={{ color: '#25d366', fontWeight: 600, fontSize: '11px' }}>
                     (доп.)
-                  </Typography>
-                )}
-              </Box>
-            )}
-            {timeLeft !== null && question?.maxTime && (
-              <Box position="relative" display="inline-flex">
+                </Typography>
+              )}
+            </Box>
+          )}
+          {timeLeft !== null && question?.maxTime && (
+            <Box position="relative" display="inline-flex">
                 <CircularProgress 
                   variant="determinate" 
                   value={(timeLeft / (question.maxTime || 1)) * 100} 
                   size={32} 
                   sx={{ color: '#25d366' }}
                 />
-                <Box
-                  sx={{
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    position: 'absolute',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
+              <Box
+                sx={{
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  right: 0,
+                  position: 'absolute',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                   <Typography variant="caption" component="div" sx={{ color: '#666', fontSize: '10px' }}>
-                    {timeLeft}
-                  </Typography>
-                </Box>
+                  {timeLeft}
+          </Typography>
               </Box>
-          )}
+            </Box>
+        )}
             {paused && <PauseIcon sx={{ color: '#666', fontSize: '20px' }} />}
-          </Box>
         </Box>
+      </Box>
 
         {/* progress */}
         {total && (
@@ -1249,13 +2087,13 @@ export default function CandidateInterviewPage() {
                     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
                     position: 'relative'
                   }}>
-                    <Box component="span" sx={{ 
+                  <Box component="span" sx={{ 
                       animation: `${blink} 1s infinite step-start`,
                       fontSize: '20px',
                       color: '#666'
-                    }}>
-                      •••
-                    </Box>
+                  }}>
+                    •••
+                  </Box>
                     {/* Время для typing индикатора */}
                     <Typography sx={{
                       fontSize: '11px',
@@ -1517,7 +2355,7 @@ export default function CandidateInterviewPage() {
         flexShrink: 0,
         boxShadow: '0 -1px 3px rgba(0,0,0,0.1)'
       }}>
-        {/* answer input – только аудио */}
+      {/* answer input – только аудио */}
         <Box sx={{ 
           display: "flex", 
           gap: 2, 
@@ -1525,22 +2363,22 @@ export default function CandidateInterviewPage() {
           flexDirection: isMobile ? 'column' : 'row',
           alignItems: 'center'
         }}>
-          {!recording ? (
-            <>
-              <Button 
-                variant="contained" 
-                onClick={startRecording} 
-                disabled={recording || loadingNextQuestion}
+        {!recording ? (
+          <>
+            <Button 
+              variant="contained" 
+              onClick={startRecording} 
+              disabled={recording || loadingNextQuestion}
                 fullWidth={isMobile}
                 size={isMobile ? 'large' : 'medium'}
-                sx={{
-                  fontWeight: 600,
+              sx={{
+                fontWeight: 600,
                   bgcolor: '#25d366', // WhatsApp green
                   '&:hover': {
                     bgcolor: '#128c7e',
                   },
-                  '&:disabled': {
-                    opacity: 0.6,
+                '&:disabled': {
+                  opacity: 0.6,
                     bgcolor: '#25d366',
                   },
                   borderRadius: '24px',
@@ -1550,24 +2388,24 @@ export default function CandidateInterviewPage() {
                 }}
               >
                 {loadingNextQuestion ? 'Обработка ответа...' : '🎤 Записать ответ'}
-              </Button>
-              <Button 
-                variant="outlined" 
-                onClick={() => setSkipDialogOpen(true)}
-                disabled={recording || loadingNextQuestion}
-                color="primary"
+            </Button>
+            <Button 
+              variant="outlined" 
+              onClick={() => setSkipDialogOpen(true)}
+              disabled={recording || loadingNextQuestion}
+              color="primary"
                 fullWidth={isMobile}
                 size={isMobile ? 'large' : 'medium'}
-                sx={{
+              sx={{
                   borderColor: '#666',
                   color: '#666',
-                  '&:hover': {
+                '&:hover': {
                     backgroundColor: '#f5f5f5',
                     borderColor: '#333',
                     color: '#333',
-                  },
-                  '&:disabled': {
-                    opacity: 0.6,
+                },
+                '&:disabled': {
+                  opacity: 0.6,
                   },
                   borderRadius: '24px',
                   textTransform: 'none',
@@ -1576,9 +2414,9 @@ export default function CandidateInterviewPage() {
                 }}
               >
                 ⏭️ Пропустить
-              </Button>
-            </>
-          ) : (
+          </Button>
+          </>
+        ) : (
             <Button 
               variant="contained" 
               color="error" 
@@ -1597,8 +2435,8 @@ export default function CandidateInterviewPage() {
               }}
             >
               ⏹️ Стоп
-            </Button>
-          )}
+          </Button>
+        )}
         </Box>
       </Box>
 
@@ -1638,7 +2476,7 @@ export default function CandidateInterviewPage() {
             </Box>
           </Box>
           <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}>
-            Пропустить вопрос?
+          Пропустить вопрос?
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 2, pb: 1 }}>
@@ -1648,7 +2486,7 @@ export default function CandidateInterviewPage() {
             textAlign: 'center',
             fontSize: '14px'
           }}>
-            Вы уверены, что хотите пропустить этот вопрос?
+            Вы уверены, что хотите пропустить этот вопрос? 
             <br />
             <Box component="span" sx={{ 
               color: '#ff9800', 

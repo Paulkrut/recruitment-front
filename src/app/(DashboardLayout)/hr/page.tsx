@@ -156,59 +156,59 @@ export default function HRDashboard() {
               </Link>
             ) : (
               // Большая hero кнопка когда нет вакансий
-              <Box sx={{ 
-                textAlign: 'center',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: 3,
-                p: 4,
-                color: 'white',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-                  opacity: 0.3
-                }
-              }}>
-                <Typography variant="h5" fontWeight={600} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
-                  🚀 Готовы создать первую вакансию?
-                </Typography>
-                <Typography variant="body1" sx={{ mb: 3, opacity: 0.9, position: 'relative', zIndex: 1 }}>
-                  Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня
-                </Typography>
-                <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
-                  <Button 
-                    variant="contained" 
-                    size="large"
-                    sx={{ 
-                      backgroundColor: 'white',
-                      color: '#667eea',
-                      fontWeight: 600,
-                      px: 4,
-                      py: 1.5,
-                      fontSize: '1.1rem',
-                      boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255,255,255,0.9)',
-                        boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
-                        transform: 'translateY(-2px)'
-                      },
-                      transition: 'all 0.3s ease',
-                      position: 'relative',
-                      zIndex: 1
-                    }}
-                  >
-                    ✨ Создать вакансию
-                  </Button>
-                </Link>
-              </Box>
-            )}
+          <Box sx={{ 
+            textAlign: 'center',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            borderRadius: 3,
+            p: 4,
+            color: 'white',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Ccircle cx=\'30\' cy=\'30\' r=\'2\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+              opacity: 0.3
+            }
+          }}>
+            <Typography variant="h5" fontWeight={600} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
+              🚀 Готовы создать первую вакансию?
+            </Typography>
+            <Typography variant="body1" sx={{ mb: 3, opacity: 0.9, position: 'relative', zIndex: 1 }}>
+              Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня
+            </Typography>
+            <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
+              <Button 
+                variant="contained" 
+                size="large"
+                sx={{ 
+                  backgroundColor: 'white',
+                  color: '#667eea',
+                  fontWeight: 600,
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1.1rem',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
+                    transform: 'translateY(-2px)'
+                  },
+                  transition: 'all 0.3s ease',
+                  position: 'relative',
+                  zIndex: 1
+                }}
+              >
+                ✨ Создать вакансию
+              </Button>
+            </Link>
           </Box>
+        )}
+        </Box>
         )}
 
         {/* Dashboard Cards */}

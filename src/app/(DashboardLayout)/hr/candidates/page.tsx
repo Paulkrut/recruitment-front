@@ -296,8 +296,8 @@ function EnhancedCandidateTable({
                           }
                         }}
                       >
-                        {getShortName(candidate.name)}
-                      </Typography>
+                      {getShortName(candidate.name)}
+                    </Typography>
                     </Link>
                     <Box display="flex" alignItems="center" gap={1} mt={0.5}>
                       {candidate.email && (
@@ -504,8 +504,8 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
                   }
                 }}
               >
-                {getShortName(candidate.name)}
-              </Typography>
+              {getShortName(candidate.name)}
+            </Typography>
             </Link>
             {candidate.email && (
               <Typography variant="body2" color="text.secondary" gutterBottom>
