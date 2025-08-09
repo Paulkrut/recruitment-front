@@ -1218,8 +1218,14 @@ export default function CandidateInterviewPage() {
                             backgroundColor: '#2e7d32',
                             color: 'white',
                             fontWeight: 500,
+                            height: 'auto',
+                            minHeight: '32px',
                             '& .MuiChip-label': {
-                              color: 'white'
+                              color: 'white',
+                              whiteSpace: 'normal',
+                              wordBreak: 'break-word',
+                              padding: '8px 12px',
+                              lineHeight: 1.4
                             }
                           }}
                         />
@@ -1245,8 +1251,14 @@ export default function CandidateInterviewPage() {
                             backgroundColor: '#f57c00',
                             color: 'white',
                             fontWeight: 500,
+                            height: 'auto',
+                            minHeight: '32px',
                             '& .MuiChip-label': {
-                              color: 'white'
+                              color: 'white',
+                              whiteSpace: 'normal',
+                              wordBreak: 'break-word',
+                              padding: '8px 12px',
+                              lineHeight: 1.4
                             }
                           }}
                         />
@@ -1560,8 +1572,14 @@ export default function CandidateInterviewPage() {
                               backgroundColor: '#2e7d32',
                               color: 'white',
                               fontWeight: 500,
+                              height: 'auto',
+                              minHeight: '32px',
                               '& .MuiChip-label': {
-                                color: 'white'
+                                color: 'white',
+                                whiteSpace: 'normal',
+                                wordBreak: 'break-word',
+                                padding: '8px 12px',
+                                lineHeight: 1.4
                               }
                             }}
                           />
@@ -1587,8 +1605,14 @@ export default function CandidateInterviewPage() {
                               backgroundColor: '#f57c00',
                               color: 'white',
                               fontWeight: 500,
+                              height: 'auto',
+                              minHeight: '32px',
                               '& .MuiChip-label': {
-                                color: 'white'
+                                color: 'white',
+                                whiteSpace: 'normal',
+                                wordBreak: 'break-word',
+                                padding: '8px 12px',
+                                lineHeight: 1.4
                               }
                             }}
                           />
