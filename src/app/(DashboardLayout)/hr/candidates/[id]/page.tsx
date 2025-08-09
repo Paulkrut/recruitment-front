@@ -631,13 +631,6 @@ export default function CandidateDetailPage() {
                               </>
                             )}
 
-                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                              🚀 Рекомендации для кандидата
-                            </Typography>
-                            <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
-                              {feedback.next_level}
-                            </Typography>
-
                             <Divider sx={{ my: 3 }} />
                             
                             <Typography variant="caption" color="text.secondary" align="center" display="block">

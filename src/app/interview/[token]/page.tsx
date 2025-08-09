@@ -1159,6 +1159,13 @@ export default function CandidateInterviewPage() {
                   🎯 Ваши результаты интервью
                 </Typography>
                 
+                {/* Дисклеймер наверху */}
+                <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
+                  <Typography variant="body2" sx={{ fontStyle: 'italic', textAlign: 'center' }}>
+                    ⚠️ {feedbackData.feedback.disclaimer}
+                  </Typography>
+                </Box>
+                
                 {feedbackData.feedback.average_score > 0 && (
                   <Box sx={{ textAlign: 'center', mb: 3 }}>
                     <Typography variant="h5" gutterBottom>
@@ -1226,15 +1233,6 @@ export default function CandidateInterviewPage() {
                     )}
                   </>
                 )}
-
-                <Divider sx={{ my: 3 }} />
-
-                <Typography variant="h6" gutterBottom>
-                  🚀 Что нужно для следующего уровня
-                </Typography>
-                <Typography paragraph>
-                  {feedbackData.feedback.next_level}
-                </Typography>
 
                 {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
                   <>
@@ -1542,6 +1540,13 @@ export default function CandidateInterviewPage() {
                     🎯 Ваши результаты интервью
                   </Typography>
                   
+                  {/* Дисклеймер наверху */}
+                  <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
+                    <Typography variant="body2" sx={{ fontStyle: 'italic', textAlign: 'center' }}>
+                      ⚠️ {feedbackData.feedback.disclaimer}
+                    </Typography>
+                  </Box>
+                  
                   {feedbackData.feedback.average_score > 0 && (
                     <Box sx={{ textAlign: 'center', mb: 3 }}>
                       <Typography variant="h5" gutterBottom>
@@ -1613,10 +1618,10 @@ export default function CandidateInterviewPage() {
                   <Divider sx={{ my: 3 }} />
 
                   <Typography variant="h6" gutterBottom>
-                    🚀 Что нужно для следующего уровня
+                    💡 Рекомендации для развития
                   </Typography>
                   <Typography paragraph>
-                    {feedbackData.feedback.next_level}
+                    {feedbackData.feedback.recommendations || feedbackData.feedback.next_level}
                   </Typography>
 
                   {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
