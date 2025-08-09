@@ -85,11 +85,11 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
   };
 
   const getProgressLabel = (percent: number) => {
-    if (percent === 0) return "Не начато";
-    if (percent >= 80) return "Отлично";
-    if (percent >= 50) return "Хорошо";
-    if (percent >= 20) return "В процессе";
-    return "Начато";
+    if (percent === 0) return "Отсутствует";
+    if (percent >= 80) return "Высокая";
+    if (percent >= 50) return "Нормальная";
+    if (percent >= 20) return "Низкая";
+    return "Низкая";
   };
 
   // Функция для сокращения текста
@@ -176,7 +176,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
             }}>
               <Box display="flex" alignItems="center" gap={1}>
                 <IconCheck size={16} />
-                Прогресс
+                Активность
               </Box>
             </TableCell>
             <TableCell sx={{ 
@@ -371,11 +371,11 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
     return "error";
   };
   const getProgressLabel = (percent: number) => {
-    if (percent === 0) return "Не начато";
-    if (percent >= 80) return "Отлично";
-    if (percent >= 50) return "Хорошо";
-    if (percent >= 20) return "В процессе";
-    return "Начато";
+    if (percent === 0) return "Отсутствует";
+    if (percent >= 80) return "Высокая";
+    if (percent >= 50) return "Нормальная";
+    if (percent >= 20) return "Низкая";
+    return "Низкая";
   };
 
   return (

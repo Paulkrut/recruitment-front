@@ -45,6 +45,14 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
     return "error";
   };
 
+  const getActivityLabel = (progress: number) => {
+    if (progress === 0) return "Отсутствует";
+    if (progress >= 80) return "Высокая";
+    if (progress >= 50) return "Нормальная";
+    if (progress >= 20) return "Низкая";
+    return "Низкая";
+  };
+
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -68,7 +76,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 600 }}>Вакансия</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="center">Прогресс</TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="center">Активность</TableCell>
                 <TableCell sx={{ fontWeight: 600 }} align="center">Действия</TableCell>
               </TableRow>
             </TableHead>
@@ -109,7 +117,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
                         />
                       </Box>
                       <Chip
-                        label={`${Math.round(progress)}%`}
+                        label={getActivityLabel(progress)}
                         size="small"
                         color={getProgressColor(progress) as any}
                         variant="outlined"
