@@ -25,6 +25,12 @@ import {
   Rating,
   Card,
   CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -1184,11 +1190,40 @@ export default function CandidateInterviewPage() {
                     <Typography variant="h6" gutterBottom>
                       📊 Таблица оценок
                     </Typography>
-                    <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
-                      <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                        {feedbackData.feedback.scores_table}
-                      </Typography>
-                    </Box>
+                    {Array.isArray(feedbackData.feedback.scores_table) && feedbackData.feedback.scores_table.length > 0 ? (
+                      <TableContainer component={Paper} sx={{ bgcolor: 'grey.50' }}>
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell><strong>Вопрос</strong></TableCell>
+                              <TableCell align="center"><strong>Оценка</strong></TableCell>
+                              <TableCell><strong>Комментарий</strong></TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {feedbackData.feedback.scores_table.map((row: any, index: number) => (
+                              <TableRow key={index}>
+                                <TableCell>{row.question}</TableCell>
+                                <TableCell align="center">
+                                  <Chip 
+                                    label={`${row.score}/10`} 
+                                    color={row.score >= 8 ? 'success' : row.score >= 6 ? 'warning' : 'error'}
+                                    size="small"
+                                  />
+                                </TableCell>
+                                <TableCell>{row.comment}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    ) : (
+                      <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                        <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                          {feedbackData.feedback.scores_table}
+                        </Typography>
+                      </Box>
+                    )}
                   </>
                 )}
 
@@ -1538,11 +1573,40 @@ export default function CandidateInterviewPage() {
                       <Typography variant="h6" gutterBottom>
                         📊 Таблица оценок
                       </Typography>
-                      <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
-                        <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                          {feedbackData.feedback.scores_table}
-                        </Typography>
-                      </Box>
+                      {Array.isArray(feedbackData.feedback.scores_table) && feedbackData.feedback.scores_table.length > 0 ? (
+                        <TableContainer component={Paper} sx={{ bgcolor: 'grey.50' }}>
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell><strong>Вопрос</strong></TableCell>
+                                <TableCell align="center"><strong>Оценка</strong></TableCell>
+                                <TableCell><strong>Комментарий</strong></TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {feedbackData.feedback.scores_table.map((row: any, index: number) => (
+                                <TableRow key={index}>
+                                  <TableCell>{row.question}</TableCell>
+                                  <TableCell align="center">
+                                    <Chip 
+                                      label={`${row.score}/10`} 
+                                      color={row.score >= 8 ? 'success' : row.score >= 6 ? 'warning' : 'error'}
+                                      size="small"
+                                    />
+                                  </TableCell>
+                                  <TableCell>{row.comment}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
+                          <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                            {feedbackData.feedback.scores_table}
+                          </Typography>
+                        </Box>
+                      )}
                     </>
                   )}
 
