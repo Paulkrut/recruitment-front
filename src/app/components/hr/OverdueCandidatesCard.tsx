@@ -8,24 +8,19 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon,
   ListItemAvatar,
   Avatar,
   Chip,
-  IconButton,
-  Tooltip,
   Divider,
-  Button,
 } from "@mui/material";
 import { 
   IconClock, 
-  IconMail, 
-  IconPhone, 
-  IconMessage, 
   IconUser 
 } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface OverdueCandidate {
+  id?: number;
   name: string;
   created_at: string;
   email?: string;
@@ -101,29 +96,6 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                     borderRadius: 1,
                   },
                 }}
-                secondaryAction={
-                  <Box display="flex" gap={1}>
-                    {candidate.email && (
-                      <Tooltip title="Отправить email">
-                        <IconButton size="small" color="primary">
-                          <IconMail size={16} />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    {candidate.phone && (
-                      <Tooltip title="Позвонить">
-                        <IconButton size="small" color="success">
-                          <IconPhone size={16} />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    <Tooltip title="Отправить сообщение">
-                      <IconButton size="small" color="info">
-                        <IconMessage size={16} />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                }
               >
                 <ListItemAvatar>
                   <Avatar sx={{ bgcolor: "primary.main", width: 40, height: 40 }}>
@@ -134,7 +106,28 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                   primary={
                     <Box display="flex" alignItems="center" gap={1}>
                       <Typography variant="body2" fontWeight="500">
-                        {candidate.name}
+                        {candidate.id ? (
+                          <Link 
+                            href={`/hr/candidates/${candidate.id}`} 
+                            style={{ 
+                              textDecoration: 'none', 
+                              color: 'inherit',
+                              cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.color = '#1976d2';
+                              (e.target as HTMLElement).style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.color = 'inherit';
+                              (e.target as HTMLElement).style.textDecoration = 'none';
+                            }}
+                          >
+                            {candidate.name}
+                          </Link>
+                        ) : (
+                          candidate.name
+                        )}
                       </Typography>
                       <Chip
                         label={getUrgencyLabel(candidate.created_at)}
@@ -168,29 +161,6 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
             <Typography variant="body2" color="textSecondary">
               Нет просроченных кандидатов
             </Typography>
-          </Box>
-        )}
-
-        {data.length > 0 && (
-          <Box mt={2} display="flex" gap={1}>
-            <Button
-              variant="outlined"
-              color="primary"
-              size="small"
-              startIcon={<IconMail size={16} />}
-              fullWidth
-            >
-              Массовая рассылка
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              startIcon={<IconMessage size={16} />}
-              fullWidth
-            >
-              Напомнить всем
-            </Button>
           </Box>
         )}
       </CardContent>
