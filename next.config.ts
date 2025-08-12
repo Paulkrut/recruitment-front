@@ -62,8 +62,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   generateEtags: false,
 
-  // Добавляем настройки для Timeweb
-  output: 'export'
 };
 
 export default nextConfig;
