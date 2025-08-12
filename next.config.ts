@@ -62,6 +62,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   generateEtags: false,
 
+
+
 };
 
 export default nextConfig;
