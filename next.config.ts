@@ -3,9 +3,19 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    domains: ['www.sofihr.ru', 'sofihr.ru'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.sofihr.ru',
+      },
+      {
+        protocol: 'https',
+        hostname: 'sofihr.ru',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
+
   async headers() {
     return [
       {
@@ -31,6 +41,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
   async redirects() {
     return [
       {
@@ -40,13 +51,19 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  i18n: {
-    locales: ['ru'],
-    defaultLocale: 'ru',
-  },
+
+  // Убираем i18n - в Next.js 13+ используется app router
+  // i18n: {
+  //   locales: ['ru'],
+  //   defaultLocale: 'ru',
+  // },
+
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
+
+  // Добавляем настройки для Timeweb
+  output: 'standalone',
 };
 
 export default nextConfig;
