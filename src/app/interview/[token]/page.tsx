@@ -67,9 +67,9 @@ export default function CandidateInterviewPage() {
   const [timerStarted, setTimerStarted] = useState(false);
   const [currentQuestionTimerStarted, setCurrentQuestionTimerStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout|null>(null);
-  const [chat, setChat] = useState<{ 
-    role: "bot" | "user"; 
-    text: string; 
+  const [chat, setChat] = useState<{
+    role: "bot" | "user";
+    text: string;
     video?: string;
     timestamp?: number;
   }[]>([]);
@@ -132,11 +132,11 @@ export default function CandidateInterviewPage() {
 
   // Функция для форматирования номера вопроса
   const formatQuestionNumber = (position: number) => {
-    // Если position имеет десятичную часть (например, 0.01, 0.02, 3.01, 3.02), 
+    // Если position имеет десятичную часть (например, 0.01, 0.02, 3.01, 3.02),
     // то это дополнительный вопрос
     const mainQuestion = Math.floor(position);
     const decimalPart = position - mainQuestion;
-    
+
     if (decimalPart > 0) {
       // Дополнительный вопрос: 1.1, 1.2, 1.3 или 3.1, 3.2, 3.3
       const followUpNumber = Math.round(decimalPart * 100); // 1, 2, 3
@@ -232,16 +232,16 @@ export default function CandidateInterviewPage() {
   }
 
   useEffect(()=>{
-    console.log('Question changed, starting countdown:', { 
-      questionId: question?.id, 
+    console.log('Question changed, starting countdown:', {
+      questionId: question?.id,
       maxTime: question?.maxTime,
-      timeLeft 
+      timeLeft
     });
     clearCountdown();
     setTimerStarted(false); // Сбрасываем флаг для нового вопроса
     setCurrentQuestionTimerStarted(false); // Сбрасываем флаг для текущего вопроса
-    if(question){ 
-      startCountdown(question.maxTime || 120); 
+    if(question){
+      startCountdown(question.maxTime || 120);
       // Дополнительный скролл к новому вопросу
       setTimeout(() => scrollToBottom(), 200);
       // Принудительный скролл в конце
@@ -251,13 +251,13 @@ export default function CandidateInterviewPage() {
   },[question?.id]); // Используем question?.id вместо question
 
   // reset answered flag when question changes
-  useEffect(()=>{ 
+  useEffect(()=>{
     if (answered) {
-      console.log('Resetting answered flag for new question:', { 
-        questionId: question?.id, 
-        answered 
+      console.log('Resetting answered flag for new question:', {
+        questionId: question?.id,
+        answered
       });
-      setAnswered(false); 
+      setAnswered(false);
     }
   }, [question?.id]); // Используем question?.id вместо question
 
@@ -274,7 +274,7 @@ export default function CandidateInterviewPage() {
         previousQuestionId,
         paused
       });
-      
+
       // Проверка - не отправляем пустой ответ если недавно был отправлен ответ
       if (lastAnswerTime) {
         const timeSinceLastAnswer = Date.now() - lastAnswerTime;
@@ -291,7 +291,7 @@ export default function CandidateInterviewPage() {
           return;
         }
       }
-      
+
       // Проверка - отправляем пустой ответ только если у вопроса есть таймер
       if (question.maxTime === null || question.maxTime === undefined || question.maxTime === 0) {
         console.log('Skipping auto-submit - no max time for current question:', {
@@ -300,7 +300,7 @@ export default function CandidateInterviewPage() {
         });
         return;
       }
-      
+
       // Отправляем пустой ответ
       console.log('Auto-submit triggered:', {
         timeLeft,
@@ -337,23 +337,23 @@ export default function CandidateInterviewPage() {
       // Проверяем разрешения перед запросом потока
       const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
       const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      
+
       console.log('Device test permissions:', {
         camera: permissions.state,
         microphone: micPermissions.state
       });
-      
+
       const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
-      
+
       // Проверяем разрешения
       setPermissionsGranted({
         camera: permissions.state === 'granted',
         microphone: micPermissions.state === 'granted'
       });
       setPermissionsRequested(true);
-      
+
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
@@ -372,13 +372,13 @@ export default function CandidateInterviewPage() {
       tick();
     }catch(e){
       console.error('Ошибка доступа к камере/микрофону:', e);
-      
+
       // Специальная обработка для Safari
       let errorMessage = 'Ошибка доступа к камере/микрофону';
       if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
         errorMessage += '\n\nВ Safari:\n1. Убедитесь, что сайт открыт по HTTPS\n2. Разрешите доступ к камере и микрофону\n3. Проверьте настройки в Safari > Настройки > Веб-сайты';
       }
-      
+
       console.error(errorMessage);
       setPermissionsGranted({ camera: false, microphone: false });
       setPermissionsRequested(true);
@@ -416,7 +416,7 @@ export default function CandidateInterviewPage() {
       alert('Для начала интервью необходимо разрешить доступ к камере и микрофону');
       return;
     }
-    
+
     stopDeviceTest();
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
@@ -451,18 +451,18 @@ export default function CandidateInterviewPage() {
   /* ------------ запись аудио ------------- */
   async function startRecording() {
     console.log('startRecording called');
-    
+
     // Проверяем поддержку getUserMedia
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       alert('Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.');
       return;
     }
-    
+
     try {
       // Сначала проверяем разрешения для Safari
       const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
       const cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      
+
       console.log('Permissions status:', {
         microphone: permissions.state,
         camera: cameraPermissions.state
@@ -474,18 +474,18 @@ export default function CandidateInterviewPage() {
         return;
       }
 
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: { 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
           sampleRate: 16000,
           channelCount: 1,
           echoCancellation: true,
           noiseSuppression: true
-        }, 
-        video: { 
-          width: 640, 
+        },
+        video: {
+          width: 640,
           height: 480,
           frameRate: { ideal: 15, max: 30 }
-        } 
+        }
       });
 
       // Проверяем, что поток действительно содержит треки
@@ -496,7 +496,7 @@ export default function CandidateInterviewPage() {
       // Дополнительная проверка для Safari - убеждаемся, что треки активны
       const audioTrack = stream.getAudioTracks()[0];
       const videoTrack = stream.getVideoTracks()[0];
-      
+
       if (!audioTrack.enabled || !videoTrack.enabled) {
         console.warn('Tracks are disabled, trying to enable them');
         audioTrack.enabled = true;
@@ -504,19 +504,19 @@ export default function CandidateInterviewPage() {
       }
 
       setPreviewStream(stream);
-      
+
       // Сбрасываем состояние загрузки видео
       setVideoLoading(true);
-      
+
       // Добавляем видео-сообщение в чат с live-потоком
       setChat((p) => [
         ...p,
         { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
       ]);
-      
+
       // Проверяем поддержку MediaRecorder и создаем с подходящим форматом
       let mr: MediaRecorder;
-      
+
       if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
         mr = new MediaRecorder(stream, {
         mimeType: 'video/webm;codecs=vp8,opus',
@@ -531,7 +531,7 @@ export default function CandidateInterviewPage() {
           'video/webm;codecs=h264,opus',
           'video/webm;codecs=vp9,opus'
         ];
-        
+
         let supportedFormat = null;
         for (const format of alternativeFormats) {
           if (MediaRecorder.isTypeSupported(format)) {
@@ -539,7 +539,7 @@ export default function CandidateInterviewPage() {
             break;
           }
         }
-        
+
         if (supportedFormat) {
           console.log('Using alternative format:', supportedFormat);
           mr = new MediaRecorder(stream, {
@@ -563,7 +563,7 @@ export default function CandidateInterviewPage() {
           setRecording(false);
           stream.getTracks().forEach((t) => t.stop());
           setPreviewStream(null);
-          
+
           // Удаляем видео-сообщение при ошибке записи
           setChat((p) => {
             const newChat = [...p];
@@ -580,17 +580,17 @@ export default function CandidateInterviewPage() {
         }
         const blob = new Blob(chunks, { type: 'video/webm' });
         console.log('Blob created:', blob.size);
-        
+
         // Отправляем оригинальный blob без сжатия на фронте
         console.log('Sending original video blob:', {
           size: blob.size,
           sizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
           type: blob.type
         });
-        
+
         /* при завершении записи сразу отправляем ответ */
         sendBlobAnswer(blob);
-        
+
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
         setPreviewStream(null);
@@ -601,11 +601,11 @@ export default function CandidateInterviewPage() {
     } catch (err: any) {
       console.error('startRecording error:', err);
       let msg = "Не удалось получить доступ к микрофону.";
-      
+
       // Специальная обработка для Safari
       if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
         msg += "\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон";
-        
+
         // В Safari иногда ошибка показывается, но запись все равно работает
         // Проверяем, есть ли активный поток
         if (previewStream && previewStream.active) {
@@ -623,9 +623,9 @@ export default function CandidateInterviewPage() {
       } else if (err?.name === "NotReadableError") {
         msg += "\nКамера или микрофон уже используются другим приложением.";
       }
-      
+
       alert(msg);
-      
+
       // Удаляем видео-сообщение при ошибке
       setChat((p) => {
         const newChat = [...p];
@@ -643,13 +643,13 @@ export default function CandidateInterviewPage() {
 
   function stopRecording() {
     console.log('stopRecording called', { answered, recording, hasMediaRecorder: !!mediaRecorder });
-    
+
     // Проверяем, что запись действительно активна
     if (!recording) {
       console.log('Recording is not active, nothing to stop');
       return;
     }
-    
+
     if (mediaRecorder && !answered) {
       console.log('Stopping media recorder');
       try {
@@ -664,13 +664,13 @@ export default function CandidateInterviewPage() {
         }
       }
     } else {
-      console.log('Not stopping recorder:', { 
-        hasMediaRecorder: !!mediaRecorder, 
-        recording, 
-        answered 
+      console.log('Not stopping recorder:', {
+        hasMediaRecorder: !!mediaRecorder,
+        recording,
+        answered
       });
     }
-    
+
     // Удаляем видео-сообщение только если запись была отменена вручную
     // При успешном завершении записи видео-сообщение обновится в sendBlobAnswer
     if (recording && !answered && !mediaRecorder) {
@@ -716,9 +716,9 @@ export default function CandidateInterviewPage() {
     });
 
     if (!question || answered) {
-      console.log('=== sendBlobAnswer EARLY RETURN ===', { 
-        hasQuestion: !!question, 
-        answered 
+      console.log('=== sendBlobAnswer EARLY RETURN ===', {
+        hasQuestion: !!question,
+        answered
       });
       return; // Защита от дублирования
     }
@@ -727,7 +727,7 @@ export default function CandidateInterviewPage() {
     setTimeLeft(null);
 
     console.log('sendBlobAnswer called', { questionId: question.id });
-    
+
     // Дополнительная проверка - если запись активна, не отправляем пустой ответ
     if (recording) {
       console.log('Recording is active, skipping empty answer');
@@ -741,7 +741,7 @@ export default function CandidateInterviewPage() {
 
     // Обновляем последнее видео-сообщение с финальным видео
     const finalVideoUrl = URL.createObjectURL(blob);
-    
+
     // Небольшая задержка для лучшего UX - пользователь видит процесс обработки
     setTimeout(() => {
       setChat((p) => {
@@ -753,9 +753,9 @@ export default function CandidateInterviewPage() {
             if (newChat[i].video !== "live") {
               URL.revokeObjectURL(newChat[i].video);
             }
-            newChat[i] = { 
-              ...newChat[i], 
-              video: finalVideoUrl, 
+            newChat[i] = {
+              ...newChat[i],
+              video: finalVideoUrl,
               text: "🎥 Видео ответ отправлен",
               timestamp: newChat[i].timestamp || Date.now()
             };
@@ -776,7 +776,7 @@ export default function CandidateInterviewPage() {
     const fd = new FormData();
     fd.append("questionId", String(question.id));
     fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
-    
+
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
       body: fd,
@@ -832,9 +832,9 @@ export default function CandidateInterviewPage() {
     });
 
     if (!question || answered) {
-      console.log('=== sendEmptyAnswer EARLY RETURN ===', { 
-        hasQuestion: !!question, 
-        answered 
+      console.log('=== sendEmptyAnswer EARLY RETURN ===', {
+        hasQuestion: !!question,
+        answered
       });
       return; // Защита от дублирования
     }
@@ -843,7 +843,7 @@ export default function CandidateInterviewPage() {
     setTimeLeft(null);
 
     console.log('sendEmptyAnswer called', { questionId: question.id });
-    
+
     // Дополнительная проверка - если запись активна, не отправляем пустой ответ
     if (recording) {
       console.log('Recording is active, skipping empty answer');
@@ -866,14 +866,14 @@ export default function CandidateInterviewPage() {
     const fd = new FormData();
     fd.append('questionId', String(question.id));
     fd.append('text','');
-    
+
     console.log('Sending empty answer to server...');
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
     console.log('Empty answer response:', answerResponse.status, answerResponse.ok);
 
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
     console.log('Next question response (empty):', r.status, r.ok);
-    
+
     if(!r.ok){
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
@@ -883,7 +883,7 @@ export default function CandidateInterviewPage() {
     }
     const d = await r.json();
     console.log('Next question data (empty):', d);
-    
+
     if(!d.question){
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
@@ -934,7 +934,7 @@ export default function CandidateInterviewPage() {
 
   async function sendFeedbackToEmail() {
     if (!feedbackEmail.trim()) return;
-    
+
     setSendingFeedback(true);
     try {
       const response = await fetch(`${API_BASE}/api/public/interview/${token}/send-feedback`, {
@@ -945,7 +945,7 @@ export default function CandidateInterviewPage() {
           feedback: JSON.stringify(feedbackData.feedback)
         })
       });
-      
+
       if (response.ok) {
         alert('Обратная связь отправлена на ваш email!');
         setShowEmailForm(false);
@@ -975,7 +975,7 @@ export default function CandidateInterviewPage() {
           opinion: candidateOpinion
         })
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setOpinionSubmitted(true);
@@ -1016,7 +1016,7 @@ export default function CandidateInterviewPage() {
       const response = await fetch(`${API_BASE}/api/public/interview/${token}/generate-feedback`, {
         method: 'POST'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.status === 'already_exists') {
@@ -1024,7 +1024,7 @@ export default function CandidateInterviewPage() {
           await loadFeedback();
           return;
         }
-        
+
         // Запускаем поллинг и прогресс
         startProgressAnimation();
         startPolling();
@@ -1042,16 +1042,16 @@ export default function CandidateInterviewPage() {
     const progressInterval = setInterval(() => {
       setElapsedTime(prev => {
         const newTime = prev + 1;
-        
+
         // Обновляем шаг каждые 7-8 секунд
         const newStep = Math.min(Math.floor(newTime / 7), progressMessages.length - 1);
         setGenerationStep(newStep);
-        
+
         // Если прошло больше минуты, останавливаем прогресс
         if (newTime > 90) {
           clearInterval(progressInterval);
         }
-        
+
         return newTime;
       });
     }, 1000);
@@ -1140,7 +1140,7 @@ export default function CandidateInterviewPage() {
     if (showFeedback && feedbackData) {
       // Экран обратной связи
     return (
-        <Box sx={{ 
+        <Box sx={{
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
@@ -1151,21 +1151,21 @@ export default function CandidateInterviewPage() {
           px: { xs: 2, sm: 3, md: 4 }
         }}>
           {stepperComp}
-          
+
           <Box sx={{ flex: 1, mt: 3 }}>
             <Card sx={{ mb: 3 }}>
               <CardContent>
                 <Typography variant="h4" gutterBottom align="center" color="primary">
                   🎯 Ваши результаты интервью
                 </Typography>
-                
+
                 {/* Дисклеймер наверху */}
                 <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
                   <Typography variant="body2" sx={{ fontStyle: 'italic', textAlign: 'center' }}>
                     ⚠️ {feedbackData.feedback.disclaimer}
                   </Typography>
                 </Box>
-                
+
                 {feedbackData.feedback.average_score > 0 && (
                   <Box sx={{ textAlign: 'center', mb: 3 }}>
                     <Typography variant="h5" gutterBottom>
@@ -1212,8 +1212,8 @@ export default function CandidateInterviewPage() {
                               <TableRow key={index}>
                                 <TableCell>{row.question}</TableCell>
                                 <TableCell align="center">
-                                  <Chip 
-                                    label={`${row.score}/10`} 
+                                  <Chip
+                                    label={`${row.score}/10`}
                                     color={row.score >= 8 ? 'success' : row.score >= 6 ? 'warning' : 'error'}
                                     size="small"
                                   />
@@ -1242,10 +1242,10 @@ export default function CandidateInterviewPage() {
                     </Typography>
                     <Stack spacing={1}>
                       {feedbackData.feedback.strengths.map((strength: string, index: number) => (
-                        <Chip 
-                          key={index} 
-                          label={strength} 
-                          color="success" 
+                        <Chip
+                          key={index}
+                          label={strength}
+                          color="success"
                           variant="filled"
                           sx={{
                             backgroundColor: '#2e7d32',
@@ -1275,10 +1275,10 @@ export default function CandidateInterviewPage() {
                     </Typography>
                     <Stack spacing={1}>
                       {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
-                        <Chip 
-                          key={index} 
-                          label={weakness} 
-                          color="warning" 
+                        <Chip
+                          key={index}
+                          label={weakness}
+                          color="warning"
                           variant="filled"
                           sx={{
                             backgroundColor: '#f57c00',
@@ -1301,7 +1301,7 @@ export default function CandidateInterviewPage() {
                 )}
 
                 <Divider sx={{ my: 3 }} />
-                
+
                 <Typography variant="caption" color="text.secondary" align="center" display="block">
                   {feedbackData.feedback.disclaimer}
                 </Typography>
@@ -1324,15 +1324,15 @@ export default function CandidateInterviewPage() {
                     sx={{ mb: 2 }}
                   />
                   <Stack direction="row" spacing={2}>
-                    <Button 
-                      variant="contained" 
+                    <Button
+                      variant="contained"
                       onClick={sendFeedbackToEmail}
                       disabled={sendingFeedback || !feedbackEmail.trim()}
                     >
                       {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
                     </Button>
-                    <Button 
-                      variant="outlined" 
+                    <Button
+                      variant="outlined"
                       onClick={() => setShowEmailForm(false)}
                     >
                       Отмена
@@ -1343,9 +1343,9 @@ export default function CandidateInterviewPage() {
             ) : (
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Button 
-                    variant="outlined" 
-                    fullWidth 
+                  <Button
+                    variant="outlined"
+                    fullWidth
                     onClick={() => setShowEmailForm(true)}
                     sx={{ mb: 2 }}
                   >
@@ -1375,8 +1375,8 @@ export default function CandidateInterviewPage() {
                     placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
                     sx={{ mb: 2 }}
                   />
-                  <Button 
-                    variant="contained" 
+                  <Button
+                    variant="contained"
                     onClick={submitCandidateOpinion}
                     disabled={candidateOpinion.length < 10}
                   >
@@ -1397,8 +1397,8 @@ export default function CandidateInterviewPage() {
             )}
 
             <Box sx={{ textAlign: 'center', mt: 4 }}>
-              <Button 
-                variant="outlined" 
+              <Button
+                variant="outlined"
                 onClick={() => setShowFeedback(false)}
                 sx={{ mr: 2 }}
               >
@@ -1415,7 +1415,7 @@ export default function CandidateInterviewPage() {
 
     // Основной экран результата с кнопкой получения обратной связи
     return (
-      <Box sx={{ 
+      <Box sx={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -1467,9 +1467,9 @@ export default function CandidateInterviewPage() {
 
         {feedbackLoading && (
           <Box sx={{ width: '100%', maxWidth: 400, mb: 3 }}>
-            <LinearProgress 
-              variant="determinate" 
-              value={Math.min((elapsedTime / estimatedTime) * 100, 95)} 
+            <LinearProgress
+              variant="determinate"
+              value={Math.min((elapsedTime / estimatedTime) * 100, 95)}
               sx={{ height: 8, borderRadius: 4 }}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
@@ -1484,8 +1484,8 @@ export default function CandidateInterviewPage() {
         )}
 
         <Typography variant="body2" color="text.secondary">
-          {feedbackLoading 
-            ? "Система AI анализирует ваши ответы для создания персональных рекомендаций" 
+          {feedbackLoading
+            ? "Система AI анализирует ваши ответы для создания персональных рекомендаций"
             : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
           }
         </Typography>
@@ -1517,11 +1517,11 @@ export default function CandidateInterviewPage() {
     if(prepared.status==='finished'){
       // Показываем ту же страницу с кнопкой обратной связи, что и после завершения интервью
       // Имитируем состояние result = true
-      
+
       if (showFeedback && feedbackData) {
         // Если обратная связь уже загружена, показываем её
       return (
-          <Box sx={{ 
+          <Box sx={{
             minHeight: '100vh',
             display: 'flex',
             flexDirection: 'column',
@@ -1532,21 +1532,21 @@ export default function CandidateInterviewPage() {
             px: { xs: 2, sm: 3, md: 4 }
           }}>
           {stepperComp}
-            
+
             <Box sx={{ flex: 1, mt: 3 }}>
               <Card sx={{ mb: 3 }}>
                 <CardContent>
                   <Typography variant="h4" gutterBottom align="center" color="primary">
                     🎯 Ваши результаты интервью
                   </Typography>
-                  
+
                   {/* Дисклеймер наверху */}
                   <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
                     <Typography variant="body2" sx={{ fontStyle: 'italic', textAlign: 'center' }}>
                       ⚠️ {feedbackData.feedback.disclaimer}
                     </Typography>
                   </Box>
-                  
+
                   {feedbackData.feedback.average_score > 0 && (
                     <Box sx={{ textAlign: 'center', mb: 3 }}>
                       <Typography variant="h5" gutterBottom>
@@ -1593,8 +1593,8 @@ export default function CandidateInterviewPage() {
                                 <TableRow key={index}>
                                   <TableCell>{row.question}</TableCell>
                                   <TableCell align="center">
-                                    <Chip 
-                                      label={`${row.score}/10`} 
+                                    <Chip
+                                      label={`${row.score}/10`}
                                       color={row.score >= 8 ? 'success' : row.score >= 6 ? 'warning' : 'error'}
                                       size="small"
                                     />
@@ -1632,10 +1632,10 @@ export default function CandidateInterviewPage() {
                       </Typography>
                       <Stack spacing={1}>
                         {feedbackData.feedback.strengths.map((strength: string, index: number) => (
-                          <Chip 
-                            key={index} 
-                            label={strength} 
-                            color="success" 
+                          <Chip
+                            key={index}
+                            label={strength}
+                            color="success"
                             variant="filled"
                             sx={{
                               backgroundColor: '#2e7d32',
@@ -1665,10 +1665,10 @@ export default function CandidateInterviewPage() {
                       </Typography>
                       <Stack spacing={1}>
                         {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
-                          <Chip 
-                            key={index} 
-                            label={weakness} 
-                            color="warning" 
+                          <Chip
+                            key={index}
+                            label={weakness}
+                            color="warning"
                             variant="filled"
                             sx={{
                               backgroundColor: '#f57c00',
@@ -1691,7 +1691,7 @@ export default function CandidateInterviewPage() {
                   )}
 
                   <Divider sx={{ my: 3 }} />
-                  
+
                   <Typography variant="caption" color="text.secondary" align="center" display="block">
                     {feedbackData.feedback.disclaimer}
                   </Typography>
@@ -1714,15 +1714,15 @@ export default function CandidateInterviewPage() {
                       sx={{ mb: 2 }}
                     />
                     <Stack direction="row" spacing={2}>
-                      <Button 
-                        variant="contained" 
+                      <Button
+                        variant="contained"
                         onClick={sendFeedbackToEmail}
                         disabled={sendingFeedback || !feedbackEmail.trim()}
                       >
                         {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
                       </Button>
-                      <Button 
-                        variant="outlined" 
+                      <Button
+                        variant="outlined"
                         onClick={() => setShowEmailForm(false)}
                       >
                         Отмена
@@ -1733,9 +1733,9 @@ export default function CandidateInterviewPage() {
               ) : (
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
-                    <Button 
-                      variant="outlined" 
-                      fullWidth 
+                    <Button
+                      variant="outlined"
+                      fullWidth
                       onClick={() => setShowEmailForm(true)}
                       sx={{ mb: 2 }}
                     >
@@ -1765,8 +1765,8 @@ export default function CandidateInterviewPage() {
                       placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
                       sx={{ mb: 2 }}
                     />
-                    <Button 
-                      variant="contained" 
+                    <Button
+                      variant="contained"
                       onClick={submitCandidateOpinion}
                       disabled={candidateOpinion.length < 10}
                     >
@@ -1787,8 +1787,8 @@ export default function CandidateInterviewPage() {
               )}
 
               <Box sx={{ textAlign: 'center', mt: 4 }}>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   onClick={() => setShowFeedback(false)}
                   sx={{ mr: 2 }}
                 >
@@ -1802,9 +1802,9 @@ export default function CandidateInterviewPage() {
           </Box>
         );
       }
-      
+
       return (
-        <Box sx={{ 
+        <Box sx={{
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
@@ -1856,9 +1856,9 @@ export default function CandidateInterviewPage() {
 
           {feedbackLoading && (
             <Box sx={{ width: '100%', maxWidth: 400, mb: 3 }}>
-              <LinearProgress 
-                variant="determinate" 
-                value={Math.min((elapsedTime / estimatedTime) * 100, 95)} 
+              <LinearProgress
+                variant="determinate"
+                value={Math.min((elapsedTime / estimatedTime) * 100, 95)}
                 sx={{ height: 8, borderRadius: 4 }}
               />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
@@ -1873,8 +1873,8 @@ export default function CandidateInterviewPage() {
           )}
 
           <Typography variant="body2" color="text.secondary">
-            {feedbackLoading 
-              ? "Система AI анализирует ваши ответы для создания персональных рекомендаций" 
+            {feedbackLoading
+              ? "Система AI анализирует ваши ответы для создания персональных рекомендаций"
               : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
             }
           </Typography>
@@ -1895,8 +1895,8 @@ export default function CandidateInterviewPage() {
         px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
       }}>
         {/* Fixed Header */}
-        <Box sx={{ 
-          p: isMobile ? 2 : 4, 
+        <Box sx={{
+          p: isMobile ? 2 : 4,
           pb: isMobile ? 1 : 4,
           bgcolor: 'background.default',
           borderBottom: '1px solid',
@@ -1910,8 +1910,8 @@ export default function CandidateInterviewPage() {
         </Box>
 
         {/* Scrollable Content */}
-        <Box sx={{ 
-          flex: 1, 
+        <Box sx={{
+          flex: 1,
           overflow: 'auto',
           p: isMobile ? 2 : 4
         }}>
@@ -1922,14 +1922,14 @@ export default function CandidateInterviewPage() {
                 ⚠️ Требуется доступ к камере и микрофону
               </Typography>
               <Typography variant="body2" sx={{mb:2}}>
-                Для прохождения интервью необходимо разрешить доступ к камере и микрофону. 
+                Для прохождения интервью необходимо разрешить доступ к камере и микрофону.
                 {!permissionsGranted.camera && !permissionsGranted.microphone && ' Камера и микрофон заблокированы.'}
                 {!permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
                 {permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
               </Typography>
-              <Button 
-                variant="contained" 
-                color="warning" 
+              <Button
+                variant="contained"
+                color="warning"
                 onClick={requestPermissions}
                 fullWidth={isMobile}
                 size={isMobile ? 'large' : 'medium'}
@@ -1944,18 +1944,18 @@ export default function CandidateInterviewPage() {
           <Box sx={{mt:3}}>
             <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
               <Box sx={{ textAlign: 'center', mb: 2 }}>
-                <video 
-                  ref={testVideoRef} 
-                  width={isMobile ? 280 : 320} 
-                  height={isMobile ? 210 : 240} 
-                  autoPlay 
-                  muted 
-                  playsInline 
+                <video
+                  ref={testVideoRef}
+                  width={isMobile ? 280 : 320}
+                  height={isMobile ? 210 : 240}
+                  autoPlay
+                  muted
+                  playsInline
                   style={{
                     border:'1px solid #ccc',
                     borderRadius:0,
                     maxWidth: '100%'
-                  }} 
+                  }}
                 />
               </Box>
               <Box sx={{display:'flex',alignItems:'center',mt:1,width:220, mx: 'auto'}}>
@@ -1989,7 +1989,7 @@ export default function CandidateInterviewPage() {
         </Box>
 
         {/* Fixed Bottom Button */}
-        <Box sx={{ 
+        <Box sx={{
           p: isMobile ? 2 : 4,
           pt: isMobile ? 1 : 4,
           bgcolor: 'background.default',
@@ -1997,8 +1997,8 @@ export default function CandidateInterviewPage() {
           borderColor: 'divider',
           flexShrink: 0
         }}>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={startInterview}
             disabled={permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone)}
             fullWidth={isMobile}
@@ -2012,7 +2012,7 @@ export default function CandidateInterviewPage() {
   }
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
@@ -2023,8 +2023,8 @@ export default function CandidateInterviewPage() {
       px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
     }}>
       {/* Fixed Header - WhatsApp Style */}
-      <Box sx={{ 
-        p: isMobile ? 2 : 3, 
+      <Box sx={{
+        p: isMobile ? 2 : 3,
         pb: isMobile ? 1 : 3,
         bgcolor: '#ffffff',
         borderBottom: '1px solid #e0e0e0',
@@ -2073,10 +2073,10 @@ export default function CandidateInterviewPage() {
           )}
           {timeLeft !== null && question?.maxTime && (
             <Box position="relative" display="inline-flex">
-                <CircularProgress 
-                  variant="determinate" 
-                  value={(timeLeft / (question.maxTime || 1)) * 100} 
-                  size={32} 
+                <CircularProgress
+                  variant="determinate"
+                  value={(timeLeft / (question.maxTime || 1)) * 100}
+                  size={32}
                   sx={{ color: '#25d366' }}
                 />
               <Box
@@ -2106,7 +2106,7 @@ export default function CandidateInterviewPage() {
           <LinearProgress
             variant="determinate"
             value={(question.position / total) * 100}
-            sx={{ 
+            sx={{
               mb: 1,
               height: 3,
               borderRadius: 2,
@@ -2125,8 +2125,8 @@ export default function CandidateInterviewPage() {
       </Box>
 
       {/* Chat Area - WhatsApp/Telegram Style */}
-      <Box sx={{ 
-        flex: 1, 
+      <Box sx={{
+        flex: 1,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -2134,7 +2134,7 @@ export default function CandidateInterviewPage() {
         position: 'relative'
       }}>
         {/* Chat Container */}
-        <Box 
+        <Box
           ref={chatScrollRef}
           sx={{
             height: '100%',
@@ -2158,8 +2158,8 @@ export default function CandidateInterviewPage() {
             },
           }}
         >
-          <Box sx={{ 
-            display: 'flex', 
+          <Box sx={{
+            display: 'flex',
             flexDirection: 'column',
             gap: 1,
             minHeight: '100%',
@@ -2180,7 +2180,7 @@ export default function CandidateInterviewPage() {
                     boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
                     position: 'relative'
                   }}>
-                  <Box component="span" sx={{ 
+                  <Box component="span" sx={{
                       animation: `${blink} 1s infinite step-start`,
                       fontSize: '20px',
                       color: '#666'
@@ -2234,7 +2234,7 @@ export default function CandidateInterviewPage() {
                           }}>
                             {/* Live-видео поток */}
                             {previewStream ? (
-                              <video 
+                              <video
                                 ref={chatVideoRef}
                                 autoPlay
                                 muted
@@ -2398,10 +2398,10 @@ export default function CandidateInterviewPage() {
                           </Box>
                         ) : (
                           // Финальное видео с контролами
-                          <video 
+                          <video
                             src={m.video}
                             controls
-                            style={{ 
+                            style={{
                               width: '100%',
                               maxWidth: '280px',
                               borderRadius: '8px'
@@ -2410,7 +2410,7 @@ export default function CandidateInterviewPage() {
                         )}
                       </Box>
                     )}
-                    
+
                     {/* Текстовое сообщение */}
                     {m.text && (
                       <Typography sx={{
@@ -2422,7 +2422,7 @@ export default function CandidateInterviewPage() {
                         {m.text}
                       </Typography>
                     )}
-                    
+
                     {/* Время сообщения */}
                     <Typography sx={{
                       fontSize: '11px',
@@ -2441,7 +2441,7 @@ export default function CandidateInterviewPage() {
       </Box>
 
       {/* Fixed Bottom Controls - WhatsApp Style */}
-      <Box sx={{ 
+      <Box sx={{
         p: isMobile ? 2 : 3,
         bgcolor: '#ffffff',
         borderTop: '1px solid #e0e0e0',
@@ -2449,18 +2449,18 @@ export default function CandidateInterviewPage() {
         boxShadow: '0 -1px 3px rgba(0,0,0,0.1)'
       }}>
       {/* answer input – только аудио */}
-        <Box sx={{ 
-          display: "flex", 
-          gap: 2, 
+        <Box sx={{
+          display: "flex",
+          gap: 2,
           justifyContent: 'space-between',
           flexDirection: isMobile ? 'column' : 'row',
           alignItems: 'center'
         }}>
         {!recording ? (
           <>
-            <Button 
-              variant="contained" 
-              onClick={startRecording} 
+            <Button
+              variant="contained"
+              onClick={startRecording}
               disabled={recording || loadingNextQuestion}
                 fullWidth={isMobile}
                 size={isMobile ? 'large' : 'medium'}
@@ -2482,8 +2482,8 @@ export default function CandidateInterviewPage() {
               >
                 {loadingNextQuestion ? 'Обработка ответа...' : '🎤 Записать ответ'}
             </Button>
-            <Button 
-              variant="outlined" 
+            <Button
+              variant="outlined"
               onClick={() => setSkipDialogOpen(true)}
               disabled={recording || loadingNextQuestion}
               color="primary"
@@ -2510,9 +2510,9 @@ export default function CandidateInterviewPage() {
           </Button>
           </>
         ) : (
-            <Button 
-              variant="contained" 
-              color="error" 
+            <Button
+              variant="contained"
+              color="error"
               onClick={stopRecording}
               fullWidth={isMobile}
               size={isMobile ? 'large' : 'medium'}
@@ -2534,8 +2534,8 @@ export default function CandidateInterviewPage() {
       </Box>
 
       {/* Диалог подтверждения пропуска вопроса - WhatsApp Style */}
-      <Dialog 
-        open={skipDialogOpen} 
+      <Dialog
+        open={skipDialogOpen}
         onClose={() => setSkipDialogOpen(false)}
         PaperProps={{
           sx: {
@@ -2547,7 +2547,7 @@ export default function CandidateInterviewPage() {
           }
         }}
       >
-        <DialogTitle sx={{ 
+        <DialogTitle sx={{
           pb: 1,
           textAlign: 'center',
           borderBottom: '1px solid #e0e0e0'
@@ -2573,16 +2573,16 @@ export default function CandidateInterviewPage() {
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ pt: 2, pb: 1 }}>
-          <Typography sx={{ 
-            color: '#666', 
+          <Typography sx={{
+            color: '#666',
             lineHeight: 1.5,
             textAlign: 'center',
             fontSize: '14px'
           }}>
-            Вы уверены, что хотите пропустить этот вопрос? 
+            Вы уверены, что хотите пропустить этот вопрос?
             <br />
-            <Box component="span" sx={{ 
-              color: '#ff9800', 
+            <Box component="span" sx={{
+              color: '#ff9800',
               fontWeight: 600,
               fontSize: '13px'
             }}>
@@ -2590,14 +2590,14 @@ export default function CandidateInterviewPage() {
             </Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
           </Typography>
         </DialogContent>
-        <DialogActions sx={{ 
-          p: 2, 
+        <DialogActions sx={{
+          p: 2,
           pt: 1,
           gap: 1,
           justifyContent: 'center'
         }}>
-          <Button 
-            onClick={() => setSkipDialogOpen(false)} 
+          <Button
+            onClick={() => setSkipDialogOpen(false)}
             sx={{
               color: '#666',
               borderColor: '#ddd',
@@ -2613,8 +2613,8 @@ export default function CandidateInterviewPage() {
           >
             Отмена
           </Button>
-          <Button 
-            onClick={skipQuestion} 
+          <Button
+            onClick={skipQuestion}
             sx={{
               bgcolor: '#ff9800',
               '&:hover': {
@@ -2627,6 +2627,7 @@ export default function CandidateInterviewPage() {
             variant="contained"
           >
             Пропустить
+
           </Button>
         </DialogActions>
       </Dialog>
