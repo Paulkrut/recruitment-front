@@ -475,6 +475,7 @@ function CandidatesTable({
     {
       field: 'select',
       headerName: '',
+      header: '',
       width: 50,
       renderCell: (params: any) => (
         <Checkbox 
@@ -486,6 +487,7 @@ function CandidatesTable({
     {
       field: 'name',
       headerName: 'Имя',
+      header: 'Имя',
       width: 200,
       renderCell: (params: any) => (
         <Box display="flex" alignItems="center" gap={2}>
@@ -502,6 +504,7 @@ function CandidatesTable({
     {
       field: 'status',
       headerName: 'Статус',
+      header: 'Статус',
       width: 150,
       renderCell: (params: any) => (
         <Chip 
@@ -514,6 +517,7 @@ function CandidatesTable({
     {
       field: 'createdAt',
       headerName: 'Дата добавления',
+      header: 'Дата добавления',
       width: 150,
       renderCell: (params: any) => (
         <Typography variant="body2">
@@ -524,6 +528,7 @@ function CandidatesTable({
     {
       field: 'actions',
       headerName: 'Действия',
+      header: 'Действия',
       width: 200,
       renderCell: (params: any) => (
         <Box display="flex" gap={1}>
@@ -546,7 +551,7 @@ function CandidatesTable({
               color="error"
               onClick={() => onDelete(params.row.id)}
             >
-              <DeleteIcon size={16} />
+              <DeleteIcon fontSize="small" />
             </IconButton>
           </Tooltip>
         </Box>
@@ -558,8 +563,6 @@ function CandidatesTable({
     <DataTable 
       rows={candidates} 
       columns={columns} 
-      pageSize={10}
-      rowsPerPageOptions={[10, 25, 50]}
       checkboxSelection
       disableSelectionOnClick
       onSelectionModelChange={(newSelection: any) => {
