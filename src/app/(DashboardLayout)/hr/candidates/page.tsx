@@ -34,6 +34,8 @@ import {
   Rating,
   Switch,
   FormControlLabel,
+  Checkbox,
+  Fab,
 } from "@mui/material";
 import {
   IconPlus,
@@ -53,8 +55,9 @@ import {
   IconMail,
   IconPhone,
   IconCalendar,
-  IconClock,
+  IconArrowsDiff,
   IconBuilding,
+  IconClock,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
@@ -103,6 +106,10 @@ function EnhancedCandidateTable({
   onStatusFilterChange,
   scoreFilter,
   onScoreFilterChange,
+  compareMode,
+  selectedCandidates,
+  onCandidateSelect,
+  onSelectAll,
 }: { 
   candidates: CandidateRow[];
   sortConfig: SortConfig;
@@ -111,6 +118,10 @@ function EnhancedCandidateTable({
   onStatusFilterChange: (status: string) => void;
   scoreFilter: string;
   onScoreFilterChange: (score: string) => void;
+  compareMode: boolean;
+  selectedCandidates: number[];
+  onCandidateSelect: (id: number) => void;
+  onSelectAll: () => void;
 }) {
   const router = useRouter();
 
@@ -224,6 +235,16 @@ function EnhancedCandidateTable({
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: 'primary.main' }}>
+            {compareMode && (
+              <TableCell sx={{ color: 'white', fontWeight: 'bold', width: 50 }}>
+                <Checkbox
+                  checked={selectedCandidates.length === candidates.length && candidates.length > 0}
+                  indeterminate={selectedCandidates.length > 0 && selectedCandidates.length < candidates.length}
+                  onChange={onSelectAll}
+                  sx={{ color: 'white' }}
+                />
+              </TableCell>
+            )}
             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
               Кандидат
             </TableCell>
@@ -270,6 +291,14 @@ function EnhancedCandidateTable({
                 transition: 'background-color 0.2s'
               }}
             >
+              {compareMode && (
+                <TableCell>
+                  <Checkbox
+                    checked={selectedCandidates.includes(candidate.id)}
+                    onChange={() => onCandidateSelect(candidate.id)}
+                  />
+                </TableCell>
+              )}
               <TableCell>
                 <Box display="flex" alignItems="center" gap={2}>
                   <Avatar 
@@ -591,6 +620,10 @@ export default function HRCandidatesPage() {
   const [vacancyFilter, setVacancyFilter] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  
+  // Состояния для сравнения кандидатов
+  const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
+  const [compareMode, setCompareMode] = useState(false);
 
   useEffect(() => {
     fetchCandidates();
@@ -644,6 +677,29 @@ export default function HRCandidatesPage() {
       setLoading(false);
     }
   }
+
+  // Функции для сравнения кандидатов
+  const handleCandidateSelect = (candidateId: number) => {
+    setSelectedCandidates(prev => 
+      prev.includes(candidateId) 
+        ? prev.filter(id => id !== candidateId)
+        : [...prev, candidateId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedCandidates.length === paginatedCandidates.length) {
+      setSelectedCandidates([]);
+    } else {
+      setSelectedCandidates(paginatedCandidates.map(c => c.id));
+    }
+  };
+
+  const handleCompare = () => {
+    if (selectedCandidates.length >= 2) {
+      router.push(`/hr/candidates/compare?ids=${selectedCandidates.join(',')}`);
+    }
+  };
 
   const filteredCandidates = candidates.filter((candidate) => {
     // Поиск по тексту
@@ -752,6 +808,17 @@ export default function HRCandidatesPage() {
             Кандидаты ({candidates.length})
           </Typography>
           <Box display="flex" gap={1}>
+            <Tooltip title={compareMode ? "Выйти из режима сравнения" : "Режим сравнения"}>
+              <IconButton
+                onClick={() => {
+                  setCompareMode(!compareMode);
+                  setSelectedCandidates([]);
+                }}
+                color={compareMode ? "primary" : "default"}
+              >
+                <IconArrowsDiff size={20} />
+              </IconButton>
+            </Tooltip>
             <Tooltip title="Таблица">
               <IconButton
                 onClick={() => setViewMode("table")}
@@ -770,6 +837,29 @@ export default function HRCandidatesPage() {
             </Tooltip>
           </Box>
         </Box>
+
+        {/* Индикатор режима сравнения */}
+        {compareMode && (
+          <Alert 
+            severity="info" 
+            sx={{ mb: 2 }}
+            action={
+              selectedCandidates.length >= 2 && (
+                <Button
+                  color="inherit"
+                  size="small"
+                  onClick={handleCompare}
+                  startIcon={<IconArrowsDiff />}
+                >
+                  Сравнить ({selectedCandidates.length})
+                </Button>
+              )
+            }
+          >
+            Режим сравнения активен. Выбрано кандидатов: {selectedCandidates.length}
+            {selectedCandidates.length < 2 && " (минимум 2 для сравнения)"}
+          </Alert>
+        )}
 
         <TextField
           fullWidth
@@ -901,6 +991,10 @@ export default function HRCandidatesPage() {
                 setScoreFilter(score);
                 setCurrentPage(1);
               }}
+              compareMode={compareMode}
+              selectedCandidates={selectedCandidates}
+              onCandidateSelect={handleCandidateSelect}
+              onSelectAll={handleSelectAll}
             />
             
             {/* Пагинация */}
@@ -927,6 +1021,22 @@ export default function HRCandidatesPage() {
           </Grid>
         )}
       </Box>
+      
+      {/* Плавающая кнопка сравнения */}
+      {compareMode && selectedCandidates.length >= 2 && (
+        <Fab
+          color="primary"
+          onClick={handleCompare}
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <IconArrowsDiff />
+        </Fab>
+      )}
     </PageContainer>
   );
 } 

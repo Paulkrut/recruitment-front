@@ -20,6 +20,12 @@ import PageContainer from "@/app/components/container/PageContainer";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+// Функция для статического экспорта
+export async function generateStaticParams() {
+  // Возвращаем пустой массив, так как ID генерируются динамически
+  return [];
+}
+
 export default function HRSessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();

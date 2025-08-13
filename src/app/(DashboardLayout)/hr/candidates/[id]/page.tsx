@@ -52,6 +52,12 @@ import Rating from '@mui/material/Rating';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+// Функция для статического экспорта
+export async function generateStaticParams() {
+  // Возвращаем пустой массив, так как ID генерируются динамически
+  return [];
+}
+
 function getStatusLabel(status: string) {
   switch (status) {
     case "completed":
@@ -726,8 +732,8 @@ export default function CandidateDetailPage() {
             <Button onClick={()=>setCompareOpen(false)}>Отмена</Button>
             <Button variant="contained" color="primary" disabled={selectedCompare.length===0} onClick={()=>{
               setCompareOpen(false);
-              // Реализовать переход на сравнение или показать сравнение в попапе
-              // Например, router.push(`/hr/candidates/compare?ids=${candId},${selectedCompare.join(',')}`)
+              const allIds = [candId, ...selectedCompare];
+              router.push(`/hr/candidates/compare?ids=${allIds.join(',')}`);
             }}>Сравнить</Button>
           </DialogActions>
         </Dialog>

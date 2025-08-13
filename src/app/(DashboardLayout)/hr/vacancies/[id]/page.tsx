@@ -2,10 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -40,6 +40,12 @@ import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
+
+// Функция для статического экспорта
+export async function generateStaticParams() {
+  // Возвращаем пустой массив, так как ID генерируются динамически
+  return [];
+}
 
 function getStatusLabel(status: string) {
   switch (status) {
@@ -105,6 +111,15 @@ export default function HRVacancyDetailPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [snackbar, setSnackbar] = useState('');
   const [tab, setTab] = useState('1');
+
+  // Функция для выбора всех кандидатов
+  const handleSelectAll = () => {
+    if (selectedCandidates.length === filteredCandidates.length) {
+      setSelectedCandidates([]);
+    } else {
+      setSelectedCandidates(filteredCandidates.map(c => c.id));
+    }
+  };
 
   // Получаем параметры из URL
   const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
@@ -234,8 +249,8 @@ export default function HRVacancyDetailPage() {
                       <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={()=>setAddDialogOpen(true)} sx={{fontWeight:600}}>
                         Добавить кандидата
                       </Button>
-                      <Button variant="contained" color="primary" disabled={selectedCandidates.length !== 2} onClick={()=>setCompareOpen(true)}>
-                        Сравнить выбранных
+                      <Button variant="contained" color="primary" disabled={selectedCandidates.length < 2} onClick={()=>setCompareOpen(true)}>
+                        Сравнить выбранных ({selectedCandidates.length})
                       </Button>
                     </Box>
                   </Box>
@@ -250,18 +265,48 @@ export default function HRVacancyDetailPage() {
                       <Button key={st} size="small" variant={statusFilter===st?'contained':'outlined'} color="primary" onClick={()=>setStatusFilter(st)} sx={{fontWeight:600}}>{getStatusLabel(st)}</Button>
                     ))}
                   </Box>
+
+                  {/* Индикатор выбранных кандидатов */}
+                  {selectedCandidates.length > 0 && (
+                    <Alert 
+                      severity="info" 
+                      sx={{ mb: 2 }}
+                      action={
+                        selectedCandidates.length >= 2 && (
+                          <Button
+                            color="inherit"
+                            size="small"
+                            onClick={() => setCompareOpen(true)}
+                            startIcon={<IconArrowsDiff />}
+                          >
+                            Сравнить ({selectedCandidates.length})
+                          </Button>
+                        )
+                      }
+                    >
+                      Выбрано кандидатов: {selectedCandidates.length}
+                      {selectedCandidates.length < 2 && " (минимум 2 для сравнения)"}
+                    </Alert>
+                  )}
                   <DataTable columns={[
-                    {field:'select',header:'',render:(r:any)=>(
+                    {field:'select',header:(
+                      <Checkbox
+                        checked={selectedCandidates.length === filteredCandidates.length && filteredCandidates.length > 0}
+                        indeterminate={selectedCandidates.length > 0 && selectedCandidates.length < filteredCandidates.length}
+                        onChange={handleSelectAll}
+                        size="small"
+                        color="primary"
+                      />
+                    ),render:(r:any)=>(
                       <Checkbox
                         checked={selectedCandidates.includes(r.id)}
                         onChange={e => {
                           if (e.target.checked) {
-                            if (selectedCandidates.length < 2) setSelectedCandidates([...selectedCandidates, r.id]);
+                            setSelectedCandidates([...selectedCandidates, r.id]);
                           } else {
                             setSelectedCandidates(selectedCandidates.filter(id => id !== r.id));
                           }
                         }}
-                        disabled={selectedCandidates.length === 2 && !selectedCandidates.includes(r.id)}
                         size="small"
                         color="primary"
                       />
@@ -492,36 +537,69 @@ export default function HRVacancyDetailPage() {
       <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>Сравнение кандидатов</DialogTitle>
         <DialogContent sx={{ pt: '16px !important' }}>
-          {selectedCandidates.length === 2 ? (
-            <Grid container spacing={2}>
-              {selectedCandidates.map((id, idx) => {
-                const cand = candidates.find((c:any) => c.id === id);
-                return (
-                  <Grid item xs={12} sm={6} key={id}>
-                    <Card sx={{p:2}}>
-                      <Box display="flex" alignItems="center" gap={2} mb={2}>
-                        <Avatar sx={{ width: 40, height: 40, bgcolor: '#1976d2', fontWeight: 700 }}>{cand.name ? cand.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
-                        <Typography variant="h6" fontWeight={700}>{cand.name}</Typography>
-                      </Box>
-                      <Typography variant="body2">Email: {cand.email || '-'}</Typography>
-                      <Typography variant="body2">Телефон: {cand.phone || '-'}</Typography>
-                      <Typography variant="body2">Статус: {getStatusLabel(cand.status)}</Typography>
-                      <Typography variant="body2">Оценка: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
-                      <Typography variant="body2">Дата добавления: {cand.createdAt ? format(new Date(cand.createdAt), 'dd.MM.yyyy HH:mm') : '-'}</Typography>
-                      <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}>Подробнее</Button>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
+          {selectedCandidates.length >= 2 ? (
+            <Box>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Выбрано кандидатов: {selectedCandidates.length}
+              </Typography>
+              <Grid container spacing={2}>
+                {selectedCandidates.map((id, idx) => {
+                  const cand = candidates.find((c:any) => c.id === id);
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={id}>
+                      <Card sx={{p:2}}>
+                        <Box display="flex" alignItems="center" gap={2} mb={2}>
+                          <Avatar sx={{ width: 40, height: 40, bgcolor: '#1976d2', fontWeight: 700 }}>{cand.name ? cand.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
+                          <Typography variant="h6" fontWeight={700}>{cand.name}</Typography>
+                        </Box>
+                        <Typography variant="body2">Email: {cand.email || '-'}</Typography>
+                        <Typography variant="body2">Телефон: {cand.phone || '-'}</Typography>
+                        <Typography variant="body2">Статус: {getStatusLabel(cand.status)}</Typography>
+                        <Typography variant="body2">Оценка: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
+                        <Typography variant="body2">Дата добавления: {cand.createdAt ? format(new Date(cand.createdAt), 'dd.MM.yyyy HH:mm') : '-'}</Typography>
+                        <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}>Подробнее</Button>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Box>
           ) : (
-            <Typography>Выберите двух кандидатов для сравнения.</Typography>
+            <Typography>Выберите минимум 2 кандидатов для сравнения.</Typography>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={()=>setCompareOpen(false)}>Закрыть</Button>
+          {selectedCandidates.length >= 2 && (
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={() => {
+                setCompareOpen(false);
+                router.push(`/hr/candidates/compare?ids=${selectedCandidates.join(',')}`);
+              }}
+            >
+              AI-сравнение ({selectedCandidates.length})
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
+      
+      {/* Плавающая кнопка сравнения */}
+      {selectedCandidates.length >= 2 && (
+        <Fab
+          color="primary"
+          onClick={() => setCompareOpen(true)}
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+        >
+          <IconArrowsDiff />
+        </Fab>
+      )}
     </PageContainer>
   );
 }

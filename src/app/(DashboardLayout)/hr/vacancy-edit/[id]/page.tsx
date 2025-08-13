@@ -31,6 +31,12 @@ import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+// Функция для статического экспорта
+export async function generateStaticParams() {
+  // Возвращаем пустой массив, так как ID генерируются динамически
+  return [];
+}
+
 interface QuestionDraft {
   id?: number;
   text: string;

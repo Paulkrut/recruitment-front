@@ -53,6 +53,13 @@ const API_BASE =
 
 const steps = ["Подготовка", "Тест оборудования", "Ответы", "Финиш"];
 
+// Функция для статического экспорта
+export async function generateStaticParams() {
+  // Возвращаем пустой массив, так как токены генерируются динамически
+  // Это позволит странице работать в статическом экспорте
+  return [];
+}
+
 export default function CandidateInterviewPage() {
   const { token } = useParams<{ token: string }>();
   const theme = useTheme();

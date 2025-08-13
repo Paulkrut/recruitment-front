@@ -123,7 +123,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                               (e.target as HTMLElement).style.textDecoration = 'none';
                             }}
                           >
-                            {candidate.name}
+                        {candidate.name}
                           </Link>
                         ) : (
                           candidate.name
