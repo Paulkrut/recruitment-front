@@ -94,12 +94,9 @@ function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: ()
 export default function VacancyDetailClient() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const [token, setToken] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [compareOpen, setCompareOpen] = useState(false);
-  const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
@@ -184,15 +181,6 @@ export default function VacancyDetailClient() {
               onClick={() => router.push(`/hr/vacancy-edit/${id}`)}
             >
               Редактировать
-            </Button>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              disabled={selectedCandidates.length < 2} 
-              onClick={()=>setCompareOpen(true)}
-            >
-              <IconArrowsDiff size={20} style={{marginRight: 8}}/>
-              Сравнить кандидатов
             </Button>
           </Box>
         </Box>
@@ -306,10 +294,6 @@ export default function VacancyDetailClient() {
             <TabPanel value="1">
               <CandidatesTable 
                 candidates={candidates} 
-                onSelect={(id) => setSelectedCandidates(prev => 
-                  prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-                )}
-                selectedCandidates={selectedCandidates}
                 onDelete={(id) => { setCandidateToDelete(id); setDeleteDialogOpen(true); }}
                 onCopyLink={handleCopyLink}
                 onShowQR={handleShowQR}
@@ -319,10 +303,6 @@ export default function VacancyDetailClient() {
             <TabPanel value="2">
               <CandidatesTable 
                 candidates={candidates.filter(c => c.status === 'new')} 
-                onSelect={(id) => setSelectedCandidates(prev => 
-                  prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-                )}
-                selectedCandidates={selectedCandidates}
                 onDelete={(id) => { setCandidateToDelete(id); setDeleteDialogOpen(true); }}
                 onCopyLink={handleCopyLink}
                 onShowQR={handleShowQR}
@@ -332,10 +312,6 @@ export default function VacancyDetailClient() {
             <TabPanel value="3">
               <CandidatesTable 
                 candidates={candidates.filter(c => c.status === 'in_progress')} 
-                onSelect={(id) => setSelectedCandidates(prev => 
-                  prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-                )}
-                selectedCandidates={selectedCandidates}
                 onDelete={(id) => { setCandidateToDelete(id); setDeleteDialogOpen(true); }}
                 onCopyLink={handleCopyLink}
                 onShowQR={handleShowQR}
@@ -345,10 +321,6 @@ export default function VacancyDetailClient() {
             <TabPanel value="4">
               <CandidatesTable 
                 candidates={candidates.filter(c => c.status === 'completed')} 
-                onSelect={(id) => setSelectedCandidates(prev => 
-                  prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-                )}
-                selectedCandidates={selectedCandidates}
                 onDelete={(id) => { setCandidateToDelete(id); setDeleteDialogOpen(true); }}
                 onCopyLink={handleCopyLink}
                 onShowQR={handleShowQR}
@@ -357,44 +329,6 @@ export default function VacancyDetailClient() {
           </TabContext>
         </CardContent>
       </Card>
-
-      {/* Диалог сравнения */}
-      <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Сравнение кандидатов</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Выбрано кандидатов: {selectedCandidates.length}
-          </Typography>
-          <Box display="flex" flexDirection="column" gap={1}>
-            {candidates
-              .filter(c => selectedCandidates.includes(c.id))
-              .map(candidate => (
-                <Box key={candidate.id} display="flex" alignItems="center" gap={2} p={2} border={1} borderColor="divider" borderRadius={1}>
-                  <Avatar sx={{ width: 32, height: 32, fontSize: '0.875rem' }}>
-                    {candidate.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                  </Avatar>
-                  <Box flex={1}>
-                    <Typography variant="subtitle1">{candidate.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">{candidate.email}</Typography>
-                  </Box>
-                  <Chip label={getStatusLabel(candidate.status)} size="small" />
-                </Box>
-              ))}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCompareOpen(false)}>Отмена</Button>
-          <Button 
-            variant="contained" 
-            onClick={() => {
-              setCompareOpen(false);
-              router.push(`/hr/candidates/compare?ids=${selectedCandidates.join(',')}`);
-            }}
-          >
-            Сравнить
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       {/* QR-код диалог */}
       <Dialog open={qrDialogOpen} onClose={() => setQrDialogOpen(false)} maxWidth="sm" fullWidth>
@@ -456,15 +390,11 @@ export default function VacancyDetailClient() {
 // Компонент таблицы кандидатов
 function CandidatesTable({ 
   candidates, 
-  onSelect, 
-  selectedCandidates, 
   onDelete, 
   onCopyLink, 
   onShowQR 
 }: {
   candidates: any[];
-  onSelect: (id: number) => void;
-  selectedCandidates: number[];
   onDelete: (id: number) => void;
   onCopyLink: (link: string) => void;
   onShowQR: (link: string) => void;
@@ -472,18 +402,6 @@ function CandidatesTable({
   const router = useRouter();
 
   const columns = [
-    {
-      field: 'select',
-      headerName: '',
-      header: '',
-      width: 50,
-      renderCell: (params: any) => (
-        <Checkbox 
-          checked={selectedCandidates.includes(params.row.id)} 
-          onChange={() => onSelect(params.row.id)}
-        />
-      )
-    },
     {
       field: 'name',
       headerName: 'Имя',
@@ -563,11 +481,6 @@ function CandidatesTable({
     <DataTable 
       rows={candidates} 
       columns={columns} 
-      checkboxSelection
-      disableSelectionOnClick
-      onSelectionModelChange={(newSelection: any) => {
-        newSelection.forEach((id: number) => onSelect(id));
-      }}
     />
   );
 } 
