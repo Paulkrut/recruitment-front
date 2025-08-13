@@ -62,8 +62,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   generateEtags: false,
 
-
-
+  output: 'export',
 };
 
 export default nextConfig;
