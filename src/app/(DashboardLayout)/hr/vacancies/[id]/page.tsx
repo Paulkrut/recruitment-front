@@ -8,6 +8,7 @@ import {
   IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
+import type { Column } from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import QRCode from 'react-qr-code';
@@ -282,6 +283,7 @@ export default function HRVacancyDetailPage() {
                       {selectedCandidates.length < 2 && " (минимум 2 для сравнения)"}
                     </Alert>
                   )}
+                  
                   <DataTable columns={[
                     {field:'select',header:(
                       <Checkbox
@@ -377,7 +379,7 @@ export default function HRVacancyDetailPage() {
                                   }
                                 })
                                 .catch(e => {
-                                  setSnackbar(`Ошибка удаления: ${e.message}`);
+                                  setSnackbar(`Ошибка: ${e.message}`);
                                 });
                             }
                           }}>
@@ -385,7 +387,7 @@ export default function HRVacancyDetailPage() {
                           </IconButton>
                         </Tooltip>
                       </Box>
-                    )},
+                    )}
                   ]} rows={filteredCandidates} defaultRowsPerPage={7} />
                   {filteredCandidates.length === 0 && (
                     <Box textAlign="center" py={4}>
