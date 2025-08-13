@@ -1,50 +1,51 @@
-# Многоэтапная сборка для оптимизации размера образа
-FROM node:18-alpine AS deps
-# Проверяем https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine
-RUN apk add --no-cache libc6-compat
+# Используем официальный Node.js образ с Alpine Linux для меньшего размера
+FROM node:22-alpine AS base
+
+# Устанавливаем рабочую директорию
 WORKDIR /app
 
 # Копируем файлы зависимостей
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-  elif [ -f package-lock.json ]; then npm ci; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
-  else echo "Lockfile not found." && exit 1; \
-  fi
+COPY package*.json ./
+COPY yarn.lock ./
 
-# Сборка приложения
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Устанавливаем зависимости
+RUN yarn install --frozen-lockfile --production=false
+
+# Копируем исходный код
 COPY . .
 
-# Создаем .next папку
-RUN yarn build
-
-# Production образ
-FROM node:18-alpine AS runner
-WORKDIR /app
-
-ENV NODE_ENV production
 # Создаем пользователя для безопасности
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Копируем только необходимые файлы
-COPY --from=builder /app/public ./public
+# Собираем приложение
+RUN yarn build
 
-# Автоматически используем standalone output
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Создаем production образ
+FROM node:22-alpine AS runner
 
+WORKDIR /app
+
+# Создаем пользователя
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Копируем необходимые файлы из base образа
+COPY --from=base /app/public ./public
+COPY --from=base /app/.next/standalone ./
+COPY --from=base /app/.next/static ./.next/static
+
+# Устанавливаем права доступа
+RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 # Открываем порт (важно для Timeweb Cloud)
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+# Устанавливаем переменные окружения
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
 # Запускаем приложение
 CMD ["node", "server.js"] 

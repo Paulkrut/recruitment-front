@@ -5,6 +5,7 @@
 - Репозиторий в Bitbucket
 - Dockerfile в корне репозитория
 - Next.js приложение с настроенным `output: 'standalone'`
+- **Node.js 22** (LTS версия)
 
 ## 🔧 Настройка проекта
 
@@ -17,7 +18,11 @@ const nextConfig: NextConfig = {
 ```
 
 ### 2. Dockerfile
-Dockerfile уже создан и настроен для production сборки.
+Dockerfile настроен для production сборки с **Node.js 22**:
+- Многоэтапная сборка для оптимизации размера
+- Alpine Linux для минимального размера образа
+- Безопасность: непривилегированный пользователь
+- Порт 3000 для Timeweb Cloud
 
 ### 3. .dockerignore
 Файл оптимизирует сборку, исключая ненужные файлы.
