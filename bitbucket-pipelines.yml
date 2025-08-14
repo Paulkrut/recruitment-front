@@ -7,26 +7,27 @@ pipelines:
           name: "PM2 Deployment with Nginx Proxy"
           runs-on:
             - self.hosted
+            - linux.shell
           deployment: production
           script:
             - echo "🚀 Начинаю PM2 деплой с nginx прокси..."
 
             - echo "📂 Переход в директорию проекта..."
             - cd /home/ubuntu/sofihr.ru
-            
+
             - echo "📥 Получение последних изменений..."
             - git fetch origin
             - git reset --hard origin/master
-            
+
             - echo "🔧 Обновление прав на скрипты..."
             - chmod +x deploy-pm2-nginx-proxy.sh
-            
+
             - echo "🚀 Запуск PM2 деплоя с nginx прокси..."
             - ./deploy-pm2-nginx-proxy.sh
-            
+
             - echo "📊 Показ статуса развертывания..."
             - ./deploy-pm2-nginx-proxy.sh status
-            
+
             - echo "✅ PM2 деплой завершен!"
             - echo "🎉 PM2 деплой с nginx прокси успешно выполнен!"
             - echo "🌐 Сайт доступен"
