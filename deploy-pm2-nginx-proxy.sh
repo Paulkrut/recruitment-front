@@ -104,7 +104,7 @@ build_new_version() {
         print_status "📁 Копируем существующие node_modules для ускорения..."
         cp -r ../node_modules ./
     fi
-    
+
     export TERM=dumb
     export YARN_ENABLE_PROGRESS_BARS=0
     
@@ -319,7 +319,7 @@ main() {
 
     local END_TIME=$(date +%s)
     local DURATION=$((END_TIME - START_TIME))
-    
+
     print_status "✅ PM2 deployment with nginx proxy completed successfully!"
     print_status "⏱️ Время выполнения: ${DURATION} секунд"
     print_status "📊 Current PM2 status:"

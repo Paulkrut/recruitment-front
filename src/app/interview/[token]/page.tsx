@@ -522,6 +522,62 @@ export default function CandidateInterviewPage() {
     checkAndroidPermissions();
   }, [prepared, testStream]);
 
+  // Специальная обработка для Telegram браузера
+  useEffect(() => {
+    const isTelegram = /TelegramWebApp/i.test(navigator.userAgent) || 
+                      /Telegram/i.test(navigator.userAgent) ||
+                      (window as any).Telegram?.WebApp;
+    
+    if (isTelegram) {
+      console.log('Telegram браузер обнаружен, применяем специальные настройки...');
+      
+      // Принудительно показываем блок разрешений в Telegram браузере
+      if (prepared && !permissionsRequested) {
+        setTimeout(() => {
+          console.log('Принудительно запрашиваем разрешения в Telegram браузере...');
+          setPermissionsRequested(true);
+        }, 1000);
+      }
+    }
+  }, [prepared, permissionsRequested]);
+
+  // Специальная обработка для мобильных браузеров
+  useEffect(() => {
+    const isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobileBrowser) {
+      console.log('Мобильный браузер обнаружен, применяем специальные настройки...');
+      
+      // Убираем блокировку прокрутки на мобильных устройствах
+      document.body.style.overflow = 'auto';
+      document.body.style.position = 'relative';
+      
+      // Добавляем специальные стили для мобильных устройств
+      const style = document.createElement('style');
+      style.textContent = `
+        @media (max-width: 768px) {
+          body {
+            overflow: auto !important;
+            position: relative !important;
+            -webkit-overflow-scrolling: touch !important;
+          }
+          .MuiBox-root {
+            overflow: visible !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      return () => {
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        if (style.parentNode) {
+          style.parentNode.removeChild(style);
+        }
+      };
+    }
+  }, []);
+
   async function startInterview(){
     // Проверяем разрешения перед началом интервью
     if (!permissionsGranted.camera || !permissionsGranted.microphone) {
@@ -2000,7 +2056,8 @@ export default function CandidateInterviewPage() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden',
+        // Убираем overflow: hidden для мобильных устройств
+        overflow: isMobile ? 'visible' : 'hidden',
         maxWidth: '1200px', // Ограничение ширины для больших мониторов
         mx: 'auto', // Центрирование на больших экранах
         width: '100%', // Полная ширина на мобильных
@@ -2025,11 +2082,28 @@ export default function CandidateInterviewPage() {
         <Box sx={{
           flex: 1,
           overflow: 'auto',
-          p: isMobile ? 2 : 4
+          p: isMobile ? 2 : 4,
+          // Убираем overflow: hidden для мобильных устройств
+          overflowY: isMobile ? 'scroll' : 'auto',
+          // Добавляем поддержку для мобильных браузеров
+          WebkitOverflowScrolling: 'touch',
+          // Убираем блокировку прокрутки на мобильных
+          overscrollBehavior: isMobile ? 'contain' : 'auto'
         }}>
           {/* Проверка разрешений */}
           {permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone) && (
             <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
+              {/* Отладочная информация для мобильных устройств */}
+              {isMobile && (
+                <Box sx={{ mb: 2, p: 1, bgcolor: '#fff3cd', borderRadius: 1, fontSize: '12px' }}>
+                  <Typography variant="caption" color="warning.dark">
+                    🔍 Отладка: permissionsRequested={String(permissionsRequested)}, 
+                    camera={String(permissionsGranted.camera)}, 
+                    microphone={String(permissionsGranted.microphone)}
+                  </Typography>
+                </Box>
+              )}
+              
               <Typography variant="h6" color="warning.dark" gutterBottom>
                 ⚠️ Требуется доступ к камере и микрофону
               </Typography>
@@ -2146,14 +2220,38 @@ export default function CandidateInterviewPage() {
           bgcolor: 'background.default',
           borderTop: '1px solid',
           borderColor: 'divider',
-          flexShrink: 0
+          flexShrink: 0,
+          // Добавляем z-index для мобильных устройств
+          zIndex: isMobile ? 1000 : 'auto',
+          // Убираем тень на мобильных для лучшей производительности
+          boxShadow: isMobile ? 'none' : '0 -1px 3px rgba(0,0,0,0.1)'
         }}>
+          {/* Отладочная информация для мобильных устройств */}
+          {isMobile && (
+            <Box sx={{ mb: 2, p: 1, bgcolor: '#f5f5f5', borderRadius: 1, fontSize: '12px' }}>
+              <Typography variant="caption" color="text.secondary">
+                🔍 Отладка: permissionsRequested={String(permissionsRequested)}, 
+                camera={String(permissionsGranted.camera)}, 
+                microphone={String(permissionsGranted.microphone)}
+              </Typography>
+            </Box>
+          )}
+          
           <Button
             variant="contained"
             onClick={startInterview}
             disabled={permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone)}
             fullWidth={isMobile}
             size={isMobile ? 'large' : 'medium'}
+            // Добавляем стили для лучшей видимости на мобильных
+            sx={{
+              ...(isMobile && {
+                minHeight: '48px',
+                fontSize: '16px',
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              })
+            }}
           >
             Начать
           </Button>
@@ -2167,7 +2265,8 @@ export default function CandidateInterviewPage() {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'hidden',
+      // Убираем overflow: hidden для мобильных устройств
+      overflow: isMobile ? 'visible' : 'hidden',
       maxWidth: '1200px', // Ограничение ширины для больших мониторов
       mx: 'auto', // Центрирование на больших экранах
       width: '100%', // Полная ширина на мобильных
@@ -2278,7 +2377,8 @@ export default function CandidateInterviewPage() {
       {/* Chat Area - WhatsApp/Telegram Style */}
       <Box sx={{
         flex: 1,
-        overflow: 'hidden',
+        // Убираем overflow: hidden для мобильных устройств
+        overflow: isMobile ? 'visible' : 'hidden',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: '#f0f2f5', // WhatsApp-like background
@@ -2289,11 +2389,14 @@ export default function CandidateInterviewPage() {
           ref={chatScrollRef}
           sx={{
             height: '100%',
-            overflow: 'auto',
+            // Улучшаем прокрутку для мобильных устройств
+            overflow: isMobile ? 'scroll' : 'auto',
             p: { xs: 1, sm: 2 },
             // WhatsApp-like scrolling
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'thin',
+            // Убираем блокировку прокрутки на мобильных
+            overscrollBehavior: isMobile ? 'contain' : 'auto',
             '&::-webkit-scrollbar': {
               width: '4px',
             },
@@ -2366,7 +2469,7 @@ export default function CandidateInterviewPage() {
                   }}>
                     {/* Видео сообщение */}
                     {m.video && (
-                      <Box sx={{ mb: 1, borderRadius: '8px', overflow: 'hidden' }}>
+                      <Box sx={{ mb: 1, borderRadius: '8px', overflow: isMobile ? 'visible' : 'hidden' }}>
                         {m.video === "live" ? (
                           // Live-поток во время записи
                           <Box sx={{
@@ -2381,7 +2484,7 @@ export default function CandidateInterviewPage() {
                             color: '#fff',
                             fontSize: '14px',
                             position: 'relative',
-                            overflow: 'hidden'
+                            overflow: isMobile ? 'visible' : 'hidden'
                           }}>
                             {/* Live-видео поток */}
                             {previewStream ? (
@@ -2534,7 +2637,7 @@ export default function CandidateInterviewPage() {
                                   bgcolor: '#fff',
                                   borderRadius: '1px',
                                   position: 'relative',
-                                  overflow: 'hidden'
+                                  overflow: isMobile ? 'visible' : 'hidden'
                                 }}>
                                   <Box sx={{
                                     width: `${Math.min(micLevel * 2, 100)}%`,
