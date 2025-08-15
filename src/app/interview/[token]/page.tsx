@@ -429,7 +429,7 @@ export default function CandidateInterviewPage() {
   const forceCheckPermissions = async () => {
     try {
       console.log('Принудительная проверка разрешений...');
-      
+
       // Пытаемся получить поток для проверки реального доступа
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -504,10 +504,10 @@ export default function CandidateInterviewPage() {
     const checkAndroidPermissions = async () => {
       // Проверяем, является ли устройство Android
       const isAndroid = /Android/i.test(navigator.userAgent);
-      
+
       if (isAndroid && prepared && !testStream) {
         console.log('Android устройство обнаружено, выполняем дополнительную проверку разрешений...');
-        
+
         // Небольшая задержка для стабилизации
         setTimeout(async () => {
           try {
@@ -524,13 +524,13 @@ export default function CandidateInterviewPage() {
 
   // Специальная обработка для Telegram браузера
   useEffect(() => {
-    const isTelegram = /TelegramWebApp/i.test(navigator.userAgent) || 
+    const isTelegram = /TelegramWebApp/i.test(navigator.userAgent) ||
                       /Telegram/i.test(navigator.userAgent) ||
                       (window as any).Telegram?.WebApp;
-    
+
     if (isTelegram) {
       console.log('Telegram браузер обнаружен, применяем специальные настройки...');
-      
+
       // Принудительно показываем блок разрешений в Telegram браузере
       if (prepared && !permissionsRequested) {
         setTimeout(() => {
@@ -544,14 +544,14 @@ export default function CandidateInterviewPage() {
   // Специальная обработка для мобильных браузеров
   useEffect(() => {
     const isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
+
     if (isMobileBrowser) {
       console.log('Мобильный браузер обнаружен, применяем специальные настройки...');
-      
+
       // Убираем блокировку прокрутки на мобильных устройствах
       document.body.style.overflow = 'auto';
       document.body.style.position = 'relative';
-      
+
       // Добавляем специальные стили для мобильных устройств
       const style = document.createElement('style');
       style.textContent = `
@@ -567,7 +567,7 @@ export default function CandidateInterviewPage() {
         }
       `;
       document.head.appendChild(style);
-      
+
       return () => {
         document.body.style.overflow = '';
         document.body.style.position = '';
@@ -1184,6 +1184,7 @@ export default function CandidateInterviewPage() {
       const response = await fetch(`${API_BASE}/api/public/interview/${token}/generate-feedback`, {
         method: 'POST'
       });
+
 
       if (response.ok) {
         const data = await response.json();
@@ -2092,7 +2093,7 @@ export default function CandidateInterviewPage() {
           {permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone) && (
             <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
 
-              
+
               <Typography variant="h6" color="warning.dark" gutterBottom>
                 ⚠️ Требуется доступ к камере и микрофону
               </Typography>
@@ -2102,11 +2103,11 @@ export default function CandidateInterviewPage() {
                 {!permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
                 {permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
               </Typography>
-              
+
               {/* Специальная информация для Android */}
               {/Android/i.test(navigator.userAgent) && (
                 <Typography variant="body2" sx={{mb:2, fontStyle: 'italic', color: 'warning.dark'}}>
-                  💡 <strong>Для Android:</strong> Если разрешения уже предоставлены, но кнопка не исчезает, 
+                  💡 <strong>Для Android:</strong> Если разрешения уже предоставлены, но кнопка не исчезает,
                   нажмите "Проверить разрешения (для Android)" или "Сбросить и повторить".
                 </Typography>
               )}
@@ -2119,7 +2120,7 @@ export default function CandidateInterviewPage() {
               >
                 Разрешить камеру и микрофон
               </Button>
-              
+
               {/* Дополнительная кнопка для Android устройств */}
               <Button
                 variant="outlined"
@@ -2131,7 +2132,7 @@ export default function CandidateInterviewPage() {
               >
                 Проверить разрешения (для Android)
               </Button>
-              
+
               {/* Кнопка для принудительного сброса разрешений */}
               <Button
                 variant="text"
@@ -2216,7 +2217,7 @@ export default function CandidateInterviewPage() {
           boxShadow: isMobile ? 'none' : '0 -1px 3px rgba(0,0,0,0.1)'
         }}>
 
-          
+
           <Button
             variant="contained"
             onClick={startInterview}
