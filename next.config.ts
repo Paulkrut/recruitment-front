@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  output: 'standalone', // Важно для Docker деплоя
   images: {
     domains: ['www.sofihr.ru', 'sofihr.ru'],
     formats: ['image/webp', 'image/avif'],
