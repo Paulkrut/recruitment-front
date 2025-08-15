@@ -18,7 +18,7 @@ import DesktopMenu from "./components/DesktopMenu";
 
 const pages = [
   "Главная",
-  "Преимущества", 
+  "Преимущества",
   "Как это работает",
   "Отзывы",
   "Тарифы",
@@ -33,10 +33,10 @@ export default function LandingPage() {
 
   // Функция плавной прокрутки к секциям
   const scrollToSection = React.useCallback((sectionName: string) => {
-    
+
     const sectionMap: { [key: string]: string } = {
       "Главная": "hero-section",
-      "Преимущества": "advantages-section", 
+      "Преимущества": "advantages-section",
       "Как это работает": "how-it-works-section",
       "Отзывы": "testimonials-section",
       "Тарифы": "pricing-section",
@@ -47,7 +47,7 @@ export default function LandingPage() {
     if (sectionId) {
       const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ 
+        element.scrollIntoView({
           behavior: 'smooth',
           block: 'start'
         });
@@ -1444,7 +1444,7 @@ export default function LandingPage() {
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="body2" color="grey.500">
-              © 2024 SofiHR. Все права защищены.
+              © 2025 SofiHR. Все права защищены.
             </Typography>
           </Box>
         </Container>
@@ -1452,4 +1452,3 @@ export default function LandingPage() {
     </Box>
   );
 }
- 
