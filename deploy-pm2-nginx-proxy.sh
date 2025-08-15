@@ -81,29 +81,10 @@ build_new_version() {
     NODE_VERSION=$(node --version)
     print_status "Using Node.js version: $NODE_VERSION"
     
-    # УМНАЯ ПРОВЕРКА ЗАВИСИМОСТЕЙ с кэшированием
-    print_status "🔍 Проверяем изменения в зависимостях..."
-    
-    # Переходим в production директорию для проверки кэша
-    cd ..
-    
-    # Проверяем кэш зависимостей
-    if check_dependencies_cache; then
-        DEPENDENCIES_CHANGED=false
-        print_status "⚡ Зависимости не изменились, используем кэш!"
-    else
-        DEPENDENCIES_CHANGED=true
-        print_status "📦 Зависимости изменились, устанавливаем заново!"
-    fi
-    
-    # Возвращаемся в temp директорию
-    cd $TMP_DIR
-    
-    # Копируем node_modules из production если зависимости не изменились
-    if [ "$DEPENDENCIES_CHANGED" = "false" ] && [ -d "../node_modules" ]; then
-        print_status "📁 Копируем существующие node_modules для ускорения..."
-        cp -r ../node_modules ./
-    fi
+    # ВРЕМЕННО ОТКЛЮЧАЕМ КЭШИРОВАНИЕ ДЛЯ ДИАГНОСТИКИ
+    print_status "🔍 ВРЕМЕННО ОТКЛЮЧАЕМ КЭШИРОВАНИЕ..."
+    DEPENDENCIES_CHANGED=true
+    print_status "📦 Принудительно устанавливаем зависимости заново!"
 
     export TERM=dumb
     export YARN_ENABLE_PROGRESS_BARS=0
@@ -130,9 +111,10 @@ build_new_version() {
     # Копируем новые артефакты в production (rsync для атомарности)
     print_status "📋 Копируем новые файлы..."
     
-    # Очищаем старый кэш Next.js перед копированием
-    print_status "🧹 Очищаем старый кэш Next.js..."
-    rm -rf .next/cache .next/standalone .next/trace
+    # ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js
+    print_status "🧹 ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js..."
+    rm -rf .next
+    rm -rf ../.next
     
     # Копируем новые файлы
     rsync -a --delete $TMP_DIR/.next ./
@@ -140,11 +122,9 @@ build_new_version() {
     cp $TMP_DIR/package.json ./
     cp $TMP_DIR/yarn.lock ./
     
-    # Копируем node_modules если зависимости изменились
-    if [ "$DEPENDENCIES_CHANGED" = "true" ]; then
-        print_status "📁 Обновляем node_modules..."
-        rsync -a --delete $TMP_DIR/node_modules ./
-    fi
+    # ПРИНУДИТЕЛЬНО КОПИРУЕМ node_modules
+    print_status "📁 ПРИНУДИТЕЛЬНО КОПИРУЕМ node_modules..."
+    rsync -a --delete $TMP_DIR/node_modules ./
 
     rm -rf $TMP_DIR
 
@@ -279,11 +259,9 @@ cleanup() {
     # Save PM2 configuration
     pm2 save
 
-    # Очищаем кэш Next.js для принудительного обновления
-    print_status "🧹 Очищаем кэш Next.js..."
-    rm -rf /home/ubuntu/sofihr.ru/.next/cache 2>/dev/null || true
-    rm -rf /home/ubuntu/sofihr.ru/.next/standalone 2>/dev/null || true
-    rm -rf /home/ubuntu/sofihr.ru/.next/trace 2>/dev/null || true
+    # ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js
+    print_status "🧹 ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js..."
+    rm -rf /home/ubuntu/sofihr.ru/.next 2>/dev/null || true
 
     # Optional: Clean old logs (keep last 7 days)
     find /home/ubuntu/sofihr.ru/logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
