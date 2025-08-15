@@ -1666,14 +1666,14 @@ export default function CandidateInterviewPage() {
     if(!prepared){
       return (
         <Box sx={{
-          height: '100vh',
+          // Убираем фиксированную высоту для страницы подготовки
+          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          p: isMobile ? 2 : 4,
+          // На странице подготовки убираем все ограничения overflow
+          overflow: 'visible',
           maxWidth: '1200px', // Ограничение ширины для больших мониторов
-          mx: 'auto', // Центрирование на больших экранах
+          mx: 'auto', // Центрирование на больших экранов
           width: '100%', // Полная ширина на мобильных
           px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
         }}>
@@ -2056,8 +2056,8 @@ export default function CandidateInterviewPage() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        // Убираем overflow: hidden для мобильных устройств
-        overflow: isMobile ? 'visible' : 'hidden',
+        // На странице подготовки убираем все ограничения overflow
+        overflow: 'visible',
         maxWidth: '1200px', // Ограничение ширины для больших мониторов
         mx: 'auto', // Центрирование на больших экранах
         width: '100%', // Полная ширина на мобильных
@@ -2078,31 +2078,20 @@ export default function CandidateInterviewPage() {
           <Typography sx={{mb:2}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
         </Box>
 
-        {/* Scrollable Content */}
+        {/* Content - без скролла на странице подготовки */}
         <Box sx={{
           flex: 1,
-          overflow: 'auto',
+          // Убираем скролл на странице подготовки
+          overflow: 'visible',
           p: isMobile ? 2 : 4,
-          // Убираем overflow: hidden для мобильных устройств
-          overflowY: isMobile ? 'scroll' : 'auto',
-          // Добавляем поддержку для мобильных браузеров
-          WebkitOverflowScrolling: 'touch',
-          // Убираем блокировку прокрутки на мобильных
-          overscrollBehavior: isMobile ? 'contain' : 'auto'
+          // Убираем все настройки скролла
+          display: 'flex',
+          flexDirection: 'column'
         }}>
           {/* Проверка разрешений */}
           {permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone) && (
             <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
-              {/* Отладочная информация для мобильных устройств */}
-              {isMobile && (
-                <Box sx={{ mb: 2, p: 1, bgcolor: '#fff3cd', borderRadius: 1, fontSize: '12px' }}>
-                  <Typography variant="caption" color="warning.dark">
-                    🔍 Отладка: permissionsRequested={String(permissionsRequested)}, 
-                    camera={String(permissionsGranted.camera)}, 
-                    microphone={String(permissionsGranted.microphone)}
-                  </Typography>
-                </Box>
-              )}
+
               
               <Typography variant="h6" color="warning.dark" gutterBottom>
                 ⚠️ Требуется доступ к камере и микрофону
@@ -2226,16 +2215,7 @@ export default function CandidateInterviewPage() {
           // Убираем тень на мобильных для лучшей производительности
           boxShadow: isMobile ? 'none' : '0 -1px 3px rgba(0,0,0,0.1)'
         }}>
-          {/* Отладочная информация для мобильных устройств */}
-          {isMobile && (
-            <Box sx={{ mb: 2, p: 1, bgcolor: '#f5f5f5', borderRadius: 1, fontSize: '12px' }}>
-              <Typography variant="caption" color="text.secondary">
-                🔍 Отладка: permissionsRequested={String(permissionsRequested)}, 
-                camera={String(permissionsGranted.camera)}, 
-                microphone={String(permissionsGranted.microphone)}
-              </Typography>
-            </Box>
-          )}
+
           
           <Button
             variant="contained"
