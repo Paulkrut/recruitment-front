@@ -15,7 +15,7 @@ import {
 
 export interface Column<T = any> {
   field: keyof T;
-  header: string;
+  header: string | React.ReactNode;
   render?: (row: T) => React.ReactNode;
 }
 
@@ -47,6 +47,12 @@ export default function DataTable<T = any>({
   const [selected,setSelected] = useState<(number|string)[]>([]);
 
   const handleRequestSort = (property: keyof T) => {
+    // Проверяем, что колонка имеет строковый header для сортировки
+    const column = columns.find(col => col.field === property);
+    if (column && typeof column.header !== 'string') {
+      return; // Не сортируем колонки с React элементами в header
+    }
+    
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -54,6 +60,13 @@ export default function DataTable<T = any>({
 
   const sortedRows = React.useMemo(() => {
     if (!orderBy) return rows;
+    
+    // Проверяем, что колонка для сортировки имеет строковый header
+    const column = columns.find(col => col.field === orderBy);
+    if (column && typeof column.header !== 'string') {
+      return rows; // Не сортируем колонки с React элементами
+    }
+    
     return [...rows].sort((a: any, b: any) => {
       const aVal = a[orderBy];
       const bVal = b[orderBy];
@@ -61,7 +74,7 @@ export default function DataTable<T = any>({
       if (order === "asc") return aVal > bVal ? 1 : -1;
       return aVal < bVal ? 1 : -1;
     });
-  }, [rows, order, orderBy]);
+  }, [rows, order, orderBy, columns]);
 
   const paginated = React.useMemo(
     () =>
@@ -103,13 +116,17 @@ export default function DataTable<T = any>({
             )}
             {columns.map((col) => (
               <TableCell key={String(col.field)}>
-                <TableSortLabel
-                  active={orderBy === col.field}
-                  direction={orderBy === col.field ? order : "asc"}
-                  onClick={() => handleRequestSort(col.field)}
-                >
-                  {col.header}
-                </TableSortLabel>
+                {typeof col.header === 'string' ? (
+                  <TableSortLabel
+                    active={orderBy === col.field}
+                    direction={orderBy === col.field ? order : "asc"}
+                    onClick={() => handleRequestSort(col.field)}
+                  >
+                    {col.header}
+                  </TableSortLabel>
+                ) : (
+                  col.header
+                )}
               </TableCell>
             ))}
           </TableRow>
