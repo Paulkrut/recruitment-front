@@ -129,6 +129,12 @@ build_new_version() {
 
     # Копируем новые артефакты в production (rsync для атомарности)
     print_status "📋 Копируем новые файлы..."
+    
+    # Очищаем старый кэш Next.js перед копированием
+    print_status "🧹 Очищаем старый кэш Next.js..."
+    rm -rf .next/cache .next/standalone .next/trace
+    
+    # Копируем новые файлы
     rsync -a --delete $TMP_DIR/.next ./
     rsync -a --delete $TMP_DIR/public ./
     cp $TMP_DIR/package.json ./
@@ -272,6 +278,12 @@ cleanup() {
 
     # Save PM2 configuration
     pm2 save
+
+    # Очищаем кэш Next.js для принудительного обновления
+    print_status "🧹 Очищаем кэш Next.js..."
+    rm -rf /home/ubuntu/sofihr.ru/.next/cache 2>/dev/null || true
+    rm -rf /home/ubuntu/sofihr.ru/.next/standalone 2>/dev/null || true
+    rm -rf /home/ubuntu/sofihr.ru/.next/trace 2>/dev/null || true
 
     # Optional: Clean old logs (keep last 7 days)
     find /home/ubuntu/sofihr.ru/logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
