@@ -347,12 +347,36 @@ export default function CandidateInterviewPage() {
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
 
-      // Проверяем разрешения
+      // Проверяем реальный доступ к трекам
+      const hasAudioTrack = stream.getAudioTracks().length > 0 && stream.getAudioTracks()[0].enabled;
+      const hasVideoTrack = stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled;
+
+      console.log('Real track access:', {
+        hasAudioTrack,
+        hasVideoTrack,
+        audioTracks: stream.getAudioTracks().length,
+        videoTracks: stream.getVideoTracks().length
+      });
+
+      // Обновляем разрешения на основе реального доступа к трекам
       setPermissionsGranted({
-        camera: permissions.state === 'granted',
-        microphone: micPermissions.state === 'granted'
+        camera: hasVideoTrack,
+        microphone: hasAudioTrack
       });
       setPermissionsRequested(true);
+
+      // Дополнительная проверка для Android устройств
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      if (isAndroid && (hasAudioTrack || hasVideoTrack)) {
+        console.log('Android: Разрешения получены, обновляем состояние...');
+        // Небольшая задержка для стабилизации UI на Android
+        setTimeout(() => {
+          setPermissionsGranted({
+            camera: hasVideoTrack,
+            microphone: hasAudioTrack
+          });
+        }, 500);
+      }
 
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
@@ -401,6 +425,71 @@ export default function CandidateInterviewPage() {
     }
   };
 
+  // Функция для принудительной проверки разрешений (особенно для Android)
+  const forceCheckPermissions = async () => {
+    try {
+      console.log('Принудительная проверка разрешений...');
+      
+      // Пытаемся получить поток для проверки реального доступа
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: { width: 640, height: 480 }
+      });
+
+      // Проверяем реальный доступ к трекам
+      const hasAudioTrack = stream.getAudioTracks().length > 0 && stream.getAudioTracks()[0].enabled;
+      const hasVideoTrack = stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled;
+
+      console.log('Force check result:', { hasAudioTrack, hasVideoTrack });
+
+      // Обновляем состояние разрешений
+      setPermissionsGranted({
+        camera: hasVideoTrack,
+        microphone: hasAudioTrack
+      });
+
+      // Останавливаем тестовый поток
+      stream.getTracks().forEach(track => track.stop());
+
+      // Если разрешения получены, обновляем UI
+      if (hasAudioTrack && hasVideoTrack) {
+        setPermissionsRequested(true);
+      }
+    } catch (e) {
+      console.error('Ошибка при принудительной проверке разрешений:', e);
+    }
+  };
+
+  // Функция для проверки разрешений с учетом особенностей Android
+  const checkPermissionsWithFallback = async () => {
+    try {
+      // Сначала проверяем через permissions API
+      const cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+
+      console.log('Permissions API check:', {
+        camera: cameraPermissions.state,
+        microphone: micPermissions.state
+      });
+
+      // Если разрешения предоставлены через API, используем их
+      if (cameraPermissions.state === 'granted' && micPermissions.state === 'granted') {
+        setPermissionsGranted({ camera: true, microphone: true });
+        setPermissionsRequested(true);
+        return;
+      }
+
+      // Если разрешения не определены или предоставлены, делаем реальную проверку
+      if (cameraPermissions.state !== 'denied' && micPermissions.state !== 'denied') {
+        await forceCheckPermissions();
+      }
+    } catch (e) {
+      console.error('Ошибка при проверке разрешений с fallback:', e);
+      // В случае ошибки делаем принудительную проверку
+      await forceCheckPermissions();
+    }
+  };
+
   useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
 
   // auto start device test when prepared screen shown
@@ -409,6 +498,29 @@ export default function CandidateInterviewPage() {
        startDeviceTest();
     }
   },[prepared, question]);
+
+  // Автоматическая проверка разрешений для Android устройств
+  useEffect(() => {
+    const checkAndroidPermissions = async () => {
+      // Проверяем, является ли устройство Android
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      
+      if (isAndroid && prepared && !testStream) {
+        console.log('Android устройство обнаружено, выполняем дополнительную проверку разрешений...');
+        
+        // Небольшая задержка для стабилизации
+        setTimeout(async () => {
+          try {
+            await checkPermissionsWithFallback();
+          } catch (e) {
+            console.log('Автоматическая проверка разрешений не удалась:', e);
+          }
+        }, 2000);
+      }
+    };
+
+    checkAndroidPermissions();
+  }, [prepared, testStream]);
 
   async function startInterview(){
     // Проверяем разрешения перед началом интервью
@@ -1927,6 +2039,14 @@ export default function CandidateInterviewPage() {
                 {!permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
                 {permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
               </Typography>
+              
+              {/* Специальная информация для Android */}
+              {/Android/i.test(navigator.userAgent) && (
+                <Typography variant="body2" sx={{mb:2, fontStyle: 'italic', color: 'warning.dark'}}>
+                  💡 <strong>Для Android:</strong> Если разрешения уже предоставлены, но кнопка не исчезает, 
+                  нажмите "Проверить разрешения (для Android)" или "Сбросить и повторить".
+                </Typography>
+              )}
               <Button
                 variant="contained"
                 color="warning"
@@ -1935,6 +2055,37 @@ export default function CandidateInterviewPage() {
                 size={isMobile ? 'large' : 'medium'}
               >
                 Разрешить камеру и микрофон
+              </Button>
+              
+              {/* Дополнительная кнопка для Android устройств */}
+              <Button
+                variant="outlined"
+                color="warning"
+                onClick={checkPermissionsWithFallback}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                sx={{ mt: 1 }}
+              >
+                Проверить разрешения (для Android)
+              </Button>
+              
+              {/* Кнопка для принудительного сброса разрешений */}
+              <Button
+                variant="text"
+                color="warning"
+                onClick={() => {
+                  setPermissionsGranted({ camera: false, microphone: false });
+                  setPermissionsRequested(false);
+                  if (testStream) {
+                    testStream.getTracks().forEach(track => track.stop());
+                    setTestStream(null);
+                  }
+                }}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                sx={{ mt: 1 }}
+              >
+                Сбросить и повторить
               </Button>
             </Box>
           )}

@@ -15,7 +15,7 @@ import {
 
 export interface Column<T = any> {
   field: keyof T;
-  header: string | React.ReactNode;
+  header: string;
   render?: (row: T) => React.ReactNode;
 }
 
@@ -103,17 +103,13 @@ export default function DataTable<T = any>({
             )}
             {columns.map((col) => (
               <TableCell key={String(col.field)}>
-                {typeof col.header === 'string' ? (
-                  <TableSortLabel
-                    active={orderBy === col.field}
-                    direction={orderBy === col.field ? order : "asc"}
-                    onClick={() => handleRequestSort(col.field)}
-                  >
-                    {col.header}
-                  </TableSortLabel>
-                ) : (
-                  col.header
-                )}
+                <TableSortLabel
+                  active={orderBy === col.field}
+                  direction={orderBy === col.field ? order : "asc"}
+                  onClick={() => handleRequestSort(col.field)}
+                >
+                  {col.header}
+                </TableSortLabel>
               </TableCell>
             ))}
           </TableRow>
