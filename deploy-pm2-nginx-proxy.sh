@@ -28,41 +28,12 @@ print_error() {
 # Create logs directory
 create_logs_dir() {
     mkdir -p /home/ubuntu/sofihr.ru/logs
-    mkdir -p /home/ubuntu/sofihr.ru/.yarn-cache
-    print_status "Logs and cache directories created"
-}
-
-# Fast dependency check with caching
-check_dependencies_cache() {
-    local CACHE_FILE="/home/ubuntu/sofihr.ru/.deps-cache"
-    local CURRENT_HASH=""
-    
-    # Создаем хеш из package.json и yarn.lock
-    if [ -f "package.json" ] && [ -f "yarn.lock" ]; then
-        CURRENT_HASH=$(sha256sum package.json yarn.lock | sha256sum | cut -d' ' -f1)
-    fi
-    
-    # Проверяем кэш
-    if [ -f "$CACHE_FILE" ] && [ -n "$CURRENT_HASH" ]; then
-        local CACHED_HASH=$(cat "$CACHE_FILE")
-        if [ "$CURRENT_HASH" = "$CACHED_HASH" ]; then
-            print_status "⚡ Зависимости не изменились (кэш совпадает)"
-            return 0  # false - зависимости НЕ изменились
-        fi
-    fi
-    
-    # Обновляем кэш
-    if [ -n "$CURRENT_HASH" ]; then
-        echo "$CURRENT_HASH" > "$CACHE_FILE"
-        print_status "📦 Зависимости изменились (обновлен кэш)"
-    fi
-    
-    return 1  # true - зависимости изменились
+    print_status "Logs directory created"
 }
 
 # Build new version
 build_new_version() {
-    print_status "Building new version with smart dependency caching..."
+    print_status "Building new version in temp dir (truly zero-downtime)..."
 
     TMP_DIR="/tmp/deploy-build-$(date +%s)"
     rm -rf $TMP_DIR
@@ -76,27 +47,14 @@ build_new_version() {
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
         nvm use 22
     fi
-    
+
     # Проверяем версию Node.js
     NODE_VERSION=$(node --version)
     print_status "Using Node.js version: $NODE_VERSION"
-    
-    # ВРЕМЕННО ОТКЛЮЧАЕМ КЭШИРОВАНИЕ ДЛЯ ДИАГНОСТИКИ
-    print_status "🔍 ВРЕМЕННО ОТКЛЮЧАЕМ КЭШИРОВАНИЕ..."
-    DEPENDENCIES_CHANGED=true
-    print_status "📦 Принудительно устанавливаем зависимости заново!"
 
     export TERM=dumb
     export YARN_ENABLE_PROGRESS_BARS=0
-    
-    # Выполняем yarn install только если нужно
-    if [ "$DEPENDENCIES_CHANGED" = "true" ]; then
-        print_status "🔧 Устанавливаем зависимости..."
-        # Оптимизированные флаги для быстрой установки
-        yarn install --frozen-lockfile --prefer-offline --production=false --cache-folder ../.yarn-cache
-    fi
-    
-    print_status "🏗️ Собираем проект..."
+    yarn install
     yarn build
 
     # Проверка успешности сборки
@@ -109,26 +67,15 @@ build_new_version() {
     cd -
 
     # Копируем новые артефакты в production (rsync для атомарности)
-    print_status "📋 Копируем новые файлы..."
-    
-    # ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js
-    print_status "🧹 ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js..."
-    rm -rf .next
-    rm -rf ../.next
-    
-    # Копируем новые файлы
     rsync -a --delete $TMP_DIR/.next ./
     rsync -a --delete $TMP_DIR/public ./
     cp $TMP_DIR/package.json ./
     cp $TMP_DIR/yarn.lock ./
-    
-    # ПРИНУДИТЕЛЬНО КОПИРУЕМ node_modules
-    print_status "📁 ПРИНУДИТЕЛЬНО КОПИРУЕМ node_modules..."
-    rsync -a --delete $TMP_DIR/node_modules ./
+    # Можно добавить другие нужные файлы
 
     rm -rf $TMP_DIR
 
-    print_status "✅ Новая версия собрана и скопирована в production"
+    print_status "New version built and copied to production folder"
 }
 
 # Check if app is running
@@ -259,10 +206,6 @@ cleanup() {
     # Save PM2 configuration
     pm2 save
 
-    # ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js
-    print_status "🧹 ПРИНУДИТЕЛЬНО ОЧИЩАЕМ ВСЕ КЭШИ Next.js..."
-    rm -rf /home/ubuntu/sofihr.ru/.next 2>/dev/null || true
-
     # Optional: Clean old logs (keep last 7 days)
     find /home/ubuntu/sofihr.ru/logs -name "*.log" -mtime +7 -delete 2>/dev/null || true
 
@@ -284,7 +227,6 @@ rollback() {
 
 # Main deployment function
 main() {
-    local START_TIME=$(date +%s)
     print_status "Starting PM2 deployment with nginx proxy..."
 
     create_logs_dir
@@ -307,11 +249,7 @@ main() {
     # Cleanup
     cleanup
 
-    local END_TIME=$(date +%s)
-    local DURATION=$((END_TIME - START_TIME))
-
     print_status "✅ PM2 deployment with nginx proxy completed successfully!"
-    print_status "⏱️ Время выполнения: ${DURATION} секунд"
     print_status "📊 Current PM2 status:"
     pm2 list
     print_status "🌐 Application is accessible via nginx proxy"
