@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Card,
@@ -12,26 +12,54 @@ import {
   Avatar,
   Chip,
   Divider,
+  Pagination,
+  FormControl,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  Stack,
 } from "@mui/material";
 import { 
   IconClock, 
   IconUser 
 } from "@tabler/icons-react";
 import Link from "next/link";
-
-interface OverdueCandidate {
-  id?: number;
-  name: string;
-  created_at: string;
-  email?: string;
-  phone?: string;
-}
+import { OverdueCandidate, PaginationState } from "@/app/(DashboardLayout)/types/dashboard";
 
 interface OverdueCandidatesCardProps {
   data: OverdueCandidate[];
 }
 
 export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardProps) {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  // Вычисляем пагинацию
+  const paginationData = useMemo(() => {
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedData = data.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(data.length / pageSize);
+
+    return {
+      data: paginatedData,
+      totalPages,
+      startIndex: startIndex + 1,
+      endIndex: Math.min(endIndex, data.length),
+      total: data.length
+    };
+  }, [data, page, pageSize]);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    const newPageSize = Number(event.target.value);
+    setPageSize(newPageSize);
+    setPage(1); // Сбрасываем на первую страницу при изменении размера
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -84,9 +112,31 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
           />
         </Box>
 
-        <List sx={{ p: 0 }}>
-          {data.map((candidate, index) => (
-            <React.Fragment key={index}>
+        {/* Настройки пагинации */}
+        {data.length > 0 && (
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+            <Typography variant="body2" color="textSecondary">
+              Показано {paginationData.startIndex}-{paginationData.endIndex} из {paginationData.total}
+            </Typography>
+            <FormControl size="small" sx={{ minWidth: 120 }}>
+              <Select
+                value={pageSize}
+                onChange={handlePageSizeChange}
+                displayEmpty
+                variant="outlined"
+              >
+                <MenuItem value={3}>3 на странице</MenuItem>
+                <MenuItem value={5}>5 на странице</MenuItem>
+                <MenuItem value={10}>10 на странице</MenuItem>
+                <MenuItem value={20}>20 на странице</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        )}
+
+        <List sx={{ p: 0, flex: 1 }}>
+          {paginationData.data.map((candidate, index) => (
+            <React.Fragment key={candidate.sessionId || index}>
               <ListItem
                 sx={{
                   px: 0,
@@ -106,9 +156,9 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                   primary={
                     <Box display="flex" alignItems="center" gap={1}>
                       <Typography variant="body2" fontWeight="500">
-                        {candidate.id ? (
+                        {candidate.sessionId ? (
                           <Link 
-                            href={`/hr/candidates/${candidate.id}`} 
+                            href={`/hr/sessions/${candidate.sessionId}`} 
                             style={{ 
                               textDecoration: 'none', 
                               color: 'inherit',
@@ -123,7 +173,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                               (e.target as HTMLElement).style.textDecoration = 'none';
                             }}
                           >
-                        {candidate.name}
+                            {candidate.name}
                           </Link>
                         ) : (
                           candidate.name
@@ -142,16 +192,11 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                       <Typography variant="caption" color="textSecondary">
                         Создан: {formatDate(candidate.created_at)}
                       </Typography>
-                      {candidate.email && (
-                        <Typography variant="caption" display="block" color="textSecondary">
-                          {candidate.email}
-                        </Typography>
-                      )}
                     </Box>
                   }
                 />
               </ListItem>
-              {index < data.length - 1 && <Divider />}
+              {index < paginationData.data.length - 1 && <Divider />}
             </React.Fragment>
           ))}
         </List>
@@ -161,6 +206,21 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
             <Typography variant="body2" color="textSecondary">
               Нет просроченных кандидатов
             </Typography>
+          </Box>
+        )}
+
+        {/* Пагинация */}
+        {paginationData.totalPages > 1 && (
+          <Box display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={paginationData.totalPages}
+              page={page}
+              onChange={handlePageChange}
+              size="small"
+              color="primary"
+              showFirstButton
+              showLastButton
+            />
           </Box>
         )}
       </CardContent>

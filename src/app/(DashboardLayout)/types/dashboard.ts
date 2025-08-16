@@ -10,3 +10,15 @@ export interface ProductType {
     created: Date;
     description: string;
   }
+
+export interface OverdueCandidate {
+  sessionId: number;
+  name: string;
+  created_at: string;
+}
+
+export interface PaginationState {
+  page: number;
+  pageSize: number;
+  total: number;
+}
