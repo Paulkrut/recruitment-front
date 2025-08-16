@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Box,
   Typography,
@@ -81,6 +82,8 @@ export default function ComparePage() {
   // Стабильная ссылка на ids для useEffect
   const stableIds = useMemo(() => ids, [ids.join(',')]);
 
+
+
   // Сброс флага инициализации при изменении ID кандидатов
   useEffect(() => {
     setHasInitialized(false);
@@ -89,6 +92,7 @@ export default function ComparePage() {
     setCandidates([]);
     setComparisonData(null);
     setAiAnalysisHash(null);
+
     if (pollingInterval) {
       clearInterval(pollingInterval);
       setPollingInterval(null);
@@ -145,18 +149,12 @@ export default function ComparePage() {
       
       const data = await response.json();
       console.log('✅ Базовое сравнение загружено:', data);
-      if (isMounted) {
         setCandidates(data.candidates || []);
-      }
     } catch (err) {
       console.error('❌ Ошибка загрузки базового сравнения:', err);
-      if (isMounted) {
         setError('Не удалось загрузить данные кандидатов');
-      }
     } finally {
-      if (isMounted) {
         setIsLoadingBasic(false);
-      }
     }
   };
 
@@ -186,24 +184,32 @@ export default function ComparePage() {
       
       const data = await response.json();
       console.log('✅ AI-анализ запущен:', data);
-      if (isMounted) {
-        setAiAnalysisHash(data.hash);
-        
-        if (data.status === 'pending') {
-          startPolling(data.hash);
-        } else {
-          setComparisonData(data);
+      setAiAnalysisHash(data.hash);
+      
+      if (data.status === 'pending') {
+        console.log('⏳ AI-анализ в процессе, запускаем поллинг');
+        startPolling(data.hash);
+      } else if (data.status === 'done') {
+        console.log('✅ AI-анализ уже завершен, загружаем результаты');
+        // Если анализ уже завершен, загружаем результаты сразу
+        const resultResponse = await apiFetch(`${API_BASE}/api/admin/candidates/compare/ai/${data.hash}`);
+        if (resultResponse.ok) {
+          const resultData = await resultResponse.json();
+          console.log('📊 Результаты AI-анализа загружены:', resultData);
+          setComparisonData(resultData);
         }
+      } else if (data.status === 'error') {
+        console.log('❌ AI-анализ завершился с ошибкой');
+        setComparisonData(data);
+      } else {
+        console.log('❓ Неизвестный статус AI-анализа:', data.status);
+        setComparisonData(data);
       }
     } catch (err) {
       console.error('❌ Ошибка запуска AI-анализа:', err);
-      if (isMounted) {
         setError('Не удалось запустить AI-анализ');
-      }
     } finally {
-      if (isMounted) {
         setIsLoadingAi(false);
-      }
     }
   };
 
@@ -223,7 +229,6 @@ export default function ComparePage() {
       
       const data = await response.json();
       console.log('📊 Статус AI:', data.status, data);
-      if (isMounted) {
         setComparisonData(data);
         
         if (data.status === 'done' || data.status === 'error') {
@@ -231,7 +236,7 @@ export default function ComparePage() {
           if (pollingInterval) {
             clearInterval(pollingInterval);
             setPollingInterval(null);
-          }
+          console.log('🛑 Поллинг остановлен');
         }
       }
     } catch (err) {
@@ -241,21 +246,24 @@ export default function ComparePage() {
 
   // Поллинг статуса
   const startPolling = (hash: string) => {
+    console.log('🔄 Запускаем поллинг для hash:', hash);
+    
     // Очищаем предыдущий интервал если он есть
     if (pollingInterval) {
+      console.log('🧹 Очищаем предыдущий интервал поллинга');
       clearInterval(pollingInterval);
     }
     
     const interval = setInterval(() => {
-      if (isMounted) {
+      console.log('⏰ Поллинг: проверяем статус для hash:', hash);
         checkAiStatus(hash);
-      } else {
-        clearInterval(interval);
-      }
     }, 3000);
     
     setPollingInterval(interval);
+    console.log('✅ Поллинг запущен, интервал:', interval);
   };
+
+
 
   useEffect(() => {
     if (stableIds.length < 2) {
@@ -276,32 +284,25 @@ export default function ComparePage() {
       return;
     }
 
-    let isMounted = true;
-
     const init = async () => {
-      if (!isMounted) return;
-      
       try {
         await loadBasicComparison();
-        if (!isMounted) return;
         
+
+        // Запускаем AI-анализ
         await startAiAnalysis();
-        if (!isMounted) return;
         
         setLoading(false);
         setHasInitialized(true); // Отмечаем что инициализация завершена
       } catch (err) {
-        if (isMounted) {
-          setError('Ошибка инициализации');
-          setLoading(false);
-        }
+        setError('Ошибка инициализации');
+        setLoading(false);
       }
     };
 
     init();
 
     return () => {
-      isMounted = false;
       if (pollingInterval) {
         clearInterval(pollingInterval);
         setPollingInterval(null);
@@ -376,7 +377,7 @@ export default function ComparePage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            📊 Базовое сравнение
+            �� Базовое сравнение
           </Typography>
           
           <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -390,7 +391,26 @@ export default function ComparePage() {
                       </Avatar>
                       <Box>
                         <Typography variant="h6" fontSize="1rem">
-                          {candidate.name}
+                          <Link 
+                            href={`/hr/candidates/${candidate.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ 
+                              textDecoration: 'none', 
+                              color: 'inherit',
+                              cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.color = '#1976d2';
+                              (e.target as HTMLElement).style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.color = 'inherit';
+                              (e.target as HTMLElement).style.textDecoration = 'none';
+                            }}
+                          >
+                            {candidate.name}
+                          </Link>
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           ID: {candidate.id}
@@ -432,7 +452,7 @@ export default function ComparePage() {
                             {candidate.skills.slice(0, 3).map((skill, index) => (
                               <Chip 
                                 key={index} 
-                                label={skill.skill} 
+                                label={typeof skill === 'string' ? skill : skill.skill} 
                                 size="small" 
                                 variant="outlined"
                                 color="primary"
@@ -480,11 +500,11 @@ export default function ComparePage() {
       </Card>
 
       {/* AI-анализ */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" alignItems="center" gap={1} mb={2}>
-            <IconBrain size={24} />
-            <Typography variant="h6">AI-анализ</Typography>
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Box display="flex" alignItems="center" gap={1} mb={2}>
+              <IconBrain size={24} />
+              <Typography variant="h6">AI-анализ</Typography>
             {aiAnalysisHash && (
               <Chip 
                 label={`Hash: ${aiAnalysisHash.substring(0, 8)}...`} 
@@ -493,102 +513,121 @@ export default function ComparePage() {
                 sx={{ ml: 'auto' }}
               />
             )}
-          </Box>
-          
+            </Box>
+            
           {comparisonData?.status === 'pending' && (
-            <>
-              <LinearProgress sx={{ mb: 2 }} />
-              <Typography variant="body2" color="text.secondary">
-                Анализируем кандидатов с помощью искусственного интеллекта...
-              </Typography>
-            </>
-          )}
-          
+              <>
+                <LinearProgress sx={{ mb: 2 }} />
+                <Typography variant="body2" color="text.secondary">
+                  Анализируем кандидатов с помощью искусственного интеллекта...
+                </Typography>
+              </>
+            )}
+            
           {comparisonData?.status === 'done' && comparisonData.result && (
-            <>
-              <Alert severity="success" sx={{ mb: 2 }}>
-                Анализ завершен
-              </Alert>
-              
-              {/* Рейтинг кандидатов */}
-              <Typography variant="h6" gutterBottom>
-                🏆 Рейтинг кандидатов
-              </Typography>
-              
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                {comparisonData.result.rank.map((candidateId, index) => {
-                  const candidate = candidates.find(c => c.id === candidateId);
-                  if (!candidate) return null;
-                  
-                  const position = index + 1;
-                  const isWinner = candidateId === comparisonData.result?.winnerId;
-                  
-                  return (
-                    <Grid item xs={12} sm={6} md={4} key={candidateId}>
-                      <Card 
-                        variant={isWinner ? "outlined" : "elevation"}
-                        sx={{ 
-                          border: isWinner ? '2px solid' : '1px solid',
-                          borderColor: isWinner ? 'success.main' : 'divider',
-                          bgcolor: isWinner ? 'success.50' : 'background.paper'
-                        }}
-                      >
-                        <CardContent>
-                          <Box display="flex" alignItems="center" gap={2} mb={2}>
-                            {getPositionIcon(position)}
-                            <Box>
-                              <Typography variant="h6" fontSize="1rem">
-                                {candidate.name}
-                              </Typography>
+              <>
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Анализ завершен
+                </Alert>
+                
+                {/* Рейтинг кандидатов */}
+                <Typography variant="h6" gutterBottom>
+                  🏆 Рейтинг кандидатов
+                </Typography>
+                
+                <Grid container spacing={2} sx={{ mb: 3 }}>
+                  {comparisonData.result.rank.map((candidateId, index) => {
+                    const candidate = candidates.find(c => c.id === candidateId);
+                    if (!candidate) return null;
+                    
+                    const position = index + 1;
+                    const isWinner = candidateId === comparisonData.result?.winnerId;
+                    
+                    return (
+                      <Grid item xs={12} sm={6} md={4} key={candidateId}>
+                        <Card 
+                          variant={isWinner ? "outlined" : "elevation"}
+                          sx={{ 
+                            border: isWinner ? '2px solid' : '1px solid',
+                            borderColor: isWinner ? 'success.main' : 'divider',
+                            bgcolor: isWinner ? 'success.50' : 'background.paper'
+                          }}
+                        >
+                          <CardContent>
+                            <Box display="flex" alignItems="center" gap={2} mb={2}>
+                              {getPositionIcon(position)}
+                              <Box>
+                                <Typography variant="h6" fontSize="1rem">
+                                  <Link 
+                                    href={`/hr/candidates/${candidate.id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ 
+                                      textDecoration: 'none', 
+                                      color: 'inherit',
+                                      cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      (e.target as HTMLElement).style.color = '#1976d2';
+                                      (e.target as HTMLElement).style.textDecoration = 'underline';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      (e.target as HTMLElement).style.color = 'inherit';
+                                      (e.target as HTMLElement).style.textDecoration = 'none';
+                                    }}
+                                  >
+                                    {candidate.name}
+                                  </Link>
+                                </Typography>
+                                <Chip 
+                                  label={`${position} место`}
+                                  color={getPositionColor(position) as any}
+                                  size="small"
+                                />
+                              </Box>
+                            </Box>
+                            
+                            {isWinner && (
                               <Chip 
-                                label={`${position} место`}
-                                color={getPositionColor(position) as any}
+                                label="🏆 Лучший кандидат" 
+                                color="success" 
+                                variant="filled"
                                 size="small"
                               />
-                            </Box>
-                          </Box>
-                          
-                          {isWinner && (
-                            <Chip 
-                              label="🏆 Лучший кандидат" 
-                              color="success" 
-                              variant="filled"
-                              size="small"
-                            />
-                          )}
-                          
-                          {candidate.score && (
-                            <Box mt={1}>
-                              <Typography variant="body2" color="text.secondary">
-                                Оценка: {candidate.score}/10
-                              </Typography>
-                              <Rating 
-                                value={candidate.score / 2} 
-                                readOnly 
-                                size="small" 
-                              />
-                            </Box>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-              
-              {/* Обоснование */}
-              <Divider sx={{ my: 2 }} />
-              <Typography variant="h6" gutterBottom>
-                📝 Обоснование выбора
-              </Typography>
-              <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1, borderLeft: '4px solid', borderColor: 'primary.main' }}>
-                <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-                  {comparisonData.result.reasoning}
+                            )}
+                            
+                            {candidate.score && (
+                              <Box mt={1}>
+                                <Typography variant="body2" color="text.secondary">
+                                  Оценка: {candidate.score}/10
+                                </Typography>
+                                <Rating 
+                                  value={candidate.score / 2} 
+                                  readOnly 
+                                  size="small" 
+                                />
+                              </Box>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+                
+                {/* Обоснование */}
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="h6" gutterBottom>
+                  📝 Обоснование выбора
                 </Typography>
-              </Box>
-            </>
-          )}
-          
+                <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1, borderLeft: '4px solid', borderColor: 'primary.main' }}>
+                  <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                    {comparisonData.result.reasoning}
+                  </Typography>
+                </Box>
+              </>
+            )}
+            
           {comparisonData?.status === 'error' && (
             <>
               <Alert severity="error" sx={{ mb: 2 }}>
@@ -648,9 +687,9 @@ export default function ComparePage() {
                 {isLoadingAi ? 'Запуск...' : 'Запустить AI-анализ'}
               </Button>
             </Box>
-          )}
-        </CardContent>
-      </Card>
+            )}
+          </CardContent>
+        </Card>
 
       {/* Таблица сравнения */}
       <Card>
@@ -671,7 +710,26 @@ export default function ComparePage() {
                           {candidate.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </Avatar>
                         <Typography variant="body2" fontWeight={600}>
-                          {candidate.name}
+                          <Link 
+                            href={`/hr/candidates/${candidate.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ 
+                              textDecoration: 'none', 
+                              color: 'inherit',
+                              cursor: 'pointer'
+                            }}
+                            onMouseEnter={(e) => {
+                              (e.target as HTMLElement).style.color = '#1976d2';
+                              (e.target as HTMLElement).style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={(e) => {
+                              (e.target as HTMLElement).style.color = 'inherit';
+                              (e.target as HTMLElement).style.textDecoration = 'none';
+                            }}
+                          >
+                            {candidate.name}
+                          </Link>
                         </Typography>
                       </Box>
                     </TableCell>
@@ -713,7 +771,7 @@ export default function ComparePage() {
                     <TableCell key={candidate.id} align="center">
                       <Typography variant="body2" color="text.secondary">
                         {new Date(candidate.createdAt).toLocaleDateString('ru-RU')}
-                      </Typography>
+                          </Typography>
                     </TableCell>
                   ))}
                 </TableRow>
