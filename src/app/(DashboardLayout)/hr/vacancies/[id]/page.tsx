@@ -106,14 +106,21 @@ export default function HRVacancyDetailPage() {
   const [snackbar, setSnackbar] = useState('');
   const [tab, setTab] = useState('1');
 
-  // Функция для выбора всех кандидатов
+  // Функция для выбора всех кандидатов (только завершенных)
   const handleSelectAll = () => {
-    if (selectedCandidates.length === filteredCandidates.length) {
+    const finishedCandidates = filteredCandidates.filter(c => c.status === 'finished');
+    if (selectedCandidates.length === finishedCandidates.length) {
       setSelectedCandidates([]);
     } else {
-      setSelectedCandidates(filteredCandidates.map(c => c.id));
+      setSelectedCandidates(finishedCandidates.map(c => c.id));
     }
   };
+
+  // Получаем только завершенных кандидатов для сравнения
+  const finishedCandidates = useMemo(() => 
+    candidates.filter(c => c.status === 'finished'), 
+    [candidates]
+  );
 
   // Получаем параметры из URL
   const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
@@ -243,7 +250,13 @@ export default function HRVacancyDetailPage() {
                       <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={()=>setAddDialogOpen(true)} sx={{fontWeight:600}}>
                         Добавить кандидата
                       </Button>
-                      <Button variant="contained" color="primary" disabled={selectedCandidates.length < 2} onClick={()=>setCompareOpen(true)}>
+                      <Button 
+                        variant="contained" 
+                        color="primary" 
+                        disabled={selectedCandidates.length < 2 || finishedCandidates.length < 2}
+                        onClick={()=>setCompareOpen(true)}
+                        startIcon={<IconArrowsDiff />}
+                      >
                         Сравнить выбранных ({selectedCandidates.length})
                       </Button>
                     </Box>
@@ -266,7 +279,7 @@ export default function HRVacancyDetailPage() {
                       severity="info" 
                       sx={{ mb: 2 }}
                       action={
-                        selectedCandidates.length >= 2 && (
+                        selectedCandidates.length >= 2 && finishedCandidates.length >= 2 && (
                           <Button
                             color="inherit"
                             size="small"
@@ -280,30 +293,58 @@ export default function HRVacancyDetailPage() {
                     >
                       Выбрано кандидатов: {selectedCandidates.length}
                       {selectedCandidates.length < 2 && " (минимум 2 для сравнения)"}
+                      {selectedCandidates.length >= 2 && finishedCandidates.length < 2 && " (но нет завершенных кандидатов для сравнения)"}
+                    </Alert>
+                  )}
+
+                  {/* Информация о доступных для сравнения кандидатах */}
+                  {finishedCandidates.length > 0 && (
+                    <Alert severity="success" sx={{ mb: 2 }}>
+                      ✅ Доступно для сравнения: <strong>{finishedCandidates.length}</strong> кандидатов
+                      {candidates.length > finishedCandidates.length && (
+                        <span> (еще {candidates.length - finishedCandidates.length} не завершили тест)</span>
+                      )}
+                    </Alert>
+                  )}
+
+                  {/* Предупреждение если нет завершенных кандидатов */}
+                  {finishedCandidates.length === 0 && candidates.length > 0 && (
+                    <Alert severity="warning" sx={{ mb: 2 }}>
+                      ⚠️ Нет кандидатов для сравнения. Дождитесь завершения тестов кандидатами.
                     </Alert>
                   )}
                   <DataTable columns={[
                     {field:'select',header:(
                       <Checkbox
-                        checked={selectedCandidates.length === filteredCandidates.length && filteredCandidates.length > 0}
-                        indeterminate={selectedCandidates.length > 0 && selectedCandidates.length < filteredCandidates.length}
+                        checked={selectedCandidates.length === finishedCandidates.length && finishedCandidates.length > 0}
+                        indeterminate={selectedCandidates.length > 0 && selectedCandidates.length < finishedCandidates.length}
                         onChange={handleSelectAll}
                         size="small"
                         color="primary"
                       />
                     ),render:(r:any)=>(
-                      <Checkbox
-                        checked={selectedCandidates.includes(r.id)}
-                        onChange={e => {
-                          if (e.target.checked) {
-                            setSelectedCandidates([...selectedCandidates, r.id]);
-                          } else {
-                            setSelectedCandidates(selectedCandidates.filter(id => id !== r.id));
-                          }
-                        }}
-                        size="small"
-                        color="primary"
-                      />
+                      <Box>
+                        <Checkbox
+                          checked={selectedCandidates.includes(r.id)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              setSelectedCandidates([...selectedCandidates, r.id]);
+                            } else {
+                              setSelectedCandidates(selectedCandidates.filter(id => id !== r.id));
+                            }
+                          }}
+                          disabled={r.status !== 'finished'}
+                          size="small"
+                          color="primary"
+                        />
+                        {r.status !== 'finished' && (
+                          <Tooltip title="Кандидат еще не завершил тест" arrow>
+                            <Box component="span" sx={{ ml: 0.5, color: 'text.disabled', fontSize: '0.75rem' }}>
+                              ⏳
+                            </Box>
+                          </Tooltip>
+                        )}
+                      </Box>
                     )},
                     {field:'name',header:'Имя',render:(r:any)=>(
                       <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
