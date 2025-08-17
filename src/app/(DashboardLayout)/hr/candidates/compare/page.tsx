@@ -24,7 +24,6 @@ import {
   Divider,
   Stack,
   CircularProgress,
-  Rating,
 } from "@mui/material";
 import {
   IconArrowLeft,
@@ -52,9 +51,26 @@ interface Candidate {
 }
 
 interface ComparisonResult {
-  winnerId: number;
-  rank: number[];
-  reasoning: string;
+  analysis?: string;
+  reasoning?: string;
+  ranking?: number[];
+  winnerId?: number;
+  criteria?: {
+    general: string[];
+    specific: string[];
+  };
+  comparison?: Array<{
+    candidateId: number;
+    name: string;
+    scores: Record<string, string>;
+    overallScore: string;
+    recommendation: string;
+  }>;
+  vacancy?: {
+    id: number;
+    title: string;
+    description?: string;
+  };
 }
 
 interface ComparisonData {
@@ -66,6 +82,23 @@ interface ComparisonData {
 export default function ComparePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  
+  // Добавляем CSS анимацию для прогресс-бара
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+  
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [comparisonData, setComparisonData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -82,6 +115,29 @@ export default function ComparePage() {
   // Стабильная ссылка на ids для useEffect
   const stableIds = useMemo(() => ids, [ids.join(',')]);
 
+  // Расчет примерного времени генерации AI анализа
+  const calculateEstimatedTime = (candidatesCount: number, questionsCount: number = 8): string => {
+    // Базовое время: 30 секунд на кандидата + 10 секунд на вопрос
+    const baseTimePerCandidate = 30;
+    const baseTimePerQuestion = 10;
+    
+    const totalSeconds = (candidatesCount * baseTimePerCandidate) + (questionsCount * baseTimePerQuestion);
+    
+    if (totalSeconds < 60) {
+      return `${totalSeconds} секунд`;
+    } else if (totalSeconds < 300) {
+      const minutes = Math.ceil(totalSeconds / 60);
+      return `до ${minutes} минут`;
+    } else {
+      const minutes = Math.ceil(totalSeconds / 60);
+      return `до ${minutes} минут`;
+    }
+  };
+
+  // Получаем примерное время для текущего сравнения
+  const estimatedTime = useMemo(() => {
+    return calculateEstimatedTime(stableIds.length);
+  }, [stableIds.length]);
 
 
   // Сброс флага инициализации при изменении ID кандидатов
@@ -184,11 +240,11 @@ export default function ComparePage() {
       
       const data = await response.json();
       console.log('✅ AI-анализ запущен:', data);
-      setAiAnalysisHash(data.hash);
-      
-      if (data.status === 'pending') {
+        setAiAnalysisHash(data.hash);
+        
+        if (data.status === 'pending') {
         console.log('⏳ AI-анализ в процессе, запускаем поллинг');
-        startPolling(data.hash);
+          startPolling(data.hash);
       } else if (data.status === 'done') {
         console.log('✅ AI-анализ уже завершен, загружаем результаты');
         // Если анализ уже завершен, загружаем результаты сразу
@@ -295,8 +351,8 @@ export default function ComparePage() {
         setLoading(false);
         setHasInitialized(true); // Отмечаем что инициализация завершена
       } catch (err) {
-        setError('Ошибка инициализации');
-        setLoading(false);
+          setError('Ошибка инициализации');
+          setLoading(false);
       }
     };
 
@@ -309,24 +365,6 @@ export default function ComparePage() {
       }
     };
   }, [stableIds]); // Убираем isLoadingBasic и isLoadingAi из зависимостей
-
-  const getPositionIcon = (position: number) => {
-    switch (position) {
-      case 1: return <IconCrown size={24} color="#FFD700" />;
-      case 2: return <IconMedal size={24} color="#C0C0C0" />;
-      case 3: return <IconTrophy size={24} color="#CD7F32" />;
-      default: return <IconUser size={24} color="#666" />;
-    }
-  };
-
-  const getPositionColor = (position: number) => {
-    switch (position) {
-      case 1: return 'success';
-      case 2: return 'warning';
-      case 3: return 'info';
-      default: return 'default';
-    }
-  };
 
   if (loading) {
     return (
@@ -518,9 +556,60 @@ export default function ComparePage() {
           {comparisonData?.status === 'pending' && (
               <>
                 <LinearProgress sx={{ mb: 2 }} />
+                <Box sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography variant="h6" gutterBottom color="primary">
+                    🤖 AI анализирует кандидатов...
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    Обрабатываем {stableIds.length} кандидатов
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                    ⏱️ Примерное время: <strong>{estimatedTime}</strong>
+                  </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Анализируем кандидатов с помощью искусственного интеллекта...
+                    💡 Чем больше кандидатов и вопросов, тем дольше анализ
+                  </Typography>
+                  
+                  {/* Прогресс-бар с анимацией */}
+                  <Box sx={{ mt: 2, position: 'relative' }}>
+                    <LinearProgress 
+                      variant="indeterminate" 
+                      sx={{ 
+                        height: 8, 
+                        borderRadius: 4,
+                        '& .MuiLinearProgress-bar': {
+                          background: 'linear-gradient(90deg, #1976d2, #42a5f5, #1976d2)',
+                          backgroundSize: '200% 100%',
+                          animation: 'shimmer 2s infinite'
+                        }
+                      }} 
+                    />
+                    <Box 
+                      sx={{ 
+                        position: 'absolute', 
+                        top: '50%', 
+                        left: '50%', 
+                        transform: 'translate(-50%, -50%)',
+                        fontSize: '0.75rem',
+                        color: 'text.secondary',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      Анализируем...
+                    </Box>
+                  </Box>
+                  
+                  {/* Дополнительная информация */}
+                  <Box sx={{ mt: 3, p: 2, bgcolor: 'info.50', borderRadius: 2, border: '1px solid', borderColor: 'info.200' }}>
+                    <Typography variant="body2" color="info.dark">
+                      💡 <strong>Почему это занимает время?</strong><br />
+                      • AI анализирует каждый ответ каждого кандидата<br />
+                      • Сравнивает навыки и опыт<br />
+                      • Формирует детальные критерии оценки<br />
+                      • Дает обоснованные рекомендации
                 </Typography>
+                  </Box>
+                </Box>
               </>
             )}
             
@@ -530,101 +619,233 @@ export default function ComparePage() {
                   Анализ завершен
                 </Alert>
                 
-                {/* Рейтинг кандидатов */}
+                {/* Полный анализ AI */}
                 <Typography variant="h6" gutterBottom>
-                  🏆 Рейтинг кандидатов
+                  🤖 Анализ кандидатов
                 </Typography>
                 
-                <Grid container spacing={2} sx={{ mb: 3 }}>
-                  {comparisonData.result.rank.map((candidateId, index) => {
-                    const candidate = candidates.find(c => c.id === candidateId);
-                    if (!candidate) return null;
-                    
-                    const position = index + 1;
-                    const isWinner = candidateId === comparisonData.result?.winnerId;
-                    
-                    return (
-                      <Grid item xs={12} sm={6} md={4} key={candidateId}>
-                        <Card 
-                          variant={isWinner ? "outlined" : "elevation"}
-                          sx={{ 
-                            border: isWinner ? '2px solid' : '1px solid',
-                            borderColor: isWinner ? 'success.main' : 'divider',
-                            bgcolor: isWinner ? 'success.50' : 'background.paper'
-                          }}
-                        >
-                          <CardContent>
-                            <Box display="flex" alignItems="center" gap={2} mb={2}>
-                              {getPositionIcon(position)}
-                              <Box>
-                                <Typography variant="h6" fontSize="1rem">
-                                  <Link 
-                                    href={`/hr/candidates/${candidate.id}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{ 
-                                      textDecoration: 'none', 
-                                      color: 'inherit',
-                                      cursor: 'pointer'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      (e.target as HTMLElement).style.color = '#1976d2';
-                                      (e.target as HTMLElement).style.textDecoration = 'underline';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      (e.target as HTMLElement).style.color = 'inherit';
-                                      (e.target as HTMLElement).style.textDecoration = 'none';
-                                    }}
-                                  >
-                                    {candidate.name}
-                                  </Link>
-                                </Typography>
-                                <Chip 
-                                  label={`${position} место`}
-                                  color={getPositionColor(position) as any}
-                                  size="small"
-                                />
-                              </Box>
-                            </Box>
-                            
-                            {isWinner && (
-                              <Chip 
-                                label="🏆 Лучший кандидат" 
-                                color="success" 
-                                variant="filled"
-                                size="small"
-                              />
-                            )}
-                            
-                            {candidate.score && (
-                              <Box mt={1}>
-                                <Typography variant="body2" color="text.secondary">
-                                  Оценка: {candidate.score}/10
-                                </Typography>
-                                <Rating 
-                                  value={candidate.score / 2} 
-                                  readOnly 
-                                  size="small" 
-                                />
-                              </Box>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-                
-                {/* Обоснование */}
-                <Divider sx={{ my: 2 }} />
-                <Typography variant="h6" gutterBottom>
-                  📝 Обоснование выбора
-                </Typography>
-                <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1, borderLeft: '4px solid', borderColor: 'primary.main' }}>
-                  <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-                    {comparisonData.result.reasoning}
+                <Box sx={{ 
+                  bgcolor: 'grey.50', 
+                  p: 3, 
+                  borderRadius: 2, 
+                  border: '1px solid', 
+                  borderColor: 'grey.200',
+                  fontFamily: 'inherit'
+                }}>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      whiteSpace: 'pre-wrap',
+                      lineHeight: 1.6,
+                      fontSize: '0.95rem'
+                    }}
+                  >
+                    {comparisonData.result?.analysis || comparisonData.result?.reasoning || 'Анализ недоступен'}
                   </Typography>
                 </Box>
+                
+                {/* Информация о вакансии */}
+                {comparisonData.result?.vacancy && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="h6" gutterBottom>
+                      📋 Информация о вакансии
+                    </Typography>
+                    <Box sx={{ 
+                      bgcolor: 'primary.50', 
+                      p: 2, 
+                      borderRadius: 1, 
+                      borderLeft: '4px solid', 
+                      borderColor: 'primary.main' 
+                    }}>
+                      <Typography variant="body2">
+                        <strong>Должность:</strong> {comparisonData.result.vacancy.title || 'Не указана'}<br />
+                        {comparisonData.result.vacancy.description && (
+                          <>
+                            <strong>Описание:</strong> {comparisonData.result.vacancy.description}
+                          </>
+                        )}
+                      </Typography>
+                    </Box>
+                  </>
+                )}
+
+                {/* Таблица сравнения кандидатов */}
+                {comparisonData.result?.comparison && comparisonData.result?.criteria && (
+                  <>
+                    <Divider sx={{ my: 3 }} />
+                    <Typography variant="h6" gutterBottom>
+                      📊 Детальное сравнение по критериям
+                    </Typography>
+                    
+                    {/* Критерии */}
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        🎯 Общие критерии для позиции
+                                </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                        {comparisonData.result.criteria.general?.map((criterion, index) => (
+                                <Chip 
+                            key={index} 
+                            label={criterion} 
+                                  size="small"
+                            variant="outlined" 
+                            color="primary"
+                                />
+                        ))}
+                            </Box>
+                            
+                      {comparisonData.result.criteria.specific && comparisonData.result.criteria.specific.length > 0 && (
+                        <>
+                          <Typography variant="subtitle1" gutterBottom>
+                            🎯 Специфичные критерии для этой вакансии
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            {comparisonData.result.criteria.specific.map((criterion, index) => (
+                              <Chip 
+                                key={index} 
+                                label={criterion} 
+                                size="small"
+                                variant="outlined" 
+                                color="secondary"
+                              />
+                            ))}
+                          </Box>
+                        </>
+                      )}
+                    </Box>
+
+                    {/* Таблица сравнения */}
+                    <TableContainer component={Paper} sx={{ mb: 2 }}>
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}>
+                              Кандидат
+                            </TableCell>
+                            {comparisonData.result.criteria.general?.map((criterion, index) => (
+                              <TableCell 
+                                key={`general-${index}`} 
+                                sx={{ 
+                                  fontWeight: 'bold', 
+                                  minWidth: 120,
+                                  bgcolor: 'primary.50',
+                                  borderRight: '1px solid',
+                                  borderColor: 'divider'
+                                }}
+                              >
+                                {criterion}
+                              </TableCell>
+                            ))}
+                            {comparisonData.result.criteria.specific?.map((criterion, index) => (
+                              <TableCell 
+                                key={`specific-${index}`} 
+                                sx={{ 
+                                  fontWeight: 'bold', 
+                                  minWidth: 120,
+                                  bgcolor: 'secondary.50',
+                                  borderRight: '1px solid',
+                                  borderColor: 'divider'
+                                }}
+                              >
+                                {criterion}
+                              </TableCell>
+                            ))}
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
+                              Общая оценка
+                            </TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
+                              Рекомендация
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {comparisonData.result.comparison.map((candidate, index) => {
+                            const isWinner = candidate.candidateId === comparisonData.result?.winnerId;
+                            return (
+                              <TableRow 
+                                key={candidate.candidateId}
+                                sx={{ 
+                                  bgcolor: isWinner ? 'success.50' : 'inherit',
+                                  '&:hover': { bgcolor: isWinner ? 'success.100' : 'grey.50' }
+                                }}
+                              >
+                                <TableCell sx={{ fontWeight: 'bold' }}>
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    {isWinner && <IconCrown size={16} color="#FFD700" />}
+                                    <Link 
+                                      href={`/hr/candidates/${candidate.candidateId}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{ 
+                                        textDecoration: 'none', 
+                                        color: 'inherit',
+                                        cursor: 'pointer'
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        (e.target as HTMLElement).style.color = '#1976d2';
+                                        (e.target as HTMLElement).style.textDecoration = 'underline';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        (e.target as HTMLElement).style.color = 'inherit';
+                                        (e.target as HTMLElement).style.textDecoration = 'none';
+                                      }}
+                                    >
+                                      {candidate.name}
+                                    </Link>
+                                  </Box>
+                                </TableCell>
+                                
+                                {/* Общие критерии */}
+                                {comparisonData.result.criteria.general?.map((criterion, critIndex) => (
+                                  <TableCell 
+                                    key={`general-${critIndex}`}
+                                    sx={{ 
+                                      borderRight: '1px solid',
+                                      borderColor: 'divider'
+                                    }}
+                                  >
+                                    {candidate.scores[criterion] || '-'}
+                                  </TableCell>
+                                ))}
+                                
+                                {/* Специфичные критерии */}
+                                {comparisonData.result.criteria.specific?.map((criterion, critIndex) => (
+                                  <TableCell 
+                                    key={`specific-${critIndex}`}
+                                    sx={{ 
+                                      borderRight: '1px solid',
+                                      borderColor: 'divider'
+                                    }}
+                                  >
+                                    {candidate.scores[criterion] || '-'}
+                                  </TableCell>
+                                ))}
+                                
+                                <TableCell sx={{ fontWeight: 'bold' }}>
+                                  {candidate.overallScore}
+                                </TableCell>
+                                
+                                <TableCell>
+                                  <Chip 
+                                    label={candidate.recommendation} 
+                                  size="small" 
+                                    color={
+                                      candidate.recommendation?.toLowerCase().includes('брать') ? 'success' :
+                                      candidate.recommendation?.toLowerCase().includes('отказать') ? 'error' :
+                                      'warning'
+                                    }
+                                    variant="outlined"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                    );
+                  })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </>
+                )}
               </>
             )}
             
@@ -668,9 +889,9 @@ export default function ComparePage() {
               >
                 {isLoadingAi ? 'Повторная попытка...' : 'Повторить AI-анализ'}
               </Button>
-            </>
-          )}
-          
+              </>
+            )}
+            
           {/* Если AI-анализ еще не запускался */}
           {!comparisonData && !isLoadingAi && (
             <Box textAlign="center" py={2}>
@@ -728,7 +949,7 @@ export default function ComparePage() {
                               (e.target as HTMLElement).style.textDecoration = 'none';
                             }}
                           >
-                            {candidate.name}
+                          {candidate.name}
                           </Link>
                         </Typography>
                       </Box>
