@@ -105,6 +105,29 @@ export default function HRVacancyDetailPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [snackbar, setSnackbar] = useState('');
   const [tab, setTab] = useState('1');
+  const [publicUrl, setPublicUrl] = useState<string | null>(null);
+
+
+  // Функция для генерации публичной ссылки
+  const generatePublicLink = async () => {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-token`, {
+        method: 'POST'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Формируем полный URL на фронтенде
+        const fullUrl = `${window.location.origin}/interview/apply/${data.publicToken}`;
+        setPublicUrl(fullUrl);
+        setSnackbar('Публичная ссылка создана!');
+      } else {
+        setSnackbar('Ошибка при создании ссылки');
+      }
+    } catch (error) {
+      setSnackbar('Ошибка при создании ссылки');
+    }
+  };
 
   // Функция для выбора всех кандидатов (только завершенных)
   const handleSelectAll = () => {
@@ -171,6 +194,20 @@ export default function HRVacancyDetailPage() {
     setLoading(true);
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`).then(r => r.json()).then(setData).finally(()=>setLoading(false));
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates);
+    
+    // Загружаем информацию о публичной ссылке
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-info`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.publicToken) {
+          // Формируем полный URL на фронтенде
+          const fullUrl = `${window.location.origin}/interview/apply/${data.publicToken}`;
+          setPublicUrl(fullUrl);
+        }
+      })
+      .catch(() => {
+        // Игнорируем ошибки при загрузке публичной информации
+      });
   }, [token, id]);
 
   if (!token) return <PageContainer title="Вакансия"><Box sx={{p:4}}><Typography>Нет доступа</Typography></Box></PageContainer>;
@@ -385,6 +422,45 @@ export default function HRVacancyDetailPage() {
                       }
                     }},
                     {field:'createdAt',header:'Дата добавления',render:(r:any)=>r.createdAt ? format(new Date(r.createdAt), 'dd.MM.yyyy HH:mm') : '-'},
+                    {field:'trustLevel',header:'Доверие',render:(r:any)=>{
+                      // Если нет fingerprint'а - показываем пустой кружок
+                      if (!r.deviceFingerprint) {
+                        return (
+                          <Tooltip title="❓ Нет данных об устройстве" arrow>
+                            <Box sx={{ 
+                              width: 16, 
+                              height: 16, 
+                              borderRadius: '50%', 
+                              border: '2px solid #ccc',
+                              display: 'inline-block'
+                            }} />
+                          </Tooltip>
+                        );
+                      }
+                      
+                      // Проверяем есть ли другие кандидаты с таким же device fingerprint
+                      const hasDuplicateDevice = candidates.some(c => 
+                        c.id !== r.id && 
+                        c.deviceFingerprint && 
+                        r.deviceFingerprint && 
+                        c.deviceFingerprint === r.deviceFingerprint
+                      );
+                      
+                      return (
+                        <Tooltip title={hasDuplicateDevice ? 
+                          "⚠️ Устройство использовалось другими кандидатами" : 
+                          "✅ Уникальное устройство"
+                        } arrow>
+                          <Box sx={{ 
+                            width: 16, 
+                            height: 16, 
+                            borderRadius: '50%', 
+                            bgcolor: hasDuplicateDevice ? 'error.main' : 'success.main',
+                            display: 'inline-block'
+                          }} />
+                        </Tooltip>
+                      );
+                    }},
                     {field:'actions',header:'',render:(r:any)=>(
                       <Box display="flex" gap={1} alignItems="center">
                         <Tooltip title="Скопировать ссылку на интервью">
@@ -478,6 +554,42 @@ export default function HRVacancyDetailPage() {
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
                     Редактировать
                   </Button>
+                  
+                  {/* Публичная ссылка для самозаписи */}
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="h6" gutterBottom>
+                      🌐 Публичная ссылка для самозаписи
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
+                      <TextField 
+                        value={publicUrl || 'Ссылка не создана'} 
+                        fullWidth 
+                        size="small"
+                        InputProps={{ readOnly: true }}
+                        sx={{ bgcolor: 'background.paper' }}
+                      />
+                      {publicUrl ? (
+                        <Button 
+                          onClick={() => navigator.clipboard.writeText(publicUrl)}
+                          variant="outlined"
+                          size="small"
+                        >
+                          Копировать
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={generatePublicLink}
+                          variant="contained"
+                          size="small"
+                        >
+                          Создать ссылку
+                        </Button>
+                      )}
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      Разместите эту ссылку на сайтах, в соцсетях, отправьте кандидатам
+                    </Typography>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
@@ -619,6 +731,8 @@ export default function HRVacancyDetailPage() {
           )}
         </DialogActions>
       </Dialog>
+
+
       
       {/* Плавающая кнопка сравнения */}
       {selectedCandidates.length >= 2 && (
