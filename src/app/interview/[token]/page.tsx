@@ -97,6 +97,7 @@ export default function CandidateInterviewPage() {
   }>({ camera: false, microphone: false });
   const [permissionsRequested, setPermissionsRequested] = useState(false);
   const [videoLoading, setVideoLoading] = useState(false);
+  const [deviceTestStarted, setDeviceTestStarted] = useState(false); // Флаг для предотвращения повторных запусков
 
   // Состояния для обратной связи
   const [showFeedback, setShowFeedback] = useState(false);
@@ -333,7 +334,16 @@ export default function CandidateInterviewPage() {
   },[token]);
 
   const startDeviceTest = async () => {
+    // Предотвращаем повторные запуски
+    if (deviceTestStarted) {
+      console.log('Device test already started, skipping...');
+      return;
+    }
+
     try{
+      setDeviceTestStarted(true);
+      console.log('Starting device test...');
+
       // Проверяем разрешения перед запросом потока
       const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
       const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
@@ -396,6 +406,7 @@ export default function CandidateInterviewPage() {
       tick();
     }catch(e){
       console.error('Ошибка доступа к камере/микрофону:', e);
+      setDeviceTestStarted(false); // Сбрасываем флаг при ошибке
 
       // Специальная обработка для Safari
       let errorMessage = 'Ошибка доступа к камере/микрофону';
@@ -414,6 +425,7 @@ export default function CandidateInterviewPage() {
     if(analyserRef.current){ analyserRef.current.disconnect(); analyserRef.current=null; }
     setMicReady(false);
     if(rafRef.current){ cancelAnimationFrame(rafRef.current); }
+    setDeviceTestStarted(false); // Сбрасываем флаг при остановке
   }
 
   const requestPermissions = async () => {
@@ -494,10 +506,10 @@ export default function CandidateInterviewPage() {
 
   // auto start device test when prepared screen shown
   useEffect(()=>{
-    if(!question && prepared && !testStream){
+    if(!question && prepared && !testStream && !deviceTestStarted){
        startDeviceTest();
     }
-  },[prepared, question]);
+  },[prepared, question, deviceTestStarted]);
 
   // Автоматическая проверка разрешений для Android устройств
   useEffect(() => {
@@ -505,13 +517,16 @@ export default function CandidateInterviewPage() {
       // Проверяем, является ли устройство Android
       const isAndroid = /Android/i.test(navigator.userAgent);
 
-      if (isAndroid && prepared && !testStream) {
+      if (isAndroid && prepared && !testStream && !deviceTestStarted) {
         console.log('Android устройство обнаружено, выполняем дополнительную проверку разрешений...');
 
         // Небольшая задержка для стабилизации
         setTimeout(async () => {
           try {
-            await checkPermissionsWithFallback();
+            // Проверяем еще раз, не запустился ли уже тест
+            if (!deviceTestStarted) {
+              await checkPermissionsWithFallback();
+            }
           } catch (e) {
             console.log('Автоматическая проверка разрешений не удалась:', e);
           }
@@ -520,7 +535,7 @@ export default function CandidateInterviewPage() {
     };
 
     checkAndroidPermissions();
-  }, [prepared, testStream]);
+  }, [prepared, testStream, deviceTestStarted]);
 
   // Специальная обработка для Telegram браузера
   useEffect(() => {
@@ -531,15 +546,15 @@ export default function CandidateInterviewPage() {
     if (isTelegram) {
       console.log('Telegram браузер обнаружен, применяем специальные настройки...');
 
-      // Принудительно показываем блок разрешений в Telegram браузере
-      if (prepared && !permissionsRequested) {
+      // Принудительно показываем блок разрешений в Telegram браузере только один раз
+      if (prepared && !permissionsRequested && !deviceTestStarted) {
         setTimeout(() => {
           console.log('Принудительно запрашиваем разрешения в Telegram браузере...');
           setPermissionsRequested(true);
         }, 1000);
       }
     }
-  }, [prepared, permissionsRequested]);
+  }, [prepared, permissionsRequested, deviceTestStarted]);
 
   // Специальная обработка для мобильных браузеров
   useEffect(() => {
@@ -586,6 +601,8 @@ export default function CandidateInterviewPage() {
     }
 
     stopDeviceTest();
+    setDeviceTestStarted(false); // Сбрасываем флаг для возможности повторного запуска в будущем
+    
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
     const d = await r.json();
