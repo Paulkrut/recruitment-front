@@ -386,19 +386,27 @@ export default function HRVacancyDetailPage() {
                     {field:'name',header:'Имя',render:(r:any)=>(
                       <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
                         <Box display="flex" alignItems="center" gap={1}>
-                          <Avatar sx={{ width: 32, height: 32, bgcolor: '#1976d2', fontWeight: 700 }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
-                          <Typography sx={{color:'#1976d2',fontWeight:700}}>{r.name}</Typography>
+                          <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
+                          <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
                         </Box>
                       </Link>
                     )},
-                    {field:'email',header:'Email',render:(r:any)=>r.email||'-'},
-                    {field:'phone',header:'Телефон',render:(r:any)=>r.phone||'-'},
+                    {field:'contact',header:'Контакты',render:(r:any)=>(
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          {r.phone || '-'}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                          {r.email || '-'}
+                        </Typography>
+                      </Box>
+                    )},
                     {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
                     {field:'score',header:'Оценка',render:(r:any)=>{
                       if (r.score !== undefined && r.score !== null) {
                         return (
                           <Chip 
-                            label={`${r.score}/10`} 
+                            label={r.score} 
                             color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'} 
                             size="small" 
                           />
@@ -406,7 +414,7 @@ export default function HRVacancyDetailPage() {
                       } else if (r.status === 'finished') {
                         return (
                           <Chip 
-                            label="Обрабатывается" 
+                            label="..." 
                             color="info" 
                             size="small" 
                           />
@@ -414,22 +422,31 @@ export default function HRVacancyDetailPage() {
                       } else {
                         return (
                           <Chip 
-                            label="Не завершено" 
+                            label="—" 
                             color="default" 
                             size="small" 
                           />
                         );
                       }
                     }},
-                    {field:'createdAt',header:'Дата добавления',render:(r:any)=>r.createdAt ? format(new Date(r.createdAt), 'dd.MM.yyyy HH:mm') : '-'},
+                    {field:'createdAt',header:'Дата',render:(r:any)=>r.createdAt ? (
+                      <Box>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                          {format(new Date(r.createdAt), 'dd.MM.yyyy')}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
+                          {format(new Date(r.createdAt), 'HH:mm')}
+                        </Typography>
+                      </Box>
+                    ) : '-'},
                     {field:'trustLevel',header:'Доверие',render:(r:any)=>{
                       // Если нет fingerprint'а - показываем пустой кружок
                       if (!r.deviceFingerprint) {
                         return (
                           <Tooltip title="❓ Нет данных об устройстве" arrow>
                             <Box sx={{ 
-                              width: 16, 
-                              height: 16, 
+                              width: 14, 
+                              height: 14, 
                               borderRadius: '50%', 
                               border: '2px solid #ccc',
                               display: 'inline-block'
@@ -452,8 +469,8 @@ export default function HRVacancyDetailPage() {
                           "✅ Уникальное устройство"
                         } arrow>
                           <Box sx={{ 
-                            width: 16, 
-                            height: 16, 
+                            width: 14, 
+                            height: 14, 
                             borderRadius: '50%', 
                             bgcolor: hasDuplicateDevice ? 'error.main' : 'success.main',
                             display: 'inline-block'
