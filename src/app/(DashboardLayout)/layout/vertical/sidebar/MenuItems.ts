@@ -69,7 +69,7 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "Запросы на удаление",
-    icon: 'delete-bin-linear',
+    icon: 'close-circle-linear',
     href: "/hr/forget-me-requests",
     bgcolor: "warning",
   }
