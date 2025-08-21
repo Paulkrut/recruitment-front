@@ -34,7 +34,6 @@ export default function PrivacyConsent({
           onChange={(e) => onChange(e.target.checked)}
           color="primary"
           sx={{ mt: 0.5 }}
-          error={error}
         />
         <Box>
           <Typography variant="body2" sx={{ mb: 1 }}>
