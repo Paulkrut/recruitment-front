@@ -4,6 +4,8 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import { Divider } from '@mui/material';
+
 const Footer = () => {
   return (
     <Box
@@ -15,20 +17,44 @@ const Footer = () => {
     >
       <Container maxWidth="lg">
         <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12} textAlign="center">
+          {/* Основная информация */}
+          <Grid item xs={12} md={6} textAlign="center">
             <Typography fontSize="14px" color="textSecondary" mt={1}>
-              All rights reserved by Spike Admin. Designed & Developed by
+              Все права защищены SofiHR. Система подбора персонала.
+            </Typography>
+          </Grid>
+          
+          {/* Ссылки на документы */}
+          <Grid item xs={12} md={6} textAlign="center">
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
               <Link
+                href="/privacy-policy"
                 target="_blank"
                 underline="none"
-                href="https://wrappixel.com/"
+                color="primary"
+                sx={{ fontSize: '14px' }}
               >
-                <Typography component="span" display="inline">
-                  {" "}
-                  Wrappixel
-                </Typography>{" "}
+                Политика конфиденциальности
               </Link>
-              .
+              <Link
+                href="/terms-of-service"
+                target="_blank"
+                underline="none"
+                color="primary"
+                sx={{ fontSize: '14px' }}
+              >
+                Условия использования
+              </Link>
+            </Box>
+          </Grid>
+        </Grid>
+        
+        <Divider sx={{ my: 2 }} />
+        
+        <Grid container spacing={3} justifyContent="center">
+          <Grid item xs={12} textAlign="center">
+            <Typography fontSize="12px" color="textSecondary">
+              © 2025 SofiHR. Система соответствует требованиям 152-ФЗ "О персональных данных"
             </Typography>
           </Grid>
         </Grid>

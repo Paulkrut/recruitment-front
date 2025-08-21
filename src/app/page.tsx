@@ -1442,11 +1442,59 @@ export default function LandingPage() {
       {/* Футер */}
       <Box sx={{ bgcolor: "#0A1929", color: "white", py: 4, position: 'relative', zIndex: 2 }}>
         <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="body2" color="grey.500">
-              © 2025 SofiHR. Все права защищены.
-            </Typography>
-          </Box>
+          <Grid container spacing={3} justifyContent="center">
+            {/* Основная информация */}
+            <Grid item xs={12} md={6} textAlign="center">
+              <Typography variant="body2" color="grey.500" mb={2}>
+                © 2025 SofiHR. Все права защищены.
+              </Typography>
+              <Typography variant="body2" color="grey.500">
+                Система соответствует требованиям 152-ФЗ "О персональных данных"
+              </Typography>
+            </Grid>
+            
+            {/* Ссылки на документы */}
+            <Grid item xs={12} md={6} textAlign="center">
+              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap' }}>
+                <Link
+                  href="/privacy-policy"
+                  target="_blank"
+                  underline="none"
+                  sx={{ 
+                    color: 'grey.400', 
+                    fontSize: '14px',
+                    '&:hover': { color: 'white' }
+                  }}
+                >
+                  Политика конфиденциальности
+                </Link>
+                <Link
+                  href="/terms-of-service"
+                  target="_blank"
+                  underline="none"
+                  sx={{ 
+                    color: 'grey.400', 
+                    fontSize: '14px',
+                    '&:hover': { color: 'white' }
+                  }}
+                >
+                  Условия использования
+                </Link>
+                <Link
+                  href="/forget-me"
+                  target="_blank"
+                  underline="none"
+                  sx={{ 
+                    color: 'grey.400', 
+                    fontSize: '14px',
+                    '&:hover': { color: 'white' }
+                  }}
+                >
+                  Удалить мои данные
+                </Link>
+              </Box>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
     </Box>

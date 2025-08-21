@@ -64,6 +64,14 @@ const Menuitems: MenuitemsType[] = [
     icon: 'settings-linear',
     href: "/hr/settings",
     bgcolor: "grey",
+  },
+
+  {
+    id: uniqueId(),
+    title: "Запросы на удаление",
+    icon: 'delete-bin-linear',
+    href: "/hr/forget-me-requests",
+    bgcolor: "warning",
   }
 ];
 
