@@ -606,7 +606,7 @@ export default function CandidateInterviewPage() {
 
     stopDeviceTest();
     setDeviceTestStarted(false); // Сбрасываем флаг для возможности повторного запуска в будущем
-    
+
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
     const d = await r.json();
@@ -1152,14 +1152,14 @@ export default function CandidateInterviewPage() {
 
   const submitCandidateOpinion = async () => {
     if (candidateOpinion.length < 10) return;
-    
+
     try {
       const response = await fetch(`${API_BASE}/api/interview/${token}/opinion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ opinion: candidateOpinion })
       });
-      
+
       if (response.ok) {
         setOpinionSubmitted(true);
       }
@@ -1174,13 +1174,13 @@ export default function CandidateInterviewPage() {
     }
 
     setForgetMeLoading(true);
-    
+
     try {
       const response = await fetch(`${API_BASE}/api/interview/${token}/forget-me`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
-      
+
       if (response.ok) {
         // Перенаправляем на главную страницу после успешного удаления
         window.location.href = '/';
@@ -2286,12 +2286,629 @@ export default function CandidateInterviewPage() {
     <>
       {/* Основной контент */}
       <Box sx={{
-        minHeight: '100vh',
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden'
+        // Убираем overflow: hidden для мобильных устройств
+        overflow: isMobile ? 'visible' : 'hidden',
+        maxWidth: '1200px', // Ограничение ширины для больших мониторов
+        mx: 'auto', // Центрирование на больших экранах
+        width: '100%', // Полная ширина на мобильных
+        px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
       }}>
-        {/* ... существующий код ... */}
+        {/* Fixed Header - WhatsApp Style */}
+        <Box sx={{
+          p: isMobile ? 2 : 3,
+          pb: isMobile ? 1 : 3,
+          bgcolor: '#ffffff',
+          borderBottom: '1px solid #e0e0e0',
+          flexShrink: 0,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          {stepperComp}
+          {/* header */}
+          <Box sx={{ display:'flex', alignItems:'center', justifyContent:'space-between', mb:1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box sx={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                bgcolor: '#25d366',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 1
+              }}>
+                <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '16px' }}>
+                  🤖
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="h6" fontWeight={600} sx={{ color: '#000' }}>
+                  Интервью
+                </Typography>
+                <Typography variant="caption" sx={{ color: '#666' }}>
+                  AI-ассистент
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{display:'flex',alignItems:'center',gap:2}}>
+              {total && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
+                    {formatQuestionNumber(question.position)} из {total}
+                  </Typography>
+                  {isFollowUpQuestion(question.position) && (
+                    <Typography variant="caption" sx={{ color: '#25d366', fontWeight: 600, fontSize: '11px' }}>
+                      (доп.)
+                    </Typography>
+                  )}
+                </Box>
+              )}
+              {timeLeft !== null && question?.maxTime && (
+                <Box position="relative" display="inline-flex">
+                  <CircularProgress
+                    variant="determinate"
+                    value={(timeLeft / (question.maxTime || 1)) * 100}
+                    size={32}
+                    sx={{ color: '#25d366' }}
+                  />
+                  <Box
+                    sx={{
+                      top: 0,
+                      left: 0,
+                      bottom: 0,
+                      right: 0,
+                      position: 'absolute',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Typography variant="caption" component="div" sx={{ color: '#666', fontSize: '10px' }}>
+                      {timeLeft}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+              {paused && <PauseIcon sx={{ color: '#666', fontSize: '20px' }} />}
+            </Box>
+          </Box>
+
+          {/* progress */}
+          {total && (
+            <LinearProgress
+              variant="determinate"
+              value={(question.position / total) * 100}
+              sx={{
+                mb: 1,
+                height: 3,
+                borderRadius: 2,
+                bgcolor: '#e0e0e0',
+                '& .MuiLinearProgress-bar': {
+                  bgcolor: '#25d366'
+                }
+              }}
+            />
+          )}
+          {timeLeft !== null && (
+            <Typography variant="caption" sx={{ color: '#666', fontSize: '11px' }}>
+              {timeLeft} сек
+            </Typography>
+          )}
+        </Box>
+
+        {/* Chat Area - WhatsApp/Telegram Style */}
+        <Box sx={{
+          flex: 1,
+          // Убираем overflow: hidden для мобильных устройств
+          overflow: isMobile ? 'visible' : 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: '#f0f2f5', // WhatsApp-like background
+          position: 'relative'
+        }}>
+          {/* Chat Container */}
+          <Box
+            ref={chatScrollRef}
+            sx={{
+              height: '100%',
+              // Улучшаем прокрутку для мобильных устройств
+              overflow: isMobile ? 'scroll' : 'auto',
+              p: { xs: 1, sm: 2 },
+              // WhatsApp-like scrolling
+              WebkitOverflowScrolling: 'touch',
+              scrollbarWidth: 'thin',
+              // Убираем блокировку прокрутки на мобильных
+              overscrollBehavior: isMobile ? 'contain' : 'auto',
+              '&::-webkit-scrollbar': {
+                width: '4px',
+              },
+              '&::-webkit-scrollbar-track': {
+                background: 'transparent',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                background: 'rgba(0,0,0,0.1)',
+                borderRadius: '2px',
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                background: 'rgba(0,0,0,0.2)',
+              },
+            }}
+          >
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              minHeight: '100%',
+              justifyContent: 'flex-end'
+            }}>
+              {chat.map((m,i)=>(
+                m.text=== 'typing' ? (
+                  <Box key={i} sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    mb: 1
+                  }}>
+                    <Box sx={{
+                      maxWidth: '70%',
+                      bgcolor: '#ffffff',
+                      p: 2,
+                      borderRadius: '18px 18px 18px 4px',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                      position: 'relative'
+                    }}>
+                      <Box component="span" sx={{
+                        animation: `${blink} 1s infinite step-start`,
+                        fontSize: '20px',
+                        color: '#666'
+                      }}>
+                        •••
+                      </Box>
+                      {/* Время для typing индикатора */}
+                      <Typography sx={{
+                        fontSize: '11px',
+                        color: '#999',
+                        textAlign: 'left',
+                        mt: 0.5
+                      }}>
+                        {formatMessageTime(m.timestamp)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box key={i} sx={{
+                    display: 'flex',
+                    justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
+                    mb: 1
+                  }}>
+                    <Box sx={{
+                      maxWidth: '70%',
+                      bgcolor: m.role === 'user' ? '#dcf8c6' : '#ffffff',
+                      p: 2,
+                      borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                      position: 'relative',
+                      wordBreak: 'break-word'
+                    }}>
+                      {/* Видео сообщение */}
+                      {m.video && (
+                        <Box sx={{ mb: 1, borderRadius: '8px', overflow: isMobile ? 'visible' : 'hidden' }}>
+                          {m.video === "live" ? (
+                            // Live-поток во время записи
+                            <Box sx={{
+                              width: '100%',
+                              maxWidth: '280px',
+                              height: '160px',
+                              bgcolor: '#000',
+                              borderRadius: '8px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#fff',
+                              fontSize: '14px',
+                              position: 'relative',
+                              overflow: isMobile ? 'visible' : 'hidden'
+                            }}>
+                              {/* Live-видео поток */}
+                              {previewStream ? (
+                                <video
+                                  ref={chatVideoRef}
+                                  autoPlay
+                                  muted
+                                  playsInline
+                                  onLoadStart={() => setVideoLoading(true)}
+                                  onCanPlay={() => setVideoLoading(false)}
+                                  onError={(e) => {
+                                    console.error('Chat video error:', e);
+                                    setVideoLoading(false);
+                                  }}
+                                  style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px'
+                                  }}
+                                />
+                              ) : (
+                                // Fallback если поток не загрузился
+                                <Box sx={{
+                                  width: '100%',
+                                  height: '100%',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexDirection: 'column',
+                                  gap: 1
+                                }}>
+                                  <Typography sx={{ fontSize: '24px' }}>🎥</Typography>
+                                  <Typography sx={{ fontSize: '12px', opacity: 0.8 }}>
+                                    Подключение к камере...
+                                  </Typography>
+                                </Box>
+                              )}
+                              {/* Индикатор загрузки видео */}
+                              {videoLoading && (
+                                <Box sx={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  left: '50%',
+                                  transform: 'translate(-50%, -50%)',
+                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                  color: 'white',
+                                  px: 2,
+                                  py: 1,
+                                  borderRadius: '4px',
+                                  fontSize: '12px',
+                                  fontWeight: 'bold',
+                                  zIndex: 2
+                                }}>
+                                  Загрузка видео...
+                                </Box>
+                              )}
+                              {/* Наложение с индикатором записи */}
+                              <Box sx={{
+                                position: 'absolute',
+                                top: 8,
+                                right: 8,
+                                bgcolor: 'rgba(255, 0, 0, 0.8)',
+                                color: 'white',
+                                px: 1,
+                                py: 0.5,
+                                borderRadius: '4px',
+                                fontSize: '10px',
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5,
+                                zIndex: 1
+                              }}>
+                                <Box sx={{
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: '50%',
+                                  bgcolor: '#fff',
+                                  animation: `${pulse} 1s infinite`
+                                }} />
+                                ЗАПИСЬ
+                              </Box>
+                              {/* Индикатор времени записи */}
+                              {timeLeft !== null && question?.maxTime && (
+                                <Box sx={{
+                                  position: 'absolute',
+                                  bottom: 8,
+                                  left: 8,
+                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                  color: 'white',
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: '4px',
+                                  fontSize: '10px',
+                                  fontWeight: 'bold',
+                                  zIndex: 1
+                                }}>
+                                  {timeLeft}s
+                                </Box>
+                              )}
+                              {/* Индикатор качества записи */}
+                              {recording && (
+                                <Box sx={{
+                                  position: 'absolute',
+                                  bottom: 8,
+                                  right: 8,
+                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                  color: 'white',
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: '4px',
+                                  fontSize: '10px',
+                                  fontWeight: 'bold',
+                                  zIndex: 1,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 0.5
+                                }}>
+                                  <Box sx={{
+                                    width: 4,
+                                    height: 4,
+                                    borderRadius: '50%',
+                                    bgcolor: '#4caf50'
+                                  }} />
+                                  HD
+                                </Box>
+                              )}
+                              {/* Индикатор уровня звука */}
+                              {recording && micLevel > 0 && (
+                                <Box sx={{
+                                  position: 'absolute',
+                                  top: 8,
+                                  left: 8,
+                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
+                                  color: 'white',
+                                  px: 1,
+                                  py: 0.5,
+                                  borderRadius: '4px',
+                                  fontSize: '10px',
+                                  fontWeight: 'bold',
+                                  zIndex: 1,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 0.5
+                                }}>
+                                  <Box sx={{
+                                    width: 8,
+                                    height: 2,
+                                    bgcolor: '#fff',
+                                    borderRadius: '1px',
+                                    position: 'relative',
+                                    overflow: isMobile ? 'visible' : 'hidden'
+                                  }}>
+                                    <Box sx={{
+                                      width: `${Math.min(micLevel * 2, 100)}%`,
+                                      height: '100%',
+                                      bgcolor: '#4caf50',
+                                      transition: 'width 0.1s ease'
+                                    }} />
+                                  </Box>
+                                  🔊
+                                </Box>
+                              )}
+                            </Box>
+                          ) : (
+                            // Финальное видео с контролами
+                            <video
+                              src={m.video}
+                              controls
+                              style={{
+                                width: '100%',
+                                maxWidth: '280px',
+                                borderRadius: '8px'
+                              }}
+                            />
+                          )}
+                        </Box>
+                      )}
+
+                      {/* Текстовое сообщение */}
+                      {m.text && (
+                        <Typography sx={{
+                          fontSize: '14px',
+                          lineHeight: 1.4,
+                          color: '#000',
+                          mb: 0.5
+                        }}>
+                          {m.text}
+                        </Typography>
+                      )}
+
+                      {/* Время сообщения */}
+                      <Typography sx={{
+                        fontSize: '11px',
+                        color: '#999',
+                        textAlign: m.role === 'user' ? 'right' : 'left',
+                        mt: 0.5
+                      }}>
+                        {formatMessageTime(m.timestamp)}
+                      </Typography>
+                    </Box>
+                  </Box>
+                )
+              ))}
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Fixed Bottom Controls - WhatsApp Style */}
+        <Box sx={{
+          p: isMobile ? 2 : 3,
+          bgcolor: '#ffffff',
+          borderTop: '1px solid #e0e0e0',
+          flexShrink: 0,
+          boxShadow: '0 -1px 3px rgba(0,0,0,0.1)'
+        }}>
+          {/* answer input – только аудио */}
+          <Box sx={{
+            display: "flex",
+            gap: 2,
+            justifyContent: 'space-between',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: 'center'
+          }}>
+            {!recording ? (
+              <>
+                <Button
+                  variant="contained"
+                  onClick={startRecording}
+                  disabled={recording || loadingNextQuestion}
+                  fullWidth={isMobile}
+                  size={isMobile ? 'large' : 'medium'}
+                  sx={{
+                    fontWeight: 600,
+                    bgcolor: '#25d366', // WhatsApp green
+                    '&:hover': {
+                      bgcolor: '#128c7e',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                      bgcolor: '#25d366',
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    px: 3
+                  }}
+                >
+                  {loadingNextQuestion ? 'Обработка ответа...' : '🎤 Записать ответ'}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setSkipDialogOpen(true)}
+                  disabled={recording || loadingNextQuestion}
+                  color="primary"
+                  fullWidth={isMobile}
+                  size={isMobile ? 'large' : 'medium'}
+                  sx={{
+                    borderColor: '#666',
+                    color: '#666',
+                    '&:hover': {
+                      backgroundColor: '#f5f5f5',
+                      borderColor: '#333',
+                      color: '#333',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    px: 3
+                  }}
+                >
+                  ⏭️ Пропустить
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={stopRecording}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                sx={{
+                  bgcolor: '#ff4444',
+                  '&:hover': {
+                    bgcolor: '#cc0000',
+                  },
+                  borderRadius: '24px',
+                  textTransform: 'none',
+                  fontSize: '14px',
+                  px: 3
+                }}
+              >
+                ⏹️ Стоп
+              </Button>
+            )}
+          </Box>
+        </Box>
+
+        {/* Диалог подтверждения пропуска вопроса - WhatsApp Style */}
+        <Dialog
+          open={skipDialogOpen}
+          onClose={() => setSkipDialogOpen(false)}
+          PaperProps={{
+            sx: {
+              bgcolor: '#ffffff',
+              borderRadius: '12px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+              maxWidth: '400px',
+              width: '90%'
+            }
+          }}
+        >
+          <DialogTitle sx={{
+            pb: 1,
+            textAlign: 'center',
+            borderBottom: '1px solid #e0e0e0'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+              <Box sx={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                bgcolor: '#ff9800',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 1
+              }}>
+                <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '20px' }}>
+                  ⚠️
+                </Typography>
+              </Box>
+            </Box>
+            <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}>
+              Пропустить вопрос?
+            </Typography>
+          </DialogTitle>
+          <DialogContent sx={{ pt: 2, pb: 1 }}>
+            <Typography sx={{
+              color: '#666',
+              lineHeight: 1.5,
+              textAlign: 'center',
+              fontSize: '14px'
+            }}>
+              Вы уверены, что хотите пропустить этот вопрос?
+              <br />
+              <Box component="span" sx={{
+                color: '#ff9800',
+                fontWeight: 600,
+                fontSize: '13px'
+              }}>
+                Внимание:
+              </Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
+            </Typography>
+          </DialogContent>
+          <DialogActions sx={{
+            p: 2,
+            pt: 1,
+            gap: 1,
+            justifyContent: 'center'
+          }}>
+            <Button
+              onClick={() => setSkipDialogOpen(false)}
+              sx={{
+                color: '#666',
+                borderColor: '#ddd',
+                '&:hover': {
+                  bgcolor: '#f5f5f5',
+                  borderColor: '#ccc'
+                },
+                borderRadius: '20px',
+                textTransform: 'none',
+                px: 3
+              }}
+              variant="outlined"
+            >
+              Отмена
+            </Button>
+            <Button
+              onClick={skipQuestion}
+              sx={{
+                bgcolor: '#ff9800',
+                '&:hover': {
+                  bgcolor: '#f57c00',
+                },
+                borderRadius: '20px',
+                textTransform: 'none',
+                px: 3
+              }}
+              variant="contained"
+            >
+              Пропустить
+
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
 
       {/* Диалог подтверждения удаления данных */}
@@ -2308,7 +2925,7 @@ export default function CandidateInterviewPage() {
           <Typography variant="body1" paragraph sx={{ mb: 2 }}>
             <strong>Внимание!</strong> Вы собираетесь удалить все свои данные с платформы SofiHR.
           </Typography>
-          
+
           <Typography variant="body2" paragraph>
             <strong>Что будет удалено:</strong>
           </Typography>
@@ -2334,7 +2951,7 @@ export default function CandidateInterviewPage() {
           <Typography variant="body2" paragraph>
             <strong>Для подтверждения введите "УДАЛИТЬ":</strong>
           </Typography>
-          
+
           <TextField
             fullWidth
             value={forgetMeConfirmed}
