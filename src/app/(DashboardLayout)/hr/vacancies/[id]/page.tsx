@@ -141,7 +141,7 @@ export default function HRVacancyDetailPage() {
 
   // Получаем только завершенных кандидатов для сравнения
   const finishedCandidates = useMemo(() => 
-    candidates.filter(c => c.status === 'finished'), 
+    (candidates || []).filter(c => c.status === 'finished'), 
     [candidates]
   );
 

@@ -135,30 +135,14 @@ export default function CandidateInterviewPage() {
     });
   };
 
-  // Функция для форматирования номера вопроса
-  const formatQuestionNumber = (position: number) => {
-    // Если position имеет десятичную часть (например, 0.01, 0.02, 3.01, 3.02),
-    // то это дополнительный вопрос
-    const mainQuestion = Math.floor(position);
-    const decimalPart = position - mainQuestion;
-
-    if (decimalPart > 0) {
-      // Дополнительный вопрос: 1.1, 1.2, 1.3 или 3.1, 3.2, 3.3
-      const followUpNumber = Math.round(decimalPart * 100); // 1, 2, 3
-      // Если mainQuestion = 0, то это дополнительный вопрос к первому основному вопросу
-      const actualMainQuestion = mainQuestion === 0 ? 1 : mainQuestion + 1;
-      return `${actualMainQuestion}.${followUpNumber}`;
-    } else {
-      // Основной вопрос: 1, 2, 3, 4
-      return `${position + 1}`;
-    }
+  // Упрощенная нумерация вопросов - просто округляем позицию
+  const getQuestionNumber = (position: number) => {
+    return Math.round(position);
   };
 
-  // Функция для определения типа вопроса
+  // Все вопросы теперь считаются основными
   const isFollowUpQuestion = (position: number) => {
-    const mainQuestion = Math.floor(position);
-    const decimalPart = position - mainQuestion;
-    return decimalPart > 0;
+    return false; // Больше нет follow-up вопросов
   };
 
   const stepperComp = (
@@ -247,7 +231,7 @@ export default function CandidateInterviewPage() {
     setCurrentQuestionTimerStarted(false); // Сбрасываем флаг для текущего вопроса
     if(question){
       startCountdown(question.maxTime || 120);
-      // Дополнительный скролл к новому вопросу
+      // Скролл к новому вопросу
       setTimeout(() => scrollToBottom(), 200);
       // Принудительный скролл в конце
       setTimeout(() => forceScrollToBottom(), 500);
@@ -896,153 +880,101 @@ export default function CandidateInterviewPage() {
 
   /* ---------------- handlers ---------------- */
   async function sendBlobAnswer(blob: Blob) {
-    console.log('=== sendBlobAnswer START ===', {
-      questionId: question?.id,
-      answered,
-      recording,
-      timeLeft,
-      timerStarted
-    });
-
-    if (!question || answered) {
-      console.log('=== sendBlobAnswer EARLY RETURN ===', {
-        hasQuestion: !!question,
-        answered
-      });
-      return; // Защита от дублирования
-    }
-
-    // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
-    setTimeLeft(null);
-
-    console.log('sendBlobAnswer called', { questionId: question.id });
-
-    // Дополнительная проверка - если запись активна, не отправляем пустой ответ
-    if (recording) {
-      console.log('Recording is active, skipping empty answer');
-      return;
-    }
+    if (!question || answered) return;
 
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
-    setLastAnswerTime(Date.now()); // Запоминаем время отправки ответа
+    setLastAnswerTime(Date.now());
 
-    // Обновляем последнее видео-сообщение с финальным видео
-    const finalVideoUrl = URL.createObjectURL(blob);
+    // Заменяем live-сообщение на записанное видео и добавляем typing индикатор
+    setChat((p) => {
+      const newChat = [...p];
 
-    // Небольшая задержка для лучшего UX - пользователь видит процесс обработки
-    setTimeout(() => {
-      setChat((p) => {
-        const newChat = [...p];
-        // Находим последнее видео-сообщение пользователя и обновляем его
-        for (let i = newChat.length - 1; i >= 0; i--) {
-          if (newChat[i].role === 'user' && newChat[i].video) {
-            // Очищаем старый URL если он был
-            if (newChat[i].video !== "live") {
-              URL.revokeObjectURL(newChat[i].video);
-            }
-            newChat[i] = {
-              ...newChat[i],
-              video: finalVideoUrl,
-              text: "🎥 Видео ответ отправлен",
-              timestamp: newChat[i].timestamp || Date.now()
-            };
-            break;
-          }
+      // Находим и заменяем последнее live-сообщение пользователя на записанное видео
+      for (let i = newChat.length - 1; i >= 0; i--) {
+        if (newChat[i].role === 'user' && newChat[i].video === 'live') {
+          newChat[i] = { role: "user", text: "", video: URL.createObjectURL(blob), timestamp: Date.now() };
+          break;
         }
-        return newChat;
-      });
-    }, 500); // 500ms задержка
+      }
 
-    // Добавляем индикатор обработки
-    setChat((p) => [
-      ...p,
-      { role: "bot", text: "typing", timestamp: Date.now() },
-    ]);
-    const typingIdx = chat.length + 1;
+      // Добавляем typing индикатор бота
+      newChat.push({ role: "bot", text: "typing", timestamp: Date.now() });
+
+      return newChat;
+    });
 
     const fd = new FormData();
     fd.append("questionId", String(question.id));
     fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
 
-    const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
-      method: "POST",
-      body: fd,
-    });
-    console.log('Answer response:', answerResponse.status, answerResponse.ok);
+    try {
+      // Отправляем ответ на сервер
+      const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
+        method: "POST",
+        body: fd,
+      });
+      console.log('Answer response:', answerResponse.status, answerResponse.ok);
 
-    const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
-    console.log('Next question response:', r.status, r.ok);
+      // Немедленно получаем следующий вопрос
+      const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+      console.log('Next question response:', r.status, r.ok);
 
-    if (!r.ok) {
-      // interview finished
-      setChat((p) => p.filter((_, i) => i !== typingIdx));
-      const res = await fetch(
-        `${API_BASE}/api/public/interview/${token}/result`
-      );
-      setResult(await res.json());
+      if (!r.ok) {
+        // интервью завершено - убираем typing индикатор
+        setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+        const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+        setResult(await res.json());
+        setLoadingNextQuestion(false);
+        return;
+      }
+
+      const d = await r.json();
+      console.log('Next question data:', d);
+
+      // если сервер не вернул вопрос - завершаем
+      if (!d.question) {
+        // убираем typing индикатор
+        setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+        const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+        setResult(await res.json());
+        setLoadingNextQuestion(false);
+        return;
+      }
+
+      // Устанавливаем следующий вопрос
+      setQuestion(d.question);
+      setPreviousQuestionId(d.question.id);
+      setChat((p) => {
+        const cp = [...p];
+        // Находим и заменяем последний typing индикатор бота на новый вопрос
+        for (let i = cp.length - 1; i >= 0; i--) {
+          if (cp[i].role === 'bot' && cp[i].text === 'typing') {
+            cp[i] = { role: "bot", text: d.question.text, timestamp: Date.now() };
+            break;
+          }
+        }
+        return cp;
+      });
+
+    } catch (error) {
+      console.error('Error sending answer:', error);
+      // Убираем typing индикатор при ошибке
+      setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+    } finally {
       setLoadingNextQuestion(false);
-      return;
+      setAnswered(false);
     }
-
-    const d = await r.json();
-    console.log('Next question data:', d);
-
-    // if server returns no question – finish
-    if (!d.question) {
-      const res = await fetch(
-        `${API_BASE}/api/public/interview/${token}/result`
-      );
-      setResult(await res.json());
-      setLoadingNextQuestion(false);
-      return;
-    }
-
-    setQuestion(d.question);
-    setPreviousQuestionId(d.question.id);
-    setChat((p) => {
-      const cp = [...p];
-      // Заменяем typing индикатор на новый вопрос, сохраняя видео-сообщение
-      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
-      return cp;
-    });
-    setLoadingNextQuestion(false);
-    setAnswered(false);
   }
 
   async function sendEmptyAnswer(){
-    console.log('=== sendEmptyAnswer START ===', {
-      questionId: question?.id,
-      answered,
-      recording,
-      timeLeft,
-      timerStarted
-    });
-
-    if (!question || answered) {
-      console.log('=== sendEmptyAnswer EARLY RETURN ===', {
-        hasQuestion: !!question,
-        answered
-      });
-      return; // Защита от дублирования
-    }
-
-    // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
-    setTimeLeft(null);
-
-    console.log('sendEmptyAnswer called', { questionId: question.id });
-
-    // Дополнительная проверка - если запись активна, не отправляем пустой ответ
-    if (recording) {
-      console.log('Recording is active, skipping empty answer');
-      return;
-    }
+    if (!question || answered) return;
 
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
-    setLastAnswerTime(Date.now()); // Запоминаем время отправки пустого ответа
+    setLastAnswerTime(Date.now());
 
     // optimistic UI
     setChat((p)=>[
@@ -1050,44 +982,64 @@ export default function CandidateInterviewPage() {
       {role:'user',text:'(нет ответа)', timestamp: Date.now()},
       {role:'bot',text:'typing', timestamp: Date.now()},
     ]);
-    const typingIdx = chat.length + 1;
 
     const fd = new FormData();
     fd.append('questionId', String(question.id));
     fd.append('text','');
 
-    console.log('Sending empty answer to server...');
-    const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
-    console.log('Empty answer response:', answerResponse.status, answerResponse.ok);
+    try {
+      // Отправляем пустой ответ на сервер
+      const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
+      console.log('Empty answer response:', answerResponse.status, answerResponse.ok);
 
-    const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
-    console.log('Next question response (empty):', r.status, r.ok);
+      // Немедленно получаем следующий вопрос
+      const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+      console.log('Next question response (empty):', r.status, r.ok);
 
-    if(!r.ok){
-      setChat((p)=>p.filter((_,i)=>i!==typingIdx));
-      const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
-      setResult(await res.json());
+      if(!r.ok){
+        // убираем typing индикатор
+        setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+        const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+        setResult(await res.json());
+        setLoadingNextQuestion(false);
+        return;
+      }
+
+      const d = await r.json();
+      console.log('Next question data (empty):', d);
+
+      if(!d.question){
+        // убираем typing индикатор
+        setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+        const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+        setResult(await res.json());
+        setLoadingNextQuestion(false);
+        return;
+      }
+
+      // Устанавливаем следующий вопрос
+      setQuestion(d.question);
+      setPreviousQuestionId(d.question.id);
+      setChat((p) => {
+        const cp = [...p];
+        // Находим и заменяем последний typing индикатор бота на новый вопрос
+        for (let i = cp.length - 1; i >= 0; i--) {
+          if (cp[i].role === 'bot' && cp[i].text === 'typing') {
+            cp[i] = { role: "bot", text: d.question.text, timestamp: Date.now() };
+            break;
+          }
+        }
+        return cp;
+      });
+
+    } catch (error) {
+      console.error('Error sending empty answer:', error);
+      // Убираем typing индикатор при ошибке
+      setChat((p) => p.filter(m => !(m.role === 'bot' && m.text === 'typing')));
+    } finally {
       setLoadingNextQuestion(false);
-      return;
+      setAnswered(false);
     }
-    const d = await r.json();
-    console.log('Next question data (empty):', d);
-
-    if(!d.question){
-      const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
-      setResult(await res.json());
-      setLoadingNextQuestion(false);
-      return;
-    }
-    setQuestion(d.question);
-    setPreviousQuestionId(d.question.id);
-    setChat((p)=>{
-      const cp=[...p];
-      cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now()};
-      return cp;
-    });
-    setLoadingNextQuestion(false);
-    setAnswered(false);
   }
 
   async function skipQuestion() {
@@ -1215,22 +1167,24 @@ export default function CandidateInterviewPage() {
 
     // Запускаем генерацию
     try {
-      const response = await fetch(`${API_BASE}/api/public/interview/${token}/generate-feedback`, {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/request-results`, {
         method: 'POST'
       });
 
-
       if (response.ok) {
         const data = await response.json();
-        if (data.status === 'already_exists') {
-          // Обратная связь уже существует, пробуем загрузить
-          await loadFeedback();
-          return;
+        if (data.status === 'generating') {
+          // Генерация запущена, запускаем поллинг и прогресс
+          startProgressAnimation();
+          startPolling();
+        } else if (data.status === 'ready') {
+          // Обратная связь уже готова
+          setFeedbackData(data);
+          setFeedbackLoading(false);
+          setShowFeedback(true);
+        } else {
+          throw new Error(data.message || 'Неизвестный статус ответа');
         }
-
-        // Запускаем поллинг и прогресс
-        startProgressAnimation();
-        startPolling();
       } else {
         throw new Error('Ошибка запуска генерации');
       }
@@ -2336,13 +2290,8 @@ export default function CandidateInterviewPage() {
               {total && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
-                    {formatQuestionNumber(question.position)} из {total}
+                    {getQuestionNumber(question.position)} из {total}
                   </Typography>
-                  {isFollowUpQuestion(question.position) && (
-                    <Typography variant="caption" sx={{ color: '#25d366', fontWeight: 600, fontSize: '11px' }}>
-                      (доп.)
-                    </Typography>
-                  )}
                 </Box>
               )}
               {timeLeft !== null && question?.maxTime && (
@@ -2444,7 +2393,7 @@ export default function CandidateInterviewPage() {
               justifyContent: 'flex-end'
             }}>
               {chat.map((m,i)=>(
-                m.text=== 'typing' ? (
+                m.text === 'typing' && m.role === 'bot' ? (
                   <Box key={i} sx={{
                     display: 'flex',
                     justifyContent: 'flex-start',
