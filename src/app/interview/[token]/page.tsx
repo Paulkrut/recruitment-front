@@ -1047,31 +1047,6 @@ export default function CandidateInterviewPage() {
     await sendEmptyAnswer();
   }
 
-  // Функции для работы с обратной связью
-  async function loadFeedback() {
-    setFeedbackLoading(true);
-    try {
-      const response = await fetch(`${API_BASE}/api/public/interview/${token}/feedback`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.status === 'ready') {
-          setFeedbackData(data);
-          setShowFeedback(true);
-        } else {
-          // Обратная связь не готова
-          throw new Error('Обратная связь еще не сгенерирована');
-        }
-      } else {
-        throw new Error('Обратная связь пока не готова');
-      }
-    } catch (error) {
-      console.error('Error loading feedback:', error);
-      // Показываем сообщение о том, что нужно начать генерацию
-      alert('Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.');
-    } finally {
-      setFeedbackLoading(false);
-    }
-  }
 
   async function sendFeedbackToEmail() {
     if (!feedbackEmail.trim()) return;
@@ -1106,10 +1081,12 @@ export default function CandidateInterviewPage() {
     if (candidateOpinion.length < 10) return;
 
     try {
-      const response = await fetch(`${API_BASE}/api/interview/${token}/opinion`, {
+      const response = await fetch(`${API_BASE}/api/public/interview/${token}/candidate-opinion`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ opinion: candidateOpinion })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          opinion: candidateOpinion
+        })
       });
 
       if (response.ok) {
@@ -1159,6 +1136,15 @@ export default function CandidateInterviewPage() {
     "✨ Финализируем результаты..."
   ];
 
+  // Прогресс-сообщения для обработки ответов
+  const processingMessages = [
+    "Обрабатываем аудио и видео ответы...",
+    "Транскрибируем речь...",
+    "Анализируем содержание ответов...",
+    "Подготавливаем данные для оценки...",
+    "Готовимся к генерации обратной связи..."
+  ];
+
   async function startFeedbackGeneration() {
     setFeedbackLoading(true);
     setGenerationStep(0);
@@ -1182,6 +1168,15 @@ export default function CandidateInterviewPage() {
           setFeedbackData(data);
           setFeedbackLoading(false);
           setShowFeedback(true);
+        } else if (data.status === 'processing') {
+          // Ответы еще обрабатываются - запускаем автоматическое ожидание
+          setFeedbackLoading(true);
+          setGenerationStep(0);
+          setElapsedTime(0);
+          setEstimatedTime(30); // Примерное время обработки ответов
+
+          // Запускаем поллинг для проверки готовности ответов
+          startProcessingPolling(data.pending_answers);
         } else {
           throw new Error(data.message || 'Неизвестный статус ответа');
         }
@@ -1200,12 +1195,20 @@ export default function CandidateInterviewPage() {
       setElapsedTime(prev => {
         const newTime = prev + 1;
 
-        // Обновляем шаг каждые 7-8 секунд
-        const newStep = Math.min(Math.floor(newTime / 7), progressMessages.length - 1);
-        setGenerationStep(newStep);
+        // Обновляем шаг в зависимости от этапа
+        if (newTime < 30) {
+          // Этап обработки ответов
+          const newStep = Math.min(Math.floor(newTime / 6), processingMessages.length - 1);
+          setGenerationStep(newStep);
+        } else {
+          // Этап генерации feedback
+          const feedbackTime = newTime - 30;
+          const newStep = Math.min(Math.floor(feedbackTime / 7), progressMessages.length - 1);
+          setGenerationStep(newStep);
+        }
 
-        // Если прошло больше минуты, останавливаем прогресс
-        if (newTime > 90) {
+        // Если прошло больше 2 минут, останавливаем прогресс
+        if (newTime > 120) {
           clearInterval(progressInterval);
         }
 
@@ -1290,6 +1293,48 @@ export default function CandidateInterviewPage() {
       // Обратная связь еще не готова, ничего не делаем
       console.log('Feedback not ready yet');
     }
+  }
+
+  // Поллинг для проверки готовности ответов
+  function startProcessingPolling(initialPendingCount: number) {
+    let pendingCount = initialPendingCount;
+
+    const interval = setInterval(async () => {
+      try {
+        // Проверяем статус ответов
+        const response = await fetch(`${API_BASE}/api/public/interview/${token}/feedback`);
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.status === 'ready') {
+            // Ответы готовы, запускаем генерацию feedback
+            clearInterval(interval);
+            setFeedbackLoading(false);
+            // Автоматически запускаем генерацию
+            startFeedbackGeneration();
+          } else if (data.status === 'processing') {
+            // Обновляем количество необработанных ответов
+            const newPendingCount = data.pending_answers || pendingCount;
+            if (newPendingCount < pendingCount) {
+              pendingCount = newPendingCount;
+              // Обновляем прогресс на основе количества обработанных ответов
+              const processedCount = initialPendingCount - newPendingCount;
+              const progressStep = Math.min(Math.floor(processedCount / Math.max(initialPendingCount / 4, 1)), processingMessages.length - 1);
+              setGenerationStep(progressStep);
+
+              // Обновляем estimatedTime на основе прогресса
+              const remainingAnswers = newPendingCount;
+              const newEstimatedTime = Math.max(30 - (processedCount * 5), 10); // Уменьшаем время по мере обработки
+              setEstimatedTime(newEstimatedTime);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Processing polling error:', error);
+      }
+    }, 5000); // Каждые 5 секунд для более частой проверки
+
+    setPollingInterval(interval);
   }
 
   /* ---------------- render ---------------- */
@@ -1608,7 +1653,8 @@ export default function CandidateInterviewPage() {
             {feedbackLoading ? (
               <>
                 <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
-                {progressMessages[generationStep]}
+                {/* Показываем разные сообщения в зависимости от этапа */}
+                {elapsedTime < 30 ? processingMessages[generationStep] : progressMessages[generationStep]}
               </>
             ) : (
               '🎯 Получить персональную обратную связь'
@@ -1630,12 +1676,18 @@ export default function CandidateInterviewPage() {
                   ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
                 </Typography>
               </Box>
+              {/* Показываем дополнительную информацию о текущем этапе */}
+              <Typography variant="caption" color="text.primary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
+                {elapsedTime < 30 ? 'Обрабатываем ваши ответы...' : 'Генерируем обратную связь...'}
+              </Typography>
             </Box>
           )}
 
           <Typography variant="body2" color="text.secondary">
             {feedbackLoading
-              ? "Система AI анализирует ваши ответы для создания персональных рекомендаций"
+              ? (elapsedTime < 30
+                  ? "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
+                  : "Система AI анализирует ваши ответы для создания персональных рекомендаций")
               : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
             }
           </Typography>
@@ -1999,7 +2051,8 @@ export default function CandidateInterviewPage() {
               {feedbackLoading ? (
                 <>
                   <CircularProgress size={24} sx={{ mr: 2, color: 'white' }} />
-                  {progressMessages[generationStep]}
+                  {/* Показываем разные сообщения в зависимости от этапа */}
+                  {elapsedTime < 30 ? processingMessages[generationStep] : progressMessages[generationStep]}
                 </>
               ) : (
                 '🎯 Получить персональную обратную связь'
@@ -2021,12 +2074,18 @@ export default function CandidateInterviewPage() {
                     ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
                   </Typography>
                 </Box>
+                {/* Показываем дополнительную информацию о текущем этапе */}
+                <Typography variant="caption" color="text.primary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
+                  {elapsedTime < 30 ? 'Обрабатываем ваши ответы...' : 'Генерируем обратную связь...'}
+                </Typography>
               </Box>
             )}
 
             <Typography variant="body2" color="text.secondary">
               {feedbackLoading
-                ? "Система AI анализирует ваши ответы для создания персональных рекомендаций"
+                ? (elapsedTime < 30
+                    ? "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
+                    : "Система AI анализирует ваши ответы для создания персональных рекомендаций")
                 : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
               }
             </Typography>
