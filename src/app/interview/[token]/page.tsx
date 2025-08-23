@@ -137,7 +137,7 @@ export default function CandidateInterviewPage() {
 
   // Упрощенная нумерация вопросов - просто округляем позицию
   const getQuestionNumber = (position: number) => {
-    return Math.round(position);
+    return Math.round(position) + 1;
   };
 
   // Все вопросы теперь считаются основными
@@ -1038,35 +1038,51 @@ export default function CandidateInterviewPage() {
 
     const fd = new FormData();
     fd.append('questionId', String(question.id));
-    fd.append('text','');
+    fd.append('text',''); // Пустой текст
 
     console.log('Sending empty answer to server...');
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`,{method:'POST',body:fd});
     console.log('Empty answer response:', answerResponse.status, answerResponse.ok);
 
+    // Проверяем что ответ успешно отправлен
+    if (!answerResponse.ok) {
+      console.error('Failed to send empty answer');
+      setChat((p)=>p.filter((_,i)=>i!==typingIdx));
+      setLoadingNextQuestion(false);
+      setAnswered(false);
+      return;
+    }
+
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
     console.log('Next question response (empty):', r.status, r.ok);
 
     if(!r.ok){
+      // Интервью завершено
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
       setLoadingNextQuestion(false);
       return;
     }
+
     const d = await r.json();
     console.log('Next question data (empty):', d);
 
     if(!d.question){
+      // Нет следующего вопроса - интервью завершено
+      setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
       setLoadingNextQuestion(false);
       return;
     }
+
+    // Устанавливаем следующий вопрос
     setQuestion(d.question);
     setPreviousQuestionId(d.question.id);
     setChat((p)=>{
       const cp=[...p];
+      // Заменяем typing индикатор на новый вопрос
       cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now()};
       return cp;
     });
@@ -2444,7 +2460,7 @@ export default function CandidateInterviewPage() {
           {total && (
             <LinearProgress
               variant="determinate"
-              value={(question.position / total) * 100}
+              value={( ( question.position + 1 ) / total) * 100}
               sx={{
                 mb: 1,
                 height: 3,
