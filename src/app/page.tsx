@@ -1379,7 +1379,7 @@ export default function LandingPage() {
               <Button
                 variant="contained"
                 size="large"
-                href="/hr/dashboard"
+                href="/hr"
                 sx={{
                   bgcolor: '#2196F3',
                   px: 6,
@@ -1452,7 +1452,7 @@ export default function LandingPage() {
                 Система соответствует требованиям 152-ФЗ "О персональных данных"
               </Typography>
             </Grid>
-            
+
             {/* Ссылки на документы */}
             <Grid item xs={12} md={6} textAlign="center">
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap' }}>
@@ -1460,8 +1460,8 @@ export default function LandingPage() {
                   href="/privacy-policy"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}
@@ -1472,8 +1472,8 @@ export default function LandingPage() {
                   href="/terms-of-service"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}
@@ -1484,8 +1484,8 @@ export default function LandingPage() {
                   href="/forget-me"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}
