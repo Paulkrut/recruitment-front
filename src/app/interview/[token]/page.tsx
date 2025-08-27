@@ -37,6 +37,7 @@ import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
 import PauseIcon from "@mui/icons-material/PauseCircleOutline";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
@@ -112,6 +113,10 @@ export default function CandidateInterviewPage() {
   const [candidateOpinion, setCandidateOpinion] = useState("");
   const [opinionSubmitted, setOpinionSubmitted] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+
+  // Переключатель камеры на экране подготовки (в стиле Google Meet)
+  const [cameraEnabled, setCameraEnabled] = useState(true);
+  const hasTestVideoTrack = useMemo(() => !!(testStream && testStream.getVideoTracks().length > 0), [testStream]);
 
   // Состояния для прогресса генерации
   const [generationStep, setGenerationStep] = useState(0);
@@ -321,7 +326,7 @@ export default function CandidateInterviewPage() {
     fetch(`${API_BASE}/api/public/interview/${token}/prepare`).then(r=>r.json()).then(setPrepared);
   },[token]);
 
-  const startDeviceTest = async () => {
+  const startDeviceTest = async (includeVideo?: boolean) => {
     // Предотвращаем повторные запуски
     if (deviceTestStarted) {
       console.log('Device test already started, skipping...');
@@ -341,7 +346,8 @@ export default function CandidateInterviewPage() {
         microphone: micPermissions.state
       });
 
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true,video:{width:640,height:480}});
+      const useVideo = includeVideo ?? cameraEnabled;
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true,video: useVideo ? {width:640,height:480} : false});
       setTestStream(stream);
       if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
 
@@ -414,6 +420,13 @@ export default function CandidateInterviewPage() {
     setMicReady(false);
     if(rafRef.current){ cancelAnimationFrame(rafRef.current); }
     setDeviceTestStarted(false); // Сбрасываем флаг при остановке
+  }
+
+  function handleToggleCamera(){
+    const newVal = !cameraEnabled;
+    setCameraEnabled(newVal);
+    stopDeviceTest();
+    setTimeout(()=> startDeviceTest(newVal), 0);
   }
 
   const requestPermissions = async () => {
@@ -495,9 +508,9 @@ export default function CandidateInterviewPage() {
   // auto start device test when prepared screen shown
   useEffect(()=>{
     if(!question && prepared && !testStream && !deviceTestStarted){
-       startDeviceTest();
+       startDeviceTest(cameraEnabled);
     }
-  },[prepared, question, deviceTestStarted]);
+  },[prepared, question, deviceTestStarted, cameraEnabled]);
 
   // Автоматическая проверка разрешений для Android устройств
   useEffect(() => {
@@ -583,8 +596,8 @@ export default function CandidateInterviewPage() {
 
   async function startInterview(){
     // Проверяем разрешения перед началом интервью
-    if (!permissionsGranted.camera || !permissionsGranted.microphone) {
-      alert('Для начала интервью необходимо разрешить доступ к камере и микрофону');
+    if (!permissionsGranted.microphone || (cameraEnabled && !permissionsGranted.camera)) {
+      alert(cameraEnabled ? 'Для начала интервью необходимо разрешить доступ к камере и микрофону' : 'Для начала интервью необходимо разрешить доступ к микрофону');
       return;
     }
 
@@ -632,18 +645,26 @@ export default function CandidateInterviewPage() {
     }
 
     try {
-      // Сначала проверяем разрешения для Safari
+      // Сначала проверяем разрешения
       const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      const cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      let cameraPermissions: PermissionStatus | null = null;
+      
+      // Проверяем камеру только если она нужна
+      if (cameraEnabled) {
+        cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
+      }
 
       console.log('Permissions status:', {
         microphone: permissions.state,
-        camera: cameraPermissions.state
+        camera: cameraPermissions?.state
       });
 
       // Если разрешения не предоставлены, запрашиваем их
-      if (permissions.state === 'denied' || cameraPermissions.state === 'denied') {
-        alert('Для записи необходимо разрешить доступ к камере и микрофону. Пожалуйста, разрешите доступ в настройках браузера.');
+      if (permissions.state === 'denied' || (cameraEnabled && cameraPermissions?.state === 'denied')) {
+        alert(cameraEnabled 
+          ? 'Для записи необходимо разрешить доступ к камере и микрофону. Пожалуйста, разрешите доступ в настройках браузера.'
+          : 'Для записи необходимо разрешить доступ к микрофону. Пожалуйста, разрешите доступ в настройках браузера.'
+        );
         return;
       }
 
@@ -654,75 +675,107 @@ export default function CandidateInterviewPage() {
           echoCancellation: true,
           noiseSuppression: true
         },
-        video: {
+        video: cameraEnabled ? {
           width: 640,
           height: 480,
           frameRate: { ideal: 15, max: 30 }
-        }
+        } : false
       });
 
       // Проверяем, что поток действительно содержит треки
-      if (!stream.getAudioTracks().length || !stream.getVideoTracks().length) {
-        throw new Error('Не удалось получить доступ к камере или микрофону');
+      const hasAudio = stream.getAudioTracks().length > 0;
+      const hasVideo = cameraEnabled ? stream.getVideoTracks().length > 0 : false;
+      
+      if (!hasAudio || (cameraEnabled && !hasVideo)) {
+        throw new Error('Не удалось получить доступ к требуемым устройствам');
       }
 
-      // Дополнительная проверка для Safari - убеждаемся, что треки активны
+      // Для видео или аудио сохраняем превью-поток
       const audioTrack = stream.getAudioTracks()[0];
-      const videoTrack = stream.getVideoTracks()[0];
+      if (!audioTrack.enabled) audioTrack.enabled = true;
+      
+      if (cameraEnabled) {
+        const videoTrack = stream.getVideoTracks()[0];
+        if (!videoTrack.enabled) videoTrack.enabled = true;
+        setPreviewStream(stream);
+        setVideoLoading(true);
 
-      if (!audioTrack.enabled || !videoTrack.enabled) {
-        console.warn('Tracks are disabled, trying to enable them');
-        audioTrack.enabled = true;
-        videoTrack.enabled = true;
+        // Добавляем видео-сообщение в чат с live-потоком
+        setChat((p) => [
+          ...p,
+          { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
+        ]);
+      } else {
+        // Для аудио-режима добавляем сообщение с индикатором записи
+        setChat((p) => [
+          ...p,
+          { role: "user", text: "🎤 Запись аудио...", timestamp: Date.now() }
+        ]);
       }
-
-      setPreviewStream(stream);
-
-      // Сбрасываем состояние загрузки видео
-      setVideoLoading(true);
-
-      // Добавляем видео-сообщение в чат с live-потоком
-      setChat((p) => [
-        ...p,
-        { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
-      ]);
 
       // Проверяем поддержку MediaRecorder и создаем с подходящим форматом
       let mr: MediaRecorder;
 
-      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
-        mr = new MediaRecorder(stream, {
-        mimeType: 'video/webm;codecs=vp8,opus',
-          videoBitsPerSecond: 500000
-        });
-      } else {
-        console.warn('WebM with VP8/Opus not supported, trying alternative formats');
-        // Попробуем альтернативные форматы для Safari
-        const alternativeFormats = [
-          'video/mp4',
-          'video/webm',
-          'video/webm;codecs=h264,opus',
-          'video/webm;codecs=vp9,opus'
-        ];
-
-        let supportedFormat = null;
-        for (const format of alternativeFormats) {
-          if (MediaRecorder.isTypeSupported(format)) {
-            supportedFormat = format;
-            break;
-          }
-        }
-
-        if (supportedFormat) {
-          console.log('Using alternative format:', supportedFormat);
+      if (cameraEnabled) {
+        // Видео запись
+        if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus')) {
           mr = new MediaRecorder(stream, {
-            mimeType: supportedFormat,
+            mimeType: 'video/webm;codecs=vp8,opus',
             videoBitsPerSecond: 500000
           });
         } else {
-          throw new Error('Ваш браузер не поддерживает запись видео');
+          console.warn('WebM with VP8/Opus not supported, trying alternative formats');
+          const alternativeFormats = [
+            'video/mp4',
+            'video/webm',
+            'video/webm;codecs=h264,opus',
+            'video/webm;codecs=vp9,opus'
+          ];
+
+          let supportedFormat = null;
+          for (const format of alternativeFormats) {
+            if (MediaRecorder.isTypeSupported(format)) {
+              supportedFormat = format;
+              break;
+            }
+          }
+
+          if (supportedFormat) {
+            console.log('Using alternative format:', supportedFormat);
+            mr = new MediaRecorder(stream, {
+              mimeType: supportedFormat,
+              videoBitsPerSecond: 500000
+            });
+          } else {
+            throw new Error('Ваш браузер не поддерживает запись видео');
+          }
         }
+      } else {
+        // Аудио запись
+        let audioMime: string | null = null;
+        const audioCandidates = [
+          'audio/webm;codecs=opus',
+          'audio/ogg;codecs=opus', 
+          'audio/webm'
+        ];
+        
+        for (const fmt of audioCandidates) {
+          if (MediaRecorder.isTypeSupported(fmt)) {
+            audioMime = fmt;
+            break;
+          }
+        }
+        
+        if (!audioMime) {
+          throw new Error('Ваш браузер не поддерживает запись аудио');
+        }
+        
+        mr = new MediaRecorder(stream, { 
+          mimeType: audioMime,
+          audioBitsPerSecond: 128000 
+        });
       }
+
       const chunks: BlobPart[] = [];
       mr.ondataavailable = (e) => {
         if (e.data && e.data.size > 0) {
@@ -735,14 +788,18 @@ export default function CandidateInterviewPage() {
           alert("Запись не содержит данных. Попробуйте ещё раз.");
           setRecording(false);
           stream.getTracks().forEach((t) => t.stop());
-          setPreviewStream(null);
+          if (cameraEnabled) {
+            setPreviewStream(null);
+          }
 
-          // Удаляем видео-сообщение при ошибке записи
+          // Удаляем сообщение при ошибке записи
           setChat((p) => {
             const newChat = [...p];
-            // Удаляем последнее видео-сообщение пользователя
             for (let i = newChat.length - 1; i >= 0; i--) {
-              if (newChat[i].role === 'user' && newChat[i].video) {
+              if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤 Запись'))) {
+                if (newChat[i].video && newChat[i].video !== "live") {
+                  URL.revokeObjectURL(newChat[i].video);
+                }
                 newChat.splice(i, 1);
                 break;
               }
@@ -751,60 +808,70 @@ export default function CandidateInterviewPage() {
           });
           return;
         }
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        console.log('Blob created:', blob.size);
 
-        // Отправляем оригинальный blob без сжатия на фронте
-        console.log('Sending original video blob:', {
-          size: blob.size,
-          sizeMB: (blob.size / (1024 * 1024)).toFixed(2) + ' MB',
-          type: blob.type
-        });
+        // Определяем тип блоба
+        let blobType = mr.mimeType || (cameraEnabled ? 'video/webm' : 'audio/webm');
+        if (!cameraEnabled && blobType.includes('ogg')) {
+          blobType = 'audio/ogg';
+        }
+        const blob = new Blob(chunks, { type: blobType });
+        console.log('Blob created:', blob.size, blob.type);
 
-        /* при завершении записи сразу отправляем ответ */
+        // Отправляем ответ
         sendBlobAnswer(blob);
 
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
-        setPreviewStream(null);
+        if (cameraEnabled) {
+          setPreviewStream(null);
+        }
       };
       mr.start();
       setMediaRecorder(mr);
       setRecording(true);
     } catch (err: any) {
       console.error('startRecording error:', err);
-      let msg = "Не удалось получить доступ к микрофону.";
+      let msg = cameraEnabled ? "Не удалось получить доступ к камере и микрофону." : "Не удалось получить доступ к микрофону.";
 
       // Специальная обработка для Safari
       if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-        msg += "\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон";
+        msg += cameraEnabled 
+          ? "\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон"
+          : "\n\nВ Safari необходимо:\n1. Разрешить доступ к микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Микрофон";
 
         // В Safari иногда ошибка показывается, но запись все равно работает
-        // Проверяем, есть ли активный поток
         if (previewStream && previewStream.active) {
           console.log('Safari error but stream is active, continuing with recording');
-          return; // Не показываем ошибку, если поток активен
+          return;
         }
       } else if (typeof window !== "undefined" && !window.isSecureContext) {
-        msg += "\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.";
+        msg += cameraEnabled 
+          ? "\nБраузер требует HTTPS или http://localhost для доступа к камере и микрофону. Откройте страницу по безопасному протоколу или через localhost."
+          : "\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.";
       } else if (err?.name === "NotAllowedError") {
-        msg += "\nРазрешите доступ к микрофону в настройках браузера (значок камеры/микрофона в адресной строке).";
+        msg += cameraEnabled 
+          ? "\nРазрешите доступ к камере и микрофону в настройках браузера (значок камеры/микрофона в адресной строке)."
+          : "\nРазрешите доступ к микрофону в настройках браузера (значок микрофона в адресной строке).";
       } else if (err?.name === "NotFoundError") {
-        msg += "\nУстройство микрофона не найдено.";
+        msg += cameraEnabled ? "\nКамера или микрофон не найдены." : "\nУстройство микрофона не найдено.";
       } else if (err?.name === "NotSupportedError") {
-        msg += "\nВаш браузер не поддерживает запись видео.";
+        msg += cameraEnabled ? "\nВаш браузер не поддерживает запись видео." : "\nВаш браузер не поддерживает запись аудио.";
       } else if (err?.name === "NotReadableError") {
-        msg += "\nКамера или микрофон уже используются другим приложением.";
+        msg += cameraEnabled 
+          ? "\nКамера или микрофон уже используются другим приложением."
+          : "\nМикрофон уже используется другим приложением.";
       }
 
       alert(msg);
 
-      // Удаляем видео-сообщение при ошибке
+      // Удаляем сообщение при ошибке
       setChat((p) => {
         const newChat = [...p];
-        // Удаляем последнее видео-сообщение пользователя
         for (let i = newChat.length - 1; i >= 0; i--) {
-          if (newChat[i].role === 'user' && newChat[i].video) {
+          if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤 Запись'))) {
+            if (newChat[i].video && newChat[i].video !== "live") {
+              URL.revokeObjectURL(newChat[i].video);
+            }
             newChat.splice(i, 1);
             break;
           }
@@ -893,43 +960,56 @@ export default function CandidateInterviewPage() {
         hasQuestion: !!question,
         answered
       });
-      return; // Защита от дублирования
+      return;
     }
 
-    // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
     setTimeLeft(null);
+    console.log('sendBlobAnswer called', { questionId: question.id, blobType: blob.type });
 
-    console.log('sendBlobAnswer called', { questionId: question.id });
-
-    // Дополнительная проверка - если запись активна, не отправляем пустой ответ
     if (recording) {
       console.log('Recording is active, skipping empty answer');
       return;
     }
 
+    const isAudio = (blob.type || '').startsWith('audio');
+
     clearCountdown();
     setLoadingNextQuestion(true);
     setAnswered(true);
-    setLastAnswerTime(Date.now()); // Запоминаем время отправки ответа
+    setLastAnswerTime(Date.now());
 
-    // Обновляем последнее видео-сообщение с финальным видео
-    const finalVideoUrl = URL.createObjectURL(blob);
-
-    // Небольшая задержка для лучшего UX - пользователь видит процесс обработки
-    setTimeout(() => {
+    if (cameraEnabled && !isAudio) {
+      // Обновляем последнее видео-сообщение с финальным видео
+      const finalVideoUrl = URL.createObjectURL(blob);
+      setTimeout(() => {
+        setChat((p) => {
+          const newChat = [...p];
+          for (let i = newChat.length - 1; i >= 0; i--) {
+            if (newChat[i].role === 'user' && newChat[i].video) {
+              if (newChat[i].video !== "live") {
+                URL.revokeObjectURL(newChat[i].video);
+              }
+              newChat[i] = {
+                ...newChat[i],
+                video: finalVideoUrl,
+                text: "🎥 Видео ответ отправлен",
+                timestamp: newChat[i].timestamp || Date.now()
+              };
+              break;
+            }
+          }
+          return newChat;
+        });
+      }, 500);
+    } else {
+      // Для аудио: обновляем последнее аудио-сообщение
       setChat((p) => {
         const newChat = [...p];
-        // Находим последнее видео-сообщение пользователя и обновляем его
         for (let i = newChat.length - 1; i >= 0; i--) {
-          if (newChat[i].role === 'user' && newChat[i].video) {
-            // Очищаем старый URL если он был
-            if (newChat[i].video !== "live") {
-              URL.revokeObjectURL(newChat[i].video);
-            }
+          if (newChat[i].role === 'user' && newChat[i].text.includes('🎤 Запись')) {
             newChat[i] = {
               ...newChat[i],
-              video: finalVideoUrl,
-              text: "🎥 Видео ответ отправлен",
+              text: "🎤 Аудио ответ отправлен",
               timestamp: newChat[i].timestamp || Date.now()
             };
             break;
@@ -937,7 +1017,7 @@ export default function CandidateInterviewPage() {
         }
         return newChat;
       });
-    }, 500); // 500ms задержка
+    }
 
     // Добавляем индикатор обработки
     setChat((p) => [
@@ -948,7 +1028,9 @@ export default function CandidateInterviewPage() {
 
     const fd = new FormData();
     fd.append("questionId", String(question.id));
-    fd.append("video", new File([blob], "answer.webm", { type: blob.type }));
+    const key = isAudio ? 'audio' : 'video';
+    const ext = (blob.type || '').includes('ogg') ? 'ogg' : 'webm';
+    fd.append(key, new File([blob], `answer.${ext}`, { type: blob.type || (isAudio ? 'audio/webm' : 'video/webm') }));
 
     const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
       method: "POST",
@@ -987,7 +1069,7 @@ export default function CandidateInterviewPage() {
     setPreviousQuestionId(d.question.id);
     setChat((p) => {
       const cp = [...p];
-      // Заменяем typing индикатор на новый вопрос, сохраняя видео-сообщение
+      // Заменяем typing индикатор на новый вопрос
       cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
       return cp;
     });
@@ -2208,21 +2290,25 @@ export default function CandidateInterviewPage() {
           p: isMobile ? 2 : 4,
           // Убираем все настройки скролла
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}>
           {/* Проверка разрешений */}
-          {permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone) && (
+          {permissionsRequested && ((cameraEnabled && (!permissionsGranted.camera || !permissionsGranted.microphone)) || (!cameraEnabled && !permissionsGranted.microphone)) && (
             <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
 
-
               <Typography variant="h6" color="warning.dark" gutterBottom>
-                ⚠️ Требуется доступ к камере и микрофону
+                {cameraEnabled ? '⚠️ Требуется доступ к камере и микрофону' : '⚠️ Требуется доступ к микрофону'}
               </Typography>
               <Typography variant="body2" sx={{mb:2}}>
-                Для прохождения интервью необходимо разрешить доступ к камере и микрофону.
-                {!permissionsGranted.camera && !permissionsGranted.microphone && ' Камера и микрофон заблокированы.'}
-                {!permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
-                {permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
+                {cameraEnabled
+                  ? 'Для прохождения интервью необходимо разрешить доступ к камере и микрофону.'
+                  : 'Для прохождения интервью необходимо разрешить доступ к микрофону. Камера может быть отключена.'}
+                {!cameraEnabled && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
+                {cameraEnabled && !permissionsGranted.camera && !permissionsGranted.microphone && ' Камера и микрофон заблокированы.'}
+                {cameraEnabled && !permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
+                {cameraEnabled && permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
               </Typography>
 
               {/* Специальная информация для Android */}
@@ -2239,7 +2325,7 @@ export default function CandidateInterviewPage() {
                 fullWidth={isMobile}
                 size={isMobile ? 'large' : 'medium'}
               >
-                Разрешить камеру и микрофон
+                {cameraEnabled ? 'Разрешить камеру и микрофон' : 'Разрешить микрофон'}
               </Button>
 
               {/* Дополнительная кнопка для Android устройств */}
@@ -2275,51 +2361,186 @@ export default function CandidateInterviewPage() {
             </Box>
           )}
 
-        {/* Device test preview */}
+        {/* Device test preview - Google Meet Style */}
         {testStream && (
-          <Box sx={{mt:3}}>
-            <Typography variant="h6" gutterBottom>Проверка оборудования</Typography>
-              <Box sx={{ textAlign: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+            {/* Video Preview - центральный элемент в стиле Google Meet */}
+            <Box sx={{
+              position: 'relative',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+              bgcolor: '#000',
+              width: { xs: '100%', sm: '480px', md: '560px' },
+              height: { xs: '240px', sm: '360px', md: '420px' },
+              maxWidth: '90vw'
+            }}>
+              {hasTestVideoTrack && cameraEnabled ? (
                 <video
                   ref={testVideoRef}
-                  width={isMobile ? 280 : 320}
-                  height={isMobile ? 210 : 240}
                   autoPlay
                   muted
                   playsInline
                   style={{
-                    border:'1px solid #ccc',
-                    borderRadius:0,
-                    maxWidth: '100%'
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
                   }}
                 />
-              </Box>
-              <Box sx={{display:'flex',alignItems:'center',mt:1,width:220, mx: 'auto'}}>
-              <GraphicEqIcon sx={{mr:1}}/>
-                <Box sx={{flexGrow:1,height:10,bgcolor:'#eee',borderRadius:0,overflow:'hidden'}}>
-                <Box sx={{width:`${micLevel}%`,height:'100%',bgcolor:'primary.main',transition:'width 0.1s linear'}} />
-              </Box>
-            </Box>
+              ) : (
+                <Box sx={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  bgcolor: '#1a1a1a',
+                  gap: 2
+                }}>
+                  {cameraEnabled ? (
+                    <>
+                      <VideocamIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)' }} />
+                      <Typography sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                        Камера подключается...
+                      </Typography>
+                    </>
+                  ) : (
+                    <>
+                      <VideocamOffIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)' }} />
+                      <Typography sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                        Камера отключена
+                      </Typography>
+                    </>
+                  )}
+                </Box>
+              )}
+
+              {/* Overlay with device controls - как в Google Meet */}
               <Box sx={{
-                display:'flex',
-                gap:2,
-                mt:1,
-                flexDirection: isMobile ? 'column' : 'row',
-                alignItems: isMobile ? 'center' : 'flex-start'
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                p: 2,
+                background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 1
               }}>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                  <VideocamIcon color={permissionsGranted.camera?"success":"error" as any}/>
-                  <Typography variant="body2" color={permissionsGranted.camera?"success.main":"error.main"}>
-                    {permissionsGranted.camera?"Камера OK":"Камера заблокирована"}
-                  </Typography>
+                {/* Кнопка микрофона */}
+                <Box sx={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: '50%',
+                  bgcolor: permissionsGranted.microphone ? 'rgba(255,255,255,0.1)' : '#ea4335',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  '&:hover': {
+                    bgcolor: permissionsGranted.microphone ? 'rgba(255,255,255,0.2)' : '#d93025'
+                  }
+                }}>
+                  <MicIcon sx={{ color: 'white' }} />
+                </Box>
+
+                {/* Кнопка камеры */}
+                <Box 
+                  onClick={handleToggleCamera}
+                  sx={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: '50%',
+                    bgcolor: cameraEnabled && permissionsGranted.camera ? 'rgba(255,255,255,0.1)' : '#ea4335',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    '&:hover': {
+                      bgcolor: cameraEnabled && permissionsGranted.camera ? 'rgba(255,255,255,0.2)' : '#d93025'
+                    }
+                  }}
+                >
+                  {cameraEnabled ? (
+                    <VideocamIcon sx={{ color: 'white' }} />
+                  ) : (
+                    <VideocamOffIcon sx={{ color: 'white' }} />
+                  )}
+                </Box>
               </Box>
-              <Box sx={{display:'flex',alignItems:'center',gap:0.5}}>
-                  <MicIcon color={permissionsGranted.microphone?"success":"error" as any}/>
-                  <Typography variant="body2" color={permissionsGranted.microphone?"success.main":"error.main"}>
-                    {permissionsGranted.microphone?"Микрофон OK":"Микрофон заблокирован"}
-                  </Typography>
+
+              {/* Индикатор уровня микрофона */}
+              {permissionsGranted.microphone && (
+                <Box sx={{
+                  position: 'absolute',
+                  top: 16,
+                  left: 16,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  bgcolor: 'rgba(0,0,0,0.7)',
+                  px: 2,
+                  py: 1,
+                  borderRadius: '20px'
+                }}>
+                  <MicIcon sx={{ fontSize: 16, color: 'white' }} />
+                  <Box sx={{
+                    width: 60,
+                    height: 4,
+                    bgcolor: 'rgba(255,255,255,0.3)',
+                    borderRadius: '2px',
+                    overflow: 'hidden'
+                  }}>
+                    <Box sx={{
+                      width: `${Math.max(micLevel * 2, 5)}%`,
+                      height: '100%',
+                      bgcolor: '#4caf50',
+                      transition: 'width 0.1s linear'
+                    }} />
+                  </Box>
+                </Box>
+              )}
+            </Box>
+
+            {/* Device Status */}
+            <Box sx={{
+              display: 'flex',
+              gap: 3,
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {cameraEnabled ? (
+                  <VideocamIcon color={permissionsGranted.camera ? "success" : "error"} />
+                ) : (
+                  <VideocamOffIcon sx={{ color: 'warning.main' }} />
+                )}
+                <Typography variant="body2" sx={{ fontSize: '14px' }}>
+                  {cameraEnabled 
+                    ? (permissionsGranted.camera ? 'Камера подключена' : 'Камера заблокирована')
+                    : 'Камера отключена'
+                  }
+                </Typography>
+              </Box>
+              
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <MicIcon color={permissionsGranted.microphone ? "success" : "error"} />
+                <Typography variant="body2" sx={{ fontSize: '14px' }}>
+                  {permissionsGranted.microphone ? 'Микрофон подключен' : 'Микрофон заблокирован'}
+                </Typography>
               </Box>
             </Box>
+
+            {/* Warning for camera off */}
+            {!cameraEnabled && (
+              <Box sx={{ mt:1.5, p:1.5, bgcolor:'warning.light', border:'1px dashed', borderColor:'warning.main', borderRadius:1, textAlign:'center', maxWidth: '500px' }}>
+                <Typography variant="body2">Рекомендуем проходить интервью с камерой — так HR сможет лучше оценить вашу коммуникацию.</Typography>
+              </Box>
+            )}
           </Box>
         )}
         </Box>
@@ -2343,7 +2564,7 @@ export default function CandidateInterviewPage() {
           <Button
             variant="contained"
             onClick={startInterview}
-            disabled={permissionsRequested && (!permissionsGranted.camera || !permissionsGranted.microphone)}
+            disabled={permissionsRequested && ( (!permissionsGranted.microphone) || (cameraEnabled && !permissionsGranted.camera) )}
             fullWidth={isMobile}
             size={isMobile ? 'large' : 'medium'}
             // Добавляем стили для лучшей видимости на мобильных
@@ -2668,120 +2889,95 @@ export default function CandidateInterviewPage() {
                                   width: 6,
                                   height: 6,
                                   borderRadius: '50%',
-                                  bgcolor: '#fff',
+                                  bgcolor: 'white',
                                   animation: `${pulse} 1s infinite`
                                 }} />
-                                ЗАПИСЬ
+                                REC
                               </Box>
-                              {/* Индикатор времени записи */}
-                              {timeLeft !== null && question?.maxTime && (
-                                <Box sx={{
-                                  position: 'absolute',
-                                  bottom: 8,
-                                  left: 8,
-                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
-                                  color: 'white',
-                                  px: 1,
-                                  py: 0.5,
-                                  borderRadius: '4px',
-                                  fontSize: '10px',
-                                  fontWeight: 'bold',
-                                  zIndex: 1
-                                }}>
-                                  {timeLeft}s
-                                </Box>
-                              )}
-                              {/* Индикатор качества записи */}
-                              {recording && (
-                                <Box sx={{
-                                  position: 'absolute',
-                                  bottom: 8,
-                                  right: 8,
-                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
-                                  color: 'white',
-                                  px: 1,
-                                  py: 0.5,
-                                  borderRadius: '4px',
-                                  fontSize: '10px',
-                                  fontWeight: 'bold',
-                                  zIndex: 1,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 0.5
-                                }}>
-                                  <Box sx={{
-                                    width: 4,
-                                    height: 4,
-                                    borderRadius: '50%',
-                                    bgcolor: '#4caf50'
-                                  }} />
-                                  HD
-                                </Box>
-                              )}
-                              {/* Индикатор уровня звука */}
-                              {recording && micLevel > 0 && (
-                                <Box sx={{
-                                  position: 'absolute',
-                                  top: 8,
-                                  left: 8,
-                                  bgcolor: 'rgba(0, 0, 0, 0.7)',
-                                  color: 'white',
-                                  px: 1,
-                                  py: 0.5,
-                                  borderRadius: '4px',
-                                  fontSize: '10px',
-                                  fontWeight: 'bold',
-                                  zIndex: 1,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: 0.5
-                                }}>
-                                  <Box sx={{
-                                    width: 8,
-                                    height: 2,
-                                    bgcolor: '#fff',
-                                    borderRadius: '1px',
-                                    position: 'relative',
-                                    overflow: isMobile ? 'visible' : 'hidden'
-                                  }}>
-                                    <Box sx={{
-                                      width: `${Math.min(micLevel * 2, 100)}%`,
-                                      height: '100%',
-                                      bgcolor: '#4caf50',
-                                      transition: 'width 0.1s ease'
-                                    }} />
-                                  </Box>
-                                  🔊
-                                </Box>
-                              )}
                             </Box>
                           ) : (
-                            // Финальное видео с контролами
+                            // Готовое видео
                             <video
-                              src={m.video}
                               controls
+                              width="100%"
                               style={{
-                                width: '100%',
                                 maxWidth: '280px',
                                 borderRadius: '8px'
                               }}
+                              src={m.video}
                             />
                           )}
                         </Box>
                       )}
 
-                      {/* Текстовое сообщение */}
-                      {m.text && (
-                        <Typography sx={{
-                          fontSize: '14px',
-                          lineHeight: 1.4,
-                          color: '#000',
-                          mb: 0.5
+                      {/* Аудио-визуализация для записи без камеры */}
+                      {!cameraEnabled && m.text.includes('🎤 Запись') && recording && (
+                        <Box sx={{
+                          mb: 1,
+                          p: 2,
+                          bgcolor: '#1976d2',
+                          borderRadius: '8px',
+                          maxWidth: '280px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          flexDirection: 'column',
+                          gap: 1
                         }}>
-                          {m.text}
-                        </Typography>
+                          <Box sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            color: 'white'
+                          }}>
+                            <MicIcon sx={{ fontSize: '20px' }} />
+                            <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
+                              Запись аудио
+                            </Typography>
+                            <Box sx={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: '50%',
+                              bgcolor: '#ff4444',
+                              animation: `${pulse} 1s infinite`
+                            }} />
+                          </Box>
+                          
+                          {/* Индикатор уровня звука */}
+                          <Box sx={{
+                            width: '100%',
+                            maxWidth: '200px',
+                            height: '8px',
+                            bgcolor: 'rgba(255,255,255,0.2)',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            position: 'relative'
+                          }}>
+                            <Box sx={{
+                              width: `${Math.max(micLevel * 2, 5)}%`,
+                              height: '100%',
+                              bgcolor: '#4caf50',
+                              borderRadius: '4px',
+                              transition: 'width 0.1s linear'
+                            }} />
+                          </Box>
+                          
+                          <Typography sx={{
+                            fontSize: '12px',
+                            color: 'rgba(255,255,255,0.8)'
+                          }}>
+                            Говорите в микрофон
+                          </Typography>
+                        </Box>
                       )}
 
+                      <Typography sx={{
+                        wordBreak: 'break-word',
+                        whiteSpace: 'pre-wrap',
+                        lineHeight: 1.5,
+                        color: m.role === 'user' ? '#2e7d32' : '#333'
+                      }}>
+                        {m.text}
+                      </Typography>
                       {/* Время сообщения */}
                       <Typography sx={{
                         fontSize: '11px',
