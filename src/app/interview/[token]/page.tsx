@@ -1717,19 +1717,19 @@ export default function CandidateInterviewPage() {
               <Card sx={{ mb: 3 }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    💬 Поделитесь своим мнением
+                    💬 Дополнительная информация
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    Что вы думаете о данной оценке? Ваше мнение поможет нам улучшить процесс интервью.
+                    Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.
                   </Typography>
                   <TextField
                     fullWidth
                     multiline
                     rows={4}
-                    label="Ваше мнение"
+                    label="Дополнительная информация"
                     value={candidateOpinion}
                     onChange={(e) => setCandidateOpinion(e.target.value)}
-                    placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
+                    placeholder="Поделитесь любой информацией, которая может быть важна для рекрутера..."
                     sx={{ mb: 2 }}
                   />
                   <Button
@@ -2116,19 +2116,19 @@ export default function CandidateInterviewPage() {
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      💬 Поделитесь своим мнением
+                      💬 Дополнительная информация
                     </Typography>
                     <Typography variant="body2" color="text.secondary" paragraph>
-                      Что вы думаете о данной оценке? Ваше мнение поможет нам улучшить процесс интервью.
+                      Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.
                     </Typography>
                     <TextField
                       fullWidth
                       multiline
                       rows={4}
-                      label="Ваше мнение"
+                      label="Дополнительная информация"
                       value={candidateOpinion}
                       onChange={(e) => setCandidateOpinion(e.target.value)}
-                      placeholder="Например: Считаю оценку справедливой / завышенной / заниженной..."
+                      placeholder="Поделитесь любой информацией, которая может быть важна для рекрутера..."
                       sx={{ mb: 2 }}
                     />
                     <Button
