@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip
 } from "@mui/material";
 import {
   IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
@@ -15,13 +15,13 @@ import { formatDateToLocal, formatDateOnly, formatTimeOnly } from "@/utils/dateU
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode2';
 import AddIcon from '@mui/icons-material/Add';
+import CommentIcon from '@mui/icons-material/Comment';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -390,12 +390,19 @@ export default function HRVacancyDetailPage() {
                       </Box>
                     )},
                     {field:'name',header:'Имя',render:(r:any)=>(
-                      <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
-                          <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
-                        </Box>
-                      </Link>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
+                          <Box display="flex" alignItems="center" gap={1}>
+                            <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
+                            <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
+                          </Box>
+                        </Link>
+                        {r.candidateOpinion && (
+                          <Tooltip title="У кандидата есть дополнительная информация" arrow>
+                            <CommentIcon sx={{ fontSize: 16, color: 'primary.main', ml: 0.5 }} />
+                          </Tooltip>
+                        )}
+                      </Box>
                     )},
                     {field:'contact',header:'Контакты',render:(r:any)=>(
                       <Box>
