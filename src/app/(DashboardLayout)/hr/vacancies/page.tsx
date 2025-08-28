@@ -48,6 +48,7 @@ import {
   IconTable,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
+import { formatDateToLocal, formatDateOnly } from "@/utils/dateUtils";
 import { apiFetch } from "@/utils/api";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -98,11 +99,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
     return text.substring(0, maxLength) + '...';
   };
 
-  // Функция для форматирования даты
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
-  };
+
 
   // Функция для получения короткого имени
   const getShortName = (fullName: string) => {
@@ -235,7 +232,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="textSecondary">
-                    {formatDate(vacancy.createdAt)}
+                    {formatDateOnly(vacancy.createdAt)}
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -362,7 +359,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
   const finished = vacancy.candidatesFinished || 0;
   const inProgress = vacancy.candidatesInProgress || 0;
   const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
-  const createdDate = new Date(vacancy.createdAt).toLocaleDateString('ru-RU');
+                const createdDate = formatDateOnly(vacancy.createdAt);
 
   const getProgressColor = (percent: number) => {
     if (percent === 0) return "info"; // Было 'default', теперь 'info' для совместимости с MUI

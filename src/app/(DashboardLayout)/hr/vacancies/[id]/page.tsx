@@ -11,7 +11,7 @@ import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import QRCode from 'react-qr-code';
-import { format } from 'date-fns';
+import { formatDateToLocal, formatDateOnly, formatTimeOnly } from "@/utils/dateUtils";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode2';
 import AddIcon from '@mui/icons-material/Add';
@@ -214,7 +214,13 @@ export default function HRVacancyDetailPage() {
   if (loading || !data) return <PageContainer title="Вакансия"><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
 
   const { title, description, template, questions } = data;
-  const createdAt = data.createdAt ? format(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : '';
+  const createdAt = data.createdAt ? formatDateToLocal(data.createdAt, {
+    year: 'numeric',
+    month: '2-digit', 
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }) : '';
 
   // --- Шапка ---
   const header = (
@@ -430,14 +436,9 @@ export default function HRVacancyDetailPage() {
                       }
                     }},
                     {field:'createdAt',header:'Дата',render:(r:any)=>r.createdAt ? (
-                      <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {format(new Date(r.createdAt), 'dd.MM.yyyy')}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
-                          {format(new Date(r.createdAt), 'HH:mm')}
-                        </Typography>
-                      </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                        {formatDateToLocal(r.createdAt)}
+                      </Typography>
                     ) : '-'},
                     {field:'trustLevel',header:'Доверие',render:(r:any)=>{
                       // Если нет fingerprint'а - показываем пустой кружок
@@ -720,7 +721,7 @@ export default function HRVacancyDetailPage() {
                         <Typography variant="body2">Телефон: {cand.phone || '-'}</Typography>
                         <Typography variant="body2">Статус: {getStatusLabel(cand.status)}</Typography>
                         <Typography variant="body2">Оценка: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
-                        <Typography variant="body2">Дата добавления: {cand.createdAt ? format(new Date(cand.createdAt), 'dd.MM.yyyy HH:mm') : '-'}</Typography>
+                        <Typography variant="body2">Дата добавления: {cand.createdAt ? formatDateToLocal(cand.createdAt) : '-'}</Typography>
                         <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}>Подробнее</Button>
                       </Card>
                     </Grid>

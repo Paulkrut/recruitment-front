@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { formatDateToLocal, getTimeAgo } from "@/utils/dateUtils";
+import DateDisplay from "@/components/common/DateDisplay";
 import {
   Box,
   Grid,
@@ -169,17 +171,7 @@ function EnhancedCandidateTable({
     return "Неудовлетворительно";
   };
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleString("ru-RU", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+
 
   const getShortName = (fullName: string) => {
     const parts = fullName.split(" ");
@@ -197,19 +189,7 @@ function EnhancedCandidateTable({
     return fullName.substring(0, 2).toUpperCase();
   };
 
-  const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
 
-    if (diffDays > 0) return `${diffDays} дн. назад`;
-    if (diffHours > 0) return `${diffHours} ч. назад`;
-    if (diffMinutes > 0) return `${diffMinutes} мин. назад`;
-    return "Только что";
-  };
 
   const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
     <TableCell 
@@ -391,19 +371,26 @@ function EnhancedCandidateTable({
               </TableCell>
               <TableCell>
                 <Box>
-                  <Typography variant="body2" fontWeight="bold">
-                    {formatDate(candidate.createdAt)}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {getTimeAgo(candidate.createdAt)}
-                  </Typography>
+                  <DateDisplay 
+                    utcDate={candidate.createdAt}
+                    format="full"
+                    variant="body2"
+                    fontWeight="bold"
+                  />
+                  <DateDisplay 
+                    utcDate={candidate.createdAt}
+                    format="relative"
+                    variant="caption"
+                    color="text.secondary"
+                    showTooltip={false}
+                  />
                 </Box>
               </TableCell>
               <TableCell>
                 {candidate.finishedAt ? (
                   <Box>
                     <Typography variant="body2" fontWeight="bold">
-                      {formatDate(candidate.finishedAt)}
+                      {formatDateToLocal(candidate.finishedAt)}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {getTimeAgo(candidate.finishedAt)}
@@ -477,17 +464,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
     return "error";
   };
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleString("ru-RU", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+
 
   const getShortName = (fullName: string) => {
     const parts = fullName.split(" ");
@@ -573,7 +550,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
 
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Typography variant="caption" color="text.secondary">
-            Создан: {formatDate(candidate.createdAt)}
+            Создан: {formatDateToLocal(candidate.createdAt)}
           </Typography>
           <Tooltip title="Просмотреть детали">
             <IconButton
