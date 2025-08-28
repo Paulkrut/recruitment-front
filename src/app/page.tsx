@@ -184,8 +184,16 @@ export default function LandingPage() {
                 </Box>
                 {/* Desktop menu */}
                 <DesktopMenu pages={pages} onScrollToSection={scrollToSection} />
-                {/* Login button */}
-                <Box>
+                {/* Login and Registration buttons */}
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Button 
+                    variant="outlined" 
+                    color="primary" 
+                    href="/auth/phone"
+                    sx={{ display: { xs: 'none', md: 'inline-flex' } }}
+                  >
+                    Регистрация
+                  </Button>
                   <Button variant="contained" color="primary" href="/auth/phone">Войти</Button>
                 </Box>
               </Toolbar>

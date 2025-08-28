@@ -1,6 +1,6 @@
 "use client";
 import React, { memo, useState, useCallback, useMemo } from 'react';
-import { Box, IconButton, Menu, MenuItem, Typography } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Typography, Divider, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
 
 interface MobileMenuProps {
@@ -76,6 +76,30 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
         }}
       >
         {menuItems}
+        <Divider sx={{ my: 1 }} />
+        <MenuItem sx={{ px: 2, py: 1 }}>
+          <Button 
+            variant="outlined" 
+            color="primary" 
+            href="/auth/phone"
+            size="small"
+            fullWidth
+            sx={{ mr: 1 }}
+          >
+            Регистрация
+          </Button>
+        </MenuItem>
+        <MenuItem sx={{ px: 2, py: 1 }}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            href="/auth/phone"
+            size="small"
+            fullWidth
+          >
+            Войти
+          </Button>
+        </MenuItem>
       </Menu>
     </Box>
   );
