@@ -391,12 +391,12 @@ export default function HRVacancyDetailPage() {
                     )},
                     {field:'name',header:'Имя',render:(r:any)=>(
                       <Box display="flex" alignItems="center" gap={1}>
-                        <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
-                          <Box display="flex" alignItems="center" gap={1}>
-                            <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
-                            <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
-                          </Box>
-                        </Link>
+                      <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
+                          <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
+                        </Box>
+                      </Link>
                         {r.candidateOpinion && (
                           <Tooltip title="У кандидата есть дополнительная информация" arrow>
                             <CommentIcon sx={{ fontSize: 16, color: 'primary.main', ml: 0.5 }} />
@@ -443,9 +443,9 @@ export default function HRVacancyDetailPage() {
                       }
                     }},
                     {field:'createdAt',header:'Дата',render:(r:any)=>r.createdAt ? (
-                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
                         {formatDateToLocal(r.createdAt)}
-                      </Typography>
+                        </Typography>
                     ) : '-'},
                     {field:'trustLevel',header:'Доверие',render:(r:any)=>{
                       // Если нет fingerprint'а - показываем пустой кружок

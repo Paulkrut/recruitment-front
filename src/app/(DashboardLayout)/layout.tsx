@@ -41,7 +41,7 @@ export default function RootLayout({
     if(typeof window!=='undefined'){
       const t = localStorage.getItem('recruitment_token');
       if(!t){ 
-        router.replace('/auth/phone'); 
+        router.replace('/auth/login'); 
         return;
       }
     }

@@ -22,6 +22,7 @@ interface Invite {
     name: string;
   };
   role: string;
+  email: string;
 }
 
 interface UserContextType {

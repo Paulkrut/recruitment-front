@@ -167,7 +167,7 @@ export default function Sidebar() {
                     <IconButton color="primary" onClick={()=>{
                         if(typeof window!=='undefined'){
                           localStorage.removeItem('recruitment_token');
-                          window.location.href='/auth/phone';
+                          window.location.href='/auth/login';
                         }
                       }}>
                       <Icon icon="solar:logout-line-duotone" width={24} height={24} />

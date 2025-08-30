@@ -159,7 +159,7 @@ export default function ComparePage() {
   useEffect(() => {
     const token = localStorage.getItem("recruitment_token");
     if (!token) {
-      router.push("/auth/phone");
+      router.push("/auth/login");
       return;
     }
   }, [router]);
@@ -197,7 +197,7 @@ export default function ComparePage() {
 
       if (response.status === 401) {
         console.log('❌ 401 Unauthorized, перенаправляем на авторизацию');
-        router.push("/auth/phone");
+        router.push("/auth/login");
         return;
       }
 
@@ -232,7 +232,7 @@ export default function ComparePage() {
 
       if (response.status === 401) {
         console.log('❌ 401 Unauthorized, перенаправляем на авторизацию');
-        router.push("/auth/phone");
+        router.push("/auth/login");
         return;
       }
 

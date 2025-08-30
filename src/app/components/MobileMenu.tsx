@@ -81,7 +81,7 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
           <Button 
             variant="outlined" 
             color="primary" 
-            href="/auth/phone"
+            href="/auth/register"
             size="small"
             fullWidth
             sx={{ mr: 1 }}
@@ -93,7 +93,7 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
           <Button 
             variant="contained" 
             color="primary" 
-            href="/auth/phone"
+            href="/auth/login"
             size="small"
             fullWidth
           >

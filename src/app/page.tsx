@@ -186,15 +186,15 @@ export default function LandingPage() {
                 <DesktopMenu pages={pages} onScrollToSection={scrollToSection} />
                 {/* Login and Registration buttons */}
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Button 
-                    variant="outlined" 
-                    color="primary" 
-                    href="/auth/phone"
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    href="/auth/register"
                     sx={{ display: { xs: 'none', md: 'inline-flex' } }}
                   >
                     Регистрация
                   </Button>
-                  <Button variant="contained" color="primary" href="/auth/phone">Войти</Button>
+                  <Button variant="contained" color="primary" href="/auth/login">Войти</Button>
                 </Box>
               </Toolbar>
             </AppBar>
@@ -286,7 +286,7 @@ export default function LandingPage() {
                     <Icon icon="logos:excel" width={24} height={24} />
                   </Box>
                 </Box>
-                <Button variant="contained" color="primary" size="large" href="/auth/phone" sx={{
+                <Button variant="contained" color="primary" size="large" href="/auth/register" sx={{
                   fontSize: '1.1rem',
                   py: 2,
                   px: 4,
@@ -1387,7 +1387,7 @@ export default function LandingPage() {
               <Button
                 variant="contained"
                 size="large"
-                href="/hr/dashboard"
+                href="/hr"
                 sx={{
                   bgcolor: '#2196F3',
                   px: 6,
@@ -1409,7 +1409,7 @@ export default function LandingPage() {
               <Button
                 variant="outlined"
                 size="large"
-                href="/auth/phone"
+                href="/auth/register"
                 sx={{
                   borderColor: '#2196F3',
                   color: '#2196F3',

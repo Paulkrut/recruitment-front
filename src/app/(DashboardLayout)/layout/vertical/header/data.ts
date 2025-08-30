@@ -163,7 +163,7 @@ const pageLinks: LinkType[] = [
     title: "Pricing Page",
   },
   {
-    href: "/auth/phone",
+    href: "/auth/login",
     title: "Authentication Design",
   },
   {

@@ -21,7 +21,7 @@ function stringAvatar(name: string) {
 
 export default function EmployeesPage() {
   const { currentCompany, refreshInvites } = useUser();
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [role, setRole] = useState("HR");
   const [invites, setInvites] = useState<any[]>([]);
   const [employees, setEmployees] = useState<any[]>([]);
@@ -87,12 +87,16 @@ export default function EmployeesPage() {
     const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invite`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phone, role })
+      body: JSON.stringify({ email, role })
     });
     const data = await res.json();
     if (data.ok) {
-      setSuccess("Приглашение отправлено!");
-      setPhone("");
+      if (data.emailSent) {
+        setSuccess("Приглашение отправлено! Email с приглашением отправлен на " + email);
+      } else {
+        setSuccess("Приглашение создано, но email не отправлен. Проверьте настройки почты.");
+      }
+      setEmail("");
       load();
     } else {
       setError(data.error || "Ошибка");
@@ -235,12 +239,12 @@ export default function EmployeesPage() {
           <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
             <Typography variant="h6" gutterBottom>Пригласить сотрудника</Typography>
             <Stack direction="row" spacing={1} mb={2}>
-              <TextField value={phone} onChange={e => setPhone(e.target.value)} size="small" label="Телефон" />
+              <TextField value={email} onChange={e => setEmail(e.target.value)} size="small" label="Email" />
               <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label="Роль" sx={{ width: 120 }}>
                 <MenuItem value="HR">HR</MenuItem>
                 <MenuItem value="HR_LEAD">HR-Лидер</MenuItem>
               </TextField>
-              <Button variant="contained" onClick={sendInvite} disabled={!phone.trim()}>Отправить</Button>
+              <Button variant="contained" onClick={sendInvite} disabled={!email.trim()}>Отправить</Button>
             </Stack>
           </Paper>
         )}
@@ -251,13 +255,13 @@ export default function EmployeesPage() {
             <DataGrid
               rows={(Array.isArray(invites) ? invites : []).map((inv: any, idx: number) => ({
                 id: inv.id,
-                phone: inv.phone,
+                email: inv.email,
                 role: inv.role,
                 createdAt: inv.createdAt,
                 status: "Ожидает", // можно доработать если появится статус
               }))}
               columns={[
-                { field: "phone", headerName: "Телефон", flex: 1 },
+                { field: "email", headerName: "Email", flex: 1 },
                 { field: "role", headerName: "Роль", flex: 1 },
                 { field: "createdAt", headerName: "Дата", flex: 1 },
                 { field: "status", headerName: "Статус", flex: 1 },
