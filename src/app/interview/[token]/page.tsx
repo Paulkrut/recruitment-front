@@ -124,6 +124,14 @@ export default function CandidateInterviewPage() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
+  // Состояния для прогресса интервью
+  const [interviewProgress, setInterviewProgress] = useState<{
+    current: number;
+    total: number;
+    percentage: number;
+  } | null>(null);
+  const [canContinue, setCanContinue] = useState(false);
+
   const chatRef = useRef<HTMLDivElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
@@ -604,6 +612,38 @@ export default function CandidateInterviewPage() {
     stopDeviceTest();
     setDeviceTestStarted(false); // Сбрасываем флаг для возможности повторного запуска в будущем
 
+    // Сначала проверяем прогресс интервью
+    const progressResponse = await fetch(`${API_BASE}/api/public/interview/${token}/progress`);
+    if (progressResponse.ok) {
+      const progressData = await progressResponse.json();
+      
+      if (progressData.status === 'finished') {
+        // Интервью уже завершено
+        alert('Интервью уже завершено');
+        return;
+      }
+      
+      if (progressData.status === 'ready') {
+        // Интервью ещё не начиналось - начинаем заново
+        console.log('Интервью ещё не начиналось, начинаем заново');
+      } else if (progressData.canContinue && progressData.nextQuestion) {
+        // Можно продолжить с места остановки
+        setQuestion(progressData.nextQuestion);
+        setPreviousQuestionId(progressData.nextQuestion.id);
+        setTotal(progressData.total);
+        setInterviewProgress(progressData.progress);
+        setCanContinue(true);
+        
+        // Показываем сообщение о прогрессе
+        setChat([
+          {role:'bot',text:`Добро пожаловать обратно! Продолжаем интервью с вопроса ${progressData.progress.current} из ${progressData.progress.total}.`, timestamp: Date.now()},
+          {role:'bot',text:progressData.nextQuestion.text, timestamp: Date.now()}
+        ]);
+        return;
+      }
+    }
+
+    // Если прогресса нет, статус ready или нельзя продолжить - начинаем заново
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) return;
     const d = await r.json();
@@ -2647,6 +2687,14 @@ export default function CandidateInterviewPage() {
                   </Typography>
                 </Box>
               )}
+              {/* Показываем прогресс если интервью продолжается */}
+              {interviewProgress && canContinue && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="body2" sx={{ color: '#25d366', fontSize: '13px', fontWeight: 600 }}>
+                    Продолжение: {interviewProgress.current} из {interviewProgress.total}
+                  </Typography>
+                </Box>
+              )}
               {timeLeft !== null && question?.maxTime && (
                 <Box position="relative" display="inline-flex">
                   <CircularProgress
@@ -2681,7 +2729,10 @@ export default function CandidateInterviewPage() {
           {total && (
             <LinearProgress
               variant="determinate"
-              value={( ( question.position + 1 ) / total) * 100}
+              value={interviewProgress && canContinue 
+                ? (interviewProgress.percentage) 
+                : (( question.position + 1 ) / total) * 100
+              }
               sx={{
                 mb: 1,
                 height: 3,
@@ -2697,6 +2748,39 @@ export default function CandidateInterviewPage() {
             <Typography variant="caption" sx={{ color: '#666', fontSize: '11px' }}>
               {timeLeft} сек
             </Typography>
+          )}
+
+          {/* Уведомление о продолжении интервью */}
+          {interviewProgress && canContinue && (
+            <Box sx={{
+              mt: 1,
+              p: 2,
+              bgcolor: '#e8f5e8',
+              border: '1px solid #4caf50',
+              borderRadius: 2,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1
+            }}>
+              <Box sx={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                bgcolor: '#4caf50',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '12px',
+                fontWeight: 'bold'
+              }}>
+                ✓
+              </Box>
+              <Typography variant="body2" sx={{ color: '#2e7d32', fontSize: '13px' }}>
+                Интервью продолжается с вопроса {interviewProgress.current} из {interviewProgress.total} 
+                ({interviewProgress.percentage}% завершено)
+              </Typography>
+            </Box>
           )}
         </Box>
 
