@@ -129,13 +129,119 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     }
   }, [onError]);
 
-  // Создание различных стратегий получения медиа (улучшенная версия BBB)
-  const createAttemptStrategies = useCallback((devices: DeviceInfo[]): AttemptConstraints[] => {
+  // Глубокая диагностика устройств (специально для Android)
+  const deepDeviceDiagnostics = useCallback(async () => {
+    const diagnostics: string[] = [];
+    
+    try {
+      // 1. Проверяем поддержку MediaDevices API
+      if (!navigator.mediaDevices) {
+        diagnostics.push('❌ MediaDevices API не поддерживается');
+        return diagnostics;
+      }
+      
+      if (!navigator.mediaDevices.getUserMedia) {
+        diagnostics.push('❌ getUserMedia не поддерживается');
+        return diagnostics;
+      }
+      
+      if (!navigator.mediaDevices.enumerateDevices) {
+        diagnostics.push('❌ enumerateDevices не поддерживается');
+        return diagnostics;
+      }
+      
+      diagnostics.push('✅ MediaDevices API поддерживается');
+      
+      // 2. Проверяем Permissions API (если доступен)
+      if ('permissions' in navigator) {
+        try {
+          const cameraPermission = await navigator.permissions.query({ name: 'camera' as PermissionName });
+          const micPermission = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          
+          diagnostics.push(`📹 Разрешение камеры: ${cameraPermission.state}`);
+          diagnostics.push(`🎤 Разрешение микрофона: ${micPermission.state}`);
+        } catch (permError) {
+          diagnostics.push('⚠️ Не удалось проверить разрешения через Permissions API');
+        }
+      } else {
+        diagnostics.push('⚠️ Permissions API недоступен');
+      }
+      
+      // 3. Первичное перечисление устройств (без getUserMedia)
+      const initialDevices = await navigator.mediaDevices.enumerateDevices();
+      diagnostics.push(`🔍 Начальный список устройств: ${initialDevices.length}`);
+      
+      const initialVideo = initialDevices.filter(d => d.kind === 'videoinput');
+      const initialAudio = initialDevices.filter(d => d.kind === 'audioinput');
+      
+      diagnostics.push(`📹 Начальные видео устройства: ${initialVideo.length}`);
+      diagnostics.push(`🎤 Начальные аудио устройства: ${initialAudio.length}`);
+      
+      // 4. Пробуем минимальный getUserMedia для получения labels
+      try {
+        diagnostics.push('🔄 Пробуем минимальный getUserMedia для получения labels...');
+        const tempStream = await navigator.mediaDevices.getUserMedia({ 
+          video: false, 
+          audio: true 
+        });
+        
+        diagnostics.push('✅ Минимальный getUserMedia успешен');
+        
+        // Останавливаем поток
+        tempStream.getTracks().forEach(track => track.stop());
+        
+        // 5. Повторное перечисление с labels
+        const detailedDevices = await navigator.mediaDevices.enumerateDevices();
+        diagnostics.push(`🔍 Детальный список устройств: ${detailedDevices.length}`);
+        
+        const detailedVideo = detailedDevices.filter(d => d.kind === 'videoinput');
+        const detailedAudio = detailedDevices.filter(d => d.kind === 'audioinput');
+        
+        diagnostics.push(`📹 Детальные видео устройства: ${detailedVideo.length}`);
+        diagnostics.push(`🎤 Детальные аудио устройства: ${detailedAudio.length}`);
+        
+        // Показываем детали каждого устройства
+        detailedVideo.forEach((device, index) => {
+          diagnostics.push(`  📹 Камера ${index + 1}: ${device.label || 'Без названия'} (ID: ${device.deviceId.slice(0, 12)}...)`);
+        });
+        
+        detailedAudio.forEach((device, index) => {
+          diagnostics.push(`  🎤 Микрофон ${index + 1}: ${device.label || 'Без названия'} (ID: ${device.deviceId.slice(0, 12)}...)`);
+        });
+        
+      } catch (tempError: any) {
+        diagnostics.push(`❌ Минимальный getUserMedia неудачен: ${tempError.name} - ${tempError.message}`);
+        
+        // Если даже аудио не работает, показываем устройства без labels
+        initialVideo.forEach((device, index) => {
+          diagnostics.push(`  📹 Камера ${index + 1}: ID ${device.deviceId.slice(0, 12)}... (без доступа к названию)`);
+        });
+        
+        initialAudio.forEach((device, index) => {
+          diagnostics.push(`  🎤 Микрофон ${index + 1}: ID ${device.deviceId.slice(0, 12)}... (без доступа к названию)`);
+        });
+      }
+      
+      // 6. Информация о браузере и системе
+      diagnostics.push(`🌐 User Agent: ${navigator.userAgent.slice(0, 100)}...`);
+      
+      // 7. Проверяем HTTPS
+      const isSecure = location.protocol === 'https:' || location.hostname === 'localhost';
+      diagnostics.push(`🔒 Безопасное соединение: ${isSecure ? 'Да' : 'Нет'}`);
+      
+    } catch (error: any) {
+      diagnostics.push(`❌ Критическая ошибка диагностики: ${error.message}`);
+    }
+    
+    return diagnostics;
+  }, []);
+
+  // Создание расширенных стратегий специально для Android
+  const createAndroidStrategies = useCallback((devices: DeviceInfo[]): AttemptConstraints[] => {
     const videoDevices = devices.filter(d => d.kind === 'videoinput');
     const strategies: AttemptConstraints[] = [];
 
     if (!cameraEnabled) {
-      // Только аудио, если камера отключена
       strategies.push({
         video: false,
         audio: true,
@@ -144,50 +250,58 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
       return strategies;
     }
 
-    // Стратегия 1: Базовые настройки (как у BBB)
-    strategies.push({
-      video: { 
-        width: { ideal: 640 }, 
-        height: { ideal: 480 }, 
-        facingMode: 'user' 
-      },
-      audio: true,
-      description: 'Базовые настройки (640x480, фронтальная)'
-    });
-
-    // Стратегия 2: Минимальные настройки видео
-    strategies.push({
-      video: { facingMode: 'user' },
-      audio: true,
-      description: 'Минимальные настройки (только фронтальная)'
-    });
-
-    // Стратегия 3: Любая камера без ограничений
+    // Android-специфичные стратегии
+    
+    // 1. Самые простые настройки
     strategies.push({
       video: true,
       audio: true,
-      description: 'Любая доступная камера'
+      description: 'Максимально простые настройки'
     });
-
-    // Стратегия 4: Конкретные устройства (если найдены)
+    
+    // 2. Только видео (без аудио)
+    strategies.push({
+      video: true,
+      audio: false,
+      description: 'Только видео (без аудио)'
+    });
+    
+    // 3. Фронтальная камера
+    strategies.push({
+      video: { facingMode: 'user' },
+      audio: true,
+      description: 'Фронтальная камера'
+    });
+    
+    // 4. Задняя камера
+    strategies.push({
+      video: { facingMode: 'environment' },
+      audio: true,
+      description: 'Задняя камера'
+    });
+    
+    // 5. Минимальное разрешение
+    strategies.push({
+      video: { 
+        width: { max: 320 }, 
+        height: { max: 240 }
+      },
+      audio: true,
+      description: 'Минимальное разрешение (320x240)'
+    });
+    
+    // 6. Конкретные устройства (если найдены)
     videoDevices.forEach((device, index) => {
       if (device.deviceId && device.deviceId !== 'default') {
         strategies.push({
           video: { deviceId: { exact: device.deviceId } },
           audio: true,
-          description: `Конкретная камера: ${device.label}`
+          description: `Конкретное устройство: ${device.label}`
         });
       }
     });
-
-    // Стратегия 5: Задняя камера (для мобильных)
-    strategies.push({
-      video: { facingMode: 'environment' },
-      audio: true,
-      description: 'Задняя камера (мобильные устройства)'
-    });
-
-    // Стратегия 6: Только аудио (fallback)
+    
+    // 7. Fallback - только аудио
     strategies.push({
       video: false,
       audio: true,
@@ -230,7 +344,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     }
   }, [onMicLevelChange]);
 
-  // Основная функция инициализации (по точному примеру BigBlueButton)
+  // Основная функция инициализации (улучшенная для Android)
   const initializeMedia = useCallback(async () => {
     if (isInitializing) return;
     
@@ -242,17 +356,27 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     setHasAudio(false);
 
     try {
-      // Шаг 1: Перечислить устройства (это всегда работает, даже при ошибках gUM)
-      onError('🔄 Поиск доступных устройств...');
+      // Шаг 1: Глубокая диагностика
+      onError('🔍 Запуск глубокой диагностики устройств...');
+      const diagnostics = await deepDeviceDiagnostics();
+      
+      // Показываем диагностику по частям
+      for (const diagnostic of diagnostics) {
+        onError(diagnostic);
+        await new Promise(resolve => setTimeout(resolve, 200)); // Пауза для читаемости
+      }
+      
+      // Шаг 2: Перечислить устройства
+      onError('🔄 Получение списка устройств...');
       const devices = await enumerateDevices();
       
-      // Шаг 2: Создать стратегии попыток
-      const strategies = createAttemptStrategies(devices);
+      // Шаг 3: Создать Android-специфичные стратегии
+      const strategies = createAndroidStrategies(devices);
       setMaxAttempts(strategies.length);
       
-      onError(`🔄 Начинаем ${strategies.length} попыток подключения...`);
+      onError(`🔄 Начинаем ${strategies.length} Android-оптимизированных попыток...`);
 
-      // Шаг 3: Пробуем каждую стратегию по очереди (точно как BBB)
+      // Шаг 4: Пробуем каждую стратегию
       for (let i = 0; i < strategies.length; i++) {
         setCurrentAttempt(i + 1);
         const strategy = strategies[i];
@@ -260,7 +384,6 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
         try {
           onError(`🔄 Попытка ${i + 1}/${strategies.length}: ${strategy.description}`);
           
-          // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Используем promiseTimeout от BBB
           const gumPromise = navigator.mediaDevices.getUserMedia({
             video: strategy.video,
             audio: strategy.audio
@@ -268,7 +391,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
           
           const stream = await promiseTimeout(GUM_TIMEOUT, gumPromise) as MediaStream;
 
-          // Успех! Анализируем что получили
+          // Анализ результата
           const videoTracks = stream.getVideoTracks();
           const audioTracks = stream.getAudioTracks();
           
@@ -276,16 +399,15 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
           setHasAudio(audioTracks.length > 0);
           
           const videoInfo = videoTracks.length > 0 
-            ? `${videoTracks[0].label || 'Неизвестная камера'}` 
+            ? `${videoTracks[0].label || 'Камера'} (${videoTracks[0].getSettings().width}x${videoTracks[0].getSettings().height})` 
             : 'нет';
           const audioInfo = audioTracks.length > 0 
-            ? `${audioTracks[0].label || 'Неизвестный микрофон'}` 
+            ? `${audioTracks[0].label || 'Микрофон'}` 
             : 'нет';
 
-          // Если нужно видео, но его нет, и это не последняя попытка - продолжаем
-          // НО НЕ ОСТАНАВЛИВАЕМСЯ НА ПЕРВОЙ ОШИБКЕ (ключевое исправление BBB)
+          // Если нужно видео, но его нет - продолжаем (кроме последних двух попыток)
           if (cameraEnabled && videoTracks.length === 0 && i < strategies.length - 2) {
-            onError(`⚠️ Видео: ${videoInfo}, Аудио: ${audioInfo} - ищем видео в следующих попытках...`);
+            onError(`⚠️ Видео: ${videoInfo}, Аудио: ${audioInfo} - ищем видео...`);
             stream.getTracks().forEach(track => track.stop());
             continue;
           }
@@ -299,7 +421,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
           setIsReady(true);
           onStreamReady(stream);
           onMicReady(audioTracks.length > 0);
-          onError(`✅ Успех! Видео: ${videoInfo}, Аудио: ${audioInfo}`);
+          onError(`✅ УСПЕХ! Видео: ${videoInfo}, Аудио: ${audioInfo}`);
           
           return;
 
@@ -307,26 +429,30 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
           const localizedError = getLocalizedError(error);
           setLastError(localizedError);
           
-          onError(`❌ Попытка ${i + 1} неудачна: ${localizedError}`);
-          
-          // НЕ ОСТАНАВЛИВАЕМСЯ - продолжаем со следующей стратегией (как BBB)
-          console.warn(`Attempt ${i + 1} failed:`, error);
+          onError(`❌ Попытка ${i + 1}: ${error.name} - ${localizedError}`);
+          console.warn(`Android attempt ${i + 1} failed:`, error);
         }
       }
 
-      // Все попытки неудачны
-      onError(`❌ Все ${strategies.length} попыток неудачны. Последняя ошибка: ${lastError}`);
+      // Все попытки неудачны - показываем финальную диагностику
+      onError(`💔 Все ${strategies.length} попыток неудачны`);
+      onError(`🔧 Последняя ошибка: ${lastError}`);
+      onError('💡 Попробуйте:');
+      onError('  1. Перезагрузить страницу');
+      onError('  2. Проверить настройки браузера');
+      onError('  3. Разрешить доступ к камере в настройках сайта');
+      onError('  4. Закрыть другие приложения, использующие камеру');
       
     } catch (error: any) {
       const localizedError = getLocalizedError(error);
       setLastError(localizedError);
-      onError(`❌ Критическая ошибка: ${localizedError}`);
+      onError(`💥 Критическая ошибка: ${localizedError}`);
     } finally {
       setIsInitializing(false);
     }
   }, [
-    isInitializing, cameraEnabled, enumerateDevices, createAttemptStrategies, 
-    setupAudioAnalysis, onStreamReady, onMicReady, onError, lastError
+    isInitializing, cameraEnabled, deepDeviceDiagnostics, enumerateDevices, 
+    createAndroidStrategies, setupAudioAnalysis, onStreamReady, onMicReady, onError, lastError
   ]);
 
   // Принудительный перезапуск
