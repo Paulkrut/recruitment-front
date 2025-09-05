@@ -29,6 +29,22 @@ interface AttemptConstraints {
   description: string;
 }
 
+// Точная копия функции promiseTimeout от BigBlueButton
+const promiseTimeout = (ms: number, promise: Promise<any>) => {
+  const timeout = new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      clearTimeout(id);
+      const error = {
+        name: 'TimeoutError',
+        message: 'Promise did not return',
+      };
+      reject(error);
+    }, ms);
+  });
+
+  return Promise.race([promise, timeout]);
+};
+
 const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
   cameraEnabled,
   onCameraToggle,
@@ -47,38 +63,36 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
   const [lastError, setLastError] = useState<string>('');
   const [hasVideo, setHasVideo] = useState<boolean>(false);
   const [hasAudio, setHasAudio] = useState<boolean>(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number | null>(null);
 
   // Константы по примеру BigBlueButton
-  const GUM_TIMEOUT = 20000; // 20 секунд timeout
-  const RETRY_DELAY = 1000; // 1 секунда между попытками
+  const GUM_TIMEOUT = 20000; // 20 секунд timeout - точно как у BBB
 
-  // Локализованные сообщения об ошибках (по примеру BigBlueButton)
+  // Локализованные сообщения об ошибках (точная копия от BigBlueButton)
   const getLocalizedError = (error: any): string => {
     const errorName = error?.name || '';
     const errorMessage = error?.message || '';
 
     switch (errorName) {
       case 'NotAllowedError':
-        return 'Доступ к камере/микрофону запрещен. Проверьте настройки браузера.';
+        return 'Отсутствует разрешение на использование веб-камеры. Проверьте настройки браузера.';
       case 'NotFoundError':
-        return 'Камера или микрофон не найдены. Проверьте подключение устройств.';
+        return 'Не удалось найти веб-камеру. Убедитесь, что она подключена.';
       case 'NotReadableError':
-        return 'Не удалось получить доступ к камере/микрофону. Возможно, они используются другим приложением.';
+        return 'Не удалось получить видео с веб-камеры. Убедитесь, что другая программа не использует камеру.';
       case 'OverconstrainedError':
-        return 'Настройки камеры/микрофона не поддерживаются устройством.';
+        return 'Не найдено устройств-кандидатов, соответствующих запрошенным критериям.';
       case 'SecurityError':
-        return 'Доступ запрещен по соображениям безопасности.';
+        return 'Поддержка медиа отключена в документе.';
       case 'AbortError':
-        return 'Операция была прервана.';
+        return 'Возникла проблема, которая не позволила использовать устройство.';
       case 'TypeError':
-        return 'Ошибка конфигурации медиа-устройств.';
+        return 'Список указанных ограничений пуст или все ограничения установлены в false.';
       case 'TimeoutError':
-        return 'Превышено время ожидания подключения к устройствам (20 сек).';
+        return 'Браузер не ответил вовремя.';
       default:
-        return `Неизвестная ошибка: ${errorMessage || 'Проверьте подключение камеры и микрофона'}`;
+        return `Произошла неизвестная ошибка с устройством (Ошибка ${errorMessage || 'неизвестна'})`;
     }
   };
 
@@ -115,7 +129,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     }
   }, [onError]);
 
-  // Создание различных стратегий получения медиа (по примеру BigBlueButton)
+  // Создание различных стратегий получения медиа (улучшенная версия BBB)
   const createAttemptStrategies = useCallback((devices: DeviceInfo[]): AttemptConstraints[] => {
     const videoDevices = devices.filter(d => d.kind === 'videoinput');
     const strategies: AttemptConstraints[] = [];
@@ -130,37 +144,50 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
       return strategies;
     }
 
-    // Стратегия 1: Базовые настройки
+    // Стратегия 1: Базовые настройки (как у BBB)
     strategies.push({
-      video: { width: 640, height: 480, facingMode: 'user' },
+      video: { 
+        width: { ideal: 640 }, 
+        height: { ideal: 480 }, 
+        facingMode: 'user' 
+      },
       audio: true,
-      description: 'Базовые настройки (640x480)'
+      description: 'Базовые настройки (640x480, фронтальная)'
     });
 
-    // Стратегия 2: Минимальные настройки
+    // Стратегия 2: Минимальные настройки видео
     strategies.push({
       video: { facingMode: 'user' },
       audio: true,
-      description: 'Минимальные настройки'
+      description: 'Минимальные настройки (только фронтальная)'
     });
 
-    // Стратегия 3: Любая камера
+    // Стратегия 3: Любая камера без ограничений
     strategies.push({
       video: true,
       audio: true,
       description: 'Любая доступная камера'
     });
 
-    // Стратегия 4: Конкретные устройства (если есть)
+    // Стратегия 4: Конкретные устройства (если найдены)
     videoDevices.forEach((device, index) => {
-      strategies.push({
-        video: { deviceId: { exact: device.deviceId } },
-        audio: true,
-        description: `Камера: ${device.label}`
-      });
+      if (device.deviceId && device.deviceId !== 'default') {
+        strategies.push({
+          video: { deviceId: { exact: device.deviceId } },
+          audio: true,
+          description: `Конкретная камера: ${device.label}`
+        });
+      }
     });
 
-    // Стратегия 5: Только аудио (fallback)
+    // Стратегия 5: Задняя камера (для мобильных)
+    strategies.push({
+      video: { facingMode: 'environment' },
+      audio: true,
+      description: 'Задняя камера (мобильные устройства)'
+    });
+
+    // Стратегия 6: Только аудио (fallback)
     strategies.push({
       video: false,
       audio: true,
@@ -169,26 +196,6 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
 
     return strategies;
   }, [cameraEnabled]);
-
-  // Попытка получить медиа с timeout (по примеру BigBlueButton)
-  const attemptGetUserMedia = useCallback((constraints: MediaStreamConstraints): Promise<MediaStream> => {
-    return new Promise((resolve, reject) => {
-      // Timeout для предотвращения зависания
-      const timeoutId = setTimeout(() => {
-        reject(new Error('TimeoutError'));
-      }, GUM_TIMEOUT);
-
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
-          clearTimeout(timeoutId);
-          resolve(stream);
-        })
-        .catch(error => {
-          clearTimeout(timeoutId);
-          reject(error);
-        });
-    });
-  }, []);
 
   // Анализ аудио уровня
   const setupAudioAnalysis = useCallback((stream: MediaStream) => {
@@ -223,7 +230,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     }
   }, [onMicLevelChange]);
 
-  // Основная функция инициализации (по примеру BigBlueButton)
+  // Основная функция инициализации (по точному примеру BigBlueButton)
   const initializeMedia = useCallback(async () => {
     if (isInitializing) return;
     
@@ -235,7 +242,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     setHasAudio(false);
 
     try {
-      // Шаг 1: Перечислить устройства (это всегда работает)
+      // Шаг 1: Перечислить устройства (это всегда работает, даже при ошибках gUM)
       onError('🔄 Поиск доступных устройств...');
       const devices = await enumerateDevices();
       
@@ -245,7 +252,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
       
       onError(`🔄 Начинаем ${strategies.length} попыток подключения...`);
 
-      // Шаг 3: Пробуем каждую стратегию по очереди
+      // Шаг 3: Пробуем каждую стратегию по очереди (точно как BBB)
       for (let i = 0; i < strategies.length; i++) {
         setCurrentAttempt(i + 1);
         const strategy = strategies[i];
@@ -253,10 +260,13 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
         try {
           onError(`🔄 Попытка ${i + 1}/${strategies.length}: ${strategy.description}`);
           
-          const stream = await attemptGetUserMedia({
+          // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Используем promiseTimeout от BBB
+          const gumPromise = navigator.mediaDevices.getUserMedia({
             video: strategy.video,
             audio: strategy.audio
           });
+          
+          const stream = await promiseTimeout(GUM_TIMEOUT, gumPromise) as MediaStream;
 
           // Успех! Анализируем что получили
           const videoTracks = stream.getVideoTracks();
@@ -273,10 +283,10 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
             : 'нет';
 
           // Если нужно видео, но его нет, и это не последняя попытка - продолжаем
-          if (cameraEnabled && videoTracks.length === 0 && i < strategies.length - 1) {
-            onError(`⚠️ Видео: ${videoInfo}, Аудио: ${audioInfo} - продолжаем поиск видео...`);
+          // НО НЕ ОСТАНАВЛИВАЕМСЯ НА ПЕРВОЙ ОШИБКЕ (ключевое исправление BBB)
+          if (cameraEnabled && videoTracks.length === 0 && i < strategies.length - 2) {
+            onError(`⚠️ Видео: ${videoInfo}, Аудио: ${audioInfo} - ищем видео в следующих попытках...`);
             stream.getTracks().forEach(track => track.stop());
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
             continue;
           }
 
@@ -299,10 +309,8 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
           
           onError(`❌ Попытка ${i + 1} неудачна: ${localizedError}`);
           
-          // Ждем перед следующей попыткой
-          if (i < strategies.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
-          }
+          // НЕ ОСТАНАВЛИВАЕМСЯ - продолжаем со следующей стратегией (как BBB)
+          console.warn(`Attempt ${i + 1} failed:`, error);
         }
       }
 
@@ -318,7 +326,7 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     }
   }, [
     isInitializing, cameraEnabled, enumerateDevices, createAttemptStrategies, 
-    attemptGetUserMedia, setupAudioAnalysis, onStreamReady, onMicReady, onError, lastError
+    setupAudioAnalysis, onStreamReady, onMicReady, onError, lastError
   ]);
 
   // Принудительный перезапуск
@@ -347,19 +355,16 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
     
     return () => {
       // Cleanup
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }
     };
   }, [cameraEnabled]);
 
-  // Обработка успешного подключения react-webcam
+  // Обработка успешного подключения react-webcam (дополнительная проверка)
   const handleUserMedia = useCallback((stream: MediaStream) => {
     console.log('✅ React-webcam connected successfully');
-    // Дополнительная проверка, если react-webcam подключился быстрее нашей логики
+    // Если react-webcam подключился быстрее нашей логики
     if (!isReady) {
       const videoTracks = stream.getVideoTracks();
       const audioTracks = stream.getAudioTracks();
@@ -455,8 +460,8 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
             width="100%"
             height="100%"
             videoConstraints={{
-              width: 640,
-              height: 480,
+              width: { ideal: 640 },
+              height: { ideal: 480 },
               facingMode: 'user'
             }}
             onUserMedia={handleUserMedia}
@@ -482,6 +487,9 @@ const AdvancedWebcamComponent: React.FC<AdvancedWebcamComponentProps> = ({
                 <CircularProgress sx={{ color: 'white', mb: 2 }} />
                 <Typography variant="h6" sx={{ opacity: 0.7 }}>
                   Подключение устройств...
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.5, mt: 1 }}>
+                  Попытка {currentAttempt}/{maxAttempts}
                 </Typography>
               </>
             ) : !cameraEnabled ? (
