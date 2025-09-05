@@ -41,7 +41,7 @@ import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
-import WebcamComponent from "./WebcamComponent";
+import AdvancedWebcamComponent from "./AdvancedWebcamComponent";
 
 interface Question {
   id: number;
@@ -2203,11 +2203,12 @@ export default function CandidateInterviewPage() {
           </Box>
         )}
 
-        {/* Новый простой компонент веб-камеры */}
-        <WebcamComponent
+        {/* Продвинутый компонент веб-камеры с улучшенной обработкой ошибок */}
+        <AdvancedWebcamComponent
           cameraEnabled={cameraEnabled}
           onCameraToggle={handleToggleCamera}
           onStreamReady={(stream) => setTestStream(stream)}
+          onMicLevelChange={setMicLevel}
           onMicReady={(ready) => setMicReady(ready)}
           onError={(error) => setDebugError(error)}
         />
