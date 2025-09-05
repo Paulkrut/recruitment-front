@@ -41,6 +41,7 @@ import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
+import WebcamComponent from "./WebcamComponent";
 
 interface Question {
   id: number;
@@ -339,170 +340,70 @@ export default function CandidateInterviewPage() {
   function handleToggleCamera(){
     const newVal = !cameraEnabled;
     setCameraEnabled(newVal);
-    // Перезапускаем поток с новыми настройками
-    if (testStream) {
-      stopDeviceTest();
-      setTimeout(() => startDeviceTest(newVal), 100);
-    }
   }
 
-  // Исправленная функция для камеры и микрофона
-  const startDeviceTest = async (includeVideo?: boolean) => {
-    setDebugError('🔄 Запуск теста устройств...');
-    
-    const useVideo = includeVideo ?? cameraEnabled;
-    
-    // Попробуем разные варианты - если нужна камера, начинаем с неё
-    const attempts = useVideo ? [
-      // Если нужна камера - сначала пробуем с камерой
-      { audio: true, video: {}, name: 'микрофон + камера (базовые)' },
-      { audio: true, video: { facingMode: 'user' }, name: 'микрофон + фронтальная камера' },
-      { audio: true, video: { facingMode: 'environment' }, name: 'микрофон + задняя камера' },
-      { audio: true, video: { facingMode: { ideal: 'user' } }, name: 'микрофон + любая камера' },
-      // Только в крайнем случае - без камеры
-      { audio: true, video: false, name: 'только микрофон (fallback)' }
-    ] : [
-      // Если камера не нужна - только микрофон
-      { audio: true, video: false, name: 'только микрофон' }
-    ];
-
-    for (let i = 0; i < attempts.length; i++) {
-      const attempt = attempts[i];
-      setDebugError(`🔄 Попытка ${i + 1}/4: ${attempt.name}...`);
-      
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(attempt);
-        
-        setTestStream(stream);
-        if (testVideoRef.current) {
-          testVideoRef.current.srcObject = stream;
-        }
-        
-        // Простая настройка аудио
-        try {
-          const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-          const source = audioCtx.createMediaStreamSource(stream);
-          const analyser = audioCtx.createAnalyser();
-          source.connect(analyser);
-          analyserRef.current = analyser;
-          
-          const data = new Uint8Array(128);
-          const tick = () => {
-            if (analyserRef.current) {
-              analyserRef.current.getByteFrequencyData(data);
-              const avg = data.reduce((a, b) => a + b) / data.length;
-              setMicLevel(avg);
-              rafRef.current = requestAnimationFrame(tick);
-            }
-          };
-          tick();
-        } catch (audioError) {
-          setDebugError('⚠️ Аудио анализ не работает, но поток получен');
-        }
-        
-        setMicReady(true);
-        const hasVideo = stream.getVideoTracks().length > 0;
-        const hasAudio = stream.getAudioTracks().length > 0;
-        
-        // Детальная диагностика камеры
-        let videoInfo = 'нет';
-        if (hasVideo) {
-          const videoTrack = stream.getVideoTracks()[0];
-          const settings = videoTrack.getSettings();
-          videoInfo = `есть (${settings.width}x${settings.height}, facing: ${settings.facingMode || 'unknown'})`;
-        }
-        
-        setDebugError(`✅ Успех! Видео: ${videoInfo}, Аудио: ${hasAudio ? 'есть' : 'нет'}`);
-        
-        // Если видео нет, но нужно - НЕ останавливаемся, продолжаем попытки
-        if (!hasVideo && useVideo && i < attempts.length - 1) {
-          setDebugError(`⚠️ Видео нет, пробуем следующий способ...`);
-          // НЕ возвращаемся, продолжаем цикл
-        } else {
-          // Если видео есть ИЛИ это последняя попытка - останавливаемся
-          if (!hasVideo && useVideo) {
-            setTimeout(() => diagnoseCameras(), 1000);
-          }
-          return; // Успех, выходим
-        }
-        
-      } catch (e: any) {
-        const errorMsg = `❌ Попытка ${i + 1} неудачна: ${e.name} - ${e.message}`;
-        setDebugError(errorMsg);
-        console.error(`Attempt ${i + 1} failed:`, e);
-        
-        // Если это последняя попытка
-        if (i === attempts.length - 1) {
-          setDebugError(`💀 Все попытки неудачны. Последняя ошибка: ${e.name} - ${e.message}`);
-        } else {
-          // Небольшая задержка перед следующей попыткой
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      }
-    }
-  };
 
   // Диагностика доступных камер для Android
   const diagnoseCameras = async () => {
     setDebugError('🔍 Диагностика камер...');
-    
+
     try {
       // Получаем список всех устройств
       const devices = await navigator.mediaDevices.enumerateDevices();
       const cameras = devices.filter(device => device.kind === 'videoinput');
-      
+
       setDebugError(`📷 Найдено камер: ${cameras.length}`);
-      
+
       if (cameras.length === 0) {
         setDebugError('❌ Камеры не найдены в системе');
         return;
       }
-      
+
       // Пробуем каждую камеру отдельно
       for (let i = 0; i < cameras.length; i++) {
         const camera = cameras[i];
         const label = camera.label || `Камера ${i + 1}`;
         setDebugError(`🔍 Тестируем: ${label}...`);
-        
+
         try {
           const testStream = await navigator.mediaDevices.getUserMedia({
             video: { deviceId: { exact: camera.deviceId } }
           });
-          
+
           const videoTrack = testStream.getVideoTracks()[0];
           const settings = videoTrack.getSettings();
-          
+
           setDebugError(`✅ ${label} работает! (${settings.width}x${settings.height})`);
-          
+
           // Останавливаем тестовый поток
           testStream.getTracks().forEach(track => track.stop());
-          
+
           // Пробуем использовать эту камеру для основного потока
           try {
             const mainStream = await navigator.mediaDevices.getUserMedia({
               audio: true,
               video: { deviceId: { exact: camera.deviceId } }
             });
-            
+
             setTestStream(mainStream);
             if (testVideoRef.current) {
               testVideoRef.current.srcObject = mainStream;
             }
-            
+
             setDebugError(`🎉 Камера подключена! ${label}`);
             return;
-            
+
           } catch (mainError: any) {
             setDebugError(`⚠️ ${label} работает отдельно, но не с микрофоном: ${mainError.message}`);
           }
-          
+
         } catch (cameraError: any) {
           setDebugError(`❌ ${label} не работает: ${cameraError.message}`);
         }
       }
-      
+
       setDebugError('💡 Камеры найдены, но не работают с микрофоном одновременно');
-      
+
     } catch (error: any) {
       setDebugError(`❌ Ошибка диагностики: ${error.message}`);
     }
@@ -510,29 +411,21 @@ export default function CandidateInterviewPage() {
 
   // Функция для остановки тестового потока
   function stopDeviceTest() {
-    if (testStream) { 
-      testStream.getTracks().forEach(t => t.stop()); 
-      setTestStream(null); 
+    if (testStream) {
+      testStream.getTracks().forEach(t => t.stop());
+      setTestStream(null);
     }
-    if (analyserRef.current) { 
-      analyserRef.current.disconnect(); 
-      analyserRef.current = null; 
+    if (analyserRef.current) {
+      analyserRef.current.disconnect();
+      analyserRef.current = null;
     }
     setMicReady(false);
-    if (rafRef.current) { 
-      cancelAnimationFrame(rafRef.current); 
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
     }
   }
 
   useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
-
-  // Автоматический запуск тестового потока при загрузке
-  useEffect(() => {
-    if (!question && prepared && !testStream) {
-      console.log('Auto-starting device test...');
-      startDeviceTest(cameraEnabled);
-    }
-  }, [prepared, question, testStream, cameraEnabled]);
 
   // Специальная обработка для мобильных браузеров
   useEffect(() => {
@@ -2281,8 +2174,8 @@ export default function CandidateInterviewPage() {
         {/* Debug сообщения для Android */}
         {debugError && (
           <Box sx={{
-            mb: 2, 
-            p: 2, 
+            mb: 2,
+            p: 2,
             bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
             borderRadius: 2,
             maxWidth: '90vw',
@@ -2293,12 +2186,12 @@ export default function CandidateInterviewPage() {
             </Typography>
           </Box>
         )}
-        
+
         {/* Debug сообщения для Android */}
         {debugError && (
           <Box sx={{
-            mb: 2, 
-            p: 2, 
+            mb: 2,
+            p: 2,
             bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
             borderRadius: 2,
             maxWidth: '90vw',
@@ -2310,188 +2203,15 @@ export default function CandidateInterviewPage() {
           </Box>
         )}
 
-        {/* Device test preview - Google Meet Style */}
-        {testStream && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-            {/* Video Preview - центральный элемент в стиле Google Meet */}
-            <Box sx={{
-              position: 'relative',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-              bgcolor: '#000',
-              width: { xs: '100%', sm: '480px', md: '560px' },
-              height: { xs: '240px', sm: '360px', md: '420px' },
-              maxWidth: '90vw'
-            }}>
-              {hasTestVideoTrack && cameraEnabled ? (
-                <video
-                  ref={testVideoRef}
-                  autoPlay
-                  muted
-                  playsInline
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                />
-              ) : (
-                <Box sx={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'column',
-                  bgcolor: '#1a1a1a',
-                  gap: 2
-                }}>
-                  {cameraEnabled ? (
-                    <>
-                      <VideocamIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)' }} />
-                      <Typography sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                        Камера подключается...
-                      </Typography>
-                    </>
-                  ) : (
-                    <>
-                      <VideocamOffIcon sx={{ fontSize: 64, color: 'rgba(255,255,255,0.5)' }} />
-                      <Typography sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                        Камера отключена
-                      </Typography>
-                    </>
-                  )}
-                </Box>
-              )}
+        {/* Новый простой компонент веб-камеры */}
+        <WebcamComponent
+          cameraEnabled={cameraEnabled}
+          onCameraToggle={handleToggleCamera}
+          onStreamReady={(stream) => setTestStream(stream)}
+          onMicReady={(ready) => setMicReady(ready)}
+          onError={(error) => setDebugError(error)}
+        />
 
-              {/* Overlay with device controls - как в Google Meet */}
-              <Box sx={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                p: 2,
-                background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                display: 'flex',
-                justifyContent: 'center',
-                gap: 1
-              }}>
-                {/* Кнопка микрофона */}
-                <Box sx={{
-                  width: 48,
-                  height: 48,
-                  borderRadius: '50%',
-                  bgcolor: 'rgba(255,255,255,0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  border: '1px solid rgba(255,255,255,0.2)',
-                  '&:hover': {
-                    bgcolor: 'rgba(255,255,255,0.2)'
-                  }
-                }}>
-                  <MicIcon sx={{ color: 'white' }} />
-                </Box>
-
-                {/* Кнопка камеры */}
-                <Box
-                  onClick={handleToggleCamera}
-                  sx={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    bgcolor: cameraEnabled ? 'rgba(255,255,255,0.1)' : '#ea4335',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    '&:hover': {
-                      bgcolor: cameraEnabled ? 'rgba(255,255,255,0.2)' : '#d93025'
-                    }
-                  }}
-                >
-                  {cameraEnabled ? (
-                    <VideocamIcon sx={{ color: 'white' }} />
-                  ) : (
-                    <VideocamOffIcon sx={{ color: 'white' }} />
-                  )}
-                </Box>
-              </Box>
-
-              {/* Индикатор уровня микрофона */}
-              {
-                <Box sx={{
-                  position: 'absolute',
-                  top: 16,
-                  left: 16,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  bgcolor: 'rgba(0,0,0,0.7)',
-                  px: 2,
-                  py: 1,
-                  borderRadius: '20px'
-                }}>
-                  <MicIcon sx={{ fontSize: 16, color: 'white' }} />
-                  <Box sx={{
-                    width: 60,
-                    height: 4,
-                    bgcolor: 'rgba(255,255,255,0.3)',
-                    borderRadius: '2px',
-                    overflow: 'hidden'
-                  }}>
-                    <Box sx={{
-                      width: `${Math.max(micLevel * 2, 5)}%`,
-                      height: '100%',
-                      bgcolor: '#4caf50',
-                      transition: 'width 0.1s linear'
-                    }} />
-                  </Box>
-                </Box>
-              }
-            </Box>
-
-            {/* Device Status */}
-            <Box sx={{
-              display: 'flex',
-              gap: 3,
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              justifyContent: 'center'
-            }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                {cameraEnabled ? (
-                  <VideocamIcon color={ "success"} />
-                ) : (
-                  <VideocamOffIcon sx={{ color: 'warning.main' }} />
-                )}
-                <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                  {cameraEnabled
-                    ? ('Камера подключена')
-                    : 'Камера отключена'
-                  }
-                </Typography>
-              </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <MicIcon color={"success"} />
-                <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                  {'Микрофон подключен'}
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* Warning for camera off */}
-            {!cameraEnabled && (
-              <Box sx={{ mt:1.5, p:1.5, bgcolor:'warning.light', border:'1px dashed', borderColor:'warning.main', borderRadius:1, textAlign:'center', maxWidth: '500px' }}>
-                <Typography variant="body2">Рекомендуем проходить интервью с камерой — так HR сможет лучше оценить вашу коммуникацию.</Typography>
-              </Box>
-            )}
-          </Box>
-        )}
         </Box>
 
         {/* Fixed Bottom Button */}
@@ -2509,7 +2229,7 @@ export default function CandidateInterviewPage() {
           display: 'flex',
           flexDirection: 'column'
         }}>
-          
+
           {/* Debug блок для Android */}
           {debugError && (
             <Box sx={{
@@ -2528,12 +2248,12 @@ export default function CandidateInterviewPage() {
               }}>
                 {debugError}
               </Typography>
-              
+
               {/* Кнопка диагностики камер */}
               {debugError.includes('Видео: нет') && (
-                <Button 
-                  size="small" 
-                  variant="outlined" 
+                <Button
+                  size="small"
+                  variant="outlined"
                   onClick={async () => {
                     setDebugError('🔍 Ищем доступные камеры...');
                     try {
