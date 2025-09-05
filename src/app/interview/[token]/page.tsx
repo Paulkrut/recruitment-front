@@ -569,6 +569,46 @@ export default function CandidateInterviewPage() {
       const audioTrack = stream.getAudioTracks()[0];
       if (!audioTrack.enabled) audioTrack.enabled = true;
 
+      // Настраиваем анализ аудио для визуализации уровня звука
+      if (!cameraEnabled) {
+        try {
+          console.log('Setting up audio analysis for recording...');
+          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+          // Возобновляем AudioContext если он приостановлен
+          if (audioContext.state === 'suspended') {
+            await audioContext.resume();
+          }
+
+          const source = audioContext.createMediaStreamSource(stream);
+          const analyser = audioContext.createAnalyser();
+
+          analyser.fftSize = 256;
+          analyser.smoothingTimeConstant = 0.8;
+          source.connect(analyser);
+          analyserRef.current = analyser;
+
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+          const updateLevel = () => {
+            if (!analyserRef.current) return;
+
+            analyserRef.current.getByteFrequencyData(dataArray);
+            const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+            const normalizedLevel = Math.min(100, (average / 128) * 100);
+
+            console.log('Audio level:', normalizedLevel);
+            setMicLevel(normalizedLevel);
+            rafRef.current = requestAnimationFrame(updateLevel);
+          };
+
+          updateLevel();
+          console.log('Audio analysis setup complete');
+        } catch (error) {
+          console.error('Не удалось настроить анализ аудио для записи:', error);
+        }
+      }
+
       if (cameraEnabled) {
         const videoTrack = stream.getVideoTracks()[0];
         if (!videoTrack.enabled) videoTrack.enabled = true;
@@ -681,6 +721,18 @@ export default function CandidateInterviewPage() {
             }
             return newChat;
           });
+
+          // Очищаем анализ аудио при ошибке записи
+          if (analyserRef.current) {
+            analyserRef.current.disconnect();
+            analyserRef.current = null;
+          }
+          if (rafRef.current) {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = null;
+          }
+          setMicLevel(0);
+
           return;
         }
 
@@ -700,6 +752,17 @@ export default function CandidateInterviewPage() {
         if (cameraEnabled) {
           setPreviewStream(null);
         }
+
+        // Очищаем анализ аудио при успешном завершении записи
+        if (analyserRef.current) {
+          analyserRef.current.disconnect();
+          analyserRef.current = null;
+        }
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current);
+          rafRef.current = null;
+        }
+        setMicLevel(0);
       };
       mr.start();
       setMediaRecorder(mr);
@@ -804,6 +867,17 @@ export default function CandidateInterviewPage() {
         return newChat;
       });
     }
+
+    // Очищаем анализ аудио в конце
+    if (analyserRef.current) {
+      analyserRef.current.disconnect();
+      analyserRef.current = null;
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    setMicLevel(0);
   }
 
   // useEffect to bind srcObject
@@ -2171,37 +2245,6 @@ export default function CandidateInterviewPage() {
           justifyContent: 'center'
         }}>
 
-        {/* Debug сообщения для Android */}
-        {debugError && (
-          <Box sx={{
-            mb: 2,
-            p: 2,
-            bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
-            borderRadius: 2,
-            maxWidth: '90vw',
-            wordBreak: 'break-word'
-          }}>
-            <Typography variant="body2" sx={{fontFamily: 'monospace'}}>
-              {debugError}
-            </Typography>
-          </Box>
-        )}
-
-        {/* Debug сообщения для Android */}
-        {debugError && (
-          <Box sx={{
-            mb: 2,
-            p: 2,
-            bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
-            borderRadius: 2,
-            maxWidth: '90vw',
-            wordBreak: 'break-word'
-          }}>
-            <Typography variant="body2" sx={{fontFamily: 'monospace'}}>
-              {debugError}
-            </Typography>
-          </Box>
-        )}
 
         {/* Продвинутый компонент веб-камеры с улучшенной обработкой ошибок */}
         <ProductionWebcamComponent
@@ -2669,7 +2712,7 @@ export default function CandidateInterviewPage() {
                       )}
 
                       {/* Аудио-визуализация для записи без камеры */}
-                      {!cameraEnabled && m.text.includes('🎤 Запись') && recording && (
+                      {!cameraEnabled && m.text.includes('🎤 Запись') && (
                         <Box sx={{
                           mb: 1,
                           p: 2,
@@ -2710,8 +2753,9 @@ export default function CandidateInterviewPage() {
                             overflow: 'hidden',
                             position: 'relative'
                           }}>
-                            <Box sx={{
-                              width: `${Math.max(micLevel * 2, 5)}%`,
+                            <Box
+                              style={{width: `${Math.max(micLevel * 2, 5)}%`}}
+                              sx={{
                               height: '100%',
                               bgcolor: '#4caf50',
                               borderRadius: '4px',

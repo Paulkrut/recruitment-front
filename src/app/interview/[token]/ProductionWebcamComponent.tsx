@@ -68,7 +68,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       case 'NotFoundError':
         return 'Камера не найдена. Проверьте подключение камеры.';
       case 'NotReadableError':
-        return 'Камера занята другим приложением. Закройте другие программы.';
+        return 'Камера занята другим приложением. Закройте все приложения, которые могут её использовать.';
       case 'OverconstrainedError':
         return 'Настройки камеры не поддерживаются.';
       case 'TimeoutError':
@@ -350,23 +350,17 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
                     '100%': { transform: 'rotate(360deg)' }
                   }
                 }} />
-                <Typography variant="h6" sx={{ opacity: 0.7 }}>
-                  Подключение...
-                </Typography>
+                {/* Убираем текст 'Подключение...' */}
               </>
             ) : !cameraEnabled ? (
               <>
                 <VideocamOffIcon sx={{ fontSize: 64, mb: 2, opacity: 0.7 }} />
-                <Typography variant="h6" sx={{ opacity: 0.7 }}>
-                  Камера отключена
-                </Typography>
+                {/* Убираем текст 'Камера отключена' */}
               </>
             ) : (
               <>
                 <WarningIcon sx={{ fontSize: 64, mb: 2, opacity: 0.7 }} />
-                <Typography variant="h6" sx={{ opacity: 0.7, textAlign: 'center' }}>
-                  Камера недоступна
-                </Typography>
+                {/* Убираем текст 'Камера недоступна' */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
                   <Button 
                     startIcon={<RefreshIcon />}
@@ -478,6 +472,27 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
             {hasAudio ? 'Микрофон подключен' : (isInitializing ? 'Подключение микрофона...' : 'Микрофон недоступен')}
           </Typography>
         </Box>
+
+        {/* Информация о пользе камеры для интервью */}
+        {!cameraEnabled && hasAudio && (
+          <Box sx={{
+            mt: 2,
+            p: 2,
+            bgcolor: '#e3f2fd',
+            borderRadius: 2,
+            border: '1px solid #2196f3',
+            maxWidth: '400px',
+            textAlign: 'center'
+          }}>
+            <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500, mb: 1 }}>
+              💡 Рекомендация
+            </Typography>
+            <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}>
+              Интервью с включенной камерой повышает лояльность HR-специалистов и даёт более полное представление о вашей личности. 
+              Видеоответы помогают продемонстрировать уверенность и коммуникативные навыки.
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Box>
   );
