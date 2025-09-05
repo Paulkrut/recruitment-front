@@ -346,22 +346,24 @@ export default function CandidateInterviewPage() {
     }
   }
 
-  // Android-совместимая функция для камеры и микрофона
+  // Исправленная функция для камеры и микрофона
   const startDeviceTest = async (includeVideo?: boolean) => {
     setDebugError('🔄 Запуск теста устройств...');
     
     const useVideo = includeVideo ?? cameraEnabled;
     
-    // Попробуем разные варианты для Android
-    const attempts = [
-      // 1. Только микрофон (самый надежный для Android)
-      { audio: true, video: false, name: 'только микрофон' },
-      // 2. Микрофон + камера с базовыми настройками
-      { audio: true, video: useVideo ? {} : false, name: 'микрофон + камера (базовые)' },
-      // 3. Микрофон + камера с конкретными настройками
-      { audio: true, video: useVideo ? { facingMode: 'user' } : false, name: 'микрофон + камера (user)' },
-      // 4. Микрофон + любая камера
-      { audio: true, video: useVideo ? { facingMode: { ideal: 'user' } } : false, name: 'микрофон + любая камера' }
+    // Попробуем разные варианты - если нужна камера, начинаем с неё
+    const attempts = useVideo ? [
+      // Если нужна камера - сначала пробуем с камерой
+      { audio: true, video: {}, name: 'микрофон + камера (базовые)' },
+      { audio: true, video: { facingMode: 'user' }, name: 'микрофон + фронтальная камера' },
+      { audio: true, video: { facingMode: 'environment' }, name: 'микрофон + задняя камера' },
+      { audio: true, video: { facingMode: { ideal: 'user' } }, name: 'микрофон + любая камера' },
+      // Только в крайнем случае - без камеры
+      { audio: true, video: false, name: 'только микрофон (fallback)' }
+    ] : [
+      // Если камера не нужна - только микрофон
+      { audio: true, video: false, name: 'только микрофон' }
     ];
 
     for (let i = 0; i < attempts.length; i++) {
@@ -401,8 +403,28 @@ export default function CandidateInterviewPage() {
         setMicReady(true);
         const hasVideo = stream.getVideoTracks().length > 0;
         const hasAudio = stream.getAudioTracks().length > 0;
-        setDebugError(`✅ Успех! Видео: ${hasVideo ? 'есть' : 'нет'}, Аудио: ${hasAudio ? 'есть' : 'нет'}`);
-        return; // Успех, выходим
+        
+        // Детальная диагностика камеры
+        let videoInfo = 'нет';
+        if (hasVideo) {
+          const videoTrack = stream.getVideoTracks()[0];
+          const settings = videoTrack.getSettings();
+          videoInfo = `есть (${settings.width}x${settings.height}, facing: ${settings.facingMode || 'unknown'})`;
+        }
+        
+        setDebugError(`✅ Успех! Видео: ${videoInfo}, Аудио: ${hasAudio ? 'есть' : 'нет'}`);
+        
+        // Если видео нет, но нужно - НЕ останавливаемся, продолжаем попытки
+        if (!hasVideo && useVideo && i < attempts.length - 1) {
+          setDebugError(`⚠️ Видео нет, пробуем следующий способ...`);
+          // НЕ возвращаемся, продолжаем цикл
+        } else {
+          // Если видео есть ИЛИ это последняя попытка - останавливаемся
+          if (!hasVideo && useVideo) {
+            setTimeout(() => diagnoseCameras(), 1000);
+          }
+          return; // Успех, выходим
+        }
         
       } catch (e: any) {
         const errorMsg = `❌ Попытка ${i + 1} неудачна: ${e.name} - ${e.message}`;
@@ -417,6 +439,72 @@ export default function CandidateInterviewPage() {
           await new Promise(resolve => setTimeout(resolve, 500));
         }
       }
+    }
+  };
+
+  // Диагностика доступных камер для Android
+  const diagnoseCameras = async () => {
+    setDebugError('🔍 Диагностика камер...');
+    
+    try {
+      // Получаем список всех устройств
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const cameras = devices.filter(device => device.kind === 'videoinput');
+      
+      setDebugError(`📷 Найдено камер: ${cameras.length}`);
+      
+      if (cameras.length === 0) {
+        setDebugError('❌ Камеры не найдены в системе');
+        return;
+      }
+      
+      // Пробуем каждую камеру отдельно
+      for (let i = 0; i < cameras.length; i++) {
+        const camera = cameras[i];
+        const label = camera.label || `Камера ${i + 1}`;
+        setDebugError(`🔍 Тестируем: ${label}...`);
+        
+        try {
+          const testStream = await navigator.mediaDevices.getUserMedia({
+            video: { deviceId: { exact: camera.deviceId } }
+          });
+          
+          const videoTrack = testStream.getVideoTracks()[0];
+          const settings = videoTrack.getSettings();
+          
+          setDebugError(`✅ ${label} работает! (${settings.width}x${settings.height})`);
+          
+          // Останавливаем тестовый поток
+          testStream.getTracks().forEach(track => track.stop());
+          
+          // Пробуем использовать эту камеру для основного потока
+          try {
+            const mainStream = await navigator.mediaDevices.getUserMedia({
+              audio: true,
+              video: { deviceId: { exact: camera.deviceId } }
+            });
+            
+            setTestStream(mainStream);
+            if (testVideoRef.current) {
+              testVideoRef.current.srcObject = mainStream;
+            }
+            
+            setDebugError(`🎉 Камера подключена! ${label}`);
+            return;
+            
+          } catch (mainError: any) {
+            setDebugError(`⚠️ ${label} работает отдельно, но не с микрофоном: ${mainError.message}`);
+          }
+          
+        } catch (cameraError: any) {
+          setDebugError(`❌ ${label} не работает: ${cameraError.message}`);
+        }
+      }
+      
+      setDebugError('💡 Камеры найдены, но не работают с микрофоном одновременно');
+      
+    } catch (error: any) {
+      setDebugError(`❌ Ошибка диагностики: ${error.message}`);
     }
   };
 
@@ -2440,6 +2528,27 @@ export default function CandidateInterviewPage() {
               }}>
                 {debugError}
               </Typography>
+              
+              {/* Кнопка диагностики камер */}
+              {debugError.includes('Видео: нет') && (
+                <Button 
+                  size="small" 
+                  variant="outlined" 
+                  onClick={async () => {
+                    setDebugError('🔍 Ищем доступные камеры...');
+                    try {
+                      const devices = await navigator.mediaDevices.enumerateDevices();
+                      const cameras = devices.filter(d => d.kind === 'videoinput');
+                      setDebugError(`📷 Камер найдено: ${cameras.length}\n${cameras.map((c, i) => `${i+1}. ${c.label || 'Неизвестная камера'}`).join('\n')}`);
+                    } catch (e: any) {
+                      setDebugError(`❌ Ошибка поиска камер: ${e.message}`);
+                    }
+                  }}
+                  sx={{ mt: 1 }}
+                >
+                  🔍 Найти камеры
+                </Button>
+              )}
             </Box>
           )}
 
