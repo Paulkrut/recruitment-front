@@ -346,53 +346,77 @@ export default function CandidateInterviewPage() {
     }
   }
 
-  // Максимально простая функция для камеры и микрофона
+  // Android-совместимая функция для камеры и микрофона
   const startDeviceTest = async (includeVideo?: boolean) => {
-    setDebugError('Запуск теста устройств...');
+    setDebugError('🔄 Запуск теста устройств...');
     
-    try {
-      const useVideo = includeVideo ?? cameraEnabled;
+    const useVideo = includeVideo ?? cameraEnabled;
+    
+    // Попробуем разные варианты для Android
+    const attempts = [
+      // 1. Только микрофон (самый надежный для Android)
+      { audio: true, video: false, name: 'только микрофон' },
+      // 2. Микрофон + камера с базовыми настройками
+      { audio: true, video: useVideo ? {} : false, name: 'микрофон + камера (базовые)' },
+      // 3. Микрофон + камера с конкретными настройками
+      { audio: true, video: useVideo ? { facingMode: 'user' } : false, name: 'микрофон + камера (user)' },
+      // 4. Микрофон + любая камера
+      { audio: true, video: useVideo ? { facingMode: { ideal: 'user' } } : false, name: 'микрофон + любая камера' }
+    ];
+
+    for (let i = 0; i < attempts.length; i++) {
+      const attempt = attempts[i];
+      setDebugError(`🔄 Попытка ${i + 1}/4: ${attempt.name}...`);
       
-      // Простой запрос без сложных параметров
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: useVideo
-      });
-      
-      setTestStream(stream);
-      if (testVideoRef.current) {
-        testVideoRef.current.srcObject = stream;
-      }
-      
-      // Простая настройка аудио
       try {
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const source = audioCtx.createMediaStreamSource(stream);
-        const analyser = audioCtx.createAnalyser();
-        source.connect(analyser);
-        analyserRef.current = analyser;
+        const stream = await navigator.mediaDevices.getUserMedia(attempt);
         
-        const data = new Uint8Array(128);
-        const tick = () => {
-          if (analyserRef.current) {
-            analyserRef.current.getByteFrequencyData(data);
-            const avg = data.reduce((a, b) => a + b) / data.length;
-            setMicLevel(avg);
-            rafRef.current = requestAnimationFrame(tick);
-          }
-        };
-        tick();
-      } catch (audioError) {
-        setDebugError('Аудио анализ не работает, но поток получен');
+        setTestStream(stream);
+        if (testVideoRef.current) {
+          testVideoRef.current.srcObject = stream;
+        }
+        
+        // Простая настройка аудио
+        try {
+          const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const source = audioCtx.createMediaStreamSource(stream);
+          const analyser = audioCtx.createAnalyser();
+          source.connect(analyser);
+          analyserRef.current = analyser;
+          
+          const data = new Uint8Array(128);
+          const tick = () => {
+            if (analyserRef.current) {
+              analyserRef.current.getByteFrequencyData(data);
+              const avg = data.reduce((a, b) => a + b) / data.length;
+              setMicLevel(avg);
+              rafRef.current = requestAnimationFrame(tick);
+            }
+          };
+          tick();
+        } catch (audioError) {
+          setDebugError('⚠️ Аудио анализ не работает, но поток получен');
+        }
+        
+        setMicReady(true);
+        const hasVideo = stream.getVideoTracks().length > 0;
+        const hasAudio = stream.getAudioTracks().length > 0;
+        setDebugError(`✅ Успех! Видео: ${hasVideo ? 'есть' : 'нет'}, Аудио: ${hasAudio ? 'есть' : 'нет'}`);
+        return; // Успех, выходим
+        
+      } catch (e: any) {
+        const errorMsg = `❌ Попытка ${i + 1} неудачна: ${e.name} - ${e.message}`;
+        setDebugError(errorMsg);
+        console.error(`Attempt ${i + 1} failed:`, e);
+        
+        // Если это последняя попытка
+        if (i === attempts.length - 1) {
+          setDebugError(`💀 Все попытки неудачны. Последняя ошибка: ${e.name} - ${e.message}`);
+        } else {
+          // Небольшая задержка перед следующей попыткой
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       }
-      
-      setMicReady(true);
-      setDebugError('Камера и микрофон работают!');
-      
-    } catch (e: any) {
-      const errorMsg = `ОШИБКА: ${e.name} - ${e.message}`;
-      setDebugError(errorMsg);
-      console.error('startDeviceTest error:', e);
     }
   };
 
@@ -2397,6 +2421,27 @@ export default function CandidateInterviewPage() {
           display: 'flex',
           flexDirection: 'column'
         }}>
+          
+          {/* Debug блок для Android */}
+          {debugError && (
+            <Box sx={{
+              mb: 2,
+              p: 2,
+              bgcolor: debugError.includes('❌') || debugError.includes('💀') ? '#ffebee' : '#e8f5e8',
+              borderRadius: 2,
+              border: '2px solid',
+              borderColor: debugError.includes('❌') || debugError.includes('💀') ? '#f44336' : '#4caf50'
+            }}>
+              <Typography variant="body2" sx={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word'
+              }}>
+                {debugError}
+              </Typography>
+            </Box>
+          )}
 
           <Button
             variant="contained"
