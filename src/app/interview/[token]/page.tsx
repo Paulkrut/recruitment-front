@@ -93,19 +93,9 @@ export default function CandidateInterviewPage() {
   const analyserRef = useRef<AnalyserNode|null>(null);
   const rafRef = useRef<number|null>(null);
   const [skipDialogOpen, setSkipDialogOpen] = useState(false);
-  // Упрощенное состояние разрешений
-  const [mediaPermissions, setMediaPermissions] = useState<{
-    status: 'unknown' | 'requesting' | 'granted' | 'denied',
-    camera: boolean,
-    microphone: boolean
-  }>({
-    status: 'unknown',
-    camera: false,
-    microphone: false
-  });
+  // Убрали все проверки разрешений - используем прямые вызовы getUserMedia
 
   const [videoLoading, setVideoLoading] = useState(false);
-  const [deviceTestStarted, setDeviceTestStarted] = useState(false); // Флаг для предотвращения повторных запусков
   const [forgetMeDialogOpen, setForgetMeDialogOpen] = useState(false);
   const [forgetMeLoading, setForgetMeLoading] = useState(false);
   const [forgetMeConfirmed, setForgetMeConfirmed] = useState('');
@@ -125,25 +115,7 @@ export default function CandidateInterviewPage() {
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const hasTestVideoTrack = useMemo(() => !!(testStream && testStream.getVideoTracks().length > 0), [testStream]);
 
-  // Совместимость со старым кодом - объекты для UI компонентов
-  const permissionsGranted = {
-    camera: mediaPermissions.camera,
-    microphone: mediaPermissions.microphone
-  };
-  const permissionsRequested = mediaPermissions.status !== 'unknown';
 
-  // Совместимость со старым кодом - функции-заглушки
-  const setPermissionsGranted = (permissions: { camera: boolean; microphone: boolean }) => {
-    setMediaPermissions({
-      status: (permissions.camera || permissions.microphone) ? 'granted' : 'denied',
-      camera: permissions.camera,
-      microphone: permissions.microphone
-    });
-  };
-  const setPermissionsRequested = (requested: boolean) => {
-    // Функция больше не используется, но оставлена для совместимости
-    console.log('setPermissionsRequested (compat):', requested);
-  };
 
   // Состояния для прогресса генерации
   const [generationStep, setGenerationStep] = useState(0);
@@ -362,319 +334,87 @@ export default function CandidateInterviewPage() {
     fetch(`${API_BASE}/api/public/interview/${token}/prepare`).then(r=>r.json()).then(setPrepared);
   },[token]);
 
-  // Единая функция для запроса разрешений
-  const requestMediaPermissions = async (includeVideo: boolean = true) => {
-    console.log('Запрос разрешений:', { includeVideo });
 
-    // Проверяем поддержку getUserMedia
-    if (!navigator.mediaDevices?.getUserMedia) {
-      alert('Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.');
-      return false;
+  function handleToggleCamera(){
+    const newVal = !cameraEnabled;
+    setCameraEnabled(newVal);
+    // Перезапускаем поток с новыми настройками
+    if (testStream) {
+      stopDeviceTest();
+      setTimeout(() => startDeviceTest(newVal), 100);
     }
+  }
 
-    setMediaPermissions(prev => ({ ...prev, status: 'requesting' }));
-
+  // Простая функция для запуска тестового потока
+  const startDeviceTest = async (includeVideo?: boolean) => {
     try {
-      // Простой запрос разрешений через getUserMedia
-      const constraints = {
-        audio: {
-          sampleRate: 16000,
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true
-        },
-        video: includeVideo ? {
-          width: 640,
-          height: 480,
-          facingMode: 'user'
-        } : false
-      };
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-      // Проверяем полученные треки
-      const audioTracks = stream.getAudioTracks();
-      const videoTracks = stream.getVideoTracks();
-
-      const hasAudio = audioTracks.length > 0 && audioTracks[0].enabled;
-      const hasVideo = videoTracks.length > 0 && videoTracks[0].enabled;
-
-      console.log('Разрешения получены:', { hasAudio, hasVideo });
-
-      // Обновляем состояние
-      setMediaPermissions({
-        status: 'granted',
-        camera: hasVideo,
-        microphone: hasAudio
+      console.log('Starting device test...');
+      
+      const useVideo = includeVideo ?? cameraEnabled;
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: useVideo ? { width: 640, height: 480 } : false
       });
-
-      // Сохраняем поток для тестирования
+      
       setTestStream(stream);
       if (testVideoRef.current) {
         testVideoRef.current.srcObject = stream;
       }
 
-      // Настраиваем аудио анализ
-      if (hasAudio) {
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const source = audioCtx.createMediaStreamSource(stream);
-        const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 256;
-        source.connect(analyser);
-        analyserRef.current = analyser;
-
-        const data = new Uint8Array(analyser.frequencyBinCount);
-        const tick = () => {
-          if (analyserRef.current) {
-            analyserRef.current.getByteFrequencyData(data);
-            const avg = data.reduce((a, b) => a + b) / data.length;
-            setMicLevel(avg);
-            requestAnimationFrame(tick);
-          }
-        };
-        tick();
-      }
-
-      setDeviceTestStarted(true);
-      return true;
-    } catch (error) {
-      console.error('Ошибка получения разрешений:', error);
-
-      setMediaPermissions({
-        status: 'denied',
-        camera: false,
-        microphone: false
-      });
-
-      // Показываем понятное сообщение об ошибке
-      if (error.name === 'NotAllowedError') {
-        console.log('Пользователь отклонил разрешения');
-      } else if (error.name === 'NotFoundError') {
-        alert(includeVideo
-          ? 'Камера или микрофон не найдены. Проверьте подключение устройств.'
-          : 'Микрофон не найден. Проверьте подключение устройства.'
-        );
-      } else {
-        alert('Произошла ошибка при доступе к устройствам. Попробуйте обновить страницу.');
-      }
-
-      return false;
-    }
-  };
-
-  const startDeviceTest = async (includeVideo?: boolean) => {
-    // Предотвращаем повторные запуски
-    if (deviceTestStarted) {
-      console.log('Device test already started, skipping...');
-      return;
-    }
-
-    try{
-      setDeviceTestStarted(true);
-      console.log('Starting device test...');
-
-      // Проверяем разрешения перед запросом потока
-      const permissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-
-      console.log('Device test permissions:', {
-        camera: permissions.state,
-        microphone: micPermissions.state
-      });
-
-      const useVideo = includeVideo ?? cameraEnabled;
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true,video: useVideo ? {width:640,height:480} : false});
-      setTestStream(stream);
-      if(testVideoRef.current){ testVideoRef.current.srcObject = stream; }
-
-      // Проверяем реальный доступ к трекам
-      const hasAudioTrack = stream.getAudioTracks().length > 0 && stream.getAudioTracks()[0].enabled;
-      const hasVideoTrack = stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled;
-
-      console.log('Real track access:', {
-        hasAudioTrack,
-        hasVideoTrack,
-        audioTracks: stream.getAudioTracks().length,
-        videoTracks: stream.getVideoTracks().length
-      });
-
-      // Обновляем разрешения на основе реального доступа к трекам
-      setMediaPermissions({
-        status: 'granted',
-        camera: hasVideoTrack,
-        microphone: hasAudioTrack
-      });
-
-      // Дополнительная проверка для Android устройств
-      const isAndroid = /Android/i.test(navigator.userAgent);
-      if (isAndroid && (hasAudioTrack || hasVideoTrack)) {
-        console.log('Android: Разрешения получены, обновляем состояние...');
-        // Небольшая задержка для стабилизации UI на Android
-        setTimeout(() => {
-          setMediaPermissions({
-            status: 'granted',
-            camera: hasVideoTrack,
-            microphone: hasAudioTrack
-          });
-        }, 500);
-      }
-
+      // Настраиваем аудио анализ для индикатора уровня микрофона
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
-      analyser.fftSize=256;
+      analyser.fftSize = 256;
       source.connect(analyser);
       analyserRef.current = analyser;
+      
       const data = new Uint8Array(analyser.frequencyBinCount);
-      const tick = ()=>{
-        analyser.getByteFrequencyData(data);
-        let sum=0; for(let i=0;i<data.length;i++){sum+=data[i];}
-        const lvl=Math.round(sum/data.length);
-        setMicLevel(lvl);
-        if(!micReady && lvl>1){ setMicReady(true); }
-        rafRef.current=requestAnimationFrame(tick);
+      const tick = () => {
+        if (!analyserRef.current) return;
+        analyserRef.current.getByteFrequencyData(data);
+        const avg = data.reduce((a, b) => a + b) / data.length;
+        setMicLevel(avg);
+        if (!micReady && avg > 1) { setMicReady(true); }
+        // Для надежности активируем кнопку через 2 секунды после запуска
+        setTimeout(() => { if (!micReady) setMicReady(true); }, 2000);
+        rafRef.current = requestAnimationFrame(tick);
       };
       tick();
-    }catch(e){
-      console.error('Ошибка доступа к камере/микрофону:', e);
-      setDeviceTestStarted(false); // Сбрасываем флаг при ошибке
-
-      // Специальная обработка для Safari
-      let errorMessage = 'Ошибка доступа к камере/микрофону';
-      if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-        errorMessage += '\n\nВ Safari:\n1. Убедитесь, что сайт открыт по HTTPS\n2. Разрешите доступ к камере и микрофону\n3. Проверьте настройки в Safari > Настройки > Веб-сайты';
-      }
-
-      console.error(errorMessage);
-      setMediaPermissions({
-        status: 'denied',
-        camera: false,
-        microphone: false
-      });
+      
+      // Активируем кнопку сразу при получении потока
+      setMicReady(true);
+    } catch (e) {
+      console.error('Device test failed:', e);
+      alert('Не удалось получить доступ к камере или микрофону. Проверьте разрешения в браузере.');
     }
   };
 
-  function stopDeviceTest(){
-    if(testStream){ testStream.getTracks().forEach(t=>t.stop()); setTestStream(null); }
-    if(analyserRef.current){ analyserRef.current.disconnect(); analyserRef.current=null; }
+  // Функция для остановки тестового потока
+  function stopDeviceTest() {
+    if (testStream) { 
+      testStream.getTracks().forEach(t => t.stop()); 
+      setTestStream(null); 
+    }
+    if (analyserRef.current) { 
+      analyserRef.current.disconnect(); 
+      analyserRef.current = null; 
+    }
     setMicReady(false);
-    if(rafRef.current){ cancelAnimationFrame(rafRef.current); }
-    setDeviceTestStarted(false); // Сбрасываем флаг при остановке
+    if (rafRef.current) { 
+      cancelAnimationFrame(rafRef.current); 
+    }
   }
-
-  function handleToggleCamera(){
-    const newVal = !cameraEnabled;
-    setCameraEnabled(newVal);
-    stopDeviceTest();
-    setTimeout(()=> startDeviceTest(newVal), 0);
-  }
-
-  const requestPermissions = async () => {
-    try {
-      setPermissionsRequested(false);
-      await startDeviceTest();
-    } catch (e) {
-      console.error('Ошибка при запросе разрешений:', e);
-    }
-  };
-
-  // Функция для принудительной проверки разрешений (особенно для Android)
-  const forceCheckPermissions = async () => {
-    try {
-      console.log('Принудительная проверка разрешений...');
-
-      // Пытаемся получить поток для проверки реального доступа
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: { width: 640, height: 480 }
-      });
-
-      // Проверяем реальный доступ к трекам
-      const hasAudioTrack = stream.getAudioTracks().length > 0 && stream.getAudioTracks()[0].enabled;
-      const hasVideoTrack = stream.getVideoTracks().length > 0 && stream.getVideoTracks()[0].enabled;
-
-      console.log('Force check result:', { hasAudioTrack, hasVideoTrack });
-
-      // Обновляем состояние разрешений
-      setMediaPermissions({
-        status: 'granted',
-        camera: hasVideoTrack,
-        microphone: hasAudioTrack
-      });
-
-      // Останавливаем тестовый поток
-      stream.getTracks().forEach(track => track.stop());
-
-      // Если разрешения получены, обновляем UI
-      if (hasAudioTrack && hasVideoTrack) {
-        setPermissionsRequested(true);
-      }
-    } catch (e) {
-      console.error('Ошибка при принудительной проверке разрешений:', e);
-    }
-  };
-
-  // Функция для проверки разрешений с учетом особенностей Android
-  const checkPermissionsWithFallback = async () => {
-    try {
-      // Сначала проверяем через permissions API
-      const cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      const micPermissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-
-      console.log('Permissions API check:', {
-        camera: cameraPermissions.state,
-        microphone: micPermissions.state
-      });
-
-      // Если разрешения предоставлены через API, используем их
-      if (cameraPermissions.state === 'granted' && micPermissions.state === 'granted') {
-        setPermissionsGranted({ camera: true, microphone: true });
-        setPermissionsRequested(true);
-        return;
-      }
-
-      // Если разрешения не определены или предоставлены, делаем реальную проверку
-      if (cameraPermissions.state !== 'denied' && micPermissions.state !== 'denied') {
-        await forceCheckPermissions();
-      }
-    } catch (e) {
-      console.error('Ошибка при проверке разрешений с fallback:', e);
-      // В случае ошибки делаем принудительную проверку
-      await forceCheckPermissions();
-    }
-  };
 
   useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
 
-  // auto start device test when prepared screen shown
-  useEffect(()=>{
-    if(!question && prepared && !testStream && !deviceTestStarted){
-       // Автоматически запрашиваем разрешения без показа блока с кнопками
-       requestMediaPermissions(cameraEnabled);
-    }
-  },[prepared, question, deviceTestStarted, cameraEnabled]);
-
-  // Автоматическая проверка разрешений для Android устройств
-  // Убрали Android-специфичную логику - теперь используем единый подход для всех устройств
-
-  // Специальная обработка для Telegram браузера
+  // Автоматический запуск тестового потока при загрузке
   useEffect(() => {
-    const isTelegram = /TelegramWebApp/i.test(navigator.userAgent) ||
-                      /Telegram/i.test(navigator.userAgent) ||
-                      (window as any).Telegram?.WebApp;
-
-    if (isTelegram) {
-      console.log('Telegram браузер обнаружен, применяем специальные настройки...');
-
-      // Принудительно показываем блок разрешений в Telegram браузере только один раз
-      if (prepared && !permissionsRequested && !deviceTestStarted) {
-        setTimeout(() => {
-          console.log('Принудительно запрашиваем разрешения в Telegram браузере...');
-          setPermissionsRequested(true);
-        }, 1000);
-      }
+    if (!question && prepared && !testStream) {
+      console.log('Auto-starting device test...');
+      startDeviceTest(cameraEnabled);
     }
-  }, [prepared, permissionsRequested, deviceTestStarted]);
+  }, [prepared, question, testStream, cameraEnabled]);
 
   // Специальная обработка для мобильных браузеров
   useEffect(() => {
@@ -714,14 +454,8 @@ export default function CandidateInterviewPage() {
   }, []);
 
   async function startInterview(){
-    // Проверяем разрешения перед началом интервью
-    if (!permissionsGranted.microphone || (cameraEnabled && !permissionsGranted.camera)) {
-      alert(cameraEnabled ? 'Для начала интервью необходимо разрешить доступ к камере и микрофону' : 'Для начала интервью необходимо разрешить доступ к микрофону');
-      return;
-    }
-
+    // Останавливаем тестовый поток перед началом интервью
     stopDeviceTest();
-    setDeviceTestStarted(false); // Сбрасываем флаг для возможности повторного запуска в будущем
 
     // Сначала проверяем прогресс интервью
     const progressResponse = await fetch(`${API_BASE}/api/public/interview/${token}/progress`);
@@ -796,28 +530,7 @@ export default function CandidateInterviewPage() {
     }
 
     try {
-      // Сначала проверяем разрешения
-      const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-      let cameraPermissions: PermissionStatus | null = null;
 
-      // Проверяем камеру только если она нужна
-      if (cameraEnabled) {
-        cameraPermissions = await navigator.permissions.query({ name: 'camera' as PermissionName });
-      }
-
-      console.log('Permissions status:', {
-        microphone: permissions.state,
-        camera: cameraPermissions?.state
-      });
-
-      // Если разрешения не предоставлены, запрашиваем их
-      if (permissions.state === 'denied' || (cameraEnabled && cameraPermissions?.state === 'denied')) {
-        alert(cameraEnabled
-          ? 'Для записи необходимо разрешить доступ к камере и микрофону. Пожалуйста, разрешите доступ в настройках браузера.'
-          : 'Для записи необходимо разрешить доступ к микрофону. Пожалуйста, разрешите доступ в настройках браузера.'
-        );
-        return;
-      }
 
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -2445,39 +2158,6 @@ export default function CandidateInterviewPage() {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
-          {/* Проверка разрешений - показываем только если явно отклонены */}
-          {mediaPermissions.status === 'denied' && (
-            <Box sx={{mb:3, p:2, bgcolor:'warning.light', borderRadius:0, border:'1px solid', borderColor:'warning.main'}}>
-
-              <Typography variant="h6" color="warning.dark" gutterBottom>
-                {cameraEnabled ? '⚠️ Требуется доступ к камере и микрофону' : '⚠️ Требуется доступ к микрофону'}
-              </Typography>
-              <Typography variant="body2" sx={{mb:2}}>
-                {cameraEnabled
-                  ? 'Для прохождения интервью необходимо разрешить доступ к камере и микрофону.'
-                  : 'Для прохождения интервью необходимо разрешить доступ к микрофону. Камера может быть отключена.'}
-                {!cameraEnabled && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
-                {cameraEnabled && !permissionsGranted.camera && !permissionsGranted.microphone && ' Камера и микрофон заблокированы.'}
-                {cameraEnabled && !permissionsGranted.camera && permissionsGranted.microphone && ' Камера заблокирована.'}
-                {cameraEnabled && permissionsGranted.camera && !permissionsGranted.microphone && ' Микрофон заблокирован.'}
-              </Typography>
-
-              <Typography variant="body2" sx={{mb:2, color: 'warning.dark'}}>
-                Разрешения были отклонены. Для продолжения интервью необходимо разрешить доступ в настройках браузера
-                или нажать кнопку ниже для повторного запроса.
-              </Typography>
-
-              <Button
-                variant="contained"
-                color="warning"
-                onClick={() => requestMediaPermissions(cameraEnabled)}
-                fullWidth={isMobile}
-                size={isMobile ? 'large' : 'medium'}
-              >
-                Запросить разрешения повторно
-              </Button>
-            </Box>
-          )}
 
         {/* Device test preview - Google Meet Style */}
         {testStream && (
@@ -2551,14 +2231,14 @@ export default function CandidateInterviewPage() {
                   width: 48,
                   height: 48,
                   borderRadius: '50%',
-                  bgcolor: permissionsGranted.microphone ? 'rgba(255,255,255,0.1)' : '#ea4335',
+                  bgcolor: 'rgba(255,255,255,0.1)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   border: '1px solid rgba(255,255,255,0.2)',
                   '&:hover': {
-                    bgcolor: permissionsGranted.microphone ? 'rgba(255,255,255,0.2)' : '#d93025'
+                    bgcolor: 'rgba(255,255,255,0.2)'
                   }
                 }}>
                   <MicIcon sx={{ color: 'white' }} />
@@ -2571,14 +2251,14 @@ export default function CandidateInterviewPage() {
                     width: 48,
                     height: 48,
                     borderRadius: '50%',
-                    bgcolor: cameraEnabled && permissionsGranted.camera ? 'rgba(255,255,255,0.1)' : '#ea4335',
+                    bgcolor: cameraEnabled ? 'rgba(255,255,255,0.1)' : '#ea4335',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
                     border: '1px solid rgba(255,255,255,0.2)',
                     '&:hover': {
-                      bgcolor: cameraEnabled && permissionsGranted.camera ? 'rgba(255,255,255,0.2)' : '#d93025'
+                      bgcolor: cameraEnabled ? 'rgba(255,255,255,0.2)' : '#d93025'
                     }
                   }}
                 >
@@ -2591,7 +2271,7 @@ export default function CandidateInterviewPage() {
               </Box>
 
               {/* Индикатор уровня микрофона */}
-              {permissionsGranted.microphone && (
+              {
                 <Box sx={{
                   position: 'absolute',
                   top: 16,
@@ -2620,7 +2300,7 @@ export default function CandidateInterviewPage() {
                     }} />
                   </Box>
                 </Box>
-              )}
+              }
             </Box>
 
             {/* Device Status */}
@@ -2633,22 +2313,22 @@ export default function CandidateInterviewPage() {
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 {cameraEnabled ? (
-                  <VideocamIcon color={permissionsGranted.camera ? "success" : "error"} />
+                  <VideocamIcon color={ "success"} />
                 ) : (
                   <VideocamOffIcon sx={{ color: 'warning.main' }} />
                 )}
                 <Typography variant="body2" sx={{ fontSize: '14px' }}>
                   {cameraEnabled
-                    ? (permissionsGranted.camera ? 'Камера подключена' : 'Камера заблокирована')
+                    ? ('Камера подключена')
                     : 'Камера отключена'
                   }
                 </Typography>
               </Box>
 
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <MicIcon color={permissionsGranted.microphone ? "success" : "error"} />
+                <MicIcon color={"success"} />
                 <Typography variant="body2" sx={{ fontSize: '14px' }}>
-                  {permissionsGranted.microphone ? 'Микрофон подключен' : 'Микрофон заблокирован'}
+                  {'Микрофон подключен'}
                 </Typography>
               </Box>
             </Box>
@@ -2682,7 +2362,7 @@ export default function CandidateInterviewPage() {
           <Button
             variant="contained"
             onClick={startInterview}
-            disabled={permissionsRequested && ( (!permissionsGranted.microphone) || (cameraEnabled && !permissionsGranted.camera) )}
+            disabled={!micReady}
             fullWidth={isMobile}
             size={isMobile ? 'large' : 'medium'}
             // Добавляем стили для лучшей видимости на мобильных
@@ -3421,16 +3101,4 @@ export default function CandidateInterviewPage() {
     </>
   );
 
-  // Хелпер-функции для совместимости со старым кодом (добавлены в конце)
-  function setPermissionsGrantedCompat(permissions: { camera: boolean; microphone: boolean }) {
-    setMediaPermissions({
-      status: (permissions.camera || permissions.microphone) ? 'granted' : 'denied',
-      camera: permissions.camera,
-      microphone: permissions.microphone
-    });
-  }
-
-  function setPermissionsRequestedCompat(requested: boolean) {
-    console.log('setPermissionsRequested вызвана (совместимость):', requested);
-  }
 }
