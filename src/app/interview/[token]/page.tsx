@@ -114,6 +114,7 @@ export default function CandidateInterviewPage() {
   // Переключатель камеры на экране подготовки (в стиле Google Meet)
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const hasTestVideoTrack = useMemo(() => !!(testStream && testStream.getVideoTracks().length > 0), [testStream]);
+  const [debugError, setDebugError] = useState<string>('');
 
 
 
@@ -345,48 +346,53 @@ export default function CandidateInterviewPage() {
     }
   }
 
-  // Простая функция для запуска тестового потока
+  // Максимально простая функция для камеры и микрофона
   const startDeviceTest = async (includeVideo?: boolean) => {
+    setDebugError('Запуск теста устройств...');
+    
     try {
-      console.log('Starting device test...');
-      
       const useVideo = includeVideo ?? cameraEnabled;
+      
+      // Простой запрос без сложных параметров
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
-        video: useVideo ? { width: 640, height: 480 } : false
+        video: useVideo
       });
       
       setTestStream(stream);
       if (testVideoRef.current) {
         testVideoRef.current.srcObject = stream;
       }
-
-      // Настраиваем аудио анализ для индикатора уровня микрофона
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const source = audioCtx.createMediaStreamSource(stream);
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 256;
-      source.connect(analyser);
-      analyserRef.current = analyser;
       
-      const data = new Uint8Array(analyser.frequencyBinCount);
-      const tick = () => {
-        if (!analyserRef.current) return;
-        analyserRef.current.getByteFrequencyData(data);
-        const avg = data.reduce((a, b) => a + b) / data.length;
-        setMicLevel(avg);
-        if (!micReady && avg > 1) { setMicReady(true); }
-        // Для надежности активируем кнопку через 2 секунды после запуска
-        setTimeout(() => { if (!micReady) setMicReady(true); }, 2000);
-        rafRef.current = requestAnimationFrame(tick);
-      };
-      tick();
+      // Простая настройка аудио
+      try {
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+        source.connect(analyser);
+        analyserRef.current = analyser;
+        
+        const data = new Uint8Array(128);
+        const tick = () => {
+          if (analyserRef.current) {
+            analyserRef.current.getByteFrequencyData(data);
+            const avg = data.reduce((a, b) => a + b) / data.length;
+            setMicLevel(avg);
+            rafRef.current = requestAnimationFrame(tick);
+          }
+        };
+        tick();
+      } catch (audioError) {
+        setDebugError('Аудио анализ не работает, но поток получен');
+      }
       
-      // Активируем кнопку сразу при получении потока
       setMicReady(true);
-    } catch (e) {
-      console.error('Device test failed:', e);
-      alert('Не удалось получить доступ к камере или микрофону. Проверьте разрешения в браузере.');
+      setDebugError('Камера и микрофон работают!');
+      
+    } catch (e: any) {
+      const errorMsg = `ОШИБКА: ${e.name} - ${e.message}`;
+      setDebugError(errorMsg);
+      console.error('startDeviceTest error:', e);
     }
   };
 
@@ -2126,6 +2132,7 @@ export default function CandidateInterviewPage() {
         flexDirection: 'column',
         // На странице подготовки убираем все ограничения overflow
         overflow: 'visible',
+        position: 'relative',
         maxWidth: '1200px', // Ограничение ширины для больших мониторов
         mx: 'auto', // Центрирование на больших экранах
         width: '100%', // Полная ширина на мобильных
@@ -2158,6 +2165,38 @@ export default function CandidateInterviewPage() {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
+
+        {/* Debug сообщения для Android */}
+        {debugError && (
+          <Box sx={{
+            mb: 2, 
+            p: 2, 
+            bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
+            borderRadius: 2,
+            maxWidth: '90vw',
+            wordBreak: 'break-word'
+          }}>
+            <Typography variant="body2" sx={{fontFamily: 'monospace'}}>
+              {debugError}
+            </Typography>
+          </Box>
+        )}
+        
+        {/* Debug сообщения для Android */}
+        {debugError && (
+          <Box sx={{
+            mb: 2, 
+            p: 2, 
+            bgcolor: debugError.includes('ОШИБКА') ? 'error.light' : 'info.light',
+            borderRadius: 2,
+            maxWidth: '90vw',
+            wordBreak: 'break-word'
+          }}>
+            <Typography variant="body2" sx={{fontFamily: 'monospace'}}>
+              {debugError}
+            </Typography>
+          </Box>
+        )}
 
         {/* Device test preview - Google Meet Style */}
         {testStream && (
