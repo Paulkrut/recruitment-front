@@ -116,6 +116,7 @@ export default function CandidateInterviewPage() {
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const hasTestVideoTrack = useMemo(() => !!(testStream && testStream.getVideoTracks().length > 0), [testStream]);
   const [debugError, setDebugError] = useState<string>('');
+  const [debugLogs, setDebugLogs] = useState<string[]>([]);
 
 
 
@@ -2210,7 +2211,10 @@ export default function CandidateInterviewPage() {
           onStreamReady={(stream) => setTestStream(stream)}
           onMicLevelChange={setMicLevel}
           onMicReady={(ready) => setMicReady(ready)}
-          onError={(error) => setDebugError(error)}
+          onError={(error) => {
+            setDebugError(error);
+            setDebugLogs(prev => [...prev, `${new Date().toLocaleTimeString()}: ${error}`]);
+          }}
         />
 
         </Box>
@@ -2249,6 +2253,37 @@ export default function CandidateInterviewPage() {
               }}>
                 {debugError}
               </Typography>
+
+              {/* Полный лог диагностики */}
+              {debugLogs.length > 1 && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="caption" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+                    Полный лог диагностики:
+                  </Typography>
+                  <Box sx={{
+                    mt: 1,
+                    p: 1,
+                    bgcolor: '#000',
+                    color: '#0f0',
+                    borderRadius: 1,
+                    fontFamily: 'monospace',
+                    fontSize: '10px',
+                    maxHeight: 200,
+                    overflow: 'auto',
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {debugLogs.join('\n')}
+                  </Box>
+                  <Button
+                    size="small"
+                    variant="text"
+                    onClick={() => setDebugLogs([])}
+                    sx={{ mt: 1, fontSize: '10px' }}
+                  >
+                    Очистить лог
+                  </Button>
+                </Box>
+              )}
 
               {/* Кнопка диагностики камер */}
               {debugError.includes('Видео: нет') && (
