@@ -62,6 +62,11 @@ export default function HRVacancyCreatePage() {
   const [genOpen, setGenOpen] = useState(false);
   const [genCount, setGenCount] = useState(3);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState<{
+    status: string;
+    elapsed_time?: number;
+    message?: string;
+  } | null>(null);
 
   // Vacancy data
   const [vacancyData, setVacancyData] = useState({
@@ -177,11 +182,12 @@ export default function HRVacancyCreatePage() {
 
     setIsGenerating(true);
     setError(null);
+    setGenerationProgress({ status: 'starting', message: 'Запуск генерации...' });
 
     try {
-      // Генерируем вопросы напрямую
+      // Запускаем асинхронную генерацию
       const count = Math.max(1, Math.min(20, genCount));
-      const suggestRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions`, {
+      const startRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-async`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -191,27 +197,92 @@ export default function HRVacancyCreatePage() {
         }),
       });
 
-      if (suggestRes.ok) {
-        const data = await suggestRes.json();
-        const newQuestions = (data.questions || []).map((text: string, i: number) => ({
-          text: text,
-          type: "text",
-          maxTime: templateData.questionTime,
-          allowFollowups: templateData.allowFollowups,
-          followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
-          position: questions.length + i,
-        }));
-        
-        setQuestions([...questions, ...newQuestions]);
-        setGenOpen(false);
-      } else {
-        throw new Error("Ошибка генерации вопросов");
+      if (!startRes.ok) {
+        throw new Error("Ошибка запуска генерации вопросов");
       }
+
+      const { jobId } = await startRes.json();
+      
+      // Начинаем поллинг статуса
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-status/${jobId}`);
+          
+          if (!statusRes.ok) {
+            throw new Error("Ошибка получения статуса генерации");
+          }
+
+          const statusData = await statusRes.json();
+          
+          // Обновляем прогресс
+          const progressMessage = getProgressMessage(statusData.status, statusData.elapsed_time);
+          setGenerationProgress({
+            status: statusData.status,
+            elapsed_time: statusData.elapsed_time,
+            message: progressMessage
+          });
+
+          if (statusData.status === 'completed') {
+            // Генерация завершена успешно
+            clearInterval(pollInterval);
+            
+            const newQuestions = (statusData.questions || []).map((text: string, i: number) => ({
+              text: text,
+              type: "text",
+              maxTime: templateData.questionTime,
+              allowFollowups: templateData.allowFollowups,
+              followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
+              position: questions.length + i,
+            }));
+            
+            setQuestions([...questions, ...newQuestions]);
+            setGenOpen(false);
+            setIsGenerating(false);
+            setGenerationProgress(null);
+            
+          } else if (statusData.status === 'failed') {
+            // Генерация завершилась с ошибкой
+            clearInterval(pollInterval);
+            throw new Error(statusData.error || "Ошибка генерации вопросов");
+          }
+          
+        } catch (pollError: any) {
+          clearInterval(pollInterval);
+          throw pollError;
+        }
+      }, 2000); // Проверяем каждые 2 секунды
+
+      // Устанавливаем таймаут на 5 минут
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        if (isGenerating) {
+          setError("Превышено время ожидания генерации");
+          setIsGenerating(false);
+          setGenerationProgress(null);
+        }
+      }, 300000); // 5 минут
 
     } catch (err: any) {
       setError(err.message);
-    } finally {
       setIsGenerating(false);
+      setGenerationProgress(null);
+    }
+  };
+
+  const getProgressMessage = (status: string, elapsedTime?: number) => {
+    const timeStr = elapsedTime ? ` (${elapsedTime}с)` : '';
+    
+    switch (status) {
+      case 'pending':
+        return `Ожидание в очереди${timeStr}...`;
+      case 'processing':
+        return `Генерация вопросов${timeStr}...`;
+      case 'completed':
+        return 'Генерация завершена!';
+      case 'failed':
+        return 'Ошибка генерации';
+      default:
+        return `Обработка${timeStr}...`;
     }
   };
 
@@ -928,6 +999,22 @@ export default function HRVacancyCreatePage() {
               <Alert severity="error" sx={{ mt: 2 }}>
                 {error}
               </Alert>
+            )}
+
+            {generationProgress && (
+              <Box sx={{ mt: 2, p: 2, bgcolor: '#f0f8ff', borderRadius: 2, border: '1px solid #e3f2fd' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <CircularProgress size={20} sx={{ mr: 1 }} />
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    {generationProgress.message}
+                  </Typography>
+                </Box>
+                {generationProgress.elapsed_time && (
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    Прошло времени: {generationProgress.elapsed_time} секунд
+                  </Typography>
+                )}
+              </Box>
             )}
           </DialogContent>
           <DialogActions sx={{ p: 3, pt: 1 }}>

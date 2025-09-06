@@ -7,7 +7,9 @@ import {
   Button,
   Box,
   Typography,
-  Slider
+  Slider,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 
 interface GenerateQuestionsDialogProps {
@@ -17,6 +19,12 @@ interface GenerateQuestionsDialogProps {
   onGenCountChange: (value: number) => void;
   onGenerate: () => void;
   isGenerating: boolean;
+  generationProgress?: {
+    status: string;
+    elapsed_time?: number;
+    message?: string;
+  } | null;
+  error?: string | null;
 }
 
 const GenerateQuestionsDialog = React.memo(({ 
@@ -25,7 +33,9 @@ const GenerateQuestionsDialog = React.memo(({
   genCount, 
   onGenCountChange, 
   onGenerate, 
-  isGenerating 
+  isGenerating,
+  generationProgress,
+  error
 }: GenerateQuestionsDialogProps) => {
   
   // Мемоизируем кнопки быстрого выбора
@@ -141,6 +151,28 @@ const GenerateQuestionsDialog = React.memo(({
             Количество вопросов, которые будут сгенерированы ИИ
           </Typography>
         </Box>
+
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {error}
+          </Alert>
+        )}
+
+        {generationProgress && (
+          <Box sx={{ mt: 2, p: 2, bgcolor: '#f0f8ff', borderRadius: 2, border: '1px solid #e3f2fd' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <CircularProgress size={20} sx={{ mr: 1 }} />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {generationProgress.message}
+              </Typography>
+            </Box>
+            {generationProgress.elapsed_time && (
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                Прошло времени: {generationProgress.elapsed_time} секунд
+              </Typography>
+            )}
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Отмена</Button>
