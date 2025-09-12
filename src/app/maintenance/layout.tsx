@@ -1,28 +1,11 @@
 import type { Metadata } from 'next';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import MaintenanceThemeProvider from './ThemeProvider';
 
 export const metadata: Metadata = {
   title: 'Технические работы - Сайт временно недоступен',
   description: 'Мы проводим плановые технические работы. Сайт скоро будет доступен.',
   robots: 'noindex, nofollow',
 };
-
-// Простая тема Material-UI
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-  },
-});
 
 export default function MaintenanceLayout({
   children,
@@ -46,10 +29,9 @@ export default function MaintenanceLayout({
         />
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+        <MaintenanceThemeProvider>
           {children}
-        </ThemeProvider>
+        </MaintenanceThemeProvider>
       </body>
     </html>
   );
