@@ -100,14 +100,14 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     setLoading(true);
     setErrors({});
-
+return
     try {
       const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
@@ -307,12 +307,12 @@ export default function RegisterPage() {
           </Box>
 
           {/* Информация о пароле */}
-          <Box 
-            sx={{ 
-              mt: 3, 
-              p: 2, 
-              backgroundColor: "info.light", 
-              borderRadius: 1, 
+          <Box
+            sx={{
+              mt: 3,
+              p: 2,
+              backgroundColor: "info.light",
+              borderRadius: 1,
               border: "1px solid",
               borderColor: "info.main"
             }}
@@ -326,4 +326,4 @@ export default function RegisterPage() {
       </Card>
     </Container>
   );
-} 
+}
