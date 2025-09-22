@@ -30,6 +30,7 @@ export default function PublicApplyPage() {
     phone: '',
     email: ''
   });
+  const [pdnConsent, setPdnConsent] = useState(false);
 
   // Ошибки валидации для каждого поля
   const [fieldErrors, setFieldErrors] = useState({
@@ -62,6 +63,11 @@ export default function PublicApplyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) return;
+
+    if (!pdnConsent) {
+      setError('Для подачи заявки необходимо согласие на обработку персональных данных');
+      return;
+    }
 
     // Проверяем валидацию перед отправкой
     if (!validateForm()) {
@@ -276,20 +282,6 @@ export default function PublicApplyPage() {
   }
 
 
-  return <Container maxWidth="md" sx={{ py: 8 }}>
-    <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
-      {/* Заголовок */}
-      <Box textAlign="center" mb={4}>
-        <Box sx={{ color: 'primary.main', mb: 2 }}>
-          <IconBriefcase size={80} />
-        </Box>
-        <Typography variant="h3" gutterBottom fontWeight="bold">
-          Интервью временно не доступно для самозаписи
-        </Typography>
-      </Box>
-    </Paper>
-  </Container>
-
 
   return (
     <Container maxWidth="md" sx={{ py: 8 }}>
@@ -379,6 +371,13 @@ export default function PublicApplyPage() {
               size="medium"
               placeholder="your@email.com"
             />
+
+            <Box sx={{ display:'flex', alignItems:'flex-start', gap:1 }}>
+              <input type="checkbox" checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} style={{ marginTop: 4 }} />
+              <Typography variant="body2">
+                Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <a href="/privacy-policy" target="_blank">Политика обработки ПДн</a>.
+              </Typography>
+            </Box>
           </Box>
 
           <Box textAlign="center">
@@ -386,7 +385,7 @@ export default function PublicApplyPage() {
               type="submit"
               variant="contained"
               size="large"
-              disabled={submitting || !formData.name || !formData.phone || Object.values(fieldErrors).some(error => error)}
+              disabled={submitting || !formData.name || !formData.phone || !pdnConsent || Object.values(fieldErrors).some(error => error)}
               sx={{ fontSize: '1.1rem', py: 1.5, px: 6 }}
             >
               {submitting ? (

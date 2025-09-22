@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
             Система подбора персонала SofiHR
           </Typography>
           <Chip 
-            label="Обновлено: 15.01.2025" 
+            label="Обновлено: 22.09.2025" 
             color="primary" 
             sx={{ mt: 2 }}
           />
@@ -331,6 +331,9 @@ export default function TermsOfServicePage() {
               />
             </ListItem>
           </List>
+          <Typography variant="body2" paragraph sx={{ mt: 1 }}>
+            Видео и аудио записи интервью используются исключительно для целей интервью и оценки соответствия вакансии и хранятся не более 60 календарных дней с даты завершения интервью. Подробно — в <Link href="/privacy-policy">Политике конфиденциальности</Link>.
+          </Typography>
           <Typography variant="body1" paragraph>
             Подробная информация о защите персональных данных содержится в 
             <Link href="/privacy-policy" style={{ color: 'primary.main', textDecoration: 'none' }}>

@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
             Обработка персональных данных в системе подбора персонала
           </Typography>
           <Chip
-            label="Обновлено: 15.01.2025"
+            label="Обновлено: 22.09.2025"
             color="primary"
             sx={{ mt: 2 }}
           />
@@ -57,7 +57,7 @@ export default function PrivacyPolicyPage() {
             2. Оператор персональных данных
           </Typography>
           <Typography variant="body1" paragraph>
-            Оператором персональных данных является компания, использующая Систему для подбора персонала.
+            Оператором персональных данных является Индивидуальный предприниматель Филипенко Анна Евгеньевна (ОГРНИП 324774600106007).
           </Typography>
           <Typography variant="body1" paragraph>
             <strong>Контактные данные оператора:</strong>
@@ -71,6 +71,9 @@ export default function PrivacyPolicyPage() {
               />
             </ListItem>
           </List>
+          <Typography variant="body2" color="text.secondary" paragraph>
+            Обработка и хранение персональных данных осуществляются на территории Российской Федерации; трансграничная передача не осуществляется.
+          </Typography>
         </Box>
 
         {/* Цели обработки */}
@@ -175,15 +178,15 @@ export default function PrivacyPolicyPage() {
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
               <ListItemText
-                primary="Договор с субъектом ПД"
-                secondary="В рамках трудовых или гражданско-правовых отношений"
+                primary="Исполнение договоров"
+                secondary="Исполнение договоров с HR‑клиентами и договоров, заключаемых с кандидатами при самозаписи"
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
               <ListItemText
-                primary="Публичные источники"
-                secondary="Данные, размещенные в публичном доступе"
+                primary="Законные интересы оператора и третьих лиц"
+                secondary="Для обеспечения безопасности сервиса и защиты прав (без нарушения прав и свобод субъекта)"
               />
             </ListItem>
           </List>
@@ -208,21 +211,21 @@ export default function PrivacyPolicyPage() {
               <ListItemIcon><Info color="info" /></ListItemIcon>
               <ListItemText
                 primary="Персональные данные кандидата"
-                secondary="1 год после принятия решения о найме или отказе"
+                secondary="До 12 месяцев после завершения процесса подбора"
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
               <ListItemText
                 primary="Видео и аудио записи интервью"
-                secondary="1 год после принятия решения о найме или отказе"
+                secondary="Не более 60 календарных дней с даты завершения интервью"
               />
             </ListItem>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
               <ListItemText
                 primary="Результаты анализа и оценки"
-                secondary="1 год после принятия решения о найме или отказе"
+                secondary="До 12 месяцев после завершения процесса подбора"
               />
             </ListItem>
             <ListItem>
@@ -247,8 +250,7 @@ export default function PrivacyPolicyPage() {
             6. Обработка видео и аудио данных
           </Typography>
           <Typography variant="body1" paragraph>
-            В процессе прохождения интервью система может записывать видео и аудио кандидата.
-            Важно понимать, что эти данные НЕ являются биометрическими персональными данными.
+            В процессе прохождения интервью система может записывать видео и аудио кандидата. Эти данные не используются для установления личности; биометрические шаблоны (слепки голоса/лица) не формируются.
           </Typography>
 
           <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
@@ -273,9 +275,7 @@ export default function PrivacyPolicyPage() {
 
           <Alert severity="info" sx={{ mt: 2 }}>
             <Typography variant="body2">
-              <strong>Важно:</strong> Видео и аудио записи НЕ используются для идентификации личности,
-              для автоматического анализа интонации, манеры говорить, оттенков речи, мимики, направления взгляда.
-              И не передаются третьим лицам без вашего согласия.
+              <strong>Важно:</strong> Видео и аудио записи используются исключительно для целей интервью и оценки соответствия вакансии. Передаются только обработчикам по поручению на территории РФ для транскрибации; иные передачи осуществляются лишь в случаях, предусмотренных законом, либо с вашего согласия.
             </Typography>
           </Alert>
         </Box>
@@ -542,6 +542,31 @@ export default function PrivacyPolicyPage() {
               <ListItemText
                 primary="Для защиты прав и безопасности"
                 secondary="При угрозе безопасности или нарушении прав"
+              />
+            </ListItem>
+          </List>
+        </Box>
+        <Box mb={4}>
+          <Typography variant="h5" gutterBottom fontWeight="bold" color="primary">
+            <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
+            10.1. Обработчики по поручению
+          </Typography>
+          <Typography variant="body1" paragraph>
+            Для транскрибации аудио и вспомогательной обработки оператор привлекает обработчиков по поручению на территории РФ. Обработка осуществляется строго по инструкциям оператора, без использования данных в целях обучения, с ограниченными сроками хранения и без трансграничной передачи.
+          </Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
+              <ListItemText
+                primary="Yandex Cloud SpeechKit (РФ)"
+                secondary="Обработка в дата‑центрах в РФ; режим 'не хранить' либо удаление в кратчайшие сроки согласно договору"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
+              <ListItemText
+                primary="Шёпот (ИП Ледянкин Р.Д., РФ)"
+                secondary="Обработка и хранение только в РФ; не используется для обучения; удаление входных данных не позднее 7 дней"
               />
             </ListItem>
           </List>

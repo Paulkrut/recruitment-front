@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import PrivacyConsent from "@/app/components/PrivacyConsent";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -49,6 +50,8 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [pdnOk, setPdnOk] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -105,9 +108,14 @@ export default function RegisterPage() {
       return;
     }
 
+    if (!pdnOk) {
+      setErrors({ general: "Для регистрации необходимо согласие на обработку персональных данных" });
+      return;
+    }
+
     setLoading(true);
     setErrors({});
-return
+
     try {
       const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
@@ -120,6 +128,7 @@ return
           company: formData.company.trim(),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim() || null,
+          marketing_opt_in: marketing
         }),
       });
 
@@ -261,13 +270,22 @@ return
                 disabled={loading}
               />
 
+              {/* Согласие на ПДн (обязательно) */}
+              <PrivacyConsent value={pdnOk} onChange={setPdnOk} required />
+
+              {/* Маркетинг (необязательно) */}
+              <Box sx={{ display:'flex', alignItems:'flex-start', gap:1 }}>
+                <input type="checkbox" checked={marketing} onChange={e=>setMarketing(e.target.checked)} style={{ marginTop: 4 }} />
+                <Typography variant="body2">Согласен(на) получать новости и предложения на указанный email</Typography>
+              </Box>
+
               {/* Кнопка регистрации */}
               <Button
                 type="submit"
                 variant="contained"
                 size="large"
                 fullWidth
-                disabled={loading}
+                disabled={loading || !pdnOk}
                 sx={{
                   py: 1.5,
                   fontSize: "1.1rem",
