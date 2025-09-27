@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import {
   Container, Typography, Box, Paper, TextField, Button, 
-  Alert, Grid, IconButton
+  Alert, Grid, IconButton, FormControlLabel, Checkbox
 } from '@mui/material';
 import {
   ContactSupport, Send, Error, Info
 } from '@mui/icons-material';
 import Link from 'next/link';
+import { logContactFormConsent } from '@/utils/consentLogger';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
 
@@ -28,6 +29,7 @@ export default function ContactPage() {
     message: ''
   });
 
+  const [pdnConsent, setPdnConsent] = useState(false);
   const [errors, setErrors] = useState<Partial<ContactFormData>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitResult, setSubmitResult] = useState<{
@@ -105,6 +107,11 @@ export default function ContactPage() {
           message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
         });
         
+        // Логируем согласие, если есть ID сообщения
+        if (result.id) {
+          logContactFormConsent(result.id.toString());
+        }
+        
         // Очищаем форму
         setFormData({
           name: '',
@@ -113,6 +120,7 @@ export default function ContactPage() {
           subject: '',
           message: ''
         });
+        setPdnConsent(false);
       } else {
         setSubmitResult({
           success: false,
@@ -238,6 +246,28 @@ export default function ContactPage() {
               />
             </Grid>
 
+            {/* Согласие на обработку ПДн */}
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={pdnConsent}
+                    onChange={(e) => setPdnConsent(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label={
+                  <Typography variant="body2">
+                    Даю согласие на обработку персональных данных в соответствии с{' '}
+                    <Link href="/privacy-policy" style={{ color: '#1976d2', textDecoration: 'underline' }}>
+                      Политикой конфиденциальности
+                    </Link>
+                    {' '}*
+                  </Typography>
+                }
+              />
+            </Grid>
+
             {/* Кнопка отправки */}
             <Grid item xs={12}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -245,7 +275,7 @@ export default function ContactPage() {
                   type="submit"
                   variant="contained"
                   size="large"
-                  disabled={submitting}
+                  disabled={submitting || !pdnConsent}
                   startIcon={submitting ? <Info /> : <Send />}
                   sx={{ px: 4, py: 1.5 }}
                 >

@@ -2241,12 +2241,12 @@ export default function CandidateInterviewPage() {
                   Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank">Политика ПДн</a>. Медиа хранятся до 60 дней.
                 </Typography>
               }
-              sx={{ alignItems: 'flex-start', mb: 1 }}
+              sx={{ alignItems: 'center', mb: 1 }}
             />
             <FormControlLabel
               control={<Checkbox checked={cameraEnabled} onChange={handleToggleCamera} color="primary" />}
               label={<Typography variant="body2">Согласие на запись видео (снимите галочку — будет только аудио)</Typography>}
-              sx={{ alignItems: 'flex-start', mb: 1 }}
+              sx={{ alignItems: 'center', mb: 1 }}
             />
           </Box>
         </Box>

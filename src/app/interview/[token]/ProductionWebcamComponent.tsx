@@ -61,7 +61,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   // Локализованные ошибки (оставляем)
   const getLocalizedError = (error: any): string => {
     const errorName = error?.name || '';
-    
+
     switch (errorName) {
       case 'NotAllowedError':
         return 'Доступ к камере запрещен. Разрешите доступ в настройках браузера.';
@@ -91,10 +91,10 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
     return [
       // 1. Оптимальные настройки
       {
-        video: { 
-          width: { ideal: 640 }, 
-          height: { ideal: 480 }, 
-          facingMode: 'user' 
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: 'user'
         },
         audio: true,
         description: 'Стандартные настройки'
@@ -129,24 +129,24 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = audioContext.createMediaStreamSource(stream);
       const analyser = audioContext.createAnalyser();
-      
+
       analyser.fftSize = 256;
       source.connect(analyser);
       analyserRef.current = analyser;
 
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      
+
       const updateLevel = () => {
         if (!analyserRef.current) return;
-        
+
         analyserRef.current.getByteFrequencyData(dataArray);
         const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
         const normalizedLevel = Math.min(100, (average / 128) * 100);
-        
+
         onMicLevelChange(normalizedLevel);
         rafRef.current = requestAnimationFrame(updateLevel);
       };
-      
+
       updateLevel();
     } catch (error) {
       console.warn('Не удалось настроить анализ аудио:', error);
@@ -156,7 +156,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   // Основная функция инициализации (упрощенная)
   const initializeMedia = useCallback(async () => {
     if (isInitializing) return;
-    
+
     setIsInitializing(true);
     setIsReady(false);
     onStreamReady(null);
@@ -171,18 +171,18 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       // Пробуем стратегии по очереди
       for (let i = 0; i < strategies.length; i++) {
         const strategy = strategies[i];
-        
+
         try {
           const gumPromise = navigator.mediaDevices.getUserMedia({
             video: strategy.video,
             audio: strategy.audio
           });
-          
+
           const stream = await promiseTimeout(GUM_TIMEOUT, gumPromise) as MediaStream;
 
           const videoTracks = stream.getVideoTracks();
           const audioTracks = stream.getAudioTracks();
-          
+
           setHasVideo(videoTracks.length > 0);
           setHasAudio(audioTracks.length > 0);
 
@@ -201,20 +201,20 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           setIsReady(true);
           onStreamReady(stream);
           onMicReady(audioTracks.length > 0);
-          
-          const status = videoTracks.length > 0 && audioTracks.length > 0 
+
+          const status = videoTracks.length > 0 && audioTracks.length > 0
             ? '✅ Камера и микрофон подключены'
-            : videoTracks.length > 0 
+            : videoTracks.length > 0
             ? '✅ Камера подключена'
             : '✅ Продолжаем только с микрофоном';
-          
+
           onError(status);
           return;
 
         } catch (error: any) {
           const localizedError = getLocalizedError(error);
           console.warn(`Strategy ${i + 1} failed:`, error);
-          
+
           // Показываем ошибку только если это последняя попытка
           if (i === strategies.length - 1) {
             onError(`❌ ${localizedError}`);
@@ -229,7 +229,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       setIsInitializing(false);
     }
   }, [
-    isInitializing, cameraEnabled, createStrategies, 
+    isInitializing, cameraEnabled, createStrategies,
     setupAudioAnalysis, onStreamReady, onMicReady, onError
   ]);
 
@@ -238,13 +238,13 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
     if (webcamRef.current?.stream) {
       webcamRef.current.stream.getTracks().forEach(track => track.stop());
     }
-    
+
     if (rafRef.current) {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     }
     analyserRef.current = null;
-    
+
     setTimeout(() => {
       initializeMedia();
     }, 500);
@@ -253,7 +253,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   // Инициализация
   useEffect(() => {
     initializeMedia();
-    
+
     return () => {
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
@@ -266,15 +266,15 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
     if (!isReady) {
       const videoTracks = stream.getVideoTracks();
       const audioTracks = stream.getAudioTracks();
-      
+
       setHasVideo(videoTracks.length > 0);
       setHasAudio(audioTracks.length > 0);
       setIsReady(true);
-      
+
       if (audioTracks.length > 0) {
         setupAudioAnalysis(stream);
       }
-      
+
       onStreamReady(stream);
       onMicReady(audioTracks.length > 0);
     }
@@ -337,9 +337,9 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           }}>
             {isInitializing ? (
               <>
-                <Box sx={{ 
-                  width: 40, 
-                  height: 40, 
+                <Box sx={{
+                  width: 40,
+                  height: 40,
                   border: '3px solid rgba(255,255,255,0.3)',
                   borderTop: '3px solid white',
                   borderRadius: '50%',
@@ -362,7 +362,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
                 <WarningIcon sx={{ fontSize: 64, mb: 2, opacity: 0.7 }} />
                 {/* Убираем текст 'Камера недоступна' */}
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
-                  <Button 
+                  <Button
                     startIcon={<RefreshIcon />}
                     onClick={handleRestart}
                     sx={{ color: 'white', borderColor: 'white' }}
@@ -371,7 +371,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
                   >
                     Попробовать снова
                   </Button>
-                  <Button 
+                  <Button
                     startIcon={<MicIcon />}
                     onClick={onCameraToggle}
                     sx={{ color: 'white', borderColor: 'white' }}
@@ -394,7 +394,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           display: 'flex',
           gap: 1
         }}>
-          <Box 
+          <Box
             onClick={onCameraToggle}
             sx={{
               width: 48,
@@ -417,9 +417,9 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
               <VideocamOffIcon sx={{ color: 'white' }} />
             )}
           </Box>
-          
+
           {!isInitializing && (
-            <Box 
+            <Box
               onClick={handleRestart}
               sx={{
                 width: 48,
@@ -488,8 +488,8 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
               💡 Рекомендация
             </Typography>
             <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}>
-              Интервью с включенной камерой повышает лояльность HR-специалистов и даёт более полное представление о вашей личности. 
-              Видеоответы помогают продемонстрировать уверенность и коммуникативные навыки.
+              Отключение камеры не влияет на возможность прохождения интервью и оценку по обязательным критериям.
+              Видео помогает HR лучше увидеть коммуникативные навыки. Видео и аудио не используются для установления личности; биометрические шаблоны не формируются.
             </Typography>
           </Box>
         )}
@@ -498,4 +498,4 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   );
 };
 
-export default ProductionWebcamComponent; 
+export default ProductionWebcamComponent;
