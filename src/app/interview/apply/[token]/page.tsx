@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import {
   Box, Card, CardContent, Typography, Button, TextField,
-  CircularProgress, Alert, Container, Paper, Divider
+  CircularProgress, Alert, Container, Paper, Divider, Checkbox, FormControlLabel
 } from '@mui/material';
 import { IconUser, IconPhone, IconMail, IconBriefcase } from '@tabler/icons-react';
 
@@ -372,12 +372,21 @@ export default function PublicApplyPage() {
               placeholder="your@email.com"
             />
 
-            <Box sx={{ display:'flex', alignItems:'flex-start', gap:1 }}>
-              <input type="checkbox" checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} style={{ marginTop: 4 }} />
-              <Typography variant="body2">
-                Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <a href="/privacy-policy" target="_blank">Политика обработки ПДн</a>.
-              </Typography>
-            </Box>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={pdnConsent}
+                  onChange={(e) => setPdnConsent(e.target.checked)}
+                  name="pdnConsent"
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2">
+                  Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <a href="/privacy-policy" target="_blank">Политика обработки ПДн</a>.
+                </Typography>
+              }
+            />
           </Box>
 
           <Box textAlign="center">

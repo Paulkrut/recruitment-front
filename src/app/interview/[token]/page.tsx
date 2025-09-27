@@ -31,6 +31,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -2232,17 +2234,20 @@ export default function CandidateInterviewPage() {
         <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
           <Typography sx={{mb:2}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
           <Box sx={{mt:2}}>
-            <Box sx={{ display:'flex', alignItems:'flex-start', gap:1, mb:1 }}>
-              <input type="checkbox" checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} style={{ marginTop: 4 }} />
-              <Typography variant="body2">
-                Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank">Политика ПДн</a>. Медиа хранятся до 60 дней.
-              </Typography>
-            </Box>
-            <Box sx={{ display:'flex', alignItems:'flex-start', gap:1, mb:1 }}>
-              <input type="checkbox" checked={cameraEnabled} onChange={handleToggleCamera} style={{ marginTop: 4 }} />
-              <Typography variant="body2">Согласие на запись видео (снимите галочку — будет только аудио)</Typography>
-            </Box>
-
+            <FormControlLabel
+              control={<Checkbox checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} color="primary" />}
+              label={
+                <Typography variant="body2">
+                  Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank">Политика ПДн</a>. Медиа хранятся до 60 дней.
+                </Typography>
+              }
+              sx={{ alignItems: 'flex-start', mb: 1 }}
+            />
+            <FormControlLabel
+              control={<Checkbox checked={cameraEnabled} onChange={handleToggleCamera} color="primary" />}
+              label={<Typography variant="body2">Согласие на запись видео (снимите галочку — будет только аудио)</Typography>}
+              sx={{ alignItems: 'flex-start', mb: 1 }}
+            />
           </Box>
         </Box>
 

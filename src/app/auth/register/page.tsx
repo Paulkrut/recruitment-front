@@ -14,6 +14,8 @@ import {
   Paper,
   Link as MuiLink,
   Divider,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
@@ -274,10 +276,17 @@ export default function RegisterPage() {
               <PrivacyConsent value={pdnOk} onChange={setPdnOk} required />
 
               {/* Маркетинг (необязательно) */}
-              <Box sx={{ display:'flex', alignItems:'flex-start', gap:1 }}>
-                <input type="checkbox" checked={marketing} onChange={e=>setMarketing(e.target.checked)} style={{ marginTop: 4 }} />
-                <Typography variant="body2">Согласен(на) получать новости и предложения на указанный email</Typography>
-              </Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={marketing}
+                    onChange={(e) => setMarketing(e.target.checked)}
+                    name="marketing"
+                    color="primary"
+                  />
+                }
+                label="Согласен(на) получать новости и предложения на указанный email"
+              />
 
               {/* Кнопка регистрации */}
               <Button

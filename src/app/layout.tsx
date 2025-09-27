@@ -5,7 +5,6 @@ import "./global.css";
 import YandexMetrika from "@/components/YandexMetrika";
 import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/app/components/CookieBanner";
-import FooterLinks from "@/app/components/FooterLinks";
 
 export const metadata = {
   title: "SofiHR - Система управления рекрутингом",
@@ -82,7 +81,6 @@ export default function RootLayout({
       <body>
         <Providers>
           <MyApp>{children}</MyApp>
-          <FooterLinks />
         </Providers>
         <CookieBanner />
         <YandexMetrika />
