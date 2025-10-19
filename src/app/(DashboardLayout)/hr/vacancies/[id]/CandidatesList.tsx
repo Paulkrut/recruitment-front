@@ -39,7 +39,7 @@ interface CandidatesListProps {
   onSnackbar: (message: string) => void;
   onShowQR: (url: string) => void;
   selectedCandidates?: number[];
-  onSelectedCandidatesChange?: (ids: number[]) => void;
+  onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
 }
 
 export default function CandidatesList({ 

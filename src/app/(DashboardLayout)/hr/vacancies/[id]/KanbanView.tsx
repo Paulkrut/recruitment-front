@@ -94,7 +94,7 @@ interface KanbanViewProps {
     dateTo?: string;
   };
   selectedCandidates?: number[];
-  onSelectedCandidatesChange?: (ids: number[]) => void;
+  onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
 }
 
 // Helper-функции для получения цветов колонок
