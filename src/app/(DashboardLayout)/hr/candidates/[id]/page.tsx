@@ -15,7 +15,7 @@ import {
   IconButton,
   Snackbar,
 } from "@mui/material";
-import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy } from "@tabler/icons-react";
+import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import MuiLink from '@mui/material/Link';
@@ -93,6 +93,9 @@ export default function CandidateDetailPage() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [allCandidates, setAllCandidates] = useState<any[]>([]);
   const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
+  const [resumeText, setResumeText] = useState<string | null>(null);
+  const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeData, setResumeData] = useState<any>(null);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -123,6 +126,24 @@ export default function CandidateDetailPage() {
       if (saved) setHrNote(saved);
     }
   }, [id]);
+
+  // Автозагрузка резюме при открытии вкладки "Резюме"
+  useEffect(() => {
+    if (tab === 'resume' && !resumeData && !resumeLoading && token && id) {
+      setResumeLoading(true);
+      apiFetch(`${API_BASE}/api/admin/candidates/${id}/resume`)
+        .then(r => r.json())
+        .then(data => {
+          setResumeData(data);
+          setResumeText(data.resumeText);
+        })
+        .catch(error => {
+          console.error('Error loading resume:', error);
+          setResumeData({ error: 'Ошибка при загрузке' });
+        })
+        .finally(() => setResumeLoading(false));
+    }
+  }, [tab, resumeData, resumeLoading, token, id]);
   const saveNote = () => {
     if (id) localStorage.setItem(`hr_note_${id}`, hrNote);
   };
@@ -130,24 +151,17 @@ export default function CandidateDetailPage() {
   // Удалить функцию exportPDF
 
   useEffect(() => {
-    if (!token) return;
-    // Получаем всех кандидатов для сравнения
-    apiFetch(`${API_BASE}/api/admin/candidates`).then(r=>r.json()).then(data => {
-      // Проверяем что data это массив
-      if (Array.isArray(data)) {
-        setAllCandidates(data);
-      } else if (data && Array.isArray(data.items)) {
-        // Если API возвращает объект с полем items
-        setAllCandidates(data.items);
-      } else {
-        // Если что-то пошло не так, устанавливаем пустой массив
-        setAllCandidates([]);
-      }
+    if (!token || !statusData?.vacancyId) return;
+    // Получаем кандидатов этой вакансии для сравнения
+    apiFetch(`${API_BASE}/api/admin/vacancies/${statusData.vacancyId}/candidates`).then(r=>r.json()).then(data => {
+      // API теперь возвращает { data: [], total: ... } или старый формат []
+      const candidates = Array.isArray(data) ? data : (data.data || []);
+      setAllCandidates(candidates);
     }).catch(() => {
       // В случае ошибки устанавливаем пустой массив
       setAllCandidates([]);
     });
-  }, [token]);
+  }, [token, statusData]);
 
   if (!token)
     return (
@@ -225,9 +239,9 @@ export default function CandidateDetailPage() {
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb">
           <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
-          {sessionDetail?.vacancy ? (
-            <Link href={`/hr/vacancies/${sessionDetail.vacancy.id}`} style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>
-              {sessionDetail.vacancy.title}
+          {statusData?.vacancyId ? (
+            <Link href={`/hr/vacancies/${statusData.vacancyId}`} style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>
+              {sessionDetail?.vacancy?.title || statusData.vacancyTitle || 'Вакансия'}
             </Link>
           ) : (
             <Typography color="text.primary">Вакансия</Typography>
@@ -293,7 +307,7 @@ export default function CandidateDetailPage() {
             <Divider sx={{ my: 2, borderColor: '#eee' }} />
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flexWrap="wrap">
               <Tooltip title="Назад к вакансии">
-                <Button variant="outlined" color="primary" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push(sessionDetail?.vacancy?.id ? `/hr/vacancies/${sessionDetail.vacancy.id}` : '/hr/vacancies')}>
+                <Button variant="outlined" color="primary" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push(statusData?.vacancyId ? `/hr/vacancies/${statusData.vacancyId}` : '/hr/vacancies')}>
                   Назад
                 </Button>
               </Tooltip>
@@ -310,6 +324,7 @@ export default function CandidateDetailPage() {
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
             <Tabs value={tab} onChange={(_,v)=>setTab(v)} variant="scrollable" scrollButtons="auto">
               <Tab icon={<AssignmentTurnedInIcon />} iconPosition="start" label="Результаты" value="results" />
+              <Tab icon={<IconFileDescription />} iconPosition="start" label="Резюме" value="resume" />
               <Tab icon={<CommentIcon />} iconPosition="start" label="Комментарии" value="comments" />
               <Tab icon={<MailOutlineIcon />} iconPosition="start" label="Письма" value="letters" />
               <Tab icon={<FeedbackIcon />} iconPosition="start" label="Отзыв" value="feedback" />
@@ -533,6 +548,125 @@ export default function CandidateDetailPage() {
                 </CardContent>
               </Card>
             )}
+          </TabPanel>
+          {/* Tab: Резюме */}
+          <TabPanel value="resume" sx={{p:0}}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
+              <CardContent sx={{ p: 4 }}>
+                <Stack direction="row" alignItems="center" spacing={2} mb={2}>
+                  <IconFileDescription size={32} color="#1976d2" />
+                  <Typography variant="h6" fontWeight="700">Резюме кандидата</Typography>
+                </Stack>
+                
+                {resumeLoading && (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <CircularProgress />
+                    <Typography variant="body2" sx={{ mt: 2, opacity: 0.7 }}>
+                      Загрузка резюме...
+                    </Typography>
+                  </Box>
+                )}
+                
+                {resumeData && !resumeLoading && (
+                  <>
+                    {/* Информация о резюме */}
+                    <Stack direction="row" spacing={2} mb={2} flexWrap="wrap" alignItems="center">
+                      {resumeData.source && (
+                        <Chip 
+                          label={`Источник: ${resumeData.source === 'headhunter' ? 'HeadHunter.ru' : resumeData.source}`} 
+                          color="primary" 
+                          size="small" 
+                        />
+                      )}
+                      {resumeData.hasResume && (
+                        <Chip 
+                          label="Резюме доступно" 
+                          color="success" 
+                          size="small" 
+                          icon={<CheckCircleIcon />}
+                        />
+                      )}
+                      {!resumeData.hasResume && resumeData.canLoadFromHh && (
+                        <Chip 
+                          label="Можно загрузить из HH" 
+                          color="info" 
+                          size="small" 
+                        />
+                      )}
+                    </Stack>
+                    
+                    {resumeText ? (
+                      <Box sx={{ 
+                        bgcolor: 'grey.50', 
+                        p: 3, 
+                        borderRadius: 2, 
+                        border: '1px solid', 
+                        borderColor: 'grey.200',
+                        mt: 2,
+                        maxHeight: '70vh',
+                        overflow: 'auto'
+                      }}>
+                        <Typography variant="body1" sx={{ 
+                          whiteSpace: 'pre-wrap',
+                          lineHeight: 1.8,
+                        }}>
+                          {resumeText}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box sx={{ textAlign: 'center', py: 4 }}>
+                        <IconFileDescription size={48} color="#ccc" style={{ marginBottom: 16 }} />
+                        <Typography variant="body1" color="text.secondary" gutterBottom>
+                          Резюме отсутствует в базе
+                        </Typography>
+                        
+                        {resumeData.canLoadFromHh && (
+                          <Button 
+                            variant="contained" 
+                            color="primary" 
+                            sx={{ mt: 2 }}
+                            onClick={async () => {
+                              setResumeLoading(true);
+                              try {
+                                const response = await apiFetch(`${API_BASE}/api/admin/candidates/${id}/resume/load-from-hh`, {
+                                  method: 'POST',
+                                });
+                                const data = await response.json();
+                                
+                                if (data.success) {
+                                  setResumeText(data.resumeText);
+                                  setResumeData({
+                                    ...resumeData,
+                                    resumeText: data.resumeText,
+                                    hasResume: true,
+                                  });
+                                  setCopyMsg(data.message || 'Резюме загружено из HeadHunter.ru');
+                                } else {
+                                  setCopyMsg(data.error || 'Ошибка при загрузке резюме');
+                                }
+                              } catch (error: any) {
+                                console.error('Error loading resume from HH:', error);
+                                setCopyMsg('Ошибка при загрузке резюме из HeadHunter.ru');
+                              } finally {
+                                setResumeLoading(false);
+                              }
+                            }}
+                          >
+                            Загрузить из HeadHunter.ru
+                          </Button>
+                        )}
+                        
+                        {!resumeData.canLoadFromHh && (
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                            Для загрузки резюме необходимо добавить его вручную
+                          </Typography>
+                        )}
+                      </Box>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
           </TabPanel>
           {/* Tab: Комментарии */}
           <TabPanel value="comments" sx={{p:0}}>

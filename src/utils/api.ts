@@ -32,6 +32,7 @@ export async function apiFetch(url: string, options: RequestInit = {}): Promise<
       '/api/public',
       '/api/company', // Операции создания/управления компаниями
       '/api/company/invite' // Операции с приглашениями
+      // НЕ исключаем /api/hh-integration - ему нужен X-Company-ID
     ];
     
     const shouldExcludeCompanyHeader = excludedPaths.some(excludedPath => 

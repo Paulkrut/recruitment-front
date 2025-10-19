@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton
 } from "@mui/material";
 import {
   IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
@@ -38,6 +38,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
+import KanbanView from './KanbanView';
+import CandidatesList from './CandidatesList';
+import CandidateFilters from './CandidateFilters';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -97,15 +102,41 @@ export default function HRVacancyDetailPage() {
   const [token, setToken] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const [candidates, setCandidates] = useState<any[]>([]);
+  const [totalCandidates, setTotalCandidates] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [qrDialog, setQrDialog] = useState({ open: false, url: '' });
   const [compareOpen, setCompareOpen] = useState(false);
   const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
-  const [statusFilter, setStatusFilter] = useState('');
   const [snackbar, setSnackbar] = useState('');
   const [tab, setTab] = useState('1');
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  
+  // Состояния для канбана (сохраняем в localStorage)
+  const [viewMode, setViewMode] = useState<'list' | 'kanban'>(() => {
+    // Читаем из localStorage при первой загрузке
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('kanban_view_mode');
+      return (saved === 'kanban' || saved === 'list') ? saved : 'list';
+    }
+    return 'list';
+  });
+  // Общие фильтры для обоих режимов
+  const [filters, setFilters] = useState<any>({});
+
+  // Обработчик переключения режима просмотра
+  const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, newMode: 'list' | 'kanban' | null) => {
+    if (newMode !== null) {
+      setViewMode(newMode);
+      localStorage.setItem('kanban_view_mode', newMode);
+      
+      // Если переключаемся на канбан, убираем фильтр по статусу
+      if (newMode === 'kanban' && filters.status) {
+        const { status, ...restFilters } = filters;
+        setFilters(restFilters);
+      }
+    }
+  };
 
 
   // Функция для генерации публичной ссылки
@@ -180,9 +211,8 @@ export default function HRVacancyDetailPage() {
     }
   }, [data, searchParams, tab]);
 
-  // Перемещаем хуки useMemo выше любых return и условий
-  const filteredCandidates = useMemo(() => statusFilter ? candidates.filter(c => c.status === statusFilter) : candidates, [candidates, statusFilter]);
-  const statusList = useMemo(() => Array.from(new Set(candidates.map(c => c.status))), [candidates]);
+  // Получаем только завершенных кандидатов для сравнения (используется в старом коде)
+  const filteredCandidates = candidates; // Теперь фильтрация происходит через CandidateFilters
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -193,7 +223,16 @@ export default function HRVacancyDetailPage() {
     if (!token || !id) return;
     setLoading(true);
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`).then(r => r.json()).then(setData).finally(()=>setLoading(false));
-    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates);
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(result => {
+      // API теперь возвращает { data: [], total: ... } или старый формат []
+      if (Array.isArray(result)) {
+        setCandidates(result);
+        setTotalCandidates(result.length);
+      } else {
+        setCandidates(result.data || []);
+        setTotalCandidates(result.total || 0);
+      }
+    });
     
     // Загружаем информацию о публичной ссылке
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-info`)
@@ -286,17 +325,34 @@ export default function HRVacancyDetailPage() {
                       </Box>
                       <Box>
                         <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: 'text.primary' }}>Кандидаты</Typography>
-                        <Typography variant="body1" sx={{ opacity: 0.9, color: 'text.secondary' }}>Всего: {candidates.length}</Typography>
+                        <Typography variant="body1" sx={{ opacity: 0.9, color: 'text.secondary' }}>Всего: {totalCandidates}</Typography>
                       </Box>
                     </Box>
-                    <Box display="flex" gap={2}>
+                    <Box display="flex" gap={2} alignItems="center">
+                      {/* Переключатель вида */}
+                      <ToggleButtonGroup
+                        value={viewMode}
+                        exclusive
+                        onChange={handleViewModeChange}
+                        size="small"
+                      >
+                        <ToggleButton value="list">
+                          <ViewListIcon sx={{ mr: 1 }} fontSize="small" />
+                          Список
+                        </ToggleButton>
+                        <ToggleButton value="kanban">
+                          <ViewKanbanIcon sx={{ mr: 1 }} fontSize="small" />
+                          Канбан
+                        </ToggleButton>
+                      </ToggleButtonGroup>
+
                       <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={()=>setAddDialogOpen(true)} sx={{fontWeight:600}}>
                         Добавить кандидата
                       </Button>
                       <Button 
                         variant="contained" 
                         color="primary" 
-                        disabled={selectedCandidates.length < 2 || finishedCandidates.length < 2}
+                        disabled={selectedCandidates.length < 2}
                         onClick={()=>setCompareOpen(true)}
                         startIcon={<IconArrowsDiff />}
                       >
@@ -304,18 +360,7 @@ export default function HRVacancyDetailPage() {
                       </Button>
                     </Box>
                   </Box>
-                  {/* Фильтр вынесен отдельно */}
-                  <Box display="flex" alignItems="center" gap={2} mb={4}>
-                    <FilterListIcon sx={{color:'#1976d2',opacity:0.7}} />
-                    <Typography variant="body2" sx={{color:'text.secondary',opacity:0.8}}>Фильтр по статусу:</Typography>
-                    <Button size="small" variant={!statusFilter?'contained':'outlined'} color="primary" onClick={()=>setStatusFilter('')} sx={{fontWeight:600}}>
-                      Все
-                    </Button>
-                    {statusList.map(st => (
-                      <Button key={st} size="small" variant={statusFilter===st?'contained':'outlined'} color="primary" onClick={()=>setStatusFilter(st)} sx={{fontWeight:600}}>{getStatusLabel(st)}</Button>
-                    ))}
-                  </Box>
-
+                  
                   {/* Индикатор выбранных кандидатов */}
                   {selectedCandidates.length > 0 && (
                     <Alert 
@@ -350,13 +395,35 @@ export default function HRVacancyDetailPage() {
                     </Alert>
                   )}
 
-                  {/* Предупреждение если нет завершенных кандидатов */}
-                  {finishedCandidates.length === 0 && candidates.length > 0 && (
-                    <Alert severity="warning" sx={{ mb: 2 }}>
-                      ⚠️ Нет кандидатов для сравнения. Дождитесь завершения тестов кандидатами.
-                    </Alert>
+                  {/* Фильтры - общие для обоих режимов */}
+                  <CandidateFilters 
+                    filters={filters} 
+                    onFilterChange={setFilters}
+                    vacancyId={parseInt(id)}
+                    viewMode={viewMode}
+                  />
+
+                  {/* Таблица или Канбан */}
+                  {viewMode === 'list' ? (
+                    <CandidatesList 
+                      vacancyId={id}
+                      filters={filters}
+                      onSnackbar={setSnackbar}
+                      onShowQR={(url) => setQrDialog({ open: true, url })}
+                      selectedCandidates={selectedCandidates}
+                      onSelectedCandidatesChange={setSelectedCandidates}
+                    />
+                  ) : (
+                    <KanbanView 
+                      vacancyId={id} 
+                      filters={filters}
+                      selectedCandidates={selectedCandidates}
+                      onSelectedCandidatesChange={setSelectedCandidates}
+                    />
                   )}
-                  <DataTable columns={[
+
+                  {/* OLD TABLE CODE - УДАЛИТЬ
+                    <DataTable columns={[
                     {field:'select',header:(
                       <Checkbox
                         checked={selectedCandidates.length === finishedCandidates.length && finishedCandidates.length > 0}
@@ -529,16 +596,7 @@ export default function HRVacancyDetailPage() {
                       </Box>
                     )},
                   ]} rows={filteredCandidates} defaultRowsPerPage={7} />
-                  {filteredCandidates.length === 0 && (
-                    <Box textAlign="center" py={4}>
-                      <Typography variant="h6" color="textSecondary" gutterBottom>
-                        Нет кандидатов по выбранному фильтру
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Добавьте первого кандидата или измените фильтр
-                      </Typography>
-                    </Box>
-                  )}
+                  END OLD TABLE CODE */}
                   <Snackbar 
                     open={!!snackbar} 
                     autoHideDuration={2000} 
@@ -675,7 +733,15 @@ export default function HRVacancyDetailPage() {
       </TabContext>
       {/* Диалоги и QR-код — как было */}
       <AddCandidateDialog open={addDialogOpen} vacancyId={id} onClose={()=>setAddDialogOpen(false)} onAdded={()=>{
-        apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(setCandidates);
+        apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(result => {
+          if (Array.isArray(result)) {
+            setCandidates(result);
+            setTotalCandidates(result.length);
+          } else {
+            setCandidates(result.data || []);
+            setTotalCandidates(result.total || 0);
+          }
+        });
       }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
         <DialogTitle>QR-код для прохождения теста</DialogTitle>
@@ -717,6 +783,7 @@ export default function HRVacancyDetailPage() {
               <Grid container spacing={2}>
                 {selectedCandidates.map((id, idx) => {
                   const cand = candidates.find((c:any) => c.id === id);
+                  if (!cand) return null; // Пропускаем, если кандидат не найден
                   return (
                     <Grid item xs={12} sm={6} md={4} key={id}>
                       <Card sx={{p:2}}>

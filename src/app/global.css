@@ -1,1 +1,10 @@
-html { overflow-y: scroll; }
+html { 
+  overflow-y: scroll; 
+  /* Отключаем навигацию по истории при горизонтальном свайпе */
+  overscroll-behavior-x: none;
+}
+
+body {
+  /* Дополнительно отключаем для body */
+  overscroll-behavior-x: none;
+}
