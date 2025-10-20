@@ -39,15 +39,6 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     id: uniqueId(),
-    title: "HH Кандидаты",
-    icon: 'users-group-two-rounded-linear',
-    href: "/hr/hh-candidates",
-    bgcolor: "error",
-    chip: "NEW",
-    chipColor: "error",
-  },
-  {
-    id: uniqueId(),
     title: "Брендирование",
     icon: 'palette-linear',
     href: "/hr/settings?tab=branding",
@@ -70,7 +61,7 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     title: "HH.ru интеграция",
-    icon: 'hierarchy-square-3-linear',
+    icon: 'link-square-linear',
     href: "/hr/settings/hh-integration",
     bgcolor: "error",
   },

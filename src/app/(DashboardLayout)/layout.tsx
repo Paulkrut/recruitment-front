@@ -40,8 +40,8 @@ export default function RootLayout({
   React.useEffect(()=>{
     if(typeof window!=='undefined'){
       const t = localStorage.getItem('recruitment_token');
-      if(!t){ 
-        router.replace('/auth/login'); 
+      if(!t){
+        router.replace('/auth/login');
         return;
       }
     }
@@ -56,7 +56,7 @@ export default function RootLayout({
 
   return (
     <MainWrapper>
-      <title>Spike NextJs 14.0.3</title>
+      <title>SofiHR</title>
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
       {/* ------------------------------------------- */}
