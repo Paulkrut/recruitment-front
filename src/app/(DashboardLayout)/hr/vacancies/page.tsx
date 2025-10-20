@@ -57,6 +57,7 @@ interface VacancyRow {
   id: number;
   title: string;
   description?: string;
+  source?: string; // 'manual' | 'headhunter' | 'linkedin'
   createdAt: string;
   createdBy: string;
   candidatesTotal?: number;
@@ -207,22 +208,40 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               >
                 <TableCell>
                   <Box>
-                    <Typography 
-                      variant="subtitle2" 
-                      fontWeight={600} 
-                      color="primary.main"
-                      sx={{
-                        cursor: 'pointer',
-                        '&:hover': {
-                          color: 'primary.dark',
-                          textDecoration: 'underline'
-                        },
-                        transition: 'all 0.2s ease'
-                      }}
-                      onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
-                    >
-                      {truncateText(vacancy.title, 50)}
-                    </Typography>
+                    <Box display="flex" alignItems="center" gap={1}>
+                      {vacancy.source === 'headhunter' && (
+                        <Tooltip title="Вакансия из HH.ru">
+                          <Chip 
+                            label="HH" 
+                            size="small" 
+                            sx={{ 
+                              height: 20,
+                              fontSize: '0.65rem',
+                              fontWeight: 700,
+                              backgroundColor: '#D6001C',
+                              color: 'white',
+                              '& .MuiChip-label': { px: 0.75 }
+                            }} 
+                          />
+                        </Tooltip>
+                      )}
+                      <Typography 
+                        variant="subtitle2" 
+                        fontWeight={600} 
+                        color="primary.main"
+                        sx={{
+                          cursor: 'pointer',
+                          '&:hover': {
+                            color: 'primary.dark',
+                            textDecoration: 'underline'
+                          },
+                          transition: 'all 0.2s ease'
+                        }}
+                        onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
+                      >
+                        {truncateText(vacancy.title, 50)}
+                      </Typography>
+                    </Box>
                     {vacancy.description && (
                       <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
                         {truncateText(vacancy.description, 60)}
@@ -390,21 +409,39 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
     >
       {/* Верхняя часть: название и статус */}
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
-        <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
-          <Typography
-            variant="h6"
-            fontWeight={700}
-            sx={{
-              flexGrow: 1,
-              cursor: 'pointer',
-              color: 'primary.main',
-              transition: 'color 0.2s',
-              '&:hover': { color: 'primary.dark', textDecoration: 'underline' },
-            }}
-          >
-            {vacancy.title}
-          </Typography>
-        </Link>
+        <Box display="flex" alignItems="center" gap={1} flexGrow={1}>
+          {vacancy.source === 'headhunter' && (
+            <Tooltip title="Вакансия из HH.ru">
+              <Chip 
+                label="HH" 
+                size="small" 
+                sx={{ 
+                  height: 20,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  backgroundColor: '#D6001C',
+                  color: 'white',
+                  '& .MuiChip-label': { px: 0.75 }
+                }} 
+              />
+            </Tooltip>
+          )}
+          <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
+            <Typography
+              variant="h6"
+              fontWeight={700}
+              sx={{
+                flexGrow: 1,
+                cursor: 'pointer',
+                color: 'primary.main',
+                transition: 'color 0.2s',
+                '&:hover': { color: 'primary.dark', textDecoration: 'underline' },
+              }}
+            >
+              {vacancy.title}
+            </Typography>
+          </Link>
+        </Box>
         <Chip
           label={getProgressLabel(percent)}
           size="small"

@@ -22,6 +22,7 @@ interface CandidateFiltersProps {
     dateFrom?: string;
     dateTo?: string;
     status?: string;
+    testScore?: string; // Новый фильтр для оценки за тест
   };
   onFilterChange: (filters: any) => void;
   vacancyId: number;
@@ -184,39 +185,63 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           </Grid>
         )}
 
-        {/* AI Score */}
+        {/* AI анализ резюме (объединённый фильтр) */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>AI Score</InputLabel>
+            <InputLabel>AI анализ резюме</InputLabel>
             <Select
-              value={localFilters.minScore || ''}
-              label="AI Score"
-              onChange={(e) => handleLocalChange('minScore', e.target.value)}
+              value={
+                localFilters.minScore ? `score_${localFilters.minScore}` : 
+                localFilters.aiAnalysisStatus ? `status_${localFilters.aiAnalysisStatus}` : ''
+              }
+              label="AI анализ резюме"
+              onChange={(e) => {
+                const value = e.target.value;
+                const newFilters = { ...localFilters };
+                
+                // Удаляем оба старых фильтра
+                delete newFilters.minScore;
+                delete newFilters.aiAnalysisStatus;
+                
+                // Устанавливаем новый фильтр в зависимости от типа
+                if (value.startsWith('score_')) {
+                  newFilters.minScore = parseInt(value.replace('score_', ''));
+                } else if (value.startsWith('status_')) {
+                  newFilters.aiAnalysisStatus = value.replace('status_', '');
+                }
+                
+                setLocalFilters(newFilters);
+              }}
             >
               <MenuItem value="">Все</MenuItem>
-              <MenuItem value="90">≥ 90 (отличные)</MenuItem>
-              <MenuItem value="80">≥ 80 (хорошие)</MenuItem>
-              <MenuItem value="70">≥ 70 (средние)</MenuItem>
-              <MenuItem value="60">≥ 60 (слабые)</MenuItem>
+              <MenuItem value="status_loading_resume">⏳ Загрузка резюме</MenuItem>
+              <MenuItem value="status_analyzing">🤖 Анализируется</MenuItem>
+              <MenuItem value="status_null">⚪ Без анализа</MenuItem>
+              <MenuItem value="status_failed">❌ Ошибка анализа</MenuItem>
+              <MenuItem value="score_90">≥ 90% (отличные)</MenuItem>
+              <MenuItem value="score_80">≥ 80% (хорошие)</MenuItem>
+              <MenuItem value="score_70">≥ 70% (средние)</MenuItem>
+              <MenuItem value="score_60">≥ 60% (слабые)</MenuItem>
             </Select>
           </FormControl>
         </Grid>
 
-        {/* AI Статус анализа */}
+        {/* Оценка за тест */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>AI Статус</InputLabel>
+            <InputLabel>Оценка за тест</InputLabel>
             <Select
-              value={localFilters.aiAnalysisStatus || ''}
-              label="AI Статус"
-              onChange={(e) => handleLocalChange('aiAnalysisStatus', e.target.value)}
+              value={localFilters.testScore || ''}
+              label="Оценка за тест"
+              onChange={(e) => handleLocalChange('testScore', e.target.value)}
             >
               <MenuItem value="">Все</MenuItem>
-              <MenuItem value="loading_resume">⏳ Загрузка резюме</MenuItem>
-              <MenuItem value="analyzing">🤖 Анализируется</MenuItem>
-              <MenuItem value="completed">✅ Проанализировано</MenuItem>
-              <MenuItem value="failed">❌ Ошибка</MenuItem>
-              <MenuItem value="null">⚪ Без анализа</MenuItem>
+              <MenuItem value="passed">✅ Прошли тест</MenuItem>
+              <MenuItem value="not_passed">❌ Не проходили</MenuItem>
+              <MenuItem value="9">≥ 9 (отлично)</MenuItem>
+              <MenuItem value="7">≥ 7 (хорошо)</MenuItem>
+              <MenuItem value="5">≥ 5 (средне)</MenuItem>
+              <MenuItem value="3">≥ 3 (слабо)</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -379,23 +404,34 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               onDelete={() => handleRemoveFilter('status')}
             />
           )}
-          {filters.minScore && (
+          {(filters.minScore || filters.aiAnalysisStatus) && (
             <Chip
-              label={`AI Score ≥ ${filters.minScore}`}
-              size="small"
-              onDelete={() => handleRemoveFilter('minScore')}
-            />
-          )}
-          {filters.aiAnalysisStatus && (
-            <Chip
-              label={`AI Статус: ${
-                filters.aiAnalysisStatus === 'loading_resume' ? 'Загрузка' : 
+              label={`AI анализ: ${
+                filters.minScore ? `≥ ${filters.minScore}%` :
+                filters.aiAnalysisStatus === 'loading_resume' ? 'Загрузка резюме' : 
                 filters.aiAnalysisStatus === 'analyzing' ? 'Анализируется' : 
                 filters.aiAnalysisStatus === 'completed' ? 'Завершено' : 
                 filters.aiAnalysisStatus === 'failed' ? 'Ошибка' : 'Без анализа'
               }`}
               size="small"
-              onDelete={() => handleRemoveFilter('aiAnalysisStatus')}
+              onDelete={() => {
+                const newFilters = { ...filters };
+                delete newFilters.minScore;
+                delete newFilters.aiAnalysisStatus;
+                setLocalFilters(newFilters);
+                onFilterChange(newFilters);
+              }}
+            />
+          )}
+          {filters.testScore && (
+            <Chip
+              label={`Тест: ${
+                filters.testScore === 'passed' ? 'Прошли' :
+                filters.testScore === 'not_passed' ? 'Не проходили' :
+                `≥ ${filters.testScore}`
+              }`}
+              size="small"
+              onDelete={() => handleRemoveFilter('testScore')}
             />
           )}
           {filters.hasResume && (

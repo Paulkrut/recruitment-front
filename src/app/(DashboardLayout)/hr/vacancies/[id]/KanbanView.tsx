@@ -8,6 +8,8 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import AddIcon from '@mui/icons-material/Add';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { apiFetch } from '@/utils/api';
 import moment from 'moment';
 import 'moment/locale/ru';
@@ -65,6 +67,7 @@ interface CandidateCard {
   aiScore: number | null;
   aiComment: string | null;
   aiAnalysisStatus: string | null; // null | loading_resume | analyzing | completed | failed
+  score: number | null; // Оценка за прохождение теста (0-10)
   sessionId: number | null;
   lastContactedAt: string | null;
   communicationStatus: string;
@@ -352,6 +355,27 @@ const DraggableCandidateCard = memo(({
             {candidate.source === 'manual' && 'Ручной ввод'}
             {candidate.source === 'linkedin' && 'LinkedIn'}
           </Typography>
+          
+          {/* Оценка за тест (если есть) */}
+          {candidate.score !== null && candidate.score !== undefined && (
+            <Tooltip title={`Оценка за прохождение теста: ${candidate.score}/10`} arrow>
+              <Chip
+                label={`📝 ${candidate.score}/10`}
+                size="small"
+                color={
+                  candidate.score >= 9 ? 'success' :
+                  candidate.score >= 7 ? 'success' :
+                  candidate.score >= 5 ? 'warning' :
+                  candidate.score >= 3 ? 'warning' : 'error'
+                }
+                sx={{ 
+                  fontSize: '0.7rem',
+                  height: 20,
+                  '& .MuiChip-label': { px: 1 }
+                }}
+              />
+            </Tooltip>
+          )}
         </Box>
 
         {/* Разделитель */}
@@ -1262,9 +1286,58 @@ export default function KanbanView({
                     )}
 
                     <Box>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        {column.icon} {column.label}
-                      </Typography>
+                      <Box display="flex" alignItems="center" gap={0.5}>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {column.icon} {column.label}
+                        </Typography>
+                        
+                        {/* Иконка автоматизации для AI Скрининг */}
+                        {column.value === 'screening' && (
+                          <Tooltip 
+                            title={
+                              <Box sx={{ p: 0.5 }}>
+                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                                  🤖 Автоматизация AI Скрининга
+                                </Typography>
+                                <Typography variant="body2" sx={{ mb: 1 }}>
+                                  При переносе кандидата на эту стадию автоматически запускается:
+                                </Typography>
+                                <Box component="ul" sx={{ m: 0, pl: 2 }}>
+                                  <li>
+                                    <Typography variant="body2">
+                                      📥 Загрузка резюме из HH.ru (для HH кандидатов)
+                                    </Typography>
+                                  </li>
+                                  <li>
+                                    <Typography variant="body2">
+                                      🧠 AI анализ резюме через DeepInfra
+                                    </Typography>
+                                  </li>
+                                  <li>
+                                    <Typography variant="body2">
+                                      📊 Оценка соответствия вакансии (0-100%)
+                                    </Typography>
+                                  </li>
+                                  <li>
+                                    <Typography variant="body2">
+                                      💬 Генерация комментария с рекомендацией
+                                    </Typography>
+                                  </li>
+                                </Box>
+                                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                                  ⏱️ Время обработки: 5-30 секунд
+                                </Typography>
+                              </Box>
+                            }
+                            arrow
+                            placement="right"
+                          >
+                            <IconButton size="small" sx={{ ml: 0.5, color: 'warning.main' }}>
+                              <AutoAwesomeIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </Box>
                       <Typography variant="caption" color="text.secondary">
                         ({totalCount})
                       </Typography>

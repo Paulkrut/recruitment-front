@@ -87,6 +87,7 @@ export default function CandidatesList({
         if (filters.status) queryParams.append('status', filters.status);
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        if (filters.testScore) queryParams.append('testScore', filters.testScore); // Новый фильтр
         if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
         if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
         if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
@@ -331,6 +332,15 @@ export default function CandidatesList({
     return 'error';
   };
 
+  const getTestScoreColor = (score: number | null) => {
+    if (score === null) return 'default';
+    if (score >= 9) return 'success';
+    if (score >= 7) return 'success';
+    if (score >= 5) return 'warning';
+    if (score >= 3) return 'warning';
+    return 'error';
+  };
+
   const getSourceIcon = (source: string) => {
     switch (source) {
       case 'headhunter': return '🎯';
@@ -434,6 +444,15 @@ export default function CandidatesList({
                 </TableCell>
                 <TableCell>
                   <TableSortLabel
+                    active={sortBy === 'score'}
+                    direction={sortBy === 'score' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'desc'}
+                    onClick={() => handleSort('score')}
+                  >
+                    📝 Тестирование
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
                     active={sortBy === 'status'}
                     direction={sortBy === 'status' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'asc'}
                     onClick={() => handleSort('status')}
@@ -521,6 +540,21 @@ export default function CandidatesList({
                           label={`${r.aiScore}%`}
                           size="small"
                           color={getAiScoreColor(r.aiScore)}
+                        />
+                      </Tooltip>
+                    ) : (
+                      <Chip label="—" size="small" variant="outlined" />
+                    )}
+                  </TableCell>
+
+                  {/* Оценка за тест */}
+                  <TableCell>
+                    {r.score !== null && r.score !== undefined ? (
+                      <Tooltip title={`Оценка за прохождение теста: ${r.score}/10`} arrow>
+                        <Chip
+                          label={`${r.score}/10`}
+                          size="small"
+                          color={getTestScoreColor(r.score)}
                         />
                       </Tooltip>
                     ) : (
