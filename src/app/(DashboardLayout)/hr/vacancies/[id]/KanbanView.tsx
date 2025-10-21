@@ -69,6 +69,10 @@ interface CandidateCard {
   aiAnalysisStatus: string | null; // null | loading_resume | analyzing | completed | failed
   score: number | null; // Оценка за прохождение теста (0-10)
   sessionId: number | null;
+  sessionStatus: string; // new | started | finished - статус тестирования
+  answersCount: number; // Количество отвеченных вопросов
+  startedAt: string | null; // Когда начал тест
+  finishedAt: string | null; // Когда завершил тест
   lastContactedAt: string | null;
   communicationStatus: string;
 }
@@ -350,43 +354,94 @@ const DraggableCandidateCard = memo(({
           </Link>
 
           {/* Источник */}
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
             {getSourceIcon(candidate.source)} {candidate.source === 'headhunter' && 'HH.ru'}
             {candidate.source === 'manual' && 'Ручной ввод'}
             {candidate.source === 'linkedin' && 'LinkedIn'}
           </Typography>
           
-          {/* Оценка за тест (если есть) */}
-          {candidate.score !== null && candidate.score !== undefined && (
-            <Tooltip title={`Оценка за прохождение теста: ${candidate.score}/10`} arrow>
-              <Chip
-                label={`📝 ${candidate.score}/10`}
-                size="small"
-                color={
-                  candidate.score >= 9 ? 'success' :
-                  candidate.score >= 7 ? 'success' :
-                  candidate.score >= 5 ? 'warning' :
-                  candidate.score >= 3 ? 'warning' : 'error'
-                }
-                sx={{ 
-                  fontSize: '0.7rem',
-                  height: 20,
-                  '& .MuiChip-label': { px: 1 }
-                }}
-              />
-            </Tooltip>
+          {/* Блок тестирования (если есть сессия или оценка) */}
+          {(candidate.sessionId || candidate.score !== null) && (
+            <Box sx={{ 
+              bgcolor: 'grey.50',
+              borderRadius: 1,
+              p: 1,
+              mb: 0.5
+            }}>
+              <Typography variant="caption" fontWeight="600" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+                📝 Тестирование
+              </Typography>
+              
+              {/* Статус */}
+              {candidate.sessionId && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
+                  <Typography variant="caption" color="text.secondary">Статус:</Typography>
+                  <Typography variant="caption" fontWeight="500" color={
+                    candidate.sessionStatus === 'finished' ? 'success.main' :
+                    candidate.sessionStatus === 'started' ? 'info.main' : 'text.secondary'
+                  }>
+                    {candidate.sessionStatus === 'finished' ? '✅ Завершён' :
+                     candidate.sessionStatus === 'started' ? '⏳ В процессе' : '⚪ Не начат'}
+                  </Typography>
+                </Box>
+              )}
+              
+              {/* Средний балл */}
+              {candidate.score !== null && candidate.score !== undefined && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
+                  <Typography variant="caption" color="text.secondary">Балл:</Typography>
+                  <Typography variant="caption" fontWeight="600" color={
+                    candidate.score >= 9 ? 'success.main' :
+                    candidate.score >= 7 ? 'success.light' :
+                    candidate.score >= 5 ? 'warning.main' :
+                    candidate.score >= 3 ? 'warning.dark' : 'error.main'
+                  }>
+                    {candidate.score}/10
+                  </Typography>
+                </Box>
+              )}
+              
+              {/* Количество ответов (если в процессе) */}
+              {candidate.sessionStatus === 'started' && candidate.answersCount > 0 && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
+                  <Typography variant="caption" color="text.secondary">Ответов:</Typography>
+                  <Typography variant="caption" fontWeight="500">
+                    {candidate.answersCount}
+                  </Typography>
+                </Box>
+              )}
+              
+              {/* Дата завершения (если завершён) */}
+              {candidate.sessionStatus === 'finished' && candidate.finishedAt && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" color="text.secondary">Завершён:</Typography>
+                  <Typography variant="caption" fontWeight="500">
+                    {formatBitrixDate(candidate.finishedAt)}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
           )}
         </Box>
 
         {/* Разделитель */}
         <Divider sx={{ my: 1 }} />
 
-        {/* Нижняя панель - дата и ссылка на карточку */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {/* Дата */}
-          <Typography variant="caption" color="text.secondary">
-            {formatBitrixDate(candidate.createdAt)}
-          </Typography>
+        {/* Нижняя панель - дата, статус коммуникации и ссылка на карточку */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+          {/* Дата добавления */}
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="caption" color="text.secondary" display="block">
+              Добавлен: {formatBitrixDate(candidate.createdAt)}
+            </Typography>
+            
+            {/* Последний контакт (если есть) */}
+            {candidate.lastContactedAt && (
+              <Typography variant="caption" color="text.secondary" display="block">
+                Контакт: {formatBitrixDate(candidate.lastContactedAt)}
+              </Typography>
+            )}
+          </Box>
 
           {/* Открыть карточку */}
           <Tooltip title="Открыть карточку" arrow>
@@ -406,7 +461,11 @@ const DraggableCandidateCard = memo(({
     prevProps.selectionMode === nextProps.selectionMode &&
     prevProps.isSelected === nextProps.isSelected &&
     prevProps.candidate.status === nextProps.candidate.status &&
-    prevProps.candidate.aiScore === nextProps.candidate.aiScore
+    prevProps.candidate.aiScore === nextProps.candidate.aiScore &&
+    prevProps.candidate.score === nextProps.candidate.score &&
+    prevProps.candidate.sessionStatus === nextProps.candidate.sessionStatus &&
+    prevProps.candidate.answersCount === nextProps.candidate.answersCount &&
+    prevProps.candidate.lastContactedAt === nextProps.candidate.lastContactedAt
   );
 });
 
