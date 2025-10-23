@@ -67,6 +67,30 @@ const Menuitems: MenuitemsType[] = [
   },
   {
     id: uniqueId(),
+    navlabel: true,
+    subheader: "Тестирование сотрудников",
+  },
+  {
+    id: uniqueId(),
+    title: "Регламенты",
+    icon: 'document-text-linear',
+    href: "/hr/regulations",
+    bgcolor: "success",
+  },
+  {
+    id: uniqueId(),
+    title: "Тесты",
+    icon: 'clipboard-text-linear',
+    href: "/hr/regulation-tests",
+    bgcolor: "info",
+  },
+  {
+    id: uniqueId(),
+    navlabel: true,
+    subheader: "Система",
+  },
+  {
+    id: uniqueId(),
     title: "Настройки",
     icon: 'settings-linear',
     href: "/hr/settings",
