@@ -6,6 +6,7 @@ const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.
 interface User {
   name: string;
   phone: string;
+  email?: string;
   position?: string;
 }
 
