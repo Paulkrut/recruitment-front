@@ -139,9 +139,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setCurrentCompany(company);
     if (company) {
       localStorage.setItem('current_company', company.id.toString());
+      localStorage.setItem('currentCompanyId', company.id.toString()); // Для совместимости
       console.log('UserContext: Сохранена компания в localStorage:', company.id);
     } else {
       localStorage.removeItem('current_company');
+      localStorage.removeItem('currentCompanyId'); // Для совместимости
       console.log('UserContext: Удалена компания из localStorage');
     }
   };

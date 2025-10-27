@@ -141,6 +141,8 @@ export default function BillingPage() {
     const featuresList = [
       { key: 'ai_questions', label: 'AI генерация вопросов', icon: features?.ai_questions },
       { key: 'video_answers', label: 'Видео-ответы', icon: features?.video_answers },
+      { key: 'screenings', label: 'Скрининги AI - безлимит', icon: true, highlight: true }, // Всегда бесплатно
+      { key: 'regulation_tests', label: 'Тесты сотрудников - безлимит', icon: true, highlight: true }, // Всегда бесплатно
       { key: 'full_analytics', label: 'Полная аналитика', icon: features?.full_analytics || features?.basic_analytics },
       { key: 'priority_support', label: 'Приоритетная поддержка', icon: features?.priority_support },
     ];
@@ -151,7 +153,7 @@ export default function BillingPage() {
           <ListItem key={feature.key} disablePadding>
             <ListItemIcon sx={{ minWidth: 32 }}>
               {feature.icon ? (
-                <IconCheck size={20} color="green" />
+                <IconCheck size={20} color={feature.highlight ? '#4caf50' : 'green'} />
               ) : (
                 <IconX size={20} color="gray" />
               )}
@@ -160,6 +162,7 @@ export default function BillingPage() {
               primary={feature.label}
               primaryTypographyProps={{
                 color: feature.icon ? 'text.primary' : 'text.disabled',
+                fontWeight: feature.highlight ? 600 : 400,
               }}
             />
           </ListItem>

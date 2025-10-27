@@ -39,6 +39,8 @@ interface Transaction {
   interviews_changed: number;
   regulation_tests_changed: number;
   description: string | null;
+  is_gifted: boolean;
+  gift_value: number | null;
   created_at: string;
   created_by: {
     id: number;
@@ -110,10 +112,13 @@ export default function TransactionsPage() {
     }
   };
 
-  const getCategoryLabel = (category: string) => {
+  const getCategoryLabel = (category: string, isGifted: boolean) => {
+    if (isGifted) return '🎁 Бонус';
+    
     const labels: Record<string, string> = {
       purchase: 'Покупка',
       interview_usage: 'Использование интервью',
+      interview_gifted: '🎁 Подарок',
       test_usage: 'Использование теста',
       refund: 'Возврат',
       bonus: 'Бонус',
@@ -258,9 +263,15 @@ export default function TransactionsPage() {
                       </TableCell>
                       <TableCell>
                         <Chip
-                          label={getCategoryLabel(transaction.category)}
+                          label={getCategoryLabel(transaction.category, transaction.is_gifted)}
                           size="small"
-                          color={transaction.type === 'credit' ? 'success' : 'default'}
+                          color={
+                            transaction.is_gifted
+                              ? 'warning'
+                              : transaction.type === 'credit'
+                              ? 'success'
+                              : 'default'
+                          }
                           icon={
                             transaction.type === 'credit' ? (
                               <IconArrowUp size={16} />
@@ -272,8 +283,13 @@ export default function TransactionsPage() {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2">{transaction.description}</Typography>
+                        {transaction.is_gifted && transaction.gift_value && (
+                          <Typography variant="caption" color="warning.main">
+                            (стоимость {transaction.gift_value.toLocaleString('ru-RU')}₽)
+                          </Typography>
+                        )}
                         {transaction.created_by && (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary" display="block">
                             {transaction.created_by.email}
                           </Typography>
                         )}

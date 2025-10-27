@@ -1,187 +1,330 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
 import { Icon } from "@iconify/react";
-
 import { Stack } from "@mui/system";
+import { useUser } from '@/contexts/UserContext';
+import { apiFetch } from '@/utils/api';
 
-const profile = [
-  {
-    href: "/apps/user-profile/profile",
-    title: "My Profile",
-    subtitle: "Account Settings",
-    icon: <Icon icon="solar:wallet-2-line-duotone" width="20" height="20" />,
-    color: "primary",
-  },
-  {
-    href: "/apps/email",
-    title: "My Inbox",
-    subtitle: "Messages & Emails",
-    icon: <Icon icon="solar:shield-minimalistic-line-duotone" width="20" height="20" />,
-    color: "success",
-  },
-  {
-    href: "/apps/notes",
-    title: "My Tasks",
-    subtitle: "To-do and Daily Tasks",
-    icon: <Icon icon="solar:card-2-line-duotone" width="20" height="20" />,
-    color: "error",
-  },
-];
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 const Profile = () => {
-
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
+  const { user } = useUser();
+  const [auth, setAuth] = useState<{name: string; phone: string; email?: string; position?: string}>({
+    name: '',
+    phone: '',
+    email: '',
+    position: ''
+  });
+  const [openProfile, setOpenProfile] = useState(false);
 
-  const [anchorEl2, setAnchorEl2] = useState(null);
-  const handleClick2 = (event: any) => {
-    setAnchorEl2(event.currentTarget);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const t = localStorage.getItem('recruitment_token');
+    if (!t) return;
+    try {
+      const payload = JSON.parse(atob(t.split('.')[1] || ''));
+      setAuth({
+        name: payload.name || '',
+        phone: payload.phone || '',
+        email: payload.email || '',
+        position: ''
+      });
+    } catch (e) {
+      /* ignore */
+    }
+    // Обновляем из контекста
+    if (user) {
+      setAuth(a => ({
+        ...a,
+        name: user.name || a.name,
+        email: user.email || a.email,
+        position: user.position || ''
+      }));
+    }
+  }, [user]);
+
+  const initials = auth.name
+    ? auth.name.split(' ').map(n => n[0]).join('').toUpperCase()
+    : auth.phone
+    ? auth.phone.slice(-2)
+    : 'U';
+
+  const stringToColor = (s: string) => {
+    let hash = 0;
+    for (let i = 0; i < s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash);
+    const c = (hash >> 24) & 0xff ^ (hash >> 16) & 0xff ^ (hash >> 8) & 0xff;
+    return `hsl(${c * 3.6}, 60%, 60%)`;
   };
-  const handleClose2 = () => {
-    setAnchorEl2(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('recruitment_token');
+      localStorage.removeItem('current_company');
+      localStorage.removeItem('currentCompanyId');
+      window.location.href = '/auth/login';
+    }
   };
 
   return (
-    <Box>
+    <>
       <Button
-        size="large"
-        aria-label="show 11 new notifications"
         color="inherit"
-        aria-controls="msgs-menu"
+        aria-label="user profile"
+        aria-controls="profile-menu"
         aria-haspopup="true"
         sx={{
-          ...(typeof anchorEl2 === "object" && {
+          ...(Boolean(anchorEl) && {
             color: "primary.main",
           }),
           display: "flex",
-          gap: 2,
+          gap: 1.5,
+          borderRadius: '50px',
+          px: lgUp ? 2 : 1,
+          py: 1,
+          '&:hover': {
+            backgroundColor: 'action.hover',
+          },
         }}
-        onClick={handleClick2}
+        onClick={handleClick}
       >
         <Avatar
-          src={"/images/profile/user1.jpg"}
-          alt={"ProfileImg"}
           sx={{
-            width: 45,
-            height: 45,
+            width: 40,
+            height: 40,
+            bgcolor: stringToColor(initials),
           }}
-        />
+        >
+          {initials}
+        </Avatar>
         
-        {lgUp ? <Box textAlign="left">
-          <Typography variant="h6" color="textPrimary" display="flex" alignItems="center"> Mike Nielsen</Typography>
-          <Typography variant="subtitle2" color="textSecondary"> Admin</Typography>
-        </Box> : ""}
+        {lgUp && (
+          <Box textAlign="left">
+            <Typography variant="body2" color="textPrimary" fontWeight={600}>
+              {auth.name || auth.phone}
+            </Typography>
+            <Typography variant="caption" color="textSecondary">
+              {auth.position || 'HR'}
+            </Typography>
+          </Box>
+        )}
       </Button>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
+
       <Menu
-        id="msgs-menu"
-        anchorEl={anchorEl2}
-        keepMounted
-        open={Boolean(anchorEl2)}
-        onClose={handleClose2}
+        id="profile-menu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
-        sx={{
-          "& .MuiMenu-paper": {
-            width: "360px",
-            p: 4,
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            width: 280,
+            mt: 1.5,
+            borderRadius: '12px',
           },
         }}
       >
-        <Typography variant="h5">User Profile</Typography>
-        <Stack direction="row" py={3} spacing={2} alignItems="center">
-          <Avatar
-            src={"/images/profile/user1.jpg"}
-            alt={"ProfileImg"}
-            sx={{ width: 95, height: 95 }}
-          />
-          <Box>
-            <Typography variant="h6" color="textPrimary" fontWeight={600}>
-            Mike Nielsen
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-            Admin
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              color="textSecondary"
-              display="flex"
-              alignItems="center"
-              gap={1}
+        <Box sx={{ px: 2, py: 2 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Avatar
+              sx={{
+                width: 50,
+                height: 50,
+                bgcolor: stringToColor(initials),
+              }}
             >
-              <Icon icon="solar:letter-line-duotone" width="15" height="15" />
-              info@spike.com
-            </Typography>
-          </Box>
-        </Stack>
-        <Divider />
-        {profile.map((profile) => (
-          <Box key={profile.title}>
-            <Box sx={{ py: 2, px: 0 }} className="hover-text-primary">
-              <Link href={profile.href}>
-                <Stack direction="row" spacing={2}>
-                  <Box
-                    minWidth="45px"
-                    height="45px"
-                    bgcolor={profile.color + ".light"}
-                    color={profile.color + ".main"}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-
-                    {profile.icon}
-                  </Box>
-                  <Box>
-                    <Typography
-                      variant="subtitle2"
-                      fontWeight={600}
-                      color="textPrimary"
-                      className="text-hover"
-                      noWrap
-                      sx={{
-                        width: "240px",
-                      }}
-                    >
-                      {profile.title}
-                    </Typography>
-                    <Typography
-                      color="textSecondary"
-                      variant="subtitle2"
-                      sx={{
-                        width: "240px",
-                      }}
-                      noWrap
-                    >
-                      {profile.subtitle}
-                    </Typography>
-                  </Box>
-                </Stack>
-              </Link>
+              {initials}
+            </Avatar>
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography
+                variant="subtitle1"
+                fontWeight={600}
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {auth.name || auth.phone}
+              </Typography>
+              {auth.email && (
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 0.5,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <Icon icon="solar:letter-line-duotone" width="12" />
+                  {auth.email}
+                </Typography>
+              )}
+              {auth.position && (
+                <Typography variant="caption" color="text.secondary">
+                  {auth.position}
+                </Typography>
+              )}
             </Box>
-          </Box>
-        ))}
-        <Box mt={2}>
-          <Button
-            href="/auth/login"
-            variant="contained"
-            color="primary"
-            component={Link}
-            fullWidth
-          >
-            Log out
-          </Button>
+          </Stack>
         </Box>
+
+        <Divider />
+
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            setOpenProfile(true);
+          }}
+          sx={{ py: 1.5, px: 2 }}
+        >
+          <Icon icon="solar:user-bold-duotone" width={20} style={{ marginRight: 12 }} />
+          <Typography variant="body2">Мой профиль</Typography>
+        </MenuItem>
+
+        <Divider />
+
+        <MenuItem
+          onClick={handleLogout}
+          sx={{
+            py: 1.5,
+            px: 2,
+            color: 'error.main',
+          }}
+        >
+          <Icon icon="solar:logout-bold-duotone" width={20} style={{ marginRight: 12 }} />
+          <Typography variant="body2">Выйти</Typography>
+        </MenuItem>
       </Menu>
-    </Box>
+
+      <ProfileDialog
+        open={openProfile}
+        onClose={() => setOpenProfile(false)}
+        onUpdated={(u) => setAuth(a => ({ ...a, ...u }))}
+      />
+    </>
+  );
+};
+
+// Диалог редактирования профиля
+function ProfileDialog({
+  open,
+  onClose,
+  onUpdated,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onUpdated: (u: any) => void;
+}) {
+  const [form, setForm] = useState({ name: '', email: '', position: '' });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({ name: '', email: '', position: '' });
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    apiFetch(`${API_BASE}/api/user/me`)
+      .then(r => r.json())
+      .then(setForm);
+  }, [open]);
+
+  const save = async () => {
+    const newErrors = { name: '', email: '', position: '' };
+    if (!(form.name && form.name.trim())) newErrors.name = 'Имя обязательно';
+    if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
+
+    if (newErrors.name || newErrors.email || newErrors.position) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setLoading(true);
+    await apiFetch(`${API_BASE}/api/user/me`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    });
+    setLoading(false);
+    onUpdated(form);
+    onClose();
+  };
+
+  const handleChange = (field: keyof typeof form) => (e: any) => {
+    const value = e.target.value;
+    setForm({ ...form, [field]: value });
+    setErrors(prev => ({ ...prev, [field]: '' }));
+    if (field === 'email' && value && !validateEmail(value)) {
+      setErrors(prev => ({ ...prev, email: 'Введите корректный email адрес' }));
+    }
+  };
+
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Мой профиль</DialogTitle>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
+        <TextField
+          label="Имя *"
+          value={form.name || ''}
+          onChange={handleChange('name')}
+          fullWidth
+          error={!!errors.name}
+          helperText={errors.name}
+        />
+        <TextField
+          label="Email"
+          value={form.email || ''}
+          onChange={handleChange('email')}
+          fullWidth
+          error={!!errors.email}
+          helperText={errors.email || 'Например: example@mail.ru'}
+          placeholder="example@mail.ru"
+        />
+        <TextField
+          label="Должность"
+          value={form.position || ''}
+          onChange={handleChange('position')}
+          fullWidth
+          error={!!errors.position}
+          helperText={errors.position}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Отмена</Button>
+        <Button onClick={save} disabled={loading || !(form.name && form.name.trim())}>
+          Сохранить
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

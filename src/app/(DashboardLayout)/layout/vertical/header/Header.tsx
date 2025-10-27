@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
 import { useSelector, useDispatch } from "@/store/hooks";
@@ -13,9 +14,8 @@ import {
 import { Icon } from "@iconify/react";
 import Notifications from "./Notification";
 import Profile from "./Profile";
-import Cart from "./Cart";
-import Search from "./Search";
-import Language from "./Language";
+import CompanyInfo from "./CompanyInfo";
+import BalanceInfo from "./BalanceInfo";
 import { AppState } from "@/store/store";
 import { shadows } from "@/utils/theme/Shadows";
 
@@ -37,6 +37,7 @@ const Header = () => {
     minHeight: customizer.TopbarHeight,
     // },
     borderRadius: 13,
+    marginBottom: theme.spacing(3), // Отступ снизу
   }));
   const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
     width: "100%",
@@ -47,7 +48,7 @@ const Header = () => {
   return (
     <AppBarStyled position="sticky" color="default">
       <ToolbarStyled>
-        <Stack spacing={1} direction="row" alignItems="center">
+        <Stack spacing={1.5} direction="row" alignItems="center">
           {/* ------------------------------------------- */}
           {/* Toggle Button Sidebar */}
           {/* ------------------------------------------- */}
@@ -66,21 +67,32 @@ const Header = () => {
           </Button>
 
           {/* ------------------------------------------- */}
-          {/* Search Dropdown */}
+          {/* Company Info - показываем на больших экранах */}
           {/* ------------------------------------------- */}
+          {lgUp && (
+            <>
+              <Divider orientation="vertical" flexItem sx={{ height: 30, alignSelf: 'center' }} />
+              <CompanyInfo />
+            </>
+          )}
         </Stack>
+
         <Box flexGrow={1} />
-        <Stack spacing={2} direction="row" alignItems="center">
-          {smUp ? <Search /> : ""}
-          <Language />
+
+        <Stack spacing={1.5} direction="row" alignItems="center">
           {/* ------------------------------------------- */}
-          {/* Ecommerce Dropdown */}
+          {/* Balance Info - основная информация */}
           {/* ------------------------------------------- */}
-          <Cart />
+          {smUp && <BalanceInfo />}
+          
           {/* ------------------------------------------- */}
-          {/* End Ecommerce Dropdown */}
+          {/* Notifications */}
           {/* ------------------------------------------- */}
           <Notifications />
+          
+          {/* ------------------------------------------- */}
+          {/* User Profile */}
+          {/* ------------------------------------------- */}
           <Profile />
         </Stack>
       </ToolbarStyled>
