@@ -87,6 +87,32 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     navlabel: true,
+    subheader: "Биллинг и тарифы",
+  },
+  {
+    id: uniqueId(),
+    title: "Тарифные планы",
+    icon: 'card-linear',
+    href: "/hr/billing",
+    bgcolor: "primary",
+  },
+  {
+    id: uniqueId(),
+    title: "История операций",
+    icon: 'bill-list-linear',
+    href: "/hr/billing/transactions",
+    bgcolor: "info",
+  },
+  {
+    id: uniqueId(),
+    title: "Аналитика",
+    icon: 'chart-2-linear',
+    href: "/hr/billing/analytics",
+    bgcolor: "success",
+  },
+  {
+    id: uniqueId(),
+    navlabel: true,
     subheader: "Система",
   },
   {

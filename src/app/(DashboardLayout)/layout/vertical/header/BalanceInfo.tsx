@@ -116,6 +116,11 @@ const BalanceInfo = () => {
     router.push('/hr/billing/transactions');
   };
 
+  const handleNavigateToAnalytics = () => {
+    handleClose();
+    router.push('/hr/billing/analytics');
+  };
+
   // Определяем цвет индикатора баланса
   const getBalanceColor = (current: number, total: number) => {
     const percentage = total > 0 ? (current / total) * 100 : 0;
@@ -361,6 +366,14 @@ const BalanceInfo = () => {
             <Button
               fullWidth
               variant="outlined"
+              startIcon={<Icon icon="solar:chart-2-bold-duotone" />}
+              onClick={handleNavigateToAnalytics}
+            >
+              Аналитика
+            </Button>
+            <Button
+              fullWidth
+              variant="text"
               startIcon={<Icon icon="solar:document-text-bold-duotone" />}
               onClick={handleNavigateToTransactions}
             >
