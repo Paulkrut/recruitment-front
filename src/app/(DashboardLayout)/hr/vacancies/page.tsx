@@ -170,17 +170,6 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               fontWeight: 600, 
               fontSize: '0.875rem',
               color: 'text.secondary',
-              width: '15%'
-            }}>
-              <Box display="flex" alignItems="center" gap={1}>
-                <IconCheck size={16} />
-                Активность
-              </Box>
-            </TableCell>
-            <TableCell sx={{ 
-              fontWeight: 600, 
-              fontSize: '0.875rem',
-              color: 'text.secondary',
               width: '8%',
               textAlign: 'center'
             }}>
@@ -287,28 +276,6 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         </Typography>
                       </Box>
                     )}
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ width: '100%', maxWidth: 120 }}>
-                    <Box display="flex" justifyContent="space-between" mb={0.5}>
-                      <Typography variant="caption" color="textSecondary">
-                        {getProgressLabel(percent)}
-                      </Typography>
-                      <Typography variant="caption" fontWeight={600}>
-                        {percent}%
-                      </Typography>
-                    </Box>
-                    <LinearProgress
-                      variant="determinate"
-                      value={percent}
-                      color={getProgressColor(percent) as any}
-                      sx={{ 
-                        height: 6, 
-                        borderRadius: 3,
-                        backgroundColor: 'grey.200'
-                      }}
-                    />
                   </Box>
                 </TableCell>
                 <TableCell>

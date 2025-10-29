@@ -7,7 +7,7 @@ import {
   Card,
   Typography,
   Breadcrumbs,
-  Link,
+  Link as MuiLink,
   Chip,
   Table,
   TableBody,
@@ -19,13 +19,13 @@ import {
   Tooltip,
   LinearProgress,
 } from '@mui/material';
+import Link from 'next/link';
 import PageContainer from '@/app/components/container/PageContainer';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LinkIcon from '@mui/icons-material/Link';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -46,7 +46,6 @@ interface RegulationTest {
 }
 
 export default function RegulationTestsPage() {
-  const router = useRouter();
   const [tests, setTests] = useState<RegulationTest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -92,22 +91,24 @@ export default function RegulationTestsPage() {
     <PageContainer title="Тесты на знание регламентов" description="Управление тестами">
       {/* Breadcrumbs */}
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-        <Link href="/hr" underline="hover" color="inherit">
+        <MuiLink href="/hr" underline="hover" color="inherit">
           Главная
-        </Link>
+        </MuiLink>
         <Typography color="text.primary">Тесты</Typography>
       </Breadcrumbs>
 
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4">📋 Тесты на знание регламентов</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => router.push('/hr/regulation-tests/create')}
-        >
-          Создать тест
-        </Button>
+        <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
+          <Button
+            component="a"
+            variant="contained"
+            startIcon={<AddIcon />}
+          >
+            Создать тест
+          </Button>
+        </Link>
       </Box>
 
       {/* Tests Table */}
@@ -136,14 +137,16 @@ export default function RegulationTestsPage() {
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                     <Typography color="text.secondary">Тесты не созданы</Typography>
-                    <Button
-                      variant="outlined"
-                      startIcon={<AddIcon />}
-                      onClick={() => router.push('/hr/regulation-tests/create')}
-                      sx={{ mt: 2 }}
-                    >
-                      Создать первый тест
-                    </Button>
+                    <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
+                      <Button
+                        component="a"
+                        variant="outlined"
+                        startIcon={<AddIcon />}
+                        sx={{ mt: 2 }}
+                      >
+                        Создать первый тест
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -215,28 +218,34 @@ export default function RegulationTestsPage() {
                     </TableCell>
                     <TableCell align="right">
                       <Tooltip title="Результаты">
-                        <IconButton
-                          size="small"
-                          onClick={() => router.push(`/hr/regulation-tests/${test.id}/results`)}
-                        >
-                          <AssessmentIcon fontSize="small" />
-                        </IconButton>
+                        <Link href={`/hr/regulation-tests/${test.id}/results`} passHref legacyBehavior>
+                          <IconButton
+                            component="a"
+                            size="small"
+                          >
+                            <AssessmentIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip title="Приглашения">
-                        <IconButton
-                          size="small"
-                          onClick={() => router.push(`/hr/regulation-tests/${test.id}/invitations`)}
-                        >
-                          <LinkIcon fontSize="small" />
-                        </IconButton>
+                        <Link href={`/hr/regulation-tests/${test.id}/invitations`} passHref legacyBehavior>
+                          <IconButton
+                            component="a"
+                            size="small"
+                          >
+                            <LinkIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip title="Редактировать">
-                        <IconButton
-                          size="small"
-                          onClick={() => router.push(`/hr/regulation-tests/${test.id}/edit`)}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
+                        <Link href={`/hr/regulation-tests/${test.id}/edit`} passHref legacyBehavior>
+                          <IconButton
+                            component="a"
+                            size="small"
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        </Link>
                       </Tooltip>
                       <Tooltip title="Удалить">
                         <IconButton size="small" onClick={() => handleDelete(test.id)}>

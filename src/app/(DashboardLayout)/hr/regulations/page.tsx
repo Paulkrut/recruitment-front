@@ -55,6 +55,7 @@ interface Regulation {
   id: number;
   title: string;
   description: string | null;
+  content?: string; // ← Добавили для полной загрузки при редактировании
   version: string;
   isActive: boolean;
   folderId: number | null;
@@ -259,17 +260,36 @@ export default function RegulationsPage() {
     setFolderDialogOpen(true);
   };
 
-  const openRegulationDialog = (regulation: Regulation | null = null) => {
+  const openRegulationDialog = async (regulation: Regulation | null = null) => {
     if (regulation) {
       setEditingRegulation(regulation);
-      setRegulationForm({
-        title: regulation.title,
-        description: regulation.description || '',
-        content: '', // Загрузим отдельно при редактировании
-        version: regulation.version,
-        folderId: regulation.folderId,
-        isActive: regulation.isActive,
-      });
+      
+      // Загружаем полные данные регламента с content
+      try {
+        const response = await apiFetch(`${API_BASE}/api/regulations/${regulation.id}`);
+        if (response.ok) {
+          const fullRegulation = await response.json();
+          setRegulationForm({
+            title: fullRegulation.title,
+            description: fullRegulation.description || '',
+            content: fullRegulation.content || '', // ← Теперь загружаем content!
+            version: fullRegulation.version,
+            folderId: fullRegulation.folderId,
+            isActive: fullRegulation.isActive,
+          });
+        }
+      } catch (error) {
+        console.error('Error loading regulation:', error);
+        // Fallback: используем данные из списка (без content)
+        setRegulationForm({
+          title: regulation.title,
+          description: regulation.description || '',
+          content: '',
+          version: regulation.version,
+          folderId: regulation.folderId,
+          isActive: regulation.isActive,
+        });
+      }
     } else {
       setEditingRegulation(null);
       setRegulationForm({
