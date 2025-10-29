@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import {
-  AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, Chip, Avatar, AvatarGroup, Paper, Select, LinearProgress, Grid, AccordionSummary, AccordionDetails, Stack, CardContent, Accordion, Card, useTheme, useMediaQuery, Link,
+  AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, Chip, Avatar, AvatarGroup, Paper, Select, LinearProgress, Grid, AccordionSummary, AccordionDetails, Stack, CardContent, Accordion, Card, useTheme, useMediaQuery, Link, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemIcon, ListItemText, Divider, Alert, Slider, Tabs, Tab, Table, TableBody, TableRow, TableCell, TableHead,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 
@@ -14,6 +14,11 @@ import Particles from "@tsparticles/react";
 import HeroParticles from "./components/HeroParticles";
 import MobileMenu from "./components/MobileMenu";
 import DesktopMenu from "./components/DesktopMenu";
+import PricingSection from "./components/landing/PricingSection";
+import ROICalculator from "./components/landing/ROICalculator";
+import PricingFAQ from "./components/landing/PricingFAQ";
+
+const { useMemo } = React;
 
 
 const pages = [
@@ -25,11 +30,64 @@ const pages = [
   "Контакты",
 ];
 
+interface PricingPlan {
+  id: string;
+  name: string;
+  price: string;
+  originalPrice?: string;
+  interviewCount: string;
+  pricePerInterview: string;
+  discount?: string;
+  color: string;
+  popular?: boolean;
+  features: string[];
+  detailedFeatures: Array<{ text: string; included: boolean }>;
+  targetAudience: string; // Для кого подходит
+}
+
 export default function LandingPage() {
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [hiresPerMonth, setHiresPerMonth] = React.useState(10); // Для калькулятора
 
   const handlePrevSlide = () => setCurrentSlide((prev) => prev === 0 ? testimonials.length - 1 : prev - 1);
   const handleNextSlide = () => setCurrentSlide((prev) => prev === testimonials.length - 1 ? 0 : prev + 1);
+  const calculateSavings = (plan: PricingPlan, hires: number) => {
+    const traditionalCostPerHire = 15000;
+    const traditionalTime = 40;
+    const hrHourlyCost = 1500;
+
+    const totalTraditionalCost = hires * traditionalCostPerHire;
+    const totalTraditionalTime = hires * traditionalTime;
+    const totalTraditionalTimeCost = totalTraditionalTime * hrHourlyCost;
+
+    // Безопасное извлечение числа из цены
+    let platformPrice = 0;
+    if (typeof plan.price === 'string') {
+      if (plan.price === 'Бесплатно') {
+        platformPrice = 0;
+      } else {
+        const numericValue = plan.price.replace(/[^\d]/g, '');
+        platformPrice = parseInt(numericValue, 10) || 0;
+      }
+    }
+    
+    const timeSaved = Math.round(totalTraditionalTime * 0.7);
+    const timeSavedCost = Math.round(timeSaved * hrHourlyCost);
+
+    const totalSavings = Math.round(totalTraditionalCost + totalTraditionalTimeCost - platformPrice);
+    const roi = platformPrice > 0 ? Math.round((totalSavings / platformPrice) * 100) : 0;
+
+    return {
+      traditionalCost: totalTraditionalCost,
+      traditionalTime: totalTraditionalTime,
+      traditionalTimeCost: totalTraditionalTimeCost,
+      platformPrice,
+      timeSaved,
+      timeSavedCost,
+      totalSavings,
+      roi
+    };
+  };
 
   // Функция плавной прокрутки к секциям
   const scrollToSection = React.useCallback((sectionName: string) => {
@@ -131,6 +189,131 @@ export default function LandingPage() {
   const totalVacancies = Math.round(totalClients * 2.5);
   const totalInterviews = totalVacancies * 3;
   const totalCandidates = Math.round(totalInterviews * 1.5);
+
+  // Тарифные планы
+  const pricingPlans: PricingPlan[] = [
+    {
+      id: 'trial',
+      name: 'Пробный',
+      price: 'Бесплатно',
+      interviewCount: '10 интервью',
+      pricePerInterview: '0₽',
+      color: '#4CAF50',
+      targetAudience: 'Для тестирования платформы без финансовых вложений',
+      features: [
+        '10 AI-интервью бесплатно',
+        'Базовый анализ ИИ',
+        'Ранжирование кандидатов',
+        'Видео и аудио запись',
+        'Базовые шаблоны',
+        'Поддержка по email'
+      ],
+      detailedFeatures: [
+        { text: '10 AI-интервью для тестирования платформы', included: true },
+        { text: 'Базовый анализ ответов с помощью ИИ', included: true },
+        { text: 'Автоматическое ранжирование кандидатов', included: true },
+        { text: 'Запись видео и аудио ответов', included: true },
+        { text: 'Доступ к базовым шаблонам интервью', included: true },
+        { text: 'Поддержка по email (ответ в течение 48 часов)', included: true },
+        { text: 'Детальные отчеты', included: false },
+        { text: 'Кастомные шаблоны', included: false },
+        { text: 'Мультикомпанийность', included: false },
+        { text: 'API доступ', included: false }
+      ]
+    },
+    {
+      id: 'start',
+      name: 'Старт',
+      price: '13,500₽',
+      interviewCount: '100 интервью',
+      pricePerInterview: '135₽',
+      color: '#2196F3',
+      targetAudience: 'Для небольших компаний и стартапов до 10 найма/месяц',
+      features: [
+        '100 AI-интервью',
+        'Полный анализ ответов ИИ',
+        'Ранжирование кандидатов',
+        'Видео и аудио запись',
+        'Базовые шаблоны',
+        'Поддержка по email'
+      ],
+      detailedFeatures: [
+        { text: '100 AI-интервью', included: true },
+        { text: 'Полный анализ ответов с помощью ИИ', included: true },
+        { text: 'Автоматическое ранжирование кандидатов', included: true },
+        { text: 'Запись видео и аудио ответов', included: true },
+        { text: 'Базовые шаблоны интервью', included: true },
+        { text: 'Поддержка по email', included: true },
+        { text: 'Экспорт базовых отчетов', included: true },
+        { text: 'Детальные отчеты', included: false },
+        { text: 'Кастомные шаблоны', included: false },
+        { text: 'Мультикомпанийность', included: false }
+      ]
+    },
+    {
+      id: 'business',
+      name: 'Бизнес',
+      price: '54,000₽',
+      interviewCount: '500 интервью',
+      pricePerInterview: '108₽',
+      discount: 'Экономия 20%',
+      color: '#2196F3',
+      popular: true,
+      targetAudience: 'Для средних компаний с активным процессом найма',
+      features: [
+        '500 AI-интервью',
+        'Расширенный анализ ИИ',
+        'Детальные отчеты',
+        'Кастомные шаблоны',
+        'Мультикомпанийность',
+        'Приоритетная поддержка',
+        'Экспорт данных'
+      ],
+      detailedFeatures: [
+        { text: '500 AI-интервью', included: true },
+        { text: 'Расширенный анализ ответов с помощью ИИ', included: true },
+        { text: 'Детальные отчеты по всем кандидатам', included: true },
+        { text: 'Создание кастомных шаблонов интервью', included: true },
+        { text: 'Работа с несколькими компаниями', included: true },
+        { text: 'Приоритетная поддержка (ответ в течение 4 часов)', included: true },
+        { text: 'Экспорт данных в различных форматах', included: true },
+        { text: 'Интеграции с внешними системами', included: true },
+        { text: 'Персональный менеджер', included: false },
+        { text: 'API доступ', included: false }
+      ]
+    },
+    {
+      id: 'premium',
+      name: 'Премиум',
+      price: '90,000₽',
+      interviewCount: '1000 интервью',
+      pricePerInterview: '90₽',
+      discount: 'Экономия 33%',
+      color: '#9C27B0',
+      targetAudience: 'Для крупных компаний и HR-агентств с высокой нагрузкой',
+      features: [
+        '1000 AI-интервью',
+        'AI-генерация вопросов',
+        'Сравнение кандидатов',
+        'Неограниченные шаблоны',
+        'Аналитика и дашборды',
+        'Персональный менеджер',
+        'API доступ'
+      ],
+      detailedFeatures: [
+        { text: '1000 AI-интервью', included: true },
+        { text: 'AI-генерация вопросов на основе вакансии', included: true },
+        { text: 'Детальное сравнение кандидатов', included: true },
+        { text: 'Неограниченное количество шаблонов', included: true },
+        { text: 'Продвинутая аналитика и дашборды', included: true },
+        { text: 'Персональный менеджер (24/7)', included: true },
+        { text: 'Полный API доступ', included: true },
+        { text: 'Интеграции с любыми системами', included: true },
+        { text: 'Приоритетная разработка функций', included: true },
+        { text: 'SLA гарантия 99.9%', included: true }
+      ]
+    }
+  ];
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -1101,240 +1284,13 @@ export default function LandingPage() {
 
 
       {/* Пятый экран - Тарифы и цены */}
-      <Box id="pricing-section" sx={{ py: 12, bgcolor: 'white', position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
-        <Container maxWidth="lg">
-          {/* Заголовок */}
-          <Box sx={{ textAlign: 'center', mb: 8 }}>
-            <Typography
-              variant="h2"
-              fontWeight={800}
-              sx={{
-                background: 'linear-gradient(45deg, #2196F3, #9C27B0)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                mb: 2
-              }}
-            >
-              Выберите подходящий тариф
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              Гибкие планы для компаний любого размера. Начните с бесплатного пробного периода
-            </Typography>
-          </Box>
+      <PricingSection plans={pricingPlans} />
 
-          {/* Тарифные планы */}
-          <Grid container spacing={4} justifyContent="center">
-            {/* Пакет 1 - Старт */}
-            <Grid item xs={12} md={4}>
-              <Box sx={{
-                bgcolor: 'white',
-                p: 4,
-                borderRadius: 4,
-                border: '2px solid #e0e0e0',
-                position: 'relative',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                  borderColor: '#2196F3'
-                }
-              }}>
-                <Box sx={{ textAlign: 'center', mb: 4 }}>
-                  <Typography variant="h5" fontWeight={700} mb={2}>Старт</Typography>
-                  <Typography variant="h3" fontWeight={800} color="#2196F3" mb={1}>2,400₽</Typography>
-                  <Typography variant="body2" color="text.secondary">за 20 интервью</Typography>
-                </Box>
+      {/* Калькулятор экономии */}
+      <ROICalculator plans={pricingPlans} />
 
-                <Box sx={{ mb: 4 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>20 AI-интервью</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Анализ ответов ИИ</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Ранжирование кандидатов</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Видео и аудио запись</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Базовые шаблоны</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Поддержка по email</Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-
-            {/* Пакет 2 - Бизнес (рекомендуемый) */}
-            <Grid item xs={12} md={4}>
-              <Box sx={{
-                bgcolor: 'white',
-                p: 4,
-                borderRadius: 4,
-                border: '2px solid #2196F3',
-                position: 'relative',
-                transition: 'all 0.3s ease',
-                transform: 'scale(1.05)',
-                '&:hover': {
-                  transform: 'scale(1.05) translateY(-8px)',
-                  boxShadow: '0 20px 40px rgba(33, 150, 243, 0.2)'
-                }
-              }}>
-                {/* Бейдж "Популярный" */}
-                <Box sx={{
-                  position: 'absolute',
-                  top: -12,
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  bgcolor: '#FF9800',
-                  color: 'white',
-                  px: 3,
-                  py: 1,
-                  borderRadius: 2,
-                  fontSize: '0.875rem',
-                  fontWeight: 600
-                }}>
-                  Популярный
-                </Box>
-
-                <Box sx={{ textAlign: 'center', mb: 4 }}>
-                  <Typography variant="h5" fontWeight={700} mb={2}>Бизнес</Typography>
-                  <Typography variant="h3" fontWeight={800} color="#2196F3" mb={1}>5,000₽</Typography>
-                  <Typography variant="body2" color="text.secondary">за 50 интервью</Typography>
-                </Box>
-
-                <Box sx={{ mb: 4 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>50 AI-интервью</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Расширенный анализ ИИ</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Детальные отчеты</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Кастомные шаблоны</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Мультикомпанийность</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Приоритетная поддержка</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Экспорт данных</Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-
-            {/* Пакет 3 - Премиум */}
-            <Grid item xs={12} md={4}>
-              <Box sx={{
-                bgcolor: 'white',
-                p: 4,
-                borderRadius: 4,
-                border: '2px solid #e0e0e0',
-                position: 'relative',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-                  borderColor: '#9C27B0'
-                }
-              }}>
-                <Box sx={{ textAlign: 'center', mb: 4 }}>
-                  <Typography variant="h5" fontWeight={700} mb={2}>Премиум</Typography>
-                  <Typography variant="h3" fontWeight={800} color="#9C27B0" mb={1}>8,000₽</Typography>
-                  <Typography variant="body2" color="text.secondary">за 100 интервью</Typography>
-                </Box>
-
-                <Box sx={{ mb: 4 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>100 AI-интервью</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>AI-генерация вопросов</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Сравнение кандидатов</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Неограниченные шаблоны</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Аналитика и дашборды</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>Персональный менеджер</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                    <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2" sx={{ ml: 2 }}>API доступ</Typography>
-                  </Box>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-
-          {/* Дополнительная информация */}
-          <Box sx={{ mt: 8, textAlign: 'center' }}>
-            <Typography variant="h6" fontWeight={600} mb={3}>
-              Все планы включают
-            </Typography>
-            <Grid container spacing={3} justifyContent="center">
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                  <Icon icon="mdi:shield-check" color="#4caf50" width={24} height={24} />
-                  <Typography variant="body2">Безопасность данных</Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                  <Icon icon="mdi:headphones" color="#2196F3" width={24} height={24} />
-                  <Typography variant="body2">Техподдержка 24/7</Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                  <Icon icon="mdi:update" color="#FF9800" width={24} height={24} />
-                  <Typography variant="body2">Регулярные обновления</Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-                  <Icon icon="mdi:school" color="#9C27B0" width={24} height={24} />
-                  <Typography variant="body2">Обучение команды</Typography>
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
-      </Box>
+      {/* FAQ по тарифам */}
+      <PricingFAQ />
 
       {/* Шестой экран - CTA */}
       <Box id="cta-section" sx={{ py: 16, bgcolor: '#f8fafc', position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
