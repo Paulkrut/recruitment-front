@@ -148,6 +148,9 @@ export default function LoginPage() {
                 helperText={errors.email}
                 placeholder="example@company.com"
                 disabled={loading}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
 
               {/* Пароль */}
@@ -163,6 +166,9 @@ export default function LoginPage() {
                 helperText={errors.password}
                 placeholder="Введите пароль из email"
                 disabled={loading}
+                InputLabelProps={{
+                  shrink: true,
+                }}
               />
 
               {/* Кнопка входа */}

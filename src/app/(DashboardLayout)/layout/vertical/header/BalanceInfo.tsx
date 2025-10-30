@@ -144,7 +144,7 @@ const BalanceInfo = () => {
     );
   }
 
-  if (error || !balance) {
+  if (error) {
     return (
       <Chip
         label="Ошибка"
@@ -153,6 +153,10 @@ const BalanceInfo = () => {
         icon={<Icon icon="solar:danger-bold-duotone" />}
       />
     );
+  }
+
+  if (!balance) {
+    return null; // Не показываем ничего, если нет данных
   }
 
   const interviewsTotal = balance.lifetime.interviews_purchased;
