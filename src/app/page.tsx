@@ -198,7 +198,7 @@ export default function LandingPage() {
       price: 'Бесплатно',
       interviewCount: '10 интервью',
       pricePerInterview: '0₽',
-      color: '#4CAF50',
+      color: '#607D8B',
       targetAudience: 'Для тестирования платформы без финансовых вложений',
       features: [
         '10 AI-интервью бесплатно',
@@ -227,7 +227,7 @@ export default function LandingPage() {
       price: '13,500₽',
       interviewCount: '100 интервью',
       pricePerInterview: '135₽',
-      color: '#2196F3',
+      color: '#4CAF50',
       targetAudience: 'Для небольших компаний и стартапов до 10 найма/месяц',
       features: [
         '100 AI-интервью',

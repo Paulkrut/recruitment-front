@@ -144,7 +144,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
                     }
                   }}
                 >
-                  {plan.id === 'trial' ? 'Попробовать бесплатно' : 'Выбрать тариф'}
+                  {plan.id === 'trial' ? 'Попробовать' : 'Выбрать тариф'}
                 </Button>
               </Box>
             </Grid>
