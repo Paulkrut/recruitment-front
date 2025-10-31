@@ -920,17 +920,35 @@ export default function RegulationTestPage() {
 
         {/* Шаг 4: Завершено */}
         {currentStep === 3 && (
-          <Paper sx={{ p: 4, textAlign: 'center' }}>
-            <CheckCircleIcon sx={{ fontSize: 64, color: 'success.main', mb: 2 }} />
-            <Typography variant="h4" gutterBottom>
-              Тестирование завершено!
+          <Paper sx={{ p: 5, textAlign: 'center', maxWidth: 600, mx: 'auto' }}>
+            <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 3 }} />
+            
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+              Спасибо за прохождение теста!
             </Typography>
-            <Typography variant="body1" paragraph>
-              Ваши ответы отправлены на проверку
+            
+            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
+              Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании.
             </Typography>
-            <Typography variant="h5" color="primary" sx={{ mt: 3 }}>
-              Итоговый балл: {finalScore}/100
+            
+            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
+              Результаты тестирования будут проанализированы, и вы получите обратную связь от вашего руководителя или HR-отдела в ближайшее время.
             </Typography>
+
+            <Box 
+              sx={{ 
+                mt: 4, 
+                p: 3, 
+                bgcolor: 'primary.50', 
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'primary.100'
+              }}
+            >
+              <Typography variant="body2" color="primary.dark" sx={{ fontWeight: 500 }}>
+                💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру
+              </Typography>
+            </Box>
           </Paper>
         )}
       </Box>
