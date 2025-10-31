@@ -81,15 +81,31 @@ export default function InvitationsPage() {
     try {
       // Загружаем тест
       const testResponse = await apiFetch(`${API_BASE}/api/regulation-tests/${testId}`);
+      
+      if (!testResponse.ok) {
+        const errorData = await testResponse.json();
+        alert(`Ошибка: ${errorData.error || 'Тест не найден'}. Возможно, вы выбрали неправильную компанию в хедере.`);
+        router.push('/hr/regulation-tests');
+        return;
+      }
+      
       const testData = await testResponse.json();
       setTestDetails(testData);
 
       // Загружаем приглашения
       const invitationsResponse = await apiFetch(`${API_BASE}/api/regulation-tests/${testId}/invitations`);
-      const invitationsData = await invitationsResponse.json();
-      setInvitations(invitationsData);
+      
+      if (!invitationsResponse.ok) {
+        console.error('Error loading invitations');
+        setInvitations([]);
+      } else {
+        const invitationsData = await invitationsResponse.json();
+        setInvitations(Array.isArray(invitationsData) ? invitationsData : []);
+      }
     } catch (error) {
       console.error('Error loading data:', error);
+      alert('Ошибка загрузки данных. Проверьте выбранную компанию в хедере.');
+      router.push('/hr/regulation-tests');
     } finally {
       setLoading(false);
     }

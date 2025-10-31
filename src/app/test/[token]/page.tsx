@@ -130,7 +130,26 @@ export default function RegulationTestPage() {
       const response = await fetch(`${API_BASE}/api/public/regulation-tests/invitation/${token}`);
       
       if (!response.ok) {
-        throw new Error('Приглашение не найдено или истекло');
+        const errorData = await response.json().catch(() => ({}));
+        
+        if (response.status === 404 || errorData.error === 'invitation_not_found') {
+          setTestInfo(null);
+          alert('❌ Приглашение не найдено\n\n' +
+                'Возможные причины:\n' +
+                '• Ссылка неверная или устарела\n' +
+                '• Приглашение было удалено HR-менеджером\n\n' +
+                '📧 Пожалуйста, запросите новое приглашение.');
+        } else if (response.status === 403 || response.status === 410) {
+          setTestInfo(null);
+          alert('❌ Приглашение истекло или уже использовано\n\n' +
+                '📧 Запросите новое приглашение у вашего HR-менеджера.');
+        } else {
+          setTestInfo(null);
+          alert('❌ Ошибка загрузки приглашения\n\n' +
+                (errorData.message || 'Не удалось загрузить информацию о тесте.'));
+        }
+        setLoading(false);
+        return;
       }
 
       const data = await response.json();
@@ -140,7 +159,11 @@ export default function RegulationTestPage() {
       setLoading(false);
     } catch (error) {
       console.error('Error loading invitation:', error);
+      setTestInfo(null);
       setLoading(false);
+      alert('❌ Ошибка соединения\n\n' +
+            'Не удалось загрузить приглашение.\n\n' +
+            '🔄 Проверьте подключение к интернету и обновите страницу.');
     }
   };
 
@@ -168,7 +191,46 @@ export default function RegulationTestPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Не удалось начать тест');
+        const errorData = await response.json().catch(() => ({}));
+        
+        // Обрабатываем разные типы ошибок
+        if (response.status === 402 || errorData.error === 'insufficient_balance') {
+          alert('❌ У компании закончились тесты на балансе\n\n' +
+                'К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов.\n\n' +
+                '📧 Пожалуйста, свяжитесь с вашим руководителем или HR-менеджером для пополнения баланса.\n\n' +
+                'Они смогут приобрести дополнительные тесты в личном кабинете.');
+          return;
+        }
+        
+        if (response.status === 404 || errorData.error === 'invitation_not_found') {
+          alert('❌ Приглашение не найдено\n\n' +
+                'Возможные причины:\n' +
+                '• Ссылка устарела или была удалена\n' +
+                '• Приглашение уже было использовано\n' +
+                '• Срок действия приглашения истёк\n\n' +
+                '📧 Запросите новое приглашение у вашего HR-менеджера.');
+          return;
+        }
+        
+        if (response.status === 403 || errorData.error === 'invitation_expired') {
+          alert('❌ Срок действия приглашения истёк\n\n' +
+                'Данное приглашение больше недействительно.\n\n' +
+                '📧 Пожалуйста, запросите новое приглашение у вашего HR-менеджера.');
+          return;
+        }
+        
+        if (response.status === 410 || errorData.error === 'invitation_used') {
+          alert('❌ Приглашение уже использовано\n\n' +
+                'Вы уже проходили тест по этому приглашению, или лимит использований исчерпан.\n\n' +
+                '📧 Если вам нужно пройти тест повторно, запросите новое приглашение у вашего HR-менеджера.');
+          return;
+        }
+        
+        // Общая ошибка с деталями, если они есть
+        const errorMessage = errorData.message || 'Не удалось начать тест';
+        alert('❌ Ошибка при запуске теста\n\n' + errorMessage + '\n\n' +
+              '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
+        return;
       }
 
       const data = await response.json();
@@ -182,7 +244,10 @@ export default function RegulationTestPage() {
       }
     } catch (error) {
       console.error('Error starting test:', error);
-      alert('Не удалось начать тест');
+      alert('❌ Ошибка соединения\n\n' +
+            'Не удалось связаться с сервером.\n\n' +
+            '🔄 Проверьте подключение к интернету и попробуйте ещё раз.\n\n' +
+            '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
     }
   };
 
@@ -331,15 +396,53 @@ export default function RegulationTestPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Не удалось отправить ответ');
+        const errorData = await response.json().catch(() => ({}));
+        
+        if (response.status === 402 || errorData.error === 'insufficient_balance') {
+          alert('❌ Тест прерван: закончились тесты на балансе\n\n' +
+                'К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n' +
+                '📧 Пожалуйста, сообщите об этом вашему HR-менеджеру.');
+          // Не возвращаем возможность повторной отправки
+          setSubmitting(false);
+          return;
+        }
+        
+        if (response.status === 404 || response.status === 410) {
+          alert('❌ Сессия тестирования не найдена или истекла\n\n' +
+                'Возможные причины:\n' +
+                '• Превышено максимальное время прохождения теста\n' +
+                '• Сессия была прервана\n\n' +
+                '📧 Обратитесь к вашему HR-менеджеру для получения нового приглашения.');
+          setSubmitting(false);
+          return;
+        }
+        
+        if (response.status === 413) {
+          alert('❌ Файл слишком большой\n\n' +
+                'Размер записи превышает допустимый лимит.\n\n' +
+                '💡 Совет: Попробуйте записать более короткий ответ или отключите видео (только аудио).');
+          // Возвращаем возможность переписать
+          setSubmitting(false);
+          if (timeLeft && timeLeft > 0) {
+            setTimerStarted(true);
+          }
+          return;
+        }
+        
+        // Общая ошибка
+        const errorMessage = errorData.message || 'Не удалось отправить ответ';
+        throw new Error(errorMessage);
       }
 
       // Успешно отправлено - переходим к следующему вопросу
       setSubmitting(false);
       skipToNextQuestion();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting answer:', error);
-      alert('Не удалось отправить ответ. Попробуйте ещё раз.');
+      alert('❌ Не удалось отправить ответ\n\n' +
+            (error.message || 'Произошла ошибка при отправке.') + '\n\n' +
+            '🔄 Пожалуйста, попробуйте ещё раз.\n\n' +
+            '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
       
       // Возвращаем возможность повторной отправки
       setSubmitting(false);
@@ -377,15 +480,30 @@ export default function RegulationTestPage() {
       );
 
       if (!response.ok) {
-        throw new Error('Не удалось завершить тест');
+        const errorData = await response.json().catch(() => ({}));
+        
+        if (response.status === 404 || response.status === 410) {
+          alert('❌ Сессия не найдена или уже завершена\n\n' +
+                'Возможно, тест уже был завершён ранее.\n\n' +
+                '📧 Если у вас возникли вопросы, обратитесь к вашему HR-менеджеру.');
+          setFinished(true);
+          return;
+        }
+        
+        const errorMessage = errorData.message || 'Не удалось завершить тест';
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
       setFinalScore(data.totalScore || data.score || 0);
       setFinished(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error finishing test:', error);
-      alert('Не удалось завершить тест');
+      alert('❌ Ошибка при завершении теста\n\n' +
+            (error.message || 'Произошла ошибка.') + '\n\n' +
+            '📧 Ваши ответы сохранены. Обратитесь к вашему HR-менеджеру если возникли вопросы.');
+      // Всё равно показываем экран завершения
+      setFinished(true);
     }
   };
 
@@ -442,6 +560,7 @@ export default function RegulationTestPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   sx={{ mb: 2 }}
+                  required
                 />
                 <TextField
                   fullWidth
@@ -450,6 +569,7 @@ export default function RegulationTestPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   sx={{ mb: 2 }}
+                  required
                 />
                 <TextField
                   fullWidth
@@ -458,13 +578,53 @@ export default function RegulationTestPage() {
                   onChange={(e) => setDepartment(e.target.value)}
                   sx={{ mb: 2 }}
                 />
+                
+                {/* Согласие на обработку ПДн */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={pdnConsent}
+                      onChange={(e) => setPdnConsent(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2" component="span">
+                      Соглашаюсь на обработку моих персональных данных для прохождения тестирования.{' '}
+                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+                      {' '}<span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                  }
+                  sx={{ mt: 1, alignItems: 'flex-start' }}
+                />
               </Box>
             )}
 
             {invitationType === 'named' && employeeEmail && (
-              <Alert severity="info" sx={{ mt: 3 }}>
-                Вы приглашены на тестирование как: <strong>{employeeEmail}</strong>
-              </Alert>
+              <>
+                <Alert severity="info" sx={{ mt: 3 }}>
+                  Вы приглашены на тестирование как: <strong>{employeeEmail}</strong>
+                </Alert>
+                
+                {/* Согласие на обработку ПДн для именного приглашения */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={pdnConsent}
+                      onChange={(e) => setPdnConsent(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label={
+                    <Typography variant="body2" component="span">
+                      Соглашаюсь на обработку моих персональных данных для прохождения тестирования.{' '}
+                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+                      {' '}<span style={{ color: 'red' }}>*</span>
+                    </Typography>
+                  }
+                  sx={{ mt: 2, alignItems: 'flex-start' }}
+                />
+              </>
             )}
 
             <Button
@@ -472,12 +632,23 @@ export default function RegulationTestPage() {
               size="large"
               fullWidth
               onClick={() => {
-                if (invitationType === 'general' && (!name || !email)) {
-                  alert('Пожалуйста, заполните все обязательные поля');
+                if (invitationType === 'general') {
+                  if (!name || !email) {
+                    alert('Пожалуйста, заполните все обязательные поля');
+                    return;
+                  }
+                  if (!pdnConsent) {
+                    alert('Необходимо согласие на обработку персональных данных');
+                    return;
+                  }
+                }
+                if (invitationType === 'named' && !pdnConsent) {
+                  alert('Необходимо согласие на обработку персональных данных');
                   return;
                 }
                 setCurrentStep(1);
               }}
+              disabled={!pdnConsent || (invitationType === 'general' && (!name || !email))}
               sx={{ mt: 3 }}
             >
               Далее
@@ -564,11 +735,12 @@ export default function RegulationTestPage() {
                   />
                 }
                 label={
-                  <Typography variant="body2">
-                    Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам. <a href="/privacy-policy" target="_blank">Политика ПДн</a>. Медиа хранятся до 60 дней.
+                  <Typography variant="body2" component="span">
+                    Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам.{' '}
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика ПДн</a>. Медиа хранятся до 60 дней.
                   </Typography>
                 }
-                sx={{ alignItems: 'center' }}
+                sx={{ alignItems: 'flex-start' }}
               />
             </Box>
 
