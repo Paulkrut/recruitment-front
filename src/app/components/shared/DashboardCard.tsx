@@ -17,6 +17,7 @@ type Props = {
   headsubtitle?: string | React.ReactNode;
   children?: React.ReactNode;
   middlecontent?: string | React.ReactNode;
+  noPadding?: boolean; // Новый пропс для отключения padding
 };
 
 const DashboardCard = ({
@@ -29,6 +30,7 @@ const DashboardCard = ({
   headtitle,
   headsubtitle,
   middlecontent,
+  noPadding = false, // По умолчанию padding есть
 }: Props) => {
   const customizer = useSelector((state: AppState) => state.customizer);
 
@@ -49,14 +51,15 @@ const DashboardCard = ({
           </Typography>
         </CardContent>
       ) : (
-        <CardContent sx={{p: "30px"}}>
+        <CardContent sx={{p: noPadding ? 0 : "30px"}}>
           {title ? (
             <Stack
               direction="row" flexWrap="wrap"
               spacing={2}
               justifyContent="space-between"
               alignItems={'center'}
-              mb={3}
+              mb={noPadding ? 0 : 3}
+              sx={noPadding ? { p: "24px", pb: 0 } : {}}
             >
               <Box>
                 {title ? <Typography variant="h5">{title}</Typography> : ''}

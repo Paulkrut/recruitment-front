@@ -33,6 +33,7 @@ import {
   TableRow,
   Checkbox,
   FormControlLabel,
+  Alert,
 } from "@mui/material";
 import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
@@ -1798,6 +1799,27 @@ export default function CandidateInterviewPage() {
               : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
             }
           </Typography>
+
+          {/* Предупреждение о времени обработки */}
+          {feedbackLoading && (
+            <Alert 
+              severity="info" 
+              sx={{ 
+                mt: 3, 
+                maxWidth: 600,
+                '& .MuiAlert-message': {
+                  width: '100%'
+                }
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                ⏱️ Обработка ответов может занимать до 20 минут
+              </Typography>
+              <Typography variant="body2">
+                Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.
+              </Typography>
+            </Alert>
+          )}
         </Box>
 
         {/* Компонент для автоматического удаления данных - прижат к низу */}
@@ -2196,6 +2218,27 @@ export default function CandidateInterviewPage() {
                 : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
               }
             </Typography>
+
+            {/* Предупреждение о времени обработки */}
+            {feedbackLoading && (
+              <Alert 
+                severity="info" 
+                sx={{ 
+                  mt: 3, 
+                  maxWidth: 600,
+                  '& .MuiAlert-message': {
+                    width: '100%'
+                  }
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                  ⏱️ Обработка ответов может занимать до 20 минут
+                </Typography>
+                <Typography variant="body2">
+                  Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.
+                </Typography>
+              </Alert>
+            )}
           </Box>
 
           {/* Компонент для автоматического удаления данных - прижат к низу */}

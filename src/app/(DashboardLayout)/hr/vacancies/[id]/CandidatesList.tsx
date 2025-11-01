@@ -20,7 +20,6 @@ import {
   TableBody,
   TablePagination,
   TableSortLabel,
-  Paper,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode';
@@ -410,7 +409,7 @@ export default function CandidatesList({
           </Typography>
         </Box>
       ) : (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Box sx={{ width: '100%', overflow: 'hidden' }}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -685,7 +684,7 @@ export default function CandidatesList({
             labelRowsPerPage="Строк на странице:"
             labelDisplayedRows={({ from, to, count }) => `${from}-${to} из ${count !== -1 ? count : `более ${to}`}`}
           />
-        </Paper>
+        </Box>
       )}
     </Box>
   );

@@ -16,6 +16,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode2';
 import AddIcon from '@mui/icons-material/Add';
 import CommentIcon from '@mui/icons-material/Comment';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -111,6 +112,7 @@ export default function HRVacancyDetailPage() {
   const [snackbar, setSnackbar] = useState('');
   const [tab, setTab] = useState('1');
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0); // Для обновления списка
   
   // Состояния для канбана (сохраняем в localStorage)
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>(() => {
@@ -270,13 +272,92 @@ export default function HRVacancyDetailPage() {
       </Breadcrumbs>
       <Card sx={{ p: 0, background: '#fff', boxShadow: 3 }}>
         <Box p={4} display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap">
-          <Box>
+          <Box flex={1}>
             <Typography variant="h3" fontWeight={800} sx={{ mb: 1, color: 'text.primary' }}>{title}</Typography>
             <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
-            <Box display="flex" gap={2} mt={2}>
+            <Box display="flex" gap={2} mt={2} flexWrap="wrap">
               <Chip icon={<IconFileText size={18}/>} label={template?.title || 'Без шаблона'} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
               <Chip icon={<IconFileText size={18}/>} label={`Вопросов: ${(questions||[]).length}`} color="primary" sx={{ fontWeight: 600 }} />
               <Chip icon={<IconUsers size={18}/>} label={`Кандидатов: ${candidates.length}`} color="success" sx={{ fontWeight: 600 }} />
+            </Box>
+            
+            {/* Публичная ссылка для самозаписи */}
+            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1, maxWidth: 600 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Typography variant="body2" fontWeight={600} color="text.primary">
+                  🌐 Ссылка для самозаписи на интервью
+                </Typography>
+                <Tooltip 
+                  title={
+                    <Box sx={{ p: 1 }}>
+                      <Typography variant="body2" gutterBottom fontWeight={600}>
+                        Публичная ссылка для массовой рассылки
+                      </Typography>
+                      <Typography variant="body2" sx={{ mb: 1 }}>
+                        Любой человек может записаться на интервью, указав свои данные.
+                      </Typography>
+                      <Typography variant="body2" sx={{ mb: 1 }}>
+                        📌 Используйте для размещения на сайтах вакансий, в соцсетях, массовых рассылках.
+                      </Typography>
+                      <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.2)' }} />
+                      <Typography variant="body2" sx={{ fontStyle: 'italic', opacity: 0.9 }}>
+                        💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке "Кандидаты" → "Добавить кандидата" — так исключите повторные прохождения под разными именами.
+                      </Typography>
+                    </Box>
+                  }
+                  arrow
+                  placement="top"
+                  componentsProps={{
+                    tooltip: {
+                      sx: {
+                        maxWidth: 400,
+                        bgcolor: 'primary.dark',
+                      }
+                    }
+                  }}
+                >
+                  <IconButton size="small" sx={{ p: 0.5 }}>
+                    <InfoOutlinedIcon fontSize="small" color="action" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <TextField 
+                value={publicUrl || 'Не создана'} 
+                size="small"
+                InputProps={{ 
+                  readOnly: true,
+                  sx: { fontSize: '0.875rem' }
+                }}
+                sx={{ 
+                  flex: 1,
+                  '& .MuiInputBase-root': {
+                    bgcolor: 'grey.50'
+                  }
+                }}
+              />
+              {publicUrl ? (
+                <Tooltip title="Скопировать ссылку">
+                  <IconButton 
+                    onClick={() => {
+                      navigator.clipboard.writeText(publicUrl);
+                      setSnackbar('Ссылка скопирована!');
+                    }}
+                    color="primary"
+                    size="small"
+                  >
+                    <ContentCopyIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Button 
+                  onClick={generatePublicLink}
+                  variant="outlined"
+                  size="small"
+                  sx={{ whiteSpace: 'nowrap' }}
+                >
+                  Создать
+                </Button>
+              )}
             </Box>
           </Box>
           <Button variant="contained" color="primary" size="large" startIcon={<IconEdit size={24}/>} sx={{ fontWeight: 700, minWidth: 180, mt: { xs: 2, md: 0 } }} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}>
@@ -317,7 +398,8 @@ export default function HRVacancyDetailPage() {
                 <Typography color="text.primary">Кандидаты</Typography>
               </Breadcrumbs>
               <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb: 3, boxShadow: 1 }}>
-                <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+                {/* Заголовок с padding */}
+                <Box sx={{ p: 3, pb: 0 }}>
                   <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
                     <Box display="flex" alignItems="center" gap={2}>
                       <Box sx={{ p: 2, borderRadius: 2, background: '#f5f5f5', backdropFilter: 'blur(10px)' }}>
@@ -402,10 +484,14 @@ export default function HRVacancyDetailPage() {
                     vacancyId={parseInt(id)}
                     viewMode={viewMode}
                   />
+                </Box>
 
+                {/* Контент без padding */}
+                <Box>
                   {/* Таблица или Канбан */}
                   {viewMode === 'list' ? (
                     <CandidatesList 
+                      key={refreshKey}
                       vacancyId={id}
                       filters={filters}
                       onSnackbar={setSnackbar}
@@ -415,6 +501,7 @@ export default function HRVacancyDetailPage() {
                     />
                   ) : (
                     <KanbanView 
+                      key={refreshKey}
                       vacancyId={id} 
                       filters={filters}
                       selectedCandidates={selectedCandidates}
@@ -604,7 +691,7 @@ export default function HRVacancyDetailPage() {
                     message={snackbar}
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                   />
-                </CardContent>
+                </Box>
               </Card>
             </Grid>
           </Grid>
@@ -637,42 +724,6 @@ export default function HRVacancyDetailPage() {
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
                     Редактировать
                   </Button>
-                  
-                  {/* Публичная ссылка для самозаписи */}
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="h6" gutterBottom>
-                      🌐 Публичная ссылка для самозаписи
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 1 }}>
-                      <TextField 
-                        value={publicUrl || 'Ссылка не создана'} 
-                        fullWidth 
-                        size="small"
-                        InputProps={{ readOnly: true }}
-                        sx={{ bgcolor: 'background.paper' }}
-                      />
-                      {publicUrl ? (
-                        <Button 
-                          onClick={() => navigator.clipboard.writeText(publicUrl)}
-                          variant="outlined"
-                          size="small"
-                        >
-                          Копировать
-                        </Button>
-                      ) : (
-                        <Button 
-                          onClick={generatePublicLink}
-                          variant="contained"
-                          size="small"
-                        >
-                          Создать ссылку
-                        </Button>
-                      )}
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      Разместите эту ссылку на сайтах, в соцсетях, отправьте кандидатам
-                    </Typography>
-                  </Box>
                 </CardContent>
               </Card>
             </Grid>
@@ -733,15 +784,9 @@ export default function HRVacancyDetailPage() {
       </TabContext>
       {/* Диалоги и QR-код — как было */}
       <AddCandidateDialog open={addDialogOpen} vacancyId={id} onClose={()=>setAddDialogOpen(false)} onAdded={()=>{
-        apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(result => {
-          if (Array.isArray(result)) {
-            setCandidates(result);
-            setTotalCandidates(result.length);
-          } else {
-            setCandidates(result.data || []);
-            setTotalCandidates(result.total || 0);
-          }
-        });
+        // Обновляем список через изменение ключа
+        setRefreshKey(prev => prev + 1);
+        setSnackbar('Кандидат добавлен успешно!');
       }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
         <DialogTitle>QR-код для прохождения теста</DialogTitle>
