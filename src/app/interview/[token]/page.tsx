@@ -41,6 +41,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
 import PauseIcon from "@mui/icons-material/PauseCircleOutline";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
@@ -105,6 +106,12 @@ export default function CandidateInterviewPage() {
   const [forgetMeConfirmed, setForgetMeConfirmed] = useState('');
   // Дубликаты хелперов удалены - используем только первый блок
 
+  // Состояние для записанного blob (перед отправкой)
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  
+  // Состояние для анимации удаления реплики
+  const [deletingMessageIndex, setDeletingMessageIndex] = useState<number | null>(null);
+
   // Состояния для обратной связи
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackData, setFeedbackData] = useState<any>(null);
@@ -141,6 +148,20 @@ export default function CandidateInterviewPage() {
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
   const blink = keyframes`50%{opacity:0.2}`;
   const pulse = keyframes`0%{opacity:1}50%{opacity:0.5}100%{opacity:1}`;
+  const fadeOutSlide = keyframes`
+    0% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translateX(10px) scale(0.95);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(30px) scale(0.8);
+    }
+  `;
 
   const activeStep = result ? 3 : question ? 2 : prepared ? 1 : 0;
 
@@ -715,7 +736,7 @@ export default function CandidateInterviewPage() {
           setChat((p) => {
             const newChat = [...p];
             for (let i = newChat.length - 1; i >= 0; i--) {
-              if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤 Запись'))) {
+              if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤'))) {
                 if (newChat[i].video && newChat[i].video !== "live") {
                   URL.revokeObjectURL(newChat[i].video);
                 }
@@ -748,8 +769,45 @@ export default function CandidateInterviewPage() {
         const blob = new Blob(chunks, { type: blobType });
         console.log('Blob created:', blob.size, blob.type);
 
-        // Отправляем ответ
-        sendBlobAnswer(blob);
+        // ИЗМЕНЕНО: Не отправляем сразу, а сохраняем blob для выбора (Переписать/Отправить)
+        setRecordedBlob(blob);
+
+        // Обновляем сообщение в чате - показываем что запись готова к отправке
+        if (cameraEnabled) {
+          // Для видео - создаём URL для preview
+          const videoUrl = URL.createObjectURL(blob);
+          setChat((p) => {
+            const newChat = [...p];
+            for (let i = newChat.length - 1; i >= 0; i--) {
+              if (newChat[i].role === 'user' && newChat[i].video === "live") {
+                newChat[i] = {
+                  ...newChat[i],
+                  video: videoUrl,
+                  text: "🎥 Запись готова. Выберите действие ниже",
+                  timestamp: newChat[i].timestamp || Date.now()
+                };
+                break;
+              }
+            }
+            return newChat;
+          });
+        } else {
+          // Для аудио - обновляем текст
+          setChat((p) => {
+            const newChat = [...p];
+            for (let i = newChat.length - 1; i >= 0; i--) {
+              if (newChat[i].role === 'user' && newChat[i].text.includes('🎤 Запись')) {
+                newChat[i] = {
+                  ...newChat[i],
+                  text: "🎤 Запись готова. Выберите действие ниже",
+                  timestamp: newChat[i].timestamp || Date.now()
+                };
+                break;
+              }
+            }
+            return newChat;
+          });
+        }
 
         setRecording(false);
         stream.getTracks().forEach((t) => t.stop());
@@ -810,7 +868,7 @@ export default function CandidateInterviewPage() {
       setChat((p) => {
         const newChat = [...p];
         for (let i = newChat.length - 1; i >= 0; i--) {
-          if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤 Запись'))) {
+          if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤'))) {
             if (newChat[i].video && newChat[i].video !== "live") {
               URL.revokeObjectURL(newChat[i].video);
             }
@@ -882,6 +940,66 @@ export default function CandidateInterviewPage() {
       rafRef.current = null;
     }
     setMicLevel(0);
+  }
+
+  // Функция для перезаписи ответа (очищает blob и запускает запись заново)
+  function handleRetake() {
+    console.log('handleRetake called');
+    setRecordedBlob(null);
+    setMediaRecorder(null);
+    
+    // Находим индекс последней реплики пользователя для анимации
+    let messageIndexToDelete = -1;
+    for (let i = chat.length - 1; i >= 0; i--) {
+      if (chat[i].role === 'user' && (chat[i].video || chat[i].text.includes('🎤'))) {
+        messageIndexToDelete = i;
+        break;
+      }
+    }
+    
+    if (messageIndexToDelete !== -1) {
+      // Запускаем анимацию удаления
+      setDeletingMessageIndex(messageIndexToDelete);
+      
+      // Через время анимации удаляем реплику
+      setTimeout(() => {
+        setChat((p) => {
+          const newChat = [...p];
+          for (let i = newChat.length - 1; i >= 0; i--) {
+            if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤'))) {
+              // Освобождаем URL если это видео
+              if (newChat[i].video && newChat[i].video !== "live") {
+                URL.revokeObjectURL(newChat[i].video);
+              }
+              newChat.splice(i, 1);
+              break;
+            }
+          }
+          return newChat;
+        });
+        
+        setDeletingMessageIndex(null);
+        
+        // Запускаем новую запись
+        setTimeout(() => {
+          startRecording();
+        }, 50);
+      }, 400); // Длительность анимации
+    } else {
+      // Если реплика не найдена, просто запускаем запись
+      setTimeout(() => {
+        startRecording();
+      }, 100);
+    }
+  }
+
+  // Функция для отправки записанного ответа
+  function handleSubmitRecording() {
+    console.log('handleSubmitRecording called', { hasBlob: !!recordedBlob });
+    if (recordedBlob) {
+      sendBlobAnswer(recordedBlob);
+      setRecordedBlob(null); // Очищаем после отправки
+    }
   }
 
   // useEffect to bind srcObject
@@ -959,7 +1077,7 @@ export default function CandidateInterviewPage() {
       setChat((p) => {
         const newChat = [...p];
         for (let i = newChat.length - 1; i >= 0; i--) {
-          if (newChat[i].role === 'user' && newChat[i].text.includes('🎤 Запись')) {
+          if (newChat[i].role === 'user' && newChat[i].text.includes('🎤')) {
             newChat[i] = {
               ...newChat[i],
               text: "🎤 Аудио ответ отправлен",
@@ -977,7 +1095,7 @@ export default function CandidateInterviewPage() {
       ...p,
       { role: "bot", text: "typing", timestamp: Date.now() },
     ]);
-    const typingIdx = chat.length + 1;
+    const typingIdx = chat.length; // Индекс добавленного элемента
 
     const fd = new FormData();
     fd.append("questionId", String(question.id));
@@ -1028,6 +1146,7 @@ export default function CandidateInterviewPage() {
     });
     setLoadingNextQuestion(false);
     setAnswered(false);
+    setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
   }
 
   async function sendEmptyAnswer(){
@@ -1069,7 +1188,7 @@ export default function CandidateInterviewPage() {
       {role:'user',text:'(нет ответа)', timestamp: Date.now()},
       {role:'bot',text:'typing', timestamp: Date.now()},
     ]);
-    const typingIdx = chat.length + 1;
+    const typingIdx = chat.length + 1; // Индекс typing (после user и bot)
 
     const fd = new FormData();
     fd.append('questionId', String(question.id));
@@ -1123,6 +1242,7 @@ export default function CandidateInterviewPage() {
     });
     setLoadingNextQuestion(false);
     setAnswered(false);
+    setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
   }
 
   async function skipQuestion() {
@@ -2645,7 +2765,11 @@ export default function CandidateInterviewPage() {
                   <Box key={i} sx={{
                     display: 'flex',
                     justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start',
-                    mb: 1
+                    mb: 1,
+                    // Добавляем анимацию удаления
+                    ...(deletingMessageIndex === i && {
+                      animation: `${fadeOutSlide} 0.4s ease-out forwards`
+                    })
                   }}>
                     <Box sx={{
                       maxWidth: '70%',
@@ -2774,7 +2898,7 @@ export default function CandidateInterviewPage() {
                       )}
 
                       {/* Аудио-визуализация для записи без камеры */}
-                      {!cameraEnabled && m.text.includes('🎤 Запись') && (
+                      {!cameraEnabled && m.text.includes('🎤 Запись аудио') && (
                         <Box sx={{
                           mb: 1,
                           p: 2,
@@ -2865,8 +2989,63 @@ export default function CandidateInterviewPage() {
           bgcolor: '#ffffff',
           borderTop: '1px solid #e0e0e0',
           flexShrink: 0,
-          boxShadow: '0 -1px 3px rgba(0,0,0,0.1)'
+          boxShadow: '0 -1px 3px rgba(0,0,0,0.1)',
+          position: 'relative' // Для абсолютного позиционирования индикатора
         }}>
+          {/* Индикатор записи ПОВЕРХ кнопок (не сдвигает их) */}
+          {recording && (
+            <Box sx={{
+              position: 'absolute',
+              top: isMobile ? -70 : -80, // Выше кнопок
+              left: isMobile ? 8 : 16,
+              right: isMobile ? 8 : 16,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1.5,
+              p: 2,
+              bgcolor: '#fff3f3',
+              borderRadius: '12px',
+              border: '2px solid #ff4444',
+              boxShadow: '0 2px 8px rgba(255, 68, 68, 0.2)',
+              zIndex: 5
+            }}>
+              <Box sx={{
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                bgcolor: '#ff4444',
+                animation: `${pulse} 1s ease-in-out infinite`
+              }} />
+              <Typography sx={{
+                fontSize: isMobile ? '14px' : '16px',
+                fontWeight: 'bold',
+                color: '#ff4444',
+                letterSpacing: '0.5px'
+              }}>
+                Идёт запись... Говорите в {cameraEnabled ? 'камеру' : 'микрофон'}
+              </Typography>
+              <Box sx={{
+                display: 'flex',
+                gap: 0.5
+              }}>
+                {[0, 1, 2].map((i) => (
+                  <Box
+                    key={i}
+                    sx={{
+                      width: 4,
+                      height: 16,
+                      bgcolor: '#ff4444',
+                      borderRadius: '2px',
+                      animation: `${pulse} 1s ease-in-out infinite`,
+                      animationDelay: `${i * 0.15}s`
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+          
           {/* answer input – только аудио */}
           <Box sx={{
             display: "flex",
@@ -2875,7 +3054,7 @@ export default function CandidateInterviewPage() {
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center'
           }}>
-            {!recording ? (
+            {!recording && !recordedBlob ? (
               <>
                 <Button
                   variant="contained"
@@ -2928,7 +3107,7 @@ export default function CandidateInterviewPage() {
                   ⏭️ Пропустить
                 </Button>
               </>
-            ) : (
+            ) : recording ? (
               <Button
                 variant="contained"
                 color="error"
@@ -2946,9 +3125,62 @@ export default function CandidateInterviewPage() {
                   px: 3
                 }}
               >
-                ⏹️ Стоп
+                ⏹️ Остановить запись
               </Button>
-            )}
+            ) : recordedBlob ? (
+              <>
+                <Button
+                  variant="outlined"
+                  size={isMobile ? 'large' : 'medium'}
+                  onClick={handleRetake}
+                  disabled={loadingNextQuestion}
+                  fullWidth={isMobile}
+                  sx={{
+                    borderColor: '#666',
+                    color: '#666',
+                    '&:hover': {
+                      backgroundColor: '#f5f5f5',
+                      borderColor: '#333',
+                      color: '#333',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    px: 3
+                  }}
+                >
+                  🔄 Переписать
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size={isMobile ? 'large' : 'medium'}
+                  onClick={handleSubmitRecording}
+                  disabled={loadingNextQuestion}
+                  fullWidth={isMobile}
+                  startIcon={loadingNextQuestion ? <CircularProgress size={20} color="inherit" /> : <CheckCircleIcon />}
+                  sx={{
+                    bgcolor: '#25d366',
+                    '&:hover': {
+                      bgcolor: '#128c7e',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    px: 3
+                  }}
+                >
+                  {loadingNextQuestion ? 'Отправка...' : '✓ Отправить ответ'}
+                </Button>
+              </>
+            ) : null}
           </Box>
         </Box>
 
