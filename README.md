@@ -34,3 +34,24 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+## 📚 Project Documentation
+
+### Interview & Testing Features
+- 📄 [Interview Retake Feature](./INTERVIEW_RETAKE_FEATURE.md) - Retake/Submit functionality for candidate interviews
+- 📄 [Interview Retake Quick Start](./INTERVIEW_RETAKE_QUICK_START.md) - Quick guide for retake feature
+- 📄 [Interview Recording Indicators](./INTERVIEW_RECORDING_INDICATORS.md) - Visual recording indicators
+
+### Regulation Testing
+- 📄 [Regulation Test Timeout](./REGULATION_TEST_TIMEOUT.md) - Auto-submit logic when time expires
+- 📄 [Regulation Test Timeout Quick Start](./REGULATION_TEST_TIMEOUT_QUICK_START.md) - Quick guide for timeout handling
+- 📄 [Regulation Test Timeout Changelog](./REGULATION_TEST_TIMEOUT_CHANGELOG.md) - Recent changes and fixes
+
+### Other Documentation
+- 📄 [Features](./docs/FEATURES.md) - Complete list of platform features
+- 📄 [PDF Export](./docs/PDF_EXPORT.md) - PDF generation and export functionality
+- 📄 [HR Migration](./HR_MIGRATION_README.md) - HR panel migration guide
+- 📄 [Deployment](./DEPLOYMENT.md) - Deployment instructions
+

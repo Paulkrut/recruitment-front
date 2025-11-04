@@ -350,9 +350,74 @@ export default function RegulationTestPage() {
       console.log('Blob already exists, submitting...');
       handleSubmitAnswer();
     } else {
-      // Нет записи вообще - пропускаем вопрос
-      console.log('No recording, skipping question...');
+      // Нет записи вообще - отправляем пустой ответ
+      console.log('No recording, submitting empty answer...');
+      handleSubmitEmptyAnswer();
+    }
+  };
+
+  const handleSubmitEmptyAnswer = async () => {
+    console.log('Submitting empty answer (timeout or skipped)');
+
+    // Останавливаем таймер
+    setTimerStarted(false);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Активируем состояние загрузки
+    setSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('questionId', currentQuestion.id.toString());
+      formData.append('answerText', ''); // Пустой ответ
+
+      console.log('Submitting empty answer for question:', currentQuestion.id);
+
+      const response = await fetch(
+        `${API_BASE}/api/public/regulation-tests/session/${sessionId}/answer`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        
+        if (response.status === 402 || errorData.error === 'insufficient_balance') {
+          alert('❌ Тест прерван: закончились тесты на балансе\n\n' +
+                'К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n' +
+                '📧 Пожалуйста, сообщите об этом вашему HR-менеджеру.');
+          setSubmitting(false);
+          return;
+        }
+        
+        if (response.status === 404 || response.status === 410) {
+          alert('❌ Сессия тестирования не найдена или истекла\n\n' +
+                'Возможные причины:\n' +
+                '• Превышено максимальное время прохождения теста\n' +
+                '• Сессия была прервана\n\n' +
+                '📧 Обратитесь к вашему HR-менеджеру для получения нового приглашения.');
+          setSubmitting(false);
+          return;
+        }
+        
+        const errorMessage = errorData.message || 'Не удалось отправить ответ';
+        throw new Error(errorMessage);
+      }
+
+      // Успешно отправлено - переходим к следующему вопросу
+      setSubmitting(false);
       skipToNextQuestion();
+    } catch (error: any) {
+      console.error('Error submitting empty answer:', error);
+      alert('❌ Не удалось зарегистрировать пропуск вопроса\n\n' +
+            (error.message || 'Произошла ошибка при отправке.') + '\n\n' +
+            '📧 Обратитесь к вашему HR-менеджеру.');
+      setSubmitting(false);
     }
   };
 
