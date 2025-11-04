@@ -33,6 +33,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiFetch } from '@/utils/api';
+import RegulationTestTabs from '../components/RegulationTestTabs';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -177,6 +178,9 @@ export default function TestResultsPage() {
           Назад к тестам
         </Button>
       </Box>
+
+      {/* Tabs navigation */}
+      <RegulationTestTabs testId={testId} />
 
       {testDetails && (
         <Card sx={{ p: 3, mb: 3 }}>

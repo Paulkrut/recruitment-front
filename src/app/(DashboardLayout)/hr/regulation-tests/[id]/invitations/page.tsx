@@ -36,6 +36,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiFetch } from '@/utils/api';
+import RegulationTestTabs from '../components/RegulationTestTabs';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 const FRONTEND_BASE = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3001';
@@ -203,6 +204,9 @@ export default function InvitationsPage() {
           </Button>
         </Box>
       </Box>
+
+      {/* Tabs navigation */}
+      <RegulationTestTabs testId={testId} />
 
       <Card>
         <TableContainer>

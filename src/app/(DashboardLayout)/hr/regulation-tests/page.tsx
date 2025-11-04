@@ -18,14 +18,21 @@ import {
   IconButton,
   Tooltip,
   LinearProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Alert,
 } from '@mui/material';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PageContainer from '@/app/components/container/PageContainer';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LinkIcon from '@mui/icons-material/Link';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import ClearIcon from '@mui/icons-material/Clear';
 import { apiFetch } from '@/utils/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -38,6 +45,11 @@ interface RegulationTest {
   questionsPerRegulation: number;
   isActive: boolean;
   regulationsCount: number;
+  regulations: Array<{
+    id: number;
+    title: string;
+    position: number;
+  }>;
   invitationsCount: number;
   sessionsTotal: number;
   sessionsFinished: number;
@@ -45,22 +57,50 @@ interface RegulationTest {
   createdAt: string;
 }
 
+interface Regulation {
+  id: number;
+  title: string;
+}
+
 export default function RegulationTestsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const regulationIdParam = searchParams.get('regulationId');
+
   const [tests, setTests] = useState<RegulationTest[]>([]);
+  const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRegulationId, setSelectedRegulationId] = useState<number | null>(
+    regulationIdParam ? parseInt(regulationIdParam) : null
+  );
 
   useEffect(() => {
-    loadTests();
+    loadData();
   }, []);
 
-  const loadTests = async () => {
+  useEffect(() => {
+    // Обновляем URL при изменении фильтра
+    if (selectedRegulationId) {
+      router.replace(`/hr/regulation-tests?regulationId=${selectedRegulationId}`);
+    } else {
+      router.replace('/hr/regulation-tests');
+    }
+  }, [selectedRegulationId, router]);
+
+  const loadData = async () => {
     setLoading(true);
     try {
-      const response = await apiFetch(`${API_BASE}/api/regulation-tests`);
-      const data = await response.json();
-      setTests(data);
+      // Загружаем тесты
+      const testsResponse = await apiFetch(`${API_BASE}/api/regulation-tests`);
+      const testsData = await testsResponse.json();
+      setTests(testsData);
+
+      // Загружаем список всех регламентов для фильтра
+      const regulationsResponse = await apiFetch(`${API_BASE}/api/regulations`);
+      const regulationsData = await regulationsResponse.json();
+      setRegulations(regulationsData);
     } catch (error) {
-      console.error('Error loading tests:', error);
+      console.error('Error loading data:', error);
     } finally {
       setLoading(false);
     }
@@ -75,7 +115,7 @@ export default function RegulationTestsPage() {
       });
 
       if (response.ok) {
-        loadTests();
+        loadData();
       }
     } catch (error) {
       console.error('Error deleting test:', error);
@@ -85,6 +125,20 @@ export default function RegulationTestsPage() {
   const getCompletionRate = (test: RegulationTest): number => {
     if (test.sessionsTotal === 0) return 0;
     return Math.round((test.sessionsFinished / test.sessionsTotal) * 100);
+  };
+
+  // Фильтруем тесты по выбранному регламенту
+  const filteredTests = selectedRegulationId
+    ? tests.filter((test) =>
+        test.regulations.some((reg) => reg.id === selectedRegulationId)
+      )
+    : tests;
+
+  // Находим название выбранного регламента
+  const selectedRegulation = regulations.find((reg) => reg.id === selectedRegulationId);
+
+  const handleClearFilter = () => {
+    setSelectedRegulationId(null);
   };
 
   return (
@@ -111,6 +165,52 @@ export default function RegulationTestsPage() {
         </Link>
       </Box>
 
+      {/* Filter */}
+      <Card sx={{ p: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <FormControl sx={{ minWidth: 300 }}>
+            <InputLabel>Фильтр по регламенту</InputLabel>
+            <Select
+              value={selectedRegulationId || ''}
+              label="Фильтр по регламенту"
+              onChange={(e) => setSelectedRegulationId(e.target.value ? Number(e.target.value) : null)}
+            >
+              <MenuItem value="">
+                <em>Все тесты</em>
+              </MenuItem>
+              {regulations.map((regulation) => (
+                <MenuItem key={regulation.id} value={regulation.id}>
+                  {regulation.title}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {selectedRegulationId && (
+            <Button
+              variant="outlined"
+              startIcon={<ClearIcon />}
+              onClick={handleClearFilter}
+            >
+              Сбросить фильтр
+            </Button>
+          )}
+
+          {selectedRegulationId && (
+            <Typography variant="body2" color="text.secondary">
+              Найдено тестов: {filteredTests.length}
+            </Typography>
+          )}
+        </Box>
+      </Card>
+
+      {/* Active Filter Alert */}
+      {selectedRegulationId && selectedRegulation && (
+        <Alert severity="info" sx={{ mb: 3 }}>
+          Показаны тесты, использующие регламент: <strong>{selectedRegulation.title}</strong>
+        </Alert>
+      )}
+
       {/* Tests Table */}
       <Card>
         <TableContainer>
@@ -133,24 +233,42 @@ export default function RegulationTestsPage() {
                     <Typography color="text.secondary">Загрузка...</Typography>
                   </TableCell>
                 </TableRow>
-              ) : tests.length === 0 ? (
+              ) : filteredTests.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary">Тесты не созданы</Typography>
-                    <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
-                      <Button
-                        component="a"
-                        variant="outlined"
-                        startIcon={<AddIcon />}
-                        sx={{ mt: 2 }}
-                      >
-                        Создать первый тест
-                      </Button>
-                    </Link>
+                    {selectedRegulationId ? (
+                      <>
+                        <Typography color="text.secondary" gutterBottom>
+                          Нет тестов для выбранного регламента
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          startIcon={<ClearIcon />}
+                          onClick={handleClearFilter}
+                          sx={{ mt: 2 }}
+                        >
+                          Сбросить фильтр
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Typography color="text.secondary">Тесты не созданы</Typography>
+                        <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
+                          <Button
+                            component="a"
+                            variant="outlined"
+                            startIcon={<AddIcon />}
+                            sx={{ mt: 2 }}
+                          >
+                            Создать первый тест
+                          </Button>
+                        </Link>
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               ) : (
-                tests.map((test) => (
+                filteredTests.map((test) => (
                   <TableRow key={test.id} hover>
                     <TableCell>
                       <Box>

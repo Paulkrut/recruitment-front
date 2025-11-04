@@ -500,7 +500,7 @@ export default function RegulationsPage() {
                         </TableCell>
                         <TableCell>
                           {regulation.testsCount !== undefined && regulation.testsCount > 0 ? (
-                            <NextLink href="/hr/regulation-tests" passHref legacyBehavior>
+                            <NextLink href={`/hr/regulation-tests?regulationId=${regulation.id}`} passHref legacyBehavior>
                               <Link underline="hover" sx={{ cursor: 'pointer' }}>
                                 <Chip 
                                   label={regulation.testsCount} 

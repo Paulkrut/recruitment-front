@@ -58,6 +58,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - 📄 [Regulation Test Questions Performance](./REGULATION_TEST_QUESTIONS_PERFORMANCE.md) - Performance optimization for editing questions
 - 📄 [Regulation Test Questions Scroll Fix](./REGULATION_TEST_QUESTIONS_SCROLL_FIX.md) - Removed internal scroll for better UX
 - 📄 [Regulation Test Success Dialog](./REGULATION_TEST_SUCCESS_DIALOG.md) - Success dialog after test creation instead of step 4
+- 📄 [Regulation Test Tabs Navigation](./REGULATION_TEST_TABS_NAVIGATION.md) - Tab navigation between test pages (edit/results/invitations)
+- 📄 [Regulation Tests Filter](./REGULATION_TESTS_FILTER.md) - Filter tests by regulation with URL-based state
 
 ### Other Documentation
 - 📄 [Features](./docs/FEATURES.md) - Complete list of platform features

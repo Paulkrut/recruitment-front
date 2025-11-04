@@ -24,6 +24,7 @@ import Link from 'next/link';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useRouter, useParams } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
+import RegulationTestTabs from '../components/RegulationTestTabs';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -155,12 +156,15 @@ export default function EditTestPage() {
         <Typography color="text.primary">Редактировать</Typography>
       </Breadcrumbs>
 
-      <Card sx={{ p: 3 }}>
-        <Typography variant="h5" gutterBottom>
-          Редактировать тест
-        </Typography>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+        Редактировать тест
+      </Typography>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
+      {/* Tabs navigation */}
+      <RegulationTestTabs testId={testId} />
+
+      <Card sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
             label="Название теста"
             fullWidth
