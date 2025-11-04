@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Box,
   Button,
   Card,
+  CardContent,
   Typography,
   Breadcrumbs,
   Link,
@@ -30,22 +32,134 @@ import {
   Divider,
   Slider,
   FormHelperText,
+  IconButton,
+  Dialog,
 } from '@mui/material';
 import PageContainer from '@/app/components/container/PageContainer';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FolderIcon from '@mui/icons-material/Folder';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
-const steps = ['Основные настройки', 'Выбор регламентов', 'Генерация вопросов', 'Создание приглашений'];
+const steps = ['Основные настройки', 'Выбор регламентов', 'Генерация вопросов'];
+
+// Мемоизированный компонент карточки вопроса для предотвращения ненужных перерендеров
+const QuestionCard = memo(({ 
+  question, 
+  index, 
+  maxTimePerQuestion,
+  onUpdate, 
+  onDelete 
+}: { 
+  question: GeneratedQuestion; 
+  index: number; 
+  maxTimePerQuestion: number;
+  onUpdate: (index: number, field: keyof GeneratedQuestion, value: any) => void; 
+  onDelete: (index: number) => void;
+}) => {
+  return (
+    <Card sx={{ mb: 2, border: '1px solid', borderColor: 'divider' }}>
+      <CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+          <Chip 
+            label={`Вопрос ${index + 1}`} 
+            size="small" 
+            color="primary" 
+            sx={{ mr: 1 }}
+          />
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Chip 
+              label={`Сложность: ${question.difficulty}`} 
+              size="small" 
+              variant="outlined"
+            />
+            <Chip 
+              label={question.regulationTitle} 
+              size="small" 
+              variant="outlined"
+              color="secondary"
+            />
+            <IconButton 
+              size="small" 
+              color="error"
+              onClick={() => onDelete(index)}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Box>
+        </Box>
+
+        <TextField
+          fullWidth
+          multiline
+          rows={2}
+          label="Вопрос"
+          value={question.text}
+          onChange={(e) => onUpdate(index, 'text', e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <TextField
+          fullWidth
+          multiline
+          rows={3}
+          label="Ожидаемый ответ (для AI проверки)"
+          value={question.expectedAnswer}
+          onChange={(e) => onUpdate(index, 'expectedAnswer', e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              fullWidth
+              type="number"
+              label="Время на ответ (сек)"
+              value={question.maxTime || maxTimePerQuestion}
+              onChange={(e) => onUpdate(index, 'maxTime', parseInt(e.target.value))}
+              inputProps={{ min: 30, max: 600 }}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel>Сложность</InputLabel>
+              <Select
+                value={question.difficulty}
+                label="Сложность"
+                onChange={(e) => onUpdate(index, 'difficulty', e.target.value as number)}
+              >
+                <MenuItem value={1}>Легкий</MenuItem>
+                <MenuItem value={2}>Средний</MenuItem>
+                <MenuItem value={3}>Сложный</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+});
+
+QuestionCard.displayName = 'QuestionCard';
+
+interface RegulationFolder {
+  id: number;
+  name: string;
+  description: string | null;
+  regulationsCount: number;
+}
 
 interface Regulation {
   id: number;
   title: string;
   description: string | null;
   version: string;
+  folderId: number | null;
   folderName: string | null;
 }
 
@@ -56,8 +170,20 @@ interface Invitation {
   expiresInDays?: number;
 }
 
+interface GeneratedQuestion {
+  id?: number;
+  text: string;
+  type: 'text' | 'multiple_choice';
+  expectedAnswer: string;
+  difficulty: number;
+  maxTime?: number;
+  regulationId: number;
+  regulationTitle: string;
+}
+
 export default function CreateTestPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeStep, setActiveStep] = useState(0);
   const [testId, setTestId] = useState<number | null>(null);
 
@@ -71,28 +197,55 @@ export default function CreateTestPage() {
 
   // Step 2: Select regulations
   const [regulations, setRegulations] = useState<Regulation[]>([]);
+  const [folders, setFolders] = useState<RegulationFolder[]>([]);
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null);
   const [selectedRegulations, setSelectedRegulations] = useState<number[]>([]);
+  const [preselectedFromUrl, setPreselectedFromUrl] = useState(false);
 
   // Step 3: Questions (for pre_generated mode)
   const [generatingQuestions, setGeneratingQuestions] = useState(false);
   const [questionsGenerated, setQuestionsGenerated] = useState(false);
+  const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
 
-  // Step 4: Invitations
-  const [invitationType, setInvitationType] = useState<'named' | 'general'>('named');
-  const [invitations, setInvitations] = useState<Invitation[]>([]);
-  const [invitationEmail, setInvitationEmail] = useState('');
+  // Success dialog
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   useEffect(() => {
     loadRegulations();
   }, []);
 
+  useEffect(() => {
+    // Если передан regulationId в URL и регламенты загружены - предвыбираем
+    const regulationIdParam = searchParams.get('regulationId');
+    if (regulationIdParam && regulations.length > 0 && !preselectedFromUrl) {
+      const id = parseInt(regulationIdParam);
+      if (!isNaN(id) && regulations.some(r => r.id === id)) {
+        setSelectedRegulations([id]);
+        setPreselectedFromUrl(true);
+      }
+    }
+  }, [searchParams, regulations, preselectedFromUrl]);
+
   const loadRegulations = async () => {
     try {
-      const response = await apiFetch(`${API_BASE}/api/regulations`);
-      const data = await response.json();
-      setRegulations(data);
+      // Загружаем регламенты
+      const regulationsResponse = await apiFetch(`${API_BASE}/api/regulations`);
+      const regulationsData = await regulationsResponse.json();
+      setRegulations(Array.isArray(regulationsData) ? regulationsData : []);
+
+      // Загружаем папки
+      try {
+        const foldersResponse = await apiFetch(`${API_BASE}/api/regulations/folders`);
+        const foldersData = await foldersResponse.json();
+        setFolders(Array.isArray(foldersData) ? foldersData : []);
+      } catch (folderError) {
+        console.error('Error loading folders:', folderError);
+        setFolders([]); // Устанавливаем пустой массив если папки не загрузились
+      }
     } catch (error) {
       console.error('Error loading regulations:', error);
+      setRegulations([]);
+      setFolders([]);
     }
   };
 
@@ -149,7 +302,13 @@ export default function CreateTestPage() {
       });
 
       if (response.ok) {
+        // Загружаем сгенерированные вопросы
+        const questionsResponse = await apiFetch(`${API_BASE}/api/regulation-tests/${testId}/questions`);
+        if (questionsResponse.ok) {
+          const questions = await questionsResponse.json();
+          setGeneratedQuestions(questions);
         setQuestionsGenerated(true);
+        }
       } else {
         const error = await response.json();
         alert(error.error || 'Ошибка при генерации вопросов');
@@ -162,47 +321,55 @@ export default function CreateTestPage() {
     }
   };
 
-  const handleAddInvitation = () => {
-    if (!invitationEmail) return;
+  const handleUpdateQuestion = useCallback((index: number, field: keyof GeneratedQuestion, value: any) => {
+    setGeneratedQuestions(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  }, []);
 
-    setInvitations([
-      ...invitations,
-      {
-        type: invitationType,
-        email: invitationEmail,
-        expiresInDays: 30,
-      },
-    ]);
-    setInvitationEmail('');
+  const handleDeleteQuestion = useCallback((index: number) => {
+    setGeneratedQuestions(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleFinishTestCreation = () => {
+    // Показываем диалог успешного создания
+    setShowSuccessDialog(true);
   };
 
-  const handleCreateTest = async () => {
-    if (!testId) {
-      alert('Тест не создан');
-      return;
-    }
+  const handleGenerateGeneralLink = async () => {
+    if (!testId) return;
 
-    // Если есть приглашения, создаём их
-    if (invitations.length > 0) {
-      try {
-        await apiFetch(`${API_BASE}/api/regulation-tests/${testId}/invitations`, {
+    try {
+      const response = await apiFetch(`${API_BASE}/api/regulation-tests/${testId}/invitations`, {
           method: 'POST',
           body: JSON.stringify({
-            invitations: invitations.map((inv) => ({
-              type: inv.type,
-              email: inv.email,
-              expiresInDays: inv.expiresInDays || 30,
-            })),
+          invitations: [{
+            type: 'general',
+            expiresInDays: 30,
+          }],
           }),
         });
-      } catch (error) {
-        console.error('Error creating invitations:', error);
-      }
-    }
 
-    // Переходим к списку тестов или к странице теста
-    router.push(`/hr/regulation-tests`);
+      if (response.ok) {
+        router.push(`/hr/regulation-tests/${testId}/invitations`);
+      }
+    } catch (error) {
+      console.error('Error creating general invitation:', error);
+      alert('Ошибка при создании общей ссылки');
+    }
   };
+
+  const handleGoToInvitations = () => {
+    if (!testId) return;
+    router.push(`/hr/regulation-tests/${testId}/invitations`);
+  };
+
+  // Вычисляем список регламентов для отображения (с учётом выбранной папки)
+  const displayedRegulations = selectedFolderId
+    ? regulations.filter(r => r.folderId === selectedFolderId)
+    : regulations.filter(r => r.folderId === null); // Показываем регламенты без папки в корне
 
   const isStepValid = (step: number): boolean => {
     switch (step) {
@@ -212,8 +379,6 @@ export default function CreateTestPage() {
         return selectedRegulations.length > 0;
       case 2:
         return questionGenerationMode === 'on_start' || questionsGenerated;
-      case 3:
-        return true; // Invitations are optional
       default:
         return false;
     }
@@ -242,27 +407,6 @@ export default function CreateTestPage() {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Краткое описание теста для сотрудников"
             />
-
-            <FormControl fullWidth>
-              <InputLabel>Режим генерации вопросов</InputLabel>
-              <Select
-                value={questionGenerationMode}
-                label="Режим генерации вопросов"
-                onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
-              >
-                <MenuItem value="pre_generated">
-                  Заранее (вопросы генерируются при создании теста)
-                </MenuItem>
-                <MenuItem value="on_start">
-                  При старте (вопросы генерируются для каждого сотрудника индивидуально)
-                </MenuItem>
-              </Select>
-              <FormHelperText>
-                {questionGenerationMode === 'pre_generated'
-                  ? 'Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее.'
-                  : 'Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее.'}
-              </FormHelperText>
-            </FormControl>
 
             <Box>
               <Typography gutterBottom>
@@ -296,7 +440,7 @@ export default function CreateTestPage() {
                 ]}
                 valueLabelDisplay="auto"
               />
-              <FormHelperText>Каждый вопрос должен быть отвечен в течение указанного времени</FormHelperText>
+              <FormHelperText>Время отведенное на один вопрос. За это время надо прочитать вопрос и дать на него ответ.</FormHelperText>
             </Box>
 
             <FormControlLabel
@@ -309,10 +453,33 @@ export default function CreateTestPage() {
       case 1:
         return (
           <Box>
+            {preselectedFromUrl && selectedRegulations.length > 0 && (
+              <Alert severity="success" sx={{ mb: 2 }}>
+                ✅ Регламент "{regulations.find(r => r.id === selectedRegulations[0])?.title}" был автоматически выбран. 
+                Вы можете добавить дополнительные регламенты ниже.
+              </Alert>
+            )}
+            
             <Alert severity="info" sx={{ mb: 2 }}>
               Выберите регламенты, по которым будет проводиться тестирование. Будет создано{' '}
               <strong>{questionsPerRegulation} вопросов</strong> на каждый регламент.
             </Alert>
+
+            {/* Breadcrumbs для навигации */}
+            {selectedFolderId && (
+              <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Button
+                  startIcon={<ArrowBackIcon />}
+                  onClick={() => setSelectedFolderId(null)}
+                  size="small"
+                >
+                  Назад к корню
+                </Button>
+                <Typography variant="body2" color="text.secondary">
+                  / {folders.find(f => f.id === selectedFolderId)?.name}
+                </Typography>
+              </Box>
+            )}
 
             {regulations.length === 0 ? (
               <Alert severity="warning">
@@ -321,7 +488,50 @@ export default function CreateTestPage() {
               </Alert>
             ) : (
               <List>
-                {regulations.map((regulation) => (
+                {/* Показываем папки в корне */}
+                {!selectedFolderId && Array.isArray(folders) && folders.map((folder) => (
+                  <ListItem
+                    key={`folder-${folder.id}`}
+                    button
+                    onClick={() => setSelectedFolderId(folder.id)}
+                    sx={{
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      borderRadius: 1,
+                      mb: 1,
+                      bgcolor: 'background.paper',
+                      '&:hover': {
+                        bgcolor: 'action.hover',
+                      },
+                    }}
+                  >
+                    <ListItemIcon>
+                      <FolderIcon color="primary" sx={{ fontSize: 40 }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6">
+                          📁 {folder.name}
+                        </Typography>
+                      }
+                      secondary={
+                        <Box>
+                          {folder.description && (
+                            <Typography variant="caption" display="block">
+                              {folder.description}
+                            </Typography>
+                          )}
+                          <Typography variant="caption" color="text.secondary">
+                            Регламентов: {folder.regulationsCount}
+                          </Typography>
+                        </Box>
+                      }
+                    />
+                  </ListItem>
+                ))}
+
+                {/* Показываем регламенты */}
+                {displayedRegulations.map((regulation) => (
                   <ListItem
                     key={regulation.id}
                     button
@@ -369,6 +579,13 @@ export default function CreateTestPage() {
                     />
                   </ListItem>
                 ))}
+
+                {/* Сообщение если папка пустая */}
+                {selectedFolderId && displayedRegulations.length === 0 && (
+                  <Alert severity="info">
+                    В этой папке пока нет регламентов
+                  </Alert>
+                )}
               </List>
             )}
 
@@ -385,6 +602,28 @@ export default function CreateTestPage() {
       case 2:
         return (
           <Box>
+            {/* Выбор режима генерации */}
+            <FormControl fullWidth sx={{ mb: 3 }}>
+              <InputLabel>Режим генерации вопросов</InputLabel>
+              <Select
+                value={questionGenerationMode}
+                label="Режим генерации вопросов"
+                onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
+              >
+                <MenuItem value="pre_generated">
+                  Заранее (вопросы генерируются при создании теста)
+                </MenuItem>
+                <MenuItem value="on_start">
+                  При старте (вопросы генерируются для каждого сотрудника индивидуально)
+                </MenuItem>
+              </Select>
+              <FormHelperText>
+                {questionGenerationMode === 'pre_generated'
+                  ? 'Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее.'
+                  : 'Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее.'}
+              </FormHelperText>
+            </FormControl>
+
             {questionGenerationMode === 'pre_generated' ? (
               <Box sx={{ textAlign: 'center', py: 4 }}>
                 {!questionsGenerated ? (
@@ -420,13 +659,29 @@ export default function CreateTestPage() {
                   </>
                 ) : (
                   <Box>
-                    <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+                    <Box sx={{ textAlign: 'center', mb: 3 }}>
+                      <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mb: 1 }} />
                     <Typography variant="h6" gutterBottom>
                       Вопросы успешно сгенерированы!
                     </Typography>
                     <Typography color="text.secondary">
-                      Создано {selectedRegulations.length * questionsPerRegulation} вопросов
+                        Создано {generatedQuestions.length} вопросов. Вы можете отредактировать их ниже.
                     </Typography>
+                    </Box>
+
+                    {/* Список вопросов с редактированием */}
+                    <Box>
+                      {generatedQuestions.map((question, index) => (
+                        <QuestionCard
+                          key={question.id || index}
+                          question={question}
+                          index={index}
+                          maxTimePerQuestion={maxTimePerQuestion}
+                          onUpdate={handleUpdateQuestion}
+                          onDelete={handleDeleteQuestion}
+                        />
+                      ))}
+                    </Box>
                   </Box>
                 )}
               </Box>
@@ -441,74 +696,6 @@ export default function CreateTestPage() {
                 </Typography>
               </Alert>
             )}
-          </Box>
-        );
-
-      case 3:
-        return (
-          <Box>
-            <Alert severity="info" sx={{ mb: 3 }}>
-              Создайте приглашения для сотрудников или сгенерируйте общую ссылку для самостоятельной
-              регистрации.
-            </Alert>
-
-            <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Тип приглашения</InputLabel>
-              <Select
-                value={invitationType}
-                label="Тип приглашения"
-                onChange={(e) => setInvitationType(e.target.value as 'named' | 'general')}
-              >
-                <MenuItem value="named">Именное (для конкретного сотрудника)</MenuItem>
-                <MenuItem value="general">Общее (для самостоятельной регистрации)</MenuItem>
-              </Select>
-            </FormControl>
-
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid item xs={9}>
-                <TextField
-                  fullWidth
-                  label="Email сотрудника"
-                  value={invitationEmail}
-                  onChange={(e) => setInvitationEmail(e.target.value)}
-                  placeholder="employee@company.com"
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={handleAddInvitation}
-                  sx={{ height: '56px' }}
-                >
-                  Добавить
-                </Button>
-              </Grid>
-            </Grid>
-
-            {invitations.length > 0 && (
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Приглашения ({invitations.length}):
-                </Typography>
-                <List dense>
-                  {invitations.map((inv, index) => (
-                    <ListItem key={index}>
-                      <ListItemText
-                        primary={inv.email}
-                        secondary={`Тип: ${inv.type === 'named' ? 'Именное' : 'Общее'} • Срок: ${
-                          inv.expiresInDays
-                        } дней`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Paper>
-            )}
-
-            <Alert severity="warning" sx={{ mt: 2 }}>
-              Вы можете создать тест без приглашений и добавить их позже.
-            </Alert>
           </Box>
         );
 
@@ -553,8 +740,8 @@ export default function CreateTestPage() {
             </Button>
 
             {activeStep === steps.length - 1 ? (
-              <Button variant="contained" onClick={handleCreateTest}>
-                Создать тест
+              <Button variant="contained" onClick={handleFinishTestCreation} disabled={!isStepValid(activeStep)}>
+                Завершить создание
               </Button>
             ) : (
               <Button variant="contained" onClick={handleNext} disabled={!isStepValid(activeStep)}>
@@ -564,6 +751,54 @@ export default function CreateTestPage() {
           </Box>
         </Box>
       </Card>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccessDialog} onClose={() => setShowSuccessDialog(false)} maxWidth="sm" fullWidth>
+        <Box sx={{ p: 4, textAlign: 'center' }}>
+          <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
+          <Typography variant="h5" gutterBottom>
+            Тест успешно создан!
+          </Typography>
+          <Typography color="text.secondary" sx={{ mb: 4 }}>
+            Что вы хотите сделать дальше?
+          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={handleGenerateGeneralLink}
+              sx={{ py: 2 }}
+            >
+              🔗 Сгенерировать общую ссылку
+              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
+                Для самостоятельной регистрации сотрудников
+              </Typography>
+            </Button>
+
+            <Button
+              variant="outlined"
+              size="large"
+              onClick={handleGoToInvitations}
+              sx={{ py: 2 }}
+            >
+              ✉️ Отправить приглашения конкретным сотрудникам
+              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
+                Создать именные приглашения по email
+              </Typography>
+            </Button>
+
+            <Divider sx={{ my: 1 }} />
+
+            <Button
+              variant="text"
+              onClick={() => router.push('/hr/regulation-tests')}
+            >
+              Вернуться к списку тестов
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
     </PageContainer>
   );
 }

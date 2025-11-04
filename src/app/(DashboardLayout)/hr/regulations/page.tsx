@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import NextLink from 'next/link';
 import {
   Box,
   Button,
@@ -36,6 +37,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { apiFetch } from '@/utils/api';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -60,6 +62,7 @@ interface Regulation {
   isActive: boolean;
   folderId: number | null;
   folderName: string | null;
+  testsCount?: number; // ← Добавляем количество тестов
   createdBy: {
     id: number | null;
     name: string | null;
@@ -426,18 +429,17 @@ export default function RegulationsPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Название</TableCell>
-                    <TableCell>Версия</TableCell>
+                    <TableCell>Информация</TableCell>
                     <TableCell>Папка</TableCell>
-                    <TableCell>Автор</TableCell>
+                    <TableCell>Тесты</TableCell>
                     <TableCell>Обновлён</TableCell>
-                    <TableCell>Статус</TableCell>
                     <TableCell align="right">Действия</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {regulations.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                      <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                         <Typography color="text.secondary">
                           {loading ? 'Загрузка...' : 'Регламенты не найдены'}
                         </Typography>
@@ -460,19 +462,69 @@ export default function RegulationsPage() {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Chip label={`v${regulation.version}`} size="small" color="default" />
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                            <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
+                              <Chip label={`v${regulation.version}`} size="small" color="default" />
+                              <Chip
+                                label={regulation.isActive ? 'Активен' : 'Неактивен'}
+                                size="small"
+                                color={regulation.isActive ? 'success' : 'default'}
+                              />
+                            </Box>
+                            {regulation.createdBy.name && (
+                              <Typography variant="caption" color="text.secondary">
+                                {regulation.createdBy.name}
+                              </Typography>
+                            )}
+                          </Box>
                         </TableCell>
-                        <TableCell>{regulation.folderName || '—'}</TableCell>
-                        <TableCell>{regulation.createdBy.name || '—'}</TableCell>
-                        <TableCell>{new Date(regulation.updatedAt).toLocaleDateString('ru-RU')}</TableCell>
                         <TableCell>
-                          <Chip
-                            label={regulation.isActive ? 'Активен' : 'Неактивен'}
-                            size="small"
-                            color={regulation.isActive ? 'success' : 'default'}
-                          />
+                          {regulation.folderId && regulation.folderName ? (
+                            <Link
+                              component="button"
+                              variant="body2"
+                              onClick={() => setSelectedFolderId(regulation.folderId)}
+                              sx={{ 
+                                cursor: 'pointer',
+                                textDecoration: 'none',
+                                '&:hover': {
+                                  textDecoration: 'underline'
+                                }
+                              }}
+                            >
+                              {regulation.folderName}
+                            </Link>
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">—</Typography>
+                          )}
                         </TableCell>
+                        <TableCell>
+                          {regulation.testsCount !== undefined && regulation.testsCount > 0 ? (
+                            <NextLink href="/hr/regulation-tests" passHref legacyBehavior>
+                              <Link underline="hover" sx={{ cursor: 'pointer' }}>
+                                <Chip 
+                                  label={regulation.testsCount} 
+                                  size="small" 
+                                  color="primary" 
+                                  sx={{ cursor: 'pointer' }}
+                                />
+                              </Link>
+                            </NextLink>
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">—</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>{new Date(regulation.updatedAt).toLocaleDateString('ru-RU')}</TableCell>
                         <TableCell align="right">
+                          <Tooltip title="Создать тест">
+                            <IconButton 
+                              size="small" 
+                              component={NextLink}
+                              href={`/hr/regulation-tests/create?regulationId=${regulation.id}`}
+                            >
+                              <AssignmentIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
                           <Tooltip title="Редактировать">
                             <IconButton size="small" onClick={() => openRegulationDialog(regulation)}>
                               <EditIcon fontSize="small" />

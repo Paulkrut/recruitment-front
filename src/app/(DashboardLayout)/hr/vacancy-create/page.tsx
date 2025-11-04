@@ -503,6 +503,7 @@ export default function HRVacancyCreatePage() {
 
                 <Divider sx={{ my: 2 }} />
 
+              {/* ВРЕМЕННО СКРЫТО: Дополнительные вопросы (функционал отключён)
               <Box>
                 <CustomFormLabel 
                   sx={{ 
@@ -584,6 +585,7 @@ export default function HRVacancyCreatePage() {
                   )}
                 </Box>
               </Box>
+              */}
               </Stack>
             </CardContent>
           </Card>

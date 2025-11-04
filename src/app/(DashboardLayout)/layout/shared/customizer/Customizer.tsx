@@ -102,11 +102,12 @@ const Customizer: FC = () => {
       {/* ------------------------------------------- */}
       {/* --Floating Button to open customizer ------ */}
       {/* ------------------------------------------- */}
-      <Tooltip title="Settings">
+      {/* СКРЫТО: Кнопка настроек отключена */}
+      <Tooltip title="Settings" sx={{ display: 'none' }}>
         <Fab
           color="primary"
           aria-label="settings"
-          sx={{ position: "fixed", right: "25px", bottom: "15px" }}
+          sx={{ position: "fixed", right: "25px", bottom: "15px", display: 'none' }}
           onClick={() => setShowDrawer(true)}
         >
           <IconSettings stroke={1.5} />

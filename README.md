@@ -48,6 +48,16 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - 📄 [Regulation Test Timeout](./REGULATION_TEST_TIMEOUT.md) - Auto-submit logic when time expires
 - 📄 [Regulation Test Timeout Quick Start](./REGULATION_TEST_TIMEOUT_QUICK_START.md) - Quick guide for timeout handling
 - 📄 [Regulation Test Timeout Changelog](./REGULATION_TEST_TIMEOUT_CHANGELOG.md) - Recent changes and fixes
+- 📄 [Regulation Questions Text Only](./REGULATION_QUESTIONS_TEXT_ONLY.md) - Open-ended text questions only
+- 📄 [Regulation Quick Test Create](./REGULATION_QUICK_TEST_CREATE.md) - Quick test creation from regulations list
+- 📄 [Regulation Test Folder Navigation](./REGULATION_TEST_FOLDER_NAVIGATION.md) - Folder navigation in test creation
+- 📄 [Regulation Test Folder Navigation Quick Start](./REGULATION_TEST_FOLDER_NAVIGATION_QUICK_START.md) - Quick guide for folder navigation
+- 📄 [Regulation Test Folder Navigation Fix](./REGULATION_TEST_FOLDER_NAVIGATION_FIX.md) - Fix for "folders.map is not a function" error
+- 📄 [Regulation Test Generation Mode UX Improvement](./REGULATION_TEST_GENERATION_MODE_UX_IMPROVEMENT.md) - Moving generation mode selection to step 3
+- 📄 [Regulation Test Questions Editing](./REGULATION_TEST_QUESTIONS_EDITING.md) - Editing generated questions before creating invitations
+- 📄 [Regulation Test Questions Performance](./REGULATION_TEST_QUESTIONS_PERFORMANCE.md) - Performance optimization for editing questions
+- 📄 [Regulation Test Questions Scroll Fix](./REGULATION_TEST_QUESTIONS_SCROLL_FIX.md) - Removed internal scroll for better UX
+- 📄 [Regulation Test Success Dialog](./REGULATION_TEST_SUCCESS_DIALOG.md) - Success dialog after test creation instead of step 4
 
 ### Other Documentation
 - 📄 [Features](./docs/FEATURES.md) - Complete list of platform features

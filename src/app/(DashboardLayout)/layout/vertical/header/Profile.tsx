@@ -148,7 +148,7 @@ const Profile = () => {
       >
         <Box sx={{ px: 2, py: 2 }}>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar
+          <Avatar
               sx={{
                 width: 50,
                 height: 50,
@@ -158,22 +158,22 @@ const Profile = () => {
               {initials}
             </Avatar>
             <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography
+                    <Typography
                 variant="subtitle1"
-                fontWeight={600}
-                sx={{
+                      fontWeight={600}
+                      sx={{
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                }}
-              >
+                      }}
+                    >
                 {auth.name || auth.phone}
-              </Typography>
+                    </Typography>
               {auth.email && (
-                <Typography
+                    <Typography
                   variant="caption"
                   color="text.secondary"
-                  sx={{
+                      sx={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 0.5,
@@ -189,7 +189,7 @@ const Profile = () => {
               {auth.position && (
                 <Typography variant="caption" color="text.secondary">
                   {auth.position}
-                </Typography>
+                    </Typography>
               )}
             </Box>
           </Stack>
