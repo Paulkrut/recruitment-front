@@ -660,7 +660,7 @@ export default function RegulationTestPage() {
                       {' '}<span style={{ color: 'red' }}>*</span>
                     </Typography>
                   }
-                  sx={{ mt: 1, alignItems: 'flex-start' }}
+                  sx={{ mt: 1, alignItems: 'center' }}
                 />
               </Box>
             )}
@@ -687,7 +687,7 @@ export default function RegulationTestPage() {
                       {' '}<span style={{ color: 'red' }}>*</span>
                     </Typography>
                   }
-                  sx={{ mt: 2, alignItems: 'flex-start' }}
+                  sx={{ mt: 2, alignItems: 'center' }}
                 />
               </>
             )}
@@ -805,7 +805,7 @@ export default function RegulationTestPage() {
                     <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика ПДн</a>. Медиа хранятся до 60 дней.
                   </Typography>
                 }
-                sx={{ alignItems: 'flex-start' }}
+                sx={{ alignItems: 'center' }}
               />
             </Box>
 
