@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect, useCallback, memo, useMemo, startTransition } from 'react';
 import {
-  Box, Card, Typography, Chip, Avatar, IconButton, CircularProgress, Tooltip, Divider, Link, Button
+  Box, Card, Typography, Chip, Avatar, IconButton, CircularProgress, Tooltip, Divider, Link, Button,
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Alert, Snackbar
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -577,6 +578,18 @@ export default function KanbanView({
   } | null>(null);
   const [resumeQueueCount, setResumeQueueCount] = useState<number>(0);
 
+  // Состояние для HH Token Required Dialog
+  const [hhTokenDialogOpen, setHhTokenDialogOpen] = useState(false);
+  const [hhTokenError, setHhTokenError] = useState<{
+    candidateName?: string;
+    message?: string;
+  } | null>(null);
+
+  // Состояние для Snackbar (сводка ошибок при пакетной операции)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'warning' | 'error'>('success');
+
   // Обработчик переключения выделения кандидата
   const handleToggleSelect = useCallback((candidateId: number, candidateStatus: string) => {
     // Если в этой колонке был выбран чекбокс "все" - снимаем его
@@ -1149,6 +1162,27 @@ export default function KanbanView({
         const result = await response.json();
         console.log('Bulk update result:', result);
 
+        // Проверяем есть ли ошибки HH token
+        const hhTokenErrors = result.errors?.filter((e: any) => e.error === 'hh_token_required') || [];
+        
+        if (hhTokenErrors.length > 0) {
+          // Если есть ошибки HH token - показываем Snackbar
+          const successCount = result.updated || 0;
+          const totalCount = result.total || 0;
+          const errorCount = hhTokenErrors.length;
+          
+          setSnackbarMessage(
+            `${successCount} из ${totalCount} кандидатов переведены. ${errorCount} ${errorCount === 1 ? 'кандидат требует' : 'кандидатов требуют'} авторизации HH.ru`
+          );
+          setSnackbarSeverity('warning');
+          setSnackbarOpen(true);
+        } else if (result.updated === result.total) {
+          // Все успешно
+          setSnackbarMessage(`✅ Успешно перемещено ${result.updated} ${result.updated === 1 ? 'кандидат' : 'кандидатов'}`);
+          setSnackbarSeverity('success');
+          setSnackbarOpen(true);
+        }
+
         // Обновляем только затронутые колонки
         // 1. Перезагружаем исходные колонки (откуда переносили)
         const sourceStatuses = new Set<string>();
@@ -1182,16 +1216,29 @@ export default function KanbanView({
         updateSelectedCandidates(new Set());
         setSelectedAllInColumn(new Set());
         setSelectionMode(false);
-
-        // Показываем сообщение об успехе (опционально)
-        console.log(`✅ Успешно перемещено ${result.updated} из ${result.total} кандидатов`);
       } else {
+        // Обработка ошибок от API
         const error = await response.json();
-        alert(`Ошибка: ${error.error || 'Не удалось переместить кандидатов'}`);
+        
+        // Если это ошибка HH token для одиночной операции - показываем Dialog
+        if (response.status === 403 && error.error === 'hh_token_required') {
+          setHhTokenError({
+            candidateName: error.candidateName,
+            message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
+          });
+          setHhTokenDialogOpen(true);
+        } else {
+          // Остальные ошибки
+          setSnackbarMessage(`Ошибка: ${error.error || error.message || 'Не удалось переместить кандидатов'}`);
+          setSnackbarSeverity('error');
+          setSnackbarOpen(true);
+        }
       }
     } catch (error) {
       console.error('Error in bulk move:', error);
-      alert('Произошла ошибка при перемещении кандидатов');
+      setSnackbarMessage('Произошла ошибка при перемещении кандидатов');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   }, [vacancyId, selectedCandidatesSet, selectedAllInColumn, columnData, loadCandidatesForStatus, fetchStats]);
 
@@ -1564,6 +1611,76 @@ export default function KanbanView({
         onConfirm={handleConfirmDelete}
       />
     )}
+
+    {/* Диалог HH Token Required (одиночная операция) */}
+    <Dialog
+      open={hhTokenDialogOpen}
+      onClose={() => setHhTokenDialogOpen(false)}
+      maxWidth="sm"
+      fullWidth
+    >
+      <DialogTitle>
+        🔑 Требуется авторизация HH.ru
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {hhTokenError?.candidateName && (
+            <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}>
+              Кандидат: {hhTokenError.candidateName}
+            </Box>
+          )}
+          {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
+        </DialogContentText>
+        <Alert severity="info" sx={{ mt: 2 }}>
+          Перейдите в настройки интеграции HH.ru и авторизуйтесь заново
+        </Alert>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">
+          Отмена
+        </Button>
+        <Button
+          onClick={() => {
+            setHhTokenDialogOpen(false);
+            window.location.href = '/hr/settings/hh-integration';
+          }}
+          variant="contained"
+          color="primary"
+        >
+          Подключить HH.ru
+        </Button>
+      </DialogActions>
+    </Dialog>
+
+    {/* Snackbar для сводки результатов (пакетная операция) */}
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000}
+      onClose={() => setSnackbarOpen(false)}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+    >
+      <Alert
+        onClose={() => setSnackbarOpen(false)}
+        severity={snackbarSeverity}
+        sx={{ width: '100%' }}
+        action={
+          snackbarSeverity === 'warning' ? (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSnackbarOpen(false);
+                window.location.href = '/hr/settings/hh-integration';
+              }}
+            >
+              Подключить HH.ru
+            </Button>
+          ) : undefined
+        }
+      >
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
     </>
   );
 }
