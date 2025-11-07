@@ -20,6 +20,12 @@ import {
   TableBody,
   TablePagination,
   TableSortLabel,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Alert,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode';
@@ -65,6 +71,13 @@ export default function CandidatesList({
   const [total, setTotal] = useState(0);
   const [sortBy, setSortBy] = useState<string>('aiScore');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
+  
+  // Состояние для HH Token Required Dialog
+  const [hhTokenDialogOpen, setHhTokenDialogOpen] = useState(false);
+  const [hhTokenError, setHhTokenError] = useState<{
+    candidateName?: string;
+    message?: string;
+  } | null>(null);
 
   // Загрузка кандидатов с фильтрами, пагинацией и сортировкой
   useEffect(() => {
@@ -232,7 +245,22 @@ export default function CandidatesList({
       });
       
       if (response.ok) {
-        onSnackbar('Кандидат отправлен на AI скрининг');
+        const result = await response.json();
+        
+        // Проверяем есть ли ошибки HH token
+        const hhTokenErrors = result.errors?.filter((e: any) => e.error === 'hh_token_required') || [];
+        
+        if (hhTokenErrors.length > 0 && hhTokenErrors[0]) {
+          // Показываем диалог для HH token
+          setHhTokenError({
+            candidateName: hhTokenErrors[0].candidateName,
+            message: hhTokenErrors[0].message || 'Требуется авторизация HH.ru для загрузки резюме',
+          });
+          setHhTokenDialogOpen(true);
+        } else {
+          onSnackbar('Кандидат отправлен на AI скрининг');
+        }
+        
         // Перезагружаем список кандидатов для получения актуальных данных
         const queryParams = new URLSearchParams();
         queryParams.append('page', (page + 1).toString());
@@ -245,10 +273,39 @@ export default function CandidatesList({
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
         
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
-        const result = await reloadResponse.json();
-        setCandidates(result.data || []);
-        setTotal(result.total || 0);
+        const result2 = await reloadResponse.json();
+        setCandidates(result2.data || []);
+        setTotal(result2.total || 0);
       } else {
+        // Проверяем специфичную ошибку HH token (403)
+        if (response.status === 403) {
+          const error = await response.json();
+          if (error.error === 'hh_token_required') {
+            setHhTokenError({
+              candidateName: error.candidateName,
+              message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
+            });
+            setHhTokenDialogOpen(true);
+            
+            // Откатываем оптимистичное обновление
+            const queryParams = new URLSearchParams();
+            queryParams.append('page', (page + 1).toString());
+            queryParams.append('perPage', rowsPerPage.toString());
+            queryParams.append('sortBy', sortBy);
+            queryParams.append('sortOrder', sortOrder);
+            if (filters.source) queryParams.append('source', filters.source);
+            if (filters.status) queryParams.append('status', filters.status);
+            if (filters.search) queryParams.append('search', filters.search);
+            if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+            
+            const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
+            const result = await reloadResponse.json();
+            setCandidates(result.data || []);
+            setTotal(result.total || 0);
+            return;
+          }
+        }
+        
         const error = await response.json();
         onSnackbar(error.error || 'Ошибка отправки на скрининг');
         // Откатываем оптимистичное обновление
@@ -686,6 +743,46 @@ export default function CandidatesList({
           />
         </Box>
       )}
+      
+      {/* Диалог HH Token Required */}
+      <Dialog
+        open={hhTokenDialogOpen}
+        onClose={() => setHhTokenDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          🔑 Требуется авторизация HH.ru
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {hhTokenError?.candidateName && (
+              <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}>
+                Кандидат: {hhTokenError.candidateName}
+              </Box>
+            )}
+            {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
+          </DialogContentText>
+          <Alert severity="info" sx={{ mt: 2 }}>
+            Перейдите в настройки интеграции HH.ru и авторизуйтесь заново
+          </Alert>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">
+            Отмена
+          </Button>
+          <Button
+            onClick={() => {
+              setHhTokenDialogOpen(false);
+              window.open('/hr/settings/hh-integration', '_blank');
+            }}
+            variant="contained"
+            color="primary"
+          >
+            Подключить HH.ru
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
