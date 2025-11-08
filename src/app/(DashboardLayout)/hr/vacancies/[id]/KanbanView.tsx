@@ -1106,30 +1106,19 @@ export default function KanbanView({
         // Проверяем специфичную ошибку HH token
         if (response.status === 403) {
           const error = await response.json();
-          console.log('403 error details:', error);
           
           if (error.error === 'hh_token_required') {
-            console.log('🔑 HH token required detected! Opening dialog...');
-            
             // Откатываем UI
             await loadCandidatesForStatus(oldStatus, 1, false);
             await loadCandidatesForStatus(newStatus, 1, false);
             fetchStats();
             
             // Показываем модальное окно
-            console.log('Setting hhTokenError:', {
-              candidateName: error.candidateName,
-              message: error.message,
-            });
             setHhTokenError({
               candidateName: error.candidateName,
               message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
             });
-            
-            console.log('Setting hhTokenDialogOpen to true');
             setHhTokenDialogOpen(true);
-            
-            console.log('Dialog should be visible now!');
             return;
           }
         }
