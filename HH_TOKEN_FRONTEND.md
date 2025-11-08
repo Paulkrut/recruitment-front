@@ -294,3 +294,4 @@ UPDATE hh_api_token SET expires_at = NOW() - INTERVAL 1 DAY WHERE company_id = 1
 
 **Осталось:** Протестировать на реальных данных! 🚀
 
+
