@@ -1155,7 +1155,8 @@ export default function CandidateInterviewPage() {
       answered,
       recording,
       timeLeft,
-      timerStarted
+      timerStarted,
+      hasRecordedBlob: !!recordedBlob
     });
 
     if (!question || answered) {
@@ -1164,6 +1165,16 @@ export default function CandidateInterviewPage() {
         answered
       });
       return; // Защита от дублирования
+    }
+
+    // ВАЖНО: Если есть записанный blob, отправляем его вместо пустого ответа
+    if (recordedBlob) {
+      console.log('Recorded blob found, sending it instead of empty answer', {
+        blobSize: recordedBlob.size,
+        blobType: recordedBlob.type
+      });
+      submitAnswer();
+      return;
     }
 
     // Устанавливаем timeLeft в null чтобы предотвратить auto-submit
