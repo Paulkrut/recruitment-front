@@ -403,7 +403,7 @@ export default function PublicApplyPage() {
                   Отправляем...
                 </>
               ) : (
-                'Подать заявку'
+                'Начать интервью'
               )}
             </Button>
           </Box>
