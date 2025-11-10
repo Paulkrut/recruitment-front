@@ -1173,7 +1173,7 @@ export default function CandidateInterviewPage() {
         blobSize: recordedBlob.size,
         blobType: recordedBlob.type
       });
-      submitAnswer();
+      sendBlobAnswer(recordedBlob);
       return;
     }
 
