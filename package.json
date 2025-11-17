@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack --port 3002",
     "build": "next build",
     "start": "next start -p 3002",
-    "lint": "next lint"
+    "lint": "next lint",
+    "i18n:extract": "lingui extract",
+    "i18n:compile": "lingui compile",
+    "i18n:extract-compile": "lingui extract && lingui compile",
+    "migrate:auto": "node scripts/migrate-to-lingui.js",
+    "migrate:check": "node scripts/find-russian-text.js"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.16.0",
@@ -17,6 +22,8 @@
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@iconify/react": "^4.1.1",
+    "@lingui/core": "^5.6.0",
+    "@lingui/react": "^5.6.0",
     "@mui/icons-material": "^5.15.0",
     "@mui/lab": "^5.0.0-alpha.144",
     "@mui/material": "^5.15.0",
@@ -72,9 +79,16 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@lingui/cli": "^5.6.0",
+    "@lingui/loader": "^5.6.0",
+    "@lingui/macro": "^5.6.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "babel-plugin-macros": "^3.1.0",
     "typescript": "^5"
   }
 }

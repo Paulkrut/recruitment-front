@@ -1,0 +1,352 @@
+﻿  10. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  100. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  101. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  102. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  103. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  104. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  105. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  106. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  107. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  108. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  109. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  11. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  110. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  111. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  112. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  113. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  115. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  116. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  117. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  118. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  119. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  12. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  120. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  121. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  122. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  123. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  124. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  125. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  126. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  127. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  128. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  129. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  13. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  130. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  131. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  132. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  133. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  134. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  135. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  136. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  137. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  138. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  139. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  14. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  140. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  141. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  142. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  143. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  144. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  145. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  146. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  147. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  148. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  149. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  15. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  150. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  151. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  152. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  153. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  154. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  155. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  156. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  157. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  158. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  159. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  16. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  160. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  161. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  162. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  163. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  164. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  165. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  166. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  167. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  168. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  169. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  17. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  170. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  173. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  174. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  175. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  176. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  177. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  178. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  179. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  18. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  180. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  181. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  182. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  183. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  184. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  185. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  186. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  187. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  188. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  189. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  19. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  190. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  191. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  192. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  193. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  194. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  195. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  196. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  197. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  198. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  199. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  20. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  200. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  201. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  202. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  203. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  204. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  205. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  206. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  207. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  208. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  209. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  21. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  210. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  211. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  212. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  213. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  214. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  215. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  216. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  217. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  218. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  219. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  22. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  220. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  221. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  222. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  223. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  224. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  225. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  226. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  227. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  228. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  229. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  23. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  230. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  231. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  232. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  233. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  234. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  235. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  236. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  237. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  238. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  239. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  24. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  240. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  241. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  242. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  243. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  244. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  245. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  246. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  247. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  248. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  249. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  25. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  250. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  251. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  252. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  253. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  254. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  255. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  256. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  257. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  258. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  259. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  26. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  260. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  261. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  262. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  263. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  264. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  265. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  266. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  267. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  268. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  269. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  27. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  270. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  271. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  272. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  273. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  274. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  275. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  276. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  277. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  278. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  279. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  28. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  280. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  281. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  282. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  283. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  284. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  285. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  286. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  287. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  288. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  289. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  29. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  290. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  291. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  292. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  293. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  294. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  295. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  296. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  297. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  298. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  299. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  30. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  300. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  301. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  302. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  303. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  304. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  305. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  306. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  307. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  308. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  309. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  31. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  310. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  311. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  312. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  313. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  314. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  315. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  316. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  317. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  318. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  319. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  32. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  320. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  321. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  322. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  323. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  324. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  325. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  326. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  327. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  328. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  329. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  330. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  331. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  332. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  333. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  334. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  335. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  336. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  337. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  338. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  339. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  340. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  341. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  342. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  343. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  344. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  345. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  346. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+  347. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  348. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  349. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  35. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  350. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  351. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  352. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  36. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  37. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  38. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  39. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  40. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  41. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  42. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  43. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  44. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  45. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  46. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  47. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  48. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  49. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  50. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  51. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  52. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  53. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  54. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  55. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  56. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  57. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  58. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  59. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  60. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  61. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  62. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  63. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  64. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  65. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  66. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  67. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  68. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  69. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  7. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  70. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  71. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  72. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  73. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  74. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  75. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  76. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  77. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  78. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  79. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  8. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  80. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  81. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  82. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  83. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  84. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  85. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+  86. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+  88. IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+  89. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.
+  9. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  90. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+  91. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+  92. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  93. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  94. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+  95. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+  96. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+  97. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+  98. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+  99. IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+❌ Console Error: IntlError: INSUFFICIENT_PATH: Message at `hr.vacancyCreate.testSettings` resolved to an object, but only strings are supported. Use a `.` to retrieve nested messages. See https://next-intl.dev/docs/usage/translations#structuring-messages
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestion` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.addQuestionsInfo` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.aiWillCreate` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.back` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.cancel` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateAI` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.generateQuestionsTitle` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.questionText` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.testQuestions` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timeHelperText` in messages for locale `en`.
+❌ Console Error: IntlError: MISSING_MESSAGE: Could not resolve `hr.vacancyCreate.timePerQuestion` in messages for locale `en`.

@@ -1,33 +1,59 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import english from '../utils/languages/en.json';
-import french from '../utils/languages/fr.json';
-import arabic from '../utils/languages/ar.json';
-import chinese from '../utils/languages/ch.json';
+import { i18n } from '@lingui/core';
 
-const resources = {
-  en: {
-    translation: english,
-  },
-  fr: {
-    translation: french,
-  },
-  ar: {
-    translation: arabic,
-  },
-  ch: {
-    translation: chinese,
-  },
+export type SupportedLocale = 'ru' | 'en';
+
+export const locales: Record<SupportedLocale, string> = {
+  ru: 'Русский',
+  en: 'English',
 };
 
-i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
-  .init({
-    resources,
-    lng: 'en',
-    interpolation: {
-      escapeValue: false, // react already safes from xss
-    },
-  });
+export const defaultLocale: SupportedLocale = 'ru';
 
-export default i18n;
+/**
+ * Динамически загружает каталог переводов для указанной локали
+ */
+export async function loadCatalog(locale: SupportedLocale) {
+  const { messages } = await import(
+    `@lingui/loader!../locales/${locale}/messages.po`
+  );
+
+  i18n.load(locale, messages);
+  i18n.activate(locale);
+}
+
+/**
+ * Определяет язык по домену
+ * Примеры:
+ * - sofihr.ru -> 'ru'
+ * - sofihr.com -> 'en'
+ * - localhost -> 'ru' (по умолчанию)
+ */
+export function getLocaleFromHostname(hostname: string): SupportedLocale {
+  // Для независимого домена возвращаем английский
+  if (hostname.includes('.com') || hostname.includes('en.')) {
+    return 'en';
+  }
+  
+  // По умолчанию русский
+  return 'ru';
+}
+
+/**
+ * Получает текущую локаль из браузера или cookies
+ */
+export function getCurrentLocale(): SupportedLocale {
+  if (typeof window === 'undefined') {
+    return defaultLocale;
+  }
+
+  const locale = getLocaleFromHostname(window.location.hostname);
+  return locale;
+}
+
+/**
+ * Инициализирует i18n с указанной локалью
+ */
+export async function initI18n(locale: SupportedLocale = defaultLocale) {
+  await loadCatalog(locale);
+  return i18n;
+}

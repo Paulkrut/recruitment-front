@@ -1,0 +1,19 @@
+{
+  "locales": ["ru", "en"],
+  "sourceLocale": "ru",
+  "catalogs": [
+    {
+      "path": "src/locales/{locale}/messages",
+      "include": ["src"],
+      "exclude": ["**/node_modules/**"]
+    }
+  ],
+  "format": "po",
+  "formatOptions": {
+    "origins": false,
+    "lineNumbers": false
+  },
+  "orderBy": "messageId"
+}
+
+

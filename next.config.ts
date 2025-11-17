@@ -7,6 +7,16 @@ const nextConfig: NextConfig = {
     domains: ['www.sofihr.ru', 'sofihr.ru'],
     formats: ['image/webp', 'image/avif'],
   },
+  webpack: (config) => {
+    // Поддержка Lingui Loader
+    config.module.rules.push({
+      test: /\.po$/,
+      use: {
+        loader: '@lingui/loader',
+      },
+    });
+    return config;
+  },
   async headers() {
     return [
       {
@@ -40,10 +50,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
     ];
-  },
-  i18n: {
-    locales: ['ru'],
-    defaultLocale: 'ru',
   },
   compress: true,
   poweredByHeader: false,

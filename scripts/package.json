@@ -1,0 +1,15 @@
+{
+  "name": "recruitment-front-migration-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Инструменты для миграции на LinguiJS",
+  "scripts": {
+    "migrate": "node migrate-to-lingui.js",
+    "migrate:check": "node migrate-to-lingui.js --dry-run",
+    "find:russian": "node find-russian-text.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
+
+
