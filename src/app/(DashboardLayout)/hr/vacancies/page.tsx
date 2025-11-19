@@ -175,9 +175,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               color: 'text.secondary',
               width: '8%',
               textAlign: 'center'
-            }}>
-              Действия
-            </TableCell>
+            }}><Trans>Действия</Trans></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -257,26 +255,20 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                       <Typography variant="body2" fontWeight={600} color="primary.main">
                         {total}
                       </Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        всего
-                      </Typography>
+                      <Typography variant="caption" color="textSecondary"><Trans>всего</Trans></Typography>
                     </Box>
                     <Box display="flex" alignItems="center" gap={1}>
                       <Typography variant="body2" fontWeight={600} color="success.main">
                         {finished}
                       </Typography>
-                      <Typography variant="caption" color="textSecondary">
-                        завершили
-                      </Typography>
+                      <Typography variant="caption" color="textSecondary"><Trans>завершили</Trans></Typography>
                     </Box>
                     {inProgress > 0 && (
                       <Box display="flex" alignItems="center" gap={1}>
                         <Typography variant="body2" fontWeight={600} color="warning.main">
                           {inProgress}
                         </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          в процессе
-                        </Typography>
+                        <Typography variant="caption" color="textSecondary"><Trans>в процессе</Trans></Typography>
                       </Box>
                     )}
                   </Box>
@@ -434,26 +426,24 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
 
       {/* Метрики */}
       <Box mb={1}>
-        <Typography variant="caption" color="textSecondary" sx={{ mb: 1, display: 'block' }}>
-          Статистика кандидатов:
-        </Typography>
+        <Typography variant="caption" color="textSecondary" sx={{ mb: 1, display: 'block' }}><Trans>Статистика кандидатов:</Trans></Typography>
         <Grid container spacing={1}>
           <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h5" fontWeight={700} color="primary.main">{total}</Typography>
-              <Typography variant="caption" color="textSecondary">Всего</Typography>
+              <Typography variant="caption" color="textSecondary"><Trans>Всего</Trans></Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h5" fontWeight={700} color="success.main">{finished}</Typography>
-              <Typography variant="caption" color="textSecondary">Завершили</Typography>
+              <Typography variant="caption" color="textSecondary"><Trans>Завершили</Trans></Typography>
             </Box>
           </Grid>
           <Grid item xs={4}>
             <Box textAlign="center">
               <Typography variant="h5" fontWeight={700} color="warning.main">{inProgress}</Typography>
-              <Typography variant="caption" color="textSecondary">В процессе</Typography>
+              <Typography variant="caption" color="textSecondary"><Trans>В процессе</Trans></Typography>
             </Box>
           </Grid>
         </Grid>
@@ -569,7 +559,7 @@ export default function HRVacanciesPage() {
     return (
       <PageContainer title={_(msg`Вакансии`)} description="Управление вакансиями">
         <Box sx={{ p: 4 }}>
-          <Typography>Нет доступа</Typography>
+          <Typography><Trans>Нет доступа</Trans></Typography>
         </Box>
       </PageContainer>
     );
@@ -593,9 +583,7 @@ export default function HRVacanciesPage() {
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
           <Box display="flex" alignItems="center" gap={2}>
             <IconBriefcase size={32} color="#2196f3" />
-            <Typography variant="h4" fontWeight="600">
-              Вакансии
-            </Typography>
+            <Typography variant="h4" fontWeight="600"><Trans>Вакансии</Trans></Typography>
             <Chip label={rows.length} color="primary" />
           </Box>
           <Box display="flex" alignItems="center" gap={2}>

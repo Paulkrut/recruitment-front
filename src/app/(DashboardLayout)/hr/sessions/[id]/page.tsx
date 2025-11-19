@@ -91,7 +91,7 @@ export default function HRSessionDetailPage() {
         {/* Ответы на вопросы */}
         <Card sx={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
           <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-            <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Ответы на вопросы</Typography>
+            <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Ответы на вопросы</Trans></Typography>
             <Grid container spacing={2}>
               {answers && answers.length > 0 ? answers.map((a:any, idx:number) => (
                 <Grid item xs={12} key={a.id}>
@@ -117,7 +117,7 @@ export default function HRSessionDetailPage() {
                   </Card>
                 </Grid>
               )) : (
-                <Grid item xs={12}><Typography>Нет ответов</Typography></Grid>
+                <Grid item xs={12}><Typography><Trans>Нет ответов</Trans></Typography></Grid>
               )}
             </Grid>
           </CardContent>
@@ -127,7 +127,7 @@ export default function HRSessionDetailPage() {
         {result && (
           <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Итог интервью</Typography>
+              <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
               <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {result.totalScore !== undefined && result.totalScore !== null ? result.totalScore : <i>нет</i>}</Typography>
               <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {result.summary || <i>нет</i>}</Typography>
             </CardContent>

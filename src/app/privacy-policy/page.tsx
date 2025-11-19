@@ -22,12 +22,8 @@ export default function PrivacyPolicyPage() {
         {/* Заголовок */}
         <Box textAlign="center" mb={4}>
           <Security sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Политика конфиденциальности
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            Обработка персональных данных в системе подбора персонала
-          </Typography>
+          <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Политика конфиденциальности</Trans></Typography>
+          <Typography variant="h6" color="text.secondary"><Trans>Обработка персональных данных в системе подбора персонала</Trans></Typography>
           <Chip
             label={_(msg`Обновлено: 22.09.2025`)}
             color="primary"
@@ -43,16 +39,12 @@ export default function PrivacyPolicyPage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             1. Общие положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки
+          <Typography variant="body1" paragraph><Trans>Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки
             персональных данных пользователей системы подбора персонала (далее — «Система»)
             в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ
-            «О персональных данных» (далее — «152-ФЗ»).
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя Систему, вы даете согласие на обработку ваших персональных данных
-            в соответствии с настоящей Политикой.
-          </Typography>
+            «О персональных данных» (далее — «152-ФЗ»).</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя Систему, вы даете согласие на обработку ваших персональных данных
+            в соответствии с настоящей Политикой.</Trans></Typography>
         </Box>
 
         {/* Оператор ПД */}
@@ -61,9 +53,7 @@ export default function PrivacyPolicyPage() {
             <Shield sx={{ mr: 1, verticalAlign: 'middle' }} />
             2. Оператор персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            Оператором персональных данных является Индивидуальный предприниматель Филипенко Анна Евгеньевна (ОГРНИП 324774600106007, ИНН 772154932804).
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Оператором персональных данных является Индивидуальный предприниматель Филипенко Анна Евгеньевна (ОГРНИП 324774600106007, ИНН 772154932804).</Trans></Typography>
           <Typography variant="body1" paragraph>
             <strong>Контактные данные оператора:</strong>
           </Typography>
@@ -76,9 +66,7 @@ export default function PrivacyPolicyPage() {
               />
             </ListItem>
           </List>
-          <Typography variant="body2" color="text.secondary" paragraph>
-            Обработка и хранение персональных данных осуществляются на территории Российской Федерации; трансграничная передача не осуществляется.
-          </Typography>
+          <Typography variant="body2" color="text.secondary" paragraph><Trans>Обработка и хранение персональных данных осуществляются на территории Российской Федерации; трансграничная передача не осуществляется.</Trans></Typography>
         </Box>
 
         {/* Цели обработки */}
@@ -87,9 +75,7 @@ export default function PrivacyPolicyPage() {
             <CheckCircle sx={{ mr: 1, verticalAlign: 'middle' }} />
             3. Цели обработки персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            Ваши персональные данные обрабатываются исключительно в следующих целях:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Ваши персональные данные обрабатываются исключительно в следующих целях:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -128,9 +114,7 @@ export default function PrivacyPolicyPage() {
             <PrivacyTip sx={{ mr: 1, verticalAlign: 'middle' }} />
             4. Категории обрабатываемых персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            Система обрабатывает следующие категории персональных данных:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Система обрабатывает следующие категории персональных данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -169,9 +153,7 @@ export default function PrivacyPolicyPage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             5. Правовые основания обработки
           </Typography>
-          <Typography variant="body1" paragraph>
-            Обработка персональных данных осуществляется на следующих основаниях:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Обработка персональных данных осуществляется на следующих основаниях:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -203,14 +185,10 @@ export default function PrivacyPolicyPage() {
             <AccessTime color="primary" sx={{ mr: 1, verticalAlign: 'middle' }} />
             7. Сроки хранения персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            Мы храним ваши персональные данные только в течение времени, необходимого
-            для достижения целей обработки, указанных в настоящей Политике.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Мы храним ваши персональные данные только в течение времени, необходимого
+            для достижения целей обработки, указанных в настоящей Политике.</Trans></Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Конкретные сроки хранения:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Конкретные сроки хранения:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -242,10 +220,8 @@ export default function PrivacyPolicyPage() {
             </ListItem>
           </List>
 
-          <Typography variant="body1" paragraph sx={{ mt: 2 }}>
-            По истечении указанных сроков все персональные данные подлежат
-            автоматическому удалению или обезличиванию.
-          </Typography>
+          <Typography variant="body1" paragraph sx={{ mt: 2 }}><Trans>По истечении указанных сроков все персональные данные подлежат
+            автоматическому удалению или обезличиванию.</Trans></Typography>
         </Box>
 
         {/* Обработка видео и аудио данных */}
@@ -254,13 +230,9 @@ export default function PrivacyPolicyPage() {
             <Videocam color="primary" sx={{ mr: 1, verticalAlign: 'middle' }} />
             6. Обработка видео и аудио данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            В процессе прохождения интервью система может записывать видео и аудио кандидата. Эти данные не используются для установления личности; биометрические шаблоны (слепки голоса/лица) не формируются.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>В процессе прохождения интервью система может записывать видео и аудио кандидата. Эти данные не используются для установления личности; биометрические шаблоны (слепки голоса/лица) не формируются.</Trans></Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Цели обработки видео и аудио данных:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Цели обработки видео и аудио данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -296,9 +268,7 @@ export default function PrivacyPolicyPage() {
             предоставляющей услуги подбора персонала для HR-специалистов и организаций.
           </Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Типы HR-клиентов платформы:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Типы HR-клиентов платформы:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -323,9 +293,7 @@ export default function PrivacyPolicyPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Как работает платформа:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Как работает платформа:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -350,9 +318,7 @@ export default function PrivacyPolicyPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Двойная обработка данных:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Двойная обработка данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -385,9 +351,7 @@ export default function PrivacyPolicyPage() {
             <Gavel color="primary" sx={{ mr: 1, verticalAlign: 'middle' }} />
             8. Ваши права как субъекта персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            В соответствии с Федеральным законом "О персональных данных" вы имеете следующие права:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>В соответствии с Федеральным законом "О персональных данных" вы имеете следующие права:</Trans></Typography>
 
           <List>
             <ListItem>
@@ -434,10 +398,8 @@ export default function PrivacyPolicyPage() {
             </ListItem>
           </List>
 
-          <Typography variant="body1" paragraph sx={{ mt: 2 }}>
-            Для реализации своих прав обращайтесь к нам через форму обратной связи
-            или по указанным контактным данным.
-          </Typography>
+          <Typography variant="body1" paragraph sx={{ mt: 2 }}><Trans>Для реализации своих прав обращайтесь к нам через форму обратной связи
+            или по указанным контактным данным.</Trans></Typography>
         </Box>
 
         {/* Как реализовать права */}
@@ -446,9 +408,7 @@ export default function PrivacyPolicyPage() {
             <ContactSupport sx={{ mr: 1, verticalAlign: 'middle' }} />
             8. Как реализовать свои права
           </Typography>
-          <Typography variant="body1" paragraph>
-            Для реализации своих прав вы можете:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Для реализации своих прав вы можете:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -483,9 +443,7 @@ export default function PrivacyPolicyPage() {
             <Security sx={{ mr: 1, verticalAlign: 'middle' }} />
             9. Меры по защите персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            Для защиты ваших персональных данных применяются следующие меры:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Для защиты ваших персональных данных применяются следующие меры:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -524,9 +482,7 @@ export default function PrivacyPolicyPage() {
             <Warning sx={{ mr: 1, verticalAlign: 'middle' }} />
             10. Передача персональных данных третьим лицам
           </Typography>
-          <Typography variant="body1" paragraph>
-            Ваши персональные данные НЕ передаются третьим лицам, за исключением случаев:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Ваши персональные данные НЕ передаются третьим лицам, за исключением случаев:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -556,9 +512,7 @@ export default function PrivacyPolicyPage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             10.1. Обработчики по поручению
           </Typography>
-          <Typography variant="body1" paragraph>
-            Для транскрибации аудио и вспомогательной обработки оператор привлекает обработчиков по поручению на территории РФ. Обработка осуществляется строго по инструкциям оператора, без использования данных в целях обучения, с ограниченными сроками хранения и без трансграничной передачи.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Для транскрибации аудио и вспомогательной обработки оператор привлекает обработчиков по поручению на территории РФ. Обработка осуществляется строго по инструкциям оператора, без использования данных в целях обучения, с ограниченными сроками хранения и без трансграничной передачи.</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -583,9 +537,7 @@ export default function PrivacyPolicyPage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             11. Cookies и аналитические данные
           </Typography>
-          <Typography variant="body1" paragraph>
-            Система использует cookies для:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Система использует cookies для:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -621,10 +573,8 @@ export default function PrivacyPolicyPage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             12. Изменения в политике конфиденциальности
           </Typography>
-          <Typography variant="body1" paragraph>
-            Мы оставляем за собой право вносить изменения в настоящую Политику.
-            При внесении существенных изменений:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Мы оставляем за собой право вносить изменения в настоящую Политику.
+            При внесении существенных изменений:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -656,9 +606,7 @@ export default function PrivacyPolicyPage() {
             <ContactSupport sx={{ mr: 1, verticalAlign: 'middle' }} />
             13. Контактная информация
           </Typography>
-          <Typography variant="body1" paragraph>
-            По всем вопросам, связанным с обработкой персональных данных, обращайтесь:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>По всем вопросам, связанным с обработкой персональных данных, обращайтесь:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><ContactSupport color="primary" /></ListItemIcon>
@@ -683,14 +631,10 @@ export default function PrivacyPolicyPage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             14. Заключительные положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящая Политика вступает в силу с момента размещения на сайте и действует
-            до момента ее отмены или замены новой Политикой.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя Систему, вы подтверждаете, что ознакомились с настоящей Политикой
-            и согласны с условиями обработки ваших персональных данных.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Настоящая Политика вступает в силу с момента размещения на сайте и действует
+            до момента ее отмены или замены новой Политикой.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя Систему, вы подтверждаете, что ознакомились с настоящей Политикой
+            и согласны с условиями обработки ваших персональных данных.</Trans></Typography>
         </Box>
 
         {/* Кнопки действий */}
@@ -702,9 +646,7 @@ export default function PrivacyPolicyPage() {
             component={Link}
             href="/"
             sx={{ mr: 2 }}
-          >
-            Вернуться на главную
-          </Button>
+          ><Trans>Вернуться на главную</Trans></Button>
           <Button
             variant="outlined"
             color="primary"
@@ -712,9 +654,7 @@ export default function PrivacyPolicyPage() {
             component={Link}
             href="/contact"
             sx={{ mr: 2 }}
-          >
-            Связаться с нами
-          </Button>
+          ><Trans>Связаться с нами</Trans></Button>
           <Button
             variant="outlined"
             color="primary"
@@ -722,18 +662,14 @@ export default function PrivacyPolicyPage() {
             component={Link}
             href="/forget-me"
             sx={{ mr: 2 }}
-          >
-            Запрос на удаление данных
-          </Button>
+          ><Trans>Запрос на удаление данных</Trans></Button>
           <Button
             variant="outlined"
             color="info"
             size="large"
             component={Link}
             href="/hr-agreement"
-          >
-            Соглашение для HR-клиентов
-          </Button>
+          ><Trans>Соглашение для HR-клиентов</Trans></Button>
         </Box>
 
         {/* Предупреждение */}

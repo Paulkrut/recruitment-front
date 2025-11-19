@@ -325,22 +325,16 @@ const DraggableCandidateCard = memo(({
           ) : candidate.aiAnalysisStatus === 'loading_resume' ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
               <CircularProgress size={16} thickness={6} />
-              <Typography variant="caption" color="text.secondary">
-                ⏳ Загрузка резюме...
-              </Typography>
+              <Typography variant="caption" color="text.secondary"><Trans>⏳ Загрузка резюме...</Trans></Typography>
             </Box>
           ) : candidate.aiAnalysisStatus === 'analyzing' ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
               <CircularProgress size={16} thickness={6} />
-              <Typography variant="caption" color="text.secondary">
-                🤖 AI анализ...
-              </Typography>
+              <Typography variant="caption" color="text.secondary"><Trans>🤖 AI анализ...</Trans></Typography>
             </Box>
           ) : candidate.aiAnalysisStatus === 'failed' ? (
             <Tooltip title={_(msg`Ошибка при анализе резюме. Попробуйте позже.`)} arrow>
-              <Typography variant="caption" color="error.main" sx={{ mb: 0.5 }}>
-                ❌ Ошибка анализа
-              </Typography>
+              <Typography variant="caption" color="error.main" sx={{ mb: 0.5 }}><Trans>❌ Ошибка анализа</Trans></Typography>
             </Tooltip>
           ) : null}
 
@@ -372,14 +366,12 @@ const DraggableCandidateCard = memo(({
               p: 1,
               mb: 0.5
             }}>
-              <Typography variant="caption" fontWeight="600" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-                📝 Тестирование
-              </Typography>
+              <Typography variant="caption" fontWeight="600" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}><Trans>📝 Тестирование</Trans></Typography>
               
               {/* Статус */}
               {candidate.sessionId && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                  <Typography variant="caption" color="text.secondary">Статус:</Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>Статус:</Trans></Typography>
                   <Typography variant="caption" fontWeight="500" color={
                     candidate.sessionStatus === 'finished' ? 'success.main' :
                     candidate.sessionStatus === 'started' ? 'info.main' : 'text.secondary'
@@ -393,7 +385,7 @@ const DraggableCandidateCard = memo(({
               {/* Средний балл */}
               {candidate.score !== null && candidate.score !== undefined && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                  <Typography variant="caption" color="text.secondary">Балл:</Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>Балл:</Trans></Typography>
                   <Typography variant="caption" fontWeight="600" color={
                     candidate.score >= 9 ? 'success.main' :
                     candidate.score >= 7 ? 'success.light' :
@@ -408,7 +400,7 @@ const DraggableCandidateCard = memo(({
               {/* Количество ответов (если в процессе) */}
               {candidate.sessionStatus === 'started' && candidate.answersCount > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
-                  <Typography variant="caption" color="text.secondary">Ответов:</Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>Ответов:</Trans></Typography>
                   <Typography variant="caption" fontWeight="500">
                     {candidate.answersCount}
                   </Typography>
@@ -418,7 +410,7 @@ const DraggableCandidateCard = memo(({
               {/* Дата завершения (если завершён) */}
               {candidate.sessionStatus === 'finished' && candidate.finishedAt && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography variant="caption" color="text.secondary">Завершён:</Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>Завершён:</Trans></Typography>
                   <Typography variant="caption" fontWeight="500">
                     {formatBitrixDate(candidate.finishedAt)}
                   </Typography>
@@ -1427,37 +1419,23 @@ export default function KanbanView({
                           <Tooltip 
                             title={
                               <Box sx={{ p: 0.5 }}>
-                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                                  🤖 Автоматизация AI Скрининга
-                                </Typography>
-                                <Typography variant="body2" sx={{ mb: 1 }}>
-                                  При переносе кандидата на эту стадию автоматически запускается:
-                                </Typography>
+                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom><Trans>🤖 Автоматизация AI Скрининга</Trans></Typography>
+                                <Typography variant="body2" sx={{ mb: 1 }}><Trans>При переносе кандидата на эту стадию автоматически запускается:</Trans></Typography>
                                 <Box component="ul" sx={{ m: 0, pl: 2 }}>
                                   <li>
-                                    <Typography variant="body2">
-                                      📥 Загрузка резюме из HH.ru (для HH кандидатов)
-                                    </Typography>
+                                    <Typography variant="body2"><Trans>📥 Загрузка резюме из HH.ru (для HH кандидатов)</Trans></Typography>
                                   </li>
                                   <li>
-                                    <Typography variant="body2">
-                                      🧠 AI анализ резюме через DeepInfra
-                                    </Typography>
+                                    <Typography variant="body2"><Trans>🧠 AI анализ резюме через DeepInfra</Trans></Typography>
                                   </li>
                                   <li>
-                                    <Typography variant="body2">
-                                      📊 Оценка соответствия вакансии (0-100%)
-                                    </Typography>
+                                    <Typography variant="body2"><Trans>📊 Оценка соответствия вакансии (0-100%)</Trans></Typography>
                                   </li>
                                   <li>
-                                    <Typography variant="body2">
-                                      💬 Генерация комментария с рекомендацией
-                                    </Typography>
+                                    <Typography variant="body2"><Trans>💬 Генерация комментария с рекомендацией</Trans></Typography>
                                   </li>
                                 </Box>
-                                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                                  ⏱️ Время обработки: 5-30 секунд
-                                </Typography>
+                                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}><Trans>⏱️ Время обработки: 5-30 секунд</Trans></Typography>
                               </Box>
                             }
                             arrow
@@ -1535,7 +1513,7 @@ export default function KanbanView({
                     borderRadius: 1,
                   }}
                 >
-                  <Typography variant="body2">Нет кандидатов</Typography>
+                  <Typography variant="body2"><Trans>Нет кандидатов</Trans></Typography>
                 </Box>
               ) : (
                 <>
@@ -1560,17 +1538,13 @@ export default function KanbanView({
                   {data.loading && (
                     <Box sx={{ p: 2, textAlign: 'center' }}>
                       <CircularProgress size={24} />
-                      <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
-                        Загрузка...
-                      </Typography>
+                      <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}><Trans>Загрузка...</Trans></Typography>
                     </Box>
                   )}
 
                   {/* Сообщение что все загружены */}
                   {!data.hasMore && data.candidates.length > 0 && !data.loading && (
-                    <Typography variant="caption" color="text.secondary" sx={{ p: 2, textAlign: 'center', display: 'block' }}>
-                      Все кандидаты загружены
-                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ p: 2, textAlign: 'center', display: 'block' }}><Trans>Все кандидаты загружены</Trans></Typography>
                   )}
                 </>
               )}
@@ -1656,9 +1630,7 @@ export default function KanbanView({
           )}
           {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
         </DialogContentText>
-        <Alert severity="info" sx={{ mt: 2 }}>
-          Перейдите в настройки интеграции HH.ru и авторизуйтесь заново
-        </Alert>
+        <Alert severity="info" sx={{ mt: 2 }}><Trans>Перейдите в настройки интеграции HH.ru и авторизуйтесь заново</Trans></Alert>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">

@@ -18,6 +18,8 @@ import OverdueCandidatesCard from "@/app/components/hr/OverdueCandidatesCard";
 
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
+import { Trans } from '@lingui/react';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -107,9 +109,7 @@ export default function HRDashboard() {
           <Typography variant="h4" fontWeight={700} gutterBottom>
             Добро пожаловать{user?.name ? `, ${user.name}` : ''}!
           </Typography>
-          <Typography variant="body1" color="text.secondary" mb={2}>
-            Это ваша HR-панель. Здесь вы управляете вакансиями, сотрудниками и кандидатами.
-          </Typography>
+          <Typography variant="body1" color="text.secondary" mb={2}><Trans>Это ваша HR-панель. Здесь вы управляете вакансиями, сотрудниками и кандидатами.</Trans></Typography>
         </Box>
 
         {/* Stepper */}
@@ -150,9 +150,7 @@ export default function HRDashboard() {
                     },
                     transition: 'all 0.3s ease'
                   }}
-                >
-                  ✨ Создать новую вакансию
-                </Button>
+                ><Trans>✨ Создать новую вакансию</Trans></Button>
               </Link>
             ) : (
               // Большая hero кнопка когда нет вакансий
@@ -175,12 +173,8 @@ export default function HRDashboard() {
               opacity: 0.3
             }
           }}>
-            <Typography variant="h5" fontWeight={600} gutterBottom sx={{ position: 'relative', zIndex: 1 }}>
-              🚀 Готовы создать первую вакансию?
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 3, opacity: 0.9, position: 'relative', zIndex: 1 }}>
-              Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня
-            </Typography>
+            <Typography variant="h5" fontWeight={600} gutterBottom sx={{ position: 'relative', zIndex: 1 }}><Trans>🚀 Готовы создать первую вакансию?</Trans></Typography>
+            <Typography variant="body1" sx={{ mb: 3, opacity: 0.9, position: 'relative', zIndex: 1 }}><Trans>Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня</Trans></Typography>
             <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
               <Button 
                 variant="contained" 
@@ -202,9 +196,7 @@ export default function HRDashboard() {
                   position: 'relative',
                   zIndex: 1
                 }}
-              >
-                ✨ Создать вакансию
-              </Button>
+              ><Trans>✨ Создать вакансию</Trans></Button>
             </Link>
           </Box>
         )}
@@ -232,12 +224,8 @@ export default function HRDashboard() {
         {/* Empty State */}
         {isEmpty && (
           <Box sx={{ textAlign: 'center', py: 8 }}>
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              Пока нет данных для отображения
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Создайте вакансию и пригласите кандидатов, чтобы увидеть статистику
-            </Typography>
+            <Typography variant="h6" color="text.secondary" gutterBottom><Trans>Пока нет данных для отображения</Trans></Typography>
+            <Typography variant="body2" color="text.secondary"><Trans>Создайте вакансию и пригласите кандидатов, чтобы увидеть статистику</Trans></Typography>
           </Box>
         )}
       </Box>

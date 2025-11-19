@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
+import { Trans } from '@lingui/react';
+
 
 const Footer = () => {
   return (
@@ -19,9 +21,7 @@ const Footer = () => {
         <Grid container spacing={3} justifyContent="center">
           {/* Основная информация */}
           <Grid item xs={12} md={6} textAlign="center">
-            <Typography fontSize="14px" color="textSecondary" mt={1}>
-              Все права защищены SofiHR. Система подбора персонала.
-            </Typography>
+            <Typography fontSize="14px" color="textSecondary" mt={1}><Trans>Все права защищены SofiHR. Система подбора персонала.</Trans></Typography>
           </Grid>
           
           {/* Ссылки на документы */}
@@ -53,9 +53,7 @@ const Footer = () => {
         
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} textAlign="center">
-            <Typography fontSize="12px" color="textSecondary">
-              © 2025 SofiHR. Система соответствует требованиям 152-ФЗ "О персональных данных"
-            </Typography>
+            <Typography fontSize="12px" color="textSecondary"><Trans>© 2025 SofiHR. Система соответствует требованиям 152-ФЗ "О персональных данных"</Trans></Typography>
           </Grid>
         </Grid>
       </Container>

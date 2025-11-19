@@ -101,9 +101,7 @@ export default function BillingAnalyticsPage() {
               <Typography variant="h3" color="white">
                 {stats.purchased}
               </Typography>
-              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}>
-                Куплено интервью
-              </Typography>
+              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}><Trans>Куплено интервью</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -118,9 +116,7 @@ export default function BillingAnalyticsPage() {
               <Typography variant="h3" color="white">
                 {stats.used.paid}
               </Typography>
-              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}>
-                Использовано оплаченных
-              </Typography>
+              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}><Trans>Использовано оплаченных</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -135,9 +131,7 @@ export default function BillingAnalyticsPage() {
               <Typography variant="h3" color="white">
                 {stats.gifts.count}
               </Typography>
-              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}>
-                🎁 Бонусных интервью
-              </Typography>
+              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}><Trans>🎁 Бонусных интервью</Trans></Typography>
               {stats.gifts.value > 0 && (
                 <Typography variant="caption" color="white" sx={{ opacity: 0.8 }}>
                   на сумму {stats.gifts.value.toLocaleString('ru-RU')}₽
@@ -157,9 +151,7 @@ export default function BillingAnalyticsPage() {
               <Typography variant="h3" color="white">
                 {stats.balance}
               </Typography>
-              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}>
-                Текущий баланс
-              </Typography>
+              <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}><Trans>Текущий баланс</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -168,17 +160,13 @@ export default function BillingAnalyticsPage() {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h5" mb={3}>
-                📊 Использование интервью
-              </Typography>
+              <Typography variant="h5" mb={3}><Trans>📊 Использование интервью</Trans></Typography>
 
               <Stack spacing={3}>
                 {/* Оплаченные */}
                 <Box>
                   <Box display="flex" justifyContent="space-between" mb={1}>
-                    <Typography variant="body1" color="text.secondary">
-                      Оплаченные интервью
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary"><Trans>Оплаченные интервью</Trans></Typography>
                     <Typography variant="h6">
                       {stats.used.paid} / {stats.purchased}
                     </Typography>
@@ -209,9 +197,7 @@ export default function BillingAnalyticsPage() {
                   <>
                     <Box>
                       <Box display="flex" justifyContent="space-between" mb={1}>
-                        <Typography variant="body1" color="warning.main">
-                          🎁 Бонусные интервью
-                        </Typography>
+                        <Typography variant="body1" color="warning.main"><Trans>🎁 Бонусные интервью</Trans></Typography>
                         <Typography variant="h6" color="warning.main">
                           {stats.gifts.count}
                         </Typography>
@@ -228,7 +214,7 @@ export default function BillingAnalyticsPage() {
                 {/* Итого */}
                 <Box>
                   <Box display="flex" justifyContent="space-between" mb={1}>
-                    <Typography variant="h6">Всего проведено интервью</Typography>
+                    <Typography variant="h6"><Trans>Всего проведено интервью</Trans></Typography>
                     <Typography variant="h5" color="success.main">
                       {stats.used.total}
                     </Typography>
@@ -247,9 +233,7 @@ export default function BillingAnalyticsPage() {
         {stats.gifts.count > 0 && (
           <Grid item xs={12}>
             <Alert severity="success" icon={<IconGift size={24} />}>
-              <Typography variant="body1" fontWeight="medium">
-                Спасибо за использование нашей платформы! 🎁
-              </Typography>
+              <Typography variant="body1" fontWeight="medium"><Trans>Спасибо за использование нашей платформы! 🎁</Trans></Typography>
               <Typography variant="body2">
                 Вы получили {stats.gifts.count} бонусных{' '}
                 {stats.gifts.count === 1 ? 'интервью' : 'интервью'} благодаря нашей системе

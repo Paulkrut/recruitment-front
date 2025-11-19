@@ -25,6 +25,8 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { OverdueCandidate, PaginationState } from "@/app/(DashboardLayout)/types/dashboard";
+import { Trans } from '@lingui/react';
+
 
 interface OverdueCandidatesCardProps {
   data: OverdueCandidate[];
@@ -100,9 +102,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconClock size={24} color="#f44336" />
-            <Typography variant="h5" fontWeight="600">
-              Просроченные кандидаты
-            </Typography>
+            <Typography variant="h5" fontWeight="600"><Trans>Просроченные кандидаты</Trans></Typography>
           </Box>
           <Chip
             label={`${data.length} кандидатов`}
@@ -125,10 +125,10 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                 displayEmpty
                 variant="outlined"
               >
-                <MenuItem value={3}>3 на странице</MenuItem>
-                <MenuItem value={5}>5 на странице</MenuItem>
-                <MenuItem value={10}>10 на странице</MenuItem>
-                <MenuItem value={20}>20 на странице</MenuItem>
+                <MenuItem value={3}><Trans>3 на странице</Trans></MenuItem>
+                <MenuItem value={5}><Trans>5 на странице</Trans></MenuItem>
+                <MenuItem value={10}><Trans>10 на странице</Trans></MenuItem>
+                <MenuItem value={20}><Trans>20 на странице</Trans></MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -203,9 +203,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
 
         {data.length === 0 && (
           <Box textAlign="center" py={3}>
-            <Typography variant="body2" color="textSecondary">
-              Нет просроченных кандидатов
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>Нет просроченных кандидатов</Trans></Typography>
           </Box>
         )}
 

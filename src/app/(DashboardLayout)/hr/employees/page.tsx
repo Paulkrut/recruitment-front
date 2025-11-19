@@ -213,7 +213,7 @@ export default function EmployeesPage() {
         )}
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h5">Сотрудники компании</Typography>
+            <Typography variant="h5"><Trans>Сотрудники компании</Trans></Typography>
             {isLead && (
               <Button startIcon={<DownloadIcon />} onClick={exportCSV} variant="outlined">Экспорт в CSV</Button>
             )}
@@ -242,20 +242,20 @@ export default function EmployeesPage() {
 
         {isLead && (
           <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
-            <Typography variant="h6" gutterBottom>Пригласить сотрудника</Typography>
+            <Typography variant="h6" gutterBottom><Trans>Пригласить сотрудника</Trans></Typography>
             <Stack direction="row" spacing={1} mb={2}>
               <TextField value={email} onChange={e => setEmail(e.target.value)} size="small" label="Email" />
               <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label={_(msg`Роль`)} sx={{ width: 120 }}>
                 <MenuItem value="HR">HR</MenuItem>
-                <MenuItem value="HR_LEAD">HR-Лидер</MenuItem>
+                <MenuItem value="HR_LEAD"><Trans>HR-Лидер</Trans></MenuItem>
               </TextField>
-              <Button variant="contained" onClick={sendInvite} disabled={!email.trim()}>Отправить</Button>
+              <Button variant="contained" onClick={sendInvite} disabled={!email.trim()}><Trans>Отправить</Trans></Button>
             </Stack>
           </Paper>
         )}
 
         <Paper sx={{ p: 4, width: "100%", maxWidth: 1100 }}>
-          <Typography variant="h6" gutterBottom>Отправленные приглашения</Typography>
+          <Typography variant="h6" gutterBottom><Trans>Отправленные приглашения</Trans></Typography>
           <Box sx={{ height: 300, width: "100%" }}>
             <DataGrid
               rows={(Array.isArray(invites) ? invites : []).map((inv: any, idx: number) => ({

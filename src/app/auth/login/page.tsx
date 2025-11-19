@@ -124,12 +124,8 @@ export default function LoginPage() {
           {/* Заголовок */}
           <Box textAlign="center" mb={4}>
             <Icon icon="mdi:login" color="#2196F3" width={48} height={48} />
-            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}>
-              Вход в систему
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Войдите в свой аккаунт SofiHR
-            </Typography>
+            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}><Trans>Вход в систему</Trans></Typography>
+            <Typography variant="body1" color="text.secondary"><Trans>Войдите в свой аккаунт SofiHR</Trans></Typography>
           </Box>
 
           {/* Форма */}

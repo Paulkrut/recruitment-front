@@ -2,6 +2,8 @@
 import React, { memo, useState, useCallback, useMemo } from 'react';
 import { Box, IconButton, Menu, MenuItem, Typography, Divider, Button } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { Trans } from '@lingui/react';
+
 
 interface MobileMenuProps {
   pages: string[];
@@ -85,9 +87,7 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
             size="small"
             fullWidth
             sx={{ mr: 1 }}
-          >
-            Регистрация
-          </Button>
+          ><Trans>Регистрация</Trans></Button>
         </MenuItem>
         <MenuItem sx={{ px: 2, py: 1 }}>
           <Button 
@@ -96,9 +96,7 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
             href="/auth/login"
             size="small"
             fullWidth
-          >
-            Войти
-          </Button>
+          ><Trans>Войти</Trans></Button>
         </MenuItem>
       </Menu>
     </Box>

@@ -1,6 +1,8 @@
 "use client";
 import React, { useMemo, useState } from 'react';
 import { Box, Container, Typography, Paper, Slider, Grid, Alert } from '@mui/material';
+import { Trans } from '@lingui/react';
+
 
 interface PricingPlan {
   id: string;
@@ -77,18 +79,12 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
               WebkitTextFillColor: 'transparent',
               mb: 2
             }}
-          >
-            💰 Рассчитайте вашу экономию
-          </Typography>
-          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 700, mx: 'auto' }}>
-            Узнайте, сколько вы сэкономите на автоматизации найма с SofiHR
-          </Typography>
+          ><Trans>💰 Рассчитайте вашу экономию</Trans></Typography>
+          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 700, mx: 'auto' }}><Trans>Узнайте, сколько вы сэкономите на автоматизации найма с SofiHR</Trans></Typography>
         </Box>
 
         <Paper sx={{ p: 4, borderRadius: 4, maxWidth: 900, mx: 'auto' }}>
-          <Typography variant="h6" mb={3} textAlign="center">
-            Сколько сотрудников вы планируете нанять в месяц?
-          </Typography>
+          <Typography variant="h6" mb={3} textAlign="center"><Trans>Сколько сотрудников вы планируете нанять в месяц?</Trans></Typography>
           <Slider
             value={hiresPerMonth}
             onChange={(e, value) => setHiresPerMonth(value as number)}
@@ -117,18 +113,14 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
           <Grid container spacing={3} mb={4}>
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 3, bgcolor: '#fff3e0', border: '2px solid #ff9800', height: '100%' }}>
-                <Typography variant="body2" color="text.secondary" mb={1}>
-                  Традиционный метод найма
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={1}><Trans>Традиционный метод найма</Trans></Typography>
                 <Typography variant="h4" fontWeight={700} color="#ff9800" mb={2}>
                   {savings.traditionalCost.toLocaleString()}₽
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   + {savings.traditionalTime} часов ({savings.traditionalTimeCost.toLocaleString()}₽)
                 </Typography>
-                <Typography variant="caption" color="text.secondary" display="block" mt={2}>
-                  Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час
-                </Typography>
+                <Typography variant="caption" color="text.secondary" display="block" mt={2}><Trans>Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час</Trans></Typography>
               </Paper>
             </Grid>
             
@@ -156,9 +148,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                 <Typography variant="h4" fontWeight={700} color="#4caf50" mb={1}>
                   💰 {savings.totalSavings.toLocaleString()}₽
                 </Typography>
-                <Typography variant="body1" color="text.secondary" fontWeight={600}>
-                  Ваша экономия в месяц
-                </Typography>
+                <Typography variant="body1" color="text.secondary" fontWeight={600}><Trans>Ваша экономия в месяц</Trans></Typography>
                 <Typography variant="caption" color="text.secondary">
                   При {hiresPerMonth} найм{hiresPerMonth === 1 ? 'е' : (hiresPerMonth < 5 ? 'ах' : 'ах')}
                 </Typography>
@@ -167,20 +157,14 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                 <Typography variant="h4" fontWeight={700} color="#4caf50" mb={1}>
                   📈 {savings.roi}%
                 </Typography>
-                <Typography variant="body1" color="text.secondary" fontWeight={600}>
-                  ROI (окупаемость)
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Возврат инвестиций
-                </Typography>
+                <Typography variant="body1" color="text.secondary" fontWeight={600}><Trans>ROI (окупаемость)</Trans></Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>Возврат инвестиций</Trans></Typography>
               </Grid>
             </Grid>
           </Paper>
 
           <Alert severity="success" sx={{ mt: 3 }}>
-            <Typography variant="body2" fontWeight={600} mb={1}>
-              🎯 Почему SofiHR выгоднее традиционного найма?
-            </Typography>
+            <Typography variant="body2" fontWeight={600} mb={1}><Trans>🎯 Почему SofiHR выгоднее традиционного найма?</Trans></Typography>
             <Typography variant="body2">
               • <strong>Автоматизация</strong> — экономия до 70% времени HR-специалистов<br/>
               • <strong>ИИ-анализ</strong> — снижение ошибок при найме на 60%<br/>

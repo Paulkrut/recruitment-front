@@ -73,9 +73,7 @@ export default function CustomStageModal({
             sx={{ mb: 3 }}
           />
 
-          <Typography variant="subtitle2" gutterBottom>
-            Цвет заливки:
-          </Typography>
+          <Typography variant="subtitle2" gutterBottom><Trans>Цвет заливки:</Trans></Typography>
           
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
             <Box sx={{ flex: 1 }}>
@@ -107,9 +105,7 @@ export default function CustomStageModal({
                 }}
               />
               
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                Предпросмотр цвета
-              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}><Trans>Предпросмотр цвета</Trans></Typography>
             </Box>
           </Box>
 
@@ -122,7 +118,7 @@ export default function CustomStageModal({
       </DialogContent>
       
       <DialogActions>
-        <Button onClick={onClose}>Отмена</Button>
+        <Button onClick={onClose}><Trans>Отмена</Trans></Button>
         <Button onClick={handleSave} variant="contained" color="primary">
           {initialName ? 'Сохранить' : 'Создать'}
         </Button>

@@ -66,9 +66,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconAlertTriangle size={24} color="#ff9800" />
-            <Typography variant="h5" fontWeight="600">
-              Слабые вопросы
-            </Typography>
+            <Typography variant="h5" fontWeight="600"><Trans>Слабые вопросы</Trans></Typography>
           </Box>
           <Chip
             label={`${data.length} вопросов`}
@@ -80,9 +78,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
 
         {data.length > 0 && (
           <Box mb={2} p={1.5} bgcolor="rgba(255, 152, 0, 0.08)" borderRadius={1} border="1px solid rgba(255, 152, 0, 0.2)">
-            <Typography variant="body2" color="warning.main" fontWeight="500" sx={{ fontSize: '0.875rem' }}>
-              💡 Рекомендация: Рассмотрите возможность пересмотра вопросов с низким средним баллом
-            </Typography>
+            <Typography variant="body2" color="warning.main" fontWeight="500" sx={{ fontSize: '0.875rem' }}><Trans>💡 Рекомендация: Рассмотрите возможность пересмотра вопросов с низким средним баллом</Trans></Typography>
           </Box>
         )}
 
@@ -176,9 +172,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
 
         {data.length === 0 && (
           <Box textAlign="center" py={3}>
-            <Typography variant="body2" color="textSecondary">
-              Нет слабых вопросов
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>Нет слабых вопросов</Trans></Typography>
           </Box>
         )}
       </CardContent>

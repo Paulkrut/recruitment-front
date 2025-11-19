@@ -433,15 +433,15 @@ export default function CandidatesList({
               onChange={(e) => setBulkStatus(e.target.value)}
               displayEmpty
             >
-              <MenuItem value="" disabled>Переместить в...</MenuItem>
-              <MenuItem value="new">Новый</MenuItem>
-              <MenuItem value="screening">AI Скрининг</MenuItem>
-              <MenuItem value="contacted">Связались</MenuItem>
-              <MenuItem value="testing">Тестирование</MenuItem>
-              <MenuItem value="finalist">Финалист</MenuItem>
-              <MenuItem value="offer">Оффер</MenuItem>
-              <MenuItem value="hired">Принят</MenuItem>
-              <MenuItem value="rejected">Отклонён</MenuItem>
+              <MenuItem value="" disabled><Trans>Переместить в...</Trans></MenuItem>
+              <MenuItem value="new"><Trans>Новый</Trans></MenuItem>
+              <MenuItem value="screening"><Trans>AI Скрининг</Trans></MenuItem>
+              <MenuItem value="contacted"><Trans>Связались</Trans></MenuItem>
+              <MenuItem value="testing"><Trans>Тестирование</Trans></MenuItem>
+              <MenuItem value="finalist"><Trans>Финалист</Trans></MenuItem>
+              <MenuItem value="offer"><Trans>Оффер</Trans></MenuItem>
+              <MenuItem value="hired"><Trans>Принят</Trans></MenuItem>
+              <MenuItem value="rejected"><Trans>Отклонён</Trans></MenuItem>
             </Select>
           </FormControl>
           <Button
@@ -449,9 +449,7 @@ export default function CandidatesList({
             color="primary"
             onClick={handleBulkStatusChange}
             disabled={!bulkStatus}
-          >
-            Применить
-          </Button>
+          ><Trans>Применить</Trans></Button>
           <Button
             variant="outlined"
             onClick={() => setSelectedCandidates([])}
@@ -463,12 +461,8 @@ export default function CandidatesList({
 
       {candidates.length === 0 && !loading ? (
         <Box textAlign="center" py={4}>
-          <Typography variant="h6" color="textSecondary" gutterBottom>
-            Нет кандидатов
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Измените фильтры или добавьте первого кандидата
-          </Typography>
+          <Typography variant="h6" color="textSecondary" gutterBottom><Trans>Нет кандидатов</Trans></Typography>
+          <Typography variant="body2" color="textSecondary"><Trans>Измените фильтры или добавьте первого кандидата</Trans></Typography>
         </Box>
       ) : (
         <Box sx={{ width: '100%', overflow: 'hidden' }}>
@@ -493,7 +487,7 @@ export default function CandidatesList({
                     Имя
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>Источник</TableCell>
+                <TableCell><Trans>Источник</Trans></TableCell>
                 <TableCell>
                   <TableSortLabel
                     active={sortBy === 'aiScore'}
@@ -521,7 +515,7 @@ export default function CandidatesList({
                     Статус
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>Контакты</TableCell>
+                <TableCell><Trans>Контакты</Trans></TableCell>
                 <TableCell>
                   <TableSortLabel
                     active={sortBy === 'createdAt'}
@@ -531,7 +525,7 @@ export default function CandidatesList({
                     Дата добавления
                   </TableSortLabel>
                 </TableCell>
-                <TableCell align="right">Действия</TableCell>
+                <TableCell align="right"><Trans>Действия</Trans></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -768,9 +762,7 @@ export default function CandidatesList({
             )}
             {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
           </DialogContentText>
-          <Alert severity="info" sx={{ mt: 2 }}>
-            Перейдите в настройки интеграции HH.ru и авторизуйтесь заново
-          </Alert>
+          <Alert severity="info" sx={{ mt: 2 }}><Trans>Перейдите в настройки интеграции HH.ru и авторизуйтесь заново</Trans></Alert>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">

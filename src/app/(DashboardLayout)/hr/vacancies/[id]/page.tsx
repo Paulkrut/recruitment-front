@@ -256,7 +256,7 @@ export default function HRVacancyDetailPage() {
       });
   }, [token, id]);
 
-  if (!token) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4}}><Typography>Нет доступа</Typography></Box></PageContainer>;
+  if (!token) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4}}><Typography><Trans>Нет доступа</Trans></Typography></Box></PageContainer>;
   if (loading || !data) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
 
   const { title, description, template, questions } = data;
@@ -289,25 +289,15 @@ export default function HRVacancyDetailPage() {
             {/* Публичная ссылка для самозаписи */}
             <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1, maxWidth: 600 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Typography variant="body2" fontWeight={600} color="text.primary">
-                  🌐 Ссылка для самозаписи на интервью
-                </Typography>
+                <Typography variant="body2" fontWeight={600} color="text.primary"><Trans>🌐 Ссылка для самозаписи на интервью</Trans></Typography>
                 <Tooltip 
                   title={
                     <Box sx={{ p: 1 }}>
-                      <Typography variant="body2" gutterBottom fontWeight={600}>
-                        Публичная ссылка для массовой рассылки
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        Любой человек может записаться на интервью, указав свои данные.
-                      </Typography>
-                      <Typography variant="body2" sx={{ mb: 1 }}>
-                        📌 Используйте для размещения на сайтах вакансий, в соцсетях, массовых рассылках.
-                      </Typography>
+                      <Typography variant="body2" gutterBottom fontWeight={600}><Trans>Публичная ссылка для массовой рассылки</Trans></Typography>
+                      <Typography variant="body2" sx={{ mb: 1 }}><Trans>Любой человек может записаться на интервью, указав свои данные.</Trans></Typography>
+                      <Typography variant="body2" sx={{ mb: 1 }}><Trans>📌 Используйте для размещения на сайтах вакансий, в соцсетях, массовых рассылках.</Trans></Typography>
                       <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.2)' }} />
-                      <Typography variant="body2" sx={{ fontStyle: 'italic', opacity: 0.9 }}>
-                        💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке "Кандидаты" → "Добавить кандидата" — так исключите повторные прохождения под разными именами.
-                      </Typography>
+                      <Typography variant="body2" sx={{ fontStyle: 'italic', opacity: 0.9 }}><Trans>💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке "Кандидаты" → "Добавить кандидата" — так исключите повторные прохождения под разными именами.</Trans></Typography>
                     </Box>
                   }
                   arrow
@@ -359,9 +349,7 @@ export default function HRVacancyDetailPage() {
                   variant="outlined"
                   size="small"
                   sx={{ whiteSpace: 'nowrap' }}
-                >
-                  Создать
-                </Button>
+                ><Trans>Создать</Trans></Button>
               )}
             </Box>
           </Box>
@@ -400,7 +388,7 @@ export default function HRVacancyDetailPage() {
               <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
                 <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
                 <Typography color="text.primary">{title}</Typography>
-                <Typography color="text.primary">Кандидаты</Typography>
+                <Typography color="text.primary"><Trans>Кандидаты</Trans></Typography>
               </Breadcrumbs>
               <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb: 3, boxShadow: 1 }}>
                 {/* Заголовок с padding */}
@@ -411,7 +399,7 @@ export default function HRVacancyDetailPage() {
                         <IconUsers size={32} color="#1976d2" />
                       </Box>
                       <Box>
-                        <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: 'text.primary' }}>Кандидаты</Typography>
+                        <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: 'text.primary' }}><Trans>Кандидаты</Trans></Typography>
                         <Typography variant="body1" sx={{ opacity: 0.9, color: 'text.secondary' }}>Всего: {totalCandidates}</Typography>
                       </Box>
                     </Box>
@@ -710,7 +698,7 @@ export default function HRVacancyDetailPage() {
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
                     <IconBriefcase size={28} color="#1976d2" />
-                    <Typography variant="h6" fontWeight="700" color="text.primary">Вакансия</Typography>
+                    <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вакансия</Trans></Typography>
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{title}</Typography>
                   <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
@@ -742,7 +730,7 @@ export default function HRVacancyDetailPage() {
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
                     <IconFileText size={28} color="#1976d2" />
-                    <Typography variant="h6" fontWeight="700" color="text.primary">Вопросы теста</Typography>
+                    <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вопросы теста</Trans></Typography>
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || 'Без шаблона'}</Typography>
                   {template?.description && (
@@ -760,10 +748,10 @@ export default function HRVacancyDetailPage() {
                     </Typography>
                   )}
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
-                  <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}>Вопросы:</Typography>
+                  <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}><Trans>Вопросы:</Trans></Typography>
                   <Box sx={{ maxHeight: 320, overflowY: 'auto', mb: 2 }}>
                     {(questions||[]).length === 0 ? (
-                      <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Вопросы не добавлены</Typography>
+                      <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}><Trans>Вопросы не добавлены</Trans></Typography>
                     ) : (
                       (questions||[]).map((q:any, index:number)=>(
                         <Box 
@@ -854,7 +842,7 @@ export default function HRVacancyDetailPage() {
               </Grid>
             </Box>
           ) : (
-            <Typography>Выберите минимум 2 кандидатов для сравнения.</Typography>
+            <Typography><Trans>Выберите минимум 2 кандидатов для сравнения.</Trans></Typography>
           )}
         </DialogContent>
         <DialogActions>
@@ -992,7 +980,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Отмена</Button>
+        <Button onClick={onClose}><Trans>Отмена</Trans></Button>
         <Button variant="contained" disabled={!canSubmit} onClick={handleSubmit}>{loading?'Добавление…':'Добавить'}</Button>
       </DialogActions>
     </Dialog>

@@ -16,7 +16,7 @@ export default function SettingsPage(){
   return (
     <PageContainer title={_(msg`Настройки HR`)}>
       <Box p={4}>
-        <Typography variant="h4" gutterBottom>Настройки</Typography>
+        <Typography variant="h4" gutterBottom><Trans>Настройки</Trans></Typography>
         <Tabs value={tab} onChange={(_,v)=>setTab(v)} sx={{mb:3}}>
           <Tab label={_(msg`Пользователи & роли`)} value="users" />
           <Tab label={_(msg`Интеграции`)} value="integrations" />
@@ -38,8 +38,8 @@ function UsersTab(){
   // заглушка списка пользователей
   return (
     <Paper sx={{p:3}}>
-      <Typography variant="h6" gutterBottom>Управление пользователями</Typography>
-      <Typography>Функционал в разработке: добавление HR-пользователей, назначение ролей.</Typography>
+      <Typography variant="h6" gutterBottom><Trans>Управление пользователями</Trans></Typography>
+      <Typography><Trans>Функционал в разработке: добавление HR-пользователей, назначение ролей.</Trans></Typography>
     </Paper>
   );
 }
@@ -50,12 +50,12 @@ function IntegrationsTab(){
   const handle=(f:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>setForm({...form,[f]:e.target.value});
   return (
     <Paper sx={{p:3}}>
-      <Typography variant="h6" gutterBottom>Интеграции</Typography>
+      <Typography variant="h6" gutterBottom><Trans>Интеграции</Trans></Typography>
       <Stack spacing={2} maxWidth={400}>
         <TextField label="OpenAI API Key" value={form.openAi} onChange={handle('openAi')} fullWidth placeholder="sk-…" />
         <TextField label="SMTP DSN" value={form.smtp} onChange={handle('smtp')} fullWidth placeholder="smtp://user:pass@host:port" />
         <TextField label="Webhook URL" value={form.webhook} onChange={handle('webhook')} fullWidth placeholder="https://example.com/hook" />
-        <Button variant="contained" disabled>Сохранить (demo)</Button>
+        <Button variant="contained" disabled><Trans>Сохранить (demo)</Trans></Button>
       </Stack>
     </Paper>
   );
@@ -66,9 +66,9 @@ function InterviewTab(){
   const [maxTime,setMaxTime]=useState(120);
   return (
     <Paper sx={{p:3,maxWidth:300}}>
-      <Typography variant="h6" gutterBottom>Параметры интервью</Typography>
+      <Typography variant="h6" gutterBottom><Trans>Параметры интервью</Trans></Typography>
       <TextField label={_(msg`Дефолтное время ответа (сек)`)} type="number" value={maxTime} onChange={e=>setMaxTime(parseInt(e.target.value))} fullWidth sx={{mb:2}} />
-      <Button variant="contained" disabled>Сохранить (demo)</Button>
+      <Button variant="contained" disabled><Trans>Сохранить (demo)</Trans></Button>
     </Paper>
   );
 }
@@ -119,7 +119,7 @@ function BrandingTab() {
 
   return (
     <Paper sx={{ p: 3, maxWidth: 500 }}>
-      <Typography variant="h6" gutterBottom>Брендирование компании</Typography>
+      <Typography variant="h6" gutterBottom><Trans>Брендирование компании</Trans></Typography>
       <Stack spacing={2}>
         <TextField
           label={_(msg`Название компании`)}
@@ -129,7 +129,7 @@ function BrandingTab() {
           InputProps={{ readOnly: !isLead }}
         />
         <Box>
-          <Typography variant="body2">Логотип</Typography>
+          <Typography variant="body2"><Trans>Логотип</Trans></Typography>
           <Stack direction="row" spacing={2} alignItems="center">
             {form.logo && <img src={form.logo} alt="logo" style={{ width: 64, height: 64, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />}
             {isLead && (
@@ -139,7 +139,7 @@ function BrandingTab() {
             )}
           </Stack>
         </Box>
-        {isLead && <Button variant="contained" onClick={handleSave}>Сохранить</Button>}
+        {isLead && <Button variant="contained" onClick={handleSave}><Trans>Сохранить</Trans></Button>}
         {success && <Typography color="success.main">{success}</Typography>}
         {error && <Typography color="error.main">{error}</Typography>}
       </Stack>

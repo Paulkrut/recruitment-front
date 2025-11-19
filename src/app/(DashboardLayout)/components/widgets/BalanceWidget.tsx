@@ -21,6 +21,8 @@ import {
   IconFileText,
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
+import { Trans } from '@lingui/react';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -101,7 +103,7 @@ export default function BalanceWidget() {
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconWallet size={24} />
-            <Typography variant="h6">Баланс</Typography>
+            <Typography variant="h6"><Trans>Баланс</Trans></Typography>
           </Box>
           <Button
             variant="contained"
@@ -128,9 +130,7 @@ export default function BalanceWidget() {
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box display="flex" alignItems="center" gap={1}>
                 <IconUsers size={20} />
-                <Typography variant="body2" color="text.secondary">
-                  Интервью кандидатов
-                </Typography>
+                <Typography variant="body2" color="text.secondary"><Trans>Интервью кандидатов</Trans></Typography>
               </Box>
               <Chip
                 label={balance?.interviews === 0 ? 'Нет интервью' : `${balance?.interviews} шт.`}
@@ -166,9 +166,7 @@ export default function BalanceWidget() {
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box display="flex" alignItems="center" gap={1}>
                 <IconFileText size={20} />
-                <Typography variant="body2" color="text.secondary">
-                  Тесты по регламентам
-                </Typography>
+                <Typography variant="body2" color="text.secondary"><Trans>Тесты по регламентам</Trans></Typography>
               </Box>
               <Chip
                 label={balance?.regulation_tests === 0 ? 'Нет тестов' : `${balance?.regulation_tests} шт.`}
@@ -188,9 +186,7 @@ export default function BalanceWidget() {
         {/* Предупреждение о низком балансе */}
         {(balance?.interviews || 0) < 5 && (
           <Alert severity="warning" sx={{ mt: 2 }}>
-            <Typography variant="body2">
-              У вас осталось мало интервью. Рекомендуем пополнить баланс.
-            </Typography>
+            <Typography variant="body2"><Trans>У вас осталось мало интервью. Рекомендуем пополнить баланс.</Trans></Typography>
           </Alert>
         )}
 

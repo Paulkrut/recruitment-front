@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
+import { Trans } from '@lingui/react';
+
 import {
   Dialog,
   DialogTitle,
@@ -97,15 +99,11 @@ const GenerateQuestionsDialog = React.memo(({
       <DialogTitle>Сгенерировать вопросы</DialogTitle>
       <DialogContent sx={{ pt: '16px !important' }}>
         <Box sx={{ mb: 3 }}>
-          <Typography variant="body2" color="textSecondary" gutterBottom>
-            Количество вопросов для генерации:
-          </Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom><Trans>Количество вопросов для генерации:</Trans></Typography>
           
           {/* Preset buttons */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
-              Быстрый выбор:
-            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
               {quickSelectButtons}
             </Box>
@@ -147,9 +145,7 @@ const GenerateQuestionsDialog = React.memo(({
             </Box>
           </Box>
           
-          <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
-            Количество вопросов, которые будут сгенерированы ИИ
-          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Количество вопросов, которые будут сгенерированы ИИ</Trans></Typography>
         </Box>
 
         {error && (
@@ -175,7 +171,7 @@ const GenerateQuestionsDialog = React.memo(({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Отмена</Button>
+        <Button onClick={handleClose}><Trans>Отмена</Trans></Button>
         <Button
           variant="contained"
           onClick={handleGenerate}

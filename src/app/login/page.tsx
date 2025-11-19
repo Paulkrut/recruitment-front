@@ -26,10 +26,10 @@ export default function LoginPage(){
   }
 
   return (<Box sx={{p:4,maxWidth:400,mx:'auto'}}>
-    <Typography variant="h5" gutterBottom>Вход HR</Typography>
+    <Typography variant="h5" gutterBottom><Trans>Вход HR</Trans></Typography>
     <TextField label={_(msg`Телефон`)} fullWidth sx={{mb:2}} value={phone} onChange={e=>setPhone(e.target.value)}/>
     <TextField label={_(msg`Пароль`)} type="password" fullWidth sx={{mb:2}} value={password} onChange={e=>setPassword(e.target.value)}/>
-    <Button variant="contained" fullWidth onClick={login}>Войти</Button>
+    <Button variant="contained" fullWidth onClick={login}><Trans>Войти</Trans></Button>
     {error && <Typography color="error" sx={{mt:1}}>{error}</Typography>}
   </Box>);
 } 

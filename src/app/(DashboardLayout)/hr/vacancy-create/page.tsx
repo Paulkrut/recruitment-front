@@ -295,7 +295,7 @@ export default function HRVacancyCreatePage() {
     return (
       <PageContainer title={_(msg`Создание вакансии`)} description="Создание новой вакансии с тестом">
         <Box sx={{ p: 4 }}>
-          <Typography>Нет доступа</Typography>
+          <Typography><Trans>Нет доступа</Trans></Typography>
         </Box>
       </PageContainer>
     );
@@ -308,9 +308,7 @@ export default function HRVacancyCreatePage() {
         <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2} mb={4}>
           <Box display="flex" alignItems="center" gap={2}>
             <IconBriefcase size={40} color="#1976d2" />
-            <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}>
-              Создание вакансии
-              </Typography>
+            <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}><Trans>Создание вакансии</Trans></Typography>
             </Box>
           <Stack direction="row" spacing={2}>
           <Button
@@ -413,9 +411,7 @@ export default function HRVacancyCreatePage() {
               <Stack spacing={3}>
                 <Box display="flex" alignItems="center" gap={2}>
                   <IconSettings size={32} color="#1976d2" />
-                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
-                    Настройки теста
-                  </Typography>
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Настройки теста</Trans></Typography>
                   <Tooltip title={_(msg`Здесь вы можете задать параметры теста для кандидатов`)} placement="right">
                     <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
@@ -435,9 +431,7 @@ export default function HRVacancyCreatePage() {
                 
                 {/* Preset buttons */}
                 <Box sx={{ mb: 3 }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
-                    Быстрый выбор:
-                  </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
                   <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
                       <Button
@@ -465,12 +459,8 @@ export default function HRVacancyCreatePage() {
                 {/* Slider */}
                 <Box sx={{ px: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                      1 мин
-                    </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                      5 мин
-                    </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>1 мин</Trans></Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>5 мин</Trans></Typography>
                   </Box>
                   <Slider
                     value={templateData.questionTime}
@@ -501,9 +491,7 @@ export default function HRVacancyCreatePage() {
                   </Box>
                 </Box>
                 
-                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
-                  Время, отведенное на ответ на каждый вопрос
-                </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
               </Box>
 
                 <Divider sx={{ my: 2 }} />
@@ -536,14 +524,10 @@ export default function HRVacancyCreatePage() {
                       }}
                       color="primary"
                     />
-                    <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-                      Разрешить дополнительные вопросы
-                    </Typography>
+                    <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}><Trans>Разрешить дополнительные вопросы</Trans></Typography>
                     {templateData.allowFollowups && (
                       <Box display="flex" alignItems="center" gap={1}>
-                        <Typography variant="body2" color="textSecondary">
-                          Количество:
-                        </Typography>
+                        <Typography variant="body2" color="textSecondary"><Trans>Количество:</Trans></Typography>
                         <TextField
                           select
                           value={templateData.followupsMax || 1}
@@ -577,15 +561,9 @@ export default function HRVacancyCreatePage() {
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
                         <strong>Как это работает:</strong>
                       </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                        • Максимум 3 дополнительных вопроса на каждый основной вопрос
-                      </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                        • Дополнительные вопросы задаются автоматически, если кандидат ответил неполно
-                      </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        • Вопросы генерируются AI на основе ответа кандидата
-                      </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Максимум 3 дополнительных вопроса на каждый основной вопрос</Trans></Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Дополнительные вопросы задаются автоматически, если кандидат ответил неполно</Trans></Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }}><Trans>• Вопросы генерируются AI на основе ответа кандидата</Trans></Typography>
                     </Box>
                   )}
                 </Box>
@@ -602,9 +580,7 @@ export default function HRVacancyCreatePage() {
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                 <Box display="flex" alignItems="center" gap={2}>
                     <IconFileText size={32} color="#1976d2" />
-                    <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
-                      Вопросы теста
-                    </Typography>
+                    <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Вопросы теста</Trans></Typography>
                   <Chip 
                     label={questions.length} 
                     sx={{ 
@@ -796,12 +772,8 @@ export default function HRVacancyCreatePage() {
                     }}>
                       <IconFileText size={64} color="#1976d2" />
                     </Box>
-                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}>
-                      Нет вопросов
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}>
-                      Добавьте вопросы для тестирования кандидатов. Вы можете создать их вручную или использовать AI для генерации.
-                    </Typography>
+                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, fontWeight: 600 }}><Trans>Нет вопросов</Trans></Typography>
+                    <Typography variant="body1" sx={{ color: 'text.secondary', mb: 4, textAlign: "center", opacity: 0.9, maxWidth: 400 }}><Trans>Добавьте вопросы для тестирования кандидатов. Вы можете создать их вручную или использовать AI для генерации.</Trans></Typography>
                     <Box display="flex" gap={3}>
                       <Button
                         variant="contained"
@@ -949,12 +921,8 @@ export default function HRVacancyCreatePage() {
                 <IconWand size={28} color="#1976d2" />
               </Box>
               <Box>
-                <Typography variant="h5" fontWeight="700" sx={{ color: 'text.primary' }}>
-                  Сгенерировать вопросы с помощью AI
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-                  AI создаст релевантные вопросы для вашей вакансии
-                </Typography>
+                <Typography variant="h5" fontWeight="700" sx={{ color: 'text.primary' }}><Trans>Сгенерировать вопросы с помощью AI</Trans></Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}><Trans>AI создаст релевантные вопросы для вашей вакансии</Trans></Typography>
               </Box>
             </Box>
           </DialogTitle>

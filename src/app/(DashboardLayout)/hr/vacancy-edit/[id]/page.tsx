@@ -399,7 +399,7 @@ export default function HRVacancyEditPage() {
     return (
       <PageContainer title={_(msg`Редактирование вакансии`)} description="Редактирование вакансии с тестом">
         <Box sx={{ p: 4 }}>
-          <Typography>Нет доступа</Typography>
+          <Typography><Trans>Нет доступа</Trans></Typography>
         </Box>
       </PageContainer>
     );
@@ -422,14 +422,12 @@ export default function HRVacancyEditPage() {
         <Stack spacing={2} mb={4}>
           <Breadcrumbs aria-label="breadcrumb">
             <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
-            <Typography color="text.primary">Редактирование</Typography>
+            <Typography color="text.primary"><Trans>Редактирование</Trans></Typography>
           </Breadcrumbs>
           <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
             <Box display="flex" alignItems="center" gap={2}>
               <IconBriefcase size={40} color="#1976d2" />
-              <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}>
-                Редактирование вакансии
-              </Typography>
+              <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}><Trans>Редактирование вакансии</Trans></Typography>
             </Box>
             <Stack direction="row" spacing={2}>
               <Button
@@ -531,9 +529,7 @@ export default function HRVacancyEditPage() {
                   {/* IconSettings and IconEye are not imported, assuming they are available or will be added */}
                   {/* <IconSettings size={32} color="#1976d2" /> */}
                   {/* <IconEye size={20} color="#1976d2" /> */}
-                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
-                    Настройки теста
-                  </Typography>
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Настройки теста</Trans></Typography>
                   <Tooltip title={_(msg`Здесь вы можете задать параметры теста для кандидатов`)} placement="right">
                     <IconButton size="small"><IconFileText size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
@@ -553,9 +549,7 @@ export default function HRVacancyEditPage() {
                   
                   {/* Preset buttons */}
                   <Box sx={{ mb: 3 }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}>
-                      Быстрый выбор:
-                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
                     <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                       {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
                         <Button
@@ -587,12 +581,8 @@ export default function HRVacancyEditPage() {
                   {/* Slider */}
                   <Box sx={{ px: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                        1 мин
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                        5 мин
-                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>1 мин</Trans></Typography>
+                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>5 мин</Trans></Typography>
                     </Box>
                     <Slider
                       value={templateData.questionTime}
@@ -611,9 +601,7 @@ export default function HRVacancyEditPage() {
                     />
                   </Box>
                   
-                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}>
-                    Время, отведенное на ответ на каждый вопрос
-                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
                 </Box>
 
                 <Divider sx={{ my: 0, borderColor: '#eee' }} />
@@ -648,14 +636,10 @@ export default function HRVacancyEditPage() {
                           '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#1976d2' }
                         }}
                       />
-                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-                        Разрешить дополнительные вопросы
-                      </Typography>
+                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}><Trans>Разрешить дополнительные вопросы</Trans></Typography>
                       {templateData.allowFollowups && (
                         <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="body2" color="textSecondary">
-                            Количество:
-                          </Typography>
+                          <Typography variant="body2" color="textSecondary"><Trans>Количество:</Trans></Typography>
                           <TextField
                             select
                             value={templateData.followupsMax || 1}
@@ -678,9 +662,7 @@ export default function HRVacancyEditPage() {
                         </Box>
                       )}
                     </Box>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}>
-                      Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата
-                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата</Trans></Typography>
                   </Box>
                 </Box>
               </Stack>
@@ -693,9 +675,7 @@ export default function HRVacancyEditPage() {
               <Stack spacing={3}>
                 <Box display="flex" alignItems="center" gap={2} mb={2}>
                   <IconFileText size={32} color="#1976d2" />
-                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
-                    Вопросы теста
-                  </Typography>
+                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Вопросы теста</Trans></Typography>
                   <Chip 
                     label={questions.length} 
                     sx={{ backgroundColor: '#f5f5f5', color: '#1976d2', fontSize: '1.1rem', fontWeight: 600, height: 32 }} 
@@ -721,12 +701,8 @@ export default function HRVacancyEditPage() {
                 </Stack>
                 {questions.length === 0 ? (
                   <Box textAlign="center" py={6}>
-                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, opacity: 0.9 }}>
-                      Нет вопросов
-                    </Typography>
-                    <Typography variant="body1" sx={{ color: 'text.secondary', opacity: 0.7, mb: 3 }}>
-                      Добавьте вопросы вручную или сгенерируйте их автоматически
-                    </Typography>
+                    <Typography variant="h5" sx={{ color: 'text.primary', mb: 2, opacity: 0.9 }}><Trans>Нет вопросов</Trans></Typography>
+                    <Typography variant="body1" sx={{ color: 'text.secondary', opacity: 0.7, mb: 3 }}><Trans>Добавьте вопросы вручную или сгенерируйте их автоматически</Trans></Typography>
                   </Box>
                 ) : (
                   <Stack spacing={3}>

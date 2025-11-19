@@ -7,6 +7,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import WarningIcon from '@mui/icons-material/Warning';
+import { Trans } from '@lingui/react';
+
 
 interface ProductionWebcamComponentProps {
   cameraEnabled: boolean;
@@ -484,13 +486,9 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
             maxWidth: '400px',
             textAlign: 'center'
           }}>
-            <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500, mb: 1 }}>
-              💡 Рекомендация
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}>
-              Отключение камеры не влияет на возможность прохождения интервью и оценку по обязательным критериям.
-              Видео помогает HR лучше увидеть коммуникативные навыки. Видео и аудио не используются для установления личности; биометрические шаблоны не формируются.
-            </Typography>
+            <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500, mb: 1 }}><Trans>💡 Рекомендация</Trans></Typography>
+            <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}><Trans>Отключение камеры не влияет на возможность прохождения интервью и оценку по обязательным критериям.
+              Видео помогает HR лучше увидеть коммуникативные навыки. Видео и аудио не используются для установления личности; биометрические шаблоны не формируются.</Trans></Typography>
           </Box>
         )}
       </Box>

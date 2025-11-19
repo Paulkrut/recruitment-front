@@ -170,11 +170,11 @@ export default function TestResultsPage() {
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
           Тесты
         </Link>
-        <Typography color="text.primary">Результаты</Typography>
+        <Typography color="text.primary"><Trans>Результаты</Trans></Typography>
       </Breadcrumbs>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">📊 Результаты тестирования</Typography>
+        <Typography variant="h4"><Trans>📊 Результаты тестирования</Trans></Typography>
         <Button
           variant="outlined"
           startIcon={<ArrowBackIcon />}
@@ -202,25 +202,19 @@ export default function TestResultsPage() {
             <Grid item xs={12} md={4}>
               <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.light' }}>
                 <Typography variant="h4">{results.length}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Всего сессий
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>Всего сессий</Trans></Typography>
               </Paper>
             </Grid>
             <Grid item xs={12} md={4}>
               <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'success.light' }}>
                 <Typography variant="h4">{finishedResults.length}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Завершено
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>Завершено</Trans></Typography>
               </Paper>
             </Grid>
             <Grid item xs={12} md={4}>
               <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'warning.light' }}>
                 <Typography variant="h4">{avgScore}%</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  Средний балл
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>Средний балл</Trans></Typography>
               </Paper>
             </Grid>
           </Grid>
@@ -232,27 +226,27 @@ export default function TestResultsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Сотрудник</TableCell>
+                <TableCell><Trans>Сотрудник</Trans></TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Отдел</TableCell>
-                <TableCell>Статус</TableCell>
-                <TableCell>Балл</TableCell>
-                <TableCell>Начало</TableCell>
-                <TableCell>Окончание</TableCell>
-                <TableCell align="right">Действия</TableCell>
+                <TableCell><Trans>Отдел</Trans></TableCell>
+                <TableCell><Trans>Статус</Trans></TableCell>
+                <TableCell><Trans>Балл</Trans></TableCell>
+                <TableCell><Trans>Начало</Trans></TableCell>
+                <TableCell><Trans>Окончание</Trans></TableCell>
+                <TableCell align="right"><Trans>Действия</Trans></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary">Загрузка...</Typography>
+                    <Typography color="text.secondary"><Trans>Загрузка...</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : results.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary">Результаты отсутствуют</Typography>
+                    <Typography color="text.secondary"><Trans>Результаты отсутствуют</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -328,9 +322,7 @@ export default function TestResultsPage() {
           {selectedSession && (
             <Box>
               <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Сотрудник
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Сотрудник</Trans></Typography>
                 <Typography variant="body1">
                   {selectedSession.employee.name} ({selectedSession.employee.email})
                 </Typography>
@@ -344,9 +336,7 @@ export default function TestResultsPage() {
               <Divider sx={{ my: 2 }} />
 
               <Box sx={{ mb: 3 }}>
-                <Typography variant="caption" color="text.secondary">
-                  Итоговый балл
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>Итоговый балл</Trans></Typography>
                 <Typography variant="h4" color="primary.main">
                   {selectedSession.score}%
                 </Typography>
@@ -354,9 +344,7 @@ export default function TestResultsPage() {
 
               <Divider sx={{ my: 2 }} />
 
-              <Typography variant="subtitle2" gutterBottom sx={{ mt: 3 }}>
-                Ответы на вопросы:
-              </Typography>
+              <Typography variant="subtitle2" gutterBottom sx={{ mt: 3 }}><Trans>Ответы на вопросы:</Trans></Typography>
 
               {selectedSession.answers.map((answer, index) => (
                 <Card key={index} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
@@ -369,14 +357,10 @@ export default function TestResultsPage() {
                     />
                   </Box>
 
-                  <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
-                    Вопрос:
-                  </Typography>
+                  <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}><Trans>Вопрос:</Trans></Typography>
                   <Typography variant="body2">{answer.questionText}</Typography>
 
-                  <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
-                    Ответ сотрудника:
-                  </Typography>
+                  <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}><Trans>Ответ сотрудника:</Trans></Typography>
                   
                   {/* Видео/Аудио ответ */}
                   {(answer.videoFilename || answer.audioFilename) && (
@@ -396,14 +380,10 @@ export default function TestResultsPage() {
                       ) : null}
                       
                       {answer.processingStatus === 'transcribing' && (
-                        <Alert severity="info" sx={{ mt: 1 }}>
-                          Идёт распознавание речи...
-                        </Alert>
+                        <Alert severity="info" sx={{ mt: 1 }}><Trans>Идёт распознавание речи...</Trans></Alert>
                       )}
                       {answer.processingStatus === 'failed' && (
-                        <Alert severity="error" sx={{ mt: 1 }}>
-                          Ошибка при распознавании речи
-                        </Alert>
+                        <Alert severity="error" sx={{ mt: 1 }}><Trans>Ошибка при распознавании речи</Trans></Alert>
                       )}
                     </Box>
                   )}
@@ -411,9 +391,7 @@ export default function TestResultsPage() {
                   {/* Транскрипция */}
                   {answer.transcription && (
                     <Paper sx={{ p: 2, bgcolor: 'background.paper', mb: 2 }}>
-                      <Typography variant="caption" color="text.secondary" gutterBottom display="block">
-                        Транскрипция:
-                      </Typography>
+                      <Typography variant="caption" color="text.secondary" gutterBottom display="block"><Trans>Транскрипция:</Trans></Typography>
                       <Typography variant="body2">{answer.transcription}</Typography>
                     </Paper>
                   )}
@@ -427,9 +405,7 @@ export default function TestResultsPage() {
 
                   {answer.aiComment && (
                     <>
-                      <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
-                        Комментарий AI:
-                      </Typography>
+                      <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}><Trans>Комментарий AI:</Trans></Typography>
                       <Alert severity={answer.score >= 70 ? 'success' : 'warning'} sx={{ mt: 1 }}>
                         {answer.aiComment}
                       </Alert>

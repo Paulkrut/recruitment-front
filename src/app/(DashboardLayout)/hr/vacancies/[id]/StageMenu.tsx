@@ -75,14 +75,14 @@ export default function StageMenu({ customId, stageName, onEdit, onDelete }: Sta
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Редактировать</ListItemText>
+          <ListItemText><Trans>Редактировать</Trans></ListItemText>
         </MenuItem>
 
         <MenuItem onClick={handleDelete}>
           <ListItemIcon>
             <DeleteIcon fontSize="small" color="error" />
           </ListItemIcon>
-          <ListItemText sx={{ color: 'error.main' }}>Удалить стадию</ListItemText>
+          <ListItemText sx={{ color: 'error.main' }}><Trans>Удалить стадию</Trans></ListItemText>
         </MenuItem>
       </Menu>
     </>

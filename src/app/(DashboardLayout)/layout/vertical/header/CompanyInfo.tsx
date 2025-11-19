@@ -14,6 +14,8 @@ import {
 } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useUser } from '@/contexts/UserContext';
+import { Trans } from '@lingui/react';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -185,9 +187,7 @@ const CompanyInfo = () => {
           }}
         >
           <Box sx={{ px: 2, py: 1.5 }}>
-            <Typography variant="subtitle2" color="text.secondary">
-              Выберите компанию
-            </Typography>
+            <Typography variant="subtitle2" color="text.secondary"><Trans>Выберите компанию</Trans></Typography>
           </Box>
           <Divider />
           {companies.map((company) => (

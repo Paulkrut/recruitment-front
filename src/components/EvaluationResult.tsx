@@ -50,21 +50,21 @@ export default function EvaluationResult({ summary,strengths,weaknesses,metrics 
     <Card sx={{mt:3}}>
       <CardHeader title={_(msg`AI-оценка`)}/>
       <CardContent>
-        <Typography variant="subtitle1" gutterBottom>Резюме</Typography>
+        <Typography variant="subtitle1" gutterBottom><Trans>Резюме</Trans></Typography>
         <Typography paragraph>{summary}</Typography>
         
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1" gutterBottom>Сильные стороны</Typography>
+            <Typography variant="subtitle1" gutterBottom><Trans>Сильные стороны</Trans></Typography>
             {strengths?.map(s=>(<Chip key={s} label={s} sx={{m:0.5}} color="success" />))}
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="subtitle1" gutterBottom>Слабые стороны</Typography>
+            <Typography variant="subtitle1" gutterBottom><Trans>Слабые стороны</Trans></Typography>
             {weaknesses?.map(w=>(<Chip key={w} label={w} sx={{m:0.5}} color="error" />))}
           </Grid>
         </Grid>
         
-        <Typography variant="subtitle1" gutterBottom>Метрики оценки</Typography>
+        <Typography variant="subtitle1" gutterBottom><Trans>Метрики оценки</Trans></Typography>
         <Grid container spacing={2}>
           {Object.entries(metrics||{}).map(([metric, value]) => {
             const score = typeof value === 'number' ? value : 0;

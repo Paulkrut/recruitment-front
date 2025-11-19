@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { Trans } from '@lingui/react';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -78,15 +80,11 @@ export default function ForgotPasswordPage() {
         <Card elevation={3}>
           <CardContent sx={{ p: 4, textAlign: "center" }}>
             <Icon icon="mdi:email-check" color="#4caf50" width={64} height={64} />
-            <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}>
-              Новый пароль отправлен!
-            </Typography>
+            <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}><Trans>Новый пароль отправлен!</Trans></Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
               Мы отправили новый пароль на ваш email: <strong>{email}</strong>
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Проверьте почту и используйте новый пароль для входа в систему.
-            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}><Trans>Проверьте почту и используйте новый пароль для входа в систему.</Trans></Typography>
             <Button
               variant="contained"
               onClick={() => router.push("/auth/login")}
@@ -107,12 +105,8 @@ export default function ForgotPasswordPage() {
           {/* Заголовок */}
           <Box textAlign="center" mb={4}>
             <Icon icon="mdi:lock-reset" color="#2196F3" width={48} height={48} />
-            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}>
-              Восстановление пароля
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Введите ваш email и мы отправим новый пароль
-            </Typography>
+            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}><Trans>Восстановление пароля</Trans></Typography>
+            <Typography variant="body1" color="text.secondary"><Trans>Введите ваш email и мы отправим новый пароль</Trans></Typography>
           </Box>
 
           {/* Форма */}

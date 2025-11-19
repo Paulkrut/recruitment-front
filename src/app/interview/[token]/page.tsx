@@ -1601,9 +1601,7 @@ export default function CandidateInterviewPage() {
           <Box sx={{ flex: 1, mt: 3, display: 'flex', flexDirection: 'column' }}>
             <Card sx={{ mb: 3 }}>
               <CardContent>
-                <Typography variant="h4" gutterBottom align="center" color="primary">
-                  🎯 Ваши результаты интервью
-                </Typography>
+                <Typography variant="h4" gutterBottom align="center" color="primary"><Trans>🎯 Ваши результаты интервью</Trans></Typography>
 
                 {/* Дисклеймер наверху */}
                 <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
@@ -1621,18 +1619,14 @@ export default function CandidateInterviewPage() {
                   </Box>
                 )}
 
-                <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                  📝 Краткий итог
-                </Typography>
+                <Typography variant="h6" gutterBottom sx={{ mt: 3 }}><Trans>📝 Краткий итог</Trans></Typography>
                 <Typography paragraph>
                   {feedbackData.feedback.summary}
                 </Typography>
 
                 <Divider sx={{ my: 3 }} />
 
-                <Typography variant="h6" gutterBottom>
-                  💡 Развивающая обратная связь
-                </Typography>
+                <Typography variant="h6" gutterBottom><Trans>💡 Развивающая обратная связь</Trans></Typography>
                 <Typography paragraph>
                   {feedbackData.feedback.feedback}
                 </Typography>
@@ -1640,9 +1634,7 @@ export default function CandidateInterviewPage() {
                 {feedbackData.feedback.scores_table && (
                   <>
                     <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" gutterBottom>
-                      📊 Таблица оценок
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>📊 Таблица оценок</Trans></Typography>
                     {Array.isArray(feedbackData.feedback.scores_table) && feedbackData.feedback.scores_table.length > 0 ? (
                       <TableContainer component={Paper} sx={{ bgcolor: 'grey.50' }}>
                         <Table size="small">
@@ -1683,9 +1675,7 @@ export default function CandidateInterviewPage() {
                 {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
                   <>
                     <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" gutterBottom color="success.main">
-                      ✅ Ваши сильные стороны
-                    </Typography>
+                    <Typography variant="h6" gutterBottom color="success.main"><Trans>✅ Ваши сильные стороны</Trans></Typography>
                     <Stack spacing={1}>
                       {feedbackData.feedback.strengths.map((strength: string, index: number) => (
                         <Chip
@@ -1716,9 +1706,7 @@ export default function CandidateInterviewPage() {
                 {feedbackData.feedback.weaknesses && feedbackData.feedback.weaknesses.length > 0 && (
                   <>
                     <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" gutterBottom color="warning.main">
-                      🎯 Области для развития
-                    </Typography>
+                    <Typography variant="h6" gutterBottom color="warning.main"><Trans>🎯 Области для развития</Trans></Typography>
                     <Stack spacing={1}>
                       {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
                         <Chip
@@ -1758,9 +1746,7 @@ export default function CandidateInterviewPage() {
             {showEmailForm ? (
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    📧 Отправить результаты на email
-                  </Typography>
+                  <Typography variant="h6" gutterBottom><Trans>📧 Отправить результаты на email</Trans></Typography>
                   <TextField
                     fullWidth
                     type="email"
@@ -1805,12 +1791,8 @@ export default function CandidateInterviewPage() {
             {!opinionSubmitted && (
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    💬 Дополнительная информация
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.
-                  </Typography>
+                  <Typography variant="h6" gutterBottom><Trans>💬 Дополнительная информация</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary" paragraph><Trans>Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.</Trans></Typography>
                   <TextField
                     fullWidth
                     multiline
@@ -1825,9 +1807,7 @@ export default function CandidateInterviewPage() {
                     variant="contained"
                     onClick={submitCandidateOpinion}
                     disabled={candidateOpinion.length < 10}
-                  >
-                    Отправить мнение
-                  </Button>
+                  ><Trans>Отправить мнение</Trans></Button>
                 </CardContent>
               </Card>
             )}
@@ -1835,9 +1815,7 @@ export default function CandidateInterviewPage() {
             {opinionSubmitted && (
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography color="success.main" align="center">
-                    ✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.
-                  </Typography>
+                  <Typography color="success.main" align="center"><Trans>✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.</Trans></Typography>
                 </CardContent>
               </Card>
             )}
@@ -1868,12 +1846,8 @@ export default function CandidateInterviewPage() {
       }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           {stepperComp}
-          <Typography variant="h4" gutterBottom>
-            Спасибо за прохождение интервью!
-          </Typography>
-          <Typography sx={{mb:3}}>
-            Наш менеджер свяжется с вами после проверки ответов.
-          </Typography>
+          <Typography variant="h4" gutterBottom><Trans>Спасибо за прохождение интервью!</Trans></Typography>
+          <Typography sx={{mb:3}}><Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans></Typography>
 
           {/* Hero кнопка для получения обратной связи */}
           <Button
@@ -1948,12 +1922,8 @@ export default function CandidateInterviewPage() {
                 }
               }}
             >
-              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
-                ⏱️ Обработка ответов может занимать до 20 минут
-              </Typography>
-              <Typography variant="body2">
-                Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.
-              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}><Trans>⏱️ Обработка ответов может занимать до 20 минут</Trans></Typography>
+              <Typography variant="body2"><Trans>Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.</Trans></Typography>
             </Alert>
           )}
         </Box>
@@ -1983,7 +1953,7 @@ export default function CandidateInterviewPage() {
           px: { xs: 0, sm: 2, md: 4 } // Адаптивные горизонтальные отступы
         }}>
           {stepperComp}
-          <Typography>Загрузка…</Typography>
+          <Typography><Trans>Загрузка…</Trans></Typography>
         </Box>
       );
     }
@@ -2009,9 +1979,7 @@ export default function CandidateInterviewPage() {
             <Box sx={{ flex: 1, mt: 3, display: 'flex', flexDirection: 'column' }}>
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography variant="h4" gutterBottom align="center" color="primary">
-                    🎯 Ваши результаты интервью
-                  </Typography>
+                  <Typography variant="h4" gutterBottom align="center" color="primary"><Trans>🎯 Ваши результаты интервью</Trans></Typography>
 
                   {/* Дисклеймер наверху */}
                   <Box sx={{ bgcolor: 'warning.light', p: 2, borderRadius: 1, mb: 3 }}>
@@ -2032,18 +2000,14 @@ export default function CandidateInterviewPage() {
                     </Box>
                   )}
 
-                  <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                    📝 Краткий итог
-                  </Typography>
+                  <Typography variant="h6" gutterBottom sx={{ mt: 3 }}><Trans>📝 Краткий итог</Trans></Typography>
                   <Typography paragraph>
                     {feedbackData.feedback.summary}
                   </Typography>
 
                   <Divider sx={{ my: 3 }} />
 
-                  <Typography variant="h6" gutterBottom>
-                    💡 Развивающая обратная связь
-                  </Typography>
+                  <Typography variant="h6" gutterBottom><Trans>💡 Развивающая обратная связь</Trans></Typography>
                   <Typography paragraph>
                     {feedbackData.feedback.feedback}
                   </Typography>
@@ -2051,9 +2015,7 @@ export default function CandidateInterviewPage() {
                   {feedbackData.feedback.scores_table && (
                     <>
                       <Divider sx={{ my: 3 }} />
-                      <Typography variant="h6" gutterBottom>
-                        📊 Таблица оценок
-                      </Typography>
+                      <Typography variant="h6" gutterBottom><Trans>📊 Таблица оценок</Trans></Typography>
                       {Array.isArray(feedbackData.feedback.scores_table) && feedbackData.feedback.scores_table.length > 0 ? (
                         <TableContainer component={Paper} sx={{ bgcolor: 'grey.50' }}>
                           <Table size="small">
@@ -2093,9 +2055,7 @@ export default function CandidateInterviewPage() {
 
                   <Divider sx={{ my: 3 }} />
 
-                  <Typography variant="h6" gutterBottom>
-                    💡 Рекомендации для развития
-                  </Typography>
+                  <Typography variant="h6" gutterBottom><Trans>💡 Рекомендации для развития</Trans></Typography>
                   <Typography paragraph>
                     {feedbackData.feedback.recommendations || feedbackData.feedback.next_level}
                   </Typography>
@@ -2103,9 +2063,7 @@ export default function CandidateInterviewPage() {
                   {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
                     <>
                       <Divider sx={{ my: 3 }} />
-                      <Typography variant="h6" gutterBottom color="success.main">
-                        ✅ Ваши сильные стороны
-                      </Typography>
+                      <Typography variant="h6" gutterBottom color="success.main"><Trans>✅ Ваши сильные стороны</Trans></Typography>
                       <Stack spacing={1}>
                         {feedbackData.feedback.strengths.map((strength: string, index: number) => (
                           <Chip
@@ -2136,9 +2094,7 @@ export default function CandidateInterviewPage() {
                   {feedbackData.feedback.weaknesses && feedbackData.feedback.weaknesses.length > 0 && (
                     <>
                       <Divider sx={{ my: 3 }} />
-                      <Typography variant="h6" gutterBottom color="warning.main">
-                        🎯 Области для развития
-                      </Typography>
+                      <Typography variant="h6" gutterBottom color="warning.main"><Trans>🎯 Области для развития</Trans></Typography>
                       <Stack spacing={1}>
                         {feedbackData.feedback.weaknesses.map((weakness: string, index: number) => (
                           <Chip
@@ -2178,9 +2134,7 @@ export default function CandidateInterviewPage() {
               {showEmailForm ? (
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      📧 Отправить результаты на email
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>📧 Отправить результаты на email</Trans></Typography>
                     <TextField
                       fullWidth
                       type="email"
@@ -2225,12 +2179,8 @@ export default function CandidateInterviewPage() {
               {!opinionSubmitted && (
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      💬 Дополнительная информация
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>💬 Дополнительная информация</Trans></Typography>
+                    <Typography variant="body2" color="text.secondary" paragraph><Trans>Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру.</Trans></Typography>
                     <TextField
                       fullWidth
                       multiline
@@ -2245,9 +2195,7 @@ export default function CandidateInterviewPage() {
                       variant="contained"
                       onClick={submitCandidateOpinion}
                       disabled={candidateOpinion.length < 10}
-                    >
-                      Отправить мнение
-                    </Button>
+                    ><Trans>Отправить мнение</Trans></Button>
                   </CardContent>
                 </Card>
               )}
@@ -2255,9 +2203,7 @@ export default function CandidateInterviewPage() {
               {opinionSubmitted && (
                 <Card sx={{ mb: 3 }}>
                   <CardContent>
-                    <Typography color="success.main" align="center">
-                      ✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.
-                    </Typography>
+                    <Typography color="success.main" align="center"><Trans>✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру.</Trans></Typography>
                   </CardContent>
                 </Card>
               )}
@@ -2287,12 +2233,8 @@ export default function CandidateInterviewPage() {
         }}>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {stepperComp}
-            <Typography variant="h4" gutterBottom>
-              Спасибо за прохождение интервью!
-            </Typography>
-            <Typography sx={{mb:3}}>
-              Наш менеджер свяжется с вами после проверки ответов.
-            </Typography>
+            <Typography variant="h4" gutterBottom><Trans>Спасибо за прохождение интервью!</Trans></Typography>
+            <Typography sx={{mb:3}}><Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans></Typography>
 
             {/* Hero кнопка для получения обратной связи */}
             <Button
@@ -2367,12 +2309,8 @@ export default function CandidateInterviewPage() {
                   }
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
-                  ⏱️ Обработка ответов может занимать до 20 минут
-                </Typography>
-                <Typography variant="body2">
-                  Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.
-                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}><Trans>⏱️ Обработка ответов может занимать до 20 минут</Trans></Typography>
+                <Typography variant="body2"><Trans>Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.</Trans></Typography>
               </Alert>
             )}
           </Box>
@@ -2409,9 +2347,9 @@ export default function CandidateInterviewPage() {
           flexShrink: 0
         }}>
         {stepperComp}
-        <Typography variant="h4" gutterBottom>Перед началом</Typography>
+        <Typography variant="h4" gutterBottom><Trans>Перед началом</Trans></Typography>
         <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
-          <Typography sx={{mb:2}}>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Typography>
+          <Typography sx={{mb:2}}><Trans>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Trans></Typography>
           <Box sx={{mt:2}}>
             <FormControlLabel
               control={<Checkbox checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} color="primary" />}
@@ -2424,7 +2362,7 @@ export default function CandidateInterviewPage() {
             />
             <FormControlLabel
               control={<Checkbox checked={cameraEnabled} onChange={handleToggleCamera} color="primary" />}
-              label={<Typography variant="body2">Согласие на запись видео (снимите галочку — будет только аудио)</Typography>}
+              label={<Typography variant="body2"><Trans>Согласие на запись видео (снимите галочку — будет только аудио)</Trans></Typography>}
               sx={{ alignItems: 'center', mb: 1 }}
             />
           </Box>
@@ -2531,9 +2469,7 @@ export default function CandidateInterviewPage() {
                 boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
               })
             }}
-          >
-            Начать
-          </Button>
+          ><Trans>Начать</Trans></Button>
 
           {/* Компонент для удаления данных - прижат к низу */}
           <Box sx={{ mt: 2 }}>
@@ -2586,12 +2522,8 @@ export default function CandidateInterviewPage() {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="h6" fontWeight={600} sx={{ color: '#000' }}>
-                  Интервью
-                </Typography>
-                <Typography variant="caption" sx={{ color: '#666' }}>
-                  AI-ассистент
-                </Typography>
+                <Typography variant="h6" fontWeight={600} sx={{ color: '#000' }}><Trans>Интервью</Trans></Typography>
+                <Typography variant="caption" sx={{ color: '#666' }}><Trans>AI-ассистент</Trans></Typography>
               </Box>
             </Box>
             <Box sx={{display:'flex',alignItems:'center',gap:2}}>
@@ -2847,9 +2779,7 @@ export default function CandidateInterviewPage() {
                                   gap: 1
                                 }}>
                                   <Typography sx={{ fontSize: '24px' }}>🎥</Typography>
-                                  <Typography sx={{ fontSize: '12px', opacity: 0.8 }}>
-                                    Подключение к камере...
-                                  </Typography>
+                                  <Typography sx={{ fontSize: '12px', opacity: 0.8 }}><Trans>Подключение к камере...</Trans></Typography>
                                 </Box>
                               )}
                               {/* Индикатор загрузки видео */}
@@ -2867,9 +2797,7 @@ export default function CandidateInterviewPage() {
                                   fontSize: '12px',
                                   fontWeight: 'bold',
                                   zIndex: 2
-                                }}>
-                                  Загрузка видео...
-                                </Box>
+                                }}><Trans>Загрузка видео...</Trans></Box>
                               )}
                               {/* Наложение с индикатором записи */}
                               <Box sx={{
@@ -2933,9 +2861,7 @@ export default function CandidateInterviewPage() {
                             color: 'white'
                           }}>
                             <MicIcon sx={{ fontSize: '20px' }} />
-                            <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}>
-                              Запись аудио
-                            </Typography>
+                            <Typography sx={{ fontSize: '14px', fontWeight: 'bold' }}><Trans>Запись аудио</Trans></Typography>
                             <Box sx={{
                               width: 6,
                               height: 6,
@@ -2968,9 +2894,7 @@ export default function CandidateInterviewPage() {
                           <Typography sx={{
                             fontSize: '12px',
                             color: 'rgba(255,255,255,0.8)'
-                          }}>
-                            Говорите в микрофон
-                          </Typography>
+                          }}><Trans>Говорите в микрофон</Trans></Typography>
                         </Box>
                       )}
 
@@ -3140,9 +3064,7 @@ export default function CandidateInterviewPage() {
                   fontSize: '14px',
                   px: 3
                 }}
-              >
-                ⏹️ Остановить запись
-              </Button>
+              ><Trans>⏹️ Остановить запись</Trans></Button>
             ) : recordedBlob ? (
               <>
                 <Button
@@ -3167,9 +3089,7 @@ export default function CandidateInterviewPage() {
                     fontSize: '14px',
                     px: 3
                   }}
-                >
-                  🔄 Переписать
-                </Button>
+                ><Trans>🔄 Переписать</Trans></Button>
                 <Button
                   variant="contained"
                   color="success"
@@ -3235,9 +3155,7 @@ export default function CandidateInterviewPage() {
                 </Typography>
               </Box>
             </Box>
-            <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}>
-              Пропустить вопрос?
-            </Typography>
+            <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}><Trans>Пропустить вопрос?</Trans></Typography>
           </DialogTitle>
           <DialogContent sx={{ pt: 2, pb: 1 }}>
             <Typography sx={{
@@ -3252,9 +3170,7 @@ export default function CandidateInterviewPage() {
                 color: '#ff9800',
                 fontWeight: 600,
                 fontSize: '13px'
-              }}>
-                Внимание:
-              </Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
+              }}><Trans>Внимание:</Trans></Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
             </Typography>
           </DialogContent>
           <DialogActions sx={{
@@ -3292,10 +3208,7 @@ export default function CandidateInterviewPage() {
                 px: 3
               }}
               variant="contained"
-            >
-              Пропустить
-
-            </Button>
+            ><Trans>Пропустить</Trans></Button>
           </DialogActions>
         </Dialog>
       </Box>
@@ -3319,18 +3232,10 @@ export default function CandidateInterviewPage() {
             <strong>Что будет удалено:</strong>
           </Typography>
           <Box sx={{ pl: 2, mb: 2 }}>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              • Ваши персональные данные (имя, email, телефон)
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              • Видео и аудио записи интервью
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              • Результаты анализа и оценки
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              • Все согласия на обработку данных
-            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Ваши персональные данные (имя, email, телефон)</Trans></Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Видео и аудио записи интервью</Trans></Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Результаты анализа и оценки</Trans></Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Все согласия на обработку данных</Trans></Typography>
           </Box>
 
           <Typography variant="body2" paragraph color="error.main">

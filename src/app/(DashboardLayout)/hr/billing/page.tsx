@@ -244,9 +244,7 @@ export default function BillingPage() {
                     <Typography variant="h4" align="center">
                       {plan.interviews_included}
                     </Typography>
-                    <Typography variant="caption" align="center" display="block">
-                      интервью
-                    </Typography>
+                    <Typography variant="caption" align="center" display="block"><Trans>интервью</Trans></Typography>
                   </Box>
 
                   {plan.features && renderFeatures(plan.features)}
@@ -288,9 +286,7 @@ export default function BillingPage() {
               </Typography>
 
               {selectedPlan.is_free && (
-                <Alert severity="info" sx={{ mt: 2 }}>
-                  Бесплатный тариф доступен только один раз для каждой компании
-                </Alert>
+                <Alert severity="info" sx={{ mt: 2 }}><Trans>Бесплатный тариф доступен только один раз для каждой компании</Trans></Alert>
               )}
             </Box>
           )}

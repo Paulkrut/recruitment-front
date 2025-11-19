@@ -147,22 +147,14 @@ export default function ContactPage() {
       {/* Заголовок */}
       <Box textAlign="center" mb={4}>
         <ContactSupport sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-        <Typography variant="h3" gutterBottom fontWeight="bold">
-          Связаться с нами
-        </Typography>
-        <Typography variant="h6" color="text.secondary">
-          У вас есть вопросы? Мы готовы помочь!
-        </Typography>
+        <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Связаться с нами</Trans></Typography>
+        <Typography variant="h6" color="text.secondary"><Trans>У вас есть вопросы? Мы готовы помочь!</Trans></Typography>
       </Box>
 
       {/* Форма обратной связи */}
       <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h5" gutterBottom fontWeight="bold" color="primary">
-          Форма обратной связи
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Заполните форму ниже, и мы свяжемся с вами в ближайшее время
-        </Typography>
+        <Typography variant="h5" gutterBottom fontWeight="bold" color="primary"><Trans>Форма обратной связи</Trans></Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}><Trans>Заполните форму ниже, и мы свяжемся с вами в ближайшее время</Trans></Typography>
 
         {/* Результат отправки */}
         {submitResult && (
@@ -287,9 +279,7 @@ export default function ContactPage() {
                   {submitting ? 'Отправляем...' : 'Отправить сообщение'}
                 </Button>
 
-                <Typography variant="caption" color="text.secondary">
-                  * - обязательные поля
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>* - обязательные поля</Trans></Typography>
               </Box>
             </Grid>
           </Grid>
@@ -305,18 +295,14 @@ export default function ContactPage() {
           component={Link}
           href="/"
           sx={{ mr: 2 }}
-        >
-          Вернуться на главную
-        </Button>
+        ><Trans>Вернуться на главную</Trans></Button>
         <Button 
           variant="outlined" 
           color="primary" 
           size="large"
           component={Link}
           href="/privacy-policy"
-        >
-          Политика конфиденциальности
-        </Button>
+        ><Trans>Политика конфиденциальности</Trans></Button>
       </Box>
     </Container>
   );

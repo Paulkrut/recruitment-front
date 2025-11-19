@@ -263,24 +263,16 @@ export default function PublicApplyPage() {
           <Box sx={{ color: 'success.main', mb: 3 }}>
             <IconUser size={80} />
           </Box>
-          <Typography variant="h4" gutterBottom color="success.main">
-            Заявка принята! 🎉
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 3 }}>
-            Спасибо за интерес к вакансии! Теперь вы можете пройти интервью.
-          </Typography>
+          <Typography variant="h4" gutterBottom color="success.main"><Trans>Заявка принята! 🎉</Trans></Typography>
+          <Typography variant="body1" sx={{ mb: 3 }}><Trans>Спасибо за интерес к вакансии! Теперь вы можете пройти интервью.</Trans></Typography>
           <Button
             variant="contained"
             size="large"
             href={interviewLink}
             target="_blank"
             sx={{ fontSize: '1.1rem', py: 1.5, px: 4 }}
-          >
-            Начать интервью
-          </Button>
-          <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}>
-            Ссылка откроется в новом окне
-          </Typography>
+          ><Trans>Начать интервью</Trans></Button>
+          <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}><Trans>Ссылка откроется в новом окне</Trans></Typography>
         </Card>
       </Container>
     );
@@ -296,9 +288,7 @@ export default function PublicApplyPage() {
           <Box sx={{ color: 'primary.main', mb: 2 }}>
             <IconBriefcase size={80} />
           </Box>
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Отклик на вакансию
-          </Typography>
+          <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Отклик на вакансию</Trans></Typography>
           {vacancyInfo && (
             <>
               <Typography variant="h5" color="primary" gutterBottom>
@@ -316,9 +306,7 @@ export default function PublicApplyPage() {
         {/* Описание вакансии */}
         {vacancyInfo?.description && (
           <Box mb={4}>
-            <Typography variant="h6" gutterBottom>
-              Описание вакансии:
-            </Typography>
+            <Typography variant="h6" gutterBottom><Trans>Описание вакансии:</Trans></Typography>
             <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
               {vacancyInfo.description}
             </Typography>
@@ -329,9 +317,7 @@ export default function PublicApplyPage() {
 
         {/* Форма самозаписи */}
         <Box component="form" onSubmit={handleSubmit}>
-          <Typography variant="h6" gutterBottom>
-            Заполните форму для подачи заявки:
-          </Typography>
+          <Typography variant="h6" gutterBottom><Trans>Заполните форму для подачи заявки:</Trans></Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 4 }}>
             <TextField

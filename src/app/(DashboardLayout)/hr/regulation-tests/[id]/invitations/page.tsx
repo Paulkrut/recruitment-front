@@ -188,12 +188,12 @@ export default function InvitationsPage() {
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
           Тесты
         </Link>
-        <Typography color="text.primary">Приглашения</Typography>
+        <Typography color="text.primary"><Trans>Приглашения</Trans></Typography>
       </Breadcrumbs>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
-          <Typography variant="h4">🔗 Приглашения на тест</Typography>
+          <Typography variant="h4"><Trans>🔗 Приглашения на тест</Trans></Typography>
           {testDetails && (
             <Typography variant="body2" color="text.secondary">
               {testDetails.title}
@@ -218,28 +218,26 @@ export default function InvitationsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Тип</TableCell>
+                <TableCell><Trans>Тип</Trans></TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell>Сотрудник</TableCell>
-                <TableCell>Статус</TableCell>
-                <TableCell>Срок действия</TableCell>
-                <TableCell>Создано</TableCell>
-                <TableCell align="right">Действия</TableCell>
+                <TableCell><Trans>Сотрудник</Trans></TableCell>
+                <TableCell><Trans>Статус</Trans></TableCell>
+                <TableCell><Trans>Срок действия</Trans></TableCell>
+                <TableCell><Trans>Создано</Trans></TableCell>
+                <TableCell align="right"><Trans>Действия</Trans></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary">Загрузка...</Typography>
+                    <Typography color="text.secondary"><Trans>Загрузка...</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : invitations.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary" gutterBottom>
-                      Приглашения не созданы
-                    </Typography>
+                    <Typography color="text.secondary" gutterBottom><Trans>Приглашения не созданы</Trans></Typography>
                     <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
                       Создать первое приглашение
                     </Button>
@@ -296,14 +294,14 @@ export default function InvitationsPage() {
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
             <FormControl fullWidth>
-              <InputLabel>Тип приглашения</InputLabel>
+              <InputLabel><Trans>Тип приглашения</Trans></InputLabel>
               <Select
                 value={invitationType}
                 label={_(msg`Тип приглашения`)}
                 onChange={(e) => setInvitationType(e.target.value as 'named' | 'general')}
               >
-                <MenuItem value="named">Именное (для конкретного сотрудника)</MenuItem>
-                <MenuItem value="general">Общее (для самостоятельной регистрации)</MenuItem>
+                <MenuItem value="named"><Trans>Именное (для конкретного сотрудника)</Trans></MenuItem>
+                <MenuItem value="general"><Trans>Общее (для самостоятельной регистрации)</Trans></MenuItem>
               </Select>
             </FormControl>
 
@@ -341,9 +339,7 @@ export default function InvitationsPage() {
             variant="contained"
             onClick={handleCreateInvitation}
             disabled={invitationType === 'named' && !email}
-          >
-            Создать
-          </Button>
+          ><Trans>Создать</Trans></Button>
         </DialogActions>
       </Dialog>
     </PageContainer>

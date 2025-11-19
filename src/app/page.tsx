@@ -17,6 +17,8 @@ import DesktopMenu from "./components/DesktopMenu";
 import PricingSection from "./components/landing/PricingSection";
 import ROICalculator from "./components/landing/ROICalculator";
 import PricingFAQ from "./components/landing/PricingFAQ";
+import { Trans } from '@lingui/react';
+
 
 const { useMemo } = React;
 
@@ -374,10 +376,8 @@ export default function LandingPage() {
                     color="primary"
                     href="/auth/register"
                     sx={{ display: { xs: 'none', md: 'inline-flex' } }}
-                  >
-                    Регистрация
-                  </Button>
-                  <Button variant="contained" color="primary" href="/auth/login">Войти</Button>
+                  ><Trans>Регистрация</Trans></Button>
+                  <Button variant="contained" color="primary" href="/auth/login"><Trans>Войти</Trans></Button>
                 </Box>
               </Toolbar>
             </AppBar>
@@ -387,12 +387,8 @@ export default function LandingPage() {
         <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 12, sm: 10, md: 8 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", gap: 4 }}>
             <Box sx={{ flex: 1 }}>
-              <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "3.5rem" }, fontWeight: 700, mb: 2, lineHeight: 1.2 }}>
-                HR-платформа для автоматизации найма и интервью
-              </Typography>
-              <Typography variant="h5" color="text.secondary" mb={4}>
-                Автоматизируйте найм с помощью ИИ. Создавайте вакансии, проводите интервью и нанимайте лучших кандидатов в 3 раза быстрее.
-              </Typography>
+              <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "3.5rem" }, fontWeight: 700, mb: 2, lineHeight: 1.2 }}><Trans>HR-платформа для автоматизации найма и интервью</Trans></Typography>
+              <Typography variant="h5" color="text.secondary" mb={4}><Trans>Автоматизируйте найм с помощью ИИ. Создавайте вакансии, проводите интервью и нанимайте лучших кандидатов в 3 раза быстрее.</Trans></Typography>
               <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
                 <AvatarGroup max={3} sx={{ mr: 2 }}>
                   <Avatar alt="User 1" src={user1.src} />
@@ -406,19 +402,19 @@ export default function LandingPage() {
               <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:clock-fast" color="#4CAF50" width={20} height={20} />
-                  <Typography variant="body2">В 3 раза быстрее</Typography>
+                  <Typography variant="body2"><Trans>В 3 раза быстрее</Trans></Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:robot" color="#2196F3" width={20} height={20} />
-                  <Typography variant="body2">ИИ-интервью</Typography>
+                  <Typography variant="body2"><Trans>ИИ-интервью</Trans></Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:shield-check" color="#FF9800" width={20} height={20} />
-                  <Typography variant="body2">Безопасность данных</Typography>
+                  <Typography variant="body2"><Trans>Безопасность данных</Trans></Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:chart-line" color="#9C27B0" width={20} height={20} />
-                  <Typography variant="body2">Аналитика в реальном времени</Typography>
+                  <Typography variant="body2"><Trans>Аналитика в реальном времени</Trans></Typography>
                 </Box>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4, flexWrap: 'wrap' }}>
@@ -432,28 +428,24 @@ export default function LandingPage() {
             {/* Dashboard Preview */}
             <Box sx={{ flex: 1, display: { xs: "none", lg: "block" } }}>
               <Paper elevation={3} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-                <Typography variant="h6" gutterBottom>
-                  Автоматизация HR-процессов
-                </Typography>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  Вакансии, кандидаты, интервью — всё в одном месте
-                </Typography>
+                <Typography variant="h6" gutterBottom><Trans>Автоматизация HR-процессов</Trans></Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Вакансии, кандидаты, интервью — всё в одном месте</Trans></Typography>
                 <Grid container spacing={2} mb={2}>
                   <Grid item xs={6}>
                     <Typography variant="h5" fontWeight={700}>{totalVacancies.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary">Открытых вакансий</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Открытых вакансий</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="h5" fontWeight={700}>{totalCandidates.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary">Кандидатов в процессе</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Кандидатов в процессе</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="h5" fontWeight={700}>{totalInterviews.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary">Проведённых интервью</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Проведённых интервью</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="h5" fontWeight={700}>{Math.round(totalInterviews/totalVacancies)}x</Typography>
-                    <Typography variant="body2" color="text.secondary">Быстрее найм</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Быстрее найм</Trans></Typography>
                   </Grid>
                 </Grid>
                 <Box mb={2}>
@@ -461,7 +453,7 @@ export default function LandingPage() {
                   <Typography variant="body2" color="text.secondary">Автоматизировано: <b>80%</b> интервью</Typography>
                 </Box>
                 <Box mb={3}>
-                  <Typography variant="body2" color="text.secondary" mb={1}>Интеграции:</Typography>
+                  <Typography variant="body2" color="text.secondary" mb={1}><Trans>Интеграции:</Trans></Typography>
                   <Box sx={{ display: 'flex', gap: 1 }}>
                     <Icon icon="logos:telegram" width={24} height={24} />
                     <Icon icon="logos:whatsapp-icon" width={24} height={24} />
@@ -480,9 +472,7 @@ export default function LandingPage() {
                   },
                   transition: 'all 0.3s ease',
                   width: '100%'
-                }}>
-                  Попробовать бесплатно
-                </Button>
+                }}><Trans>Попробовать бесплатно</Trans></Button>
               </Paper>
             </Box>
           </Box>
@@ -494,12 +484,8 @@ export default function LandingPage() {
         <Container maxWidth="lg">
 
           {/* Заголовок раздела */}
-          <Typography variant="h3" align="center" fontWeight={700} mb={2}>
-            AI-интервью: революция в найме
-          </Typography>
-          <Typography variant="h6" align="center" color="text.secondary" mb={6}>
-            Автоматизируйте весь процесс интервью с помощью искусственного интеллекта
-          </Typography>
+          <Typography variant="h3" align="center" fontWeight={700} mb={2}><Trans>AI-интервью: революция в найме</Trans></Typography>
+          <Typography variant="h6" align="center" color="text.secondary" mb={6}><Trans>Автоматизируйте весь процесс интервью с помощью искусственного интеллекта</Trans></Typography>
 
           {/* Основные функции AI-интервью */}
           <Grid container spacing={4} mb={8}>
@@ -509,14 +495,12 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#E3F2FD', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:robot" color="#2196F3" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Автоматические интервью</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Автоматические интервью</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  ИИ проводит интервью без участия интервьюера. Адаптивные вопросы на основе предыдущих ответов.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>ИИ проводит интервью без участия интервьюера. Адаптивные вопросы на основе предыдущих ответов.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">15 минут на интервью</Typography>
+                  <Typography variant="caption"><Trans>15 минут на интервью</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -527,14 +511,12 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#E8F5E8', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:brain" color="#4CAF50" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Анализ каждого ответа</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Анализ каждого ответа</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  ИИ оценивает качество, полноту и релевантность каждого ответа кандидата.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>ИИ оценивает качество, полноту и релевантность каждого ответа кандидата.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">Детальная оценка</Typography>
+                  <Typography variant="caption"><Trans>Детальная оценка</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -545,14 +527,12 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#FFF3E0', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:chart-line" color="#FF9800" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Ранжирование кандидатов</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Ранжирование кандидатов</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  Автоматическая сортировка кандидатов по релевантности и качеству ответов.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Автоматическая сортировка кандидатов по релевантности и качеству ответов.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">Умная сортировка</Typography>
+                  <Typography variant="caption"><Trans>Умная сортировка</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -563,14 +543,12 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#F3E5F5', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:comment-question" color="#9C27B0" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Дополнительные вопросы</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Дополнительные вопросы</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  ИИ автоматически задаёт уточняющие вопросы на основе контекста ответов.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>ИИ автоматически задаёт уточняющие вопросы на основе контекста ответов.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">Адаптивные вопросы</Typography>
+                  <Typography variant="caption"><Trans>Адаптивные вопросы</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -581,14 +559,12 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#E1F5FE', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:file-document" color="#00BCD4" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Развёрнутый отчёт</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Развёрнутый отчёт</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  Сравнение выбранных кандидатов с анализом сильных и слабых сторон.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Сравнение выбранных кандидатов с анализом сильных и слабых сторон.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">Детальный анализ</Typography>
+                  <Typography variant="caption"><Trans>Детальный анализ</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
@@ -599,89 +575,81 @@ export default function LandingPage() {
                   <Box sx={{ width: 56, height: 56, borderRadius: 2, bgcolor: '#FCE4EC', display: 'flex', alignItems: 'center', justifyContent: 'center', mr: 2 }}>
                     <Icon icon="mdi:video" color="#E91E63" width={32} height={32} />
                   </Box>
-                  <Typography variant="h6" fontWeight={600}>Видео и аудио запись</Typography>
+                  <Typography variant="h6" fontWeight={600}><Trans>Видео и аудио запись</Trans></Typography>
                 </Box>
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  Запись интервью в реальном времени с возможностью просмотра и анализа.
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Запись интервью в реальном времени с возможностью просмотра и анализа.</Trans></Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon icon="mdi:check-circle" color="#4caf50" width={16} height={16} />
-                  <Typography variant="caption">Полная запись</Typography>
+                  <Typography variant="caption"><Trans>Полная запись</Trans></Typography>
                 </Box>
               </Paper>
             </Grid>
           </Grid>
 
           {/* Дополнительные функции управления */}
-          <Typography variant="h4" align="center" fontWeight={700} mb={4}>
-            Дополнительные возможности
-          </Typography>
+          <Typography variant="h4" align="center" fontWeight={700} mb={4}><Trans>Дополнительные возможности</Trans></Typography>
 
           <Grid container spacing={3} mb={6}>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:domain" color="#2196F3" width={24} height={24} />
-                <Typography variant="body2">Мультикомпанийность</Typography>
+                <Typography variant="body2"><Trans>Мультикомпанийность</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:account-group" color="#4CAF50" width={24} height={24} />
-                <Typography variant="body2">Управление сотрудниками</Typography>
+                <Typography variant="body2"><Trans>Управление сотрудниками</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:shield-account" color="#FF9800" width={24} height={24} />
-                <Typography variant="body2">Система прав доступа</Typography>
+                <Typography variant="body2"><Trans>Система прав доступа</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:briefcase" color="#9C27B0" width={24} height={24} />
-                <Typography variant="body2">Управление вакансиями</Typography>
+                <Typography variant="body2"><Trans>Управление вакансиями</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:file-document-outline" color="#00BCD4" width={24} height={24} />
-                <Typography variant="body2">Шаблоны интервью</Typography>
+                <Typography variant="body2"><Trans>Шаблоны интервью</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:tune" color="#E91E63" width={24} height={24} />
-                <Typography variant="body2">Настройка критериев</Typography>
+                <Typography variant="body2"><Trans>Настройка критериев</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:download" color="#795548" width={24} height={24} />
-                <Typography variant="body2">Экспорт данных</Typography>
+                <Typography variant="body2"><Trans>Экспорт данных</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
                 <Icon icon="mdi:bell" color="#607D8B" width={24} height={24} />
-                <Typography variant="body2">Уведомления</Typography>
+                <Typography variant="body2"><Trans>Уведомления</Trans></Typography>
               </Box>
             </Grid>
           </Grid>
 
           {/* Статистика эффективности */}
           <Box sx={{ bgcolor: '#f8fafc', p: 4, borderRadius: 3, mb: 6 }}>
-            <Typography variant="h5" align="center" fontWeight={600} mb={4}>
-              Эффективность AI-интервью
-            </Typography>
+            <Typography variant="h5" align="center" fontWeight={600} mb={4}><Trans>Эффективность AI-интервью</Trans></Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6} md={3}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" color="primary" fontWeight={700}>
                     100%
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Интервью автоматизировано
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Интервью автоматизировано</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -689,9 +657,7 @@ export default function LandingPage() {
                   <Typography variant="h3" color="primary" fontWeight={700}>
                     17x
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Быстрее найм
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Быстрее найм</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -699,9 +665,7 @@ export default function LandingPage() {
                   <Typography variant="h3" color="primary" fontWeight={700}>
                     5x
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Дешевле интервью
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Дешевле интервью</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -709,9 +673,7 @@ export default function LandingPage() {
                   <Typography variant="h3" color="primary" fontWeight={700}>
                     24/7
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Доступность системы
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Доступность системы</Trans></Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -725,12 +687,8 @@ export default function LandingPage() {
         <Box sx={{ py: 8, bgcolor: "#f8fafc", position: 'relative', zIndex: 2 }}>
           <Container maxWidth="lg">
             {/* Заголовок */}
-            <Typography variant="h3" align="center" fontWeight={700} mb={2}>
-              Как это работает?
-            </Typography>
-            <Typography variant="h6" align="center" color="text.secondary" mb={6}>
-              Простой процесс автоматизации найма за 4 шага
-            </Typography>
+            <Typography variant="h3" align="center" fontWeight={700} mb={2}><Trans>Как это работает?</Trans></Typography>
+            <Typography variant="h6" align="center" color="text.secondary" mb={6}><Trans>Простой процесс автоматизации найма за 4 шага</Trans></Typography>
 
             {/* Пошаговый процесс */}
             <Grid container spacing={4} mb={6}>
@@ -742,21 +700,21 @@ export default function LandingPage() {
                       <Typography variant="h4" color="white" fontWeight={700}>1</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="h5" fontWeight={600}>Создаёте вакансию</Typography>
-                      <Typography variant="body2" color="text.secondary">ИИ генерирует вопросы на основе описания</Typography>
+                      <Typography variant="h5" fontWeight={600}><Trans>Создаёте вакансию</Trans></Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>ИИ генерирует вопросы на основе описания</Trans></Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Заполняете требования к позиции</Typography>
+                    <Typography variant="body2"><Trans>Заполняете требования к позиции</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">ИИ создаёт адаптивные вопросы</Typography>
+                    <Typography variant="body2"><Trans>ИИ создаёт адаптивные вопросы</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Настраиваете критерии оценки</Typography>
+                    <Typography variant="body2"><Trans>Настраиваете критерии оценки</Trans></Typography>
                   </Box>
                 </Paper>
               </Grid>
@@ -769,21 +727,21 @@ export default function LandingPage() {
                       <Typography variant="h4" color="white" fontWeight={700}>2</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="h5" fontWeight={600}>ИИ проводит интервью</Typography>
-                      <Typography variant="body2" color="text.secondary">Кандидат проходит автоматическое интервью</Typography>
+                      <Typography variant="h5" fontWeight={600}><Trans>ИИ проводит интервью</Trans></Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>Кандидат проходит автоматическое интервью</Trans></Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Запись видео и аудио в реальном времени</Typography>
+                    <Typography variant="body2"><Trans>Запись видео и аудио в реальном времени</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Адаптивные вопросы на основе ответов</Typography>
+                    <Typography variant="body2"><Trans>Адаптивные вопросы на основе ответов</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">15 минут вместо 4 часов</Typography>
+                    <Typography variant="body2"><Trans>15 минут вместо 4 часов</Trans></Typography>
                   </Box>
                 </Paper>
               </Grid>
@@ -796,21 +754,21 @@ export default function LandingPage() {
                       <Typography variant="h4" color="white" fontWeight={700}>3</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="h5" fontWeight={600}>ИИ анализирует ответы</Typography>
-                      <Typography variant="body2" color="text.secondary">Детальный анализ каждого ответа</Typography>
+                      <Typography variant="h5" fontWeight={600}><Trans>ИИ анализирует ответы</Trans></Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>Детальный анализ каждого ответа</Trans></Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Оценка качества и полноты ответов</Typography>
+                    <Typography variant="body2"><Trans>Оценка качества и полноты ответов</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Ранжирование кандидатов</Typography>
+                    <Typography variant="body2"><Trans>Ранжирование кандидатов</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Выявление сильных и слабых сторон</Typography>
+                    <Typography variant="body2"><Trans>Выявление сильных и слабых сторон</Trans></Typography>
                   </Box>
                 </Paper>
               </Grid>
@@ -823,21 +781,21 @@ export default function LandingPage() {
                       <Typography variant="h4" color="white" fontWeight={700}>4</Typography>
                     </Box>
                     <Box>
-                      <Typography variant="h5" fontWeight={600}>Получаете готовый отчёт</Typography>
-                      <Typography variant="body2" color="text.secondary">Детальные рекомендации для принятия решения</Typography>
+                      <Typography variant="h5" fontWeight={600}><Trans>Получаете готовый отчёт</Trans></Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>Детальные рекомендации для принятия решения</Trans></Typography>
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Сравнение кандидатов</Typography>
+                    <Typography variant="body2"><Trans>Сравнение кандидатов</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Рекомендации по найму</Typography>
+                    <Typography variant="body2"><Trans>Рекомендации по найму</Trans></Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:check-circle" color="#4caf50" width={20} height={20} />
-                    <Typography variant="body2">Экспорт данных в любом формате</Typography>
+                    <Typography variant="body2"><Trans>Экспорт данных в любом формате</Trans></Typography>
                   </Box>
                 </Paper>
               </Grid>
@@ -845,32 +803,30 @@ export default function LandingPage() {
 
             {/* Дополнительная информация */}
             <Box sx={{ bgcolor: 'white', p: 4, borderRadius: 3, border: '1px solid #e0e0e0' }}>
-              <Typography variant="h5" fontWeight={600} mb={3} align="center">
-                Преимущества процесса
-              </Typography>
+              <Typography variant="h5" fontWeight={600} mb={3} align="center"><Trans>Преимущества процесса</Trans></Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6} md={3}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:clock-fast" color="#4CAF50" width={24} height={24} />
-                    <Typography variant="body2">Экономия времени HR</Typography>
+                    <Typography variant="body2"><Trans>Экономия времени HR</Trans></Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:currency-usd" color="#FF9800" width={24} height={24} />
-                    <Typography variant="body2">Снижение затрат на найм</Typography>
+                    <Typography variant="body2"><Trans>Снижение затрат на найм</Trans></Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:chart-line" color="#2196F3" width={24} height={24} />
-                    <Typography variant="body2">Объективная оценка</Typography>
+                    <Typography variant="body2"><Trans>Объективная оценка</Trans></Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Icon icon="mdi:shield-check" color="#9C27B0" width={24} height={24} />
-                    <Typography variant="body2">Безопасность данных</Typography>
+                    <Typography variant="body2"><Trans>Безопасность данных</Trans></Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -894,19 +850,13 @@ export default function LandingPage() {
                 WebkitTextFillColor: 'transparent',
                 mb: 2
               }}
-            >
-              Реальные результаты клиентов
-            </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              Истории успеха и конкретные цифры экономии от реальных компаний
-            </Typography>
+            ><Trans>Реальные результаты клиентов</Trans></Typography>
+            <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}><Trans>Истории успеха и конкретные цифры экономии от реальных компаний</Trans></Typography>
           </Box>
 
           {/* Кейсы клиентов - карточки с градиентами */}
           <Box sx={{ mb: 10 }}>
-            <Typography variant="h3" align="center" fontWeight={700} mb={6}>
-              Истории успеха
-            </Typography>
+            <Typography variant="h3" align="center" fontWeight={700} mb={6}><Trans>Истории успеха</Trans></Typography>
             <Grid container spacing={4}>
               <Grid item xs={12} md={4}>
                 <Box sx={{
@@ -928,25 +878,23 @@ export default function LandingPage() {
                       <Icon icon="mdi:bank" color="white" width={32} height={32} />
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={700}>IT-компания</Typography>
+                      <Typography variant="h6" fontWeight={700}><Trans>IT-компания</Trans></Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>TechCorp</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}>
-                    Автоматизировали найм разработчиков. Сократили время закрытия вакансии с 45 до 7 дней.
-                  </Typography>
+                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}><Trans>Автоматизировали найм разработчиков. Сократили время закрытия вакансии с 45 до 7 дней.</Trans></Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, position: 'relative', zIndex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Экономия: 85% времени HR</Typography>
+                      <Typography variant="body2"><Trans>Экономия: 85% времени HR</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Сокращение затрат: 5x</Typography>
+                      <Typography variant="body2"><Trans>Сокращение затрат: 5x</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Улучшение качества найма: 40%</Typography>
+                      <Typography variant="body2"><Trans>Улучшение качества найма: 40%</Trans></Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -972,25 +920,23 @@ export default function LandingPage() {
                       <Icon icon="mdi:factory" color="white" width={32} height={32} />
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={700}>Производственная компания</Typography>
+                      <Typography variant="h6" fontWeight={700}><Trans>Производственная компания</Trans></Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>SalesForce</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}>
-                    Внедрили для найма специалистов по продажам. Обработали 500+ кандидатов за месяц.
-                  </Typography>
+                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}><Trans>Внедрили для найма специалистов по продажам. Обработали 500+ кандидатов за месяц.</Trans></Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, position: 'relative', zIndex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Обработано кандидатов: 500+</Typography>
+                      <Typography variant="body2"><Trans>Обработано кандидатов: 500+</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Экономия бюджета: 300,000₽</Typography>
+                      <Typography variant="body2"><Trans>Экономия бюджета: 300,000₽</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Скорость найма: 3x быстрее</Typography>
+                      <Typography variant="body2"><Trans>Скорость найма: 3x быстрее</Trans></Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -1016,25 +962,23 @@ export default function LandingPage() {
                       <Icon icon="mdi:school" color="white" width={32} height={32} />
                     </Box>
                     <Box>
-                      <Typography variant="h6" fontWeight={700}>HR-агентство</Typography>
+                      <Typography variant="h6" fontWeight={700}><Trans>HR-агентство</Trans></Typography>
                       <Typography variant="body2" sx={{ opacity: 0.9 }}>RecruitPro</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}>
-                    Используют для клиентов из разных отраслей. Масштабировали бизнес в 3 раза.
-                  </Typography>
+                  <Typography variant="body1" mb={4} sx={{ lineHeight: 1.6, position: 'relative', zIndex: 1 }}><Trans>Используют для клиентов из разных отраслей. Масштабировали бизнес в 3 раза.</Trans></Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, position: 'relative', zIndex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Рост клиентов: 3x</Typography>
+                      <Typography variant="body2"><Trans>Рост клиентов: 3x</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Экономия времени: 70%</Typography>
+                      <Typography variant="body2"><Trans>Экономия времени: 70%</Trans></Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'white' }} />
-                      <Typography variant="body2">Увеличение прибыли: 250%</Typography>
+                      <Typography variant="body2"><Trans>Увеличение прибыли: 250%</Trans></Typography>
                     </Box>
                   </Box>
                 </Box>
@@ -1044,9 +988,7 @@ export default function LandingPage() {
 
           {/* Отзывы клиентов - рабочий слайдер */}
           <Box sx={{ mb: 8 }}>
-            <Typography variant="h3" align="center" fontWeight={700} mb={6}>
-              Что говорят наши клиенты
-            </Typography>
+            <Typography variant="h3" align="center" fontWeight={700} mb={6}><Trans>Что говорят наши клиенты</Trans></Typography>
 
             <Box sx={{ position: 'relative', maxWidth: 800, mx: 'auto' }}>
               {/* Кнопки навигации */}
@@ -1147,9 +1089,7 @@ export default function LandingPage() {
 
           {/* Статистика успеха - круговые диаграммы */}
           <Box sx={{ bgcolor: 'white', p: 6, borderRadius: 4, boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
-            <Typography variant="h4" align="center" fontWeight={700} mb={6}>
-              Результаты внедрения SofiHR
-            </Typography>
+            <Typography variant="h4" align="center" fontWeight={700} mb={6}><Trans>Результаты внедрения SofiHR</Trans></Typography>
             <Grid container spacing={6}>
               <Grid item xs={12} sm={6} md={3}>
                 <Box sx={{ textAlign: 'center', position: 'relative' }}>
@@ -1177,9 +1117,7 @@ export default function LandingPage() {
                       <Typography variant="h4" fontWeight={700} color="#4caf50">95%</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Клиентов рекомендуют SofiHR
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Клиентов рекомендуют SofiHR</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -1208,9 +1146,7 @@ export default function LandingPage() {
                       <Typography variant="h4" fontWeight={700} color="#2196F3">80%</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Экономия времени HR
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Экономия времени HR</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -1239,9 +1175,7 @@ export default function LandingPage() {
                       <Typography variant="h4" fontWeight={700} color="#FF9800">70%</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Снижение затрат на найм
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Снижение затрат на найм</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -1270,9 +1204,7 @@ export default function LandingPage() {
                       <Typography variant="h4" fontWeight={700} color="#9C27B0">60%</Typography>
                     </Box>
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Улучшение качества найма
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Улучшение качества найма</Trans></Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -1307,33 +1239,29 @@ export default function LandingPage() {
                 WebkitTextFillColor: 'transparent',
                 mb: 3
               }}
-            >
-              Готовы автоматизировать найм?
-            </Typography>
+            ><Trans>Готовы автоматизировать найм?</Trans></Typography>
 
             {/* Подзаголовок */}
-            <Typography variant="h5" color="text.secondary" sx={{ mb: 6, maxWidth: 700, mx: 'auto' }}>
-              Присоединяйтесь к тысячам HR-специалистов, которые уже используют SofiHR для эффективного найма
-            </Typography>
+            <Typography variant="h5" color="text.secondary" sx={{ mb: 6, maxWidth: 700, mx: 'auto' }}><Trans>Присоединяйтесь к тысячам HR-специалистов, которые уже используют SofiHR для эффективного найма</Trans></Typography>
 
             {/* Статистика */}
             <Grid container spacing={4} justifyContent="center" sx={{ mb: 8 }}>
               <Grid item xs={12} sm={4}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" fontWeight={700} color="#2196F3">500+</Typography>
-                  <Typography variant="body1" color="text.secondary">Компаний</Typography>
+                  <Typography variant="body1" color="text.secondary"><Trans>Компаний</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" fontWeight={700} color="#4CAF50">10,000+</Typography>
-                  <Typography variant="body1" color="text.secondary">Интервью</Typography>
+                  <Typography variant="body1" color="text.secondary"><Trans>Интервью</Trans></Typography>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Box sx={{ textAlign: 'center' }}>
                   <Typography variant="h3" fontWeight={700} color="#FF9800">95%</Typography>
-                  <Typography variant="body1" color="text.secondary">Довольных клиентов</Typography>
+                  <Typography variant="body1" color="text.secondary"><Trans>Довольных клиентов</Trans></Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -1358,9 +1286,7 @@ export default function LandingPage() {
                   },
                   transition: 'all 0.3s ease'
                 }}
-              >
-                Перейти в HR панель
-              </Button>
+              ><Trans>Перейти в HR панель</Trans></Button>
 
               <Button
                 variant="outlined"
@@ -1382,21 +1308,15 @@ export default function LandingPage() {
                   },
                   transition: 'all 0.3s ease'
                 }}
-              >
-                Попробовать бесплатно
-              </Button>
+              ><Trans>Попробовать бесплатно</Trans></Button>
             </Box>
 
             {/* Дополнительная информация */}
             <Box sx={{ mt: 6 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                Без кредитной карты • 14 дней бесплатно • Отмена в любое время
-              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}><Trans>Без кредитной карты • 14 дней бесплатно • Отмена в любое время</Trans></Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <Icon icon="mdi:shield-check" color="#4caf50" width={20} height={20} />
-                <Typography variant="body2" color="text.secondary">
-                  Безопасность данных гарантирована
-                </Typography>
+                <Typography variant="body2" color="text.secondary"><Trans>Безопасность данных гарантирована</Trans></Typography>
               </Box>
             </Box>
           </Box>
@@ -1409,12 +1329,8 @@ export default function LandingPage() {
           <Grid container spacing={3} justifyContent="center">
             {/* Основная информация */}
             <Grid item xs={12} md={6} textAlign="center">
-              <Typography variant="body2" color="grey.500" mb={2}>
-                © 2025 SofiHR. Все права защищены.
-              </Typography>
-              <Typography variant="body2" color="grey.500">
-                Система соответствует требованиям 152-ФЗ "О персональных данных"
-              </Typography>
+              <Typography variant="body2" color="grey.500" mb={2}><Trans>© 2025 SofiHR. Все права защищены.</Trans></Typography>
+              <Typography variant="body2" color="grey.500"><Trans>Система соответствует требованиям 152-ФЗ "О персональных данных"</Trans></Typography>
             </Grid>
             
             {/* Ссылки на документы */}

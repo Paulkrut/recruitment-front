@@ -322,12 +322,12 @@ export default function RegulationsPage() {
         <Link href="/hr" underline="hover" color="inherit">
           Главная
         </Link>
-        <Typography color="text.primary">Регламенты</Typography>
+        <Typography color="text.primary"><Trans>Регламенты</Trans></Typography>
       </Breadcrumbs>
 
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">📚 Регламенты компании</Typography>
+        <Typography variant="h4"><Trans>📚 Регламенты компании</Trans></Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
             variant="outlined"
@@ -363,9 +363,7 @@ export default function RegulationsPage() {
         {/* Sidebar - Folders */}
         <Grid item xs={12} md={3}>
           <Card sx={{ p: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Папки
-            </Typography>
+            <Typography variant="h6" sx={{ mb: 2 }}><Trans>Папки</Trans></Typography>
 
             <Box
               onClick={() => setSelectedFolderId(null)}
@@ -380,9 +378,7 @@ export default function RegulationsPage() {
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <FolderIcon sx={{ mr: 1, color: selectedFolderId === null ? 'primary.main' : 'text.secondary' }} />
-                <Typography fontWeight={selectedFolderId === null ? 600 : 400}>
-                  Все регламенты
-                </Typography>
+                <Typography fontWeight={selectedFolderId === null ? 600 : 400}><Trans>Все регламенты</Trans></Typography>
               </Box>
             </Box>
 
@@ -433,12 +429,12 @@ export default function RegulationsPage() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Название</TableCell>
-                    <TableCell>Информация</TableCell>
-                    <TableCell>Папка</TableCell>
-                    <TableCell>Тесты</TableCell>
-                    <TableCell>Обновлён</TableCell>
-                    <TableCell align="right">Действия</TableCell>
+                    <TableCell><Trans>Название</Trans></TableCell>
+                    <TableCell><Trans>Информация</Trans></TableCell>
+                    <TableCell><Trans>Папка</Trans></TableCell>
+                    <TableCell><Trans>Тесты</Trans></TableCell>
+                    <TableCell><Trans>Обновлён</Trans></TableCell>
+                    <TableCell align="right"><Trans>Действия</Trans></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -622,13 +618,13 @@ export default function RegulationsPage() {
               </Grid>
               <Grid item xs={6}>
                 <FormControl fullWidth>
-                  <InputLabel>Папка</InputLabel>
+                  <InputLabel><Trans>Папка</Trans></InputLabel>
                   <Select
                     value={regulationForm.folderId || ''}
                     label={_(msg`Папка`)}
                     onChange={(e) => setRegulationForm({ ...regulationForm, folderId: e.target.value as number || null })}
                   >
-                    <MenuItem value="">Без папки</MenuItem>
+                    <MenuItem value=""><Trans>Без папки</Trans></MenuItem>
                     {folders.map(folder => (
                       <MenuItem key={folder.id} value={folder.id}>{folder.name}</MenuItem>
                     ))}

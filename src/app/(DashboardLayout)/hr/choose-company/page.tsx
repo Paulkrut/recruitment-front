@@ -83,7 +83,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
   
   return (
     <Paper sx={{ p: 4, width: "100%", maxWidth: 600, mb: 4 }}>
-      <Typography variant="h6" gutterBottom>Вас пригласили в компании:</Typography>
+      <Typography variant="h6" gutterBottom><Trans>Вас пригласили в компании:</Trans></Typography>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       <Stack spacing={2}>
         {invites.map(inv => (
@@ -167,7 +167,7 @@ export default function ChooseCompanyPage() {
         <InvitesBlock onAccept={refreshCompanies} />
         
         <Paper sx={{ p: 4, width: "100%", maxWidth: 600, mb: 4 }}>
-          <Typography variant="h5" gutterBottom>Выберите компанию</Typography>
+          <Typography variant="h5" gutterBottom><Trans>Выберите компанию</Trans></Typography>
           <Stack spacing={2} mt={2}>
             {companies && companies.length > 0 ? companies.map((c: any) => (
               <Button 
@@ -180,15 +180,13 @@ export default function ChooseCompanyPage() {
                 {c.name} ({c.role})
               </Button>
             )) : (
-              <Typography color="text.secondary">
-                У вас пока нет компаний. Создайте новую компанию или примите приглашение.
-              </Typography>
+              <Typography color="text.secondary"><Trans>У вас пока нет компаний. Создайте новую компанию или примите приглашение.</Trans></Typography>
             )}
           </Stack>
         </Paper>
         
         <Paper sx={{ p: 4, width: "100%", maxWidth: 600 }}>
-          <Typography variant="h6" gutterBottom>Создать новую компанию</Typography>
+          <Typography variant="h6" gutterBottom><Trans>Создать новую компанию</Trans></Typography>
           <Stack direction="row" spacing={2} mt={2}>
             <TextField 
               value={name} 

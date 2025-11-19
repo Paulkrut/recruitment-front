@@ -22,12 +22,8 @@ export default function HrAgreementPage() {
         {/* Заголовок */}
         <Box textAlign="center" mb={4}>
           <Business sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Публичная оферта для HR-клиентов
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            Условия использования платформы SofiHR для HR-организаций
-          </Typography>
+          <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Публичная оферта для HR-клиентов</Trans></Typography>
+          <Typography variant="h6" color="text.secondary"><Trans>Условия использования платформы SofiHR для HR-организаций</Trans></Typography>
           <Chip
             label={_(msg`Обновлено: 22.09.2025`)}
             color="primary"
@@ -43,15 +39,11 @@ export default function HrAgreementPage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             1. Общие положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящая публичная оферта (далее — «Оферта») определяет условия использования
+          <Typography variant="body1" paragraph><Trans>Настоящая публичная оферта (далее — «Оферта») определяет условия использования
             платформы SofiHR для HR-специалистов и организаций, независимо от их
-            организационно-правовой формы.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя платформу SofiHR, клиент (физическое или юридическое лицо) принимает
-            настоящую Оферту и соглашается следовать её условиям.
-          </Typography>
+            организационно-правовой формы.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя платформу SofiHR, клиент (физическое или юридическое лицо) принимает
+            настоящую Оферту и соглашается следовать её условиям.</Trans></Typography>
         </Box>
 
         {/* Определения */}
@@ -105,13 +97,9 @@ export default function HrAgreementPage() {
             <People sx={{ mr: 1, verticalAlign: 'middle' }} />
             3. Типы HR-клиентов и их ответственность
           </Typography>
-          <Typography variant="body1" paragraph>
-            Платформа SofiHR поддерживает работу с разными типами HR-клиентов:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Платформа SofiHR поддерживает работу с разными типами HR-клиентов:</Trans></Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Физическое лицо (HR-специалист):
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Физическое лицо (HR-специалист):</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -136,9 +124,7 @@ export default function HrAgreementPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Юридическое лицо (организация):
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Юридическое лицо (организация):</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -163,9 +149,7 @@ export default function HrAgreementPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Смешанный тип (HR-специалист + организация):
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Смешанный тип (HR-специалист + организация):</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -190,9 +174,7 @@ export default function HrAgreementPage() {
             <CheckCircle sx={{ mr: 1, verticalAlign: 'middle' }} />
             4. Обязательства HR-клиента
           </Typography>
-          <Typography variant="body1" paragraph>
-            Независимо от типа клиента, HR-клиент обязуется:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Независимо от типа клиента, HR-клиент обязуется:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -252,14 +234,10 @@ export default function HrAgreementPage() {
             <Security sx={{ mr: 1, verticalAlign: 'middle' }} />
             5. Обработка персональных данных
           </Typography>
-          <Typography variant="body1" paragraph>
-            HR-клиент является оператором персональных данных кандидатов и несет
-            ответственность за их обработку согласно 152-ФЗ.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>HR-клиент является оператором персональных данных кандидатов и несет
+            ответственность за их обработку согласно 152-ФЗ.</Trans></Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Цели обработки данных:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Цели обработки данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -284,9 +262,7 @@ export default function HrAgreementPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Медиафайлы и обработчики по поручению:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Медиафайлы и обработчики по поручению:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -311,9 +287,7 @@ export default function HrAgreementPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Сроки хранения данных:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Сроки хранения данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -338,9 +312,7 @@ export default function HrAgreementPage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             6. Права кандидатов
           </Typography>
-          <Typography variant="body1" paragraph>
-            HR-клиент обязан обеспечить реализацию прав кандидатов:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>HR-клиент обязан обеспечить реализацию прав кандидатов:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -393,14 +365,10 @@ export default function HrAgreementPage() {
             <Business sx={{ mr: 1, verticalAlign: 'middle' }} />
             7. Привязка HR-специалиста к организации
           </Typography>
-          <Typography variant="body1" paragraph>
-            HR-специалист может привязать свой аккаунт к организации для расширения
-            функциональности и корпоративной работы.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>HR-специалист может привязать свой аккаунт к организации для расширения
+            функциональности и корпоративной работы.</Trans></Typography>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Возможности при привязке к организации:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Возможности при привязке к организации:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -432,9 +400,7 @@ export default function HrAgreementPage() {
             </ListItem>
           </List>
 
-          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}>
-            Обязательства при привязке к организации:
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mt: 3 }}><Trans>Обязательства при привязке к организации:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Warning color="warning" /></ListItemIcon>
@@ -528,9 +494,7 @@ export default function HrAgreementPage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             9. Изменения оферты
           </Typography>
-          <Typography variant="body1" paragraph>
-            Платформа SofiHR оставляет за собой право изменять условия оферты:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Платформа SofiHR оставляет за собой право изменять условия оферты:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -569,9 +533,7 @@ export default function HrAgreementPage() {
             <ContactSupport sx={{ mr: 1, verticalAlign: 'middle' }} />
             10. Контактная информация
           </Typography>
-          <Typography variant="body1" paragraph>
-            По всем вопросам, связанным с настоящей офертой:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>По всем вопросам, связанным с настоящей офертой:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Security color="primary" /></ListItemIcon>
@@ -596,14 +558,10 @@ export default function HrAgreementPage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             11. Заключительные положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящая оферта вступает в силу с момента размещения на платформе и действует
-            до момента её отмены или замены новой офертой.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя платформу SofiHR, HR-клиент подтверждает, что ознакомился с настоящей
-            офертой и согласен следовать её условиям.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Настоящая оферта вступает в силу с момента размещения на платформе и действует
+            до момента её отмены или замены новой офертой.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя платформу SofiHR, HR-клиент подтверждает, что ознакомился с настоящей
+            офертой и согласен следовать её условиям.</Trans></Typography>
         </Box>
 
         {/* Кнопки действий */}
@@ -615,18 +573,14 @@ export default function HrAgreementPage() {
             component={Link}
             href="/"
             sx={{ mr: 2 }}
-          >
-            Вернуться на главную
-          </Button>
+          ><Trans>Вернуться на главную</Trans></Button>
           <Button
             variant="outlined"
             color="primary"
             size="large"
             component={Link}
             href="/privacy-policy"
-          >
-            Политика конфиденциальности
-          </Button>
+          ><Trans>Политика конфиденциальности</Trans></Button>
         </Box>
 
         {/* Предупреждение */}

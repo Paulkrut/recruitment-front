@@ -78,12 +78,10 @@ export default function DeleteStageDialog({
               } (во всех вакансиях компании)
             </Alert>
 
-            <Typography variant="body2" gutterBottom sx={{ mb: 2 }}>
-              Выберите стадию, в которую будут перемещены все кандидаты:
-            </Typography>
+            <Typography variant="body2" gutterBottom sx={{ mb: 2 }}><Trans>Выберите стадию, в которую будут перемещены все кандидаты:</Trans></Typography>
 
             <FormControl fullWidth>
-              <InputLabel>Переместить кандидатов в</InputLabel>
+              <InputLabel><Trans>Переместить кандидатов в</Trans></InputLabel>
               <Select
                 value={moveToStatus}
                 label={_(msg`Переместить кандидатов в`)}
@@ -98,20 +96,14 @@ export default function DeleteStageDialog({
             </FormControl>
           </>
         ) : (
-          <Typography variant="body2">
-            Эта стадия не содержит кандидатов и будет удалена безвозвратно.
-          </Typography>
+          <Typography variant="body2"><Trans>Эта стадия не содержит кандидатов и будет удалена безвозвратно.</Trans></Typography>
         )}
 
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-          Это действие нельзя отменить.
-        </Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}><Trans>Это действие нельзя отменить.</Trans></Typography>
       </DialogContent>
       
       <DialogActions>
-        <Button onClick={onClose}>
-          Отмена
-        </Button>
+        <Button onClick={onClose}><Trans>Отмена</Trans></Button>
         <Button 
           onClick={handleConfirm} 
           variant="contained" 

@@ -124,7 +124,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
     <Paper sx={{ p: 2, mb: 2 }}>
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <FilterListIcon />
-        <Box flex={1} fontWeight="bold">Фильтры</Box>
+        <Box flex={1} fontWeight="bold"><Trans>Фильтры</Trans></Box>
         
         {hasActiveFilters && (
           <Button
@@ -153,14 +153,14 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {/* Источник */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>Источник</InputLabel>
+            <InputLabel><Trans>Источник</Trans></InputLabel>
             <Select
               value={localFilters.source || ''}
               label={_(msg`Источник`)}
               onChange={(e) => handleLocalChange('source', e.target.value)}
             >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="manual">✍️ Ручной</MenuItem>
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="manual"><Trans>✍️ Ручной</Trans></MenuItem>
               <MenuItem value="headhunter">🎯 HH.ru</MenuItem>
             </Select>
           </FormControl>
@@ -170,21 +170,21 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {viewMode === 'list' && (
           <Grid item xs={12} md={2}>
             <FormControl fullWidth size="small">
-              <InputLabel>Статус</InputLabel>
+              <InputLabel><Trans>Статус</Trans></InputLabel>
               <Select
                 value={localFilters.status || ''}
                 label={_(msg`Статус`)}
                 onChange={(e) => handleLocalChange('status', e.target.value)}
               >
-                <MenuItem value="">Все</MenuItem>
-                <MenuItem value="new">Новый</MenuItem>
-                <MenuItem value="screening">AI Скрининг</MenuItem>
-                <MenuItem value="contacted">Связались</MenuItem>
-                <MenuItem value="testing">Тестирование</MenuItem>
-                <MenuItem value="finalist">Финалист</MenuItem>
-                <MenuItem value="offer">Оффер</MenuItem>
-                <MenuItem value="hired">Принят</MenuItem>
-                <MenuItem value="rejected">Отклонён</MenuItem>
+                <MenuItem value=""><Trans>Все</Trans></MenuItem>
+                <MenuItem value="new"><Trans>Новый</Trans></MenuItem>
+                <MenuItem value="screening"><Trans>AI Скрининг</Trans></MenuItem>
+                <MenuItem value="contacted"><Trans>Связались</Trans></MenuItem>
+                <MenuItem value="testing"><Trans>Тестирование</Trans></MenuItem>
+                <MenuItem value="finalist"><Trans>Финалист</Trans></MenuItem>
+                <MenuItem value="offer"><Trans>Оффер</Trans></MenuItem>
+                <MenuItem value="hired"><Trans>Принят</Trans></MenuItem>
+                <MenuItem value="rejected"><Trans>Отклонён</Trans></MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -193,7 +193,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {/* AI анализ резюме (объединённый фильтр) */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>AI анализ резюме</InputLabel>
+            <InputLabel><Trans>AI анализ резюме</Trans></InputLabel>
             <Select
               value={
                 localFilters.minScore ? `score_${localFilters.minScore}` : 
@@ -218,15 +218,15 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 setLocalFilters(newFilters);
               }}
             >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="status_loading_resume">⏳ Загрузка резюме</MenuItem>
-              <MenuItem value="status_analyzing">🤖 Анализируется</MenuItem>
-              <MenuItem value="status_null">⚪ Без анализа</MenuItem>
-              <MenuItem value="status_failed">❌ Ошибка анализа</MenuItem>
-              <MenuItem value="score_90">≥ 90% (отличные)</MenuItem>
-              <MenuItem value="score_80">≥ 80% (хорошие)</MenuItem>
-              <MenuItem value="score_70">≥ 70% (средние)</MenuItem>
-              <MenuItem value="score_60">≥ 60% (слабые)</MenuItem>
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="status_loading_resume"><Trans>⏳ Загрузка резюме</Trans></MenuItem>
+              <MenuItem value="status_analyzing"><Trans>🤖 Анализируется</Trans></MenuItem>
+              <MenuItem value="status_null"><Trans>⚪ Без анализа</Trans></MenuItem>
+              <MenuItem value="status_failed"><Trans>❌ Ошибка анализа</Trans></MenuItem>
+              <MenuItem value="score_90"><Trans>≥ 90% (отличные)</Trans></MenuItem>
+              <MenuItem value="score_80"><Trans>≥ 80% (хорошие)</Trans></MenuItem>
+              <MenuItem value="score_70"><Trans>≥ 70% (средние)</Trans></MenuItem>
+              <MenuItem value="score_60"><Trans>≥ 60% (слабые)</Trans></MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -234,19 +234,19 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {/* Оценка за тест */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>Оценка за тест</InputLabel>
+            <InputLabel><Trans>Оценка за тест</Trans></InputLabel>
             <Select
               value={localFilters.testScore || ''}
               label={_(msg`Оценка за тест`)}
               onChange={(e) => handleLocalChange('testScore', e.target.value)}
             >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="passed">✅ Прошли тест</MenuItem>
-              <MenuItem value="not_passed">❌ Не проходили</MenuItem>
-              <MenuItem value="9">≥ 9 (отлично)</MenuItem>
-              <MenuItem value="7">≥ 7 (хорошо)</MenuItem>
-              <MenuItem value="5">≥ 5 (средне)</MenuItem>
-              <MenuItem value="3">≥ 3 (слабо)</MenuItem>
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="passed"><Trans>✅ Прошли тест</Trans></MenuItem>
+              <MenuItem value="not_passed"><Trans>❌ Не проходили</Trans></MenuItem>
+              <MenuItem value="9"><Trans>≥ 9 (отлично)</Trans></MenuItem>
+              <MenuItem value="7"><Trans>≥ 7 (хорошо)</Trans></MenuItem>
+              <MenuItem value="5"><Trans>≥ 5 (средне)</Trans></MenuItem>
+              <MenuItem value="3"><Trans>≥ 3 (слабо)</Trans></MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -254,15 +254,15 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {/* Наличие резюме */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>Резюме</InputLabel>
+            <InputLabel><Trans>Резюме</Trans></InputLabel>
             <Select
               value={localFilters.hasResume || ''}
               label={_(msg`Резюме`)}
               onChange={(e) => handleLocalChange('hasResume', e.target.value)}
             >
-              <MenuItem value="">Все</MenuItem>
-              <MenuItem value="true">✅ С резюме</MenuItem>
-              <MenuItem value="false">❌ Без резюме</MenuItem>
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="true"><Trans>✅ С резюме</Trans></MenuItem>
+              <MenuItem value="false"><Trans>❌ Без резюме</Trans></MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -270,7 +270,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {/* Дата добавления */}
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>Дата добавления</InputLabel>
+            <InputLabel><Trans>Дата добавления</Trans></InputLabel>
             <Select
               value={localFilters.datePreset || ''}
               label={_(msg`Дата добавления`)}
@@ -287,12 +287,12 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 setLocalFilters(newFilters);
               }}
             >
-              <MenuItem value="">Все время</MenuItem>
-              <MenuItem value="today">📅 Сегодня</MenuItem>
-              <MenuItem value="3days">📅 Последние 3 дня</MenuItem>
-              <MenuItem value="week">📅 Последняя неделя</MenuItem>
-              <MenuItem value="month">📅 Последний месяц</MenuItem>
-              <MenuItem value="custom">📆 Выбрать диапазон...</MenuItem>
+              <MenuItem value=""><Trans>Все время</Trans></MenuItem>
+              <MenuItem value="today"><Trans>📅 Сегодня</Trans></MenuItem>
+              <MenuItem value="3days"><Trans>📅 Последние 3 дня</Trans></MenuItem>
+              <MenuItem value="week"><Trans>📅 Последняя неделя</Trans></MenuItem>
+              <MenuItem value="month"><Trans>📅 Последний месяц</Trans></MenuItem>
+              <MenuItem value="custom"><Trans>📆 Выбрать диапазон...</Trans></MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -329,14 +329,14 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         {hhStages.length > 0 && (
           <Grid item xs={12} md={2}>
             <FormControl fullWidth size="small">
-              <InputLabel>Стадия HH</InputLabel>
+              <InputLabel><Trans>Стадия HH</Trans></InputLabel>
               <Select
                 value={localFilters.hhStage || ''}
                 label={_(msg`Стадия HH`)}
                 onChange={(e) => handleLocalChange('hhStage', e.target.value)}
                 disabled={loadingStages}
               >
-                <MenuItem value="">Все стадии</MenuItem>
+                <MenuItem value=""><Trans>Все стадии</Trans></MenuItem>
                 {hhStages.map((stage) => (
                   <MenuItem key={stage} value={stage}>
                     {stage}

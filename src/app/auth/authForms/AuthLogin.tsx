@@ -120,9 +120,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
                 textDecoration: "none",
                 color: "primary.main",
               }}
-            >
-              Забыли пароль?
-            </Typography>
+            ><Trans>Забыли пароль?</Trans></Typography>
           </Stack>
         </Stack>
         <Box>

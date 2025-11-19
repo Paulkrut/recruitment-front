@@ -153,12 +153,12 @@ export default function RegulationTestsPage() {
         <MuiLink href="/hr" underline="hover" color="inherit">
           Главная
         </MuiLink>
-        <Typography color="text.primary">Тесты</Typography>
+        <Typography color="text.primary"><Trans>Тесты</Trans></Typography>
       </Breadcrumbs>
 
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">📋 Тесты на знание регламентов</Typography>
+        <Typography variant="h4"><Trans>📋 Тесты на знание регламентов</Trans></Typography>
         <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
           <Button
             component="a"
@@ -174,7 +174,7 @@ export default function RegulationTestsPage() {
       <Card sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
           <FormControl sx={{ minWidth: 300 }}>
-            <InputLabel>Фильтр по регламенту</InputLabel>
+            <InputLabel><Trans>Фильтр по регламенту</Trans></InputLabel>
             <Select
               value={selectedRegulationId || ''}
               label={_(msg`Фильтр по регламенту`)}
@@ -222,20 +222,20 @@ export default function RegulationTestsPage() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Название</TableCell>
-                <TableCell>Регламенты</TableCell>
-                <TableCell>Режим генерации</TableCell>
-                <TableCell>Прогресс</TableCell>
-                <TableCell>Средний балл</TableCell>
-                <TableCell>Статус</TableCell>
-                <TableCell align="right">Действия</TableCell>
+                <TableCell><Trans>Название</Trans></TableCell>
+                <TableCell><Trans>Регламенты</Trans></TableCell>
+                <TableCell><Trans>Режим генерации</Trans></TableCell>
+                <TableCell><Trans>Прогресс</Trans></TableCell>
+                <TableCell><Trans>Средний балл</Trans></TableCell>
+                <TableCell><Trans>Статус</Trans></TableCell>
+                <TableCell align="right"><Trans>Действия</Trans></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
-                    <Typography color="text.secondary">Загрузка...</Typography>
+                    <Typography color="text.secondary"><Trans>Загрузка...</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : filteredTests.length === 0 ? (
@@ -243,9 +243,7 @@ export default function RegulationTestsPage() {
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                     {selectedRegulationId ? (
                       <>
-                        <Typography color="text.secondary" gutterBottom>
-                          Нет тестов для выбранного регламента
-                        </Typography>
+                        <Typography color="text.secondary" gutterBottom><Trans>Нет тестов для выбранного регламента</Trans></Typography>
                         <Button
                           variant="outlined"
                           startIcon={<ClearIcon />}
@@ -257,7 +255,7 @@ export default function RegulationTestsPage() {
                       </>
                     ) : (
                       <>
-                        <Typography color="text.secondary">Тесты не созданы</Typography>
+                        <Typography color="text.secondary"><Trans>Тесты не созданы</Trans></Typography>
                         <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
                           <Button
                             component="a"

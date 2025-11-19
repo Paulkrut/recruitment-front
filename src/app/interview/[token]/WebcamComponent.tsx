@@ -4,6 +4,8 @@ import { Box, Typography, Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicIcon from '@mui/icons-material/Mic';
+import { Trans } from '@lingui/react';
+
 
 interface WebcamComponentProps {
   cameraEnabled: boolean;
@@ -106,9 +108,7 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
             color: 'white'
           }}>
             <VideocamOffIcon sx={{ fontSize: 64, mb: 2, opacity: 0.7 }} />
-            <Typography variant="h6" sx={{ opacity: 0.7 }}>
-              Камера отключена
-            </Typography>
+            <Typography variant="h6" sx={{ opacity: 0.7 }}><Trans>Камера отключена</Trans></Typography>
           </Box>
         )}
 

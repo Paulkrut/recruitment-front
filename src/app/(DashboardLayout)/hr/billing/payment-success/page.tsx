@@ -61,7 +61,7 @@ export default function PaymentSuccessPage() {
       <PageContainer title={_(msg`Проверка платежа`)} description="Пожалуйста, подождите">
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="50vh">
           <CircularProgress size={60} sx={{ mb: 2 }} />
-          <Typography variant="h6">Проверяем статус платежа...</Typography>
+          <Typography variant="h6"><Trans>Проверяем статус платежа...</Trans></Typography>
         </Box>
       </PageContainer>
     );
@@ -78,9 +78,7 @@ export default function PaymentSuccessPage() {
             {error ? (
               <>
                 <IconX size={80} color="red" style={{ marginBottom: 16 }} />
-                <Typography variant="h4" gutterBottom color="error">
-                  Ошибка
-                </Typography>
+                <Typography variant="h4" gutterBottom color="error"><Trans>Ошибка</Trans></Typography>
                 <Typography variant="body1" color="text.secondary" paragraph>
                   {error}
                 </Typography>
@@ -91,16 +89,10 @@ export default function PaymentSuccessPage() {
             ) : isSuccess ? (
               <>
                 <IconCheck size={80} color="green" style={{ marginBottom: 16 }} />
-                <Typography variant="h4" gutterBottom color="success.main">
-                  Оплата прошла успешно!
-                </Typography>
-                <Typography variant="body1" color="text.secondary" paragraph>
-                  Интервью зачислены на ваш баланс. Теперь вы можете создавать кандидатов и проводить интервью.
-                </Typography>
+                <Typography variant="h4" gutterBottom color="success.main"><Trans>Оплата прошла успешно!</Trans></Typography>
+                <Typography variant="body1" color="text.secondary" paragraph><Trans>Интервью зачислены на ваш баланс. Теперь вы можете создавать кандидатов и проводить интервью.</Trans></Typography>
                 <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Сумма платежа
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Сумма платежа</Trans></Typography>
                   <Typography variant="h5">
                     {payment.amount.toLocaleString('ru-RU')}₽
                   </Typography>
@@ -117,22 +109,14 @@ export default function PaymentSuccessPage() {
             ) : isPending ? (
               <>
                 <CircularProgress size={60} sx={{ mb: 2 }} />
-                <Typography variant="h5" gutterBottom>
-                  Платёж обрабатывается
-                </Typography>
-                <Typography variant="body1" color="text.secondary" paragraph>
-                  Пожалуйста, подождите. Обычно это занимает несколько секунд.
-                </Typography>
-                <Button variant="outlined" onClick={checkPaymentStatus}>
-                  Обновить статус
-                </Button>
+                <Typography variant="h5" gutterBottom><Trans>Платёж обрабатывается</Trans></Typography>
+                <Typography variant="body1" color="text.secondary" paragraph><Trans>Пожалуйста, подождите. Обычно это занимает несколько секунд.</Trans></Typography>
+                <Button variant="outlined" onClick={checkPaymentStatus}><Trans>Обновить статус</Trans></Button>
               </>
             ) : (
               <>
                 <IconX size={80} color="orange" style={{ marginBottom: 16 }} />
-                <Typography variant="h5" gutterBottom color="warning.main">
-                  Платёж отменён
-                </Typography>
+                <Typography variant="h5" gutterBottom color="warning.main"><Trans>Платёж отменён</Trans></Typography>
                 <Typography variant="body1" color="text.secondary" paragraph>
                   Статус: {payment?.status}
                 </Typography>

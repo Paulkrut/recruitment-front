@@ -19,6 +19,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Trans } from '@lingui/react';
+
 
 interface BulkActionsPanelProps {
   selectedCount: number;
@@ -128,9 +130,7 @@ export default function BulkActionsPanel({
             )}
           </Box>
 
-          <Button variant="outlined" onClick={onCancel} size="small">
-            Отменить выделение
-          </Button>
+          <Button variant="outlined" onClick={onCancel} size="small"><Trans>Отменить выделение</Trans></Button>
 
           <Select
             value={selectedStatus}
@@ -139,9 +139,7 @@ export default function BulkActionsPanel({
             size="small"
             sx={{ minWidth: 200 }}
           >
-            <MenuItem value="" disabled>
-              Переместить в...
-            </MenuItem>
+            <MenuItem value="" disabled><Trans>Переместить в...</Trans></MenuItem>
             {Object.entries(STATUS_LABELS).map(([value, label]) => (
               <MenuItem key={value} value={value}>
                 {label}
@@ -155,9 +153,7 @@ export default function BulkActionsPanel({
             onClick={handleMoveClick}
             disabled={!selectedStatus}
             size="small"
-          >
-            Переместить
-          </Button>
+          ><Trans>Переместить</Trans></Button>
         </Paper>
       </Box>
 
@@ -178,9 +174,7 @@ export default function BulkActionsPanel({
           
           {selectedAllInColumns.length > 0 && (
             <Alert severity="info" sx={{ mt: 2 }}>
-              <Typography variant="body2" fontWeight="bold">
-                Выбраны ВСЕ кандидаты из колонок:
-              </Typography>
+              <Typography variant="body2" fontWeight="bold"><Trans>Выбраны ВСЕ кандидаты из колонок:</Trans></Typography>
               {selectedAllInColumns.map(col => (
                 <Typography key={col.columnId} variant="body2">
                   • {STATUS_LABELS[col.columnId]}: {col.count} кандидатов
@@ -191,9 +185,7 @@ export default function BulkActionsPanel({
 
           {triggers.length > 0 && (
             <>
-              <Alert severity="info" sx={{ mt: 2, mb: 2 }}>
-                Будет автоматически выполнено:
-              </Alert>
+              <Alert severity="info" sx={{ mt: 2, mb: 2 }}><Trans>Будет автоматически выполнено:</Trans></Alert>
               <List dense>
                 {triggers.map((trigger, index) => (
                   <ListItem key={index}>
@@ -213,9 +205,7 @@ export default function BulkActionsPanel({
               severity={daysNeeded > 3 ? "warning" : daysNeeded > 1 ? "info" : "success"} 
               sx={{ mt: 2 }}
             >
-              <Typography variant="body2" fontWeight="bold" gutterBottom>
-                📊 Лимиты HeadHunter.ru (менеджер):
-              </Typography>
+              <Typography variant="body2" fontWeight="bold" gutterBottom><Trans>📊 Лимиты HeadHunter.ru (менеджер):</Trans></Typography>
               <Typography variant="body2">
                 • Осталось сегодня: <strong>{hhLimits.left.resumeView}</strong> из {hhLimits.limits.resumeView}
               </Typography>
@@ -231,9 +221,7 @@ export default function BulkActionsPanel({
                   <>⏳ AI скрининг займёт примерно <strong>{daysNeeded} {daysNeeded === 2 || daysNeeded === 3 || daysNeeded === 4 ? 'дня' : 'дней'}</strong></>
                 )}
               </Typography>
-              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-                ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.
-              </Typography>
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}><Trans>ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.</Trans></Typography>
               
               {resumeQueueCount !== undefined && resumeQueueCount > 0 && (
                 <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>

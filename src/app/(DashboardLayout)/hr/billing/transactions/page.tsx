@@ -179,12 +179,10 @@ export default function TransactionsPage() {
               <CardContent>
                 <Box display="flex" alignItems="center" gap={1} mb={1}>
                   <IconCoin size={20} color="green" />
-                  <Typography variant="h6">Текущий баланс</Typography>
+                  <Typography variant="h6"><Trans>Текущий баланс</Trans></Typography>
                 </Box>
                 <Typography variant="h4">{stats.current_balance.interviews}</Typography>
-                <Typography variant="caption" color="text.secondary">
-                  интервью
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>интервью</Trans></Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   {stats.current_balance.regulation_tests} тестов по регламентам
                 </Typography>
@@ -197,14 +195,12 @@ export default function TransactionsPage() {
               <CardContent>
                 <Box display="flex" alignItems="center" gap={1} mb={1}>
                   <IconReceipt size={20} color="blue" />
-                  <Typography variant="h6">Всего потрачено</Typography>
+                  <Typography variant="h6"><Trans>Всего потрачено</Trans></Typography>
                 </Box>
                 <Typography variant="h4">
                   {parseFloat(stats.lifetime.total_spent).toLocaleString('ru-RU')}₽
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  за всё время
-                </Typography>
+                <Typography variant="caption" color="text.secondary"><Trans>за всё время</Trans></Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -213,7 +209,7 @@ export default function TransactionsPage() {
             <Card>
               <CardContent>
                 <Box display="flex" alignItems="center" gap={1} mb={1}>
-                  <Typography variant="h6">Использование</Typography>
+                  <Typography variant="h6"><Trans>Использование</Trans></Typography>
                 </Box>
                 <Typography variant="h4">{stats.usage_rate}%</Typography>
                 <Typography variant="caption" color="text.secondary">
@@ -237,21 +233,19 @@ export default function TransactionsPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Дата</TableCell>
-                  <TableCell>Операция</TableCell>
-                  <TableCell>Описание</TableCell>
-                  <TableCell align="right">Интервью</TableCell>
-                  <TableCell align="right">Тесты</TableCell>
-                  <TableCell align="right">Сумма</TableCell>
+                  <TableCell><Trans>Дата</Trans></TableCell>
+                  <TableCell><Trans>Операция</Trans></TableCell>
+                  <TableCell><Trans>Описание</Trans></TableCell>
+                  <TableCell align="right"><Trans>Интервью</Trans></TableCell>
+                  <TableCell align="right"><Trans>Тесты</Trans></TableCell>
+                  <TableCell align="right"><Trans>Сумма</Trans></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {transactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} align="center">
-                      <Typography variant="body2" color="text.secondary">
-                        Нет транзакций
-                      </Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>Нет транзакций</Trans></Typography>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -342,20 +336,18 @@ export default function TransactionsPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Дата создания</TableCell>
-                  <TableCell>Тариф</TableCell>
-                  <TableCell>Статус</TableCell>
-                  <TableCell>Дата оплаты</TableCell>
-                  <TableCell align="right">Сумма</TableCell>
+                  <TableCell><Trans>Дата создания</Trans></TableCell>
+                  <TableCell><Trans>Тариф</Trans></TableCell>
+                  <TableCell><Trans>Статус</Trans></TableCell>
+                  <TableCell><Trans>Дата оплаты</Trans></TableCell>
+                  <TableCell align="right"><Trans>Сумма</Trans></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {payments.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} align="center">
-                      <Typography variant="body2" color="text.secondary">
-                        Нет платежей
-                      </Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>Нет платежей</Trans></Typography>
                     </TableCell>
                   </TableRow>
                 ) : (

@@ -90,17 +90,13 @@ const StateCard = memo(({
 
         <Box display="flex" flexDirection="column" gap={0.5}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="caption" color="text.secondary">
-              На HH:
-            </Typography>
+            <Typography variant="caption" color="text.secondary"><Trans>На HH:</Trans></Typography>
             <Typography variant="body2" fontWeight={600}>
               {stateData.count_hh}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="caption" color="text.secondary">
-              У нас:
-            </Typography>
+            <Typography variant="caption" color="text.secondary"><Trans>У нас:</Trans></Typography>
             <Typography variant="body2">
               {stateData.count}
             </Typography>
@@ -455,7 +451,7 @@ export default function HhVacancyDetailPage() {
             <Card>
               <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h5">📊 Информация о вакансии</Typography>
+                  <Typography variant="h5"><Trans>📊 Информация о вакансии</Trans></Typography>
                   <Button
                     variant="outlined"
                     startIcon={syncingVacancy ? <CircularProgress size={16} /> : <IconRefresh />}
@@ -523,7 +519,7 @@ export default function HhVacancyDetailPage() {
                 {vacancy.description && (
                   <Box mt={2}>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Typography variant="h6">Описание:</Typography>
+                      <Typography variant="h6"><Trans>Описание:</Trans></Typography>
                       <IconButton
                         size="small"
                         onClick={() => setExpandedDescription(!expandedDescription)}
@@ -547,9 +543,7 @@ export default function HhVacancyDetailPage() {
                 {/* Ключевые навыки */}
                 {vacancy.key_skills && vacancy.key_skills.length > 0 && (
                   <Box mt={2}>
-                    <Typography variant="h6" mb={1}>
-                      Ключевые навыки:
-                    </Typography>
+                    <Typography variant="h6" mb={1}><Trans>Ключевые навыки:</Trans></Typography>
                     <Box display="flex" flexWrap="wrap" gap={1}>
                       {vacancy.key_skills.map((skill, index) => (
                         <Chip key={index} label={skill} variant="outlined" />
@@ -565,19 +559,13 @@ export default function HhVacancyDetailPage() {
           <Grid item xs={12}>
             <Card>
               <CardContent>
-                <Typography variant="h5" mb={2}>
-                  👥 Синхронизация кандидатов
-                </Typography>
+                <Typography variant="h5" mb={2}><Trans>👥 Синхронизация кандидатов</Trans></Typography>
 
-                <Typography variant="body2" color="text.secondary" mb={3}>
-                  Выберите статусы HH.ru для синхронизации:
-                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Выберите статусы HH.ru для синхронизации:</Trans></Typography>
 
                 {/* Список статусов */}
                 {candidates_by_state.length === 0 ? (
-                  <Alert severity="info">
-                    Статистика по статусам пока недоступна. Запустите синхронизацию кандидатов.
-                  </Alert>
+                  <Alert severity="info"><Trans>Статистика по статусам пока недоступна. Запустите синхронизацию кандидатов.</Trans></Alert>
                 ) : (
                   <Grid container spacing={2}>
                     {candidates_by_state.map((stateData) => (
@@ -619,9 +607,7 @@ export default function HhVacancyDetailPage() {
                     variant="outlined"
                     onClick={handleSaveSettings}
                     disabled={syncing}
-                  >
-                    Сохранить настройки
-                  </Button>
+                  ><Trans>Сохранить настройки</Trans></Button>
                   <Button
                     variant="contained"
                     onClick={handleSyncCandidates}
@@ -640,9 +626,7 @@ export default function HhVacancyDetailPage() {
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Typography variant="h5" mb={2}>
-                    📈 Статистика синхронизации
-                  </Typography>
+                  <Typography variant="h5" mb={2}><Trans>📈 Статистика синхронизации</Trans></Typography>
 
                   <List>
                     <ListItem>

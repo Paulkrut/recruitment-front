@@ -130,15 +130,15 @@ const QuestionCard = memo(({
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
-              <InputLabel>Сложность</InputLabel>
+              <InputLabel><Trans>Сложность</Trans></InputLabel>
               <Select
                 value={question.difficulty}
                 label={_(msg`Сложность`)}
                 onChange={(e) => onUpdate(index, 'difficulty', e.target.value as number)}
               >
-                <MenuItem value={1}>Легкий</MenuItem>
-                <MenuItem value={2}>Средний</MenuItem>
-                <MenuItem value={3}>Сложный</MenuItem>
+                <MenuItem value={1}><Trans>Легкий</Trans></MenuItem>
+                <MenuItem value={2}><Trans>Средний</Trans></MenuItem>
+                <MenuItem value={3}><Trans>Сложный</Trans></MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -587,9 +587,7 @@ export default function CreateTestPage() {
 
                 {/* Сообщение если папка пустая */}
                 {selectedFolderId && displayedRegulations.length === 0 && (
-                  <Alert severity="info">
-                    В этой папке пока нет регламентов
-                  </Alert>
+                  <Alert severity="info"><Trans>В этой папке пока нет регламентов</Trans></Alert>
                 )}
               </List>
             )}
@@ -609,18 +607,14 @@ export default function CreateTestPage() {
           <Box>
             {/* Выбор режима генерации */}
             <FormControl fullWidth sx={{ mb: 3 }}>
-              <InputLabel>Режим генерации вопросов</InputLabel>
+              <InputLabel><Trans>Режим генерации вопросов</Trans></InputLabel>
               <Select
                 value={questionGenerationMode}
                 label={_(msg`Режим генерации вопросов`)}
                 onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
               >
-                <MenuItem value="pre_generated">
-                  Заранее (вопросы генерируются при создании теста)
-                </MenuItem>
-                <MenuItem value="on_start">
-                  При старте (вопросы генерируются для каждого сотрудника индивидуально)
-                </MenuItem>
+                <MenuItem value="pre_generated"><Trans>Заранее (вопросы генерируются при создании теста)</Trans></MenuItem>
+                <MenuItem value="on_start"><Trans>При старте (вопросы генерируются для каждого сотрудника индивидуально)</Trans></MenuItem>
               </Select>
               <FormHelperText>
                 {questionGenerationMode === 'pre_generated'
@@ -633,18 +627,14 @@ export default function CreateTestPage() {
               <Box sx={{ textAlign: 'center', py: 4 }}>
                 {!questionsGenerated ? (
                   <>
-                    <Typography variant="h6" gutterBottom>
-                      Генерация вопросов
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>Генерация вопросов</Trans></Typography>
                     <Typography color="text.secondary" sx={{ mb: 3 }}>
                       Система создаст {selectedRegulations.length * questionsPerRegulation} вопросов на основе
                       выбранных регламентов с помощью AI.
                     </Typography>
 
                     <Alert severity="info" sx={{ mb: 3, textAlign: 'left' }}>
-                      <Typography variant="subtitle2" gutterBottom>
-                        Что будет сгенерировано:
-                      </Typography>
+                      <Typography variant="subtitle2" gutterBottom><Trans>Что будет сгенерировано:</Trans></Typography>
                       <ul style={{ margin: 0, paddingLeft: 20 }}>
                         <li>Текстовые вопросы по содержанию регламентов</li>
                         <li>Вопросы с вариантами ответов</li>
@@ -666,9 +656,7 @@ export default function CreateTestPage() {
                   <Box>
                     <Box sx={{ textAlign: 'center', mb: 3 }}>
                       <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mb: 1 }} />
-                    <Typography variant="h6" gutterBottom>
-                      Вопросы успешно сгенерированы!
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>Вопросы успешно сгенерированы!</Trans></Typography>
                     <Typography color="text.secondary">
                         Создано {generatedQuestions.length} вопросов. Вы можете отредактировать их ниже.
                     </Typography>
@@ -692,13 +680,9 @@ export default function CreateTestPage() {
               </Box>
             ) : (
               <Alert severity="info">
-                <Typography variant="subtitle2" gutterBottom>
-                  Динамическая генерация вопросов
-                </Typography>
-                <Typography variant="body2">
-                  Вопросы будут автоматически генерироваться при старте теста для каждого сотрудника
-                  индивидуально. Это обеспечит уникальность заданий и предотвратит списывание.
-                </Typography>
+                <Typography variant="subtitle2" gutterBottom><Trans>Динамическая генерация вопросов</Trans></Typography>
+                <Typography variant="body2"><Trans>Вопросы будут автоматически генерироваться при старте теста для каждого сотрудника
+                  индивидуально. Это обеспечит уникальность заданий и предотвратит списывание.</Trans></Typography>
               </Alert>
             )}
           </Box>
@@ -718,7 +702,7 @@ export default function CreateTestPage() {
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
           Тесты
         </Link>
-        <Typography color="text.primary">Создать тест</Typography>
+        <Typography color="text.primary"><Trans>Создать тест</Trans></Typography>
       </Breadcrumbs>
 
       <Card sx={{ p: 3 }}>
@@ -735,9 +719,7 @@ export default function CreateTestPage() {
         <Divider sx={{ my: 3 }} />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button onClick={handleBack} disabled={activeStep === 0}>
-            Назад
-          </Button>
+          <Button onClick={handleBack} disabled={activeStep === 0}><Trans>Назад</Trans></Button>
 
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button variant="outlined" onClick={() => router.push('/hr/regulation-tests')}>
@@ -745,13 +727,9 @@ export default function CreateTestPage() {
             </Button>
 
             {activeStep === steps.length - 1 ? (
-              <Button variant="contained" onClick={handleFinishTestCreation} disabled={!isStepValid(activeStep)}>
-                Завершить создание
-              </Button>
+              <Button variant="contained" onClick={handleFinishTestCreation} disabled={!isStepValid(activeStep)}><Trans>Завершить создание</Trans></Button>
             ) : (
-              <Button variant="contained" onClick={handleNext} disabled={!isStepValid(activeStep)}>
-                Далее
-              </Button>
+              <Button variant="contained" onClick={handleNext} disabled={!isStepValid(activeStep)}><Trans>Далее</Trans></Button>
             )}
           </Box>
         </Box>
@@ -761,12 +739,8 @@ export default function CreateTestPage() {
       <Dialog open={showSuccessDialog} onClose={() => setShowSuccessDialog(false)} maxWidth="sm" fullWidth>
         <Box sx={{ p: 4, textAlign: 'center' }}>
           <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
-          <Typography variant="h5" gutterBottom>
-            Тест успешно создан!
-          </Typography>
-          <Typography color="text.secondary" sx={{ mb: 4 }}>
-            Что вы хотите сделать дальше?
-          </Typography>
+          <Typography variant="h5" gutterBottom><Trans>Тест успешно создан!</Trans></Typography>
+          <Typography color="text.secondary" sx={{ mb: 4 }}><Trans>Что вы хотите сделать дальше?</Trans></Typography>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Button
@@ -776,9 +750,7 @@ export default function CreateTestPage() {
               sx={{ py: 2 }}
             >
               🔗 Сгенерировать общую ссылку
-              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
-                Для самостоятельной регистрации сотрудников
-              </Typography>
+              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}><Trans>Для самостоятельной регистрации сотрудников</Trans></Typography>
             </Button>
 
             <Button
@@ -788,9 +760,7 @@ export default function CreateTestPage() {
               sx={{ py: 2 }}
             >
               ✉️ Отправить приглашения конкретным сотрудникам
-              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
-                Создать именные приглашения по email
-              </Typography>
+              <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}><Trans>Создать именные приглашения по email</Trans></Typography>
             </Button>
 
             <Divider sx={{ my: 1 }} />

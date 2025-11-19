@@ -172,7 +172,7 @@ export default function CandidateDetailPage() {
     return (
       <PageContainer title={_(msg`Кандидат`)}>
         <Box sx={{ p: 4 }}>
-          <Typography>Нет доступа</Typography>
+          <Typography><Trans>Нет доступа</Trans></Typography>
         </Box>
       </PageContainer>
     );
@@ -249,7 +249,7 @@ export default function CandidateDetailPage() {
               {sessionDetail?.vacancy?.title || statusData.vacancyTitle || 'Вакансия'}
             </Link>
           ) : (
-            <Typography color="text.primary">Вакансия</Typography>
+            <Typography color="text.primary"><Trans>Вакансия</Trans></Typography>
           )}
           <Typography color="text.primary">{candidate}</Typography>
         </Breadcrumbs>
@@ -293,7 +293,7 @@ export default function CandidateDetailPage() {
                 </Tooltip>
                 <Tooltip title={_(msg`Открыть интервью`)}>
                   <Link href={interviewLink || '#'} target="_blank" rel="noopener" passHref legacyBehavior>
-                    <Button variant="contained" color="primary" size="small" component="a">Интервью</Button>
+                    <Button variant="contained" color="primary" size="small" component="a"><Trans>Интервью</Trans></Button>
                   </Link>
                 </Tooltip>
                 <Tooltip title={_(msg`Экспорт в PDF`)}>
@@ -343,7 +343,7 @@ export default function CandidateDetailPage() {
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
                   <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                     <IconFileText size={32} color="#1976d2" />
-                    <Typography variant="h4" fontWeight="700">Детали интервью-сессии</Typography>
+                    <Typography variant="h4" fontWeight="700"><Trans>Детали интервью-сессии</Trans></Typography>
                     <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
                   </Stack>
                   <Grid container spacing={2} mb={2}>
@@ -354,11 +354,11 @@ export default function CandidateDetailPage() {
                       <Typography variant="body2"><b>Завершена:</b> <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.finishedAt || '-'}</Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary" sx={{ml:1}}>Открыть</Button>)}</Typography>
+                      <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary" sx={{ml:1}}><Trans>Открыть</Trans></Button>)}</Typography>
                     </Grid>
                     {sessionDetail.vacancy && (
                       <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b>Вакансия:</b> {sessionDetail.vacancy.title}{sessionDetail.vacancy.id && (<Button component={Link} href={`/hr/vacancies/${sessionDetail.vacancy.id}`} size="small" color="primary" sx={{ml:1}}>Открыть</Button>)}</Typography>
+                        <Typography variant="body2"><b>Вакансия:</b> {sessionDetail.vacancy.title}{sessionDetail.vacancy.id && (<Button component={Link} href={`/hr/vacancies/${sessionDetail.vacancy.id}`} size="small" color="primary" sx={{ml:1}}><Trans>Открыть</Trans></Button>)}</Typography>
                       </Grid>
                     )}
                     {/* Длительность интервью */}
@@ -383,7 +383,7 @@ export default function CandidateDetailPage() {
                     )}
                   </Grid>
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
-                  <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Ответы на вопросы</Typography>
+                  <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Ответы на вопросы</Trans></Typography>
                   {/* Accordion для длинных списков */}
                   {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
                     <Accordion key={a.id} defaultExpanded={idx<3} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
@@ -421,11 +421,11 @@ export default function CandidateDetailPage() {
                       </AccordionDetails>
                     </Accordion>
                   )) : (
-                    <Typography color="text.secondary">Нет ответов</Typography>
+                    <Typography color="text.secondary"><Trans>Нет ответов</Trans></Typography>
                   )}
                   {sessionDetail.result && (
                     <Box mt={3}>
-                      <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}>Итог интервью</Typography>
+                      <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
                       <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}>нет</i>}</Typography>
                       <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i style={{color:'#888'}}>нет</i>}</Typography>
                     </Box>
@@ -438,7 +438,7 @@ export default function CandidateDetailPage() {
               <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
                 <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
                   <Stack spacing={2}>
-                    <Typography variant="h5" fontWeight="700">AI-оценка кандидата</Typography>
+                    <Typography variant="h5" fontWeight="700"><Trans>AI-оценка кандидата</Trans></Typography>
                     <Stack direction="row" alignItems="center" spacing={2}>
                       <Chip label={aiStatus || 'нет данных'} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
                       {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}>Обновлено: {aiUpdatedAt}</Typography>}
@@ -446,7 +446,7 @@ export default function CandidateDetailPage() {
                     {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><b>Резюме:</b> {aiSummary}</Typography>}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
                       <Box mb={1}>
-                        <Typography variant="subtitle2">Сильные стороны:</Typography>
+                        <Typography variant="subtitle2"><Trans>Сильные стороны:</Trans></Typography>
                         <Stack component="ul" spacing={0.5} sx={{pl:2}}>
                           {aiStrengths.map((s:string,i:number)=>(<li key={i}><CheckCircleIcon color="success" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
                         </Stack>
@@ -454,7 +454,7 @@ export default function CandidateDetailPage() {
                     )}
                     {aiWeaknesses && Array.isArray(aiWeaknesses) && aiWeaknesses.length > 0 && (
                       <Box mb={1}>
-                        <Typography variant="subtitle2">Слабые стороны:</Typography>
+                        <Typography variant="subtitle2"><Trans>Слабые стороны:</Trans></Typography>
                         <Stack component="ul" spacing={0.5} sx={{pl:2}}>
                           {aiWeaknesses.map((s:string,i:number)=>(<li key={i}><HourglassEmptyIcon color="warning" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
                         </Stack>
@@ -462,9 +462,7 @@ export default function CandidateDetailPage() {
                     )}
                     {aiMetrics && (
                       <Box mb={1}>
-                        <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}>
-                          Метрики оценки:
-                        </Typography>
+                        <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}><Trans>Метрики оценки:</Trans></Typography>
                         <Grid container spacing={2}>
                           {Object.entries(aiMetrics).map(([metric, value]) => {
                             const score = typeof value === 'number' ? value : 0;
@@ -560,15 +558,13 @@ export default function CandidateDetailPage() {
               <CardContent sx={{ p: 4 }}>
                 <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                   <IconFileDescription size={32} color="#1976d2" />
-                  <Typography variant="h6" fontWeight="700">Резюме кандидата</Typography>
+                  <Typography variant="h6" fontWeight="700"><Trans>Резюме кандидата</Trans></Typography>
                 </Stack>
                 
                 {resumeLoading && (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <CircularProgress />
-                    <Typography variant="body2" sx={{ mt: 2, opacity: 0.7 }}>
-                      Загрузка резюме...
-                    </Typography>
+                    <Typography variant="body2" sx={{ mt: 2, opacity: 0.7 }}><Trans>Загрузка резюме...</Trans></Typography>
                   </Box>
                 )}
                 
@@ -621,9 +617,7 @@ export default function CandidateDetailPage() {
                     ) : (
                       <Box sx={{ textAlign: 'center', py: 4 }}>
                         <IconFileDescription size={48} color="#ccc" style={{ marginBottom: 16 }} />
-                        <Typography variant="body1" color="text.secondary" gutterBottom>
-                          Резюме отсутствует в базе
-                        </Typography>
+                        <Typography variant="body1" color="text.secondary" gutterBottom><Trans>Резюме отсутствует в базе</Trans></Typography>
                         
                         {resumeData.canLoadFromHh && (
                           <Button 
@@ -662,9 +656,7 @@ export default function CandidateDetailPage() {
                         )}
                         
                         {!resumeData.canLoadFromHh && (
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                            Для загрузки резюме необходимо добавить его вручную
-                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}><Trans>Для загрузки резюме необходимо добавить его вручную</Trans></Typography>
                         )}
                       </Box>
                     )}
@@ -677,7 +669,7 @@ export default function CandidateDetailPage() {
           <TabPanel value="comments" sx={{p:0}}>
             <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h6" sx={{mb:1}}>Заметки HR</Typography>
+                <Typography variant="h6" sx={{mb:1}}><Trans>Заметки HR</Trans></Typography>
                 <textarea
                   value={hrNote}
                   onChange={e=>setHrNote(e.target.value)}
@@ -686,10 +678,10 @@ export default function CandidateDetailPage() {
                   placeholder={_(msg`Введите заметку или комментарий...`)}
                 />
                 <Stack direction="row" spacing={2} alignItems="center">
-                  <Button variant="contained" color="primary" onClick={saveNote}>Сохранить заметку</Button>
-                  {copyMsg && <Typography color="success.main">Сохранено!</Typography>}
+                  <Button variant="contained" color="primary" onClick={saveNote}><Trans>Сохранить заметку</Trans></Button>
+                  {copyMsg && <Typography color="success.main"><Trans>Сохранено!</Trans></Typography>}
                 </Stack>
-                <Typography variant="body2" sx={{opacity:0.7}}>Заметка хранится только локально в браузере (MVP).</Typography>
+                <Typography variant="body2" sx={{opacity:0.7}}><Trans>Заметка хранится только локально в браузере (MVP).</Trans></Typography>
               </CardContent>
             </Card>
           </TabPanel>
@@ -697,8 +689,8 @@ export default function CandidateDetailPage() {
           <TabPanel value="letters" sx={{p:0}}>
             <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h6" sx={{mb:1}}>Письма кандидату</Typography>
-                <Typography variant="body2" sx={{opacity:0.7}}>Здесь появится история писем и уведомлений кандидату (в будущем).</Typography>
+                <Typography variant="h6" sx={{mb:1}}><Trans>Письма кандидату</Trans></Typography>
+                <Typography variant="body2" sx={{opacity:0.7}}><Trans>Здесь появится история писем и уведомлений кандидату (в будущем).</Trans></Typography>
               </CardContent>
             </Card>
           </TabPanel>
@@ -708,7 +700,7 @@ export default function CandidateDetailPage() {
               <CardContent sx={{ p: 4 }}>
                 <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                   <FeedbackIcon sx={{ fontSize: 32, color: '#1976d2' }} />
-                  <Typography variant="h6" fontWeight="700">Обратная связь, полученная кандидатом</Typography>
+                  <Typography variant="h6" fontWeight="700"><Trans>Обратная связь, полученная кандидатом</Trans></Typography>
                 </Stack>
                 {statusData?.candidateFeedback ? (
                   <>
@@ -717,9 +709,7 @@ export default function CandidateDetailPage() {
                         const feedback = JSON.parse(statusData.candidateFeedback);
                         return (
                           <Box>
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              Это та же обратная связь, которую видит кандидат после интервью
-                            </Typography>
+                            <Typography variant="body2" color="text.secondary" gutterBottom><Trans>Это та же обратная связь, которую видит кандидат после интервью</Trans></Typography>
                             
                             {feedback.average_score > 0 && (
                               <Box sx={{ textAlign: 'center', mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -730,25 +720,19 @@ export default function CandidateDetailPage() {
                               </Box>
                             )}
 
-                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                              📝 Краткий итог
-                            </Typography>
+                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}><Trans>📝 Краткий итог</Trans></Typography>
                             <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
                               {feedback.summary}
                             </Typography>
 
-                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                              💡 Развивающая обратная связь
-                            </Typography>
+                            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}><Trans>💡 Развивающая обратная связь</Trans></Typography>
                             <Typography paragraph sx={{ fontStyle: 'italic', bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
                               {feedback.feedback}
                             </Typography>
 
                             {feedback.strengths && feedback.strengths.length > 0 && (
                               <>
-                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="success.main">
-                                  ✅ Сильные стороны (по мнению AI)
-                                </Typography>
+                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="success.main"><Trans>✅ Сильные стороны (по мнению AI)</Trans></Typography>
                                 <Stack spacing={1}>
                                   {feedback.strengths.map((strength: string, index: number) => (
                                     <Chip key={index} label={strength} color="success" variant="outlined" />
@@ -759,9 +743,7 @@ export default function CandidateDetailPage() {
 
                             {feedback.weaknesses && feedback.weaknesses.length > 0 && (
                               <>
-                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="warning.main">
-                                  🎯 Области для развития (по мнению AI)
-                                </Typography>
+                                <Typography variant="h6" gutterBottom sx={{ mt: 3 }} color="warning.main"><Trans>🎯 Области для развития (по мнению AI)</Trans></Typography>
                                 <Stack spacing={1}>
                                   {feedback.weaknesses.map((weakness: string, index: number) => (
                                     <Chip key={index} label={weakness} color="warning" variant="outlined" />
@@ -779,9 +761,7 @@ export default function CandidateDetailPage() {
                         );
                       } catch (e) {
                         return (
-                          <Typography color="error">
-                            Ошибка при отображении обратной связи
-                          </Typography>
+                          <Typography color="error"><Trans>Ошибка при отображении обратной связи</Trans></Typography>
                         );
                       }
                     })()}
@@ -789,12 +769,8 @@ export default function CandidateDetailPage() {
                 ) : (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <FeedbackIcon sx={{ fontSize: 48, color: '#ccc', mb: 2 }} />
-                    <Typography variant="body1" color="text.secondary" gutterBottom>
-                      Кандидат еще не запросил обратную связь
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Обратная связь появится после того, как кандидат нажмет соответствующую кнопку на странице результатов
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary" gutterBottom><Trans>Кандидат еще не запросил обратную связь</Trans></Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Обратная связь появится после того, как кандидат нажмет соответствующую кнопку на странице результатов</Trans></Typography>
                   </Box>
                 )}
               </CardContent>
@@ -807,7 +783,7 @@ export default function CandidateDetailPage() {
               <CardContent sx={{ p: 4 }}>
                 <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                   <IconMoodHappy size={32} color="#1976d2" />
-                  <Typography variant="h6" fontWeight="700">Мнение кандидата о своей оценке</Typography>
+                  <Typography variant="h6" fontWeight="700"><Trans>Мнение кандидата о своей оценке</Trans></Typography>
                 </Stack>
                 {statusData?.candidateOpinion ? (
                   <Box sx={{ 
@@ -825,19 +801,13 @@ export default function CandidateDetailPage() {
                     }}>
                       "{statusData.candidateOpinion}"
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-                      💭 Мнение кандидата о результатах интервью
-                    </Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}><Trans>💭 Мнение кандидата о результатах интервью</Trans></Typography>
                   </Box>
                 ) : (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <IconMoodHappy size={48} color="#ccc" style={{ marginBottom: 16 }} />
-                    <Typography variant="body1" color="text.secondary" gutterBottom>
-                      Кандидат еще не оставил свое мнение о результатах
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Мнение появится после того, как кандидат получит обратную связь
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary" gutterBottom><Trans>Кандидат еще не оставил свое мнение о результатах</Trans></Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Мнение появится после того, как кандидат получит обратную связь</Trans></Typography>
                   </Box>
                 )}
               </CardContent>
@@ -848,7 +818,7 @@ export default function CandidateDetailPage() {
         <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="sm" fullWidth>
           <DialogTitle>Сравнить с другими кандидатами</DialogTitle>
           <DialogContent sx={{ pt: '16px !important' }}>
-            <Typography variant="body2" sx={{mb:2}}>Выберите кандидатов для сравнения (минимум 1):</Typography>
+            <Typography variant="body2" sx={{mb:2}}><Trans>Выберите кандидатов для сравнения (минимум 1):</Trans></Typography>
             <Stack spacing={1}>
               {Array.isArray(allCandidates) && allCandidates.filter(c=>c.id!==candId).map(c=>(
                 <FormControlLabel

@@ -1,5 +1,7 @@
 "use client";
 import React from 'react';
+import { Trans } from '@lingui/react';
+
 import {
   Box, Checkbox, Typography, Link
 } from '@mui/material';
@@ -54,9 +56,7 @@ export default function PrivacyConsent({
               Условиями использования
             </Link>
           </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время.
-          </Typography>
+          <Typography variant="caption" color="text.secondary"><Trans>Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время.</Trans></Typography>
           {helperText && (
             <Typography variant="caption" color="error" sx={{ display: 'block', mt: 1 }}>
               {helperText}

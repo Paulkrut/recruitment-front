@@ -81,16 +81,12 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         >
           <DialogTitle sx={{ textAlign: 'center', color: 'success.main' }}>
             <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
-              <Typography variant="h4" fontWeight="bold" color="success.main">
-                ✅ Данные успешно удалены!
-              </Typography>
+              <Typography variant="h4" fontWeight="bold" color="success.main"><Trans>✅ Данные успешно удалены!</Trans></Typography>
             </Box>
           </DialogTitle>
           <DialogContent>
             <Box textAlign="center" py={2}>
-              <Typography variant="h6" gutterBottom color="success.main">
-                Ваши персональные данные полностью удалены с платформы
-              </Typography>
+              <Typography variant="h6" gutterBottom color="success.main"><Trans>Ваши персональные данные полностью удалены с платформы</Trans></Typography>
               <Typography variant="body1" paragraph>
                 {successMessage}
               </Typography>
@@ -135,9 +131,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>🗑️ Удаление персональных данных</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Внимание! Это действие необратимо. Все ваши данные будут полностью удалены с платформы.
-          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}><Trans>Внимание! Это действие необратимо. Все ваши данные будут полностью удалены с платформы.</Trans></Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>
             Для подтверждения введите слово <strong>УДАЛИТЬ</strong> в поле ниже:
           </Typography>
@@ -198,9 +192,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          >
-            политикой конфиденциальности
-          </Button>
+          ><Trans>политикой конфиденциальности</Trans></Button>
           {' '}и{' '}
           <Button 
             component="a"
@@ -223,9 +215,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          >
-            условиями обработки персональных данных
-          </Button>
+          ><Trans>условиями обработки персональных данных</Trans></Button>
           . В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ "О персональных данных" вы имеете право на{' '}
           <Button 
             variant="text" 

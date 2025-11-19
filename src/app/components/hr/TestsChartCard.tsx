@@ -145,9 +145,7 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
             <IconTrendingUp size={24} color="#2196f3" />
-            <Typography variant="h5" fontWeight="600">
-              Тестов за 7 дней
-            </Typography>
+            <Typography variant="h5" fontWeight="600"><Trans>Тестов за 7 дней</Trans></Typography>
           </Box>
           <Tooltip title={_(msg`Обновить данные`)}>
             <IconButton size="small" color="primary" onClick={handleRefresh} disabled={isRefreshing}>
@@ -161,17 +159,13 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
             <Typography variant="h4" fontWeight="700" color="primary">
               {totalTests}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Всего тестов
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>Всего тестов</Trans></Typography>
           </Box>
           <Box textAlign="right">
             <Typography variant="h4" fontWeight="700" color="success.main">
               {avgTests}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              В среднем в день
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>В среднем в день</Trans></Typography>
           </Box>
         </Box>
 
@@ -181,9 +175,7 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
 
         {data.length === 0 && (
           <Box textAlign="center" py={3}>
-            <Typography variant="body2" color="textSecondary">
-              Нет данных для отображения
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>Нет данных для отображения</Trans></Typography>
           </Box>
         )}
       </CardContent>

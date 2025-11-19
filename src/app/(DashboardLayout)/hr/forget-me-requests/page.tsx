@@ -155,9 +155,7 @@ export default function ForgetMeRequestsPage() {
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Загрузка запросов на удаление данных...
-        </Typography>
+        <Typography variant="h4" gutterBottom><Trans>Загрузка запросов на удаление данных...</Trans></Typography>
       </Container>
     );
   }
@@ -170,15 +168,11 @@ export default function ForgetMeRequestsPage() {
           <DeleteForever sx={{ mr: 2, verticalAlign: 'middle', color: 'warning.main' }} />
           Уведомления об удалении данных кандидатов
         </Typography>
-        <Typography variant="h6" color="text.secondary" gutterBottom>
-          Информация для HR-клиентов о кандидатах, чьи данные были удалены с платформы
-        </Typography>
+        <Typography variant="h6" color="text.secondary" gutterBottom><Trans>Информация для HR-клиентов о кандидатах, чьи данные были удалены с платформы</Trans></Typography>
         
         {/* Подробное описание для HR */}
         <Paper elevation={1} sx={{ p: 3, mt: 3, bgcolor: 'info.light' }}>
-          <Typography variant="h6" gutterBottom fontWeight={600} color="info.dark">
-            📋 Что это за страница и зачем она нужна?
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} color="info.dark"><Trans>📋 Что это за страница и зачем она нужна?</Trans></Typography>
           
           <Typography variant="body1" paragraph>
             Эта страница содержит <strong>уведомления о кандидатах, чьи персональные данные уже удалены</strong> 
@@ -190,9 +184,7 @@ export default function ForgetMeRequestsPage() {
             этих данных, которые вы получили от нас</strong> в соответствии с 152-ФЗ "О персональных данных".
           </Typography>
           
-          <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark" sx={{ mt: 3 }}>
-            ⚠️ Что именно нужно удалить у HR-клиентов!
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark" sx={{ mt: 3 }}><Trans>⚠️ Что именно нужно удалить у HR-клиентов!</Trans></Typography>
           
           <Typography variant="body1" paragraph>
             При получении уведомления вы должны удалить из своих систем только <strong>копии данных, 
@@ -220,9 +212,7 @@ export default function ForgetMeRequestsPage() {
             то их удалять НЕ обязательно.
           </Typography>
           
-          <Typography variant="h6" gutterBottom fontWeight={600} color="success.dark" sx={{ mt: 3 }}>
-            🎯 Как работать с этой страницей?
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} color="success.dark" sx={{ mt: 3 }}><Trans>🎯 Как работать с этой страницей?</Trans></Typography>
           
           <Box component="ol" sx={{ pl: 3, mb: 2 }}>
             <Typography component="li" variant="body2" paragraph>
@@ -256,9 +246,7 @@ export default function ForgetMeRequestsPage() {
               <Typography variant="h4" color="warning.main" gutterBottom>
                 {requests.filter(r => r.status === 'pending').length}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Требуют подтверждения
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Требуют подтверждения</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -268,9 +256,7 @@ export default function ForgetMeRequestsPage() {
               <Typography variant="h4" color="success.main" gutterBottom>
                 {requests.filter(r => r.status === 'processed').length}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Подтверждено удаление
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Подтверждено удаление</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -280,9 +266,7 @@ export default function ForgetMeRequestsPage() {
               <Typography variant="h4" color="error.main" gutterBottom>
                 {requests.filter(r => r.status === 'rejected').length}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Отклонено
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Отклонено</Trans></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -290,33 +274,25 @@ export default function ForgetMeRequestsPage() {
 
       {/* Информация о статусах */}
       <Paper elevation={1} sx={{ p: 3, mb: 4, bgcolor: 'grey.50' }}>
-        <Typography variant="h6" gutterBottom fontWeight={600} color="text.primary">
-          �� Понимание статусов уведомлений
-        </Typography>
+        <Typography variant="h6" gutterBottom fontWeight={600} color="text.primary"><Trans>�� Понимание статусов уведомлений</Trans></Typography>
         
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Chip label={_(msg`Требует подтверждения`)} color="warning" size="small" sx={{ mr: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                HR-клиент еще не подтвердил удаление копий данных
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>HR-клиент еще не подтвердил удаление копий данных</Trans></Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Chip label={_(msg`Подтверждено`)} color="success" size="small" sx={{ mr: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                HR-клиент подтвердил удаление копий данных из своих систем
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>HR-клиент подтвердил удаление копий данных из своих систем</Trans></Typography>
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Chip label={_(msg`Отклонено`)} color="error" size="small" sx={{ mr: 1 }} />
-              <Typography variant="body2" color="text.secondary">
-                Запрос на удаление отклонен по веским причинам
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Запрос на удаление отклонен по веским причинам</Trans></Typography>
             </Box>
           </Grid>
         </Grid>
@@ -352,9 +328,7 @@ export default function ForgetMeRequestsPage() {
               {requests.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                    <Typography variant="body1" color="text.secondary">
-                      Уведомлений об удалении данных пока нет
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary"><Trans>Уведомлений об удалении данных пока нет</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : (
@@ -449,9 +423,7 @@ export default function ForgetMeRequestsPage() {
           {selectedRequest && (
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Имя кандидата
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Имя кандидата</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
                   {selectedRequest.name}
                 </Typography>
@@ -467,45 +439,35 @@ export default function ForgetMeRequestsPage() {
               </Grid>
               
               <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Телефон
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Телефон</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
                   {selectedRequest.phone || 'Не указан'}
                 </Typography>
               </Grid>
               
               <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Дата интервью
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Дата интервью</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
                   {selectedRequest.interviewDate ? formatDate(selectedRequest.interviewDate) : 'Не указана'}
                 </Typography>
               </Grid>
               
               <Grid item xs={12}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Причина удаления
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Причина удаления</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
                   {selectedRequest.reason || 'Не указана'}
                 </Typography>
               </Grid>
               
               <Grid item xs={12}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Типы данных для удаления
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Типы данных для удаления</Trans></Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
                   {/* The parseConsentTypes function is removed, so this block will be empty or need to be re-implemented */}
                 </Box>
               </Grid>
               
               <Grid item xs={12}>
-                <Typography variant="subtitle2" color="text.secondary">
-                  Дата запроса
-                </Typography>
+                <Typography variant="subtitle2" color="text.secondary"><Trans>Дата запроса</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
                   {formatDate(selectedRequest.requestedAt)}
                 </Typography>
@@ -513,9 +475,7 @@ export default function ForgetMeRequestsPage() {
               
               {selectedRequest.processedAt && (
                 <Grid item xs={12}>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Дата обработки
-                  </Typography>
+                  <Typography variant="subtitle2" color="text.secondary"><Trans>Дата обработки</Trans></Typography>
                   <Typography variant="body1" gutterBottom>
                     {formatDate(selectedRequest.processedAt)}
                   </Typography>
@@ -524,9 +484,7 @@ export default function ForgetMeRequestsPage() {
               
               {selectedRequest.adminNotes && (
                 <Grid item xs={12}>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Комментарий администратора
-                  </Typography>
+                  <Typography variant="subtitle2" color="text.secondary"><Trans>Комментарий администратора</Trans></Typography>
                   <Typography variant="body1" gutterBottom>
                     {selectedRequest.adminNotes}
                   </Typography>
@@ -560,9 +518,7 @@ export default function ForgetMeRequestsPage() {
             Пожалуйста, подтвердите, что вы удалили все <strong>копии данных кандидата{' '}
             {selectedRequest?.name}, полученные с платформы SofiHR</strong> из своих внутренних систем.
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
-            Это обязательное требование в соответствии с 152-ФЗ "О персональных данных".
-          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}><Trans>Это обязательное требование в соответствии с 152-ФЗ "О персональных данных".</Trans></Typography>
           <Typography variant="body2" sx={{ mb: 2, fontStyle: 'italic', color: 'text.secondary' }}>
             <strong>Напоминание:</strong> Удалять нужно только копии данных, полученных от нас. 
             Собственные данные о кандидате (личные встречи, переписка) удалять не обязательно.
@@ -599,9 +555,7 @@ export default function ForgetMeRequestsPage() {
       {/* Юридическая информация */}
       <Box sx={{ bgcolor: 'grey.100', py: 4, mt: 6 }}>
         <Paper elevation={1} sx={{ p: 4, bgcolor: 'white' }}>
-          <Typography variant="h6" gutterBottom fontWeight={600} color="primary.main">
-            ⚖️ Юридические аспекты и ответственность
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} color="primary.main"><Trans>⚖️ Юридические аспекты и ответственность</Trans></Typography>
           
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
@@ -612,12 +566,8 @@ export default function ForgetMeRequestsPage() {
                 <Typography component="li" variant="body2" sx={{ mb: 1 }}>
                   • Срок обработки запроса: <strong>30 дней</strong>
                 </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  • Обязательное уведомление о результатах
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  • Ответственность за несоблюдение сроков
-                </Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}><Trans>• Обязательное уведомление о результатах</Trans></Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}><Trans>• Ответственность за несоблюдение сроков</Trans></Typography>
               </Box>
             </Grid>
             
@@ -626,15 +576,9 @@ export default function ForgetMeRequestsPage() {
                 <strong>Ответственность HR-клиентов:</strong>
               </Typography>
               <Box component="ul" sx={{ pl: 2, mb: 2 }}>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  • Удаление всех копий данных из своих систем
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  • Подтверждение выполнения требований
-                </Typography>
-                <Typography component="li" variant="body2" sx={{ mb: 1 }}>
-                  • Сохранение доказательств удаления
-                </Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}><Trans>• Удаление всех копий данных из своих систем</Trans></Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}><Trans>• Подтверждение выполнения требований</Trans></Typography>
+                <Typography component="li" variant="body2" sx={{ mb: 1 }}><Trans>• Сохранение доказательств удаления</Trans></Typography>
               </Box>
             </Grid>
           </Grid>

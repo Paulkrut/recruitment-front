@@ -253,11 +253,9 @@ const Notifications = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6">Уведомления</Typography>
+          <Typography variant="h6"><Trans>Уведомления</Trans></Typography>
           {unreadCount > 0 && (
-            <Button size="small" onClick={markAllAsRead}>
-              Прочитать все
-            </Button>
+            <Button size="small" onClick={markAllAsRead}><Trans>Прочитать все</Trans></Button>
           )}
         </Stack>
         <Divider />
@@ -269,9 +267,7 @@ const Notifications = () => {
         ) : notifications.length === 0 ? (
           <Box sx={{ py: 4, px: 3, textAlign: 'center' }}>
             <Icon icon="solar:bell-off-bold-duotone" width="48" height="48" style={{ opacity: 0.3, marginBottom: 8 }} />
-            <Typography variant="body2" color="text.secondary">
-              Нет уведомлений
-            </Typography>
+            <Typography variant="body2" color="text.secondary"><Trans>Нет уведомлений</Trans></Typography>
           </Box>
         ) : (
           <Scrollbar sx={{ maxHeight: 350 }}>

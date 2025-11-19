@@ -408,9 +408,7 @@ export default function ComparePage() {
           Назад
         </Button>
         
-        <Typography variant="h4" gutterBottom>
-          Сравнение кандидатов
-        </Typography>
+        <Typography variant="h4" gutterBottom><Trans>Сравнение кандидатов</Trans></Typography>
         <Typography variant="body2" color="text.secondary">
           Детальный анализ и сравнение {candidates.length} кандидатов
         </Typography>
@@ -419,9 +417,7 @@ export default function ComparePage() {
       {/* Информация о базовом сравнении */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
-            �� Базовое сравнение
-          </Typography>
+          <Typography variant="h6" gutterBottom><Trans>�� Базовое сравнение</Trans></Typography>
           
           <Grid container spacing={2} sx={{ mb: 2 }}>
             {candidates.map((candidate) => (
@@ -482,9 +478,7 @@ export default function ComparePage() {
                           ⭐ Оценка: {candidate.score}/10
                         </Typography>
                       ) : (
-                        <Typography variant="body2" color="warning.main">
-                          ⚠️ Оценка не доступна
-                        </Typography>
+                        <Typography variant="body2" color="warning.main"><Trans>⚠️ Оценка не доступна</Trans></Typography>
                       )}
                       {candidate.skills && candidate.skills.length > 0 ? (
                         <Box sx={{ mt: 1 }}>
@@ -512,9 +506,7 @@ export default function ComparePage() {
                           </Box>
                         </Box>
                       ) : (
-                        <Typography variant="body2" color="warning.main">
-                          ⚠️ Навыки не оценены
-                        </Typography>
+                        <Typography variant="body2" color="warning.main"><Trans>⚠️ Навыки не оценены</Trans></Typography>
                       )}
                     </Box>
                   </CardContent>
@@ -547,7 +539,7 @@ export default function ComparePage() {
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <IconBrain size={24} />
-              <Typography variant="h6">AI-анализ</Typography>
+              <Typography variant="h6"><Trans>AI-анализ</Trans></Typography>
             {aiAnalysisHash && (
               <Chip 
                 label={`Hash: ${aiAnalysisHash.substring(0, 8)}...`} 
@@ -562,18 +554,14 @@ export default function ComparePage() {
               <>
                 <LinearProgress sx={{ mb: 2 }} />
                 <Box sx={{ textAlign: 'center', py: 2 }}>
-                  <Typography variant="h6" gutterBottom color="primary">
-                    🤖 AI анализирует кандидатов...
-                  </Typography>
+                  <Typography variant="h6" gutterBottom color="primary"><Trans>🤖 AI анализирует кандидатов...</Trans></Typography>
                   <Typography variant="body1" gutterBottom>
                     Обрабатываем {stableIds.length} кандидатов
                   </Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     ⏱️ Примерное время: <strong>{estimatedTime}</strong>
                   </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    💡 Чем больше кандидатов и вопросов, тем дольше анализ
-                  </Typography>
+                <Typography variant="body2" color="text.secondary"><Trans>💡 Чем больше кандидатов и вопросов, тем дольше анализ</Trans></Typography>
                   
                   {/* Прогресс-бар с анимацией */}
                   <Box sx={{ mt: 2, position: 'relative' }}>
@@ -599,9 +587,7 @@ export default function ComparePage() {
                         color: 'text.secondary',
                         fontWeight: 'bold'
                       }}
-                    >
-                      Анализируем...
-                    </Box>
+                    ><Trans>Анализируем...</Trans></Box>
                   </Box>
                   
                   {/* Дополнительная информация */}
@@ -620,14 +606,10 @@ export default function ComparePage() {
             
           {comparisonData?.status === 'done' && comparisonData.result && (
               <>
-                <Alert severity="success" sx={{ mb: 2 }}>
-                  Анализ завершен
-                </Alert>
+                <Alert severity="success" sx={{ mb: 2 }}><Trans>Анализ завершен</Trans></Alert>
                 
                 {/* Полный анализ AI */}
-                <Typography variant="h6" gutterBottom>
-                  🤖 Анализ кандидатов
-                </Typography>
+                <Typography variant="h6" gutterBottom><Trans>🤖 Анализ кандидатов</Trans></Typography>
                 
                 <Box sx={{ 
                   bgcolor: 'grey.50', 
@@ -653,9 +635,7 @@ export default function ComparePage() {
                 {comparisonData.result?.vacancy && (
                   <>
                     <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" gutterBottom>
-                      📋 Информация о вакансии
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>📋 Информация о вакансии</Trans></Typography>
                     <Box sx={{ 
                       bgcolor: 'primary.50', 
                       p: 2, 
@@ -679,15 +659,11 @@ export default function ComparePage() {
                 {comparisonData.result?.comparison && comparisonData.result?.criteria && (
                   <>
                     <Divider sx={{ my: 3 }} />
-                    <Typography variant="h6" gutterBottom>
-                      📊 Детальное сравнение по критериям
-                    </Typography>
+                    <Typography variant="h6" gutterBottom><Trans>📊 Детальное сравнение по критериям</Trans></Typography>
                     
                     {/* Критерии */}
                     <Box sx={{ mb: 3 }}>
-                      <Typography variant="subtitle1" gutterBottom>
-                        🎯 Общие критерии для позиции
-                                </Typography>
+                      <Typography variant="subtitle1" gutterBottom><Trans>🎯 Общие критерии для позиции</Trans></Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                         {comparisonData.result.criteria.general?.map((criterion, index) => (
                                 <Chip 
@@ -702,9 +678,7 @@ export default function ComparePage() {
                             
                       {comparisonData.result.criteria.specific && comparisonData.result.criteria.specific.length > 0 && (
                         <>
-                          <Typography variant="subtitle1" gutterBottom>
-                            🎯 Специфичные критерии для этой вакансии
-                          </Typography>
+                          <Typography variant="subtitle1" gutterBottom><Trans>🎯 Специфичные критерии для этой вакансии</Trans></Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                             {comparisonData.result.criteria.specific.map((criterion, index) => (
                               <Chip 
@@ -725,9 +699,7 @@ export default function ComparePage() {
                       <Table size="small">
                         <TableHead>
                           <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}>
-                              Кандидат
-                            </TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}><Trans>Кандидат</Trans></TableCell>
                             {comparisonData.result.criteria.general?.map((criterion, index) => (
                               <TableCell 
                                 key={`general-${index}`} 
@@ -756,12 +728,8 @@ export default function ComparePage() {
                                 {criterion}
                               </TableCell>
                             ))}
-                            <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}>
-                              Общая оценка
-                            </TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}>
-                              Рекомендация
-                            </TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 100 }}><Trans>Общая оценка</Trans></TableCell>
+                            <TableCell sx={{ fontWeight: 'bold', minWidth: 120 }}><Trans>Рекомендация</Trans></TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -857,12 +825,8 @@ export default function ComparePage() {
           {comparisonData?.status === 'error' && (
             <>
               <Alert severity="error" sx={{ mb: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  ❌ Ошибка AI-анализа
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Не удалось провести анализ кандидатов с помощью искусственного интеллекта.
-                </Typography>
+                <Typography variant="h6" gutterBottom><Trans>❌ Ошибка AI-анализа</Trans></Typography>
+                <Typography variant="body2" gutterBottom><Trans>Не удалось провести анализ кандидатов с помощью искусственного интеллекта.</Trans></Typography>
                 {comparisonData.error && (
                   <Box sx={{ mt: 1, p: 1, bgcolor: 'error.50', borderRadius: 1, border: '1px solid', borderColor: 'error.200' }}>
                     <Typography variant="caption" color="error.dark" sx={{ fontFamily: 'monospace' }}>
@@ -900,9 +864,7 @@ export default function ComparePage() {
           {/* Если AI-анализ еще не запускался */}
           {!comparisonData && !isLoadingAi && (
             <Box textAlign="center" py={2}>
-              <Typography variant="body2" color="text.secondary" gutterBottom>
-                AI-анализ еще не запущен
-              </Typography>
+              <Typography variant="body2" color="text.secondary" gutterBottom><Trans>AI-анализ еще не запущен</Trans></Typography>
               <Button
                 variant="contained"
                 color="primary"
@@ -920,9 +882,7 @@ export default function ComparePage() {
       {/* Таблица сравнения */}
       <Card>
         <CardContent>
-          <Typography variant="h6" gutterBottom>
-            📊 Сравнительная таблица
-          </Typography>
+          <Typography variant="h6" gutterBottom><Trans>📊 Сравнительная таблица</Trans></Typography>
           
           <TableContainer component={Paper} variant="outlined">
             <Table>

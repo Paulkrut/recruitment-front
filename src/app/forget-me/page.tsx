@@ -133,12 +133,8 @@ export default function ForgetMePage() {
         {/* Заголовок */}
         <Box textAlign="center" mb={6}>
           <DeleteForever sx={{ fontSize: 60, color: 'warning.main', mb: 2 }} />
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Запрос на удаление данных
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            Реализуйте свое право на забвение согласно 152-ФЗ
-          </Typography>
+          <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Запрос на удаление данных</Trans></Typography>
+          <Typography variant="h6" color="text.secondary"><Trans>Реализуйте свое право на забвение согласно 152-ФЗ</Trans></Typography>
         </Box>
 
         <Divider sx={{ mb: 4 }} />
@@ -186,9 +182,7 @@ export default function ForgetMePage() {
               {submitResult.message}
             </Typography>
             {submitResult.success && (
-              <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic', color: 'success.dark' }}>
-                📧 Проверьте указанный email - мы отправили подтверждение получения вашего запроса.
-              </Typography>
+              <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic', color: 'success.dark' }}><Trans>📧 Проверьте указанный email - мы отправили подтверждение получения вашего запроса.</Trans></Typography>
             )}
           </Alert>
         )}
@@ -203,9 +197,7 @@ export default function ForgetMePage() {
 
         {/* Уведомление о быстром способе */}
         <Alert severity="warning" sx={{ mb: 4, p: 3 }}>
-          <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark">
-            🚀 Быстрый способ удаления данных!
-          </Typography>
+          <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark"><Trans>🚀 Быстрый способ удаления данных!</Trans></Typography>
           <Typography variant="body1" paragraph>
             <strong>Если вы кандидат и проходили интервью:</strong>
           </Typography>
@@ -218,9 +210,7 @@ export default function ForgetMePage() {
           <Typography variant="body2" paragraph sx={{ pl: 2 }}>
             3️⃣ <strong>Нажмите на ссылку</strong> и подтвердите удаление
           </Typography>
-          <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'success.main' }}>
-            ✅ Тогда удаление будет мгновенным!
-          </Typography>
+          <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'success.main' }}><Trans>✅ Тогда удаление будет мгновенным!</Trans></Typography>
           <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
             Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже. 
             <strong>Это займет больше времени, так как мы должны проверить вашу личность.</strong>
@@ -231,43 +221,25 @@ export default function ForgetMePage() {
           {/* Форма */}
           <Grid item xs={12} md={8}>
             <Box component="form" onSubmit={handleSubmit}>
-              <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 3 }}>
-                Заполните форму для запроса удаления всех ваших данных:
-              </Typography>
+              <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 3 }}><Trans>Заполните форму для запроса удаления всех ваших данных:</Trans></Typography>
 
               {/* Информация о том, что удаляется */}
               <Card sx={{ mb: 3, bgcolor: 'warning.light' }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark">
-                    ⚠️ Внимание! Будут удалены ВСЕ ваши данные:
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}>
-                    • Персональные данные (имя, email, телефон)
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}>
-                    • Видео и аудио записи интервью
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}>
-                    • Результаты анализа и оценки
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}>
-                    • Все согласия на обработку данных
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}>
-                    • Данные, переданные HR-клиентам
-                  </Typography>
-                  <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'error.main' }}>
-                    🗑️ Это действие нельзя отменить!
-                  </Typography>
+                  <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark"><Trans>⚠️ Внимание! Будут удалены ВСЕ ваши данные:</Trans></Typography>
+                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}><Trans>• Персональные данные (имя, email, телефон)</Trans></Typography>
+                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}><Trans>• Видео и аудио записи интервью</Trans></Typography>
+                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}><Trans>• Результаты анализа и оценки</Trans></Typography>
+                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}><Trans>• Все согласия на обработку данных</Trans></Typography>
+                  <Typography variant="body2" paragraph sx={{ pl: 2, mb: 1 }}><Trans>• Данные, переданные HR-клиентам</Trans></Typography>
+                  <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'error.main' }}><Trans>🗑️ Это действие нельзя отменить!</Trans></Typography>
                 </CardContent>
               </Card>
 
               {/* Данные для идентификации */}
               <Card sx={{ mb: 3 }}>
                 <CardContent>
-                  <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2 }}>
-                    Ваши данные для идентификации:
-                  </Typography>
+                  <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2 }}><Trans>Ваши данные для идентификации:</Trans></Typography>
                   
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
@@ -378,9 +350,7 @@ export default function ForgetMePage() {
                   <Typography variant="body2" fontWeight={600}>
                     <strong>⚡ Мгновенное удаление!</strong>
                   </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Если у вас есть ссылка на интервью, используйте кнопку "Удалить мои данные" прямо на странице интервью.
-                  </Typography>
+                  <Typography variant="body2" sx={{ mt: 1 }}><Trans>Если у вас есть ссылка на интервью, используйте кнопку "Удалить мои данные" прямо на странице интервью.</Trans></Typography>
                 </Alert>
                 
                 <Typography variant="body2" color="text.secondary">
@@ -407,18 +377,14 @@ export default function ForgetMePage() {
             component={Link}
             href="/"
             sx={{ mr: 2 }}
-          >
-            Вернуться на главную
-          </Button>
+          ><Trans>Вернуться на главную</Trans></Button>
           <Button 
             variant="outlined" 
             color="primary" 
             size="large"
             component={Link}
             href="/privacy-policy"
-          >
-            Политика конфиденциальности
-          </Button>
+          ><Trans>Политика конфиденциальности</Trans></Button>
         </Box>
       </Paper>
 
@@ -432,31 +398,19 @@ export default function ForgetMePage() {
         <DialogTitle sx={{ textAlign: 'center', color: 'success.main' }}>
           <Box display="flex" alignItems="center" justifyContent="center" mb={1}>
             <CheckCircle sx={{ fontSize: 60, color: 'success.main', mr: 2 }} />
-            <Typography variant="h4" fontWeight="bold">
-              Запрос отправлен!
-            </Typography>
+            <Typography variant="h4" fontWeight="bold"><Trans>Запрос отправлен!</Trans></Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body1" paragraph>
-            Ваш запрос на удаление данных успешно зарегистрирован в нашей системе.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Ваш запрос на удаление данных успешно зарегистрирован в нашей системе.</Trans></Typography>
           <Typography variant="body1" paragraph>
             <strong>Что дальше:</strong>
           </Typography>
           <Box component="ul" sx={{ pl: 2 }}>
-            <Typography component="li" variant="body2" paragraph>
-              📧 Мы отправили подтверждение на указанный email
-            </Typography>
-            <Typography component="li" variant="body2" paragraph>
-              ⏰ Обработка займет до 30 дней согласно 152-ФЗ
-            </Typography>
-            <Typography component="li" variant="body2" paragraph>
-              🔍 Мы свяжемся с вами для подтверждения личности
-            </Typography>
-            <Typography component="li" variant="body2" paragraph>
-              🗑️ После подтверждения все данные будут удалены
-            </Typography>
+            <Typography component="li" variant="body2" paragraph><Trans>📧 Мы отправили подтверждение на указанный email</Trans></Typography>
+            <Typography component="li" variant="body2" paragraph><Trans>⏰ Обработка займет до 30 дней согласно 152-ФЗ</Trans></Typography>
+            <Typography component="li" variant="body2" paragraph><Trans>🔍 Мы свяжемся с вами для подтверждения личности</Trans></Typography>
+            <Typography component="li" variant="body2" paragraph><Trans>🗑️ После подтверждения все данные будут удалены</Trans></Typography>
           </Box>
           {submitResult?.message.includes('Номер вашего запроса:') && (
             <Alert severity="info" sx={{ mt: 2 }}>

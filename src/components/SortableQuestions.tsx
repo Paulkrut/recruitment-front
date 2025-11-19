@@ -27,6 +27,8 @@ import {
 } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Trans } from '@lingui/react';
+
 
 export interface QuestionDraft {
   id?: number;
@@ -68,9 +70,9 @@ export default function SortableQuestions({ questions, onChange }: Props) {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>#</TableCell>
-              <TableCell>Текст</TableCell>
-              <TableCell>Время, сек</TableCell>
-              <TableCell>Уточнения</TableCell>
+              <TableCell><Trans>Текст</Trans></TableCell>
+              <TableCell><Trans>Время, сек</Trans></TableCell>
+              <TableCell><Trans>Уточнения</Trans></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>

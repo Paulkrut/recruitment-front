@@ -22,12 +22,8 @@ export default function TermsOfServicePage() {
         {/* Заголовок */}
         <Box textAlign="center" mb={4}>
           <Description sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-          <Typography variant="h3" gutterBottom fontWeight="bold">
-            Условия использования
-          </Typography>
-          <Typography variant="h6" color="text.secondary">
-            Система подбора персонала SofiHR
-          </Typography>
+          <Typography variant="h3" gutterBottom fontWeight="bold"><Trans>Условия использования</Trans></Typography>
+          <Typography variant="h6" color="text.secondary"><Trans>Система подбора персонала SofiHR</Trans></Typography>
           <Chip 
             label={_(msg`Обновлено: 22.09.2025`)} 
             color="primary" 
@@ -43,14 +39,10 @@ export default function TermsOfServicePage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             1. Общие положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящие Условия использования (далее — «Условия») регулируют порядок использования 
+          <Typography variant="body1" paragraph><Trans>Настоящие Условия использования (далее — «Условия») регулируют порядок использования 
             системы подбора персонала SofiHR (далее — «Система») и определяют права и обязанности 
-            пользователей.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя Систему, вы принимаете настоящие Условия и соглашаетесь следовать им.
-          </Typography>
+            пользователей.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя Систему, вы принимаете настоящие Условия и соглашаетесь следовать им.</Trans></Typography>
         </Box>
 
         {/* Определения */}
@@ -97,9 +89,7 @@ export default function TermsOfServicePage() {
             <CheckCircle sx={{ mr: 1, verticalAlign: 'middle' }} />
             3. Функциональность системы
           </Typography>
-          <Typography variant="body1" paragraph>
-            Система предоставляет следующие возможности:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Система предоставляет следующие возможности:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -145,9 +135,7 @@ export default function TermsOfServicePage() {
             <Security sx={{ mr: 1, verticalAlign: 'middle' }} />
             4. Правила использования
           </Typography>
-          <Typography variant="body1" paragraph>
-            При использовании Системы запрещается:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>При использовании Системы запрещается:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Warning color="warning" /></ListItemIcon>
@@ -193,9 +181,7 @@ export default function TermsOfServicePage() {
             <CheckCircle sx={{ mr: 1, verticalAlign: 'middle' }} />
             5. Обязанности пользователей
           </Typography>
-          <Typography variant="body1" paragraph>
-            Пользователи обязаны:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Пользователи обязаны:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -234,9 +220,7 @@ export default function TermsOfServicePage() {
             <Warning sx={{ mr: 1, verticalAlign: 'middle' }} />
             6. Ограничения ответственности
           </Typography>
-          <Typography variant="body1" paragraph>
-            Система предоставляется «как есть» без каких-либо гарантий:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Система предоставляется «как есть» без каких-либо гарантий:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Warning color="warning" /></ListItemIcon>
@@ -272,9 +256,7 @@ export default function TermsOfServicePage() {
             <Security sx={{ mr: 1, verticalAlign: 'middle' }} />
             7. Интеллектуальная собственность
           </Typography>
-          <Typography variant="body1" paragraph>
-            Все права на Систему принадлежат разработчикам:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Все права на Систему принадлежат разработчикам:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -298,10 +280,8 @@ export default function TermsOfServicePage() {
               />
             </ListItem>
           </List>
-          <Typography variant="body1" paragraph>
-            Пользователи не имеют права копировать, модифицировать или распространять 
-            элементы Системы без разрешения.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Пользователи не имеют права копировать, модифицировать или распространять 
+            элементы Системы без разрешения.</Trans></Typography>
         </Box>
 
         {/* Конфиденциальность */}
@@ -310,9 +290,7 @@ export default function TermsOfServicePage() {
             <Security sx={{ mr: 1, verticalAlign: 'middle' }} />
             8. Конфиденциальность
           </Typography>
-          <Typography variant="body1" paragraph>
-            Система обеспечивает конфиденциальность данных:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Система обеспечивает конфиденциальность данных:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
@@ -353,9 +331,7 @@ export default function TermsOfServicePage() {
             <Info sx={{ mr: 1, verticalAlign: 'middle' }} />
             9. Изменения условий использования
           </Typography>
-          <Typography variant="body1" paragraph>
-            Мы оставляем за собой право изменять настоящие Условия:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Мы оставляем за собой право изменять настоящие Условия:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Info color="info" /></ListItemIcon>
@@ -387,9 +363,7 @@ export default function TermsOfServicePage() {
             <Warning sx={{ mr: 1, verticalAlign: 'middle' }} />
             10. Прекращение использования
           </Typography>
-          <Typography variant="body1" paragraph>
-            Использование Системы может быть прекращено:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Использование Системы может быть прекращено:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><Warning color="warning" /></ListItemIcon>
@@ -421,14 +395,10 @@ export default function TermsOfServicePage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             11. Применимое право
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящие Условия регулируются законодательством Российской Федерации. 
-            Все споры разрешаются в соответствии с российским правом.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            В случае возникновения разногласий стороны обязуются решать их путем переговоров. 
-            При невозможности достижения соглашения спор разрешается в судебном порядке.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Настоящие Условия регулируются законодательством Российской Федерации. 
+            Все споры разрешаются в соответствии с российским правом.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>В случае возникновения разногласий стороны обязуются решать их путем переговоров. 
+            При невозможности достижения соглашения спор разрешается в судебном порядке.</Trans></Typography>
         </Box>
 
         {/* Контакты */}
@@ -437,9 +407,7 @@ export default function TermsOfServicePage() {
             <ContactSupport sx={{ mr: 1, verticalAlign: 'middle' }} />
             12. Контактная информация
           </Typography>
-          <Typography variant="body1" paragraph>
-            По всем вопросам, связанным с использованием Системы:
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>По всем вопросам, связанным с использованием Системы:</Trans></Typography>
           <List>
             <ListItem>
               <ListItemIcon><ContactSupport color="primary" /></ListItemIcon>
@@ -471,14 +439,10 @@ export default function TermsOfServicePage() {
             <Gavel sx={{ mr: 1, verticalAlign: 'middle' }} />
             13. Заключительные положения
           </Typography>
-          <Typography variant="body1" paragraph>
-            Настоящие Условия вступают в силу с момента размещения на сайте и действуют 
-            до момента их отмены или замены новыми Условиями.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Используя Систему, вы подтверждаете, что ознакомились с настоящими Условиями 
-            и согласны следовать им.
-          </Typography>
+          <Typography variant="body1" paragraph><Trans>Настоящие Условия вступают в силу с момента размещения на сайте и действуют 
+            до момента их отмены или замены новыми Условиями.</Trans></Typography>
+          <Typography variant="body1" paragraph><Trans>Используя Систему, вы подтверждаете, что ознакомились с настоящими Условиями 
+            и согласны следовать им.</Trans></Typography>
         </Box>
 
         {/* Кнопки действий */}
@@ -490,18 +454,14 @@ export default function TermsOfServicePage() {
             component={Link}
             href="/"
             sx={{ mr: 2 }}
-          >
-            Вернуться на главную
-          </Button>
+          ><Trans>Вернуться на главную</Trans></Button>
           <Button 
             variant="outlined" 
             color="primary" 
             size="large"
             component={Link}
             href="/privacy-policy"
-          >
-            Политика конфиденциальности
-          </Button>
+          ><Trans>Политика конфиденциальности</Trans></Button>
         </Box>
 
         {/* Предупреждение */}

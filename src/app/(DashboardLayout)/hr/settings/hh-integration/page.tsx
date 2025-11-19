@@ -399,9 +399,7 @@ export default function HhIntegrationPage() {
               <CardContent>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
                   <IconBrandHipchat size={32} color="#d63031" />
-                  <Typography variant="h5">
-                    Интеграция с HeadHunter
-                  </Typography>
+                  <Typography variant="h5"><Trans>Интеграция с HeadHunter</Trans></Typography>
                   {status?.isConnected && (
                     <Chip
                       icon={<IconCheck size={16} />}
@@ -414,9 +412,7 @@ export default function HhIntegrationPage() {
 
                 {!status?.isConnected ? (
                   <Box>
-                    <Typography variant="body1" color="text.secondary" mb={3}>
-                      Подключите ваш аккаунт работодателя HH.ru для автоматической синхронизации вакансий и получения откликов кандидатов.
-                    </Typography>
+                    <Typography variant="body1" color="text.secondary" mb={3}><Trans>Подключите ваш аккаунт работодателя HH.ru для автоматической синхронизации вакансий и получения откликов кандидатов.</Trans></Typography>
 
                     <Button
                       variant="contained"
@@ -429,9 +425,7 @@ export default function HhIntegrationPage() {
                     </Button>
 
                     <Box mt={3}>
-                      <Typography variant="h6" gutterBottom>
-                        Что даст интеграция:
-                      </Typography>
+                      <Typography variant="h6" gutterBottom><Trans>Что даст интеграция:</Trans></Typography>
                       <List>
                         <ListItem>
                           <ListItemIcon>
@@ -526,25 +520,19 @@ export default function HhIntegrationPage() {
 
                     <Grid container spacing={2} mb={3}>
                       <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Компания
-                        </Typography>
+                        <Typography variant="body2" color="text.secondary"><Trans>Компания</Trans></Typography>
                         <Typography variant="body1" fontWeight="bold">
                           {status.companyName || 'Не указано'}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          ID работодателя
-                        </Typography>
+                        <Typography variant="body2" color="text.secondary"><Trans>ID работодателя</Trans></Typography>
                         <Typography variant="body1" fontWeight="bold">
                           {status.employerId || 'Не указано'}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Последняя синхронизация
-                        </Typography>
+                        <Typography variant="body2" color="text.secondary"><Trans>Последняя синхронизация</Trans></Typography>
                         <Typography variant="body1">
                           {status.lastSyncAt
                             ? new Date(status.lastSyncAt).toLocaleString('ru-RU')
@@ -553,9 +541,7 @@ export default function HhIntegrationPage() {
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary">
-                          Токен действует до
-                        </Typography>
+                        <Typography variant="body2" color="text.secondary"><Trans>Токен действует до</Trans></Typography>
                         <Typography variant="body1">
                           {status.tokenExpiresAt
                             ? new Date(status.tokenExpiresAt).toLocaleString('ru-RU')
@@ -568,18 +554,14 @@ export default function HhIntegrationPage() {
                     {/* Статистика */}
                     {status.stats && (
                       <Box mb={3}>
-                        <Typography variant="h6" gutterBottom>
-                          Статистика
-                        </Typography>
+                        <Typography variant="h6" gutterBottom><Trans>Статистика</Trans></Typography>
                         <Grid container spacing={2}>
                           <Grid item xs={4}>
                             <Box textAlign="center">
                               <Typography variant="h4" color="primary">
                                 {status.stats.totalVacancies}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                Вакансий
-                              </Typography>
+                              <Typography variant="body2" color="text.secondary"><Trans>Вакансий</Trans></Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={4}>
@@ -587,9 +569,7 @@ export default function HhIntegrationPage() {
                               <Typography variant="h4" color="secondary">
                                 {status.stats.totalCandidates}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                Кандидатов
-                              </Typography>
+                              <Typography variant="body2" color="text.secondary"><Trans>Кандидатов</Trans></Typography>
                             </Box>
                           </Grid>
                           <Grid item xs={4}>
@@ -597,9 +577,7 @@ export default function HhIntegrationPage() {
                               <Typography variant="h4" color="success.main">
                                 {status.stats.newCandidatesToday}
                               </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                Новых сегодня
-                              </Typography>
+                              <Typography variant="body2" color="text.secondary"><Trans>Новых сегодня</Trans></Typography>
                             </Box>
                           </Grid>
                         </Grid>
@@ -631,9 +609,7 @@ export default function HhIntegrationPage() {
                                 >
                                   {status.hhLimits.left.resumeView}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block">
-                                  Осталось просмотров резюме
-                                </Typography>
+                                <Typography variant="caption" color="text.secondary" display="block"><Trans>Осталось просмотров резюме</Trans></Typography>
                                 <Typography variant="caption" color="text.secondary">
                                   из {status.hhLimits.limits.resumeView} на сегодня
                                 </Typography>
@@ -644,15 +620,11 @@ export default function HhIntegrationPage() {
                                 <Typography variant="h4" color="text.secondary">
                                   {status.hhLimits.spend.resumeView}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block">
-                                  Потрачено сегодня
-                                </Typography>
+                                <Typography variant="caption" color="text.secondary" display="block"><Trans>Потрачено сегодня</Trans></Typography>
                               </Box>
                             </Grid>
                           </Grid>
-                          <Typography variant="caption" color="text.secondary" mt={1} display="block">
-                            ⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00
-                          </Typography>
+                          <Typography variant="caption" color="text.secondary" mt={1} display="block"><Trans>⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00</Trans></Typography>
                           
                           {status.resumeQueueCount !== undefined && status.resumeQueueCount > 0 && (
                             <Box 
@@ -666,9 +638,7 @@ export default function HhIntegrationPage() {
                               <Typography variant="body2" color="text.primary">
                                 📋 В очереди на загрузку резюме: <strong>{status.resumeQueueCount}</strong> {status.resumeQueueCount === 1 ? 'кандидат' : status.resumeQueueCount < 5 ? 'кандидата' : 'кандидатов'}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                                Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга
-                              </Typography>
+                              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}><Trans>Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга</Trans></Typography>
                             </Box>
                           )}
                         </Alert>
@@ -702,7 +672,7 @@ export default function HhIntegrationPage() {
                 <AccordionSummary expandIcon={<IconChevronDown />}>
                   <Box display="flex" alignItems="center" gap={2}>
                     <IconSettings />
-                    <Typography variant="h6">Настройки синхронизации</Typography>
+                    <Typography variant="h6"><Trans>Настройки синхронизации</Trans></Typography>
                   </Box>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -717,9 +687,7 @@ export default function HhIntegrationPage() {
                       label={_(msg`Автоматическая синхронизация`)}
                     />
 
-                    <Typography variant="body2" color="text.secondary" mt={1}>
-                      При включении данные будут автоматически обновляться каждые 2 часа
-                    </Typography>
+                    <Typography variant="body2" color="text.secondary" mt={1}><Trans>При включении данные будут автоматически обновляться каждые 2 часа</Trans></Typography>
 
                     {status.autoSync && (
                       <Alert severity="info" sx={{ mt: 2 }}>
@@ -763,30 +731,20 @@ export default function HhIntegrationPage() {
 
                   {vacancies.length === 0 ? (
                     <Alert severity="info">
-                      <Typography variant="body2">
-                        Нажмите "Обновить список" чтобы загрузить вакансии из HH.ru
-                      </Typography>
+                      <Typography variant="body2"><Trans>Нажмите "Обновить список" чтобы загрузить вакансии из HH.ru</Trans></Typography>
                     </Alert>
                   ) : (
                     <Alert severity="info" sx={{ mb: 3 }}>
                       <Typography variant="body2">
                         💡 <strong>Как это работает:</strong>
                       </Typography>
-                      <Typography variant="body2" mt={1}>
-                        1. Вакансии автоматически синхронизируются с вашим профилем HH.ru
-                      </Typography>
+                      <Typography variant="body2" mt={1}><Trans>1. Вакансии автоматически синхронизируются с вашим профилем HH.ru</Trans></Typography>
                       <Typography variant="body2">
                         2. Нажмите <strong>"Настроить"</strong> на любой вакансии чтобы:
                       </Typography>
-                      <Typography variant="body2" ml={2}>
-                        • Выбрать какие статусы кандидатов синхронизировать (отклики, приглашения, интервью и т.д.)
-                      </Typography>
-                      <Typography variant="body2" ml={2}>
-                        • Загрузить кандидатов из выбранных статусов
-                      </Typography>
-                      <Typography variant="body2" ml={2}>
-                        • Запустить AI-анализ резюме для автоматической оценки кандидатов
-                      </Typography>
+                      <Typography variant="body2" ml={2}><Trans>• Выбрать какие статусы кандидатов синхронизировать (отклики, приглашения, интервью и т.д.)</Trans></Typography>
+                      <Typography variant="body2" ml={2}><Trans>• Загрузить кандидатов из выбранных статусов</Trans></Typography>
+                      <Typography variant="body2" ml={2}><Trans>• Запустить AI-анализ резюме для автоматической оценки кандидатов</Trans></Typography>
                     </Alert>
                   )}
 
@@ -833,9 +791,7 @@ export default function HhIntegrationPage() {
                               {/* Статус синхронизации кандидатов */}
                               <Box>
                                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                                  <Typography variant="body2" color="text.secondary">
-                                    Синхронизация кандидатов:
-                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary"><Trans>Синхронизация кандидатов:</Trans></Typography>
                                   <Button
                                     size="small"
                                     variant="contained"

@@ -12,6 +12,8 @@ import {
   keyframes
 } from '@mui/material';
 import { Settings, Circle } from '@mui/icons-material';
+import { Trans } from '@lingui/react';
+
 
 // Анимация для иконки
 const bounce = keyframes`
@@ -123,15 +125,11 @@ export default function MaintenancePage() {
           </Box>
 
           {/* Заголовок */}
-          <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'text.primary' }}>
-            Технические работы
-          </Typography>
+          <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold', color: 'text.primary' }}><Trans>Технические работы</Trans></Typography>
 
           {/* Описание */}
-          <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.6 }}>
-            Мы проводим плановые технические работы для улучшения качества сервиса. 
-            Приносим извинения за временные неудобства.
-          </Typography>
+          <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.6 }}><Trans>Мы проводим плановые технические работы для улучшения качества сервиса. 
+            Приносим извинения за временные неудобства.</Trans></Typography>
 
           {/* Статус */}
           <Alert 
@@ -144,27 +142,19 @@ export default function MaintenancePage() {
             }}
             icon={<Circle />}
           >
-            <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-              Работы выполняются
-            </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'medium' }}><Trans>Работы выполняются</Trans></Typography>
           </Alert>
 
           {/* Сообщение о возвращении */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'semibold', mb: 1 }}>
-              Мы скоро вернёмся!
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Ожидаемое время завершения работ: в течение нескольких часов
-            </Typography>
+            <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'semibold', mb: 1 }}><Trans>Мы скоро вернёмся!</Trans></Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}><Trans>Ожидаемое время завершения работ: в течение нескольких часов</Trans></Typography>
           </Box>
 
           <Divider sx={{ my: 3 }} />
 
           {/* Контактная информация */}
-          <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            По вопросам обращайтесь к администратору
-          </Typography>
+          <Typography variant="caption" sx={{ color: 'text.disabled' }}><Trans>По вопросам обращайтесь к администратору</Trans></Typography>
         </Paper>
       </Container>
     </Box>

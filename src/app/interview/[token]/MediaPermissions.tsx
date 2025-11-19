@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { Trans } from '@lingui/react';
+
 
 interface MediaPermissionsProps {
   mediaPermissions: {
@@ -53,9 +55,7 @@ const MediaPermissions: React.FC<MediaPermissionsProps> = ({
           disabled
           fullWidth={isMobile}
           size={isMobile ? 'large' : 'medium'}
-        >
-          Запрашиваем разрешения...
-        </Button>
+        ><Trans>Запрашиваем разрешения...</Trans></Button>
       ) : (
         <Button
           variant="contained"

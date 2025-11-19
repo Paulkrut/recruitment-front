@@ -210,7 +210,7 @@ const Profile = () => {
           sx={{ py: 1.5, px: 2 }}
         >
           <Icon icon="solar:user-bold-duotone" width={20} style={{ marginRight: 12 }} />
-          <Typography variant="body2">Мой профиль</Typography>
+          <Typography variant="body2"><Trans>Мой профиль</Trans></Typography>
         </MenuItem>
 
         <Divider />
@@ -224,7 +224,7 @@ const Profile = () => {
           }}
         >
           <Icon icon="solar:logout-bold-duotone" width={20} style={{ marginRight: 12 }} />
-          <Typography variant="body2">Выйти</Typography>
+          <Typography variant="body2"><Trans>Выйти</Trans></Typography>
         </MenuItem>
       </Menu>
 
@@ -324,10 +324,8 @@ function ProfileDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Отмена</Button>
-        <Button onClick={save} disabled={loading || !(form.name && form.name.trim())}>
-          Сохранить
-        </Button>
+        <Button onClick={onClose}><Trans>Отмена</Trans></Button>
+        <Button onClick={save} disabled={loading || !(form.name && form.name.trim())}><Trans>Сохранить</Trans></Button>
       </DialogActions>
     </Dialog>
   );

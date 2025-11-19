@@ -240,16 +240,14 @@ const BalanceInfo = () => {
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography variant="h6" mb={2}>
-            Ваш баланс
-          </Typography>
+          <Typography variant="h6" mb={2}><Trans>Ваш баланс</Trans></Typography>
 
           {/* Интервью */}
           <Box mb={2}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Icon icon="solar:case-round-bold-duotone" width={20} style={{ color: '#2196f3' }} />
-                <Typography variant="body2">Интервью</Typography>
+                <Typography variant="body2"><Trans>Интервью</Trans></Typography>
               </Stack>
               <Chip
                 label={`${interviewsCurrent} из ${interviewsTotal}`}
@@ -271,7 +269,7 @@ const BalanceInfo = () => {
             <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Icon icon="solar:clipboard-list-bold-duotone" width={20} style={{ color: '#9c27b0' }} />
-                <Typography variant="body2">Тесты по регламентам</Typography>
+                <Typography variant="body2"><Trans>Тесты по регламентам</Trans></Typography>
               </Stack>
               {isTestsFree ? (
                 <Chip
@@ -305,7 +303,7 @@ const BalanceInfo = () => {
               <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <Icon icon="solar:document-text-bold-duotone" width={20} style={{ color: '#ff9800' }} />
-                  <Typography variant="body2">Скрининги AI</Typography>
+                  <Typography variant="body2"><Trans>Скрининги AI</Trans></Typography>
                 </Stack>
                 <Chip
                   label={_(msg`∞ Безлимит`)}
@@ -320,30 +318,22 @@ const BalanceInfo = () => {
           <Divider sx={{ my: 2 }} />
 
           {/* Статистика */}
-          <Typography variant="subtitle2" mb={1} color="text.secondary">
-            За всё время:
-          </Typography>
+          <Typography variant="subtitle2" mb={1} color="text.secondary"><Trans>За всё время:</Trans></Typography>
           <Stack spacing={1} mb={2}>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" color="text.secondary">
-                Проведено интервью:
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Проведено интервью:</Trans></Typography>
               <Typography variant="body2" fontWeight={600}>
                 {balance.lifetime.interviews_used}
               </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" color="text.secondary">
-                Проведено тестов:
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Проведено тестов:</Trans></Typography>
               <Typography variant="body2" fontWeight={600}>
                 {balance.lifetime.regulation_tests_used}
               </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              <Typography variant="body2" color="text.secondary">
-                Потрачено:
-              </Typography>
+              <Typography variant="body2" color="text.secondary"><Trans>Потрачено:</Trans></Typography>
               <Typography variant="body2" fontWeight={600} color="primary">
                 {parseFloat(balance.lifetime.total_spent).toLocaleString('ru-RU')} ₽
               </Typography>
@@ -353,9 +343,7 @@ const BalanceInfo = () => {
           {/* Предупреждение о низком балансе */}
           {isLowBalance && (
             <Alert severity="warning" sx={{ mb: 2 }}>
-              <Typography variant="body2">
-                Баланс заканчивается! Пополните счёт.
-              </Typography>
+              <Typography variant="body2"><Trans>Баланс заканчивается! Пополните счёт.</Trans></Typography>
             </Alert>
           )}
 

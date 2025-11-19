@@ -141,9 +141,7 @@ export default function EditTestPage() {
           {error}
         </Alert>
         <Link href="/hr/regulation-tests" passHref legacyBehavior>
-          <Button component="a" variant="outlined">
-            Вернуться к списку
-          </Button>
+          <Button component="a" variant="outlined"><Trans>Вернуться к списку</Trans></Button>
         </Link>
       </PageContainer>
     );
@@ -158,12 +156,10 @@ export default function EditTestPage() {
         <MuiLink href="/hr/regulation-tests" underline="hover" color="inherit">
           Тесты
         </MuiLink>
-        <Typography color="text.primary">Редактировать</Typography>
+        <Typography color="text.primary"><Trans>Редактировать</Trans></Typography>
       </Breadcrumbs>
 
-      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-        Редактировать тест
-      </Typography>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}><Trans>Редактировать тест</Trans></Typography>
 
       {/* Tabs navigation */}
       <RegulationTestTabs testId={testId} />
@@ -190,18 +186,14 @@ export default function EditTestPage() {
           />
 
           <FormControl fullWidth>
-            <InputLabel>Режим генерации вопросов</InputLabel>
+            <InputLabel><Trans>Режим генерации вопросов</Trans></InputLabel>
             <Select
               value={questionGenerationMode}
               label={_(msg`Режим генерации вопросов`)}
               onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
             >
-              <MenuItem value="pre_generated">
-                Заранее (вопросы генерируются при создании теста)
-              </MenuItem>
-              <MenuItem value="on_start">
-                При старте (вопросы генерируются для каждого сотрудника индивидуально)
-              </MenuItem>
+              <MenuItem value="pre_generated"><Trans>Заранее (вопросы генерируются при создании теста)</Trans></MenuItem>
+              <MenuItem value="on_start"><Trans>При старте (вопросы генерируются для каждого сотрудника индивидуально)</Trans></MenuItem>
             </Select>
             <FormHelperText>
               {questionGenerationMode === 'pre_generated'
@@ -263,9 +255,7 @@ export default function EditTestPage() {
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
           <Link href="/hr/regulation-tests" passHref legacyBehavior>
-            <Button component="a" variant="outlined">
-              Отмена
-            </Button>
+            <Button component="a" variant="outlined"><Trans>Отмена</Trans></Button>
           </Link>
 
           <Button

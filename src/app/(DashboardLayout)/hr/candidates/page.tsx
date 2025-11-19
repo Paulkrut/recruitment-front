@@ -219,40 +219,24 @@ function EnhancedCandidateTable({
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: 'primary.main' }}>
-            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-              Кандидат
-            </TableCell>
+            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Кандидат</Trans></TableCell>
             <SortableHeader field="vacancy">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-                Вакансия
-              </Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Вакансия</Trans></Typography>
             </SortableHeader>
             <SortableHeader field="status">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-                Статус
-              </Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Статус</Trans></Typography>
             </SortableHeader>
             <SortableHeader field="score">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-                Оценка
-              </Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Оценка</Trans></Typography>
             </SortableHeader>
-            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>
-              Ответов
-            </TableCell>
+            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Ответов</Trans></TableCell>
             <SortableHeader field="createdAt">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-                Дата создания
-              </Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Дата создания</Trans></Typography>
             </SortableHeader>
             <SortableHeader field="finishedAt">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}>
-                Дата завершения
-              </Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Дата завершения</Trans></Typography>
             </SortableHeader>
-            <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>
-              Действия
-            </TableCell>
+            <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}><Trans>Действия</Trans></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -330,9 +314,7 @@ function EnhancedCandidateTable({
                     </Box>
                   </Link>
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    Не указана
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Не указана</Trans></Typography>
                 )}
               </TableCell>
               <TableCell>
@@ -367,9 +349,7 @@ function EnhancedCandidateTable({
                   <Typography variant="body2" fontWeight="bold">
                     {candidate.answersCount}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ответов
-                  </Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>ответов</Trans></Typography>
                 </Box>
               </TableCell>
               <TableCell>
@@ -731,9 +711,7 @@ export default function HRCandidatesPage() {
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
-        <Button onClick={fetchCandidates} variant="contained">
-          Попробовать снова
-        </Button>
+        <Button onClick={fetchCandidates} variant="contained"><Trans>Попробовать снова</Trans></Button>
       </PageContainer>
     );
   }
@@ -784,7 +762,7 @@ export default function HRCandidatesPage() {
         <Card sx={{ mb: 2, p: 2 }}>
           <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
             <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Статус</InputLabel>
+              <InputLabel><Trans>Статус</Trans></InputLabel>
               <Select
                 value={statusFilter}
                 label={_(msg`Статус`)}
@@ -793,16 +771,16 @@ export default function HRCandidatesPage() {
                   setCurrentPage(1);
                 }}
               >
-                <MenuItem value="">Все статусы</MenuItem>
-                <MenuItem value="finished">Завершено</MenuItem>
-                <MenuItem value="in_progress">В процессе</MenuItem>
-                <MenuItem value="pending">Ожидает</MenuItem>
-                <MenuItem value="failed">Ошибка</MenuItem>
+                <MenuItem value=""><Trans>Все статусы</Trans></MenuItem>
+                <MenuItem value="finished"><Trans>Завершено</Trans></MenuItem>
+                <MenuItem value="in_progress"><Trans>В процессе</Trans></MenuItem>
+                <MenuItem value="pending"><Trans>Ожидает</Trans></MenuItem>
+                <MenuItem value="failed"><Trans>Ошибка</Trans></MenuItem>
               </Select>
             </FormControl>
 
             <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Оценка</InputLabel>
+              <InputLabel><Trans>Оценка</Trans></InputLabel>
               <Select
                 value={scoreFilter}
                 label={_(msg`Оценка`)}
@@ -811,17 +789,17 @@ export default function HRCandidatesPage() {
                   setCurrentPage(1);
                 }}
               >
-                <MenuItem value="">Все оценки</MenuItem>
-                <MenuItem value="8-10">Отлично (8-10)</MenuItem>
-                <MenuItem value="6-7">Хорошо (6-7)</MenuItem>
-                <MenuItem value="4-5">Удовлетворительно (4-5)</MenuItem>
-                <MenuItem value="0-3">Неудовлетворительно (0-3)</MenuItem>
-                <MenuItem value="no-score">Без оценки</MenuItem>
+                <MenuItem value=""><Trans>Все оценки</Trans></MenuItem>
+                <MenuItem value="8-10"><Trans>Отлично (8-10)</Trans></MenuItem>
+                <MenuItem value="6-7"><Trans>Хорошо (6-7)</Trans></MenuItem>
+                <MenuItem value="4-5"><Trans>Удовлетворительно (4-5)</Trans></MenuItem>
+                <MenuItem value="0-3"><Trans>Неудовлетворительно (0-3)</Trans></MenuItem>
+                <MenuItem value="no-score"><Trans>Без оценки</Trans></MenuItem>
               </Select>
             </FormControl>
 
             <FormControl size="small" sx={{ minWidth: 200 }}>
-              <InputLabel>Вакансия</InputLabel>
+              <InputLabel><Trans>Вакансия</Trans></InputLabel>
               <Select
                 value={vacancyFilter}
                 label={_(msg`Вакансия`)}
@@ -835,7 +813,7 @@ export default function HRCandidatesPage() {
                   </InputAdornment>
                 }
               >
-                <MenuItem value="">Все вакансии</MenuItem>
+                <MenuItem value=""><Trans>Все вакансии</Trans></MenuItem>
                 {vacancies.map((vacancy) => (
                   <MenuItem key={vacancy.id} value={vacancy.id.toString()}>
                     {vacancy.title}

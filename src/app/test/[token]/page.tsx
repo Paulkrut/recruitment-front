@@ -588,9 +588,7 @@ export default function RegulationTestPage() {
   if (!testInfo) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography variant="h5" color="error">
-          Приглашение не найдено или истекло
-        </Typography>
+        <Typography variant="h5" color="error"><Trans>Приглашение не найдено или истекло</Trans></Typography>
       </Box>
     );
   }
@@ -729,17 +727,13 @@ export default function RegulationTestPage() {
         {/* Шаг 2: Настройка оборудования */}
         {currentStep === 1 && (
           <Paper sx={{ p: 4 }}>
-            <Typography variant="h5" gutterBottom>
-              Настройка оборудования
-            </Typography>
+            <Typography variant="h5" gutterBottom><Trans>Настройка оборудования</Trans></Typography>
             <Typography variant="body2" paragraph>
               Тестирование состоит из {testInfo.questionsPerRegulation} вопросов. 
               На каждый вопрос отводится ограниченное время.
             </Typography>
-            <Typography variant="body2" paragraph>
-              Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы. 
-              Отвечайте последовательно и не перегружайте страницу.
-            </Typography>
+            <Typography variant="body2" paragraph><Trans>Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы. 
+              Отвечайте последовательно и не перегружайте страницу.</Trans></Typography>
 
             <ProductionWebcamComponent
               cameraEnabled={cameraEnabled}
@@ -759,9 +753,7 @@ export default function RegulationTestPage() {
             {/* Индикатор уровня микрофона */}
             {micReady && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="body2" gutterBottom>
-                  Микрофон подключен
-                </Typography>
+                <Typography variant="body2" gutterBottom><Trans>Микрофон подключен</Trans></Typography>
                 <Typography variant="body2" gutterBottom>
                   Уровень микрофона: {Math.round(micLevel)}%
                 </Typography>
@@ -785,9 +777,7 @@ export default function RegulationTestPage() {
                     />
                   }
                   label={
-                    <Typography variant="body2">
-                      Согласие на запись видео (снимите галочку — будет только аудио)
-                    </Typography>
+                    <Typography variant="body2"><Trans>Согласие на запись видео (снимите галочку — будет только аудио)</Trans></Typography>
                   }
                   sx={{ alignItems: 'center' }}
                 />
@@ -821,9 +811,7 @@ export default function RegulationTestPage() {
               onClick={handleStartTest}
               disabled={!micReady || !pdnConsent}
               sx={{ mt: 2 }}
-            >
-              Начать тестирование
-            </Button>
+            ><Trans>Начать тестирование</Trans></Button>
           </Paper>
         )}
 
@@ -925,9 +913,7 @@ export default function RegulationTestPage() {
                     fontSize: '18px',
                     fontWeight: 'bold'
                   }}
-                >
-                  🎤 Начать ответ
-                </Button>
+                ><Trans>🎤 Начать ответ</Trans></Button>
               )}
 
               {recording && (
@@ -943,9 +929,7 @@ export default function RegulationTestPage() {
                     fontSize: '18px',
                     fontWeight: 'bold'
                   }}
-                >
-                  ⏹ Остановить запись
-                </Button>
+                ><Trans>⏹ Остановить запись</Trans></Button>
               )}
 
               {audioBlob && (
@@ -993,17 +977,11 @@ export default function RegulationTestPage() {
           <Paper sx={{ p: 5, textAlign: 'center', maxWidth: 600, mx: 'auto' }}>
             <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 3 }} />
             
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
-              Спасибо за прохождение теста!
-            </Typography>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}><Trans>Спасибо за прохождение теста!</Trans></Typography>
             
-            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-              Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании.
-            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}><Trans>Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании.</Trans></Typography>
             
-            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}>
-              Результаты тестирования будут проанализированы, и вы получите обратную связь от вашего руководителя или HR-отдела в ближайшее время.
-            </Typography>
+            <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}><Trans>Результаты тестирования будут проанализированы, и вы получите обратную связь от вашего руководителя или HR-отдела в ближайшее время.</Trans></Typography>
 
             <Box 
               sx={{ 
@@ -1015,9 +993,7 @@ export default function RegulationTestPage() {
                 borderColor: 'primary.100'
               }}
             >
-              <Typography variant="body2" color="primary.dark" sx={{ fontWeight: 500 }}>
-                💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру
-              </Typography>
+              <Typography variant="body2" color="primary.dark" sx={{ fontWeight: 500 }}><Trans>💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру</Trans></Typography>
             </Box>
           </Paper>
         )}

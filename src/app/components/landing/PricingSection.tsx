@@ -2,6 +2,8 @@
 import React from 'react';
 import { Box, Container, Typography, Grid, Button, Paper } from '@mui/material';
 import { Icon } from '@iconify/react';
+import { Trans } from '@lingui/react';
+
 
 interface PricingPlan {
   id: string;
@@ -36,12 +38,8 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
               WebkitTextFillColor: 'transparent',
               mb: 2
             }}
-          >
-            Выберите подходящий тариф
-          </Typography>
-          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-            Гибкие планы для компаний любого размера. Начните с бесплатного пробного периода
-          </Typography>
+          ><Trans>Выберите подходящий тариф</Trans></Typography>
+          <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}><Trans>Гибкие планы для компаний любого размера. Начните с бесплатного пробного периода</Trans></Typography>
         </Box>
 
         {/* Тарифные планы */}
@@ -112,9 +110,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
                     border: `1px dashed ${plan.color}40`,
                     mt: 2
                   }}>
-                    <Typography variant="caption" color={plan.color} fontWeight={600} display="block" mb={0.5}>
-                      💼 Для кого:
-                    </Typography>
+                    <Typography variant="caption" color={plan.color} fontWeight={600} display="block" mb={0.5}><Trans>💼 Для кого:</Trans></Typography>
                     <Typography variant="caption" color="text.secondary">
                       {plan.targetAudience}
                     </Typography>
@@ -153,32 +149,30 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
 
         {/* Дополнительная информация */}
         <Box sx={{ mt: 8, textAlign: 'center' }}>
-          <Typography variant="h6" fontWeight={600} mb={3}>
-            Все планы включают
-          </Typography>
+          <Typography variant="h6" fontWeight={600} mb={3}><Trans>Все планы включают</Trans></Typography>
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <Icon icon="mdi:shield-check" color="#4caf50" width={24} height={24} />
-                <Typography variant="body2">Безопасность данных</Typography>
+                <Typography variant="body2"><Trans>Безопасность данных</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <Icon icon="mdi:headphones" color="#2196F3" width={24} height={24} />
-                <Typography variant="body2">Техподдержка 24/7</Typography>
+                <Typography variant="body2"><Trans>Техподдержка 24/7</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <Icon icon="mdi:update" color="#FF9800" width={24} height={24} />
-                <Typography variant="body2">Регулярные обновления</Typography>
+                <Typography variant="body2"><Trans>Регулярные обновления</Trans></Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                 <Icon icon="mdi:school" color="#9C27B0" width={24} height={24} />
-                <Typography variant="body2">Обучение команды</Typography>
+                <Typography variant="body2"><Trans>Обучение команды</Trans></Typography>
               </Box>
             </Grid>
           </Grid>

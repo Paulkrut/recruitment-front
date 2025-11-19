@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Trans } from '@lingui/react';
+
 
 export default function NotFound() {
   return (
@@ -24,21 +26,15 @@ export default function NotFound() {
           height={500}
           style={{ width: "100%", maxWidth: "500px", maxHeight: "500px" }}
         />
-        <Typography align="center" variant="h1" mb={4}>
-          Упс!!!
-        </Typography>
-        <Typography align="center" variant="h4" mb={4}>
-          Страница, которую вы ищете, не найдена.
-        </Typography>
+        <Typography align="center" variant="h1" mb={4}><Trans>Упс!!!</Trans></Typography>
+        <Typography align="center" variant="h4" mb={4}><Trans>Страница, которую вы ищете, не найдена.</Trans></Typography>
         <Button
           color="primary"
           variant="contained"
           component={Link}
           href="/"
           disableElevation
-        >
-          Вернуться на главную
-        </Button>
+        ><Trans>Вернуться на главную</Trans></Button>
       </Container>
     </Box>
   );

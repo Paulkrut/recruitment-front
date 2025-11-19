@@ -166,19 +166,13 @@ export default function RegisterPage() {
       <Container maxWidth="sm" sx={{ mt: 8 }}>
         <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
           <Icon icon="mdi:check-circle" color="#4caf50" width={64} height={64} />
-          <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}>
-            Регистрация успешна!
-          </Typography>
+          <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}><Trans>Регистрация успешна!</Trans></Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
             Мы отправили пароль на ваш email: <strong>{formData.email}</strong>
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Проверьте почту и используйте полученный пароль для входа в систему.
-          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}><Trans>Проверьте почту и используйте полученный пароль для входа в систему.</Trans></Typography>
           <CircularProgress size={24} sx={{ mr: 1 }} />
-          <Typography variant="body2" color="text.secondary">
-            Переходим на страницу входа...
-          </Typography>
+          <Typography variant="body2" color="text.secondary"><Trans>Переходим на страницу входа...</Trans></Typography>
         </Paper>
       </Container>
     );
@@ -191,12 +185,8 @@ export default function RegisterPage() {
           {/* Заголовок */}
           <Box textAlign="center" mb={4}>
             <Icon icon="mdi:account-plus" color="#2196F3" width={48} height={48} />
-            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}>
-              Регистрация
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Создайте аккаунт для работы с SofiHR
-            </Typography>
+            <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}><Trans>Регистрация</Trans></Typography>
+            <Typography variant="body1" color="text.secondary"><Trans>Создайте аккаунт для работы с SofiHR</Trans></Typography>
           </Box>
 
           {/* Форма */}

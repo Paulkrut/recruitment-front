@@ -6,6 +6,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Image from "next/image";
 import Link from "next/link";
+import { Trans } from '@lingui/react';
+
 
 const Error = () => (
   <Box
@@ -21,21 +23,15 @@ const Error = () => (
         alt="404" width={500} height={500}
         style={{ width: "100%", maxWidth: "500px",  maxHeight: '500px' }}
       />
-      <Typography align="center" variant="h1" mb={4}>
-        Упс!!!
-      </Typography>
-      <Typography align="center" variant="h4" mb={4}>
-        Страница, которую вы ищете, не найдена.
-      </Typography>
+      <Typography align="center" variant="h1" mb={4}><Trans>Упс!!!</Trans></Typography>
+      <Typography align="center" variant="h4" mb={4}><Trans>Страница, которую вы ищете, не найдена.</Trans></Typography>
       <Button
         color="primary"
         variant="contained"
         component={Link}
         href="/"
         disableElevation
-      >
-        Вернуться на главную
-      </Button>
+      ><Trans>Вернуться на главную</Trans></Button>
     </Container>
   </Box>
 );

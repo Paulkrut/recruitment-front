@@ -66,9 +66,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-          <Typography variant="h5" fontWeight="600">
-            Открытые вакансии
-          </Typography>
+          <Typography variant="h5" fontWeight="600"><Trans>Открытые вакансии</Trans></Typography>
           <Tooltip title={_(msg`Добавить вакансию`)}>
             <IconButton size="small" color="primary">
               <IconPlus size={20} />
@@ -80,9 +78,9 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ fontWeight: 600 }}>Вакансия</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="center">Активность</TableCell>
-                <TableCell sx={{ fontWeight: 600 }} align="center">Действия</TableCell>
+                <TableCell sx={{ fontWeight: 600 }}><Trans>Вакансия</Trans></TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="center"><Trans>Активность</Trans></TableCell>
+                <TableCell sx={{ fontWeight: 600 }} align="center"><Trans>Действия</Trans></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -149,9 +147,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
 
         {data.length === 0 && (
           <Box textAlign="center" py={3}>
-            <Typography variant="body2" color="textSecondary">
-              Нет открытых вакансий
-            </Typography>
+            <Typography variant="body2" color="textSecondary"><Trans>Нет открытых вакансий</Trans></Typography>
           </Box>
         )}
 

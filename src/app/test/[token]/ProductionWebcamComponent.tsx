@@ -7,6 +7,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import WarningIcon from '@mui/icons-material/Warning';
+import { Trans } from '@lingui/react';
+
 
 interface ProductionWebcamComponentProps {
   cameraEnabled: boolean;
@@ -460,12 +462,8 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
             maxWidth: '400px',
             textAlign: 'center'
           }}>
-            <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500, mb: 1 }}>
-              💡 Рекомендация
-            </Typography>
-            <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}>
-              Вы можете включить камеру для более полного ответа, но это не обязательно.
-            </Typography>
+            <Typography variant="body2" sx={{ color: '#1976d2', fontWeight: 500, mb: 1 }}><Trans>💡 Рекомендация</Trans></Typography>
+            <Typography variant="body2" sx={{ color: '#1565c0', fontSize: '13px', lineHeight: 1.4 }}><Trans>Вы можете включить камеру для более полного ответа, но это не обязательно.</Trans></Typography>
           </Box>
         )}
       </Box>
