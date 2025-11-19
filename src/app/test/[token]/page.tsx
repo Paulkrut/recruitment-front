@@ -48,7 +48,7 @@ interface TestInfo {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
-const steps = ['Подготовка', 'Настройка оборудования', 'Тестирование', 'Завершено'];
+const steps = [_(msg`Подготовка`), _(msg`Настройка оборудования`), _(msg`Тестирование`), _(msg`Завершено`)];
 
 export default function RegulationTestPage() {
   const { _ } = useLingui();

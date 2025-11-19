@@ -49,7 +49,7 @@ import { msg } from '@lingui/macro';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
-const steps = ['Основные настройки', 'Выбор регламентов', 'Генерация вопросов'];
+const steps = [_(msg`Основные настройки`), _(msg`Выбор регламентов`), _(msg`Генерация вопросов`)];
 
 // Мемоизированный компонент карточки вопроса для предотвращения ненужных перерендеров
 const QuestionCard = memo(({ 

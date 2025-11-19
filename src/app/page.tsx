@@ -18,18 +18,21 @@ import PricingSection from "./components/landing/PricingSection";
 import ROICalculator from "./components/landing/ROICalculator";
 import PricingFAQ from "./components/landing/PricingFAQ";
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 const { useMemo } = React;
 
 
 const pages = [
-  "Главная",
-  "Преимущества",
-  "Как это работает",
-  "Отзывы",
-  "Тарифы",
-  "Контакты",
+  _(msg`Главная`),
+  _(msg`Преимущества`),
+  _(msg`Как это работает`),
+  _(msg`Отзывы`),
+  _(msg`Тарифы`),
+  _(msg`Контакты`),
 ];
 
 interface PricingPlan {
@@ -48,6 +51,8 @@ interface PricingPlan {
 }
 
 export default function LandingPage() {
+  const { _ } = useLingui();
+
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [hiresPerMonth, setHiresPerMonth] = React.useState(10); // Для калькулятора
 
