@@ -93,7 +93,7 @@ export default function BillingPage() {
       if (data.success) {
         if (selectedPlan.is_free) {
           // Бесплатный тариф - просто показываем успех
-          alert(`Успешно! ${data.message}`);
+          alert(_(msg`Успешно! ${data.message}`));
           setPurchaseDialogOpen(false);
           // Перезагружаем страницу или обновляем баланс
           window.location.reload();

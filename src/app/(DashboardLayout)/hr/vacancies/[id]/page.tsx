@@ -666,7 +666,7 @@ export default function HRVacancyDetailPage() {
                                   }
                                 })
                                 .catch(e => {
-                                  setSnackbar(`Ошибка удаления: ${e.message}`);
+                                  setSnackbar(_(msg`Ошибка удаления: ${e.message}`));
                                 });
                             }
                           }}>

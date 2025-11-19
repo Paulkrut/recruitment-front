@@ -74,9 +74,9 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays === 1) return _(msg`1 день назад`);
-    if (diffDays < 7) return `${diffDays} дней назад`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} недель назад`;
-    return `${Math.floor(diffDays / 30)} месяцев назад`;
+    if (diffDays < 7) return _(msg`${diffDays} дней назад`);
+    if (diffDays < 30) return _(msg`${Math.floor(diffDays / 7)} недель назад`);
+    return _(msg`${Math.floor(diffDays / 30)} месяцев назад`);
   };
 
   const getUrgencyColor = (dateString: string) => {

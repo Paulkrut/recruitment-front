@@ -382,7 +382,7 @@ export default function CandidateInterviewPage() {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const cameras = devices.filter(device => device.kind === 'videoinput');
 
-      setDebugError(`📷 Найдено камер: ${cameras.length}`);
+      setDebugError(_(msg`📷 Найдено камер: ${cameras.length}`));
 
       if (cameras.length === 0) {
         setDebugError(_(msg`❌ Камеры не найдены в системе`));
@@ -393,7 +393,7 @@ export default function CandidateInterviewPage() {
       for (let i = 0; i < cameras.length; i++) {
         const camera = cameras[i];
         const label = camera.label || `Камера ${i + 1}`;
-        setDebugError(`🔍 Тестируем: ${label}...`);
+        setDebugError(_(msg`🔍 Тестируем: ${label}...`));
 
         try {
           const testStream = await navigator.mediaDevices.getUserMedia({
@@ -403,7 +403,7 @@ export default function CandidateInterviewPage() {
           const videoTrack = testStream.getVideoTracks()[0];
           const settings = videoTrack.getSettings();
 
-          setDebugError(`✅ ${label} работает! (${settings.width}x${settings.height})`);
+          setDebugError(_(msg`✅ ${label} работает! (${settings.width}x${settings.height})`));
 
           // Останавливаем тестовый поток
           testStream.getTracks().forEach(track => track.stop());
@@ -420,22 +420,22 @@ export default function CandidateInterviewPage() {
               testVideoRef.current.srcObject = mainStream;
             }
 
-            setDebugError(`🎉 Камера подключена! ${label}`);
+            setDebugError(_(msg`🎉 Камера подключена! ${label}`));
             return;
 
           } catch (mainError: any) {
-            setDebugError(`⚠️ ${label} работает отдельно, но не с микрофоном: ${mainError.message}`);
+            setDebugError(_(msg`⚠️ ${label} работает отдельно, но не с микрофоном: ${mainError.message}`));
           }
 
         } catch (cameraError: any) {
-          setDebugError(`❌ ${label} не работает: ${cameraError.message}`);
+          setDebugError(_(msg`❌ ${label} не работает: ${cameraError.message}`));
         }
       }
 
       setDebugError(_(msg`💡 Камеры найдены, но не работают с микрофоном одновременно`));
 
     } catch (error: any) {
-      setDebugError(`❌ Ошибка диагностики: ${error.message}`);
+      setDebugError(_(msg`❌ Ошибка диагностики: ${error.message}`));
     }
   };
 
@@ -2443,7 +2443,7 @@ export default function CandidateInterviewPage() {
                       const cameras = devices.filter(d => d.kind === 'videoinput');
                       setDebugError(`📷 Камер найдено: ${cameras.length}\n${cameras.map((c, i) => `${i+1}. ${c.label || 'Неизвестная камера'}`).join('\n')}`);
                     } catch (e: any) {
-                      setDebugError(`❌ Ошибка поиска камер: ${e.message}`);
+                      setDebugError(_(msg`❌ Ошибка поиска камер: ${e.message}`));
                     }
                   }}
                   sx={{ mt: 1 }}

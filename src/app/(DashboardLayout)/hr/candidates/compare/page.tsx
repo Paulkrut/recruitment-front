@@ -129,13 +129,13 @@ export default function ComparePage() {
     const totalSeconds = (candidatesCount * baseTimePerCandidate) + (questionsCount * baseTimePerQuestion);
     
     if (totalSeconds < 60) {
-      return `${totalSeconds} секунд`;
+      return _(msg`${totalSeconds} секунд`);
     } else if (totalSeconds < 300) {
       const minutes = Math.ceil(totalSeconds / 60);
-      return `до ${minutes} минут`;
+      return _(msg`до ${minutes} минут`);
     } else {
       const minutes = Math.ceil(totalSeconds / 60);
-      return `до ${minutes} минут`;
+      return _(msg`до ${minutes} минут`);
     }
   };
 

@@ -120,7 +120,7 @@ export default function HhIntegrationPage() {
     const error = searchParams.get('error');
 
     if (error) {
-      setError(`Ошибка авторизации: ${error}`);
+      setError(_(msg`Ошибка авторизации: ${error}`));
       setLoading(false);
       return;
     }
@@ -225,7 +225,7 @@ export default function HhIntegrationPage() {
       });
       const data = await response.json();
 
-      setSuccess(`Синхронизация завершена. Загружено вакансий: ${data.syncedCount || 0}`);
+      setSuccess(_(msg`Синхронизация завершена. Загружено вакансий: ${data.syncedCount || 0}`));
       await fetchStatus();
     } catch (err: any) {
       setError(err.message || 'Ошибка синхронизации');
@@ -243,7 +243,7 @@ export default function HhIntegrationPage() {
       await response.json(); // Парсим ответ
 
       setStatus(prev => prev ? { ...prev, autoSync: enabled } : null);
-      setSuccess(`Автоматическая синхронизация ${enabled ? 'включена' : 'отключена'}`);
+      setSuccess(_(msg`Автоматическая синхронизация ${enabled ? 'включена' : 'отключена'}`));
     } catch (err: any) {
       setError(err.message || 'Ошибка обновления настроек');
     }
@@ -281,7 +281,7 @@ export default function HhIntegrationPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(`AI-анализ запущен. Будет проанализировано ${data.candidatesCount || 0} кандидатов.`);
+        setSuccess(_(msg`AI-анализ запущен. Будет проанализировано ${data.candidatesCount || 0} кандидатов.`));
         // Обновляем список вакансий через несколько секунд
         setTimeout(() => fetchVacancies(), 3000);
       } else {
@@ -322,9 +322,9 @@ export default function HhIntegrationPage() {
           setPollingVacancyId(null);
           
           if (vacancyStatus.candidates_sync_status === 'synced') {
-            setSuccess(`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`);
+            setSuccess(_(msg`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`));
           } else if (vacancyStatus.candidates_sync_status === 'error') {
-            setError(`Ошибка синхронизации: ${vacancyStatus.candidates_sync_error || 'Неизвестная ошибка'}`);
+            setError(_(msg`Ошибка синхронизации: ${vacancyStatus.candidates_sync_error || 'Неизвестная ошибка'}`));
           }
         }
       }

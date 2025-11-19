@@ -378,15 +378,15 @@ export default function HRVacancyEditPage() {
     
     switch (status) {
       case 'pending':
-        return `Ожидание в очереди${timeStr}...`;
+        return _(msg`Ожидание в очереди${timeStr}...`);
       case 'processing':
-        return `Генерация вопросов${timeStr}...`;
+        return _(msg`Генерация вопросов${timeStr}...`);
       case 'completed':
         return _(msg`Генерация завершена!`);
       case 'failed':
         return _(msg`Ошибка генерации`);
       default:
-        return `Обработка${timeStr}...`;
+        return _(msg`Обработка${timeStr}...`);
     }
   };
 

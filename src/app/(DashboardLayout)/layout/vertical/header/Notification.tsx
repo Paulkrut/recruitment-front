@@ -115,9 +115,9 @@ const Notifications = () => {
     const diffDays = Math.floor(diffMs / 86400000);
 
     if (diffMins < 1) return _(msg`только что`);
-    if (diffMins < 60) return `${diffMins} мин назад`;
-    if (diffHours < 24) return `${diffHours} ч назад`;
-    if (diffDays < 7) return `${diffDays} дн назад`;
+    if (diffMins < 60) return _(msg`${diffMins} мин назад`);
+    if (diffHours < 24) return _(msg`${diffHours} ч назад`);
+    if (diffDays < 7) return _(msg`${diffDays} дн назад`);
     return date.toLocaleDateString('ru-RU');
   };
 

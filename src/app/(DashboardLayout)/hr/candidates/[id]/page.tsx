@@ -375,7 +375,7 @@ export default function CandidateDetailPage() {
                             const ms = end.getTime() - start.getTime();
                             const min = Math.floor(ms/60000);
                             const sec = Math.floor((ms%60000)/1000);
-                            return `${min} мин ${sec} сек`;
+                            return _(msg`${min} мин ${sec} сек`);
                           }
                           return '-';
                         })()}</Typography>

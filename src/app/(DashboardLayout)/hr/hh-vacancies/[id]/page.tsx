@@ -315,7 +315,7 @@ export default function HhVacancyDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccess(`AI-анализ завершён: ${result.data.analyzed} кандидатов проанализировано`);
+        setSuccess(_(msg`AI-анализ завершён: ${result.data.analyzed} кандидатов проанализировано`));
         fetchVacancyDetails(); // Перезагружаем статистику
         setTimeout(() => setSuccess(null), 5000);
       } else {
@@ -350,7 +350,7 @@ export default function HhVacancyDetailPage() {
             if (syncStatus === 'error') {
               setError(result.data.error || 'Ошибка синхронизации');
             } else {
-              setSuccess(`Синхронизация завершена! Обработано: ${result.data.synced} из ${result.data.total}`);
+              setSuccess(_(msg`Синхронизация завершена! Обработано: ${result.data.synced} из ${result.data.total}`));
               setTimeout(() => setSuccess(null), 5000);
             }
           }

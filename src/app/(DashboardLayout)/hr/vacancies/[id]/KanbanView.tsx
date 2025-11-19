@@ -41,12 +41,12 @@ const formatBitrixDate = (dateString: string | null | undefined): string => {
 
   // Сегодня - показываем время
   if (date.isSame(now, 'day')) {
-    return `сегодня, ${date.format('HH:mm')}`;
+    return _(msg`сегодня, ${date.format('HH:mm')}`);
   }
 
   // Вчера
   if (date.isSame(now.clone().subtract(1, 'day'), 'day')) {
-    return `вчера, ${date.format('HH:mm')}`;
+    return _(msg`вчера, ${date.format('HH:mm')}`);
   }
 
   // В этом году - без года
@@ -722,7 +722,7 @@ export default function KanbanView({
         alert(`Стадия удалена. ${result.movedCandidates > 0 ? `Перемещено кандидатов: ${result.movedCandidates}` : ''}`);
       } else {
         const error = await response.json();
-        alert(`Ошибка: ${error.message || 'Не удалось удалить стадию'}`);
+        alert(_(msg`Ошибка: ${error.message || 'Не удалось удалить стадию'}`));
       }
     } catch (error) {
       console.error('Error deleting stage:', error);
@@ -753,7 +753,7 @@ export default function KanbanView({
           ));
         } else {
           const error = await response.json();
-          alert(`Ошибка: ${error.error || 'Не удалось обновить стадию'}`);
+          alert(_(msg`Ошибка: ${error.error || 'Не удалось обновить стадию'}`));
         }
       }
       // Если создаём новую стадию
@@ -809,7 +809,7 @@ export default function KanbanView({
           }));
         } else {
           const error = await response.json();
-          alert(`Ошибка: ${error.error || 'Не удалось создать стадию'}`);
+          alert(_(msg`Ошибка: ${error.error || 'Не удалось создать стадию'}`));
         }
       }
     } catch (error) {
@@ -1188,14 +1188,13 @@ export default function KanbanView({
           const totalCount = result.total || 0;
           const errorCount = hhTokenErrors.length;
           
-          setSnackbarMessage(
-            `${successCount} из ${totalCount} кандидатов переведены. ${errorCount} ${errorCount === 1 ? 'кандидат требует' : 'кандидатов требуют'} авторизации HH.ru`
+          setSnackbarMessage(_(msg`${successCount} из ${totalCount} кандидатов переведены. ${errorCount} ${errorCount === 1 ? 'кандидат требует' : 'кандидатов требуют'} авторизации HH.ru`)
           );
           setSnackbarSeverity('warning');
           setSnackbarOpen(true);
         } else if (result.updated === result.total) {
           // Все успешно
-          setSnackbarMessage(`✅ Успешно перемещено ${result.updated} ${result.updated === 1 ? 'кандидат' : 'кандидатов'}`);
+          setSnackbarMessage(_(msg`✅ Успешно перемещено ${result.updated} ${result.updated === 1 ? 'кандидат' : 'кандидатов'}`));
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
         }
@@ -1246,7 +1245,7 @@ export default function KanbanView({
           setHhTokenDialogOpen(true);
         } else {
           // Остальные ошибки
-          setSnackbarMessage(`Ошибка: ${error.error || error.message || 'Не удалось переместить кандидатов'}`);
+          setSnackbarMessage(_(msg`Ошибка: ${error.error || error.message || 'Не удалось переместить кандидатов'}`));
           setSnackbarSeverity('error');
           setSnackbarOpen(true);
         }
