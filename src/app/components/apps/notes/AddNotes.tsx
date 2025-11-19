@@ -49,7 +49,7 @@ const AddNotes = ({ colors }: Props) => {
     
     // Валидация: описание не должно быть пустым
     if (value.trim().length < 3) {
-      setError('Описание должно содержать минимум 3 символа');
+      setError(_(msg`Описание должно содержать минимум 3 символа`));
     }
   };
 
@@ -109,7 +109,7 @@ const AddNotes = ({ colors }: Props) => {
             onClick={(e) => {
               e.preventDefault();
               if (title.trim().length < 3) {
-                setError('Описание должно содержать минимум 3 символа');
+                setError(_(msg`Описание должно содержать минимум 3 символа`));
                 return;
               }
               dispatch(addNote(id, title, scolor));

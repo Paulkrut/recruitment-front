@@ -25,11 +25,11 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
         const data = await res.json();
         setInvites(Array.isArray(data) ? data : []);
       } else {
-        setError("Ошибка загрузки приглашений");
+        setError(_(msg`Ошибка загрузки приглашений`));
         setInvites([]);
       }
     } catch (err) {
-      setError("Ошибка загрузки приглашений");
+      setError(_(msg`Ошибка загрузки приглашений`));
       setInvites([]);
     } finally {
       setLoading(false);
@@ -50,7 +50,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
         setError(data.error || "Ошибка");
       }
     } catch (err) {
-      setError("Ошибка принятия приглашения");
+      setError(_(msg`Ошибка принятия приглашения`));
     }
   };
   
@@ -65,7 +65,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
         setError(data.error || "Ошибка");
       }
     } catch (err) {
-      setError("Ошибка отклонения приглашения");
+      setError(_(msg`Ошибка отклонения приглашения`));
     }
   };
   
@@ -126,14 +126,14 @@ export default function ChooseCompanyPage() {
       });
       const d = await res.json();
       if (d.id) {
-        setSuccess("Компания создана!");
+        setSuccess(_(msg`Компания создана!`));
         setName("");
         await refreshCompanies();
       } else {
         setError(d.error || "Ошибка создания компании");
       }
     } catch (err) {
-      setError("Ошибка создания компании");
+      setError(_(msg`Ошибка создания компании`));
     } finally {
       setCreating(false);
     }

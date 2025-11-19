@@ -104,7 +104,7 @@ export default function BillingPage() {
             // Загружаем и открываем виджет ЮKassa
             openYookassaWidget(confirmationToken, data.payment.id);
           } else {
-            throw new Error('Не получен токен подтверждения от ЮKassa');
+            throw new Error(_(msg`Не получен токен подтверждения от ЮKassa`));
           }
         }
       }
@@ -127,7 +127,7 @@ export default function BillingPage() {
         return_url: `${window.location.origin}/hr/billing/payment-success?payment_id=${paymentId}`,
         error_callback: (error: any) => {
           console.error('ЮKassa error:', error);
-          setError('Ошибка при открытии формы оплаты');
+          setError(_(msg`Ошибка при открытии формы оплаты`));
         },
       });
 

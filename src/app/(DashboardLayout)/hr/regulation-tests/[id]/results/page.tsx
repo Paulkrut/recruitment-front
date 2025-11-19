@@ -147,11 +147,11 @@ export default function TestResultsPage() {
   const getStatusLabel = (status: string): string => {
     switch (status) {
       case 'finished':
-        return 'Завершён';
+        return _(msg`Завершён`);
       case 'started':
-        return 'В процессе';
+        return _(msg`В процессе`);
       default:
-        return 'Новый';
+        return _(msg`Новый`);
     }
   };
 

@@ -43,9 +43,9 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 4) return "Хорошо";
-    if (score >= 3) return "Удовлетворительно";
-    return "Плохо";
+    if (score >= 4) return _(msg`Хорошо`);
+    if (score >= 3) return _(msg`Удовлетворительно`);
+    return _(msg`Плохо`);
   };
 
   const handleViewClick = (questionId: number, vacancyId: number) => {

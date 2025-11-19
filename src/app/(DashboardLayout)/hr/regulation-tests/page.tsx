@@ -112,7 +112,7 @@ export default function RegulationTestsPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Удалить тест? Все связанные данные (приглашения, результаты) будут удалены.')) return;
+    if (!confirm(_(msg`Удалить тест? Все связанные данные (приглашения, результаты) будут удалены.`))) return;
 
     try {
       const response = await apiFetch(`${API_BASE}/api/regulation-tests/${id}`, {

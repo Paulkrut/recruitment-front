@@ -8,6 +8,9 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import WarningIcon from '@mui/icons-material/Warning';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface ProductionWebcamComponentProps {
@@ -27,6 +30,8 @@ interface AttemptStrategy {
 
 // Timeout функция от BigBlueButton (оставляем)
 const promiseTimeout = (ms: number, promise: Promise<any>) => {
+  const { _ } = useLingui();
+
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);
@@ -66,15 +71,15 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
 
     switch (errorName) {
       case 'NotAllowedError':
-        return 'Доступ к камере запрещен. Разрешите доступ в настройках браузера.';
+        return _(msg`Доступ к камере запрещен. Разрешите доступ в настройках браузера.`);
       case 'NotFoundError':
-        return 'Камера не найдена. Проверьте подключение камеры.';
+        return _(msg`Камера не найдена. Проверьте подключение камеры.`);
       case 'NotReadableError':
-        return 'Камера занята другим приложением. Закройте все приложения, которые могут её использовать.';
+        return _(msg`Камера занята другим приложением. Закройте все приложения, которые могут её использовать.`);
       case 'OverconstrainedError':
-        return 'Настройки камеры не поддерживаются.';
+        return _(msg`Настройки камеры не поддерживаются.`);
       case 'TimeoutError':
-        return 'Превышено время ожидания подключения камеры.';
+        return _(msg`Превышено время ожидания подключения камеры.`);
       default:
         return `Ошибка подключения камеры: ${error?.message || 'неизвестная ошибка'}`;
     }

@@ -17,11 +17,16 @@ import {
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function ForgotPasswordPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -37,12 +42,12 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     
     if (!email.trim()) {
-      setError("Введите email адрес");
+      setError(_(msg`Введите email адрес`));
       return;
     }
 
     if (!validateEmail(email)) {
-      setError("Введите корректный email адрес");
+      setError(_(msg`Введите корректный email адрес`));
       return;
     }
 
@@ -68,7 +73,7 @@ export default function ForgotPasswordPage() {
         setError(data.message || "Ошибка при восстановлении пароля");
       }
     } catch (error) {
-      setError("Ошибка соединения. Попробуйте еще раз.");
+      setError(_(msg`Ошибка соединения. Попробуйте еще раз.`));
     } finally {
       setLoading(false);
     }

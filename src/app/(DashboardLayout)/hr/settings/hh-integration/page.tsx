@@ -172,7 +172,7 @@ export default function HhIntegrationPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSuccess('HH.ru успешно подключен!');
+        setSuccess(_(msg`HH.ru успешно подключен!`));
         await fetchStatus();
       } else {
         throw new Error(data.message || 'Ошибка подключения');
@@ -193,7 +193,7 @@ export default function HhIntegrationPage() {
         // Перенаправляем на HH.ru для авторизации
         window.location.href = data.authUrl;
       } else {
-        throw new Error('Не удалось получить URL авторизации');
+        throw new Error(_(msg`Не удалось получить URL авторизации`));
       }
     } catch (err: any) {
       setError(err.message || 'Ошибка запуска авторизации');
@@ -209,7 +209,7 @@ export default function HhIntegrationPage() {
       });
       await response.json(); // Парсим ответ
 
-      setSuccess('HH.ru отключен');
+      setSuccess(_(msg`HH.ru отключен`));
       await fetchStatus();
     } catch (err: any) {
       setError(err.message || 'Ошибка отключения');

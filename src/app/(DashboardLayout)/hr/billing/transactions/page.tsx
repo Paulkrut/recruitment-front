@@ -118,7 +118,7 @@ export default function TransactionsPage() {
   };
 
   const getCategoryLabel = (category: string, isGifted: boolean) => {
-    if (isGifted) return '🎁 Бонус';
+    if (isGifted) return _(msg`🎁 Бонус`);
     
     const labels: Record<string, string> = {
       purchase: 'Покупка',

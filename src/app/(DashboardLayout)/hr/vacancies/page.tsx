@@ -90,11 +90,11 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
   };
 
   const getProgressLabel = (percent: number) => {
-    if (percent === 0) return "Отсутствует";
-    if (percent >= 80) return "Высокая";
-    if (percent >= 50) return "Нормальная";
-    if (percent >= 20) return "Низкая";
-    return "Низкая";
+    if (percent === 0) return _(msg`Отсутствует`);
+    if (percent >= 80) return _(msg`Высокая`);
+    if (percent >= 50) return _(msg`Нормальная`);
+    if (percent >= 20) return _(msg`Низкая`);
+    return _(msg`Низкая`);
   };
 
   // Функция для сокращения текста
@@ -349,11 +349,11 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
     return "error";
   };
   const getProgressLabel = (percent: number) => {
-    if (percent === 0) return "Отсутствует";
-    if (percent >= 80) return "Высокая";
-    if (percent >= 50) return "Нормальная";
-    if (percent >= 20) return "Низкая";
-    return "Низкая";
+    if (percent === 0) return _(msg`Отсутствует`);
+    if (percent >= 80) return _(msg`Высокая`);
+    if (percent >= 50) return _(msg`Нормальная`);
+    if (percent >= 20) return _(msg`Низкая`);
+    return _(msg`Низкая`);
   };
 
   return (

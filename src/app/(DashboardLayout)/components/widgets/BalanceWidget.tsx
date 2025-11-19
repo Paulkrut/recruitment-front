@@ -22,6 +22,9 @@ import {
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -36,6 +39,8 @@ interface Balance {
 }
 
 export default function BalanceWidget() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [balance, setBalance] = useState<Balance | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +59,7 @@ export default function BalanceWidget() {
       if (data.success) {
         setBalance(data.balance);
       } else {
-        setError('Не удалось загрузить баланс');
+        setError(_(msg`Не удалось загрузить баланс`));
       }
     } catch (err: any) {
       setError(err.message || 'Ошибка загрузки баланса');

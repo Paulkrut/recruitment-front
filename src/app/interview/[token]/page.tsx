@@ -375,7 +375,7 @@ export default function CandidateInterviewPage() {
 
   // Диагностика доступных камер для Android
   const diagnoseCameras = async () => {
-    setDebugError('🔍 Диагностика камер...');
+    setDebugError(_(msg`🔍 Диагностика камер...`));
 
     try {
       // Получаем список всех устройств
@@ -385,7 +385,7 @@ export default function CandidateInterviewPage() {
       setDebugError(`📷 Найдено камер: ${cameras.length}`);
 
       if (cameras.length === 0) {
-        setDebugError('❌ Камеры не найдены в системе');
+        setDebugError(_(msg`❌ Камеры не найдены в системе`));
         return;
       }
 
@@ -432,7 +432,7 @@ export default function CandidateInterviewPage() {
         }
       }
 
-      setDebugError('💡 Камеры найдены, но не работают с микрофоном одновременно');
+      setDebugError(_(msg`💡 Камеры найдены, но не работают с микрофоном одновременно`));
 
     } catch (error: any) {
       setDebugError(`❌ Ошибка диагностики: ${error.message}`);
@@ -505,7 +505,7 @@ export default function CandidateInterviewPage() {
 
       if (progressData.status === 'finished') {
         // Интервью уже завершено
-        alert('Интервью уже завершено');
+        alert(_(msg`Интервью уже завершено`));
         return;
       }
 
@@ -566,7 +566,7 @@ export default function CandidateInterviewPage() {
 
     // Проверяем поддержку getUserMedia
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      alert('Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.');
+      alert(_(msg`Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.`));
       return;
     }
 
@@ -592,7 +592,7 @@ export default function CandidateInterviewPage() {
       const hasVideo = cameraEnabled ? stream.getVideoTracks().length > 0 : false;
 
       if (!hasAudio || (cameraEnabled && !hasVideo)) {
-        throw new Error('Не удалось получить доступ к требуемым устройствам');
+        throw new Error(_(msg`Не удалось получить доступ к требуемым устройствам`));
       }
 
       // Для видео или аудио сохраняем превью-поток
@@ -692,7 +692,7 @@ export default function CandidateInterviewPage() {
               videoBitsPerSecond: 500000
             });
           } else {
-            throw new Error('Ваш браузер не поддерживает запись видео');
+            throw new Error(_(msg`Ваш браузер не поддерживает запись видео`));
           }
         }
       } else {
@@ -712,7 +712,7 @@ export default function CandidateInterviewPage() {
         }
 
         if (!audioMime) {
-          throw new Error('Ваш браузер не поддерживает запись аудио');
+          throw new Error(_(msg`Ваш браузер не поддерживает запись аудио`));
         }
 
         mr = new MediaRecorder(stream, {
@@ -730,7 +730,7 @@ export default function CandidateInterviewPage() {
       mr.onstop = () => {
         console.log('Recording stopped, chunks:', chunks.length);
         if (chunks.length === 0) {
-          alert("Запись не содержит данных. Попробуйте ещё раз.");
+          alert(_(msg`Запись не содержит данных. Попробуйте ещё раз.`));
           setRecording(false);
           stream.getTracks().forEach((t) => t.stop());
           if (cameraEnabled) {
@@ -1278,15 +1278,15 @@ export default function CandidateInterviewPage() {
           setShowFeedback(true);
         } else {
           // Обратная связь не готова
-          throw new Error('Обратная связь еще не сгенерирована');
+          throw new Error(_(msg`Обратная связь еще не сгенерирована`));
         }
       } else {
-        throw new Error('Обратная связь пока не готова');
+        throw new Error(_(msg`Обратная связь пока не готова`));
       }
     } catch (error) {
       console.error('Error loading feedback:', error);
       // Показываем сообщение о том, что нужно начать генерацию
-      alert('Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.');
+      alert(_(msg`Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.`));
     } finally {
       setFeedbackLoading(false);
     }
@@ -1307,15 +1307,15 @@ export default function CandidateInterviewPage() {
       });
 
       if (response.ok) {
-        alert('Обратная связь отправлена на ваш email!');
+        alert(_(msg`Обратная связь отправлена на ваш email!`));
         setShowEmailForm(false);
         setFeedbackEmail('');
       } else {
-        throw new Error('Ошибка отправки');
+        throw new Error(_(msg`Ошибка отправки`));
       }
     } catch (error) {
       console.error('Error sending feedback:', error);
-      alert('Произошла ошибка при отправке. Попробуйте позже.');
+      alert(_(msg`Произошла ошибка при отправке. Попробуйте позже.`));
     } finally {
       setSendingFeedback(false);
     }
@@ -1425,11 +1425,11 @@ export default function CandidateInterviewPage() {
           throw new Error(data.message || 'Неизвестный статус ответа');
         }
       } else {
-        throw new Error('Ошибка запуска генерации');
+        throw new Error(_(msg`Ошибка запуска генерации`));
       }
     } catch (error) {
       console.error('Error starting generation:', error);
-      alert('Произошла ошибка при запуске генерации. Попробуйте позже.');
+      alert(_(msg`Произошла ошибка при запуске генерации. Попробуйте позже.`));
       setFeedbackLoading(false);
     }
   }
@@ -2437,7 +2437,7 @@ export default function CandidateInterviewPage() {
                   size="small"
                   variant="outlined"
                   onClick={async () => {
-                    setDebugError('🔍 Ищем доступные камеры...');
+                    setDebugError(_(msg`🔍 Ищем доступные камеры...`));
                     try {
                       const devices = await navigator.mediaDevices.enumerateDevices();
                       const cameras = devices.filter(d => d.kind === 'videoinput');

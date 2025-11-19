@@ -53,10 +53,10 @@ export default function EmployeesPage() {
       const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
       if (!res.ok) {
         if (res.status === 403) {
-          setError("Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.");
+          setError(_(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`));
           setInvites([]);
         } else {
-          setError("Ошибка загрузки приглашений");
+          setError(_(msg`Ошибка загрузки приглашений`));
           setInvites([]);
         }
       } else {
@@ -67,10 +67,10 @@ export default function EmployeesPage() {
       const res2 = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employees`);
       if (!res2.ok) {
         if (res2.status === 403) {
-          setError("Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.");
+          setError(_(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`));
           setEmployees([]);
         } else {
-          setError("Ошибка загрузки сотрудников");
+          setError(_(msg`Ошибка загрузки сотрудников`));
           setEmployees([]);
         }
       } else {
@@ -78,7 +78,7 @@ export default function EmployeesPage() {
         setEmployees(Array.isArray(employeesData) ? employeesData : []);
       }
     } catch (err: any) {
-      setError("Ошибка загрузки данных");
+      setError(_(msg`Ошибка загрузки данных`));
       setInvites([]);
       setEmployees([]);
     } finally {
@@ -99,7 +99,7 @@ export default function EmployeesPage() {
       if (data.emailSent) {
         setSuccess("Приглашение отправлено! Email с приглашением отправлен на " + email);
       } else {
-        setSuccess("Приглашение создано, но email не отправлен. Проверьте настройки почты.");
+        setSuccess(_(msg`Приглашение создано, но email не отправлен. Проверьте настройки почты.`));
       }
       setEmail("");
       load();
@@ -113,7 +113,7 @@ export default function EmployeesPage() {
     const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employee/${id}/remove`, { method: "POST" });
     const data = await res.json();
     if (data.ok) {
-      setSuccess("Сотрудник удалён");
+      setSuccess(_(msg`Сотрудник удалён`));
       load();
     } else {
       setError(data.error || "Ошибка");
@@ -125,7 +125,7 @@ export default function EmployeesPage() {
     const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employee/${id}/make-lead`, { method: "POST" });
     const data = await res.json();
     if (data.ok) {
-      setSuccess("Сотрудник повышен до HR-Лидера");
+      setSuccess(_(msg`Сотрудник повышен до HR-Лидера`));
       load();
     } else {
       setError(data.error || "Ошибка");
@@ -137,7 +137,7 @@ export default function EmployeesPage() {
     const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invite/${id}/revoke`, { method: "POST" });
     const data = await res.json();
     if (data.ok) {
-      setSuccess("Приглашение отозвано");
+      setSuccess(_(msg`Приглашение отозвано`));
       load();
     } else {
       setError(data.error || "Ошибка");

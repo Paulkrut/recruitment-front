@@ -699,7 +699,7 @@ export default function CandidatesList({
                           size="small"
                           color="error"
                           onClick={async () => {
-                            if (window.confirm('Вы уверены, что хотите удалить этого кандидата?')) {
+                            if (window.confirm(_(msg`Вы уверены, что хотите удалить этого кандидата?`))) {
                               try {
                                 const response = await apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' });
                                 if (response.ok) {

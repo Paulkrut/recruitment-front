@@ -678,7 +678,7 @@ export default function KanbanView({
       }
     } catch (error) {
       console.error('Error checking candidates:', error);
-      alert('Произошла ошибка при проверке кандидатов');
+      alert(_(msg`Произошла ошибка при проверке кандидатов`));
     }
   }, [columns]);
 
@@ -726,7 +726,7 @@ export default function KanbanView({
       }
     } catch (error) {
       console.error('Error deleting stage:', error);
-      alert('Произошла ошибка при удалении стадии');
+      alert(_(msg`Произошла ошибка при удалении стадии`));
     }
   }, [deletingStage]);
 
@@ -814,7 +814,7 @@ export default function KanbanView({
       }
     } catch (error) {
       console.error('Error saving custom stage:', error);
-      alert('Произошла ошибка при сохранении стадии');
+      alert(_(msg`Произошла ошибка при сохранении стадии`));
     }
   }, [stageModalPosition, editingStage]);
 
@@ -1253,7 +1253,7 @@ export default function KanbanView({
       }
     } catch (error) {
       console.error('Error in bulk move:', error);
-      setSnackbarMessage('Произошла ошибка при перемещении кандидатов');
+      setSnackbarMessage(_(msg`Произошла ошибка при перемещении кандидатов`));
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }

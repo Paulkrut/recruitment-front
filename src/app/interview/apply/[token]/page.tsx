@@ -58,7 +58,7 @@ export default function PublicApplyPage() {
         }
       })
       .catch(err => {
-        setError('Ошибка загрузки информации о вакансии');
+        setError(_(msg`Ошибка загрузки информации о вакансии`));
         console.error(err);
       })
       .finally(() => setLoading(false));
@@ -70,7 +70,7 @@ export default function PublicApplyPage() {
     if (!token) return;
 
     if (!pdnConsent) {
-      setError('Для подачи заявки необходимо согласие на обработку персональных данных');
+      setError(_(msg`Для подачи заявки необходимо согласие на обработку персональных данных`));
       return;
     }
 
@@ -105,7 +105,7 @@ export default function PublicApplyPage() {
         setInterviewLink(interviewUrl);
       }
     } catch (err) {
-      setError('Ошибка при отправке заявки');
+      setError(_(msg`Ошибка при отправке заявки`));
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -114,28 +114,28 @@ export default function PublicApplyPage() {
 
   // Валидация имени и фамилии
   const validateName = (name: string): string => {
-    if (!name.trim()) return 'Имя обязательно для заполнения';
-    if (name.trim().length < 2) return 'Имя должно содержать минимум 2 символа';
-    if (name.trim().length > 100) return 'Имя слишком длинное';
-    if (!/^[а-яёa-z\s-]+$/i.test(name.trim())) return 'Имя может содержать только буквы, пробелы и дефисы';
+    if (!name.trim()) return _(msg`Имя обязательно для заполнения`);
+    if (name.trim().length < 2) return _(msg`Имя должно содержать минимум 2 символа`);
+    if (name.trim().length > 100) return _(msg`Имя слишком длинное`);
+    if (!/^[а-яёa-z\s-]+$/i.test(name.trim())) return _(msg`Имя может содержать только буквы, пробелы и дефисы`);
     return '';
   };
 
   // Валидация телефона
   const validatePhone = (phone: string): string => {
-    if (!phone.trim()) return 'Телефон обязателен для заполнения';
+    if (!phone.trim()) return _(msg`Телефон обязателен для заполнения`);
 
     // Убираем все символы кроме цифр для проверки
     const cleanPhone = phone.replace(/\D/g, '');
 
     // Проверяем длину (10-15 цифр)
-    if (cleanPhone.length < 10) return 'Телефон должен содержать минимум 10 цифр';
-    if (cleanPhone.length > 15) return 'Телефон слишком длинный';
+    if (cleanPhone.length < 10) return _(msg`Телефон должен содержать минимум 10 цифр`);
+    if (cleanPhone.length > 15) return _(msg`Телефон слишком длинный`);
 
     // Проверяем что номер начинается с 7, 8 или +7
     const firstDigit = cleanPhone[0];
     if (firstDigit !== '7' && firstDigit !== '8') {
-      return 'Номер должен начинаться с 7, 8 или +7';
+      return _(msg`Номер должен начинаться с 7, 8 или +7`);
     }
 
     return '';
@@ -145,8 +145,8 @@ export default function PublicApplyPage() {
   const validateEmail = (email: string): string => {
     if (!email.trim()) return ''; // Email необязателен
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) return 'Введите корректный email адрес';
-    if (email.trim().length > 255) return 'Email слишком длинный';
+    if (!emailRegex.test(email.trim())) return _(msg`Введите корректный email адрес`);
+    if (email.trim().length > 255) return _(msg`Email слишком длинный`);
     return '';
   };
 

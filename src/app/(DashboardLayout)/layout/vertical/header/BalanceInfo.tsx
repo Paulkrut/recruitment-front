@@ -76,7 +76,7 @@ const BalanceInfo = () => {
       const token = localStorage.getItem('recruitment_token');
 
       if (!token) {
-        setError('Не авторизован');
+        setError(_(msg`Не авторизован`));
         setLoading(false);
         return;
       }
@@ -89,7 +89,7 @@ const BalanceInfo = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Ошибка загрузки баланса');
+        throw new Error(_(msg`Ошибка загрузки баланса`));
       }
 
       const data = await response.json();

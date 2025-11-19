@@ -200,7 +200,7 @@ export default function HhVacancyDetailPage() {
         setError(result.error || 'Ошибка загрузки данных');
       }
     } catch (err) {
-      setError('Ошибка при загрузке данных вакансии');
+      setError(_(msg`Ошибка при загрузке данных вакансии`));
       console.error(err);
     } finally {
       setLoading(false);
@@ -226,13 +226,13 @@ export default function HhVacancyDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccess('Настройки синхронизации сохранены');
+        setSuccess(_(msg`Настройки синхронизации сохранены`));
         setTimeout(() => setSuccess(null), 3000);
       } else {
         setError(result.error || 'Ошибка сохранения настроек');
       }
     } catch (err) {
-      setError('Ошибка при сохранении настроек');
+      setError(_(msg`Ошибка при сохранении настроек`));
       console.error(err);
     }
   }, [vacancyId, selectedStates]);
@@ -249,14 +249,14 @@ export default function HhVacancyDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccess('Вакансия обновлена');
+        setSuccess(_(msg`Вакансия обновлена`));
         fetchVacancyDetails(); // Перезагружаем данные
         setTimeout(() => setSuccess(null), 3000);
       } else {
         setError(result.error || 'Ошибка обновления вакансии');
       }
     } catch (err) {
-      setError('Ошибка при обновлении вакансии');
+      setError(_(msg`Ошибка при обновлении вакансии`));
       console.error(err);
     } finally {
       setSyncingVacancy(false);
@@ -266,7 +266,7 @@ export default function HhVacancyDetailPage() {
   // Синхронизировать кандидатов
   const handleSyncCandidates = useCallback(async () => {
     if (selectedStates.length === 0) {
-      setError('Выберите хотя бы один статус для синхронизации');
+      setError(_(msg`Выберите хотя бы один статус для синхронизации`));
       return;
     }
 
@@ -289,7 +289,7 @@ export default function HhVacancyDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        setSuccess('Синхронизация кандидатов запущена');
+        setSuccess(_(msg`Синхронизация кандидатов запущена`));
         setPollingStatus(true);
         pollSyncStatus();
       } else {
@@ -297,7 +297,7 @@ export default function HhVacancyDetailPage() {
         setSyncing(false);
       }
     } catch (err) {
-      setError('Ошибка при запуске синхронизации');
+      setError(_(msg`Ошибка при запуске синхронизации`));
       console.error(err);
       setSyncing(false);
     }
@@ -322,7 +322,7 @@ export default function HhVacancyDetailPage() {
         setError(result.message || 'Ошибка AI-анализа');
       }
     } catch (err) {
-      setError('Ошибка при запуске AI-анализа');
+      setError(_(msg`Ошибка при запуске AI-анализа`));
       console.error(err);
     } finally {
       setAnalyzing(false);
@@ -365,7 +365,7 @@ export default function HhVacancyDetailPage() {
       clearInterval(interval);
       setPollingStatus(false);
       setSyncing(false);
-      setError('Таймаут синхронизации (превышено 5 минут)');
+      setError(_(msg`Таймаут синхронизации (превышено 5 минут)`));
     }, 300000);
 
     // Сохраняем ID таймаута чтобы очистить его при успешном завершении

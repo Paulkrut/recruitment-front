@@ -61,23 +61,23 @@ function getStatusLabel(status: string) {
   switch (status) {
     case "completed":
     case "finished":
-      return "Завершено";
+      return _(msg`Завершено`);
     case "in_progress":
-      return "В процессе";
+      return _(msg`В процессе`);
     case "pending":
-      return "Ожидает";
+      return _(msg`Ожидает`);
     case "ready":
-      return "Готов к интервью";
+      return _(msg`Готов к интервью`);
     case "failed":
-      return "Ошибка";
+      return _(msg`Ошибка`);
     case "canceled":
-      return "Отменено";
+      return _(msg`Отменено`);
     case "new":
-      return "Новый";
+      return _(msg`Новый`);
     case "rejected":
-      return "Отклонён";
+      return _(msg`Отклонён`);
     case "active":
-      return "Активен";
+      return _(msg`Активен`);
     default:
       return status;
   }
@@ -206,7 +206,7 @@ export default function CandidateDetailPage() {
   const copyInterviewUrl = () => {
     if (interviewUrl) {
       navigator.clipboard.writeText(interviewUrl);
-      setCopyMsg('Ссылка скопирована!');
+      setCopyMsg(_(msg`Ссылка скопирована!`));
     }
   };
   const shareInterviewUrl = async () => {
@@ -234,7 +234,7 @@ export default function CandidateDetailPage() {
       await exportCandidateToPDFWithFont(pdfData);
     } catch (error) {
       console.error('Ошибка при экспорте PDF:', error);
-      setCopyMsg('Ошибка при создании PDF');
+      setCopyMsg(_(msg`Ошибка при создании PDF`));
     }
   };
 
@@ -645,7 +645,7 @@ export default function CandidateDetailPage() {
                                 }
                               } catch (error: any) {
                                 console.error('Error loading resume from HH:', error);
-                                setCopyMsg('Ошибка при загрузке резюме из HeadHunter.ru');
+                                setCopyMsg(_(msg`Ошибка при загрузке резюме из HeadHunter.ru`));
                               } finally {
                                 setResumeLoading(false);
                               }

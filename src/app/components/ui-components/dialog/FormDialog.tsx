@@ -8,8 +8,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import CustomTextField from "../../forms/theme-elements/CustomTextField";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const FormDialog = () => {
+  const { _ } = useLingui();
+
     const [open, setOpen] = React.useState(false);
     const [email, setEmail] = React.useState('');
     const [error, setError] = React.useState('');
@@ -36,17 +41,17 @@ const FormDialog = () => {
         setError('');
         
         if (value && !validateEmail(value)) {
-            setError('Введите корректный email адрес');
+            setError(_(msg`Введите корректный email адрес`));
         }
     };
     
     const handleSubmit = () => {
         if (!email.trim()) {
-            setError('Email обязателен');
+            setError(_(msg`Email обязателен`));
             return;
         }
         if (!validateEmail(email)) {
-            setError('Введите корректный email адрес');
+            setError(_(msg`Введите корректный email адрес`));
             return;
         }
         // Здесь можно добавить логику подписки

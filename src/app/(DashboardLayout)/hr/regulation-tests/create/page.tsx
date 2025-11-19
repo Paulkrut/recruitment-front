@@ -283,7 +283,7 @@ export default function CreateTestPage() {
       }
     } catch (error) {
       console.error('Error creating test:', error);
-      alert('Ошибка при создании теста');
+      alert(_(msg`Ошибка при создании теста`));
     }
   };
 
@@ -320,7 +320,7 @@ export default function CreateTestPage() {
       }
     } catch (error) {
       console.error('Error generating questions:', error);
-      alert('Ошибка при генерации вопросов');
+      alert(_(msg`Ошибка при генерации вопросов`));
     } finally {
       setGeneratingQuestions(false);
     }
@@ -362,7 +362,7 @@ export default function CreateTestPage() {
       }
     } catch (error) {
       console.error('Error creating general invitation:', error);
-      alert('Ошибка при создании общей ссылки');
+      alert(_(msg`Ошибка при создании общей ссылки`));
     }
   };
 

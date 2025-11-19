@@ -55,23 +55,23 @@ function getStatusLabel(status: string) {
 
   switch (status) {
     case "completed":
-      return "Завершено";
+      return _(msg`Завершено`);
     case "finished":
-      return "Завершено";
+      return _(msg`Завершено`);
     case "in_progress":
-      return "В процессе";
+      return _(msg`В процессе`);
     case "pending":
-      return "Ожидает";
+      return _(msg`Ожидает`);
     case "ready":
-      return "Готов к интервью";
+      return _(msg`Готов к интервью`);
     case "failed":
-      return "Ошибка";
+      return _(msg`Ошибка`);
     case "canceled":
-      return "Отменено";
+      return _(msg`Отменено`);
     case "new":
-      return "Новый";
+      return _(msg`Новый`);
     case "rejected":
-      return "Отклонён";
+      return _(msg`Отклонён`);
     default:
       return status;
   }
@@ -158,12 +158,12 @@ export default function HRVacancyDetailPage() {
         // Формируем полный URL на фронтенде
         const fullUrl = `${window.location.origin}/interview/apply/${data.publicToken}`;
         setPublicUrl(fullUrl);
-        setSnackbar('Публичная ссылка создана!');
+        setSnackbar(_(msg`Публичная ссылка создана!`));
       } else {
-        setSnackbar('Ошибка при создании ссылки');
+        setSnackbar(_(msg`Ошибка при создании ссылки`));
       }
     } catch (error) {
-      setSnackbar('Ошибка при создании ссылки');
+      setSnackbar(_(msg`Ошибка при создании ссылки`));
     }
   };
 
@@ -335,7 +335,7 @@ export default function HRVacancyDetailPage() {
                   <IconButton 
                     onClick={() => {
                       navigator.clipboard.writeText(publicUrl);
-                      setSnackbar('Ссылка скопирована!');
+                      setSnackbar(_(msg`Ссылка скопирована!`));
                     }}
                     color="primary"
                     size="small"
@@ -638,7 +638,7 @@ export default function HRVacancyDetailPage() {
                         <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                           <IconButton size="small" color="primary" onClick={() => {
                             navigator.clipboard.writeText(typeof window !== 'undefined' ? `${window.location.origin}/interview/${r.token}` : '');
-                            setSnackbar('Ссылка скопирована!');
+                            setSnackbar(_(msg`Ссылка скопирована!`));
                           }}>
                             <ContentCopyIcon fontSize="small" />
                           </IconButton>
@@ -650,11 +650,11 @@ export default function HRVacancyDetailPage() {
                         </Tooltip>
                         <Tooltip title={_(msg`Удалить кандидата`)}>
                           <IconButton size="small" color="error" onClick={() => {
-                            if (window.confirm('Вы уверены, что хотите удалить этого кандидата?')) {
+                            if (window.confirm(_(msg`Вы уверены, что хотите удалить этого кандидата?`))) {
                               apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' })
                                 .then(response => {
                                   if (response.ok) {
-                                    setSnackbar('Кандидат удален!');
+                                    setSnackbar(_(msg`Кандидат удален!`));
                                     // Обновляем список кандидатов
                                     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`)
                                       .then(r => r.json())
@@ -779,7 +779,7 @@ export default function HRVacancyDetailPage() {
       <AddCandidateDialog open={addDialogOpen} vacancyId={id} onClose={()=>setAddDialogOpen(false)} onAdded={()=>{
         // Обновляем список через изменение ключа
         setRefreshKey(prev => prev + 1);
-        setSnackbar('Кандидат добавлен успешно!');
+        setSnackbar(_(msg`Кандидат добавлен успешно!`));
       }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
         <DialogTitle>QR-код для прохождения теста</DialogTitle>

@@ -34,7 +34,7 @@ export default function PaymentSuccessPage() {
     if (paymentId) {
       checkPaymentStatus();
     } else {
-      setError('Не указан ID платежа');
+      setError(_(msg`Не указан ID платежа`));
       setLoading(false);
     }
   }, [paymentId]);
@@ -47,7 +47,7 @@ export default function PaymentSuccessPage() {
       if (data.success) {
         setPayment(data.payment);
       } else {
-        setError('Не удалось получить информацию о платеже');
+        setError(_(msg`Не удалось получить информацию о платеже`));
       }
     } catch (err: any) {
       setError(err.message || 'Ошибка при проверке статуса платежа');

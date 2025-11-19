@@ -46,7 +46,7 @@ export default function CustomStageModal({
 
   const handleSave = () => {
     if (!name.trim()) {
-      alert('Введите название стадии');
+      alert(_(msg`Введите название стадии`));
       return;
     }
 

@@ -62,7 +62,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Ошибка при удалении данных');
+      alert(_(msg`Ошибка при удалении данных`));
     } finally {
       setLoading(false);
     }

@@ -73,14 +73,14 @@ export default function ForgetMeRequestsPage() {
         const data = await response.json();
         setRequests(data.requests || []);
       } else if (response.status === 401) {
-        setError('Сессия истекла. Пожалуйста, войдите в систему заново.');
+        setError(_(msg`Сессия истекла. Пожалуйста, войдите в систему заново.`));
         // Можно добавить редирект на страницу входа
         // window.location.href = '/auth/login';
       } else {
-        setError('Ошибка при загрузке запросов');
+        setError(_(msg`Ошибка при загрузке запросов`));
       }
     } catch (error) {
-      setError('Ошибка соединения');
+      setError(_(msg`Ошибка соединения`));
     } finally {
       setLoading(false);
     }
@@ -88,7 +88,7 @@ export default function ForgetMeRequestsPage() {
 
   const handleProcessRequest = async (requestId: number) => {
     if (!adminNotes.trim()) {
-      setError('Пожалуйста, добавьте комментарий');
+      setError(_(msg`Пожалуйста, добавьте комментарий`));
       return;
     }
 
@@ -114,13 +114,13 @@ export default function ForgetMeRequestsPage() {
         setAdminNotes('');
         setError(null);
       } else if (response.status === 401) {
-        setError('Сессия истекла. Пожалуйста, войдите в систему заново.');
+        setError(_(msg`Сессия истекла. Пожалуйста, войдите в систему заново.`));
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Ошибка при обработке запроса');
       }
     } catch (error) {
-      setError('Ошибка соединения');
+      setError(_(msg`Ошибка соединения`));
     } finally {
       setProcessing(false);
     }
@@ -137,9 +137,9 @@ export default function ForgetMeRequestsPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'pending': return 'Требует подтверждения';
-      case 'processed': return 'Подтверждено';
-      case 'rejected': return 'Отклонено';
+      case 'pending': return _(msg`Требует подтверждения`);
+      case 'processed': return _(msg`Подтверждено`);
+      case 'rejected': return _(msg`Отклонено`);
       default: return status;
     }
   };

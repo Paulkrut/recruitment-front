@@ -165,7 +165,7 @@ export default function RegulationsPage() {
   };
 
   const handleDeleteFolder = async (id: number) => {
-    if (!confirm('Удалить папку?')) return;
+    if (!confirm(_(msg`Удалить папку?`))) return;
 
     try {
       const response = await apiFetch(`${API_BASE}/api/regulations/folders/${id}`, {
@@ -235,7 +235,7 @@ export default function RegulationsPage() {
   };
 
   const handleDeleteRegulation = async (id: number) => {
-    if (!confirm('Удалить регламент?')) return;
+    if (!confirm(_(msg`Удалить регламент?`))) return;
 
     try {
       const response = await apiFetch(`${API_BASE}/api/regulations/${id}`, {

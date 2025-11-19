@@ -36,7 +36,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone, password })
       });
-      if (!res.ok) throw new Error('Неверный телефон или пароль');
+      if (!res.ok) throw new Error(_(msg`Неверный телефон или пароль`));
       const d = await res.json();
       localStorage.setItem('recruitment_token', d.token);
       window.location.replace('/hr');

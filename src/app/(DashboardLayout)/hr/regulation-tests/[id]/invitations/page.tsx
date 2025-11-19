@@ -110,7 +110,7 @@ export default function InvitationsPage() {
       }
     } catch (error) {
       console.error('Error loading data:', error);
-      alert('Ошибка загрузки данных. Проверьте выбранную компанию в хедере.');
+      alert(_(msg`Ошибка загрузки данных. Проверьте выбранную компанию в хедере.`));
       router.push('/hr/regulation-tests');
     } finally {
       setLoading(false);
@@ -139,7 +139,7 @@ export default function InvitationsPage() {
   };
 
   const handleDeleteInvitation = async (id: number) => {
-    if (!confirm('Удалить приглашение?')) return;
+    if (!confirm(_(msg`Удалить приглашение?`))) return;
 
     try {
       const response = await apiFetch(`${API_BASE}/api/regulation-tests/invitations/${id}`, {
@@ -157,7 +157,7 @@ export default function InvitationsPage() {
   const handleCopyLink = (token: string) => {
     const link = `${FRONTEND_BASE}/test/${token}`;
     navigator.clipboard.writeText(link);
-    alert('Ссылка скопирована в буфер обмена');
+    alert(_(msg`Ссылка скопирована в буфер обмена`));
   };
 
   const getInvitationStatus = (invitation: Invitation): { label: string; color: 'success' | 'warning' | 'default' } => {

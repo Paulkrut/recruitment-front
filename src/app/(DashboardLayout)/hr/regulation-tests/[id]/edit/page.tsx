@@ -80,11 +80,11 @@ export default function EditTestPage() {
         setMaxTimePerQuestion(data.maxTimePerQuestion);
         setIsActive(data.isActive);
       } else {
-        setError('Тест не найден');
+        setError(_(msg`Тест не найден`));
       }
     } catch (error) {
       console.error('Error loading test:', error);
-      setError('Ошибка при загрузке теста');
+      setError(_(msg`Ошибка при загрузке теста`));
     } finally {
       setLoading(false);
     }
@@ -92,7 +92,7 @@ export default function EditTestPage() {
 
   const handleSave = async () => {
     if (!title.trim()) {
-      alert('Введите название теста');
+      alert(_(msg`Введите название теста`));
       return;
     }
 
@@ -118,7 +118,7 @@ export default function EditTestPage() {
       }
     } catch (error) {
       console.error('Error saving test:', error);
-      alert('Ошибка при сохранении теста');
+      alert(_(msg`Ошибка при сохранении теста`));
     } finally {
       setSaving(false);
     }

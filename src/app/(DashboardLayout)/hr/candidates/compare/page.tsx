@@ -172,7 +172,7 @@ export default function ComparePage() {
   // Проверка наличия ID кандидатов
   useEffect(() => {
     if (stableIds.length < 2) {
-      setError('Необходимо выбрать минимум 2 кандидата для сравнения');
+      setError(_(msg`Необходимо выбрать минимум 2 кандидата для сравнения`));
       setLoading(false);
       return;
     }
@@ -206,14 +206,14 @@ export default function ComparePage() {
         return;
       }
 
-      if (!response.ok) throw new Error('Ошибка загрузки данных');
+      if (!response.ok) throw new Error(_(msg`Ошибка загрузки данных`));
       
       const data = await response.json();
       console.log('✅ Базовое сравнение загружено:', data);
         setCandidates(data.candidates || []);
     } catch (err) {
       console.error('❌ Ошибка загрузки базового сравнения:', err);
-        setError('Не удалось загрузить данные кандидатов');
+        setError(_(msg`Не удалось загрузить данные кандидатов`));
     } finally {
         setIsLoadingBasic(false);
     }
@@ -241,7 +241,7 @@ export default function ComparePage() {
         return;
       }
 
-      if (!response.ok) throw new Error('Ошибка запуска AI-анализа');
+      if (!response.ok) throw new Error(_(msg`Ошибка запуска AI-анализа`));
       
       const data = await response.json();
       console.log('✅ AI-анализ запущен:', data);
@@ -268,7 +268,7 @@ export default function ComparePage() {
       }
     } catch (err) {
       console.error('❌ Ошибка запуска AI-анализа:', err);
-        setError('Не удалось запустить AI-анализ');
+        setError(_(msg`Не удалось запустить AI-анализ`));
     } finally {
         setIsLoadingAi(false);
     }
@@ -286,7 +286,7 @@ export default function ComparePage() {
         return;
       }
       
-      if (!response.ok) throw new Error('Ошибка проверки статуса');
+      if (!response.ok) throw new Error(_(msg`Ошибка проверки статуса`));
       
       const data = await response.json();
       console.log('📊 Статус AI:', data.status, data);
@@ -328,7 +328,7 @@ export default function ComparePage() {
 
   useEffect(() => {
     if (stableIds.length < 2) {
-      setError('Необходимо выбрать минимум 2 кандидатов');
+      setError(_(msg`Необходимо выбрать минимум 2 кандидатов`));
       setLoading(false);
       return;
     }
@@ -356,7 +356,7 @@ export default function ComparePage() {
         setLoading(false);
         setHasInitialized(true); // Отмечаем что инициализация завершена
       } catch (err) {
-          setError('Ошибка инициализации');
+          setError(_(msg`Ошибка инициализации`));
           setLoading(false);
       }
     };

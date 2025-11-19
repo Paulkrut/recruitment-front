@@ -26,6 +26,9 @@ import {
 import Link from "next/link";
 import { OverdueCandidate, PaginationState } from "@/app/(DashboardLayout)/types/dashboard";
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface OverdueCandidatesCardProps {
@@ -33,6 +36,8 @@ interface OverdueCandidatesCardProps {
 }
 
 export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardProps) {
+  const { _ } = useLingui();
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
@@ -68,7 +73,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) return "1 день назад";
+    if (diffDays === 1) return _(msg`1 день назад`);
     if (diffDays < 7) return `${diffDays} дней назад`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} недель назад`;
     return `${Math.floor(diffDays / 30)} месяцев назад`;
@@ -91,9 +96,9 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays > 30) return "Критично";
-    if (diffDays > 14) return "Срочно";
-    return "Внимание";
+    if (diffDays > 30) return _(msg`Критично`);
+    if (diffDays > 14) return _(msg`Срочно`);
+    return _(msg`Внимание`);
   };
 
   return (

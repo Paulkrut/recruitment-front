@@ -51,11 +51,11 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
   };
 
   const getActivityLabel = (progress: number) => {
-    if (progress === 0) return "Отсутствует";
-    if (progress >= 80) return "Высокая";
-    if (progress >= 50) return "Нормальная";
-    if (progress >= 20) return "Низкая";
-    return "Низкая";
+    if (progress === 0) return _(msg`Отсутствует`);
+    if (progress >= 80) return _(msg`Высокая`);
+    if (progress >= 50) return _(msg`Нормальная`);
+    if (progress >= 20) return _(msg`Низкая`);
+    return _(msg`Низкая`);
   };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {

@@ -178,7 +178,7 @@ export default function RegulationTestPage() {
       
       if (invitationType === 'general') {
         if (!name || !email) {
-          alert('Пожалуйста, заполните все обязательные поля');
+          alert(_(msg`Пожалуйста, заполните все обязательные поля`));
           return;
         }
         body.name = name;
@@ -268,7 +268,7 @@ export default function RegulationTestPage() {
     
     if (!stream) {
       console.error('No stream available. testStream:', testStream, 'getWebcamStream:', (window as any).getWebcamStream);
-      alert('Нет доступного потока для записи. Проверьте, что камера/микрофон подключены.');
+      alert(_(msg`Нет доступного потока для записи. Проверьте, что камера/микрофон подключены.`));
       return;
     }
     
@@ -319,7 +319,7 @@ export default function RegulationTestPage() {
       setRecording(true);
     } catch (error) {
       console.error('Error starting recording:', error);
-      alert('Не удалось начать запись');
+      alert(_(msg`Не удалось начать запись`));
     }
   }, [testStream, cameraEnabled]);
 
@@ -428,7 +428,7 @@ export default function RegulationTestPage() {
 
   const handleSubmitAnswer = async () => {
     if (!audioBlob) {
-      alert('Пожалуйста, запишите ответ');
+      alert(_(msg`Пожалуйста, запишите ответ`));
       return;
     }
 
@@ -702,16 +702,16 @@ export default function RegulationTestPage() {
               onClick={() => {
                 if (invitationType === 'general') {
                   if (!name || !email) {
-                    alert('Пожалуйста, заполните все обязательные поля');
+                    alert(_(msg`Пожалуйста, заполните все обязательные поля`));
                     return;
                   }
                   if (!pdnConsent) {
-                    alert('Необходимо согласие на обработку персональных данных');
+                    alert(_(msg`Необходимо согласие на обработку персональных данных`));
                     return;
                   }
                 }
                 if (invitationType === 'named' && !pdnConsent) {
-                  alert('Необходимо согласие на обработку персональных данных');
+                  alert(_(msg`Необходимо согласие на обработку персональных данных`));
                   return;
                 }
                 setCurrentStep(1);

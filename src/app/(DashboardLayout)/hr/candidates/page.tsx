@@ -149,13 +149,13 @@ function EnhancedCandidateTable({
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "finished":
-        return "Завершено";
+        return _(msg`Завершено`);
       case "in_progress":
-        return "В процессе";
+        return _(msg`В процессе`);
       case "pending":
-        return "Ожидает";
+        return _(msg`Ожидает`);
       case "failed":
-        return "Ошибка";
+        return _(msg`Ошибка`);
       default:
         return status;
     }
@@ -168,10 +168,10 @@ function EnhancedCandidateTable({
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 8) return "Отлично";
-    if (score >= 6) return "Хорошо";
-    if (score >= 4) return "Удовлетворительно";
-    return "Неудовлетворительно";
+    if (score >= 8) return _(msg`Отлично`);
+    if (score >= 6) return _(msg`Хорошо`);
+    if (score >= 4) return _(msg`Удовлетворительно`);
+    return _(msg`Неудовлетворительно`);
   };
 
 
@@ -431,13 +431,13 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "finished":
-        return "Завершено";
+        return _(msg`Завершено`);
       case "in_progress":
-        return "В процессе";
+        return _(msg`В процессе`);
       case "pending":
-        return "Ожидает";
+        return _(msg`Ожидает`);
       case "failed":
-        return "Ошибка";
+        return _(msg`Ошибка`);
       default:
         return status;
     }
@@ -610,10 +610,10 @@ export default function HRCandidatesPage() {
         const data = await response.json();
         setCandidates(data);
       } else {
-        setError("Ошибка загрузки кандидатов");
+        setError(_(msg`Ошибка загрузки кандидатов`));
       }
     } catch (err) {
-      setError("Ошибка загрузки кандидатов");
+      setError(_(msg`Ошибка загрузки кандидатов`));
     } finally {
       setLoading(false);
     }

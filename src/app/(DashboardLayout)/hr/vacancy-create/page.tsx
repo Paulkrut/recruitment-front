@@ -146,7 +146,7 @@ export default function HRVacancyCreatePage() {
       // Получаем текущую компанию
       const currentCompanyId = localStorage.getItem("current_company");
       if (!currentCompanyId) {
-        throw new Error("Не выбрана компания");
+        throw new Error(_(msg`Не выбрана компания`));
       }
 
       // Создаем вакансию с тестом в одном запросе
@@ -164,7 +164,7 @@ export default function HRVacancyCreatePage() {
       });
 
       if (!response.ok) {
-        throw new Error("Ошибка создания вакансии с тестом");
+        throw new Error(_(msg`Ошибка создания вакансии с тестом`));
       }
 
       const result = await response.json();
@@ -181,7 +181,7 @@ export default function HRVacancyCreatePage() {
 
   const generateQuestions = async () => {
     if (!token || !vacancyData.title) {
-      setError("Сначала заполните название вакансии");
+      setError(_(msg`Сначала заполните название вакансии`));
       return;
     }
 
@@ -203,7 +203,7 @@ export default function HRVacancyCreatePage() {
       });
 
       if (!startRes.ok) {
-        throw new Error("Ошибка запуска генерации вопросов");
+        throw new Error(_(msg`Ошибка запуска генерации вопросов`));
       }
 
       const { jobId } = await startRes.json();
@@ -214,7 +214,7 @@ export default function HRVacancyCreatePage() {
           const statusRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-status/${jobId}`);
           
           if (!statusRes.ok) {
-            throw new Error("Ошибка получения статуса генерации");
+            throw new Error(_(msg`Ошибка получения статуса генерации`));
           }
 
           const statusData = await statusRes.json();
@@ -261,7 +261,7 @@ export default function HRVacancyCreatePage() {
       setTimeout(() => {
         clearInterval(pollInterval);
         if (isGenerating) {
-          setError("Превышено время ожидания генерации");
+          setError(_(msg`Превышено время ожидания генерации`));
           setIsGenerating(false);
           setGenerationProgress(null);
         }
@@ -283,9 +283,9 @@ export default function HRVacancyCreatePage() {
       case 'processing':
         return `Генерация вопросов${timeStr}...`;
       case 'completed':
-        return 'Генерация завершена!';
+        return _(msg`Генерация завершена!`);
       case 'failed':
-        return 'Ошибка генерации';
+        return _(msg`Ошибка генерации`);
       default:
         return `Обработка${timeStr}...`;
     }
