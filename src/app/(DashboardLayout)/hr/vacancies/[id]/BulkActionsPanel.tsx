@@ -20,6 +20,9 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface BulkActionsPanelProps {
@@ -38,15 +41,15 @@ interface BulkActionsPanelProps {
 
 // Лейблы для статусов
 const STATUS_LABELS: Record<string, string> = {
-  'new': '📥 Новые',
-  'screening': '🤖 AI Скрининг',
-  'contacted': '📞 На связи',
-  'testing': '📝 Тестирование',
-  'finalist': '⭐ Финалист',
-  'offer': '💼 Оффер',
-  'hired': '✅ Нанят',
-  'deferred': '⏸️ Отложен',
-  'rejected': '❌ Отказ',
+  'new': _(msg`📥 Новые`),
+  'screening': _(msg`🤖 AI Скрининг`),
+  'contacted': _(msg`📞 На связи`),
+  'testing': _(msg`📝 Тестирование`),
+  'finalist': _(msg`⭐ Финалист`),
+  'offer': _(msg`💼 Оффер`),
+  'hired': _(msg`✅ Нанят`),
+  'deferred': _(msg`⏸️ Отложен`),
+  'rejected': _(msg`❌ Отказ`),
 };
 
 export default function BulkActionsPanel({
@@ -58,6 +61,8 @@ export default function BulkActionsPanel({
   hhLimits,
   resumeQueueCount,
 }: BulkActionsPanelProps) {
+  const { _ } = useLingui();
+
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
