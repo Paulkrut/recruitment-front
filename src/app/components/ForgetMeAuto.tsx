@@ -148,7 +148,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
           <Button onClick={() => setOpen(false)}>Отмена</Button>
           <Button 
             onClick={handleForgetMe}
-            disabled={confirmed !== 'УДАЛИТЬ' || loading}
+            disabled={confirmed !== _(msg`УДАЛИТЬ`) || loading}
             color="error"
             variant="contained"
           >

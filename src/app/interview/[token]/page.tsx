@@ -113,7 +113,7 @@ export default function CandidateInterviewPage() {
 
   // Состояние для записанного blob (перед отправкой)
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
-  
+
   // Состояние для анимации удаления реплики
   const [deletingMessageIndex, setDeletingMessageIndex] = useState<number | null>(null);
 
@@ -952,7 +952,7 @@ export default function CandidateInterviewPage() {
     console.log('handleRetake called');
     setRecordedBlob(null);
     setMediaRecorder(null);
-    
+
     // Находим индекс последней реплики пользователя для анимации
     let messageIndexToDelete = -1;
     for (let i = chat.length - 1; i >= 0; i--) {
@@ -961,11 +961,11 @@ export default function CandidateInterviewPage() {
         break;
       }
     }
-    
+
     if (messageIndexToDelete !== -1) {
       // Запускаем анимацию удаления
       setDeletingMessageIndex(messageIndexToDelete);
-      
+
       // Через время анимации удаляем реплику
       setTimeout(() => {
         setChat((p) => {
@@ -982,9 +982,9 @@ export default function CandidateInterviewPage() {
           }
           return newChat;
         });
-        
+
         setDeletingMessageIndex(null);
-        
+
         // Запускаем новую запись
         setTimeout(() => {
           startRecording();
@@ -1912,10 +1912,10 @@ export default function CandidateInterviewPage() {
 
           {/* Предупреждение о времени обработки */}
           {feedbackLoading && (
-            <Alert 
-              severity="info" 
-              sx={{ 
-                mt: 3, 
+            <Alert
+              severity="info"
+              sx={{
+                mt: 3,
                 maxWidth: 600,
                 '& .MuiAlert-message': {
                   width: '100%'
@@ -2299,10 +2299,10 @@ export default function CandidateInterviewPage() {
 
             {/* Предупреждение о времени обработки */}
             {feedbackLoading && (
-              <Alert 
-                severity="info" 
-                sx={{ 
-                  mt: 3, 
+              <Alert
+                severity="info"
+                sx={{
+                  mt: 3,
                   maxWidth: 600,
                   '& .MuiAlert-message': {
                     width: '100%'
@@ -2985,7 +2985,7 @@ export default function CandidateInterviewPage() {
               </Box>
             </Box>
           )}
-          
+
           {/* answer input – только аудио */}
           <Box sx={{
             display: "flex",
@@ -3266,7 +3266,7 @@ export default function CandidateInterviewPage() {
             onClick={handleForgetMe}
             variant="contained"
             color="warning"
-            disabled={forgetMeConfirmed !== 'УДАЛИТЬ' || forgetMeLoading}
+            disabled={forgetMeConfirmed !== _(msg`УДАЛИТЬ`) || forgetMeLoading}
             startIcon={forgetMeLoading ? <CircularProgress size={20} /> : null}
           >
             {forgetMeLoading ? 'Удаляю...' : 'Удалить навсегда'}
