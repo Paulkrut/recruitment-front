@@ -62,7 +62,7 @@ export default function BalanceWidget() {
         setError(_(msg`Не удалось загрузить баланс`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка загрузки баланса');
+      setError(err.message || _(msg`Ошибка загрузки баланса`));
     } finally {
       setLoading(false);
     }

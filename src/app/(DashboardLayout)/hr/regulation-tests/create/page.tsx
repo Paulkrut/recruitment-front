@@ -316,7 +316,7 @@ export default function CreateTestPage() {
         }
       } else {
         const error = await response.json();
-        alert(error.error || 'Ошибка при генерации вопросов');
+        alert(error.error || _(msg`Ошибка при генерации вопросов`));
       }
     } catch (error) {
       console.error('Error generating questions:', error);

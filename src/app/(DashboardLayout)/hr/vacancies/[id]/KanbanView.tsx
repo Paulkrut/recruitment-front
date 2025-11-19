@@ -312,7 +312,7 @@ const DraggableCandidateCard = memo(({
         }}>
           {/* AI Score крупно (как цена в Битрикс) или статус анализа */}
           {candidate.aiScore !== null ? (
-            <Tooltip title={candidate.aiComment || 'AI оценка резюме'} arrow>
+            <Tooltip title={candidate.aiComment || _(msg`AI оценка резюме`)} arrow>
               <Typography
                 variant="h6"
                 fontWeight="bold"
@@ -722,7 +722,7 @@ export default function KanbanView({
         alert(`Стадия удалена. ${result.movedCandidates > 0 ? `Перемещено кандидатов: ${result.movedCandidates}` : ''}`);
       } else {
         const error = await response.json();
-        alert(_(msg`Ошибка: ${error.message || 'Не удалось удалить стадию'}`));
+        alert(_(msg`Ошибка: ${error.message || _(msg`Не удалось удалить стадию`)}`));
       }
     } catch (error) {
       console.error('Error deleting stage:', error);
@@ -753,7 +753,7 @@ export default function KanbanView({
           ));
         } else {
           const error = await response.json();
-          alert(_(msg`Ошибка: ${error.error || 'Не удалось обновить стадию'}`));
+          alert(_(msg`Ошибка: ${error.error || _(msg`Не удалось обновить стадию`)}`));
         }
       }
       // Если создаём новую стадию
@@ -809,7 +809,7 @@ export default function KanbanView({
           }));
         } else {
           const error = await response.json();
-          alert(_(msg`Ошибка: ${error.error || 'Не удалось создать стадию'}`));
+          alert(_(msg`Ошибка: ${error.error || _(msg`Не удалось создать стадию`)}`));
         }
       }
     } catch (error) {
@@ -1113,7 +1113,7 @@ export default function KanbanView({
             // Показываем модальное окно
             setHhTokenError({
               candidateName: error.candidateName,
-              message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
+              message: error.message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
             });
             setHhTokenDialogOpen(true);
             return;
@@ -1240,12 +1240,12 @@ export default function KanbanView({
         if (response.status === 403 && error.error === 'hh_token_required') {
           setHhTokenError({
             candidateName: error.candidateName,
-            message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
+            message: error.message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
           });
           setHhTokenDialogOpen(true);
         } else {
           // Остальные ошибки
-          setSnackbarMessage(_(msg`Ошибка: ${error.error || error.message || 'Не удалось переместить кандидатов'}`));
+          setSnackbarMessage(_(msg`Ошибка: ${error.error || error.message || _(msg`Не удалось переместить кандидатов`)}`));
           setSnackbarSeverity('error');
           setSnackbarOpen(true);
         }
@@ -1627,7 +1627,7 @@ export default function KanbanView({
               Кандидат: {hhTokenError.candidateName}
             </Box>
           )}
-          {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
+          {hhTokenError?.message || _(msg`Для загрузки резюме с HeadHunter необходимо обновить токен доступа.`)}
         </DialogContentText>
         <Alert severity="info" sx={{ mt: 2 }}><Trans>Перейдите в настройки интеграции HH.ru и авторизуйтесь заново</Trans></Alert>
       </DialogContent>

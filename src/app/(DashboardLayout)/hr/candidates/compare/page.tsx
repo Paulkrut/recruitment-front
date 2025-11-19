@@ -459,10 +459,10 @@ export default function ComparePage() {
                     
                     <Box sx={{ mt: 1 }}>
                       <Typography variant="body2" color="text.secondary">
-                        📧 {candidate.email || 'Email не указан'}
+                        📧 {candidate.email || _(msg`Email не указан`)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        📱 {candidate.phone || 'Телефон не указан'}
+                        📱 {candidate.phone || _(msg`Телефон не указан`)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         📅 Создан: {new Date(candidate.createdAt).toLocaleDateString('ru-RU')}
@@ -627,7 +627,7 @@ export default function ComparePage() {
                       fontSize: '0.95rem'
                     }}
                   >
-                    {comparisonData.result?.analysis || comparisonData.result?.reasoning || 'Анализ недоступен'}
+                    {comparisonData.result?.analysis || comparisonData.result?.reasoning || _(msg`Анализ недоступен`)}
                   </Typography>
                 </Box>
                 
@@ -644,7 +644,7 @@ export default function ComparePage() {
                       borderColor: 'primary.main' 
                     }}>
                       <Typography variant="body2">
-                        <strong>Должность:</strong> {comparisonData.result.vacancy.title || 'Не указана'}<br />
+                        <strong>Должность:</strong> {comparisonData.result.vacancy.title || _(msg`Не указана`)}<br />
                         {comparisonData.result.vacancy.description && (
                           <>
                             <strong>Описание:</strong> {comparisonData.result.vacancy.description}

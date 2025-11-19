@@ -192,7 +192,7 @@ export default function CandidatesList({
         if (error.errorType === 'limit_exceeded') {
           onSnackbar('Превышен лимит просмотров резюме на HH.ru');
         } else {
-          onSnackbar(error.error || 'Ошибка загрузки резюме');
+          onSnackbar(error.error || _(msg`Ошибка загрузки резюме`));
         }
         // Откатываем оптимистичное обновление
         const queryParams = new URLSearchParams();
@@ -259,7 +259,7 @@ export default function CandidatesList({
           // Показываем диалог для HH token
           setHhTokenError({
             candidateName: hhTokenErrors[0].candidateName,
-            message: hhTokenErrors[0].message || 'Требуется авторизация HH.ru для загрузки резюме',
+            message: hhTokenErrors[0].message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
           });
           setHhTokenDialogOpen(true);
         } else {
@@ -288,7 +288,7 @@ export default function CandidatesList({
           if (error.error === 'hh_token_required') {
             setHhTokenError({
               candidateName: error.candidateName,
-              message: error.message || 'Требуется авторизация HH.ru для загрузки резюме',
+              message: error.message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
             });
             setHhTokenDialogOpen(true);
             
@@ -312,7 +312,7 @@ export default function CandidatesList({
         }
         
         const error = await response.json();
-        onSnackbar(error.error || 'Ошибка отправки на скрининг');
+        onSnackbar(error.error || _(msg`Ошибка отправки на скрининг`));
         // Откатываем оптимистичное обновление
         const queryParams = new URLSearchParams();
         queryParams.append('page', (page + 1).toString());
@@ -590,7 +590,7 @@ export default function CandidatesList({
                         />
                       </Tooltip>
                     ) : r.aiScore !== null && r.aiScore !== undefined ? (
-                      <Tooltip title={r.aiComment || 'AI оценка'} arrow>
+                      <Tooltip title={r.aiComment || _(msg`AI оценка`)} arrow>
                         <Chip
                           label={`${r.aiScore}%`}
                           size="small"
@@ -760,7 +760,7 @@ export default function CandidatesList({
                 Кандидат: {hhTokenError.candidateName}
               </Box>
             )}
-            {hhTokenError?.message || 'Для загрузки резюме с HeadHunter необходимо обновить токен доступа.'}
+            {hhTokenError?.message || _(msg`Для загрузки резюме с HeadHunter необходимо обновить токен доступа.`)}
           </DialogContentText>
           <Alert severity="info" sx={{ mt: 2 }}><Trans>Перейдите в настройки интеграции HH.ru и авторизуйтесь заново</Trans></Alert>
         </DialogContent>

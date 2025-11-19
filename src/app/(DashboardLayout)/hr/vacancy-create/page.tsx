@@ -248,7 +248,7 @@ export default function HRVacancyCreatePage() {
           } else if (statusData.status === 'failed') {
             // Генерация завершилась с ошибкой
             clearInterval(pollInterval);
-            throw new Error(statusData.error || "Ошибка генерации вопросов");
+            throw new Error(statusData.error || _(msg`Ошибка генерации вопросов`));
           }
           
         } catch (pollError: any) {

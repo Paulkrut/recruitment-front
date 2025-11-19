@@ -41,7 +41,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
 
       if (response.ok) {
         const result = await response.json();
-        setSuccessMessage(result.message || 'Ваши данные успешно удалены с платформы');
+        setSuccessMessage(result.message || _(msg`Ваши данные успешно удалены с платформы`));
         setShowSuccess(true);
         setOpen(false);
         
@@ -58,7 +58,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         }, 1000);
       } else {
         const errorData = await response.json();
-        alert('Ошибка при удалении данных: ' + (errorData.error || 'Неизвестная ошибка'));
+        alert('Ошибка при удалении данных: ' + (errorData.error || _(msg`Неизвестная ошибка`)));
       }
     } catch (error) {
       console.error('Error:', error);

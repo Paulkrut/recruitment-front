@@ -151,7 +151,7 @@ export default function RegulationTestPage() {
         } else {
           setTestInfo(null);
           alert('❌ Ошибка загрузки приглашения\n\n' +
-                (errorData.message || 'Не удалось загрузить информацию о тесте.'));
+                (errorData.message || _(msg`Не удалось загрузить информацию о тесте.`)));
         }
         setLoading(false);
         return;
@@ -232,7 +232,7 @@ export default function RegulationTestPage() {
         }
         
         // Общая ошибка с деталями, если они есть
-        const errorMessage = errorData.message || 'Не удалось начать тест';
+        const errorMessage = errorData.message || _(msg`Не удалось начать тест`);
         alert('❌ Ошибка при запуске теста\n\n' + errorMessage + '\n\n' +
               '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
         return;
@@ -410,7 +410,7 @@ export default function RegulationTestPage() {
           return;
         }
         
-        const errorMessage = errorData.message || 'Не удалось отправить ответ';
+        const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
       }
 
@@ -420,7 +420,7 @@ export default function RegulationTestPage() {
     } catch (error: any) {
       console.error('Error submitting empty answer:', error);
       alert('❌ Не удалось зарегистрировать пропуск вопроса\n\n' +
-            (error.message || 'Произошла ошибка при отправке.') + '\n\n' +
+            (error.message || _(msg`Произошла ошибка при отправке.`)) + '\n\n' +
             '📧 Обратитесь к вашему HR-менеджеру.');
       setSubmitting(false);
     }
@@ -500,7 +500,7 @@ export default function RegulationTestPage() {
         }
         
         // Общая ошибка
-        const errorMessage = errorData.message || 'Не удалось отправить ответ';
+        const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
       }
 
@@ -510,7 +510,7 @@ export default function RegulationTestPage() {
     } catch (error: any) {
       console.error('Error submitting answer:', error);
       alert('❌ Не удалось отправить ответ\n\n' +
-            (error.message || 'Произошла ошибка при отправке.') + '\n\n' +
+            (error.message || _(msg`Произошла ошибка при отправке.`)) + '\n\n' +
             '🔄 Пожалуйста, попробуйте ещё раз.\n\n' +
             '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
       
@@ -560,7 +560,7 @@ export default function RegulationTestPage() {
           return;
         }
         
-        const errorMessage = errorData.message || 'Не удалось завершить тест';
+        const errorMessage = errorData.message || _(msg`Не удалось завершить тест`);
         throw new Error(errorMessage);
       }
 
@@ -570,7 +570,7 @@ export default function RegulationTestPage() {
     } catch (error: any) {
       console.error('Error finishing test:', error);
       alert('❌ Ошибка при завершении теста\n\n' +
-            (error.message || 'Произошла ошибка.') + '\n\n' +
+            (error.message || _(msg`Произошла ошибка.`)) + '\n\n' +
             '📧 Ваши ответы сохранены. Обратитесь к вашему HR-менеджеру если возникли вопросы.');
       // Всё равно показываем экран завершения
       setFinished(true);

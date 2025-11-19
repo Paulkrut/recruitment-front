@@ -117,7 +117,7 @@ export default function ForgetMeRequestsPage() {
         setError(_(msg`Сессия истекла. Пожалуйста, войдите в систему заново.`));
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'Ошибка при обработке запроса');
+        setError(errorData.error || _(msg`Ошибка при обработке запроса`));
       }
     } catch (error) {
       setError(_(msg`Ошибка соединения`));
@@ -441,7 +441,7 @@ export default function ForgetMeRequestsPage() {
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle2" color="text.secondary"><Trans>Телефон</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
-                  {selectedRequest.phone || 'Не указан'}
+                  {selectedRequest.phone || _(msg`Не указан`)}
                 </Typography>
               </Grid>
               
@@ -455,7 +455,7 @@ export default function ForgetMeRequestsPage() {
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary"><Trans>Причина удаления</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
-                  {selectedRequest.reason || 'Не указана'}
+                  {selectedRequest.reason || _(msg`Не указана`)}
                 </Typography>
               </Grid>
               

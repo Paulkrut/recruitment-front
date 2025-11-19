@@ -104,7 +104,7 @@ export default function EmployeesPage() {
       setEmail("");
       load();
     } else {
-      setError(data.error || "Ошибка");
+      setError(data.error || _(msg`Ошибка`));
     }
   };
 
@@ -116,7 +116,7 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Сотрудник удалён`));
       load();
     } else {
-      setError(data.error || "Ошибка");
+      setError(data.error || _(msg`Ошибка`));
     }
     setLoading(false);
   };
@@ -128,7 +128,7 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Сотрудник повышен до HR-Лидера`));
       load();
     } else {
-      setError(data.error || "Ошибка");
+      setError(data.error || _(msg`Ошибка`));
     }
     setLoading(false);
   };
@@ -140,7 +140,7 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Приглашение отозвано`));
       load();
     } else {
-      setError(data.error || "Ошибка");
+      setError(data.error || _(msg`Ошибка`));
     }
     setLoading(false);
   };

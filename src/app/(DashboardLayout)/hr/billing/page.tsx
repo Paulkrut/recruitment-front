@@ -65,7 +65,7 @@ export default function BillingPage() {
         setPlans(data.plans);
       }
     } catch (err: any) {
-      setError(err.message || 'Не удалось загрузить тарифы');
+      setError(err.message || _(msg`Не удалось загрузить тарифы`));
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ export default function BillingPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || data.message || 'Ошибка при создании платежа');
+        throw new Error(data.error || data.message || _(msg`Ошибка при создании платежа`));
       }
 
       if (data.success) {
@@ -109,7 +109,7 @@ export default function BillingPage() {
         }
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка при создании платежа');
+      setError(err.message || _(msg`Ошибка при создании платежа`));
     } finally {
       setPurchasing(false);
     }

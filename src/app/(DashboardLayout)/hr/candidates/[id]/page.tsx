@@ -246,7 +246,7 @@ export default function CandidateDetailPage() {
           <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
           {statusData?.vacancyId ? (
             <Link href={`/hr/vacancies/${statusData.vacancyId}`} style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>
-              {sessionDetail?.vacancy?.title || statusData.vacancyTitle || 'Вакансия'}
+              {sessionDetail?.vacancy?.title || statusData.vacancyTitle || _(msg`Вакансия`)}
             </Link>
           ) : (
             <Typography color="text.primary"><Trans>Вакансия</Trans></Typography>
@@ -440,7 +440,7 @@ export default function CandidateDetailPage() {
                   <Stack spacing={2}>
                     <Typography variant="h5" fontWeight="700"><Trans>AI-оценка кандидата</Trans></Typography>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                      <Chip label={aiStatus || 'нет данных'} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
+                      <Chip label={aiStatus || _(msg`нет данных`)} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
                       {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}>Обновлено: {aiUpdatedAt}</Typography>}
                     </Stack>
                     {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><b>Резюме:</b> {aiSummary}</Typography>}
@@ -639,9 +639,9 @@ export default function CandidateDetailPage() {
                                     resumeText: data.resumeText,
                                     hasResume: true,
                                   });
-                                  setCopyMsg(data.message || 'Резюме загружено из HeadHunter.ru');
+                                  setCopyMsg(data.message || _(msg`Резюме загружено из HeadHunter.ru`));
                                 } else {
-                                  setCopyMsg(data.error || 'Ошибка при загрузке резюме');
+                                  setCopyMsg(data.error || _(msg`Ошибка при загрузке резюме`));
                                 }
                               } catch (error: any) {
                                 console.error('Error loading resume from HH:', error);

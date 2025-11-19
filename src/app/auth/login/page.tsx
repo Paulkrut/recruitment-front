@@ -105,7 +105,7 @@ export default function LoginPage() {
         window.location.href = "/hr/";
       } else {
         setErrors({
-          general: data.message || "Ошибка авторизации. Проверьте данные.",
+          general: data.message || _(msg`Ошибка авторизации. Проверьте данные.`),
         });
       }
     } catch (error) {

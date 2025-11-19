@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
       if (response.ok) {
         setSuccess(true);
       } else {
-        setError(data.message || "Ошибка при восстановлении пароля");
+        setError(data.message || _(msg`Ошибка при восстановлении пароля`));
       }
     } catch (error) {
       setError(_(msg`Ошибка соединения. Попробуйте еще раз.`));

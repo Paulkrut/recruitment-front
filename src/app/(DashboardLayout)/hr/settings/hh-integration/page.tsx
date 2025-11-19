@@ -144,7 +144,7 @@ export default function HhIntegrationPage() {
         await fetchVacancies();
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка загрузки статуса интеграции');
+      setError(err.message || _(msg`Ошибка загрузки статуса интеграции`));
     } finally {
       setLoading(false);
     }
@@ -175,10 +175,10 @@ export default function HhIntegrationPage() {
         setSuccess(_(msg`HH.ru успешно подключен!`));
         await fetchStatus();
       } else {
-        throw new Error(data.message || 'Ошибка подключения');
+        throw new Error(data.message || _(msg`Ошибка подключения`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка обработки авторизации');
+      setError(err.message || _(msg`Ошибка обработки авторизации`));
     } finally {
       setConnecting(false);
     }
@@ -196,7 +196,7 @@ export default function HhIntegrationPage() {
         throw new Error(_(msg`Не удалось получить URL авторизации`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка запуска авторизации');
+      setError(err.message || _(msg`Ошибка запуска авторизации`));
       setConnecting(false);
     }
   };
@@ -212,7 +212,7 @@ export default function HhIntegrationPage() {
       setSuccess(_(msg`HH.ru отключен`));
       await fetchStatus();
     } catch (err: any) {
-      setError(err.message || 'Ошибка отключения');
+      setError(err.message || _(msg`Ошибка отключения`));
       setLoading(false);
     }
   };
@@ -228,7 +228,7 @@ export default function HhIntegrationPage() {
       setSuccess(_(msg`Синхронизация завершена. Загружено вакансий: ${data.syncedCount || 0}`));
       await fetchStatus();
     } catch (err: any) {
-      setError(err.message || 'Ошибка синхронизации');
+      setError(err.message || _(msg`Ошибка синхронизации`));
     } finally {
       setSyncing(false);
     }
@@ -245,7 +245,7 @@ export default function HhIntegrationPage() {
       setStatus(prev => prev ? { ...prev, autoSync: enabled } : null);
       setSuccess(_(msg`Автоматическая синхронизация ${enabled ? 'включена' : 'отключена'}`));
     } catch (err: any) {
-      setError(err.message || 'Ошибка обновления настроек');
+      setError(err.message || _(msg`Ошибка обновления настроек`));
     }
   };
 
@@ -263,11 +263,11 @@ export default function HhIntegrationPage() {
         // Начинаем polling для отслеживания прогресса
         pollVacancyStatus(vacancyId);
       } else {
-        setError(data.message || 'Ошибка запуска синхронизации');
+        setError(data.message || _(msg`Ошибка запуска синхронизации`));
         setPollingVacancyId(null);
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка синхронизации кандидатов');
+      setError(err.message || _(msg`Ошибка синхронизации кандидатов`));
       setPollingVacancyId(null);
     }
   };
@@ -285,10 +285,10 @@ export default function HhIntegrationPage() {
         // Обновляем список вакансий через несколько секунд
         setTimeout(() => fetchVacancies(), 3000);
       } else {
-        setError(data.message || 'Ошибка запуска AI-анализа');
+        setError(data.message || _(msg`Ошибка запуска AI-анализа`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка запуска AI-анализа');
+      setError(err.message || _(msg`Ошибка запуска AI-анализа`));
     }
   };
 
@@ -324,7 +324,7 @@ export default function HhIntegrationPage() {
           if (vacancyStatus.candidates_sync_status === 'synced') {
             setSuccess(_(msg`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`));
           } else if (vacancyStatus.candidates_sync_status === 'error') {
-            setError(_(msg`Ошибка синхронизации: ${vacancyStatus.candidates_sync_error || 'Неизвестная ошибка'}`));
+            setError(_(msg`Ошибка синхронизации: ${vacancyStatus.candidates_sync_error || _(msg`Неизвестная ошибка`)}`));
           }
         }
       }
@@ -522,13 +522,13 @@ export default function HhIntegrationPage() {
                       <Grid item xs={12} md={6}>
                         <Typography variant="body2" color="text.secondary"><Trans>Компания</Trans></Typography>
                         <Typography variant="body1" fontWeight="bold">
-                          {status.companyName || 'Не указано'}
+                          {status.companyName || _(msg`Не указано`)}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={6}>
                         <Typography variant="body2" color="text.secondary"><Trans>ID работодателя</Trans></Typography>
                         <Typography variant="body1" fontWeight="bold">
-                          {status.employerId || 'Не указано'}
+                          {status.employerId || _(msg`Не указано`)}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} md={6}>
@@ -859,7 +859,7 @@ export default function HhIntegrationPage() {
                                 {vacancy.candidates_sync_status === 'error' && (
                                   <Alert severity="error" sx={{ mt: 1 }}>
                                     <Typography variant="body2">
-                                      {vacancy.candidates_sync_error || 'Произошла ошибка при синхронизации'}
+                                      {vacancy.candidates_sync_error || _(msg`Произошла ошибка при синхронизации`)}
                                     </Typography>
                                   </Alert>
                                 )}

@@ -256,8 +256,8 @@ export default function HRVacancyEditPage() {
         body: JSON.stringify({
           title: vacancyData.title,
           description: vacancyData.description,
-          templateTitle: vacancyData.template?.title || `Тест для вакансии: ${vacancyData.title}`,
-          templateDescription: vacancyData.template?.description || `Тест для вакансии "${vacancyData.title}"`,
+          templateTitle: vacancyData.template?.title || _(msg`Тест для вакансии: ${vacancyData.title}`),
+          templateDescription: vacancyData.template?.description || _(msg`Тест для вакансии "${vacancyData.title}"`),
           questions: questions,
         }),
       });
@@ -347,7 +347,7 @@ export default function HRVacancyEditPage() {
           } else if (statusData.status === 'failed') {
             // Генерация завершилась с ошибкой
             clearInterval(pollInterval);
-            throw new Error(statusData.error || "Ошибка генерации вопросов");
+            throw new Error(statusData.error || _(msg`Ошибка генерации вопросов`));
           }
           
         } catch (pollError: any) {

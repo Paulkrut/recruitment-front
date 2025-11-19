@@ -50,7 +50,7 @@ export default function PaymentSuccessPage() {
         setError(_(msg`Не удалось получить информацию о платеже`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка при проверке статуса платежа');
+      setError(err.message || _(msg`Ошибка при проверке статуса платежа`));
     } finally {
       setLoading(false);
     }

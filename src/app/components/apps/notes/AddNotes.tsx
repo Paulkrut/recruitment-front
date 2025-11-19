@@ -80,7 +80,7 @@ const AddNotes = ({ colors }: Props) => {
             size="small"
             variant="outlined"
             error={!!error}
-            helperText={error || 'Минимум 3 символа'}
+            helperText={error || _(msg`Минимум 3 символа`)}
             placeholder={_(msg`Введите описание заметки...`)}
           />
           <Typography variant="h6" my={2}>

@@ -392,7 +392,7 @@ export default function CandidateInterviewPage() {
       // Пробуем каждую камеру отдельно
       for (let i = 0; i < cameras.length; i++) {
         const camera = cameras[i];
-        const label = camera.label || `Камера ${i + 1}`;
+        const label = camera.label || _(msg`Камера ${i + 1}`);
         setDebugError(_(msg`🔍 Тестируем: ${label}...`));
 
         try {
@@ -1422,7 +1422,7 @@ export default function CandidateInterviewPage() {
           // Запускаем поллинг для проверки готовности ответов
           startProcessingPolling(data.pending_answers);
         } else {
-          throw new Error(data.message || 'Неизвестный статус ответа');
+          throw new Error(data.message || _(msg`Неизвестный статус ответа`));
         }
       } else {
         throw new Error(_(msg`Ошибка запуска генерации`));
@@ -2441,7 +2441,7 @@ export default function CandidateInterviewPage() {
                     try {
                       const devices = await navigator.mediaDevices.enumerateDevices();
                       const cameras = devices.filter(d => d.kind === 'videoinput');
-                      setDebugError(`📷 Камер найдено: ${cameras.length}\n${cameras.map((c, i) => `${i+1}. ${c.label || 'Неизвестная камера'}`).join('\n')}`);
+                      setDebugError(`📷 Камер найдено: ${cameras.length}\n${cameras.map((c, i) => `${i+1}. ${c.label || _(msg`Неизвестная камера`)}`).join('\n')}`);
                     } catch (e: any) {
                       setDebugError(_(msg`❌ Ошибка поиска камер: ${e.message}`));
                     }

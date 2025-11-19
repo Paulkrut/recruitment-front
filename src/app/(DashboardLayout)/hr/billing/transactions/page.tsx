@@ -111,7 +111,7 @@ export default function TransactionsPage() {
       if (paymentsData.success) setPayments(paymentsData.payments);
       if (statsData.success) setStats(statsData.stats);
     } catch (err: any) {
-      setError(err.message || 'Не удалось загрузить данные');
+      setError(err.message || _(msg`Не удалось загрузить данные`));
     } finally {
       setLoading(false);
     }

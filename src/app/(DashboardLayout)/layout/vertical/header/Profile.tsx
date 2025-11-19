@@ -311,7 +311,7 @@ function ProfileDialog({
           onChange={handleChange('email')}
           fullWidth
           error={!!errors.email}
-          helperText={errors.email || 'Например: example@mail.ru'}
+          helperText={errors.email || _(msg`Например: example@mail.ru`)}
           placeholder="example@mail.ru"
         />
         <TextField

@@ -114,7 +114,7 @@ function BrandingTab() {
       body: JSON.stringify({ name: form.name, logo: logoUrl })
     });
     const d = await res.json();
-    if (d.ok) setSuccess(_(msg`Сохранено!`)); else setError(d.error || 'Ошибка');
+    if (d.ok) setSuccess(_(msg`Сохранено!`)); else setError(d.error || _(msg`Ошибка`));
   };
 
   return (

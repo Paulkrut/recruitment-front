@@ -114,7 +114,7 @@ export default function ForgetMePage() {
       } else {
         setSubmitResult({
           success: false,
-          message: result.error || 'Произошла ошибка при отправке запроса'
+          message: result.error || _(msg`Произошла ошибка при отправке запроса`)
         });
       }
     } catch (error) {

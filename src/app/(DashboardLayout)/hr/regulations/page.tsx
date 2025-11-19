@@ -176,7 +176,7 @@ export default function RegulationsPage() {
         loadData();
       } else {
         const error = await response.json();
-        alert(error.error || 'Ошибка при удалении папки');
+        alert(error.error || _(msg`Ошибка при удалении папки`));
       }
     } catch (error) {
       console.error('Error deleting folder:', error);
@@ -246,7 +246,7 @@ export default function RegulationsPage() {
         loadData();
       } else {
         const error = await response.json();
-        alert(error.error || 'Ошибка при удалении регламента');
+        alert(error.error || _(msg`Ошибка при удалении регламента`));
       }
     } catch (error) {
       console.error('Error deleting regulation:', error);

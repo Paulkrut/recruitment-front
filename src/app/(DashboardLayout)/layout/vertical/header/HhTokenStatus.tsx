@@ -4,6 +4,9 @@ import { Chip, Tooltip, CircularProgress } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { apiFetch } from '@/utils/api';
 import { useRouter } from 'next/navigation';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -19,6 +22,8 @@ interface HhTokenStatusData {
 }
 
 const HhTokenStatus = () => {
+  const { _ } = useLingui();
+
   const [status, setStatus] = useState<HhTokenStatusData | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -91,7 +96,7 @@ const HhTokenStatus = () => {
 
   return (
     <Tooltip 
-      title={status.message || 'Статус интеграции HH.ru'}
+      title={status.message || _(msg`Статус интеграции HH.ru`)}
       arrow
       placement="bottom"
     >

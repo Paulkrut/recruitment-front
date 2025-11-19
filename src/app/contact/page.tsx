@@ -129,7 +129,7 @@ export default function ContactPage() {
       } else {
         setSubmitResult({
           success: false,
-          message: result.error || 'Произошла ошибка при отправке сообщения'
+          message: result.error || _(msg`Произошла ошибка при отправке сообщения`)
         });
       }
     } catch (error) {

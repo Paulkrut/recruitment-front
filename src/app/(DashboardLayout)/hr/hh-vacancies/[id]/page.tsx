@@ -197,7 +197,7 @@ export default function HhVacancyDetailPage() {
         setData(result);
         setSelectedStates(result.sync_settings.selectedStates || []);
       } else {
-        setError(result.error || 'Ошибка загрузки данных');
+        setError(result.error || _(msg`Ошибка загрузки данных`));
       }
     } catch (err) {
       setError(_(msg`Ошибка при загрузке данных вакансии`));
@@ -229,7 +229,7 @@ export default function HhVacancyDetailPage() {
         setSuccess(_(msg`Настройки синхронизации сохранены`));
         setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError(result.error || 'Ошибка сохранения настроек');
+        setError(result.error || _(msg`Ошибка сохранения настроек`));
       }
     } catch (err) {
       setError(_(msg`Ошибка при сохранении настроек`));
@@ -253,7 +253,7 @@ export default function HhVacancyDetailPage() {
         fetchVacancyDetails(); // Перезагружаем данные
         setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError(result.error || 'Ошибка обновления вакансии');
+        setError(result.error || _(msg`Ошибка обновления вакансии`));
       }
     } catch (err) {
       setError(_(msg`Ошибка при обновлении вакансии`));
@@ -293,7 +293,7 @@ export default function HhVacancyDetailPage() {
         setPollingStatus(true);
         pollSyncStatus();
       } else {
-        setError(result.message || 'Ошибка синхронизации');
+        setError(result.message || _(msg`Ошибка синхронизации`));
         setSyncing(false);
       }
     } catch (err) {
@@ -319,7 +319,7 @@ export default function HhVacancyDetailPage() {
         fetchVacancyDetails(); // Перезагружаем статистику
         setTimeout(() => setSuccess(null), 5000);
       } else {
-        setError(result.message || 'Ошибка AI-анализа');
+        setError(result.message || _(msg`Ошибка AI-анализа`));
       }
     } catch (err) {
       setError(_(msg`Ошибка при запуске AI-анализа`));
@@ -348,7 +348,7 @@ export default function HhVacancyDetailPage() {
             fetchVacancyDetails(); // Перезагружаем данные
             
             if (syncStatus === 'error') {
-              setError(result.data.error || 'Ошибка синхронизации');
+              setError(result.data.error || _(msg`Ошибка синхронизации`));
             } else {
               setSuccess(_(msg`Синхронизация завершена! Обработано: ${result.data.synced} из ${result.data.total}`));
               setTimeout(() => setSuccess(null), 5000);
@@ -405,7 +405,7 @@ export default function HhVacancyDetailPage() {
   if (!data) {
     return (
       <PageContainer title={_(msg`Ошибка`)} description="">
-        <Alert severity="error">{error || 'Вакансия не найдена'}</Alert>
+        <Alert severity="error">{error || _(msg`Вакансия не найдена`)}</Alert>
       </PageContainer>
     );
   }

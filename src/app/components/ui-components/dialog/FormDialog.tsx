@@ -81,7 +81,7 @@ const FormDialog = () => {
                             value={email}
                             onChange={handleEmailChange}
                             error={!!error}
-                            helperText={error || 'Например: example@mail.ru'}
+                            helperText={error || _(msg`Например: example@mail.ru`)}
                             placeholder="example@mail.ru"
                         />
                     </Box>

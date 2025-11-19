@@ -281,7 +281,7 @@ export default function HRVacancyDetailPage() {
             <Typography variant="h3" fontWeight={800} sx={{ mb: 1, color: 'text.primary' }}>{title}</Typography>
             <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
             <Box display="flex" gap={2} mt={2} flexWrap="wrap">
-              <Chip icon={<IconFileText size={18}/>} label={template?.title || 'Без шаблона'} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
+              <Chip icon={<IconFileText size={18}/>} label={template?.title || _(msg`Без шаблона`)} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
               <Chip icon={<IconFileText size={18}/>} label={`Вопросов: ${(questions||[]).length}`} color="primary" sx={{ fontWeight: 600 }} />
               <Chip icon={<IconUsers size={18}/>} label={`Кандидатов: ${candidates.length}`} color="success" sx={{ fontWeight: 600 }} />
             </Box>
@@ -317,7 +317,7 @@ export default function HRVacancyDetailPage() {
                 </Tooltip>
               </Box>
               <TextField 
-                value={publicUrl || 'Не создана'} 
+                value={publicUrl || _(msg`Не создана`)} 
                 size="small"
                 InputProps={{ 
                   readOnly: true,
@@ -661,7 +661,7 @@ export default function HRVacancyDetailPage() {
                                       .then(setCandidates);
                                   } else {
                                     return response.json().then(data => {
-                                      throw new Error(data.error || 'Ошибка удаления');
+                                      throw new Error(data.error || _(msg`Ошибка удаления`));
                                     });
                                   }
                                 })
@@ -732,7 +732,7 @@ export default function HRVacancyDetailPage() {
                     <IconFileText size={28} color="#1976d2" />
                     <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вопросы теста</Trans></Typography>
                   </Box>
-                  <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || 'Без шаблона'}</Typography>
+                  <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || _(msg`Без шаблона`)}</Typography>
                   {template?.description && (
                     <Typography 
                       variant="body2" 
@@ -965,7 +965,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
           value={form.email} 
           onChange={handleChange('email')} 
           error={!!errors.email}
-          helperText={errors.email || 'Например: example@mail.ru'}
+          helperText={errors.email || _(msg`Например: example@mail.ru`)}
           placeholder="example@mail.ru"
         />
         <TextField 
@@ -975,7 +975,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
           value={form.phone} 
           onChange={handleChange('phone')} 
           error={!!errors.phone}
-          helperText={errors.phone || 'Например: +7 (999) 123-45-67'}
+          helperText={errors.phone || _(msg`Например: +7 (999) 123-45-67`)}
           placeholder="+7 (999) 123-45-67"
         />
       </DialogContent>

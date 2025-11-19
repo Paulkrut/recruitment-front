@@ -114,7 +114,7 @@ export default function EditTestPage() {
         router.push('/hr/regulation-tests');
       } else {
         const errorData = await response.json();
-        alert(errorData.error || 'Ошибка при сохранении');
+        alert(errorData.error || _(msg`Ошибка при сохранении`));
       }
     } catch (error) {
       console.error('Error saving test:', error);

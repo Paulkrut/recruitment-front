@@ -47,7 +47,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
         onAccept();
         load();
       } else {
-        setError(data.error || "Ошибка");
+        setError(data.error || _(msg`Ошибка`));
       }
     } catch (err) {
       setError(_(msg`Ошибка принятия приглашения`));
@@ -62,7 +62,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       if (data.ok) {
         load();
       } else {
-        setError(data.error || "Ошибка");
+        setError(data.error || _(msg`Ошибка`));
       }
     } catch (err) {
       setError(_(msg`Ошибка отклонения приглашения`));
@@ -130,7 +130,7 @@ export default function ChooseCompanyPage() {
         setName("");
         await refreshCompanies();
       } else {
-        setError(d.error || "Ошибка создания компании");
+        setError(d.error || _(msg`Ошибка создания компании`));
       }
     } catch (err) {
       setError(_(msg`Ошибка создания компании`));

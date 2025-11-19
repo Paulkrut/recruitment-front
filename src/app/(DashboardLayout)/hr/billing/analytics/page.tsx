@@ -62,7 +62,7 @@ export default function BillingAnalyticsPage() {
         setError(_(msg`Не удалось загрузить статистику`));
       }
     } catch (err: any) {
-      setError(err.message || 'Ошибка загрузки данных');
+      setError(err.message || _(msg`Ошибка загрузки данных`));
     } finally {
       setLoading(false);
     }

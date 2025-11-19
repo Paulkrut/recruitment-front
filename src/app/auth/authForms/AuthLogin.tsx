@@ -41,7 +41,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       localStorage.setItem('recruitment_token', d.token);
       window.location.replace('/hr');
     } catch (e: any) {
-      setError(e.message || 'Ошибка авторизации');
+      setError(e.message || _(msg`Ошибка авторизации`));
     } finally {
       setLoading(false);
     }

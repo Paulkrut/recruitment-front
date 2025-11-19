@@ -149,7 +149,7 @@ export default function RegisterPage() {
         }, 3000);
       } else {
         setErrors({
-          general: data.message || "Ошибка при регистрации. Попробуйте еще раз.",
+          general: data.message || _(msg`Ошибка при регистрации. Попробуйте еще раз.`),
         });
       }
     } catch (error) {
@@ -249,7 +249,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
                 error={!!errors.email}
-                helperText={errors.email || "На этот email будет отправлен пароль"}
+                helperText={errors.email || _(msg`На этот email будет отправлен пароль`)}
                 placeholder="example@company.com"
                 disabled={loading}
               />
@@ -262,7 +262,7 @@ export default function RegisterPage() {
                 value={formData.phone}
                 onChange={(e) => handleInputChange("phone", e.target.value)}
                 error={!!errors.phone}
-                helperText={errors.phone || "Для дополнительной безопасности входа (необязательно)"}
+                helperText={errors.phone || _(msg`Для дополнительной безопасности входа (необязательно)`)}
                 placeholder="+7 (900) 123-45-67"
                 disabled={loading}
               />
