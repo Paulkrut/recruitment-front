@@ -34,6 +34,9 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -84,6 +87,8 @@ interface SessionDetail {
 }
 
 export default function TestResultsPage() {
+  const { _ } = useLingui();
+
   const params = useParams();
   const router = useRouter();
   const testId = parseInt(params.id as string);
@@ -157,7 +162,7 @@ export default function TestResultsPage() {
       : 0;
 
   return (
-    <PageContainer title="Результаты теста" description="Просмотр результатов тестирования">
+    <PageContainer title={_(msg`Результаты теста`)} description="Просмотр результатов тестирования">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
           Главная
@@ -295,7 +300,7 @@ export default function TestResultsPage() {
                       {result.finishedAt ? new Date(result.finishedAt).toLocaleString('ru-RU') : '—'}
                     </TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Детали">
+                      <Tooltip title={_(msg`Детали`)}>
                         <IconButton size="small" onClick={() => handleViewDetails(result.sessionId)}>
                           <VisibilityIcon fontSize="small" />
                         </IconButton>

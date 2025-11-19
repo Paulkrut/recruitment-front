@@ -60,6 +60,9 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -403,7 +406,7 @@ function EnhancedCandidateTable({
                 )}
               </TableCell>
               <TableCell align="center">
-                <Tooltip title="Просмотреть детали">
+                <Tooltip title={_(msg`Просмотреть детали`)}>
                   <IconButton
                     size="small"
                     onClick={() => router.push(`/hr/candidates/${candidate.id}`)}
@@ -426,6 +429,8 @@ function EnhancedCandidateTable({
 
 // Компонент карточек кандидатов
 function CandidateCard({ candidate }: { candidate: CandidateRow }) {
+  const { _ } = useLingui();
+
   const router = useRouter();
 
   const getStatusColor = (status: string) => {
@@ -552,7 +557,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
           <Typography variant="caption" color="text.secondary">
             Создан: {formatDateToLocal(candidate.createdAt)}
           </Typography>
-          <Tooltip title="Просмотреть детали">
+          <Tooltip title={_(msg`Просмотреть детали`)}>
             <IconButton
               size="small"
               onClick={() => router.push(`/hr/candidates/${candidate.id}`)}
@@ -712,7 +717,7 @@ export default function HRCandidatesPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Кандидаты" description="Список всех кандидатов">
+      <PageContainer title={_(msg`Кандидаты`)} description="Список всех кандидатов">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
           <CircularProgress />
         </Box>
@@ -722,7 +727,7 @@ export default function HRCandidatesPage() {
 
   if (error) {
     return (
-      <PageContainer title="Кандидаты" description="Список всех кандидатов">
+      <PageContainer title={_(msg`Кандидаты`)} description="Список всех кандидатов">
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
@@ -734,14 +739,14 @@ export default function HRCandidatesPage() {
   }
 
   return (
-    <PageContainer title="Кандидаты" description="Список всех кандидатов">
+    <PageContainer title={_(msg`Кандидаты`)} description="Список всех кандидатов">
       <Box sx={{ mb: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h4" fontWeight="bold">
             Кандидаты ({candidates.length})
           </Typography>
           <Box display="flex" gap={1}>
-            <Tooltip title="Таблица">
+            <Tooltip title={_(msg`Таблица`)}>
               <IconButton
                 onClick={() => setViewMode("table")}
                 color={viewMode === "table" ? "primary" : "default"}
@@ -749,7 +754,7 @@ export default function HRCandidatesPage() {
                 <IconTable size={20} />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Карточки">
+            <Tooltip title={_(msg`Карточки`)}>
               <IconButton
                 onClick={() => setViewMode("cards")}
                 color={viewMode === "cards" ? "primary" : "default"}
@@ -762,7 +767,7 @@ export default function HRCandidatesPage() {
 
         <TextField
           fullWidth
-          placeholder="Поиск по имени, email, телефону или вакансии..."
+          placeholder={_(msg`Поиск по имени, email, телефону или вакансии...`)}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           InputProps={{
@@ -782,7 +787,7 @@ export default function HRCandidatesPage() {
               <InputLabel>Статус</InputLabel>
               <Select
                 value={statusFilter}
-                label="Статус"
+                label={_(msg`Статус`)}
                 onChange={(e) => {
                   setStatusFilter(e.target.value);
                   setCurrentPage(1);
@@ -800,7 +805,7 @@ export default function HRCandidatesPage() {
               <InputLabel>Оценка</InputLabel>
               <Select
                 value={scoreFilter}
-                label="Оценка"
+                label={_(msg`Оценка`)}
                 onChange={(e) => {
                   setScoreFilter(e.target.value);
                   setCurrentPage(1);
@@ -819,7 +824,7 @@ export default function HRCandidatesPage() {
               <InputLabel>Вакансия</InputLabel>
               <Select
                 value={vacancyFilter}
-                label="Вакансия"
+                label={_(msg`Вакансия`)}
                 onChange={(e) => {
                   setVacancyFilter(e.target.value);
                   setCurrentPage(1);

@@ -49,10 +49,15 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { exportCandidateToPDFWithFont } from '@/utils/pdfExportWithFont';
 import Rating from '@mui/material/Rating';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 function getStatusLabel(status: string) {
+  const { _ } = useLingui();
+
   switch (status) {
     case "completed":
     case "finished":
@@ -165,7 +170,7 @@ export default function CandidateDetailPage() {
 
   if (!token)
     return (
-      <PageContainer title="Кандидат">
+      <PageContainer title={_(msg`Кандидат`)}>
         <Box sx={{ p: 4 }}>
           <Typography>Нет доступа</Typography>
         </Box>
@@ -173,7 +178,7 @@ export default function CandidateDetailPage() {
     );
   if (loading || !statusData)
     return (
-      <PageContainer title="Кандидат">
+      <PageContainer title={_(msg`Кандидат`)}>
         <Box sx={{ p: 4, textAlign: "center" }}>
           <CircularProgress />
         </Box>
@@ -261,9 +266,9 @@ export default function CandidateDetailPage() {
                   {candidateStatus && <Chip label={getStatusLabel(candidateStatus)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
                   {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
                   {statusData?.candidateOpinion && (
-                    <Tooltip title="Кандидат оставил мнение о результатах">
+                    <Tooltip title={_(msg`Кандидат оставил мнение о результатах`)}>
                       <Chip 
-                        label="Есть мнение" 
+                        label={_(msg`Есть мнение`)} 
                         color="info" 
                         size="small" 
                         icon={<IconMoodHappy size={16} />}
@@ -283,15 +288,15 @@ export default function CandidateDetailPage() {
                 </Stack>
               </Box>
               <Stack direction="row" spacing={1}>
-                <Tooltip title="Скопировать ссылку на интервью">
+                <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                   <IconButton color="primary" onClick={copyInterviewUrl}><ContentCopyIcon /></IconButton>
                 </Tooltip>
-                <Tooltip title="Открыть интервью">
+                <Tooltip title={_(msg`Открыть интервью`)}>
                   <Link href={interviewLink || '#'} target="_blank" rel="noopener" passHref legacyBehavior>
                     <Button variant="contained" color="primary" size="small" component="a">Интервью</Button>
                   </Link>
                 </Tooltip>
-                <Tooltip title="Экспорт в PDF">
+                <Tooltip title={_(msg`Экспорт в PDF`)}>
                   <Button 
                     variant="outlined" 
                     color="primary" 
@@ -306,12 +311,12 @@ export default function CandidateDetailPage() {
             </Stack>
             <Divider sx={{ my: 2, borderColor: '#eee' }} />
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flexWrap="wrap">
-              <Tooltip title="Назад к вакансии">
+              <Tooltip title={_(msg`Назад к вакансии`)}>
                 <Button variant="outlined" color="primary" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push(statusData?.vacancyId ? `/hr/vacancies/${statusData.vacancyId}` : '/hr/vacancies')}>
                   Назад
                 </Button>
               </Tooltip>
-              <Tooltip title="Сравнить с другими">
+              <Tooltip title={_(msg`Сравнить с другими`)}>
                 <Button variant="outlined" color="primary" startIcon={<IconArrowsDiff size={20}/>} onClick={()=>setCompareOpen(true)}>
                   Сравнить
                 </Button>
@@ -323,12 +328,12 @@ export default function CandidateDetailPage() {
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
             <Tabs value={tab} onChange={(_,v)=>setTab(v)} variant="scrollable" scrollButtons="auto">
-              <Tab icon={<AssignmentTurnedInIcon />} iconPosition="start" label="Результаты" value="results" />
-              <Tab icon={<IconFileDescription />} iconPosition="start" label="Резюме" value="resume" />
-              <Tab icon={<CommentIcon />} iconPosition="start" label="Комментарии" value="comments" />
-              <Tab icon={<MailOutlineIcon />} iconPosition="start" label="Письма" value="letters" />
-              <Tab icon={<FeedbackIcon />} iconPosition="start" label="Отзыв" value="feedback" />
-              <Tab icon={<IconMoodHappy />} iconPosition="start" label="Мнение кандидата" value="opinion" />
+              <Tab icon={<AssignmentTurnedInIcon />} iconPosition="start" label={_(msg`Результаты`)} value="results" />
+              <Tab icon={<IconFileDescription />} iconPosition="start" label={_(msg`Резюме`)} value="resume" />
+              <Tab icon={<CommentIcon />} iconPosition="start" label={_(msg`Комментарии`)} value="comments" />
+              <Tab icon={<MailOutlineIcon />} iconPosition="start" label={_(msg`Письма`)} value="letters" />
+              <Tab icon={<FeedbackIcon />} iconPosition="start" label={_(msg`Отзыв`)} value="feedback" />
+              <Tab icon={<IconMoodHappy />} iconPosition="start" label={_(msg`Мнение кандидата`)} value="opinion" />
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
@@ -580,7 +585,7 @@ export default function CandidateDetailPage() {
                       )}
                       {resumeData.hasResume && (
                         <Chip 
-                          label="Резюме доступно" 
+                          label={_(msg`Резюме доступно`)} 
                           color="success" 
                           size="small" 
                           icon={<CheckCircleIcon />}
@@ -588,7 +593,7 @@ export default function CandidateDetailPage() {
                       )}
                       {!resumeData.hasResume && resumeData.canLoadFromHh && (
                         <Chip 
-                          label="Можно загрузить из HH" 
+                          label={_(msg`Можно загрузить из HH`)} 
                           color="info" 
                           size="small" 
                         />
@@ -678,7 +683,7 @@ export default function CandidateDetailPage() {
                   onChange={e=>setHrNote(e.target.value)}
                   rows={6}
                   style={{width:'100%',borderRadius:8,padding:8,fontSize:16,marginBottom:8,border:'1px solid #eee'}}
-                  placeholder="Введите заметку или комментарий..."
+                  placeholder={_(msg`Введите заметку или комментарий...`)}
                 />
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Button variant="contained" color="primary" onClick={saveNote}>Сохранить заметку</Button>

@@ -12,6 +12,9 @@ import {
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
 
@@ -34,6 +37,8 @@ interface ForgetMeRequest {
 }
 
 export default function ForgetMeRequestsPage() {
+  const { _ } = useLingui();
+
   const [requests, setRequests] = useState<ForgetMeRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<ForgetMeRequest | null>(null);
@@ -292,7 +297,7 @@ export default function ForgetMeRequestsPage() {
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <Chip label="Требует подтверждения" color="warning" size="small" sx={{ mr: 1 }} />
+              <Chip label={_(msg`Требует подтверждения`)} color="warning" size="small" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary">
                 HR-клиент еще не подтвердил удаление копий данных
               </Typography>
@@ -300,7 +305,7 @@ export default function ForgetMeRequestsPage() {
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <Chip label="Подтверждено" color="success" size="small" sx={{ mr: 1 }} />
+              <Chip label={_(msg`Подтверждено`)} color="success" size="small" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary">
                 HR-клиент подтвердил удаление копий данных из своих систем
               </Typography>
@@ -308,7 +313,7 @@ export default function ForgetMeRequestsPage() {
           </Grid>
           <Grid item xs={12} md={4}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <Chip label="Отклонено" color="error" size="small" sx={{ mr: 1 }} />
+              <Chip label={_(msg`Отклонено`)} color="error" size="small" sx={{ mr: 1 }} />
               <Typography variant="body2" color="text.secondary">
                 Запрос на удаление отклонен по веским причинам
               </Typography>
@@ -391,7 +396,7 @@ export default function ForgetMeRequestsPage() {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Tooltip title="Просмотреть детали">
+                        <Tooltip title={_(msg`Просмотреть детали`)}>
                           <IconButton
                             size="small"
                             onClick={() => {
@@ -404,7 +409,7 @@ export default function ForgetMeRequestsPage() {
                         </Tooltip>
                         
                         {request.status === 'pending' && (
-                          <Tooltip title="Подтвердить удаление копий данных">
+                          <Tooltip title={_(msg`Подтвердить удаление копий данных`)}>
                             <IconButton
                               size="small"
                               color="success"
@@ -565,12 +570,12 @@ export default function ForgetMeRequestsPage() {
           
           <TextField
             fullWidth
-            label="Комментарий о выполненных действиях *"
+            label={_(msg`Комментарий о выполненных действиях *`)}
             multiline
             rows={4}
             value={adminNotes}
             onChange={(e) => setAdminNotes(e.target.value)}
-            placeholder="Опишите какие копии данных были удалены и из каких систем..."
+            placeholder={_(msg`Опишите какие копии данных были удалены и из каких систем...`)}
             sx={{ mt: 2 }}
           />
         </DialogContent>

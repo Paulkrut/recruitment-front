@@ -2,10 +2,15 @@
 
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function LoginPage(){
+  const { _ } = useLingui();
+
   const [phone,setPhone] = useState('');
   const [password,setPassword] = useState('');
   const [error,setError] = useState<string|null>(null);
@@ -22,8 +27,8 @@ export default function LoginPage(){
 
   return (<Box sx={{p:4,maxWidth:400,mx:'auto'}}>
     <Typography variant="h5" gutterBottom>Вход HR</Typography>
-    <TextField label="Телефон" fullWidth sx={{mb:2}} value={phone} onChange={e=>setPhone(e.target.value)}/>
-    <TextField label="Пароль" type="password" fullWidth sx={{mb:2}} value={password} onChange={e=>setPassword(e.target.value)}/>
+    <TextField label={_(msg`Телефон`)} fullWidth sx={{mb:2}} value={phone} onChange={e=>setPhone(e.target.value)}/>
+    <TextField label={_(msg`Пароль`)} type="password" fullWidth sx={{mb:2}} value={password} onChange={e=>setPassword(e.target.value)}/>
     <Button variant="contained" fullWidth onClick={login}>Войти</Button>
     {error && <Typography color="error" sx={{mt:1}}>{error}</Typography>}
   </Box>);

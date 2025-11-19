@@ -31,6 +31,9 @@ import {
   IconChevronUp,
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -170,6 +173,8 @@ interface VacancyDetailsData {
 }
 
 export default function HhVacancyDetailPage() {
+  const { _ } = useLingui();
+
   const params = useParams();
   const router = useRouter();
   const vacancyId = params.id as string;
@@ -393,7 +398,7 @@ export default function HhVacancyDetailPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Загрузка..." description="">
+      <PageContainer title={_(msg`Загрузка...`)} description="">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
           <CircularProgress />
         </Box>
@@ -403,7 +408,7 @@ export default function HhVacancyDetailPage() {
 
   if (!data) {
     return (
-      <PageContainer title="Ошибка" description="">
+      <PageContainer title={_(msg`Ошибка`)} description="">
         <Alert severity="error">{error || 'Вакансия не найдена'}</Alert>
       </PageContainer>
     );

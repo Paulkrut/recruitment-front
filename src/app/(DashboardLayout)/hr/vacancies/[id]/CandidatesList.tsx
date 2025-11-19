@@ -35,6 +35,9 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import Link from 'next/link';
 import { apiFetch } from '@/utils/api';
 import moment from 'moment';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -55,6 +58,8 @@ export default function CandidatesList({
   selectedCandidates: externalSelectedCandidates = [],
   onSelectedCandidatesChange
 }: CandidatesListProps) {
+  const { _ } = useLingui();
+
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -573,19 +578,19 @@ export default function CandidatesList({
                   {/* AI Score */}
                   <TableCell>
                     {r.aiAnalysisStatus === 'loading_resume' ? (
-                      <Tooltip title="Загрузка резюме из HH.ru" arrow>
+                      <Tooltip title={_(msg`Загрузка резюме из HH.ru`)} arrow>
                         <Chip
                           icon={<CircularProgress size={12} />}
-                          label="Загрузка..."
+                          label={_(msg`Загрузка...`)}
                           size="small"
                           color="info"
                         />
                       </Tooltip>
                     ) : r.aiAnalysisStatus === 'analyzing' ? (
-                      <Tooltip title="AI анализирует резюме" arrow>
+                      <Tooltip title={_(msg`AI анализирует резюме`)} arrow>
                         <Chip
                           icon={<CircularProgress size={12} />}
-                          label="Анализ..."
+                          label={_(msg`Анализ...`)}
                           size="small"
                           color="warning"
                         />
@@ -649,7 +654,7 @@ export default function CandidatesList({
                     <Box display="flex" gap={1} alignItems="center" justifyContent="flex-end">
                       {/* Кнопка загрузки резюме из HH (только для кандидатов из HH без резюме) */}
                       {r.source === 'headhunter' && !r.resumeText && r.aiAnalysisStatus !== 'loading_resume' && r.aiAnalysisStatus !== 'analyzing' && (
-                        <Tooltip title="Загрузить резюме из HH.ru">
+                        <Tooltip title={_(msg`Загрузить резюме из HH.ru`)}>
                           <IconButton
                             size="small"
                             color="info"
@@ -662,7 +667,7 @@ export default function CandidatesList({
                       
                       {/* Кнопка отправки на AI скрининг (для кандидатов с резюме, но без AI оценки) */}
                       {r.status !== 'screening' && (r.resumeText || r.source === 'headhunter') && r.aiScore === null && r.aiAnalysisStatus !== 'loading_resume' && r.aiAnalysisStatus !== 'analyzing' && (
-                        <Tooltip title="Отправить на AI скрининг">
+                        <Tooltip title={_(msg`Отправить на AI скрининг`)}>
                           <IconButton
                             size="small"
                             color="success"
@@ -673,7 +678,7 @@ export default function CandidatesList({
                         </Tooltip>
                       )}
                       
-                      <Tooltip title="Скопировать ссылку на интервью">
+                      <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                         <IconButton
                           size="small"
                           color="primary"
@@ -686,7 +691,7 @@ export default function CandidatesList({
                           <ContentCopyIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Показать QR-код">
+                      <Tooltip title={_(msg`Показать QR-код`)}>
                         <IconButton
                           size="small"
                           color="secondary"
@@ -695,7 +700,7 @@ export default function CandidatesList({
                           <QrCodeIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Удалить кандидата">
+                      <Tooltip title={_(msg`Удалить кандидата`)}>
                         <IconButton
                           size="small"
                           color="error"

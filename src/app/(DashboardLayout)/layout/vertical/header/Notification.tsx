@@ -14,6 +14,9 @@ import { Icon } from "@iconify/react";
 import { Stack } from "@mui/system";
 import Link from "next/link";
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -33,6 +36,8 @@ interface Notification {
 }
 
 const Notifications = () => {
+  const { _ } = useLingui();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -167,7 +172,7 @@ const Notifications = () => {
     <Box>
       <IconButton
         size="large"
-        aria-label="уведомления"
+        aria-label={_(msg`уведомления`)}
         aria-controls="notifications-menu"
         aria-haspopup="true"
         color="inherit"

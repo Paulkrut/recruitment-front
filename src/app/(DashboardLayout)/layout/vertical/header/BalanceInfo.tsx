@@ -16,6 +16,9 @@ import {
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -39,6 +42,8 @@ interface BalanceData {
 }
 
 const BalanceInfo = () => {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const { currentCompany } = useUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -147,7 +152,7 @@ const BalanceInfo = () => {
   if (error) {
     return (
       <Chip
-        label="Ошибка"
+        label={_(msg`Ошибка`)}
         color="error"
         size="small"
         icon={<Icon icon="solar:danger-bold-duotone" />}
@@ -270,7 +275,7 @@ const BalanceInfo = () => {
               </Stack>
               {isTestsFree ? (
                 <Chip
-                  label="∞ Безлимит"
+                  label={_(msg`∞ Безлимит`)}
                   size="small"
                   color="success"
                   icon={<Icon icon="solar:gift-bold-duotone" />}
@@ -303,7 +308,7 @@ const BalanceInfo = () => {
                   <Typography variant="body2">Скрининги AI</Typography>
                 </Stack>
                 <Chip
-                  label="∞ Безлимит"
+                  label={_(msg`∞ Безлимит`)}
                   size="small"
                   color="success"
                   icon={<Icon icon="solar:gift-bold-duotone" />}

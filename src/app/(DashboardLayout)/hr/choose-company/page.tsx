@@ -5,6 +5,9 @@ import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import { useRouter } from "next/navigation";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -96,6 +99,8 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
 }
 
 export default function ChooseCompanyPage() {
+  const { _ } = useLingui();
+
   const { companies, isLoading, error: contextError, refreshCompanies, setCurrentCompany } = useUser();
   const router = useRouter();
   const [name, setName] = useState("");
@@ -136,7 +141,7 @@ export default function ChooseCompanyPage() {
 
   if (isLoading) {
     return (
-      <PageContainer title="Выбор компании">
+      <PageContainer title={_(msg`Выбор компании`)}>
         <Box minHeight="100vh" display="flex" justifyContent="center" alignItems="center">
           <CircularProgress size={60} />
         </Box>
@@ -146,7 +151,7 @@ export default function ChooseCompanyPage() {
 
   if (contextError) {
     return (
-      <PageContainer title="Выбор компании">
+      <PageContainer title={_(msg`Выбор компании`)}>
         <Box minHeight="100vh" display="flex" justifyContent="center" alignItems="center">
           <Alert severity="error" sx={{ maxWidth: 600 }}>
             Ошибка загрузки данных: {contextError}
@@ -157,7 +162,7 @@ export default function ChooseCompanyPage() {
   }
 
   return (
-    <PageContainer title="Выбор компании">
+    <PageContainer title={_(msg`Выбор компании`)}>
       <Box minHeight="100vh" display="flex" flexDirection="column" alignItems="center" pt={8} gap={4}>
         <InvitesBlock onAccept={refreshCompanies} />
         
@@ -190,7 +195,7 @@ export default function ChooseCompanyPage() {
               onChange={e => setName(e.target.value)} 
               size="small" 
               fullWidth 
-              placeholder="Название компании"
+              placeholder={_(msg`Название компании`)}
               disabled={creating}
             />
             <Button 

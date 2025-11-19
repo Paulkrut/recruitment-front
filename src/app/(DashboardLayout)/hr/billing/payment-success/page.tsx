@@ -13,10 +13,15 @@ import {
 import { IconCheck, IconX } from '@tabler/icons-react';
 import PageContainer from '@/app/components/container/PageContainer';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 export default function PaymentSuccessPage() {
+  const { _ } = useLingui();
+
   const searchParams = useSearchParams();
   const router = useRouter();
   const paymentId = searchParams?.get('payment_id');
@@ -53,7 +58,7 @@ export default function PaymentSuccessPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Проверка платежа" description="Пожалуйста, подождите">
+      <PageContainer title={_(msg`Проверка платежа`)} description="Пожалуйста, подождите">
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" minHeight="50vh">
           <CircularProgress size={60} sx={{ mb: 2 }} />
           <Typography variant="h6">Проверяем статус платежа...</Typography>
@@ -66,7 +71,7 @@ export default function PaymentSuccessPage() {
   const isPending = payment?.status === 'pending' || payment?.status === 'waiting_for_capture';
 
   return (
-    <PageContainer title="Результат оплаты" description="">
+    <PageContainer title={_(msg`Результат оплаты`)} description="">
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
         <Card sx={{ maxWidth: 600, width: '100%' }}>
           <CardContent sx={{ p: 4, textAlign: 'center' }}>

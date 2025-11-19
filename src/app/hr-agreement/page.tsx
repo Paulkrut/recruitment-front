@@ -9,8 +9,13 @@ import {
   Security, Business, People, DataUsage, DeleteForever, ContactSupport
 } from '@mui/icons-material';
 import Link from 'next/link';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export default function HrAgreementPage() {
+  const { _ } = useLingui();
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -24,7 +29,7 @@ export default function HrAgreementPage() {
             Условия использования платформы SofiHR для HR-организаций
           </Typography>
           <Chip
-            label="Обновлено: 22.09.2025"
+            label={_(msg`Обновлено: 22.09.2025`)}
             color="primary"
             sx={{ mt: 2 }}
           />

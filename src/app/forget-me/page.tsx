@@ -6,6 +6,9 @@ import {
 } from '@mui/material';
 import { DeleteForever, Warning, Info, CheckCircle } from '@mui/icons-material';
 import Link from 'next/link';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
 
@@ -18,6 +21,8 @@ interface ForgetMeFormData {
 }
 
 export default function ForgetMePage() {
+  const { _ } = useLingui();
+
   const [formData, setFormData] = useState<ForgetMeFormData>({
     email: '',
     name: '',
@@ -268,7 +273,7 @@ export default function ForgetMePage() {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
-                        label="Имя *"
+                        label={_(msg`Имя *`)}
                         value={formData.name}
                         onChange={(e) => handleFieldChange('name', e.target.value)}
                         required
@@ -289,7 +294,7 @@ export default function ForgetMePage() {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
-                        label="Телефон"
+                        label={_(msg`Телефон`)}
                         value={formData.phone}
                         onChange={(e) => handleFieldChange('phone', e.target.value)}
                         placeholder="+7 (999) 123-45-67"
@@ -299,7 +304,7 @@ export default function ForgetMePage() {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
-                        label="Дата интервью (приблизительно)"
+                        label={_(msg`Дата интервью (приблизительно)`)}
                         type="date"
                         value={formData.interviewDate}
                         onChange={(e) => handleFieldChange('interviewDate', e.target.value)}
@@ -315,12 +320,12 @@ export default function ForgetMePage() {
                 <CardContent>
                   <TextField
                     fullWidth
-                    label="Причина удаления данных (необязательно)"
+                    label={_(msg`Причина удаления данных (необязательно)`)}
                     multiline
                     rows={3}
                     value={formData.reason}
                     onChange={(e) => handleFieldChange('reason', e.target.value)}
-                    placeholder="Укажите причину удаления данных, если хотите..."
+                    placeholder={_(msg`Укажите причину удаления данных, если хотите...`)}
                   />
                 </CardContent>
               </Card>

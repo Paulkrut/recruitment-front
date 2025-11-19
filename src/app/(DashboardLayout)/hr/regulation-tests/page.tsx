@@ -34,6 +34,9 @@ import LinkIcon from '@mui/icons-material/Link';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ClearIcon from '@mui/icons-material/Clear';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -63,6 +66,8 @@ interface Regulation {
 }
 
 export default function RegulationTestsPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const regulationIdParam = searchParams.get('regulationId');
@@ -142,7 +147,7 @@ export default function RegulationTestsPage() {
   };
 
   return (
-    <PageContainer title="Тесты на знание регламентов" description="Управление тестами">
+    <PageContainer title={_(msg`Тесты на знание регламентов`)} description="Управление тестами">
       {/* Breadcrumbs */}
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <MuiLink href="/hr" underline="hover" color="inherit">
@@ -172,7 +177,7 @@ export default function RegulationTestsPage() {
             <InputLabel>Фильтр по регламенту</InputLabel>
             <Select
               value={selectedRegulationId || ''}
-              label="Фильтр по регламенту"
+              label={_(msg`Фильтр по регламенту`)}
               onChange={(e) => setSelectedRegulationId(e.target.value ? Number(e.target.value) : null)}
             >
               <MenuItem value="">
@@ -335,7 +340,7 @@ export default function RegulationTestsPage() {
                       />
                     </TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Результаты">
+                      <Tooltip title={_(msg`Результаты`)}>
                         <Link href={`/hr/regulation-tests/${test.id}/results`} passHref legacyBehavior>
                           <IconButton
                             component="a"
@@ -345,7 +350,7 @@ export default function RegulationTestsPage() {
                           </IconButton>
                         </Link>
                       </Tooltip>
-                      <Tooltip title="Приглашения">
+                      <Tooltip title={_(msg`Приглашения`)}>
                         <Link href={`/hr/regulation-tests/${test.id}/invitations`} passHref legacyBehavior>
                           <IconButton
                             component="a"
@@ -355,7 +360,7 @@ export default function RegulationTestsPage() {
                           </IconButton>
                         </Link>
                       </Tooltip>
-                      <Tooltip title="Редактировать">
+                      <Tooltip title={_(msg`Редактировать`)}>
                         <Link href={`/hr/regulation-tests/${test.id}/edit`} passHref legacyBehavior>
                           <IconButton
                             component="a"
@@ -365,7 +370,7 @@ export default function RegulationTestsPage() {
                           </IconButton>
                         </Link>
                       </Tooltip>
-                      <Tooltip title="Удалить">
+                      <Tooltip title={_(msg`Удалить`)}>
                         <IconButton size="small" onClick={() => handleDelete(test.id)}>
                           <DeleteIcon fontSize="small" />
                         </IconButton>

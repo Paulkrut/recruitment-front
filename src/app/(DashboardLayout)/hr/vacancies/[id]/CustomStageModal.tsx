@@ -11,6 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 import { HexColorPicker } from 'react-colorful';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface CustomStageModalProps {
   open: boolean;
@@ -29,6 +32,8 @@ export default function CustomStageModal({
   initialColor = '#2196F3',
   position,
 }: CustomStageModalProps) {
+  const { _ } = useLingui();
+
   const [name, setName] = useState(initialName);
   const [color, setColor] = useState(initialColor);
 
@@ -60,11 +65,11 @@ export default function CustomStageModal({
         <Box sx={{ pt: 1 }}>
           <TextField
             autoFocus
-            label="Название стадии"
+            label={_(msg`Название стадии`)}
             fullWidth
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Например: Техническое собеседование"
+            placeholder={_(msg`Например: Техническое собеседование`)}
             sx={{ mb: 3 }}
           />
 
@@ -79,7 +84,7 @@ export default function CustomStageModal({
             
             <Box sx={{ flex: 1 }}>
               <TextField
-                label="HEX код"
+                label={_(msg`HEX код`)}
                 fullWidth
                 value={color}
                 onChange={(e) => {

@@ -24,6 +24,9 @@ import { IconCheck, IconX, IconCreditCard, IconSparkles } from '@tabler/icons-re
 import PageContainer from '@/app/components/container/PageContainer';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -40,6 +43,8 @@ interface Plan {
 }
 
 export default function BillingPage() {
+  const { _ } = useLingui();
+
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -173,7 +178,7 @@ export default function BillingPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Тарифы и оплата" description="Управление подпиской">
+      <PageContainer title={_(msg`Тарифы и оплата`)} description="Управление подпиской">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
@@ -182,8 +187,8 @@ export default function BillingPage() {
   }
 
   return (
-    <PageContainer title="Тарифы и оплата" description="Выберите подходящий тариф">
-      <DashboardCard title="Тарифные планы">
+    <PageContainer title={_(msg`Тарифы и оплата`)} description="Выберите подходящий тариф">
+      <DashboardCard title={_(msg`Тарифные планы`)}>
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
             {error}
@@ -206,7 +211,7 @@ export default function BillingPage() {
               >
                 {plan.is_free && (
                   <Chip
-                    label="БЕСПЛАТНО"
+                    label={_(msg`БЕСПЛАТНО`)}
                     color="success"
                     size="small"
                     sx={{ position: 'absolute', top: 16, right: 16 }}

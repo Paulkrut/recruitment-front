@@ -20,6 +20,9 @@ import {
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import PrivacyConsent from "@/app/components/PrivacyConsent";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -41,6 +44,8 @@ interface FormErrors {
 }
 
 export default function RegisterPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -204,7 +209,7 @@ export default function RegisterPage() {
 
               {/* Имя */}
               <TextField
-                label="Ваше имя"
+                label={_(msg`Ваше имя`)}
                 variant="outlined"
                 fullWidth
                 required
@@ -212,13 +217,13 @@ export default function RegisterPage() {
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 error={!!errors.name}
                 helperText={errors.name}
-                placeholder="Иван Иванов"
+                placeholder={_(msg`Иван Иванов`)}
                 disabled={loading}
               />
 
               {/* Должность */}
               <TextField
-                label="Должность"
+                label={_(msg`Должность`)}
                 variant="outlined"
                 fullWidth
                 required
@@ -226,13 +231,13 @@ export default function RegisterPage() {
                 onChange={(e) => handleInputChange("position", e.target.value)}
                 error={!!errors.position}
                 helperText={errors.position}
-                placeholder="HR менеджер, Рекрутер, Директор по персоналу"
+                placeholder={_(msg`HR менеджер, Рекрутер, Директор по персоналу`)}
                 disabled={loading}
               />
 
               {/* Компания */}
               <TextField
-                label="Компания"
+                label={_(msg`Компания`)}
                 variant="outlined"
                 fullWidth
                 required
@@ -240,7 +245,7 @@ export default function RegisterPage() {
                 onChange={(e) => handleInputChange("company", e.target.value)}
                 error={!!errors.company}
                 helperText={errors.company}
-                placeholder="ООО «Ваша компания»"
+                placeholder={_(msg`ООО «Ваша компания»`)}
                 disabled={loading}
               />
 
@@ -261,7 +266,7 @@ export default function RegisterPage() {
 
               {/* Телефон */}
               <TextField
-                label="Телефон"
+                label={_(msg`Телефон`)}
                 variant="outlined"
                 fullWidth
                 value={formData.phone}
@@ -285,7 +290,7 @@ export default function RegisterPage() {
                     color="primary"
                   />
                 }
-                label="Согласен(на) получать новости и предложения на указанный email"
+                label={_(msg`Согласен(на) получать новости и предложения на указанный email`)}
               />
 
               {/* Кнопка регистрации */}

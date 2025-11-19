@@ -8,10 +8,15 @@ import DownloadIcon from "@mui/icons-material/Download";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 function stringAvatar(name: string) {
+  const { _ } = useLingui();
+
   if (!name) return { children: "?" };
   const parts = name.split(" ");
   return {
@@ -181,10 +186,10 @@ export default function EmployeesPage() {
       renderCell: (params) => (
         <Stack direction="row" spacing={1}>
           {isLead && params.row.role === "HR" && (
-            <Tooltip title="Сделать лидером"><IconButton color="primary" onClick={() => handleMakeLead(params.row.id)}><StarIcon /></IconButton></Tooltip>
+            <Tooltip title={_(msg`Сделать лидером`)}><IconButton color="primary" onClick={() => handleMakeLead(params.row.id)}><StarIcon /></IconButton></Tooltip>
           )}
           {isLead && (
-            <Tooltip title="Удалить"><IconButton color="error" onClick={() => handleDelete(params.row.id)}><DeleteIcon /></IconButton></Tooltip>
+            <Tooltip title={_(msg`Удалить`)}><IconButton color="error" onClick={() => handleDelete(params.row.id)}><DeleteIcon /></IconButton></Tooltip>
           )}
         </Stack>
       ),
@@ -194,7 +199,7 @@ export default function EmployeesPage() {
   ];
 
   return (
-    <PageContainer title="Сотрудники компании">
+    <PageContainer title={_(msg`Сотрудники компании`)}>
       <Box minHeight="100vh" display="flex" flexDirection="column" alignItems="center" pt={6} gap={4}>
         {error && (
           <Alert severity="error" sx={{ width: "100%", maxWidth: 1100 }}>
@@ -240,7 +245,7 @@ export default function EmployeesPage() {
             <Typography variant="h6" gutterBottom>Пригласить сотрудника</Typography>
             <Stack direction="row" spacing={1} mb={2}>
               <TextField value={email} onChange={e => setEmail(e.target.value)} size="small" label="Email" />
-              <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label="Роль" sx={{ width: 120 }}>
+              <TextField select value={role} onChange={e => setRole(e.target.value)} size="small" label={_(msg`Роль`)} sx={{ width: 120 }}>
                 <MenuItem value="HR">HR</MenuItem>
                 <MenuItem value="HR_LEAD">HR-Лидер</MenuItem>
               </TextField>

@@ -9,8 +9,13 @@ import {
   CheckCircle, Warning, Info, Videocam, AccessTime, BusinessCenter, DeleteForever
 } from '@mui/icons-material';
 import Link from 'next/link';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export default function PrivacyPolicyPage() {
+  const { _ } = useLingui();
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -24,7 +29,7 @@ export default function PrivacyPolicyPage() {
             Обработка персональных данных в системе подбора персонала
           </Typography>
           <Chip
-            label="Обновлено: 22.09.2025"
+            label={_(msg`Обновлено: 22.09.2025`)}
             color="primary"
             sx={{ mt: 2 }}
           />

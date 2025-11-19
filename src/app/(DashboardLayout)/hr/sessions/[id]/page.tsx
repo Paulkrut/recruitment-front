@@ -17,10 +17,15 @@ import {
 } from "@mui/material";
 import { IconUsers, IconFileText, IconCheck, IconClock, IconArrowLeft, IconMicrophone, IconVideo } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function HRSessionDetailPage() {
+  const { _ } = useLingui();
+
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [data, setData] = useState<any>(null);
@@ -37,7 +42,7 @@ export default function HRSessionDetailPage() {
 
   if (loading || !data)
     return (
-      <PageContainer title="Интервью-сессия">
+      <PageContainer title={_(msg`Интервью-сессия`)}>
         <Box sx={{ p: 4, textAlign: "center" }}>
           <CircularProgress />
         </Box>

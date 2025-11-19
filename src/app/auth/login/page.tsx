@@ -16,6 +16,9 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -31,6 +34,8 @@ interface FormErrors {
 }
 
 export default function LoginPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -155,7 +160,7 @@ export default function LoginPage() {
 
               {/* Пароль */}
               <TextField
-                label="Пароль"
+                label={_(msg`Пароль`)}
                 type="password"
                 variant="outlined"
                 fullWidth
@@ -164,7 +169,7 @@ export default function LoginPage() {
                 onChange={(e) => handleInputChange("password", e.target.value)}
                 error={!!errors.password}
                 helperText={errors.password}
-                placeholder="Введите пароль из email"
+                placeholder={_(msg`Введите пароль из email`)}
                 disabled={loading}
                 InputLabelProps={{
                   shrink: true,

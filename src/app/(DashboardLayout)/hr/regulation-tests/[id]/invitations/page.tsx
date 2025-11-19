@@ -37,6 +37,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 const FRONTEND_BASE = process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3001';
@@ -59,6 +62,8 @@ interface TestDetails {
 }
 
 export default function InvitationsPage() {
+  const { _ } = useLingui();
+
   const params = useParams();
   const router = useRouter();
   const testId = parseInt(params.id as string);
@@ -175,7 +180,7 @@ export default function InvitationsPage() {
   };
 
   return (
-    <PageContainer title="Приглашения" description="Управление приглашениями на тест">
+    <PageContainer title={_(msg`Приглашения`)} description="Управление приглашениями на тест">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
           Главная
@@ -266,12 +271,12 @@ export default function InvitationsPage() {
                     </TableCell>
                     <TableCell>{new Date(invitation.createdAt).toLocaleDateString('ru-RU')}</TableCell>
                     <TableCell align="right">
-                      <Tooltip title="Скопировать ссылку">
+                      <Tooltip title={_(msg`Скопировать ссылку`)}>
                         <IconButton size="small" onClick={() => handleCopyLink(invitation.token)}>
                           <ContentCopyIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Удалить">
+                      <Tooltip title={_(msg`Удалить`)}>
                         <IconButton size="small" onClick={() => handleDeleteInvitation(invitation.id)}>
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -294,7 +299,7 @@ export default function InvitationsPage() {
               <InputLabel>Тип приглашения</InputLabel>
               <Select
                 value={invitationType}
-                label="Тип приглашения"
+                label={_(msg`Тип приглашения`)}
                 onChange={(e) => setInvitationType(e.target.value as 'named' | 'general')}
               >
                 <MenuItem value="named">Именное (для конкретного сотрудника)</MenuItem>
@@ -304,7 +309,7 @@ export default function InvitationsPage() {
 
             {invitationType === 'named' && (
               <TextField
-                label="Email сотрудника"
+                label={_(msg`Email сотрудника`)}
                 type="email"
                 fullWidth
                 required
@@ -315,7 +320,7 @@ export default function InvitationsPage() {
             )}
 
             <TextField
-              label="Срок действия (дней)"
+              label={_(msg`Срок действия (дней)`)}
               type="number"
               fullWidth
               value={expiresInDays}

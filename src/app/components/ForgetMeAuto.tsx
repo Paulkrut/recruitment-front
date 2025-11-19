@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from 'react';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Alert } from '@mui/material';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -9,6 +12,8 @@ interface ForgetMeAutoProps {
 }
 
 export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
+  const { _ } = useLingui();
+
   const [open, setOpen] = useState(false);
   const [confirmed, setConfirmed] = useState('');
   const [loading, setLoading] = useState(false);
@@ -140,7 +145,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
             fullWidth
             value={confirmed}
             onChange={(e) => setConfirmed(e.target.value)}
-            placeholder="Введите УДАЛИТЬ"
+            placeholder={_(msg`Введите УДАЛИТЬ`)}
             variant="outlined"
             size="small"
           />

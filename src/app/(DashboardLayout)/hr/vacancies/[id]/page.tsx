@@ -44,10 +44,15 @@ import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import KanbanView from './KanbanView';
 import CandidatesList from './CandidatesList';
 import CandidateFilters from './CandidateFilters';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 function getStatusLabel(status: string) {
+  const { _ } = useLingui();
+
   switch (status) {
     case "completed":
       return "Завершено";
@@ -78,7 +83,7 @@ function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: ()
   const handleClose = () => setAnchorEl(null);
   return (
     <Box display="flex" gap={1}>
-      <Tooltip title="Действия">
+      <Tooltip title={_(msg`Действия`)}>
         <IconButton size="small" onClick={handleClick}><FilterListIcon fontSize="small" /></IconButton>
       </Tooltip>
       <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
@@ -251,8 +256,8 @@ export default function HRVacancyDetailPage() {
       });
   }, [token, id]);
 
-  if (!token) return <PageContainer title="Вакансия"><Box sx={{p:4}}><Typography>Нет доступа</Typography></Box></PageContainer>;
-  if (loading || !data) return <PageContainer title="Вакансия"><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
+  if (!token) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4}}><Typography>Нет доступа</Typography></Box></PageContainer>;
+  if (loading || !data) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
 
   const { title, description, template, questions } = data;
   const createdAt = data.createdAt ? formatDateToLocal(data.createdAt, {
@@ -336,7 +341,7 @@ export default function HRVacancyDetailPage() {
                 }}
               />
               {publicUrl ? (
-                <Tooltip title="Скопировать ссылку">
+                <Tooltip title={_(msg`Скопировать ссылку`)}>
                   <IconButton 
                     onClick={() => {
                       navigator.clipboard.writeText(publicUrl);
@@ -383,7 +388,7 @@ export default function HRVacancyDetailPage() {
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <TabList onChange={(_, v) => setTab(v)} aria-label="vacancy tabs">
             <Tab icon={<IconUsers size={20}/>} iconPosition="start" label={`Кандидаты (${candidates.length})`} value="1" />
-            <Tab icon={<IconBriefcase size={20}/>} iconPosition="start" label="Описание" value="2" />
+            <Tab icon={<IconBriefcase size={20}/>} iconPosition="start" label={_(msg`Описание`)} value="2" />
             <Tab icon={<IconFileText size={20}/>} iconPosition="start" label={`Вопросы (${(questions||[]).length})`} value="3" />
           </TabList>
         </Box>
@@ -535,7 +540,7 @@ export default function HRVacancyDetailPage() {
                           color="primary"
                         />
                         {r.status !== 'finished' && (
-                          <Tooltip title="Кандидат еще не завершил тест" arrow>
+                          <Tooltip title={_(msg`Кандидат еще не завершил тест`)} arrow>
                             <Box component="span" sx={{ ml: 0.5, color: 'text.disabled', fontSize: '0.75rem' }}>
                               ⏳
                             </Box>
@@ -552,7 +557,7 @@ export default function HRVacancyDetailPage() {
                         </Box>
                       </Link>
                         {r.candidateOpinion && (
-                          <Tooltip title="У кандидата есть дополнительная информация" arrow>
+                          <Tooltip title={_(msg`У кандидата есть дополнительная информация`)} arrow>
                             <CommentIcon sx={{ fontSize: 16, color: 'primary.main', ml: 0.5 }} />
                           </Tooltip>
                         )}
@@ -605,7 +610,7 @@ export default function HRVacancyDetailPage() {
                       // Если нет fingerprint'а - показываем пустой кружок
                       if (!r.deviceFingerprint) {
                         return (
-                          <Tooltip title="❓ Нет данных об устройстве" arrow>
+                          <Tooltip title={_(msg`❓ Нет данных об устройстве`)} arrow>
                             <Box sx={{ 
                               width: 14, 
                               height: 14, 
@@ -642,7 +647,7 @@ export default function HRVacancyDetailPage() {
                     }},
                     {field:'actions',header:'',render:(r:any)=>(
                       <Box display="flex" gap={1} alignItems="center">
-                        <Tooltip title="Скопировать ссылку на интервью">
+                        <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                           <IconButton size="small" color="primary" onClick={() => {
                             navigator.clipboard.writeText(typeof window !== 'undefined' ? `${window.location.origin}/interview/${r.token}` : '');
                             setSnackbar('Ссылка скопирована!');
@@ -650,12 +655,12 @@ export default function HRVacancyDetailPage() {
                             <ContentCopyIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Показать QR-код для интервью">
+                        <Tooltip title={_(msg`Показать QR-код для интервью`)}>
                           <IconButton size="small" color="secondary" onClick={() => setQrDialog({open:true,url:typeof window !== 'undefined' ? `${window.location.origin}/interview/${r.token}` : ''})}>
                             <QrCodeIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Удалить кандидата">
+                        <Tooltip title={_(msg`Удалить кандидата`)}>
                           <IconButton size="small" color="error" onClick={() => {
                             if (window.confirm('Вы уверены, что хотите удалить этого кандидата?')) {
                               apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' })
@@ -956,7 +961,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
       <DialogTitle>Добавить кандидата</DialogTitle>
       <DialogContent sx={{ pt: '16px !important' }}>
         <TextField 
-          label="Имя *" 
+          label={_(msg`Имя *`)} 
           fullWidth 
           sx={{mb:2}} 
           value={form.name} 
@@ -976,7 +981,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
           placeholder="example@mail.ru"
         />
         <TextField 
-          label="Телефон" 
+          label={_(msg`Телефон`)} 
           fullWidth 
           sx={{mb:2}} 
           value={form.phone} 

@@ -19,6 +19,9 @@ import AddStageButton from './AddStageButton';
 import CustomStageModal from './CustomStageModal';
 import StageMenu from './StageMenu';
 import DeleteStageDialog from './DeleteStageDialog';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -334,7 +337,7 @@ const DraggableCandidateCard = memo(({
               </Typography>
             </Box>
           ) : candidate.aiAnalysisStatus === 'failed' ? (
-            <Tooltip title="Ошибка при анализе резюме. Попробуйте позже." arrow>
+            <Tooltip title={_(msg`Ошибка при анализе резюме. Попробуйте позже.`)} arrow>
               <Typography variant="caption" color="error.main" sx={{ mb: 0.5 }}>
                 ❌ Ошибка анализа
               </Typography>
@@ -445,7 +448,7 @@ const DraggableCandidateCard = memo(({
           </Box>
 
           {/* Открыть карточку */}
-          <Tooltip title="Открыть карточку" arrow>
+          <Tooltip title={_(msg`Открыть карточку`)} arrow>
             <IconButton size="small" onClick={handleOpenDetails} sx={{ p: 0.5 }}>
               <PersonIcon fontSize="small" sx={{ fontSize: 16 }} />
             </IconButton>
@@ -529,6 +532,8 @@ export default function KanbanView({
   selectedCandidates: externalSelectedCandidates = [],
   onSelectedCandidatesChange 
 }: KanbanViewProps) {
+  const { _ } = useLingui();
+
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);

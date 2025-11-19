@@ -9,8 +9,13 @@ import {
   Security, ContactSupport, Business, DeleteForever
 } from '@mui/icons-material';
 import Link from 'next/link';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export default function TermsOfServicePage() {
+  const { _ } = useLingui();
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
@@ -24,7 +29,7 @@ export default function TermsOfServicePage() {
             Система подбора персонала SofiHR
           </Typography>
           <Chip 
-            label="Обновлено: 22.09.2025" 
+            label={_(msg`Обновлено: 22.09.2025`)} 
             color="primary" 
             sx={{ mt: 2 }}
           />

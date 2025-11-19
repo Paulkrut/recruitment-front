@@ -11,6 +11,9 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface StageMenuProps {
   customId: number;
@@ -20,6 +23,8 @@ interface StageMenuProps {
 }
 
 export default function StageMenu({ customId, stageName, onEdit, onDelete }: StageMenuProps) {
+  const { _ } = useLingui();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -44,7 +49,7 @@ export default function StageMenu({ customId, stageName, onEdit, onDelete }: Sta
 
   return (
     <>
-      <Tooltip title="Управление стадией" arrow>
+      <Tooltip title={_(msg`Управление стадией`)} arrow>
         <IconButton
           size="small"
           onClick={handleClick}

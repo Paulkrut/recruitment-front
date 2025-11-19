@@ -4,19 +4,24 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { Box, Typography, Tab, Tabs, TextField, Button, Paper, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export default function SettingsPage(){
+  const { _ } = useLingui();
+
   const [tab,setTab]=useState('users');
 
   return (
-    <PageContainer title="Настройки HR">
+    <PageContainer title={_(msg`Настройки HR`)}>
       <Box p={4}>
         <Typography variant="h4" gutterBottom>Настройки</Typography>
         <Tabs value={tab} onChange={(_,v)=>setTab(v)} sx={{mb:3}}>
-          <Tab label="Пользователи & роли" value="users" />
-          <Tab label="Интеграции" value="integrations" />
-          <Tab label="Интервью" value="interview" />
-          <Tab label="Брендирование" value="branding" />
+          <Tab label={_(msg`Пользователи & роли`)} value="users" />
+          <Tab label={_(msg`Интеграции`)} value="integrations" />
+          <Tab label={_(msg`Интервью`)} value="interview" />
+          <Tab label={_(msg`Брендирование`)} value="branding" />
         </Tabs>
 
         {tab==='users' && <UsersTab/>}
@@ -62,7 +67,7 @@ function InterviewTab(){
   return (
     <Paper sx={{p:3,maxWidth:300}}>
       <Typography variant="h6" gutterBottom>Параметры интервью</Typography>
-      <TextField label="Дефолтное время ответа (сек)" type="number" value={maxTime} onChange={e=>setMaxTime(parseInt(e.target.value))} fullWidth sx={{mb:2}} />
+      <TextField label={_(msg`Дефолтное время ответа (сек)`)} type="number" value={maxTime} onChange={e=>setMaxTime(parseInt(e.target.value))} fullWidth sx={{mb:2}} />
       <Button variant="contained" disabled>Сохранить (demo)</Button>
     </Paper>
   );
@@ -117,7 +122,7 @@ function BrandingTab() {
       <Typography variant="h6" gutterBottom>Брендирование компании</Typography>
       <Stack spacing={2}>
         <TextField
-          label="Название компании"
+          label={_(msg`Название компании`)}
           value={form.name}
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
           fullWidth

@@ -1,4 +1,7 @@
 import { Card, CardHeader, CardContent, Chip, Typography, Grid, Box } from '@mui/material';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export interface Metrics { [key:string]:number; }
 
@@ -10,6 +13,8 @@ interface Props {
 }
 
 export default function EvaluationResult({ summary,strengths,weaknesses,metrics }: Props){
+  const { _ } = useLingui();
+
   const getColor = (score: number) => {
     if (score >= 80) return 'success';
     if (score >= 60) return 'warning';
@@ -43,7 +48,7 @@ export default function EvaluationResult({ summary,strengths,weaknesses,metrics 
 
   return (
     <Card sx={{mt:3}}>
-      <CardHeader title="AI-оценка"/>
+      <CardHeader title={_(msg`AI-оценка`)}/>
       <CardContent>
         <Typography variant="subtitle1" gutterBottom>Резюме</Typography>
         <Typography paragraph>{summary}</Typography>

@@ -28,6 +28,9 @@ import {
 import PageContainer from '@/app/components/container/PageContainer';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -78,6 +81,8 @@ interface Stats {
 }
 
 export default function TransactionsPage() {
+  const { _ } = useLingui();
+
   const [tabValue, setTabValue] = useState(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -150,7 +155,7 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <PageContainer title="История и статистика" description="Просмотр транзакций">
+      <PageContainer title={_(msg`История и статистика`)} description="Просмотр транзакций">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
@@ -159,7 +164,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <PageContainer title="История и статистика" description="Просмотр всех операций">
+    <PageContainer title={_(msg`История и статистика`)} description="Просмотр всех операций">
       {error && (
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
@@ -222,8 +227,8 @@ export default function TransactionsPage() {
 
       <DashboardCard title="">
         <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)} sx={{ mb: 3 }}>
-          <Tab label="Транзакции" />
-          <Tab label="Платежи" />
+          <Tab label={_(msg`Транзакции`)} />
+          <Tab label={_(msg`Платежи`)} />
         </Tabs>
 
         {/* Таблица транзакций */}

@@ -6,6 +6,9 @@ import {
   CircularProgress, Alert, Container, Paper, Divider, Checkbox, FormControlLabel
 } from '@mui/material';
 import { IconUser, IconPhone, IconMail, IconBriefcase } from '@tabler/icons-react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -16,6 +19,8 @@ interface VacancyInfo {
 }
 
 export default function PublicApplyPage() {
+  const { _ } = useLingui();
+
   const { token } = useParams<{ token: string }>();
   const [vacancyInfo, setVacancyInfo] = useState<VacancyInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -331,7 +336,7 @@ export default function PublicApplyPage() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mb: 4 }}>
             <TextField
               required
-              label="Имя и фамилия"
+              label={_(msg`Имя и фамилия`)}
               value={formData.name}
               onChange={(e) => handleFieldChange('name', e.target.value)}
               error={!!fieldErrors.name}
@@ -345,7 +350,7 @@ export default function PublicApplyPage() {
 
             <TextField
               required
-              label="Номер телефона"
+              label={_(msg`Номер телефона`)}
               value={formData.phone}
               onChange={(e) => handleFieldChange('phone', e.target.value)}
               error={!!fieldErrors.phone}
@@ -355,11 +360,11 @@ export default function PublicApplyPage() {
               }}
               fullWidth
               size="medium"
-              placeholder="+7 (999) 123-45-67 или 89991234567"
+              placeholder={_(msg`+7 (999) 123-45-67 или 89991234567`)}
             />
 
             <TextField
-              label="Email (необязательно)"
+              label={_(msg`Email (необязательно)`)}
               value={formData.email}
               onChange={(e) => handleFieldChange('email', e.target.value)}
               error={!!fieldErrors.email}

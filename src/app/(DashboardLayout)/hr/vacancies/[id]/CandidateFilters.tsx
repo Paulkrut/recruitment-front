@@ -7,6 +7,9 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -30,6 +33,8 @@ interface CandidateFiltersProps {
 }
 
 export default function CandidateFilters({ filters, onFilterChange, vacancyId, viewMode = 'list' }: CandidateFiltersProps) {
+  const { _ } = useLingui();
+
   const [hhStages, setHhStages] = useState<string[]>([]);
   const [loadingStages, setLoadingStages] = useState(false);
   
@@ -138,8 +143,8 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           <TextField
             fullWidth
             size="small"
-            label="Поиск"
-            placeholder="Имя, email, телефон..."
+            label={_(msg`Поиск`)}
+            placeholder={_(msg`Имя, email, телефон...`)}
             value={localFilters.search || ''}
             onChange={(e) => handleLocalChange('search', e.target.value)}
           />
@@ -151,7 +156,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <InputLabel>Источник</InputLabel>
             <Select
               value={localFilters.source || ''}
-              label="Источник"
+              label={_(msg`Источник`)}
               onChange={(e) => handleLocalChange('source', e.target.value)}
             >
               <MenuItem value="">Все</MenuItem>
@@ -168,7 +173,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               <InputLabel>Статус</InputLabel>
               <Select
                 value={localFilters.status || ''}
-                label="Статус"
+                label={_(msg`Статус`)}
                 onChange={(e) => handleLocalChange('status', e.target.value)}
               >
                 <MenuItem value="">Все</MenuItem>
@@ -194,7 +199,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 localFilters.minScore ? `score_${localFilters.minScore}` : 
                 localFilters.aiAnalysisStatus ? `status_${localFilters.aiAnalysisStatus}` : ''
               }
-              label="AI анализ резюме"
+              label={_(msg`AI анализ резюме`)}
               onChange={(e) => {
                 const value = e.target.value;
                 const newFilters = { ...localFilters };
@@ -232,7 +237,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <InputLabel>Оценка за тест</InputLabel>
             <Select
               value={localFilters.testScore || ''}
-              label="Оценка за тест"
+              label={_(msg`Оценка за тест`)}
               onChange={(e) => handleLocalChange('testScore', e.target.value)}
             >
               <MenuItem value="">Все</MenuItem>
@@ -252,7 +257,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <InputLabel>Резюме</InputLabel>
             <Select
               value={localFilters.hasResume || ''}
-              label="Резюме"
+              label={_(msg`Резюме`)}
               onChange={(e) => handleLocalChange('hasResume', e.target.value)}
             >
               <MenuItem value="">Все</MenuItem>
@@ -268,7 +273,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <InputLabel>Дата добавления</InputLabel>
             <Select
               value={localFilters.datePreset || ''}
-              label="Дата добавления"
+              label={_(msg`Дата добавления`)}
               onChange={(e) => {
                 const value = e.target.value;
                 const newFilters = { ...localFilters, datePreset: value };
@@ -300,7 +305,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 fullWidth
                 size="small"
                 type="date"
-                label="С даты"
+                label={_(msg`С даты`)}
                 value={localFilters.dateFrom || ''}
                 onChange={(e) => handleLocalChange('dateFrom', e.target.value)}
                 InputLabelProps={{ shrink: true }}
@@ -311,7 +316,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 fullWidth
                 size="small"
                 type="date"
-                label="По дату"
+                label={_(msg`По дату`)}
                 value={localFilters.dateTo || ''}
                 onChange={(e) => handleLocalChange('dateTo', e.target.value)}
                 InputLabelProps={{ shrink: true }}
@@ -327,7 +332,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               <InputLabel>Стадия HH</InputLabel>
               <Select
                 value={localFilters.hhStage || ''}
-                label="Стадия HH"
+                label={_(msg`Стадия HH`)}
                 onChange={(e) => handleLocalChange('hhStage', e.target.value)}
                 disabled={loadingStages}
               >

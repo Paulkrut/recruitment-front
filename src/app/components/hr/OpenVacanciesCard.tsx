@@ -19,6 +19,9 @@ import {
 } from "@mui/material";
 import { IconEye, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface Vacancy {
   id: number;
@@ -32,6 +35,8 @@ interface OpenVacanciesCardProps {
 }
 
 export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
+  const { _ } = useLingui();
+
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -64,7 +69,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
           <Typography variant="h5" fontWeight="600">
             Открытые вакансии
           </Typography>
-          <Tooltip title="Добавить вакансию">
+          <Tooltip title={_(msg`Добавить вакансию`)}>
             <IconButton size="small" color="primary">
               <IconPlus size={20} />
             </IconButton>
@@ -125,7 +130,7 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
                     </TableCell>
                     <TableCell align="center">
                       <Link href={`/hr/vacancies/${vacancy.id}`} style={{ textDecoration: 'none' }}>
-                        <Tooltip title="Просмотреть детали">
+                        <Tooltip title={_(msg`Просмотреть детали`)}>
                           <IconButton 
                             size="small" 
                             color="primary"

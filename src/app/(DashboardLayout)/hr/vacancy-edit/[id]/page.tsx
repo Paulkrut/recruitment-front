@@ -28,6 +28,9 @@ import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLab
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import { apiFetch } from "@/utils/api";
 import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -54,6 +57,8 @@ interface VacancyData {
 }
 
 export default function HRVacancyEditPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const params = useParams();
   const vacancyId = params.id as string;
@@ -392,7 +397,7 @@ export default function HRVacancyEditPage() {
 
   if (!token) {
     return (
-      <PageContainer title="Редактирование вакансии" description="Редактирование вакансии с тестом">
+      <PageContainer title={_(msg`Редактирование вакансии`)} description="Редактирование вакансии с тестом">
         <Box sx={{ p: 4 }}>
           <Typography>Нет доступа</Typography>
         </Box>
@@ -402,7 +407,7 @@ export default function HRVacancyEditPage() {
 
   if (isLoadingData) {
     return (
-      <PageContainer title="Редактирование вакансии" description="Редактирование вакансии с тестом">
+      <PageContainer title={_(msg`Редактирование вакансии`)} description="Редактирование вакансии с тестом">
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
           <CircularProgress />
         </Box>
@@ -411,7 +416,7 @@ export default function HRVacancyEditPage() {
   }
 
   return (
-    <PageContainer title="Редактирование вакансии" description="Редактирование вакансии с тестом">
+    <PageContainer title={_(msg`Редактирование вакансии`)} description="Редактирование вакансии с тестом">
       <Box>
         {/* Breadcrumbs и Header */}
         <Stack spacing={2} mb={4}>
@@ -468,7 +473,7 @@ export default function HRVacancyEditPage() {
                     fullWidth
                     value={vacancyData.title}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, title: e.target.value })}
-                    placeholder="Например: Frontend-разработчик"
+                    placeholder={_(msg`Например: Frontend-разработчик`)}
                     error={!vacancyData.title}
                     helperText={!vacancyData.title ? "Название обязательно" : "Введите название вакансии, которое будет видно кандидатам"}
                     FormHelperTextProps={{ sx: { color: !vacancyData.title ? 'error.main' : 'text.secondary', opacity: 0.9 } }}
@@ -499,8 +504,8 @@ export default function HRVacancyEditPage() {
                     rows={5}
                     value={vacancyData.description}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, description: e.target.value })}
-                    placeholder="Опишите требования, обязанности и условия работы"
-                    helperText="Опишите требования, обязанности и условия работы"
+                    placeholder={_(msg`Опишите требования, обязанности и условия работы`)}
+                    helperText={_(msg`Опишите требования, обязанности и условия работы`)}
                     FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
                     sx={{
                       '& .MuiOutlinedInput-root': {
@@ -529,7 +534,7 @@ export default function HRVacancyEditPage() {
                   <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
                     Настройки теста
                   </Typography>
-                  <Tooltip title="Здесь вы можете задать параметры теста для кандидатов" placement="right">
+                  <Tooltip title={_(msg`Здесь вы можете задать параметры теста для кандидатов`)} placement="right">
                     <IconButton size="small"><IconFileText size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
                 </Box>
@@ -747,9 +752,9 @@ export default function HRVacancyEditPage() {
                           <Typography variant="subtitle1" fontWeight={700} color="text.primary">Вопрос {qIndex + 1}</Typography>
                           <Box flexGrow={1} />
                           <Stack direction="row" spacing={1}>
-                            <Tooltip title="Вверх"><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "up")} disabled={qIndex === 0}><IconArrowUp size={18} /></IconButton></span></Tooltip>
-                            <Tooltip title="Вниз"><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "down")} disabled={qIndex === questions.length - 1}><IconArrowDown size={18} /></IconButton></span></Tooltip>
-                            <Tooltip title="Удалить"><span><IconButton size="small" onClick={() => removeQuestion(qIndex)}><IconTrash size={18} color="#e53935" /></IconButton></span></Tooltip>
+                            <Tooltip title={_(msg`Вверх`)}><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "up")} disabled={qIndex === 0}><IconArrowUp size={18} /></IconButton></span></Tooltip>
+                            <Tooltip title={_(msg`Вниз`)}><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "down")} disabled={qIndex === questions.length - 1}><IconArrowDown size={18} /></IconButton></span></Tooltip>
+                            <Tooltip title={_(msg`Удалить`)}><span><IconButton size="small" onClick={() => removeQuestion(qIndex)}><IconTrash size={18} color="#e53935" /></IconButton></span></Tooltip>
                           </Stack>
                         </Stack>
                         <Box>
@@ -761,7 +766,7 @@ export default function HRVacancyEditPage() {
                             rows={3}
                             value={question.text}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuestion(qIndex, "text", e.target.value)}
-                            placeholder="Введите текст вопроса"
+                            placeholder={_(msg`Введите текст вопроса`)}
                             sx={{
                               '& .MuiOutlinedInput-root': {
                                 backgroundColor: '#fff',

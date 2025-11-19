@@ -42,6 +42,9 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -55,6 +58,8 @@ interface QuestionDraft {
 }
 
 export default function HRVacancyCreatePage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -288,7 +293,7 @@ export default function HRVacancyCreatePage() {
 
   if (!token) {
     return (
-      <PageContainer title="Создание вакансии" description="Создание новой вакансии с тестом">
+      <PageContainer title={_(msg`Создание вакансии`)} description="Создание новой вакансии с тестом">
         <Box sx={{ p: 4 }}>
           <Typography>Нет доступа</Typography>
         </Box>
@@ -297,7 +302,7 @@ export default function HRVacancyCreatePage() {
   }
 
   return (
-    <PageContainer title="Создание вакансии" description="Создание новой вакансии с тестом">
+    <PageContainer title={_(msg`Создание вакансии`)} description="Создание новой вакансии с тестом">
       <Box>
         {/* Header */}
         <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2} mb={4}>
@@ -350,7 +355,7 @@ export default function HRVacancyCreatePage() {
                   onChange={(e: any) =>
                     setVacancyData({ ...vacancyData, title: e.target.value })
                   }
-                    placeholder="Например: Frontend-разработчик"
+                    placeholder={_(msg`Например: Frontend-разработчик`)}
                     error={!vacancyData.title}
                     helperText={!vacancyData.title ? "Название обязательно" : "Введите название вакансии, которое будет видно кандидатам"}
                     FormHelperTextProps={{ sx: { color: !vacancyData.title ? 'error.main' : 'text.secondary', opacity: 0.9 } }}
@@ -383,8 +388,8 @@ export default function HRVacancyCreatePage() {
                   onChange={(e: any) =>
                     setVacancyData({ ...vacancyData, description: e.target.value })
                   }
-                    placeholder="Опишите требования, обязанности и условия работы"
-                  helperText="Опишите требования, обязанности и условия работы"
+                    placeholder={_(msg`Опишите требования, обязанности и условия работы`)}
+                  helperText={_(msg`Опишите требования, обязанности и условия работы`)}
                     FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -411,7 +416,7 @@ export default function HRVacancyCreatePage() {
                   <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}>
                     Настройки теста
                   </Typography>
-                  <Tooltip title="Здесь вы можете задать параметры теста для кандидатов" placement="right">
+                  <Tooltip title={_(msg`Здесь вы можете задать параметры теста для кандидатов`)} placement="right">
                     <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
               </Box>
@@ -663,7 +668,7 @@ export default function HRVacancyCreatePage() {
                         }} 
                       />
                       <Box flexGrow={1} />
-                      <Tooltip title="Переместить вверх">
+                      <Tooltip title={_(msg`Переместить вверх`)}>
                         <IconButton
                           size="large"
                           onClick={() => moveQuestion(qIndex, "up")}
@@ -682,7 +687,7 @@ export default function HRVacancyCreatePage() {
                           <IconArrowUp size={20} />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Переместить вниз">
+                      <Tooltip title={_(msg`Переместить вниз`)}>
                         <IconButton
                           size="large"
                           onClick={() => moveQuestion(qIndex, "down")}
@@ -701,7 +706,7 @@ export default function HRVacancyCreatePage() {
                           <IconArrowDown size={20} />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Удалить вопрос">
+                      <Tooltip title={_(msg`Удалить вопрос`)}>
                         <IconButton
                           size="large"
                           onClick={() => removeQuestion(qIndex)}
@@ -742,8 +747,8 @@ export default function HRVacancyCreatePage() {
                         onChange={(e: any) =>
                           updateQuestion(qIndex, "text", e.target.value)
                         }
-                        placeholder="Введите вопрос, на который должен ответить кандидат"
-                        helperText="Введите вопрос, на который должен ответить кандидат"
+                        placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
+                        helperText={_(msg`Введите вопрос, на который должен ответить кандидат`)}
                         FormHelperTextProps={{
                           sx: { color: '#333', opacity: 0.9 }
                         }}
@@ -974,7 +979,7 @@ export default function HRVacancyCreatePage() {
                 value={genCount}
                 onChange={(e: any) => setGenCount(Number(e.target.value))}
                 inputProps={{ min: 1, max: 20 }}
-                helperText="Выберите количество вопросов от 1 до 20"
+                helperText={_(msg`Выберите количество вопросов от 1 до 20`)}
               FormHelperTextProps={{
                   sx: { color: 'text.secondary', opacity: 0.9 }
               }}

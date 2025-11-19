@@ -39,6 +39,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -72,6 +75,8 @@ interface Regulation {
 }
 
 export default function RegulationsPage() {
+  const { _ } = useLingui();
+
   const [folders, setFolders] = useState<RegulationFolder[]>([]);
   const [regulations, setRegulations] = useState<Regulation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -311,7 +316,7 @@ export default function RegulationsPage() {
   const getChildFolders = (parentId: number) => folders.filter(f => f.parentId === parentId);
 
   return (
-    <PageContainer title="Регламенты" description="Управление регламентами компании">
+    <PageContainer title={_(msg`Регламенты`)} description="Управление регламентами компании">
       {/* Breadcrumbs */}
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
@@ -345,7 +350,7 @@ export default function RegulationsPage() {
       <Card sx={{ mb: 3, p: 2 }}>
         <TextField
           fullWidth
-          placeholder="Поиск по регламентам..."
+          placeholder={_(msg`Поиск по регламентам...`)}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           InputProps={{
@@ -516,7 +521,7 @@ export default function RegulationsPage() {
                         </TableCell>
                         <TableCell>{new Date(regulation.updatedAt).toLocaleDateString('ru-RU')}</TableCell>
                         <TableCell align="right">
-                          <Tooltip title="Создать тест">
+                          <Tooltip title={_(msg`Создать тест`)}>
                             <IconButton 
                               size="small" 
                               component={NextLink}
@@ -525,12 +530,12 @@ export default function RegulationsPage() {
                               <AssignmentIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Редактировать">
+                          <Tooltip title={_(msg`Редактировать`)}>
                             <IconButton size="small" onClick={() => openRegulationDialog(regulation)}>
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>
-                          <Tooltip title="Удалить">
+                          <Tooltip title={_(msg`Удалить`)}>
                             <IconButton size="small" onClick={() => handleDeleteRegulation(regulation.id)}>
                               <DeleteIcon fontSize="small" />
                             </IconButton>
@@ -552,13 +557,13 @@ export default function RegulationsPage() {
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
-              label="Название папки"
+              label={_(msg`Название папки`)}
               fullWidth
               value={folderForm.name}
               onChange={(e) => setFolderForm({ ...folderForm, name: e.target.value })}
             />
             <TextField
-              label="Описание"
+              label={_(msg`Описание`)}
               fullWidth
               multiline
               rows={3}
@@ -584,13 +589,13 @@ export default function RegulationsPage() {
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
-              label="Название регламента"
+              label={_(msg`Название регламента`)}
               fullWidth
               value={regulationForm.title}
               onChange={(e) => setRegulationForm({ ...regulationForm, title: e.target.value })}
             />
             <TextField
-              label="Описание"
+              label={_(msg`Описание`)}
               fullWidth
               multiline
               rows={2}
@@ -598,18 +603,18 @@ export default function RegulationsPage() {
               onChange={(e) => setRegulationForm({ ...regulationForm, description: e.target.value })}
             />
             <TextField
-              label="Содержание регламента"
+              label={_(msg`Содержание регламента`)}
               fullWidth
               multiline
               rows={10}
               value={regulationForm.content}
               onChange={(e) => setRegulationForm({ ...regulationForm, content: e.target.value })}
-              placeholder="Введите полный текст регламента..."
+              placeholder={_(msg`Введите полный текст регламента...`)}
             />
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <TextField
-                  label="Версия"
+                  label={_(msg`Версия`)}
                   fullWidth
                   value={regulationForm.version}
                   onChange={(e) => setRegulationForm({ ...regulationForm, version: e.target.value })}
@@ -620,7 +625,7 @@ export default function RegulationsPage() {
                   <InputLabel>Папка</InputLabel>
                   <Select
                     value={regulationForm.folderId || ''}
-                    label="Папка"
+                    label={_(msg`Папка`)}
                     onChange={(e) => setRegulationForm({ ...regulationForm, folderId: e.target.value as number || null })}
                   >
                     <MenuItem value="">Без папки</MenuItem>

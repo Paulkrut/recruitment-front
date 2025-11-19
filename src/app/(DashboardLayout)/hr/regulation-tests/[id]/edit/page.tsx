@@ -25,6 +25,9 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { useRouter, useParams } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -39,6 +42,8 @@ interface RegulationTest {
 }
 
 export default function EditTestPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const params = useParams();
   const testId = params?.id as string;
@@ -121,7 +126,7 @@ export default function EditTestPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Редактировать тест" description="Загрузка...">
+      <PageContainer title={_(msg`Редактировать тест`)} description="Загрузка...">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
@@ -131,7 +136,7 @@ export default function EditTestPage() {
 
   if (error) {
     return (
-      <PageContainer title="Редактировать тест" description="Ошибка">
+      <PageContainer title={_(msg`Редактировать тест`)} description="Ошибка">
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
@@ -145,7 +150,7 @@ export default function EditTestPage() {
   }
 
   return (
-    <PageContainer title="Редактировать тест" description="Изменение настроек теста">
+    <PageContainer title={_(msg`Редактировать тест`)} description="Изменение настроек теста">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <MuiLink href="/hr" underline="hover" color="inherit">
           Главная
@@ -166,29 +171,29 @@ export default function EditTestPage() {
       <Card sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
-            label="Название теста"
+            label={_(msg`Название теста`)}
             fullWidth
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Например: Тест на знание политики безопасности"
+            placeholder={_(msg`Например: Тест на знание политики безопасности`)}
           />
 
           <TextField
-            label="Описание"
+            label={_(msg`Описание`)}
             fullWidth
             multiline
             rows={3}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Краткое описание теста для сотрудников"
+            placeholder={_(msg`Краткое описание теста для сотрудников`)}
           />
 
           <FormControl fullWidth>
             <InputLabel>Режим генерации вопросов</InputLabel>
             <Select
               value={questionGenerationMode}
-              label="Режим генерации вопросов"
+              label={_(msg`Режим генерации вопросов`)}
               onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
             >
               <MenuItem value="pre_generated">
@@ -246,7 +251,7 @@ export default function EditTestPage() {
 
           <FormControlLabel
             control={<Switch checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />}
-            label="Тест активен"
+            label={_(msg`Тест активен`)}
           />
 
           <Alert severity="info">

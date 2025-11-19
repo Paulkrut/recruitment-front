@@ -10,12 +10,17 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from '@/store/hooks';
 import { IconCheck } from '@tabler/icons-react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface Props {
   colors: any[];
 }
 
 const AddNotes = ({ colors }: Props) => {
+  const { _ } = useLingui();
+
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [scolor, setScolor] = React.useState<string>('primary');
@@ -76,7 +81,7 @@ const AddNotes = ({ colors }: Props) => {
             variant="outlined"
             error={!!error}
             helperText={error || 'Минимум 3 символа'}
-            placeholder="Введите описание заметки..."
+            placeholder={_(msg`Введите описание заметки...`)}
           />
           <Typography variant="h6" my={2}>
             Choose Color

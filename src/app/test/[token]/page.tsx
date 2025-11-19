@@ -26,6 +26,9 @@ import { keyframes } from '@mui/system';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ProductionWebcamComponent from './ProductionWebcamComponent';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface Question {
   id: number;
@@ -48,6 +51,8 @@ const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.
 const steps = ['Подготовка', 'Настройка оборудования', 'Тестирование', 'Завершено'];
 
 export default function RegulationTestPage() {
+  const { _ } = useLingui();
+
   const { token } = useParams<{ token: string }>();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -621,7 +626,7 @@ export default function RegulationTestPage() {
               <Box sx={{ mt: 3 }}>
                 <TextField
                   fullWidth
-                  label="Ваше имя"
+                  label={_(msg`Ваше имя`)}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   sx={{ mb: 2 }}
@@ -638,7 +643,7 @@ export default function RegulationTestPage() {
                 />
                 <TextField
                   fullWidth
-                  label="Отдел (необязательно)"
+                  label={_(msg`Отдел (необязательно)`)}
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                   sx={{ mb: 2 }}

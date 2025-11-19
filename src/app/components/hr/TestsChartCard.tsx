@@ -11,6 +11,9 @@ import {
 } from "@mui/material";
 import { IconRefresh, IconTrendingUp } from "@tabler/icons-react";
 import { Line } from "react-chartjs-2";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,6 +48,8 @@ interface TestsChartCardProps {
 }
 
 export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps) {
+  const { _ } = useLingui();
+
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = async () => {
@@ -144,7 +149,7 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
               Тестов за 7 дней
             </Typography>
           </Box>
-          <Tooltip title="Обновить данные">
+          <Tooltip title={_(msg`Обновить данные`)}>
             <IconButton size="small" color="primary" onClick={handleRefresh} disabled={isRefreshing}>
               {isRefreshing ? <CircularProgress size={20} color="inherit" /> : <IconRefresh size={20} />}
             </IconButton>

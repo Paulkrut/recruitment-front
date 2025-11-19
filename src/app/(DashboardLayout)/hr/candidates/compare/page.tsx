@@ -35,6 +35,9 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -80,6 +83,8 @@ interface ComparisonData {
 }
 
 export default function ComparePage() {
+  const { _ } = useLingui();
+
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -368,7 +373,7 @@ export default function ComparePage() {
 
   if (loading) {
     return (
-      <PageContainer title="Сравнение кандидатов" description="Анализ и сравнение кандидатов">
+      <PageContainer title={_(msg`Сравнение кандидатов`)} description="Анализ и сравнение кандидатов">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
           <CircularProgress />
         </Box>
@@ -378,7 +383,7 @@ export default function ComparePage() {
 
   if (error) {
     return (
-      <PageContainer title="Сравнение кандидатов" description="Анализ и сравнение кандидатов">
+      <PageContainer title={_(msg`Сравнение кандидатов`)} description="Анализ и сравнение кандидатов">
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
@@ -393,7 +398,7 @@ export default function ComparePage() {
   }
 
   return (
-    <PageContainer title="Сравнение кандидатов" description="Анализ и сравнение кандидатов">
+    <PageContainer title={_(msg`Сравнение кандидатов`)} description="Анализ и сравнение кандидатов">
       <Box sx={{ mb: 3 }}>
         <Button 
           startIcon={<IconArrowLeft />} 

@@ -6,12 +6,17 @@ import { useRouter } from 'next/navigation';
 import EditIcon from '@mui/icons-material/Edit';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MailIcon from '@mui/icons-material/Mail';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface RegulationTestTabsProps {
   testId: string | number;
 }
 
 export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const pathname = usePathname();
 
@@ -35,19 +40,19 @@ export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) 
         <Tab
           icon={<EditIcon />}
           iconPosition="start"
-          label="Редактировать"
+          label={_(msg`Редактировать`)}
           value="edit"
         />
         <Tab
           icon={<AssessmentIcon />}
           iconPosition="start"
-          label="Результаты"
+          label={_(msg`Результаты`)}
           value="results"
         />
         <Tab
           icon={<MailIcon />}
           iconPosition="start"
-          label="Приглашения"
+          label={_(msg`Приглашения`)}
           value="invitations"
         />
       </Tabs>

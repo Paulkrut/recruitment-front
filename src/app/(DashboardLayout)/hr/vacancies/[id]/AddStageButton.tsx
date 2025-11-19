@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface AddStageButtonProps {
   position: number;
@@ -9,6 +12,8 @@ interface AddStageButtonProps {
 }
 
 export default function AddStageButton({ position, onAdd }: AddStageButtonProps) {
+  const { _ } = useLingui();
+
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -41,7 +46,7 @@ export default function AddStageButton({ position, onAdd }: AddStageButtonProps)
       
       {/* Кнопка "+" поверх линии */}
       {isHovered && (
-        <Tooltip title="Добавить кастомную стадию" arrow placement="top">
+        <Tooltip title={_(msg`Добавить кастомную стадию`)} arrow placement="top">
           <IconButton
             onClick={() => onAdd(position)}
             sx={{

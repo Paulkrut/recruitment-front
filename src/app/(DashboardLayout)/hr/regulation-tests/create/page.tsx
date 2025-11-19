@@ -43,6 +43,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FolderIcon from '@mui/icons-material/Folder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -98,7 +101,7 @@ const QuestionCard = memo(({
           fullWidth
           multiline
           rows={2}
-          label="Вопрос"
+          label={_(msg`Вопрос`)}
           value={question.text}
           onChange={(e) => onUpdate(index, 'text', e.target.value)}
           sx={{ mb: 2 }}
@@ -108,7 +111,7 @@ const QuestionCard = memo(({
           fullWidth
           multiline
           rows={3}
-          label="Ожидаемый ответ (для AI проверки)"
+          label={_(msg`Ожидаемый ответ (для AI проверки)`)}
           value={question.expectedAnswer}
           onChange={(e) => onUpdate(index, 'expectedAnswer', e.target.value)}
           sx={{ mb: 2 }}
@@ -119,7 +122,7 @@ const QuestionCard = memo(({
             <TextField
               fullWidth
               type="number"
-              label="Время на ответ (сек)"
+              label={_(msg`Время на ответ (сек)`)}
               value={question.maxTime || maxTimePerQuestion}
               onChange={(e) => onUpdate(index, 'maxTime', parseInt(e.target.value))}
               inputProps={{ min: 30, max: 600 }}
@@ -130,7 +133,7 @@ const QuestionCard = memo(({
               <InputLabel>Сложность</InputLabel>
               <Select
                 value={question.difficulty}
-                label="Сложность"
+                label={_(msg`Сложность`)}
                 onChange={(e) => onUpdate(index, 'difficulty', e.target.value as number)}
               >
                 <MenuItem value={1}>Легкий</MenuItem>
@@ -182,6 +185,8 @@ interface GeneratedQuestion {
 }
 
 export default function CreateTestPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeStep, setActiveStep] = useState(0);
@@ -390,22 +395,22 @@ export default function CreateTestPage() {
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <TextField
-              label="Название теста"
+              label={_(msg`Название теста`)}
               fullWidth
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Например: Тест на знание политики безопасности"
+              placeholder={_(msg`Например: Тест на знание политики безопасности`)}
             />
 
             <TextField
-              label="Описание"
+              label={_(msg`Описание`)}
               fullWidth
               multiline
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Краткое описание теста для сотрудников"
+              placeholder={_(msg`Краткое описание теста для сотрудников`)}
             />
 
             <Box>
@@ -445,7 +450,7 @@ export default function CreateTestPage() {
 
             <FormControlLabel
               control={<Switch checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />}
-              label="Тест активен"
+              label={_(msg`Тест активен`)}
             />
           </Box>
         );
@@ -607,7 +612,7 @@ export default function CreateTestPage() {
               <InputLabel>Режим генерации вопросов</InputLabel>
               <Select
                 value={questionGenerationMode}
-                label="Режим генерации вопросов"
+                label={_(msg`Режим генерации вопросов`)}
                 onChange={(e) => setQuestionGenerationMode(e.target.value as 'pre_generated' | 'on_start')}
               >
                 <MenuItem value="pre_generated">
@@ -705,7 +710,7 @@ export default function CreateTestPage() {
   };
 
   return (
-    <PageContainer title="Создать тест" description="Конструктор теста на знание регламентов">
+    <PageContainer title={_(msg`Создать тест`)} description="Конструктор теста на знание регламентов">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
           Главная

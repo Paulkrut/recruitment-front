@@ -16,10 +16,15 @@ import { Icon } from "@iconify/react";
 import { Stack } from "@mui/system";
 import { useUser } from '@/contexts/UserContext';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 const Profile = () => {
+  const { _ } = useLingui();
+
   const lgUp = useMediaQuery((theme: any) => theme.breakpoints.up("lg"));
   const { user } = useUser();
   const [auth, setAuth] = useState<{name: string; phone: string; email?: string; position?: string}>({
@@ -293,7 +298,7 @@ function ProfileDialog({
       <DialogTitle>Мой профиль</DialogTitle>
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
         <TextField
-          label="Имя *"
+          label={_(msg`Имя *`)}
           value={form.name || ''}
           onChange={handleChange('name')}
           fullWidth
@@ -310,7 +315,7 @@ function ProfileDialog({
           placeholder="example@mail.ru"
         />
         <TextField
-          label="Должность"
+          label={_(msg`Должность`)}
           value={form.position || ''}
           onChange={handleChange('position')}
           fullWidth

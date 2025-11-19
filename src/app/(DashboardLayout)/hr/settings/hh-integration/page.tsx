@@ -41,6 +41,9 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -98,6 +101,8 @@ interface HhVacancy {
 }
 
 export default function HhIntegrationPage() {
+  const { _ } = useLingui();
+
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<HhIntegrationStatus | null>(null);
   const [vacancies, setVacancies] = useState<HhVacancy[]>([]);
@@ -331,7 +336,7 @@ export default function HhIntegrationPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Интеграция с HH.ru" description="Настройка интеграции с HeadHunter">
+      <PageContainer title={_(msg`Интеграция с HH.ru`)} description="Настройка интеграции с HeadHunter">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
           <CircularProgress />
         </Box>
@@ -340,7 +345,7 @@ export default function HhIntegrationPage() {
   }
 
   return (
-    <PageContainer title="Интеграция с HH.ru" description="Настройка интеграции с HeadHunter">
+    <PageContainer title={_(msg`Интеграция с HH.ru`)} description="Настройка интеграции с HeadHunter">
       <Box>
         {/* Алерты */}
         {error && (
@@ -709,7 +714,7 @@ export default function HhIntegrationPage() {
                           onChange={(e) => updateAutoSync(e.target.checked)}
                         />
                       }
-                      label="Автоматическая синхронизация"
+                      label={_(msg`Автоматическая синхронизация`)}
                     />
 
                     <Typography variant="body2" color="text.secondary" mt={1}>
@@ -845,7 +850,7 @@ export default function HhIntegrationPage() {
                                 {(!vacancy.candidates_sync_status || vacancy.candidates_sync_status === 'not_synced') && (
                                   <Box display="flex" alignItems="center" gap={1}>
                                     <Chip
-                                      label="Не синхронизированы"
+                                      label={_(msg`Не синхронизированы`)}
                                       size="small"
                                       variant="outlined"
                                     />

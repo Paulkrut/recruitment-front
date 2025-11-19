@@ -46,6 +46,9 @@ import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
 import ProductionWebcamComponent from "./ProductionWebcamComponent";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface Question {
   id: number;
@@ -61,6 +64,8 @@ const API_BASE =
 const steps = ["Подготовка", "Тест оборудования", "Ответы", "Финиш"];
 
 export default function CandidateInterviewPage() {
+  const { _ } = useLingui();
+
   const { token } = useParams<{ token: string }>();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -1759,7 +1764,7 @@ export default function CandidateInterviewPage() {
                   <TextField
                     fullWidth
                     type="email"
-                    label="Ваш email"
+                    label={_(msg`Ваш email`)}
                     value={feedbackEmail}
                     onChange={(e) => setFeedbackEmail(e.target.value)}
                     sx={{ mb: 2 }}
@@ -1810,10 +1815,10 @@ export default function CandidateInterviewPage() {
                     fullWidth
                     multiline
                     rows={4}
-                    label="Дополнительная информация"
+                    label={_(msg`Дополнительная информация`)}
                     value={candidateOpinion}
                     onChange={(e) => setCandidateOpinion(e.target.value)}
-                    placeholder="Поделитесь любой информацией, которая может быть важна для рекрутера..."
+                    placeholder={_(msg`Поделитесь любой информацией, которая может быть важна для рекрутера...`)}
                     sx={{ mb: 2 }}
                   />
                   <Button
@@ -2179,7 +2184,7 @@ export default function CandidateInterviewPage() {
                     <TextField
                       fullWidth
                       type="email"
-                      label="Ваш email"
+                      label={_(msg`Ваш email`)}
                       value={feedbackEmail}
                       onChange={(e) => setFeedbackEmail(e.target.value)}
                       sx={{ mb: 2 }}
@@ -2230,10 +2235,10 @@ export default function CandidateInterviewPage() {
                       fullWidth
                       multiline
                       rows={4}
-                      label="Дополнительная информация"
+                      label={_(msg`Дополнительная информация`)}
                       value={candidateOpinion}
                       onChange={(e) => setCandidateOpinion(e.target.value)}
-                      placeholder="Поделитесь любой информацией, которая может быть важна для рекрутера..."
+                      placeholder={_(msg`Поделитесь любой информацией, которая может быть важна для рекрутера...`)}
                       sx={{ mb: 2 }}
                     />
                     <Button
@@ -3340,7 +3345,7 @@ export default function CandidateInterviewPage() {
             fullWidth
             value={forgetMeConfirmed}
             onChange={(e) => setForgetMeConfirmed(e.target.value)}
-            placeholder="Введите УДАЛИТЬ для подтверждения"
+            placeholder={_(msg`Введите УДАЛИТЬ для подтверждения`)}
             sx={{ mb: 2 }}
           />
         </DialogContent>

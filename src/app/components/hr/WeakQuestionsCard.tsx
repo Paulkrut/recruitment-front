@@ -16,6 +16,9 @@ import {
 } from "@mui/material";
 import { IconAlertTriangle, IconEdit, IconEye } from "@tabler/icons-react";
 import Link from "next/link";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface WeakQuestion {
   questionId: number;
@@ -31,6 +34,8 @@ interface WeakQuestionsCardProps {
 }
 
 export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
+  const { _ } = useLingui();
+
   const getScoreColor = (score: number) => {
     if (score >= 4) return "success";
     if (score >= 3) return "warning";
@@ -95,7 +100,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
                 }}
                 secondaryAction={
                   <Box display="flex" gap={1}>
-                    <Tooltip title="Просмотреть в вакансии">
+                    <Tooltip title={_(msg`Просмотреть в вакансии`)}>
                       <IconButton
                         size="small"
                         color="primary"
@@ -104,7 +109,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
                         <IconEye size={16} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Редактировать">
+                    <Tooltip title={_(msg`Редактировать`)}>
                       <IconButton
                         size="small"
                         color="warning"

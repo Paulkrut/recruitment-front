@@ -15,6 +15,9 @@ import {
   Box,
 } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 interface Column {
   value: string;
@@ -43,6 +46,8 @@ export default function DeleteStageDialog({
   onClose,
   onConfirm,
 }: DeleteStageDialogProps) {
+  const { _ } = useLingui();
+
   const [moveToStatus, setMoveToStatus] = useState('new');
 
   const handleConfirm = () => {
@@ -81,7 +86,7 @@ export default function DeleteStageDialog({
               <InputLabel>Переместить кандидатов в</InputLabel>
               <Select
                 value={moveToStatus}
-                label="Переместить кандидатов в"
+                label={_(msg`Переместить кандидатов в`)}
                 onChange={(e) => setMoveToStatus(e.target.value)}
               >
                 {availableColumns.map((col) => (

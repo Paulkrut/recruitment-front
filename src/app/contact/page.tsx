@@ -9,6 +9,9 @@ import {
 } from '@mui/icons-material';
 import Link from 'next/link';
 import { logContactFormConsent } from '@/utils/consentLogger';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
 
@@ -21,6 +24,8 @@ interface ContactFormData {
 }
 
 export default function ContactPage() {
+  const { _ } = useLingui();
+
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
@@ -184,7 +189,7 @@ export default function ContactPage() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Имя *"
+                label={_(msg`Имя *`)}
                 value={formData.name}
                 onChange={(e) => handleFieldChange('name', e.target.value)}
                 error={!!errors.name}
@@ -211,7 +216,7 @@ export default function ContactPage() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Телефон"
+                label={_(msg`Телефон`)}
                 value={formData.phone}
                 onChange={(e) => handleFieldChange('phone', e.target.value)}
                 placeholder="+7 (999) 123-45-67"
@@ -222,7 +227,7 @@ export default function ContactPage() {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Тема *"
+                label={_(msg`Тема *`)}
                 value={formData.subject}
                 onChange={(e) => handleFieldChange('subject', e.target.value)}
                 error={!!errors.subject}
@@ -235,7 +240,7 @@ export default function ContactPage() {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Сообщение *"
+                label={_(msg`Сообщение *`)}
                 multiline
                 rows={6}
                 value={formData.message}

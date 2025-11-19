@@ -19,6 +19,9 @@ import {
 } from '@tabler/icons-react';
 import PageContainer from '@/app/components/container/PageContainer';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -37,6 +40,8 @@ interface DetailedStats {
 }
 
 export default function BillingAnalyticsPage() {
+  const { _ } = useLingui();
+
   const [stats, setStats] = useState<DetailedStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +70,7 @@ export default function BillingAnalyticsPage() {
 
   if (loading) {
     return (
-      <PageContainer title="Аналитика" description="Детальная статистика">
+      <PageContainer title={_(msg`Аналитика`)} description="Детальная статистика">
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
@@ -75,7 +80,7 @@ export default function BillingAnalyticsPage() {
 
   if (error) {
     return (
-      <PageContainer title="Аналитика" description="Детальная статистика">
+      <PageContainer title={_(msg`Аналитика`)} description="Детальная статистика">
         <Alert severity="error">{error}</Alert>
       </PageContainer>
     );
@@ -84,7 +89,7 @@ export default function BillingAnalyticsPage() {
   if (!stats) return null;
 
   return (
-    <PageContainer title="Аналитика использования" description="Детальная статистика интервью">
+    <PageContainer title={_(msg`Аналитика использования`)} description="Детальная статистика интервью">
       <Grid container spacing={3}>
         {/* Куплено */}
         <Grid item xs={12} md={3}>

@@ -50,6 +50,9 @@ import {
 import PageContainer from "@/app/components/container/PageContainer";
 import { formatDateToLocal, formatDateOnly } from "@/utils/dateUtils";
 import { apiFetch } from "@/utils/api";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -159,7 +162,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               color: 'text.secondary',
               width: '18%'
             }}>
-              <Tooltip title="Показывает общее количество кандидатов, завершивших интервью и находящихся в процессе">
+              <Tooltip title={_(msg`Показывает общее количество кандидатов, завершивших интервью и находящихся в процессе`)}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <IconUsers size={16} />
                   Статистика кандидатов
@@ -199,7 +202,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                   <Box>
                     <Box display="flex" alignItems="center" gap={1}>
                       {vacancy.source === 'headhunter' && (
-                        <Tooltip title="Вакансия из HH.ru">
+                        <Tooltip title={_(msg`Вакансия из HH.ru`)}>
                           <Chip 
                             label="HH" 
                             size="small" 
@@ -280,7 +283,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 </TableCell>
                 <TableCell>
                   <Box display="flex" gap={0.5} justifyContent="center">
-                    <Tooltip title="Просмотр">
+                    <Tooltip title={_(msg`Просмотр`)}>
                       <IconButton
                         size="small"
                         color="primary"
@@ -294,7 +297,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         <IconEye size={14} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Редактировать">
+                    <Tooltip title={_(msg`Редактировать`)}>
                       <IconButton
                         size="small"
                         color="primary"
@@ -308,7 +311,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         <IconEdit size={14} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Удалить">
+                    <Tooltip title={_(msg`Удалить`)}>
                       <IconButton
                         size="small"
                         color="error"
@@ -378,7 +381,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
         <Box display="flex" alignItems="center" gap={1} flexGrow={1}>
           {vacancy.source === 'headhunter' && (
-            <Tooltip title="Вакансия из HH.ru">
+            <Tooltip title={_(msg`Вакансия из HH.ru`)}>
               <Chip 
                 label="HH" 
                 size="small" 
@@ -495,21 +498,21 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
 
       {/* Кнопки действий */}
       <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
-        <Tooltip title="Просмотреть">
+        <Tooltip title={_(msg`Просмотреть`)}>
           <Link href={`/hr/vacancies/${vacancy.id}`} passHref legacyBehavior>
             <IconButton size="small" color="primary" component="a">
               <IconEye size={18} />
             </IconButton>
           </Link>
         </Tooltip>
-        <Tooltip title="Редактировать">
+        <Tooltip title={_(msg`Редактировать`)}>
           <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
             <IconButton size="small" color="warning" component="a">
               <IconEdit size={18} />
             </IconButton>
           </Link>
         </Tooltip>
-        <Tooltip title="Удалить">
+        <Tooltip title={_(msg`Удалить`)}>
           <IconButton size="small" color="error" onClick={() => onDelete(vacancy.id)}>
             <IconTrash size={18} />
           </IconButton>
@@ -520,6 +523,8 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
 }
 
 export default function HRVacanciesPage() {
+  const { _ } = useLingui();
+
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [rows, setRows] = useState<VacancyRow[]>([]);
@@ -562,7 +567,7 @@ export default function HRVacanciesPage() {
 
   if (!token) {
     return (
-      <PageContainer title="Вакансии" description="Управление вакансиями">
+      <PageContainer title={_(msg`Вакансии`)} description="Управление вакансиями">
         <Box sx={{ p: 4 }}>
           <Typography>Нет доступа</Typography>
         </Box>
@@ -575,7 +580,7 @@ export default function HRVacanciesPage() {
   );
 
   return (
-    <PageContainer title="Вакансии" description="Управление вакансиями">
+    <PageContainer title={_(msg`Вакансии`)} description="Управление вакансиями">
       <Box sx={{ 
         overflow: "hidden", // Предотвращаем скроллбар на уровне страницы
         "& *": { // Применяем ко всем элементам
@@ -605,12 +610,12 @@ export default function HRVacanciesPage() {
               }}
               aria-label="vacancy view mode"
             >
-              <Tooltip title="Карточки">
+              <Tooltip title={_(msg`Карточки`)}>
                 <ToggleButton value="card" aria-label="card view">
                   <IconCards size={20} />
                 </ToggleButton>
               </Tooltip>
-              <Tooltip title="Таблица">
+              <Tooltip title={_(msg`Таблица`)}>
                 <ToggleButton value="table" aria-label="table view">
                   <IconTable size={20} />
                 </ToggleButton>
@@ -632,7 +637,7 @@ export default function HRVacanciesPage() {
         <Box mb={3}>
           <TextField
             fullWidth
-            placeholder="Поиск вакансий..."
+            placeholder={_(msg`Поиск вакансий...`)}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             InputProps={{
