@@ -25,15 +25,15 @@ import { msg } from '@lingui/macro';
 
 const { useMemo } = React;
 
-
-const pages = [
-  _(msg`Главная`),
-  _(msg`Преимущества`),
-  _(msg`Как это работает`),
-  _(msg`Отзывы`),
-  _(msg`Тарифы`),
-  _(msg`Контакты`),
-];
+// Технические ID для навигации (не переводятся)
+const PAGE_IDS = {
+  HOME: 'home',
+  ADVANTAGES: 'advantages',
+  HOW_IT_WORKS: 'how-it-works',
+  TESTIMONIALS: 'testimonials',
+  PRICING: 'pricing',
+  CONTACTS: 'contacts',
+} as const;
 
 interface PricingPlan {
   id: string;
@@ -52,6 +52,16 @@ interface PricingPlan {
 
 export default function LandingPage() {
   const { _ } = useLingui();
+
+  // Массив страниц меню с переводами
+  const pages = React.useMemo(() => [
+    { id: PAGE_IDS.HOME, label: _(msg`Главная`) },
+    { id: PAGE_IDS.ADVANTAGES, label: _(msg`Преимущества`) },
+    { id: PAGE_IDS.HOW_IT_WORKS, label: _(msg`Как это работает`) },
+    { id: PAGE_IDS.TESTIMONIALS, label: _(msg`Отзывы`) },
+    { id: PAGE_IDS.PRICING, label: _(msg`Тарифы`) },
+    { id: PAGE_IDS.CONTACTS, label: _(msg`Контакты`) },
+  ], [_]);
 
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [hiresPerMonth, setHiresPerMonth] = React.useState(10); // Для калькулятора
@@ -97,18 +107,17 @@ export default function LandingPage() {
   };
 
   // Функция плавной прокрутки к секциям
-  const scrollToSection = React.useCallback((sectionName: string) => {
-
+  const scrollToSection = React.useCallback((pageId: string) => {
     const sectionMap: { [key: string]: string } = {
-      "Главная": "hero-section",
-      "Преимущества": "advantages-section",
-      "Как это работает": "how-it-works-section",
-      "Отзывы": "testimonials-section",
-      "Тарифы": "pricing-section",
-      "Контакты": "cta-section",
+      [PAGE_IDS.HOME]: "hero-section",
+      [PAGE_IDS.ADVANTAGES]: "advantages-section",
+      [PAGE_IDS.HOW_IT_WORKS]: "how-it-works-section",
+      [PAGE_IDS.TESTIMONIALS]: "testimonials-section",
+      [PAGE_IDS.PRICING]: "pricing-section",
+      [PAGE_IDS.CONTACTS]: "cta-section",
     };
 
-    const sectionId = sectionMap[sectionName];
+    const sectionId = sectionMap[pageId];
     if (sectionId) {
       const element = document.getElementById(sectionId);
       if (element) {

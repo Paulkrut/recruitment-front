@@ -4,10 +4,14 @@ import { Box, IconButton, Menu, MenuItem, Typography, Divider, Button } from '@m
 import { Icon } from '@iconify/react';
 import { Trans } from '@lingui/react';
 
+interface Page {
+  id: string;
+  label: string;
+}
 
 interface MobileMenuProps {
-  pages: string[];
-  onScrollToSection: (sectionName: string) => void;
+  pages: Page[];
+  onScrollToSection: (pageId: string) => void;
 }
 
 const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
@@ -21,8 +25,8 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
     setAnchorEl(null);
   }, []);
 
-  const handleMenuItemClick = useCallback((page: string) => {
-    onScrollToSection(page);
+  const handleMenuItemClick = useCallback((pageId: string) => {
+    onScrollToSection(pageId);
     handleCloseMenu();
   }, [onScrollToSection, handleCloseMenu]);
 
@@ -30,8 +34,8 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
   const menuItems = useMemo(() => 
     pages.map((page) => (
       <MenuItem 
-        key={page} 
-        onClick={() => handleMenuItemClick(page)}
+        key={page.id} 
+        onClick={() => handleMenuItemClick(page.id)}
         sx={{
           py: 1.5,
           px: 2,
@@ -42,7 +46,7 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
         }}
       >
         <Typography textAlign="center" sx={{ fontWeight: 500 }}>
-          {page}
+          {page.label}
         </Typography>
       </MenuItem>
     )), [pages, handleMenuItemClick]);

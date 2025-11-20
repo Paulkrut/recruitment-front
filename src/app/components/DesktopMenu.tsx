@@ -2,22 +2,27 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Box, Button } from '@mui/material';
 
+interface Page {
+  id: string;
+  label: string;
+}
+
 interface DesktopMenuProps {
-  pages: string[];
-  onScrollToSection: (sectionName: string) => void;
+  pages: Page[];
+  onScrollToSection: (pageId: string) => void;
 }
 
 const DesktopMenu = memo(({ pages, onScrollToSection }: DesktopMenuProps) => {
-  const handleClick = useCallback((page: string) => {
-    onScrollToSection(page);
+  const handleClick = useCallback((pageId: string) => {
+    onScrollToSection(pageId);
   }, [onScrollToSection]);
 
   // Мемоизируем кнопки меню
   const menuButtons = useMemo(() => 
     pages.map((page) => (
       <Button 
-        key={page} 
-        onClick={() => handleClick(page)} 
+        key={page.id} 
+        onClick={() => handleClick(page.id)} 
         sx={{ 
           color: "text.primary", 
           display: "flex", 
@@ -33,7 +38,7 @@ const DesktopMenu = memo(({ pages, onScrollToSection }: DesktopMenuProps) => {
           transition: 'all 0.2s ease-in-out',
         }}
       >
-        {page}
+        {page.label}
       </Button>
     )), [pages, handleClick]);
 
