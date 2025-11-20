@@ -648,13 +648,13 @@ export default function CandidateInterviewPage() {
         // Добавляем видео-сообщение в чат с live-потоком
         setChat((p) => [
           ...p,
-          { role: 'user', text: '🎥 Запись...', video: "live", timestamp: Date.now() }
+          { role: 'user', text: _(msg`🎥 Запись...`), video: "live", timestamp: Date.now() }
         ]);
       } else {
         // Для аудио-режима добавляем сообщение с индикатором записи
         setChat((p) => [
           ...p,
-          { role: "user", text: '🎤 Запись аудио...', timestamp: Date.now() }
+          { role: "user", text: _(msg`🎤 Запись аудио...`), timestamp: Date.now() }
         ]);
       }
 
