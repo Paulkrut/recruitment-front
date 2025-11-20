@@ -681,7 +681,7 @@ export default function RegulationTestPage() {
               disabled={!pdnConsent || (invitationType === 'general' && (!name || !email))}
               sx={{ mt: 3 }}
             >
-              Далее
+              <Trans>Далее</Trans>
             </Button>
           </Paper>
         )}
@@ -759,7 +759,7 @@ export default function RegulationTestPage() {
                 label={
                   <Typography variant="body2" component="span">
                     Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам.{' '}
-                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика ПДн</a>. Медиа хранятся до 60 дней.
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"><Trans>Политика ПДн</Trans></a>. Медиа хранятся до 60 дней.
                   </Typography>
                 }
                 sx={{ alignItems: 'center' }}

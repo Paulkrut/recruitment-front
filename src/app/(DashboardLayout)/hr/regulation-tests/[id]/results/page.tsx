@@ -165,10 +165,10 @@ export default function TestResultsPage() {
     <PageContainer title={_(msg`Результаты теста`)} description="Просмотр результатов тестирования">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </Link>
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
-          Тесты
+          <Trans>Тесты</Trans>
         </Link>
         <Typography color="text.primary"><Trans>Результаты</Trans></Typography>
       </Breadcrumbs>
@@ -316,7 +316,7 @@ export default function TestResultsPage() {
         fullWidth
       >
         <DialogTitle>
-          Детали результата
+          <Trans>Детали результата</Trans>
         </DialogTitle>
         <DialogContent>
           {selectedSession && (
@@ -417,7 +417,7 @@ export default function TestResultsPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDetailsDialogOpen(false)}>Закрыть</Button>
+          <Button onClick={() => setDetailsDialogOpen(false)}><Trans>Закрыть</Trans></Button>
         </DialogActions>
       </Dialog>
     </PageContainer>

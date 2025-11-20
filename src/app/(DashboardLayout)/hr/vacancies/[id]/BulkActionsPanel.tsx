@@ -66,14 +66,14 @@ export default function BulkActionsPanel({
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   // Подсчитываем общее количество кандидатов (индивидуально выбранные + все из колонок)
   const totalSelectedCount = selectedCount + selectedAllInColumns.reduce((sum, col) => sum + col.count, 0);
-  
+
   // Подсчёт дней для AI скрининга если выбран статус screening
   const isScreening = selectedStatus === 'screening';
-  const daysNeeded = isScreening && hhLimits?.left?.resumeView 
-    ? Math.ceil(totalSelectedCount / hhLimits.left.resumeView) 
+  const daysNeeded = isScreening && hhLimits?.left?.resumeView
+    ? Math.ceil(totalSelectedCount / hhLimits.left.resumeView)
     : 0;
 
   const handleMoveClick = () => {
@@ -128,7 +128,7 @@ export default function BulkActionsPanel({
             </Typography>
             {selectedAllInColumns.length > 0 && (
               <Typography variant="caption" color="text.secondary">
-                {selectedAllInColumns.map(col => 
+                {selectedAllInColumns.map(col =>
                   `${STATUS_LABELS[col.columnId]}: ${col.count}`
                 ).join(', ')}
               </Typography>
@@ -176,7 +176,7 @@ export default function BulkActionsPanel({
           <Typography variant="body1" gutterBottom>
             Переместить в стадию: <strong>{STATUS_LABELS[selectedStatus]}</strong>
           </Typography>
-          
+
           {selectedAllInColumns.length > 0 && (
             <Alert severity="info" sx={{ mt: 2 }}>
               <Typography variant="body2" fontWeight="bold"><Trans>Выбраны ВСЕ кандидаты из колонок:</Trans></Typography>
@@ -206,8 +206,8 @@ export default function BulkActionsPanel({
 
           {/* Информация о лимитах HH при AI скрининге */}
           {isScreening && hhLimits && (
-            <Alert 
-              severity={daysNeeded > 3 ? "warning" : daysNeeded > 1 ? "info" : "success"} 
+            <Alert
+              severity={daysNeeded > 3 ? "warning" : daysNeeded > 1 ? "info" : "success"}
               sx={{ mt: 2 }}
             >
               <Typography variant="body2" fontWeight="bold" gutterBottom><Trans>📊 Лимиты HeadHunter.ru (менеджер):</Trans></Typography>
@@ -219,15 +219,15 @@ export default function BulkActionsPanel({
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
                 {daysNeeded === 0 ? (
-                  <>⚠️ <strong>Недостаточно лимита!</strong> Кандидаты будут обрабатываться по мере обновления лимита.</>
+                  <>⚠️ <strong><Trans>Недостаточно лимита</Trans>!</strong> <Trans>Кандидаты будут обрабатываться по мере обновления лимита</Trans>.</>
                 ) : daysNeeded === 1 ? (
-                  <>✅ AI скрининг будет выполнен <strong>сегодня</strong></>
+                  <>✅ <Trans>AI скрининг будет выполнен</Trans> <strong><Trans>сегодня</Trans></strong></>
                 ) : (
-                  <>⏳ AI скрининг займёт примерно <strong>{daysNeeded} {daysNeeded === 2 || daysNeeded === 3 || daysNeeded === 4 ? _(msg`дня`) : _(msg`дней`)}</strong></>
+                  <>⏳ <Trans>AI скрининг займёт примерно <strong>{daysNeeded}</strong> дней</Trans></strong></>
                 )}
               </Typography>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}><Trans>ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.</Trans></Typography>
-              
+
               {resumeQueueCount !== undefined && resumeQueueCount > 0 && (
                 <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>
                   ⚠️ Уже в очереди на загрузку резюме: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} по всем вакансиям
@@ -244,7 +244,7 @@ export default function BulkActionsPanel({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmDialogOpen(false)} disabled={loading}>
-            Отмена
+            <Trans>Отмена</Trans>
           </Button>
           <Button
             onClick={handleConfirm}

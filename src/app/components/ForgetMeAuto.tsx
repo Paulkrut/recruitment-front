@@ -119,7 +119,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                   onClick={() => window.location.href = '/'}
                   sx={{ px: 4 }}
                 >
-                  Перейти сейчас
+                  <Trans>Перейти сейчас</Trans>
                 </Button>
               </Box>
             </Box>
@@ -133,7 +133,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}><Trans>Внимание! Это действие необратимо. Все ваши данные будут полностью удалены с платформы.</Trans></Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>
-            Для подтверждения введите слово <strong>УДАЛИТЬ</strong> в поле ниже:
+            Для подтверждения введите слово <strong><Trans>УДАЛИТЬ</Trans></strong> в поле ниже:
           </Typography>
           <TextField
             fullWidth
@@ -145,7 +145,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Отмена</Button>
+          <Button onClick={() => setOpen(false)}><Trans>Отмена</Trans></Button>
           <Button
             onClick={handleForgetMe}
             disabled={confirmed !== _(msg`УДАЛИТЬ`) || loading}

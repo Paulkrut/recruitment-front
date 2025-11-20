@@ -320,7 +320,7 @@ export default function RegulationsPage() {
       {/* Breadcrumbs */}
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </Link>
         <Typography color="text.primary"><Trans>Регламенты</Trans></Typography>
       </Breadcrumbs>
@@ -334,14 +334,14 @@ export default function RegulationsPage() {
             startIcon={<FolderIcon />}
             onClick={() => openFolderDialog()}
           >
-            Создать папку
+            <Trans>Создать папку</Trans>
           </Button>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => openRegulationDialog()}
           >
-            Создать регламент
+            <Trans>Создать регламент</Trans>
           </Button>
         </Box>
       </Box>
@@ -569,7 +569,7 @@ export default function RegulationsPage() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setFolderDialogOpen(false)}>Отмена</Button>
+          <Button onClick={() => setFolderDialogOpen(false)}><Trans>Отмена</Trans></Button>
           <Button
             variant="contained"
             onClick={editingFolder ? handleUpdateFolder : handleCreateFolder}
@@ -635,7 +635,7 @@ export default function RegulationsPage() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRegulationDialogOpen(false)}>Отмена</Button>
+          <Button onClick={() => setRegulationDialogOpen(false)}><Trans>Отмена</Trans></Button>
           <Button
             variant="contained"
             onClick={editingRegulation ? handleUpdateRegulation : handleCreateRegulation}

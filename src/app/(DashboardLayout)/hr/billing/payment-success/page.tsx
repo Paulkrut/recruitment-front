@@ -99,10 +99,10 @@ export default function PaymentSuccessPage() {
                 </Box>
                 <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'center' }}>
                   <Button variant="outlined" onClick={() => router.push('/hr/billing/transactions')}>
-                    История платежей
+                    <Trans>История платежей</Trans>
                   </Button>
                   <Button variant="contained" onClick={() => router.push('/hr/candidates')}>
-                    К кандидатам
+                    <Trans>К кандидатам</Trans>
                   </Button>
                 </Box>
               </>
@@ -121,7 +121,7 @@ export default function PaymentSuccessPage() {
                   Статус: {payment?.status}
                 </Typography>
                 <Button variant="contained" onClick={() => router.push('/hr/billing')}>
-                  Попробовать снова
+                  <Trans>Попробовать снова</Trans>
                 </Button>
               </>
             )}

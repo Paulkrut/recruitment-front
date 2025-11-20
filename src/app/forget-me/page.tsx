@@ -170,7 +170,7 @@ export default function ForgetMePage() {
                   onClick={() => setSubmitResult(null)}
                   sx={{ color: 'success.dark' }}
                 >
-                  Закрыть
+                  <Trans>Закрыть</Trans>
                 </Button>
               )
             }
@@ -325,7 +325,7 @@ export default function ForgetMePage() {
               <CardContent>
                 <Typography variant="h6" gutterBottom fontWeight={600} color="warning.main">
                   <Warning sx={{ mr: 1, verticalAlign: 'middle' }} />
-                  Важная информация
+                  <Trans>Важная информация</Trans>
                 </Typography>
                 
                 <Typography variant="body2" paragraph>
@@ -428,7 +428,7 @@ export default function ForgetMePage() {
             onClick={() => setShowSuccessModal(false)}
             sx={{ px: 4 }}
           >
-            Понятно
+            <Trans>Понятно</Trans>
           </Button>
         </DialogActions>
       </Dialog>

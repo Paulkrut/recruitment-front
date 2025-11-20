@@ -355,7 +355,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
                     variant="outlined"
                     size="small"
                   >
-                    Попробовать снова
+                    <Trans>Попробовать снова</Trans>
                   </Button>
                   <Button
                     startIcon={<MicIcon />}

@@ -295,7 +295,7 @@ function ProfileDialog({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Мой профиль</DialogTitle>
+      <DialogTitle><Trans>Мой профиль</Trans></DialogTitle>
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: '16px !important' }}>
         <TextField
           label={_(msg`Имя *`)}

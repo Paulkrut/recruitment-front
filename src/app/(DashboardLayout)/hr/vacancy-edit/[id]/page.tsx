@@ -421,7 +421,7 @@ export default function HRVacancyEditPage() {
         {/* Breadcrumbs и Header */}
         <Stack spacing={2} mb={4}>
           <Breadcrumbs aria-label="breadcrumb">
-            <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+            <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}><Trans>Вакансии</Trans></Link>
             <Typography color="text.primary"><Trans>Редактирование</Trans></Typography>
           </Breadcrumbs>
           <Box display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
@@ -436,7 +436,7 @@ export default function HRVacancyEditPage() {
                 onClick={() => router.push("/hr/vacancies")}
                 sx={{ fontWeight: 500, borderWidth: 2 }}
               >
-                Назад
+                <Trans>Назад</Trans>
               </Button>
               <Button
                 variant="contained"
@@ -462,7 +462,7 @@ export default function HRVacancyEditPage() {
                     htmlFor="vacancy-title"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                   >
-                    Название вакансии
+                    <Trans>Название вакансии</Trans>
                   </CustomFormLabel>
                   <CustomTextField
                     id="vacancy-title"
@@ -492,7 +492,7 @@ export default function HRVacancyEditPage() {
                     htmlFor="vacancy-description"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                   >
-                    Описание вакансии
+                    <Trans>Описание вакансии</Trans>
                   </CustomFormLabel>
                   <CustomTextField
                     id="vacancy-description"
@@ -688,7 +688,7 @@ export default function HRVacancyEditPage() {
                     onClick={addQuestion}
                     sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
                   >
-                    Добавить вопрос
+                    <Trans>Добавить вопрос</Trans>
                   </Button>
                   <Button
                     variant="contained"
@@ -734,7 +734,7 @@ export default function HRVacancyEditPage() {
                           </Stack>
                         </Stack>
                         <Box>
-                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 1 }}>Текст вопроса</CustomFormLabel>
+                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 1 }}><Trans>Текст вопроса</Trans></CustomFormLabel>
                           <CustomTextField
                             variant="outlined"
                             fullWidth
@@ -798,7 +798,7 @@ export default function HRVacancyEditPage() {
                 onClick={() => router.push("/hr/vacancies")}
                 sx={{ fontWeight: 500, borderWidth: 2 }}
               >
-                Назад
+                <Trans>Назад</Trans>
               </Button>
               <Button
                 variant="contained"

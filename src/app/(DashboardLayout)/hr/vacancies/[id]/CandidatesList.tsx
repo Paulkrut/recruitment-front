@@ -454,7 +454,7 @@ export default function CandidatesList({
             variant="outlined"
             onClick={() => setSelectedCandidates([])}
           >
-            Отменить
+            <Trans>Отменить</Trans>
           </Button>
         </Box>
       )}
@@ -484,7 +484,7 @@ export default function CandidatesList({
                     direction={sortBy === 'name' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'asc'}
                     onClick={() => handleSort('name')}
                   >
-                    Имя
+                    <Trans>Имя</Trans>
                   </TableSortLabel>
                 </TableCell>
                 <TableCell><Trans>Источник</Trans></TableCell>
@@ -512,7 +512,7 @@ export default function CandidatesList({
                     direction={sortBy === 'status' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'asc'}
                     onClick={() => handleSort('status')}
                   >
-                    Статус
+                    <Trans>Статус</Trans>
                   </TableSortLabel>
                 </TableCell>
                 <TableCell><Trans>Контакты</Trans></TableCell>
@@ -522,7 +522,7 @@ export default function CandidatesList({
                     direction={sortBy === 'createdAt' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'desc'}
                     onClick={() => handleSort('createdAt')}
                   >
-                    Дата добавления
+                    <Trans>Дата добавления</Trans>
                   </TableSortLabel>
                 </TableCell>
                 <TableCell align="right"><Trans>Действия</Trans></TableCell>
@@ -766,7 +766,7 @@ export default function CandidatesList({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">
-            Отмена
+            <Trans>Отмена</Trans>
           </Button>
           <Button
             onClick={() => {
@@ -776,7 +776,7 @@ export default function CandidatesList({
             variant="contained"
             color="primary"
           >
-            Подключить HH.ru
+            <Trans>Подключить HH.ru</Trans>
           </Button>
         </DialogActions>
       </Dialog>

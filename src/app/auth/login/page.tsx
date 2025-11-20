@@ -195,7 +195,7 @@ export default function LoginPage() {
                 ) : (
                   <>
                     <Icon icon="mdi:login" width={20} height={20} style={{ marginRight: 8 }} />
-                    Войти
+                    <Trans>Войти</Trans>
                   </>
                 )}
               </Button>
@@ -222,7 +222,7 @@ export default function LoginPage() {
               Нет аккаунта?{" "}
               <Link href="/auth/register" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
-                  Зарегистрироваться
+                  <Trans>Зарегистрироваться</Trans>
                 </MuiLink>
               </Link>
             </Typography>

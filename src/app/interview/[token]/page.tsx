@@ -1640,9 +1640,9 @@ export default function CandidateInterviewPage() {
                         <Table size="small">
                           <TableHead>
                             <TableRow>
-                              <TableCell><strong>Вопрос</strong></TableCell>
-                              <TableCell align="center"><strong>Оценка</strong></TableCell>
-                              <TableCell><strong>Комментарий</strong></TableCell>
+                              <TableCell><strong><Trans>Вопрос</Trans></strong></TableCell>
+                              <TableCell align="center"><strong><Trans>Оценка</Trans></strong></TableCell>
+                              <TableCell><strong><Trans>Комментарий</Trans></strong></TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -1767,7 +1767,7 @@ export default function CandidateInterviewPage() {
                       variant="outlined"
                       onClick={() => setShowEmailForm(false)}
                     >
-                      Отмена
+                      <Trans>Отмена</Trans>
                     </Button>
                   </Stack>
                 </CardContent>
@@ -2021,9 +2021,9 @@ export default function CandidateInterviewPage() {
                           <Table size="small">
                             <TableHead>
                               <TableRow>
-                                <TableCell><strong>Вопрос</strong></TableCell>
-                                <TableCell align="center"><strong>Оценка</strong></TableCell>
-                                <TableCell><strong>Комментарий</strong></TableCell>
+                                <TableCell><strong><Trans>Вопрос</Trans></strong></TableCell>
+                                <TableCell align="center"><strong><Trans>Оценка</Trans></strong></TableCell>
+                                <TableCell><strong><Trans>Комментарий</Trans></strong></TableCell>
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -2155,7 +2155,7 @@ export default function CandidateInterviewPage() {
                         variant="outlined"
                         onClick={() => setShowEmailForm(false)}
                       >
-                        Отмена
+                        <Trans>Отмена</Trans>
                       </Button>
                     </Stack>
                   </CardContent>
@@ -2355,7 +2355,7 @@ export default function CandidateInterviewPage() {
               control={<Checkbox checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} color="primary" />}
               label={
                 <Typography variant="body2">
-                  Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank">Политика ПДн</a>. Медиа хранятся до 60 дней.
+                  Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank"><Trans>Политика ПДн</Trans></a>. Медиа хранятся до 60 дней.
                 </Typography>
               }
               sx={{ alignItems: 'center', mb: 1 }}
@@ -3194,7 +3194,7 @@ export default function CandidateInterviewPage() {
               }}
               variant="outlined"
             >
-              Отмена
+              <Trans>Отмена</Trans>
             </Button>
             <Button
               onClick={skipQuestion}
@@ -3260,7 +3260,7 @@ export default function CandidateInterviewPage() {
             variant="outlined"
             sx={{ mr: 2 }}
           >
-            Отмена
+            <Trans>Отмена</Trans>
           </Button>
           <Button
             onClick={handleForgetMe}

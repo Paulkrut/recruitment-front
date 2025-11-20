@@ -63,27 +63,27 @@ export default function HRSessionDetailPage() {
             </Box>
             <Grid container spacing={2} mb={2}>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="body2"><b>Начата:</b> {startedAt || '-'}</Typography>
+                <Typography variant="body2"><b><Trans>Начата</Trans>:</b> {startedAt || '-'}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="body2"><b>Завершена:</b> {finishedAt || '-'}</Typography>
+                <Typography variant="body2"><b><Trans>Завершена</Trans>:</b> {finishedAt || '-'}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="body2"><b>Шаблон:</b> {template?.title || '-'}</Typography>
+                <Typography variant="body2"><b><Trans>Шаблон</Trans>:</b> {template?.title || '-'}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="body2"><b>Кандидат:</b> {candidate?.name || '-'} (ID: {candidate?.id})</Typography>
+                <Typography variant="body2"><b><Trans>Кандидат</Trans>:</b> {candidate?.name || '-'} (ID: {candidate?.id})</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="body2"><b>Email:</b> {candidate?.email || '-'}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <Typography variant="body2"><b>Телефон:</b> {candidate?.phone || '-'}</Typography>
+                <Typography variant="body2"><b><Trans>Телефон</Trans>:</b> {candidate?.phone || '-'}</Typography>
               </Grid>
             </Grid>
             <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.3)' }} />
             <Button variant="outlined" color="inherit" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push('/hr/candidates')} sx={{color:'white',borderColor:'white'}}>
-              Назад к кандидатам
+              <Trans>Назад к кандидатам</Trans>
             </Button>
           </CardContent>
         </Card>
@@ -97,22 +97,22 @@ export default function HRSessionDetailPage() {
                 <Grid item xs={12} key={a.id}>
                   <Card sx={{background:'rgba(255,255,255,0.08)', color:'#fff', mb:2}}>
                     <CardContent>
-                      <Typography variant="subtitle1" sx={{mb:1}}><b>Вопрос {idx+1}:</b> {a.question}</Typography>
-                      <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text || <i>нет ответа</i>}</Typography>
-                      <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i>нет</i>}</Typography>
+                      <Typography variant="subtitle1" sx={{mb:1}}><b><Trans>Вопрос</Trans> {idx+1}:</b> {a.question}</Typography>
+                      <Typography variant="body2" sx={{mb:1}}><b><Trans>Ответ</Trans>:</b> {a.text || <i><Trans>нет ответа</Trans></i>}</Typography>
+                      <Typography variant="body2" sx={{mb:1}}><b><Trans>Оценка</Trans>:</b> {a.score !== undefined && a.score !== null ? a.score : <i><Trans>нет</Trans></i>}</Typography>
                       {a.audio && (
                         <Box mb={1}>
                           <IconMicrophone size={18} style={{verticalAlign:'middle'}} />{' '}
-                          <MuiLink href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}>Аудио</MuiLink>
+                          <MuiLink href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}><Trans>Аудио</Trans></MuiLink>
                         </Box>
                       )}
                       {a.video && (
                         <Box mb={1}>
                           <IconVideo size={18} style={{verticalAlign:'middle'}} />{' '}
-                          <MuiLink href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}>Видео</MuiLink>
+                          <MuiLink href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" sx={{color:'#fff',textDecoration:'underline'}}><Trans>Видео</Trans></MuiLink>
                         </Box>
                       )}
-                      <Typography variant="caption" sx={{opacity:0.7}}>Время ответа: {a.createdAt || '-'}</Typography>
+                      <Typography variant="caption" sx={{opacity:0.7}}><Trans>Время ответа</Trans>: {a.createdAt || '-'}</Typography>
                     </CardContent>
                   </Card>
                 </Grid>
@@ -122,14 +122,14 @@ export default function HRSessionDetailPage() {
             </Grid>
           </CardContent>
         </Card>
-        mv "recruitment-front/src/app/(DashboardLayout)/hr-dashboard" "recruitment-front/src/app/(DashboardLayout)/hr/dashboard"
+
         {/* Итог */}
         {result && (
           <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
-              <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {result.totalScore !== undefined && result.totalScore !== null ? result.totalScore : <i>нет</i>}</Typography>
-              <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {result.summary || <i>нет</i>}</Typography>
+              <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {result.totalScore !== undefined && result.totalScore !== null ? result.totalScore : <i><Trans>нет</Trans></i>}</Typography>
+              <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {result.summary || <i><Trans>нет</Trans></i>}</Typography>
             </CardContent>
           </Card>
         )}

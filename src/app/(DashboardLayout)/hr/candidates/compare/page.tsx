@@ -87,7 +87,7 @@ export default function ComparePage() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   // Добавляем CSS анимацию для прогресс-бара
   useEffect(() => {
     const style = document.createElement('style');
@@ -98,12 +98,12 @@ export default function ComparePage() {
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       document.head.removeChild(style);
     };
   }, []);
-  
+
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [comparisonData, setComparisonData] = useState<ComparisonData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -125,9 +125,9 @@ export default function ComparePage() {
     // Базовое время: 30 секунд на кандидата + 10 секунд на вопрос
     const baseTimePerCandidate = 30;
     const baseTimePerQuestion = 10;
-    
+
     const totalSeconds = (candidatesCount * baseTimePerCandidate) + (questionsCount * baseTimePerQuestion);
-    
+
     if (totalSeconds < 60) {
       return _(msg`${totalSeconds} секунд`);
     } else if (totalSeconds < 300) {
@@ -190,10 +190,10 @@ export default function ComparePage() {
       console.log('⏳ Базовое сравнение уже загружается или уже загружено, пропускаем');
       return;
     }
-    
+
     console.log('🔄 Загружаем базовое сравнение для ID:', stableIds);
     setIsLoadingBasic(true);
-    
+
     try {
       const response = await apiFetch(`${API_BASE}/api/admin/candidates/compare`, {
         method: 'POST',
@@ -207,12 +207,12 @@ export default function ComparePage() {
       }
 
       if (!response.ok) throw new Error(_(msg`Ошибка загрузки данных`));
-      
+
       const data = await response.json();
       console.log('✅ Базовое сравнение загружено:', data);
         setCandidates(data.candidates || []);
     } catch (err) {
-      console.error('❌ Ошибка загрузки базового сравнения: _(msg`, err);
+      console.error('❌ Ошибка загрузки базового сравнения: ', err);
         setError(_(msg`Не удалось загрузить данные кандидатов`));
     } finally {
         setIsLoadingBasic(false);
@@ -222,13 +222,13 @@ export default function ComparePage() {
   // Запуск AI-анализа
   const startAiAnalysis = async () => {
     if (isLoadingAi || hasInitialized) {
-      console.log(`)⏳ AI-анализ уже запускается или уже запущен, пропускаем');
+      console.log('⏳ AI-анализ уже запускается или уже запущен, пропускаем');
       return;
     }
-    
+
     console.log('🤖 Запускаем AI-анализ для ID:', stableIds);
     setIsLoadingAi(true);
-    
+
     try {
       const response = await apiFetch(`${API_BASE}/api/admin/candidates/compare/ai`, {
         method: 'POST',
@@ -242,11 +242,11 @@ export default function ComparePage() {
       }
 
       if (!response.ok) throw new Error(_(msg`Ошибка запуска AI-анализа`));
-      
+
       const data = await response.json();
       console.log('✅ AI-анализ запущен:', data);
         setAiAnalysisHash(data.hash);
-        
+
         if (data.status === 'pending') {
         console.log('⏳ AI-анализ в процессе, запускаем поллинг');
           startPolling(data.hash);
@@ -279,19 +279,19 @@ export default function ComparePage() {
     console.log('🔍 Проверяем статус AI для hash:', hash);
     try {
       const response = await apiFetch(`${API_BASE}/api/admin/candidates/compare/ai/${hash}`);
-      
+
       if (response.status === 401) {
         console.log('❌ 401 Unauthorized, перенаправляем на авторизацию');
         router.push("/auth/phone");
         return;
       }
-      
+
       if (!response.ok) throw new Error(_(msg`Ошибка проверки статуса`));
-      
+
       const data = await response.json();
       console.log('📊 Статус AI:', data.status, data);
         setComparisonData(data);
-        
+
         if (data.status === 'done' || data.status === 'error') {
           console.log('🏁 AI-анализ завершен, останавливаем поллинг');
           if (pollingInterval) {
@@ -308,18 +308,18 @@ export default function ComparePage() {
   // Поллинг статуса
   const startPolling = (hash: string) => {
     console.log('🔄 Запускаем поллинг для hash:', hash);
-    
+
     // Очищаем предыдущий интервал если он есть
     if (pollingInterval) {
       console.log('🧹 Очищаем предыдущий интервал поллинга');
       clearInterval(pollingInterval);
     }
-    
+
     const interval = setInterval(() => {
       console.log('⏰ Поллинг: проверяем статус для hash:', hash);
         checkAiStatus(hash);
     }, 3000);
-    
+
     setPollingInterval(interval);
     console.log('✅ Поллинг запущен, интервал:', interval);
   };
@@ -348,11 +348,11 @@ export default function ComparePage() {
     const init = async () => {
       try {
         await loadBasicComparison();
-        
+
 
         // Запускаем AI-анализ
         await startAiAnalysis();
-        
+
         setLoading(false);
         setHasInitialized(true); // Отмечаем что инициализация завершена
       } catch (err) {
@@ -387,11 +387,11 @@ export default function ComparePage() {
         <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
-        <Button 
-          startIcon={<IconArrowLeft />} 
+        <Button
+          startIcon={<IconArrowLeft />}
           onClick={() => router.back()}
         >
-          Назад
+          <Trans>Назад</Trans>
         </Button>
       </PageContainer>
     );
@@ -400,14 +400,14 @@ export default function ComparePage() {
   return (
     <PageContainer title={_(msg`Сравнение кандидатов`)} description="Анализ и сравнение кандидатов">
       <Box sx={{ mb: 3 }}>
-        <Button 
-          startIcon={<IconArrowLeft />} 
+        <Button
+          startIcon={<IconArrowLeft />}
           onClick={() => router.back()}
           sx={{ mb: 2 }}
         >
-          Назад
+          <Trans>Назад</Trans>
         </Button>
-        
+
         <Typography variant="h4" gutterBottom><Trans>Сравнение кандидатов</Trans></Typography>
         <Typography variant="body2" color="text.secondary">
           Детальный анализ и сравнение {candidates.length} кандидатов
@@ -418,7 +418,7 @@ export default function ComparePage() {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom><Trans>�� Базовое сравнение</Trans></Typography>
-          
+
           <Grid container spacing={2} sx={{ mb: 2 }}>
             {candidates.map((candidate) => (
               <Grid item xs={12} sm={6} md={4} key={candidate.id}>
@@ -430,12 +430,12 @@ export default function ComparePage() {
                       </Avatar>
                       <Box>
                         <Typography variant="h6" fontSize="1rem">
-                          <Link 
+                          <Link
                             href={`/hr/candidates/${candidate.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ 
-                              textDecoration: 'none', 
+                            style={{
+                              textDecoration: 'none',
                               color: 'inherit',
                               cursor: 'pointer'
                             }}
@@ -456,7 +456,7 @@ export default function ComparePage() {
                         </Typography>
                       </Box>
                     </Box>
-                    
+
                     <Box sx={{ mt: 1 }}>
                       <Typography variant="body2" color="text.secondary">
                         📧 {candidate.email || _(msg`Email не указан`)}
@@ -487,18 +487,18 @@ export default function ComparePage() {
                           </Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
                             {candidate.skills.slice(0, 3).map((skill, index) => (
-                              <Chip 
-                                key={index} 
-                                label={typeof skill === 'string' ? skill : skill.skill} 
-                                size="small" 
+                              <Chip
+                                key={index}
+                                label={typeof skill === 'string' ? skill : skill.skill}
+                                size="small"
                                 variant="outlined"
                                 color="primary"
                               />
                             ))}
                             {candidate.skills.length > 3 && (
-                              <Chip 
-                                label={`+${candidate.skills.length - 3}`} 
-                                size="small" 
+                              <Chip
+                                label={`+${candidate.skills.length - 3}`}
+                                size="small"
                                 variant="outlined"
                                 color="default"
                               />
@@ -514,7 +514,7 @@ export default function ComparePage() {
               </Grid>
             ))}
           </Grid>
-          
+
           {/* Предупреждение о недостатке данных */}
           {candidates.every(c => !c.score && c.skills.length === 0) && (
             <Alert severity="warning" sx={{ mt: 2 }}>
@@ -541,15 +541,15 @@ export default function ComparePage() {
               <IconBrain size={24} />
               <Typography variant="h6"><Trans>AI-анализ</Trans></Typography>
             {aiAnalysisHash && (
-              <Chip 
-                label={`Hash: ${aiAnalysisHash.substring(0, 8)}...`} 
-                size="small" 
+              <Chip
+                label={`Hash: ${aiAnalysisHash.substring(0, 8)}...`}
+                size="small"
                 variant="outlined"
                 sx={{ ml: 'auto' }}
               />
             )}
             </Box>
-            
+
           {comparisonData?.status === 'pending' && (
               <>
                 <LinearProgress sx={{ mb: 2 }} />
@@ -562,26 +562,26 @@ export default function ComparePage() {
                     ⏱️ Примерное время: <strong>{estimatedTime}</strong>
                   </Typography>
                 <Typography variant="body2" color="text.secondary"><Trans>💡 Чем больше кандидатов и вопросов, тем дольше анализ</Trans></Typography>
-                  
+
                   {/* Прогресс-бар с анимацией */}
                   <Box sx={{ mt: 2, position: 'relative' }}>
-                    <LinearProgress 
-                      variant="indeterminate" 
-                      sx={{ 
-                        height: 8, 
+                    <LinearProgress
+                      variant="indeterminate"
+                      sx={{
+                        height: 8,
                         borderRadius: 4,
                         '& .MuiLinearProgress-bar': {
                           background: 'linear-gradient(90deg, #1976d2, #42a5f5, #1976d2)',
                           backgroundSize: '200% 100%',
                           animation: 'shimmer 2s infinite'
                         }
-                      }} 
+                      }}
                     />
-                    <Box 
-                      sx={{ 
-                        position: 'absolute', 
-                        top: '50%', 
-                        left: '50%', 
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
                         transform: 'translate(-50%, -50%)',
                         fontSize: '0.75rem',
                         color: 'text.secondary',
@@ -589,7 +589,7 @@ export default function ComparePage() {
                       }}
                     ><Trans>Анализируем...</Trans></Box>
                   </Box>
-                  
+
                   {/* Дополнительная информация */}
                   <Box sx={{ mt: 3, p: 2, bgcolor: 'info.50', borderRadius: 2, border: '1px solid', borderColor: 'info.200' }}>
                     <Typography variant="body2" color="info.dark">
@@ -603,25 +603,25 @@ export default function ComparePage() {
                 </Box>
               </>
             )}
-            
+
           {comparisonData?.status === 'done' && comparisonData.result && (
               <>
                 <Alert severity="success" sx={{ mb: 2 }}><Trans>Анализ завершен</Trans></Alert>
-                
+
                 {/* Полный анализ AI */}
                 <Typography variant="h6" gutterBottom><Trans>🤖 Анализ кандидатов</Trans></Typography>
-                
-                <Box sx={{ 
-                  bgcolor: 'grey.50', 
-                  p: 3, 
-                  borderRadius: 2, 
-                  border: '1px solid', 
+
+                <Box sx={{
+                  bgcolor: 'grey.50',
+                  p: 3,
+                  borderRadius: 2,
+                  border: '1px solid',
                   borderColor: 'grey.200',
                   fontFamily: 'inherit'
                 }}>
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
+                  <Typography
+                    variant="body1"
+                    sx={{
                       whiteSpace: 'pre-wrap',
                       lineHeight: 1.6,
                       fontSize: '0.95rem'
@@ -630,18 +630,18 @@ export default function ComparePage() {
                     {comparisonData.result?.analysis || comparisonData.result?.reasoning || _(msg`Анализ недоступен`)}
                   </Typography>
                 </Box>
-                
+
                 {/* Информация о вакансии */}
                 {comparisonData.result?.vacancy && (
                   <>
                     <Divider sx={{ my: 3 }} />
                     <Typography variant="h6" gutterBottom><Trans>📋 Информация о вакансии</Trans></Typography>
-                    <Box sx={{ 
-                      bgcolor: 'primary.50', 
-                      p: 2, 
-                      borderRadius: 1, 
-                      borderLeft: '4px solid', 
-                      borderColor: 'primary.main' 
+                    <Box sx={{
+                      bgcolor: 'primary.50',
+                      p: 2,
+                      borderRadius: 1,
+                      borderLeft: '4px solid',
+                      borderColor: 'primary.main'
                     }}>
                       <Typography variant="body2">
                         <strong>Должность:</strong> {comparisonData.result.vacancy.title || _(msg`Не указана`)}<br />
@@ -660,32 +660,32 @@ export default function ComparePage() {
                   <>
                     <Divider sx={{ my: 3 }} />
                     <Typography variant="h6" gutterBottom><Trans>📊 Детальное сравнение по критериям</Trans></Typography>
-                    
+
                     {/* Критерии */}
                     <Box sx={{ mb: 3 }}>
                       <Typography variant="subtitle1" gutterBottom><Trans>🎯 Общие критерии для позиции</Trans></Typography>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                         {comparisonData.result.criteria.general?.map((criterion, index) => (
-                                <Chip 
-                            key={index} 
-                            label={criterion} 
+                                <Chip
+                            key={index}
+                            label={criterion}
                                   size="small"
-                            variant="outlined" 
+                            variant="outlined"
                             color="primary"
                                 />
                         ))}
                             </Box>
-                            
+
                       {comparisonData.result.criteria.specific && comparisonData.result.criteria.specific.length > 0 && (
                         <>
                           <Typography variant="subtitle1" gutterBottom><Trans>🎯 Специфичные критерии для этой вакансии</Trans></Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                             {comparisonData.result.criteria.specific.map((criterion, index) => (
-                              <Chip 
-                                key={index} 
-                                label={criterion} 
+                              <Chip
+                                key={index}
+                                label={criterion}
                                 size="small"
-                                variant="outlined" 
+                                variant="outlined"
                                 color="secondary"
                               />
                             ))}
@@ -701,10 +701,10 @@ export default function ComparePage() {
                           <TableRow>
                             <TableCell sx={{ fontWeight: 'bold', minWidth: 150 }}><Trans>Кандидат</Trans></TableCell>
                             {comparisonData.result.criteria.general?.map((criterion, index) => (
-                              <TableCell 
-                                key={`general-${index}`} 
-                                sx={{ 
-                                  fontWeight: 'bold', 
+                              <TableCell
+                                key={`general-${index}`}
+                                sx={{
+                                  fontWeight: 'bold',
                                   minWidth: 120,
                                   bgcolor: 'primary.50',
                                   borderRight: '1px solid',
@@ -715,10 +715,10 @@ export default function ComparePage() {
                               </TableCell>
                             ))}
                             {comparisonData.result.criteria.specific?.map((criterion, index) => (
-                              <TableCell 
-                                key={`specific-${index}`} 
-                                sx={{ 
-                                  fontWeight: 'bold', 
+                              <TableCell
+                                key={`specific-${index}`}
+                                sx={{
+                                  fontWeight: 'bold',
                                   minWidth: 120,
                                   bgcolor: 'secondary.50',
                                   borderRight: '1px solid',
@@ -736,9 +736,9 @@ export default function ComparePage() {
                           {comparisonData.result.comparison.map((candidate, index) => {
                             const isWinner = candidate.candidateId === comparisonData.result?.winnerId;
                             return (
-                              <TableRow 
+                              <TableRow
                                 key={candidate.candidateId}
-                                sx={{ 
+                                sx={{
                                   bgcolor: isWinner ? 'success.50' : 'inherit',
                                   '&:hover': { bgcolor: isWinner ? 'success.100' : 'grey.50' }
                                 }}
@@ -746,12 +746,12 @@ export default function ComparePage() {
                                 <TableCell sx={{ fontWeight: 'bold' }}>
                                   <Box display="flex" alignItems="center" gap={1}>
                                     {isWinner && <IconCrown size={16} color="#FFD700" />}
-                                    <Link 
+                                    <Link
                                       href={`/hr/candidates/${candidate.candidateId}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      style={{ 
-                                        textDecoration: 'none', 
+                                      style={{
+                                        textDecoration: 'none',
                                         color: 'inherit',
                                         cursor: 'pointer'
                                       }}
@@ -768,12 +768,12 @@ export default function ComparePage() {
                                     </Link>
                                   </Box>
                                 </TableCell>
-                                
+
                                 {/* Общие критерии */}
                                 {comparisonData.result.criteria.general?.map((criterion, critIndex) => (
-                                  <TableCell 
+                                  <TableCell
                                     key={`general-${critIndex}`}
-                                    sx={{ 
+                                    sx={{
                                       borderRight: '1px solid',
                                       borderColor: 'divider'
                                     }}
@@ -781,12 +781,12 @@ export default function ComparePage() {
                                     {candidate.scores[criterion] || '-'}
                                   </TableCell>
                                 ))}
-                                
+
                                 {/* Специфичные критерии */}
                                 {comparisonData.result.criteria.specific?.map((criterion, critIndex) => (
-                                  <TableCell 
+                                  <TableCell
                                     key={`specific-${critIndex}`}
-                                    sx={{ 
+                                    sx={{
                                       borderRight: '1px solid',
                                       borderColor: 'divider'
                                     }}
@@ -794,15 +794,15 @@ export default function ComparePage() {
                                     {candidate.scores[criterion] || '-'}
                                   </TableCell>
                                 ))}
-                                
+
                                 <TableCell sx={{ fontWeight: 'bold' }}>
                                   {candidate.overallScore}
                                 </TableCell>
-                                
+
                                 <TableCell>
-                                  <Chip 
-                                    label={candidate.recommendation} 
-                                  size="small" 
+                                  <Chip
+                                    label={candidate.recommendation}
+                                  size="small"
                                     color={
                                       candidate.recommendation?.toLowerCase().includes('брать') ? 'success' :
                                       candidate.recommendation?.toLowerCase().includes('отказать') ? 'error' :
@@ -821,7 +821,7 @@ export default function ComparePage() {
                 )}
               </>
             )}
-            
+
           {comparisonData?.status === 'error' && (
             <>
               <Alert severity="error" sx={{ mb: 2 }}>
@@ -846,7 +846,7 @@ export default function ComparePage() {
                   </Typography>
                 </Box>
               </Alert>
-              
+
               {/* Кнопка повторной попытки */}
               <Button
                 variant="outlined"
@@ -860,7 +860,7 @@ export default function ComparePage() {
               </Button>
               </>
             )}
-            
+
           {/* Если AI-анализ еще не запускался */}
           {!comparisonData && !isLoadingAi && (
             <Box textAlign="center" py={2}>
@@ -883,12 +883,12 @@ export default function ComparePage() {
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom><Trans>📊 Сравнительная таблица</Trans></Typography>
-          
+
           <TableContainer component={Paper} variant="outlined">
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell><strong>Параметр</strong></TableCell>
+                  <TableCell><strong><Trans>Параметр</Trans></strong></TableCell>
                   {candidates.map(candidate => (
                     <TableCell key={candidate.id} align="center">
                       <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
@@ -896,12 +896,12 @@ export default function ComparePage() {
                           {candidate.name.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </Avatar>
                         <Typography variant="body2" fontWeight={600}>
-                          <Link 
+                          <Link
                             href={`/hr/candidates/${candidate.id}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ 
-                              textDecoration: 'none', 
+                            style={{
+                              textDecoration: 'none',
                               color: 'inherit',
                               cursor: 'pointer'
                             }}
@@ -924,10 +924,10 @@ export default function ComparePage() {
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell><strong>Статус</strong></TableCell>
+                  <TableCell><strong><Trans>Статус</Trans></strong></TableCell>
                   {candidates.map(candidate => (
                     <TableCell key={candidate.id} align="center">
-                      <Chip 
+                      <Chip
                         label={candidate.status === 'new' ? _(msg`Новый`) : candidate.status}
                         color={candidate.status === 'finished' ? 'success' : 'default'}
                         size="small"
@@ -936,12 +936,12 @@ export default function ComparePage() {
                     </TableCell>
                   ))}
                 </TableRow>
-                
+
                 <TableRow>
-                  <TableCell><strong>Количество сессий</strong></TableCell>
+                  <TableCell><strong><Trans>Количество сессий</Trans></strong></TableCell>
                   {candidates.map(candidate => (
                     <TableCell key={candidate.id} align="center">
-                      <Chip 
+                      <Chip
                         label={candidate.sessionsCount}
                         color={candidate.sessionsCount > 0 ? 'primary' : 'default'}
                         size="small"
@@ -950,9 +950,9 @@ export default function ComparePage() {
                     </TableCell>
                   ))}
                 </TableRow>
-                
+
                 <TableRow>
-                  <TableCell><strong>Дата создания</strong></TableCell>
+                  <TableCell><strong><Trans>Дата создания</Trans></strong></TableCell>
                   {candidates.map(candidate => (
                     <TableCell key={candidate.id} align="center">
                       <Typography variant="body2" color="text.secondary">
@@ -968,4 +968,4 @@ export default function ComparePage() {
       </Card>
     </PageContainer>
   );
-} 
+}

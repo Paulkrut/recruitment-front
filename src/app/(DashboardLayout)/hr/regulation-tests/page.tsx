@@ -151,7 +151,7 @@ export default function RegulationTestsPage() {
       {/* Breadcrumbs */}
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <MuiLink href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </MuiLink>
         <Typography color="text.primary"><Trans>Тесты</Trans></Typography>
       </Breadcrumbs>
@@ -165,7 +165,7 @@ export default function RegulationTestsPage() {
             variant="contained"
             startIcon={<AddIcon />}
           >
-            Создать тест
+            <Trans>Создать тест</Trans>
           </Button>
         </Link>
       </Box>
@@ -181,7 +181,7 @@ export default function RegulationTestsPage() {
               onChange={(e) => setSelectedRegulationId(e.target.value ? Number(e.target.value) : null)}
             >
               <MenuItem value="">
-                <em>Все тесты</em>
+                <em><Trans>Все тесты</Trans></em>
               </MenuItem>
               {regulations.map((regulation) => (
                 <MenuItem key={regulation.id} value={regulation.id}>
@@ -197,13 +197,13 @@ export default function RegulationTestsPage() {
               startIcon={<ClearIcon />}
               onClick={handleClearFilter}
             >
-              Сбросить фильтр
+              <Trans>Сбросить фильтр</Trans>
             </Button>
           )}
 
           {selectedRegulationId && (
             <Typography variant="body2" color="text.secondary">
-              Найдено тестов: {filteredTests.length}
+              <Trans>Найдено тестов</Trans>: {filteredTests.length}
             </Typography>
           )}
         </Box>
@@ -250,7 +250,7 @@ export default function RegulationTestsPage() {
                           onClick={handleClearFilter}
                           sx={{ mt: 2 }}
                         >
-                          Сбросить фильтр
+                          <Trans>Сбросить фильтр</Trans>
                         </Button>
                       </>
                     ) : (
@@ -263,7 +263,7 @@ export default function RegulationTestsPage() {
                             startIcon={<AddIcon />}
                             sx={{ mt: 2 }}
                           >
-                            Создать первый тест
+                            <Trans>Создать первый тест</Trans>
                           </Button>
                         </Link>
                       </>

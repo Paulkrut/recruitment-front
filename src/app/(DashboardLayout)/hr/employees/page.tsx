@@ -276,7 +276,7 @@ export default function EmployeesPage() {
                   width: 120,
                   renderCell: (params) => (
                     isLead ? (
-                      <Button color="error" onClick={() => handleRevokeInvite(params.row.id)}>Отозвать</Button>
+                      <Button color="error" onClick={() => handleRevokeInvite(params.row.id)}><Trans>Отозвать</Trans></Button>
                     ) : null
                   ),
                   sortable: false,

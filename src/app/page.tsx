@@ -455,7 +455,7 @@ export default function LandingPage() {
                 </Grid>
                 <Box mb={2}>
                   <Typography variant="body2" color="text.secondary">Среднее время закрытия вакансии: <b>7 дней</b></Typography>
-                  <Typography variant="body2" color="text.secondary">Автоматизировано: <b>80%</b> интервью</Typography>
+                  <Typography variant="body2" color="text.secondary">Автоматизировано: <b>80%</b> <Trans>интервью</Trans></Typography>
                 </Box>
                 <Box mb={3}>
                   <Typography variant="body2" color="text.secondary" mb={1}><Trans>Интеграции:</Trans></Typography>

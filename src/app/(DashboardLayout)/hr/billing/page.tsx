@@ -293,7 +293,7 @@ export default function BillingPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setPurchaseDialogOpen(false)} disabled={purchasing}>
-            Отмена
+            <Trans>Отмена</Trans>
           </Button>
           <Button
             onClick={handlePurchase}
@@ -313,7 +313,7 @@ export default function BillingPage() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Оплата</DialogTitle>
+        <DialogTitle><Trans>Оплата</Trans></DialogTitle>
         <DialogContent>
           <Box id="yookassa-widget-container" sx={{ minHeight: 400 }} />
         </DialogContent>

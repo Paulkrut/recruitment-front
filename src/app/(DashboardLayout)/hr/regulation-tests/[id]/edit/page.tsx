@@ -148,13 +148,13 @@ export default function EditTestPage() {
   }
 
   return (
-    <PageContainer title={_(msg`Редактировать тест`)} description="Изменение настроек теста">
+    <PageContainer title={_(msg`Редактировать тест`)} description={_(msg`Изменение настроек теста`)}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <MuiLink href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </MuiLink>
         <MuiLink href="/hr/regulation-tests" underline="hover" color="inherit">
-          Тесты
+          <Trans>Тесты</Trans>
         </MuiLink>
         <Typography color="text.primary"><Trans>Редактировать</Trans></Typography>
       </Breadcrumbs>

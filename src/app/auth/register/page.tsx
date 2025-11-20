@@ -306,7 +306,7 @@ export default function RegisterPage() {
                 ) : (
                   <>
                     <Icon icon="mdi:account-plus" width={20} height={20} style={{ marginRight: 8 }} />
-                    Зарегистрироваться
+                    <Trans>Зарегистрироваться</Trans>
                   </>
                 )}
               </Button>

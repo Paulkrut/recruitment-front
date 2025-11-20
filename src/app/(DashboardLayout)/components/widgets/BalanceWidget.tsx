@@ -116,7 +116,7 @@ export default function BalanceWidget() {
             startIcon={<IconPlus size={18} />}
             onClick={() => router.push('/hr/billing')}
           >
-            Пополнить
+            <Trans>Пополнить</Trans>
           </Button>
         </Box>
 

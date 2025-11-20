@@ -656,7 +656,7 @@ export default function HhIntegrationPage() {
                         disabled={!status.hasValidToken}
                         startIcon={<IconX />}
                       >
-                        Отключить
+                        <Trans>Отключить</Trans>
                       </Button>
                     </Box>
                   </Box>
@@ -799,7 +799,7 @@ export default function HhIntegrationPage() {
                                     href={`/hr/hh-vacancies/${vacancy.id}`}
                                     startIcon={<IconSettings />}
                                   >
-                                    Настроить
+                                    <Trans>Настроить</Trans>
                                   </Button>
                                 </Box>
                                 

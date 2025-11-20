@@ -243,7 +243,7 @@ export default function CandidateDetailPage() {
       <Stack spacing={3}>
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb">
-          <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+          <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}><Trans>Вакансии</Trans></Link>
           {statusData?.vacancyId ? (
             <Link href={`/hr/vacancies/${statusData.vacancyId}`} style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>
               {sessionDetail?.vacancy?.title || statusData.vacancyTitle || _(msg`Вакансия`)}
@@ -313,12 +313,12 @@ export default function CandidateDetailPage() {
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} flexWrap="wrap">
               <Tooltip title={_(msg`Назад к вакансии`)}>
                 <Button variant="outlined" color="primary" startIcon={<IconArrowLeft size={20}/>} onClick={()=>router.push(statusData?.vacancyId ? `/hr/vacancies/${statusData.vacancyId}` : '/hr/vacancies')}>
-                  Назад
+                  <Trans>Назад</Trans>
                 </Button>
               </Tooltip>
               <Tooltip title={_(msg`Сравнить с другими`)}>
                 <Button variant="outlined" color="primary" startIcon={<IconArrowsDiff size={20}/>} onClick={()=>setCompareOpen(true)}>
-                  Сравнить
+                  <Trans>Сравнить</Trans>
                 </Button>
               </Tooltip>
             </Stack>
@@ -400,21 +400,21 @@ export default function CandidateDetailPage() {
                         </Stack>
                       </AccordionSummary>
                       <AccordionDetails>
-                        <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}>Нет ответа</i>}</Typography>
-                        <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}>нет</i>}</Typography>
+                        <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
+                        <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
                         {a.aiComment && (
                           <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><b>AI-характеристика:</b> {a.aiComment}</Typography>
                         )}
                         {a.audio && (
                           <Box mb={1} display="flex" alignItems="center" gap={1}>
                             <IconMicrophone size={18} style={{verticalAlign:'middle'}} />
-                            <Button component={Link} href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconMicrophone />}>Аудио</Button>
+                            <Button component={Link} href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconMicrophone />}><Trans>Аудио</Trans></Button>
                           </Box>
                         )}
                         {a.video && (
                           <Box mb={1} display="flex" alignItems="center" gap={1}>
                             <IconVideo size={18} style={{verticalAlign:'middle'}} />
-                            <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}>Видео</Button>
+                            <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}><Trans>Видео</Trans></Button>
                           </Box>
                         )}
                         <Typography variant="caption" sx={{opacity:0.7}}>Время ответа: {a.createdAt || '-'}</Typography>
@@ -426,8 +426,8 @@ export default function CandidateDetailPage() {
                   {sessionDetail.result && (
                     <Box mt={3}>
                       <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
-                      <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}>нет</i>}</Typography>
-                      <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i style={{color:'#888'}}>нет</i>}</Typography>
+                      <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
+                      <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
                     </Box>
                   )}
                 </CardContent>
@@ -832,12 +832,12 @@ export default function CandidateDetailPage() {
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={()=>setCompareOpen(false)}>Отмена</Button>
+            <Button onClick={()=>setCompareOpen(false)}><Trans>Отмена</Trans></Button>
             <Button variant="contained" color="primary" disabled={selectedCompare.length===0} onClick={()=>{
               setCompareOpen(false);
               const allIds = [candId, ...selectedCompare];
               router.push(`/hr/candidates/compare?ids=${allIds.join(',')}`);
-            }}>Сравнить</Button>
+            }}><Trans>Сравнить</Trans></Button>
           </DialogActions>
         </Dialog>
         <Snackbar 

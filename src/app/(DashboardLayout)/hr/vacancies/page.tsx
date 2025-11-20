@@ -131,7 +131,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
             }}>
               <Box display="flex" alignItems="center" gap={1}>
                 <IconBriefcase size={16} />
-                Название
+                <Trans>Название</Trans>
               </Box>
             </TableCell>
             <TableCell sx={{ 
@@ -142,7 +142,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
             }}>
               <Box display="flex" alignItems="center" gap={1}>
                 <IconTarget size={16} />
-                Создано
+                <Trans>Создано</Trans>
               </Box>
             </TableCell>
             <TableCell sx={{ 
@@ -153,7 +153,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
             }}>
               <Box display="flex" alignItems="center" gap={1}>
                 <IconUsers size={16} />
-                Кто создал
+                <Trans>Кто создал</Trans>
               </Box>
             </TableCell>
             <TableCell sx={{ 
@@ -615,7 +615,7 @@ export default function HRVacanciesPage() {
                 startIcon={<IconPlus size={20} />}
                 component="a"
               >
-                Создать вакансию
+                <Trans>Создать вакансию</Trans>
               </Button>
             </Link>
           </Box>

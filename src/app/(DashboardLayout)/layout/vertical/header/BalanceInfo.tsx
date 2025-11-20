@@ -358,7 +358,7 @@ const BalanceInfo = () => {
               startIcon={<Icon icon="solar:wallet-bold-duotone" />}
               onClick={handleNavigateToBilling}
             >
-              Пополнить баланс
+              <Trans>Пополнить баланс</Trans>
             </Button>
             <Button
               fullWidth
@@ -366,7 +366,7 @@ const BalanceInfo = () => {
               startIcon={<Icon icon="solar:chart-2-bold-duotone" />}
               onClick={handleNavigateToAnalytics}
             >
-              Аналитика
+              <Trans>Аналитика</Trans>
             </Button>
             <Button
               fullWidth
@@ -374,7 +374,7 @@ const BalanceInfo = () => {
               startIcon={<Icon icon="solar:document-text-bold-duotone" />}
               onClick={handleNavigateToTransactions}
             >
-              История операций
+              <Trans>История операций</Trans>
             </Button>
           </Stack>
         </Box>

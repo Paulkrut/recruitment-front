@@ -89,8 +89,8 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
         {invites.map(inv => (
           <Stack key={inv.id} direction="row" spacing={2} alignItems="center">
             <Typography><b>{inv.company}</b> — роль: {inv.role}</Typography>
-            <Button variant="contained" onClick={() => handleAccept(inv.id)}>Принять</Button>
-            <Button variant="outlined" color="error" onClick={() => handleDecline(inv.id)}>Отклонить</Button>
+            <Button variant="contained" onClick={() => handleAccept(inv.id)}><Trans>Принять</Trans></Button>
+            <Button variant="outlined" color="error" onClick={() => handleDecline(inv.id)}><Trans>Отклонить</Trans></Button>
           </Stack>
         ))}
       </Stack>

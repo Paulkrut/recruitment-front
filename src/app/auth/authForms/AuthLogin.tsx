@@ -76,7 +76,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       <form onSubmit={handleLogin}>
         <Stack>
           <Box>
-            <CustomFormLabel htmlFor="phone">Телефон</CustomFormLabel>
+            <CustomFormLabel htmlFor="phone"><Trans>Телефон</Trans></CustomFormLabel>
             <CustomTextField
               id="phone"
               variant="outlined"
@@ -88,7 +88,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             />
           </Box>
           <Box>
-            <CustomFormLabel htmlFor="password">Пароль</CustomFormLabel>
+            <CustomFormLabel htmlFor="password"><Trans>Пароль</Trans></CustomFormLabel>
             <CustomTextField
               id="password"
               type="password"

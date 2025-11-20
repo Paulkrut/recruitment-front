@@ -185,7 +185,7 @@ export default function ForgotPasswordPage() {
               Нет аккаунта?{" "}
               <Link href="/auth/register" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
-                  Зарегистрироваться
+                  <Trans>Зарегистрироваться</Trans>
                 </MuiLink>
               </Link>
             </Typography>

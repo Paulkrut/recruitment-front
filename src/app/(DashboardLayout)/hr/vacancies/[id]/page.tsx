@@ -118,7 +118,7 @@ export default function HRVacancyDetailPage() {
   const [tab, setTab] = useState('1');
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0); // Для обновления списка
-  
+
   // Состояния для канбана (сохраняем в localStorage)
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>(() => {
     // Читаем из localStorage при первой загрузке
@@ -136,7 +136,7 @@ export default function HRVacancyDetailPage() {
     if (newMode !== null) {
       setViewMode(newMode);
       localStorage.setItem('kanban_view_mode', newMode);
-      
+
       // Если переключаемся на канбан, убираем фильтр по статусу
       if (newMode === 'kanban' && filters.status) {
         const { status, ...restFilters } = filters;
@@ -152,7 +152,7 @@ export default function HRVacancyDetailPage() {
       const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-token`, {
         method: 'POST'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         // Формируем полный URL на фронтенде
@@ -178,19 +178,19 @@ export default function HRVacancyDetailPage() {
   };
 
   // Получаем только завершенных кандидатов для сравнения
-  const finishedCandidates = useMemo(() => 
-    (candidates || []).filter(c => c.status === 'finished'), 
+  const finishedCandidates = useMemo(() =>
+    (candidates || []).filter(c => c.status === 'finished'),
     [candidates]
   );
 
   // Получаем параметры из URL
   const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       setSearchParams(params);
-      
+
       // Устанавливаем вкладку из URL
       const tabParam = params.get('tab');
       if (tabParam) {
@@ -240,7 +240,7 @@ export default function HRVacancyDetailPage() {
         setTotalCandidates(result.total || 0);
       }
     });
-    
+
     // Загружаем информацию о публичной ссылке
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-info`)
       .then(r => r.json())
@@ -262,7 +262,7 @@ export default function HRVacancyDetailPage() {
   const { title, description, template, questions } = data;
   const createdAt = data.createdAt ? formatDateToLocal(data.createdAt, {
     year: 'numeric',
-    month: '2-digit', 
+    month: '2-digit',
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit'
@@ -272,7 +272,7 @@ export default function HRVacancyDetailPage() {
   const header = (
     <Box mb={4}>
       <Breadcrumbs sx={{ mb: 2 }} aria-label="breadcrumb">
-        <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+        <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}><Trans>Вакансии</Trans></Link>
         <Typography color="text.primary">{title}</Typography>
       </Breadcrumbs>
       <Card sx={{ p: 0, background: '#fff', boxShadow: 3 }}>
@@ -285,12 +285,12 @@ export default function HRVacancyDetailPage() {
               <Chip icon={<IconFileText size={18}/>} label={`Вопросов: ${(questions||[]).length}`} color="primary" sx={{ fontWeight: 600 }} />
               <Chip icon={<IconUsers size={18}/>} label={`Кандидатов: ${candidates.length}`} color="success" sx={{ fontWeight: 600 }} />
             </Box>
-            
+
             {/* Публичная ссылка для самозаписи */}
             <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1, maxWidth: 600 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                 <Typography variant="body2" fontWeight={600} color="text.primary"><Trans>🌐 Ссылка для самозаписи на интервью</Trans></Typography>
-                <Tooltip 
+                <Tooltip
                   title={
                     <Box sx={{ p: 1 }}>
                       <Typography variant="body2" gutterBottom fontWeight={600}><Trans>Публичная ссылка для массовой рассылки</Trans></Typography>
@@ -316,14 +316,14 @@ export default function HRVacancyDetailPage() {
                   </IconButton>
                 </Tooltip>
               </Box>
-              <TextField 
-                value={publicUrl || _(msg`Не создана`)} 
+              <TextField
+                value={publicUrl || _(msg`Не создана`)}
                 size="small"
-                InputProps={{ 
+                InputProps={{
                   readOnly: true,
                   sx: { fontSize: '0.875rem' }
                 }}
-                sx={{ 
+                sx={{
                   flex: 1,
                   '& .MuiInputBase-root': {
                     bgcolor: 'grey.50'
@@ -332,7 +332,7 @@ export default function HRVacancyDetailPage() {
               />
               {publicUrl ? (
                 <Tooltip title={_(msg`Скопировать ссылку`)}>
-                  <IconButton 
+                  <IconButton
                     onClick={() => {
                       navigator.clipboard.writeText(publicUrl);
                       setSnackbar(_(msg`Ссылка скопирована!`));
@@ -344,7 +344,7 @@ export default function HRVacancyDetailPage() {
                   </IconButton>
                 </Tooltip>
               ) : (
-                <Button 
+                <Button
                   onClick={generatePublicLink}
                   variant="outlined"
                   size="small"
@@ -354,7 +354,7 @@ export default function HRVacancyDetailPage() {
             </Box>
           </Box>
           <Button variant="contained" color="primary" size="large" startIcon={<IconEdit size={24}/>} sx={{ fontWeight: 700, minWidth: 180, mt: { xs: 2, md: 0 } }} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}>
-            Редактировать
+            <Trans>Редактировать</Trans>
           </Button>
         </Box>
       </Card>
@@ -386,7 +386,7 @@ export default function HRVacancyDetailPage() {
             <Grid item xs={12}>
               {/* Breadcrumbs для кандидатов */}
               <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
-                <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}>Вакансии</Link>
+                <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}><Trans>Вакансии</Trans></Link>
                 <Typography color="text.primary">{title}</Typography>
                 <Typography color="text.primary"><Trans>Кандидаты</Trans></Typography>
               </Breadcrumbs>
@@ -413,33 +413,33 @@ export default function HRVacancyDetailPage() {
                       >
                         <ToggleButton value="list">
                           <ViewListIcon sx={{ mr: 1 }} fontSize="small" />
-                          Список
+                          <Trans>Список</Trans>
                         </ToggleButton>
                         <ToggleButton value="kanban">
                           <ViewKanbanIcon sx={{ mr: 1 }} fontSize="small" />
-                          Канбан
+                          <Trans>Канбан</Trans>
                         </ToggleButton>
                       </ToggleButtonGroup>
 
                       <Button variant="contained" color="secondary" startIcon={<AddIcon />} onClick={()=>setAddDialogOpen(true)} sx={{fontWeight:600}}>
-                        Добавить кандидата
+                        <Trans>Добавить кандидата</Trans>
                       </Button>
-                      <Button 
-                        variant="contained" 
-                        color="primary" 
+                      <Button
+                        variant="contained"
+                        color="primary"
                         disabled={selectedCandidates.length < 2}
                         onClick={()=>setCompareOpen(true)}
                         startIcon={<IconArrowsDiff />}
                       >
-                        Сравнить выбранных ({selectedCandidates.length})
+                        <Trans>Сравнить выбранных</Trans>{' '}({selectedCandidates.length})
                       </Button>
                     </Box>
                   </Box>
-                  
+
                   {/* Индикатор выбранных кандидатов */}
                   {selectedCandidates.length > 0 && (
-                    <Alert 
-                      severity="info" 
+                    <Alert
+                      severity="info"
                       sx={{ mb: 2 }}
                       action={
                         selectedCandidates.length >= 2 && finishedCandidates.length >= 2 && (
@@ -471,8 +471,8 @@ export default function HRVacancyDetailPage() {
                   )}
 
                   {/* Фильтры - общие для обоих режимов */}
-                  <CandidateFilters 
-                    filters={filters} 
+                  <CandidateFilters
+                    filters={filters}
                     onFilterChange={setFilters}
                     vacancyId={parseInt(id)}
                     viewMode={viewMode}
@@ -483,7 +483,7 @@ export default function HRVacancyDetailPage() {
                 <Box>
                   {/* Таблица или Канбан */}
                   {viewMode === 'list' ? (
-                    <CandidatesList 
+                    <CandidatesList
                       key={refreshKey}
                       vacancyId={id}
                       filters={filters}
@@ -493,9 +493,9 @@ export default function HRVacancyDetailPage() {
                       onSelectedCandidatesChange={setSelectedCandidates}
                     />
                   ) : (
-                    <KanbanView 
+                    <KanbanView
                       key={refreshKey}
-                      vacancyId={id} 
+                      vacancyId={id}
                       filters={filters}
                       selectedCandidates={selectedCandidates}
                       onSelectedCandidatesChange={setSelectedCandidates}
@@ -565,26 +565,26 @@ export default function HRVacancyDetailPage() {
                     {field:'score',header: _(msg`Оценка`),render:(r:any)=>{
                       if (r.score !== undefined && r.score !== null) {
                         return (
-                          <Chip 
-                            label={r.score} 
-                            color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'} 
-                            size="small" 
+                          <Chip
+                            label={r.score}
+                            color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'}
+                            size="small"
                           />
                         );
                       } else if (r.status === 'finished') {
                         return (
-                          <Chip 
-                            label="..." 
-                            color="info" 
-                            size="small" 
+                          <Chip
+                            label="..."
+                            color="info"
+                            size="small"
                           />
                         );
                       } else {
                         return (
-                          <Chip 
-                            label="—" 
-                            color="default" 
-                            size="small" 
+                          <Chip
+                            label="—"
+                            color="default"
+                            size="small"
                           />
                         );
                       }
@@ -599,32 +599,32 @@ export default function HRVacancyDetailPage() {
                       if (!r.deviceFingerprint) {
                         return (
                           <Tooltip title={_(msg`❓ Нет данных об устройстве`)} arrow>
-                            <Box sx={{ 
-                              width: 14, 
-                              height: 14, 
-                              borderRadius: '50%', 
+                            <Box sx={{
+                              width: 14,
+                              height: 14,
+                              borderRadius: '50%',
                               border: '2px solid #ccc',
                               display: 'inline-block'
                             }} />
                           </Tooltip>
                         );
                       }
-                      
+
                       // Проверяем есть ли другие кандидаты с таким же device fingerprint
-                      const hasDuplicateDevice = candidates.some(c => 
-                        c.id !== r.id && 
-                        c.deviceFingerprint && 
-                        r.deviceFingerprint && 
+                      const hasDuplicateDevice = candidates.some(c =>
+                        c.id !== r.id &&
+                        c.deviceFingerprint &&
+                        r.deviceFingerprint &&
                         c.deviceFingerprint === r.deviceFingerprint
                       );
-                      
+
                       return (
                         <Tooltip title={hasDuplicateDevice ? _(msg`⚠️ Устройство использовалось другими кандидатами`) : _(msg`✅ Уникальное устройство`)
                         } arrow>
-                          <Box sx={{ 
-                            width: 14, 
-                            height: 14, 
-                            borderRadius: '50%', 
+                          <Box sx={{
+                            width: 14,
+                            height: 14,
+                            borderRadius: '50%',
                             bgcolor: hasDuplicateDevice ? 'error.main' : 'success.main',
                             display: 'inline-block'
                           }} />
@@ -675,10 +675,10 @@ export default function HRVacancyDetailPage() {
                     )},
                   ]} rows={filteredCandidates} defaultRowsPerPage={7} />
                   END OLD TABLE CODE */}
-                  <Snackbar 
-                    open={!!snackbar} 
-                    autoHideDuration={2000} 
-                    onClose={()=>setSnackbar(null)} 
+                  <Snackbar
+                    open={!!snackbar}
+                    autoHideDuration={2000}
+                    onClose={()=>setSnackbar(null)}
                     message={snackbar}
                     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                   />
@@ -700,10 +700,10 @@ export default function HRVacancyDetailPage() {
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{title}</Typography>
                   <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      opacity: 0.8, 
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      opacity: 0.8,
                       color: 'text.secondary',
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-word'
@@ -713,7 +713,7 @@ export default function HRVacancyDetailPage() {
                   </Typography>
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
-                    Редактировать
+                    <Trans>Редактировать</Trans>
                   </Button>
                 </CardContent>
               </Card>
@@ -732,11 +732,11 @@ export default function HRVacancyDetailPage() {
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || _(msg`Без шаблона`)}</Typography>
                   {template?.description && (
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        mb: 1, 
-                        opacity: 0.9, 
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        mb: 1,
+                        opacity: 0.9,
                         color: 'text.secondary',
                         whiteSpace: 'pre-wrap',
                         wordBreak: 'break-word'
@@ -752,8 +752,8 @@ export default function HRVacancyDetailPage() {
                       <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}><Trans>Вопросы не добавлены</Trans></Typography>
                     ) : (
                       (questions||[]).map((q:any, index:number)=>(
-                        <Box 
-                          key={q.position} 
+                        <Box
+                          key={q.position}
                           sx={{ mb: 1, p: 1, borderRadius: 1, background: '#f5f5f5', cursor: 'pointer' }}
                           onClick={() => {
                             const newSearchParams = new URLSearchParams(window.location.search);
@@ -804,17 +804,17 @@ export default function HRVacancyDetailPage() {
           <Box id="qr-download" style={{display:'none'}}><QRCode value={qrDialog.url} size={400} /></Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setQrDialog({open:false,url:''})}>Закрыть</Button>
+          <Button onClick={()=>setQrDialog({open:false,url:''})}><Trans>Закрыть</Trans></Button>
         </DialogActions>
       </Dialog>
       {/* Попап сравнения двух кандидатов */}
       <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Сравнение кандидатов</DialogTitle>
+        <DialogTitle><Trans>Сравнение кандидатов</Trans></DialogTitle>
         <DialogContent sx={{ pt: '16px !important' }}>
           {selectedCandidates.length >= 2 ? (
             <Box>
               <Typography variant="h6" sx={{ mb: 2 }}>
-                Выбрано кандидатов: {selectedCandidates.length}
+                <Trans>Выбрано кандидатов</Trans>: {selectedCandidates.length}
               </Typography>
               <Grid container spacing={2}>
                 {selectedCandidates.map((id, idx) => {
@@ -828,11 +828,11 @@ export default function HRVacancyDetailPage() {
                           <Typography variant="h6" fontWeight={700}>{cand.name}</Typography>
                         </Box>
                         <Typography variant="body2">Email: {cand.email || '-'}</Typography>
-                        <Typography variant="body2">Телефон: {cand.phone || '-'}</Typography>
-                        <Typography variant="body2">Статус: {getStatusLabel(cand.status)}</Typography>
-                        <Typography variant="body2">Оценка: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
-                        <Typography variant="body2">Дата добавления: {cand.createdAt ? formatDateToLocal(cand.createdAt) : '-'}</Typography>
-                        <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}>Подробнее</Button>
+                        <Typography variant="body2"><Trans>Телефон</Trans>: {cand.phone || '-'}</Typography>
+                        <Typography variant="body2"><Trans>Статус</Trans>: {getStatusLabel(cand.status)}</Typography>
+                        <Typography variant="body2"><Trans>Оценка</Trans>: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
+                        <Typography variant="body2"><Trans>Дата добавления</Trans>: {cand.createdAt ? formatDateToLocal(cand.createdAt) : '-'}</Typography>
+                        <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}><Trans>Подробнее</Trans></Button>
                       </Card>
                     </Grid>
                   );
@@ -844,10 +844,10 @@ export default function HRVacancyDetailPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>setCompareOpen(false)}>Закрыть</Button>
+          <Button onClick={()=>setCompareOpen(false)}><Trans>Закрыть</Trans></Button>
           {selectedCandidates.length >= 2 && (
-            <Button 
-              variant="contained" 
+            <Button
+              variant="contained"
               color="primary"
               onClick={() => {
                 setCompareOpen(false);
@@ -861,7 +861,7 @@ export default function HRVacancyDetailPage() {
       </Dialog>
 
 
-      
+
       {/* Плавающая кнопка сравнения */}
       {selectedCandidates.length >= 2 && (
         <Fab
@@ -886,28 +886,28 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
   const [form,setForm] = React.useState({name:'',email:'',phone:''});
   const [loading,setLoading]=React.useState(false);
   const [errors, setErrors] = React.useState({name:'',email:'',phone:''});
-  
+
   // Валидация email
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
+
   // Валидация телефона (российский формат)
   const validatePhone = (phone: string) => {
     const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
     return phoneRegex.test(phone.replace(/\s/g, ''));
   };
-  
+
   const canSubmit = form.name.trim()!=='' && !loading && !errors.name && !errors.email && !errors.phone;
-  
+
   const handleChange=(field:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>{
     const value = e.target.value;
     setForm({...form,[field]:value});
-    
+
     // Очищаем ошибку при вводе
     setErrors(prev => ({...prev, [field]: ''}));
-    
+
     // Валидация в реальном времени
     if (field === 'email' && value && !validateEmail(value)) {
       setErrors(prev => ({...prev, email: _(msg`Введите корректный email адрес`)}));
@@ -916,62 +916,62 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
       setErrors(prev => ({...prev, phone: _(msg`Введите корректный номер телефона`)}));
     }
   };
-  
+
   const handleSubmit=async()=>{
     if(!canSubmit) return;
-    
+
     // Финальная валидация перед отправкой
     const newErrors = {name:'',email:'',phone:''};
     if (!form.name.trim()) newErrors.name = 'Имя обязательно';
     if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
     if (form.phone && !validatePhone(form.phone)) newErrors.phone = 'Введите корректный номер телефона';
-    
+
     if (newErrors.name || newErrors.email || newErrors.phone) {
       setErrors(newErrors);
       return;
     }
-    
+
     setLoading(true);
     const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,vacancyId})});
     setLoading(false);
-    if(res.ok){ 
-      setForm({name:'',email:'',phone:''}); 
+    if(res.ok){
+      setForm({name:'',email:'',phone:''});
       setErrors({name:'',email:'',phone:''});
-      onClose(); 
-      onAdded(); 
+      onClose();
+      onAdded();
     }
   };
-  
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Добавить кандидата</DialogTitle>
+      <DialogTitle><Trans>Добавить кандидата</Trans></DialogTitle>
       <DialogContent sx={{ pt: '16px !important' }}>
-        <TextField 
-          label={_(msg`Имя *`)} 
-          fullWidth 
-          sx={{mb:2}} 
-          value={form.name} 
-          onChange={handleChange('name')} 
-          autoFocus 
+        <TextField
+          label={_(msg`Имя *`)}
+          fullWidth
+          sx={{mb:2}}
+          value={form.name}
+          onChange={handleChange('name')}
+          autoFocus
           error={!!errors.name}
           helperText={errors.name}
         />
-        <TextField 
-          label="Email" 
-          fullWidth 
-          sx={{mb:2}} 
-          value={form.email} 
-          onChange={handleChange('email')} 
+        <TextField
+          label="Email"
+          fullWidth
+          sx={{mb:2}}
+          value={form.email}
+          onChange={handleChange('email')}
           error={!!errors.email}
           helperText={errors.email || _(msg`Например: example@mail.ru`)}
           placeholder="example@mail.ru"
         />
-        <TextField 
-          label={_(msg`Телефон`)} 
-          fullWidth 
-          sx={{mb:2}} 
-          value={form.phone} 
-          onChange={handleChange('phone')} 
+        <TextField
+          label={_(msg`Телефон`)}
+          fullWidth
+          sx={{mb:2}}
+          value={form.phone}
+          onChange={handleChange('phone')}
           error={!!errors.phone}
           helperText={errors.phone || _(msg`Например: +7 (999) 123-45-67`)}
           placeholder="+7 (999) 123-45-67"

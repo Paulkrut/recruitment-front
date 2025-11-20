@@ -835,7 +835,7 @@ export default function HRCandidatesPage() {
               }}
               size="small"
             >
-              Сбросить
+              <Trans>Сбросить</Trans>
             </Button>
 
             <Box sx={{ ml: 'auto' }}>

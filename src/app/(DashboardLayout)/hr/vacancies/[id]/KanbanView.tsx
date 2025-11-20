@@ -1497,7 +1497,7 @@ export default function KanbanView({
                     },
                   }}
                 >
-                  Добавить кандидата
+                  <Trans>Добавить кандидата</Trans>
                 </Button>
               </Box>
 
@@ -1633,7 +1633,7 @@ export default function KanbanView({
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setHhTokenDialogOpen(false)} color="inherit">
-          Отмена
+          <Trans>Отмена</Trans>
         </Button>
         <Button
           onClick={() => {
@@ -1643,7 +1643,7 @@ export default function KanbanView({
           variant="contained"
           color="primary"
         >
-          Подключить HH.ru
+          <Trans>Подключить HH.ru</Trans>
         </Button>
       </DialogActions>
     </Dialog>

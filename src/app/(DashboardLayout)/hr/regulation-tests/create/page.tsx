@@ -52,43 +52,43 @@ const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.
 const steps = [_(msg`Основные настройки`), _(msg`Выбор регламентов`), _(msg`Генерация вопросов`)];
 
 // Мемоизированный компонент карточки вопроса для предотвращения ненужных перерендеров
-const QuestionCard = memo(({ 
-  question, 
-  index, 
+const QuestionCard = memo(({
+  question,
+  index,
   maxTimePerQuestion,
-  onUpdate, 
-  onDelete 
-}: { 
-  question: GeneratedQuestion; 
-  index: number; 
+  onUpdate,
+  onDelete
+}: {
+  question: GeneratedQuestion;
+  index: number;
   maxTimePerQuestion: number;
-  onUpdate: (index: number, field: keyof GeneratedQuestion, value: any) => void; 
+  onUpdate: (index: number, field: keyof GeneratedQuestion, value: any) => void;
   onDelete: (index: number) => void;
 }) => {
   return (
     <Card sx={{ mb: 2, border: '1px solid', borderColor: 'divider' }}>
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-          <Chip 
-            label={`Вопрос ${index + 1}`} 
-            size="small" 
-            color="primary" 
+          <Chip
+            label={`Вопрос ${index + 1}`}
+            size="small"
+            color="primary"
             sx={{ mr: 1 }}
           />
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Chip 
-              label={`Сложность: ${question.difficulty}`} 
-              size="small" 
+            <Chip
+              label={`Сложность: ${question.difficulty}`}
+              size="small"
               variant="outlined"
             />
-            <Chip 
-              label={question.regulationTitle} 
-              size="small" 
+            <Chip
+              label={question.regulationTitle}
+              size="small"
               variant="outlined"
               color="secondary"
             />
-            <IconButton 
-              size="small" 
+            <IconButton
+              size="small"
               color="error"
               onClick={() => onDelete(index)}
             >
@@ -460,11 +460,11 @@ export default function CreateTestPage() {
           <Box>
             {preselectedFromUrl && selectedRegulations.length > 0 && (
               <Alert severity="success" sx={{ mb: 2 }}>
-                ✅ Регламент "{regulations.find(r => r.id === selectedRegulations[0])?.title}" был автоматически выбран. 
+                ✅ Регламент "{regulations.find(r => r.id === selectedRegulations[0])?.title}" был автоматически выбран.
                 Вы можете добавить дополнительные регламенты ниже.
               </Alert>
             )}
-            
+
             <Alert severity="info" sx={{ mb: 2 }}>
               Выберите регламенты, по которым будет проводиться тестирование. Будет создано{' '}
               <strong>{questionsPerRegulation} вопросов</strong> на каждый регламент.
@@ -488,8 +488,8 @@ export default function CreateTestPage() {
 
             {regulations.length === 0 ? (
               <Alert severity="warning">
-                Регламенты не созданы. Сначала{' '}
-                <Link href="/hr/regulations">создайте регламенты</Link>.
+                <Trans>Регламенты не созданы. Сначала</Trans>{' '}
+                <Link href="/hr/regulations"><Trans>создайте регламенты</Trans></Link>.
               </Alert>
             ) : (
               <List>
@@ -697,10 +697,10 @@ export default function CreateTestPage() {
     <PageContainer title={_(msg`Создать тест`)} description="Конструктор теста на знание регламентов">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </Link>
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
-          Тесты
+          <Trans>Тесты</Trans>
         </Link>
         <Typography color="text.primary"><Trans>Создать тест</Trans></Typography>
       </Breadcrumbs>
@@ -723,7 +723,7 @@ export default function CreateTestPage() {
 
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button variant="outlined" onClick={() => router.push('/hr/regulation-tests')}>
-              Отмена
+              <Trans>Отмена</Trans>
             </Button>
 
             {activeStep === steps.length - 1 ? (

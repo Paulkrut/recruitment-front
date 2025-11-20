@@ -132,7 +132,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             startIcon={<ClearIcon />}
             onClick={handleClear}
           >
-            Сбросить
+            <Trans>Сбросить</Trans>
           </Button>
         )}
       </Box>

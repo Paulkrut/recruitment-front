@@ -133,7 +133,7 @@ function BrandingTab() {
           <Stack direction="row" spacing={2} alignItems="center">
             {form.logo && <img src={form.logo} alt="logo" style={{ width: 64, height: 64, objectFit: 'contain', borderRadius: 8, background: '#eee' }} />}
             {isLead && (
-              <Button variant="outlined" component="label">Загрузить
+              <Button variant="outlined" component="label"><Trans>Загрузить</Trans>
                 <input type="file" accept="image/*" hidden onChange={handleLogo} />
               </Button>
             )}

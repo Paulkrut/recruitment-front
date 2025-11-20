@@ -317,7 +317,7 @@ export default function HRVacancyCreatePage() {
             onClick={() => router.push("/hr/vacancies")}
               sx={{ fontWeight: 500, borderWidth: 2 }}
           >
-              Назад
+              <Trans>Назад</Trans>
           </Button>
             <Button
               variant="contained"
@@ -343,7 +343,7 @@ export default function HRVacancyCreatePage() {
                   htmlFor="vacancy-title"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                 >
-                  Название вакансии
+                  <Trans>Название вакансии</Trans>
                 </CustomFormLabel>
                 <CustomTextField
                   id="vacancy-title"
@@ -374,7 +374,7 @@ export default function HRVacancyCreatePage() {
                   htmlFor="vacancy-description"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                 >
-                  Описание вакансии
+                  <Trans>Описание вакансии</Trans>
                 </CustomFormLabel>
                 <CustomTextField
                   id="vacancy-description"
@@ -605,7 +605,7 @@ export default function HRVacancyCreatePage() {
                       }
                     }}
                   >
-                    Добавить вопрос
+                    <Trans>Добавить вопрос</Trans>
                   </Button>
                   <Button
                       variant="outlined"
@@ -711,7 +711,7 @@ export default function HRVacancyCreatePage() {
                           mb: 2
                         }}
                       >
-                        Текст вопроса
+                        <Trans>Текст вопроса</Trans>
                       </CustomFormLabel>
                       <CustomTextField
                         id={`question-${qIndex}-text`}
@@ -790,7 +790,7 @@ export default function HRVacancyCreatePage() {
                           }
                         }}
                       >
-                        Добавить вопрос
+                        <Trans>Добавить вопрос</Trans>
                       </Button>
                       <Button
                         variant="outlined"
@@ -836,7 +836,7 @@ export default function HRVacancyCreatePage() {
                         }
                       }}
                     >
-                      Добавить вопрос
+                      <Trans>Добавить вопрос</Trans>
                     </Button>
                     <Button
                       variant="outlined"
@@ -882,7 +882,7 @@ export default function HRVacancyCreatePage() {
                   onClick={() => router.push("/hr/vacancies")}
                 sx={{ fontWeight: 500, borderWidth: 2 }}
                 >
-                Назад
+                <Trans>Назад</Trans>
                 </Button>
                 <Button
                   variant="contained"
@@ -937,7 +937,7 @@ export default function HRVacancyCreatePage() {
                   mb: 2
                 }}
               >
-                Количество вопросов
+                <Trans>Количество вопросов</Trans>
               </CustomFormLabel>
               <CustomTextField
                 id="gen-count"
@@ -1004,7 +1004,7 @@ export default function HRVacancyCreatePage() {
                 }
               }}
             >
-              Отмена
+              <Trans>Отмена</Trans>
             </Button>
             <Button
               variant="contained"

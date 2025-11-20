@@ -458,7 +458,7 @@ export default function HhVacancyDetailPage() {
                     onClick={handleSyncVacancyOnly}
                     disabled={syncingVacancy}
                   >
-                    Обновить вакансию
+                    <Trans>Обновить вакансию</Trans>
                   </Button>
                 </Box>
 

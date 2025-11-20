@@ -183,10 +183,10 @@ export default function InvitationsPage() {
     <PageContainer title={_(msg`Приглашения`)} description="Управление приглашениями на тест">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
         <Link href="/hr" underline="hover" color="inherit">
-          Главная
+          <Trans>Главная</Trans>
         </Link>
         <Link href="/hr/regulation-tests" underline="hover" color="inherit">
-          Тесты
+          <Trans>Тесты</Trans>
         </Link>
         <Typography color="text.primary"><Trans>Приглашения</Trans></Typography>
       </Breadcrumbs>
@@ -202,10 +202,10 @@ export default function InvitationsPage() {
         </Box>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={() => router.push('/hr/regulation-tests')}>
-            Назад
+            <Trans>Назад</Trans>
           </Button>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
-            Создать приглашение
+            <Trans>Создать приглашение</Trans>
           </Button>
         </Box>
       </Box>
@@ -290,7 +290,7 @@ export default function InvitationsPage() {
 
       {/* Dialog создания приглашения */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Создать приглашение</DialogTitle>
+        <DialogTitle><Trans>Создать приглашение</Trans></DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
             <FormControl fullWidth>
@@ -334,7 +334,7 @@ export default function InvitationsPage() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Отмена</Button>
+          <Button onClick={() => setDialogOpen(false)}><Trans>Отмена</Trans></Button>
           <Button
             variant="contained"
             onClick={handleCreateInvitation}
