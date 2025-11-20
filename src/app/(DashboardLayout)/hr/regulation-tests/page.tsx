@@ -287,7 +287,7 @@ export default function RegulationTestsPage() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={`${test.regulationsCount} шт.`}
+                        label={${test.regulationsCount} {_(msg`шт.`)}}
                         size="small"
                         color="primary"
                         variant="outlined"

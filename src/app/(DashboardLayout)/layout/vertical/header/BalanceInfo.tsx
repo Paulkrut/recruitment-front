@@ -250,7 +250,7 @@ const BalanceInfo = () => {
                 <Typography variant="body2"><Trans>Интервью</Trans></Typography>
               </Stack>
               <Chip
-                label={`${interviewsCurrent} из ${interviewsTotal}`}
+                label={_(msg`${interviewsCurrent} из ${interviewsTotal}`)}
                 size="small"
                 color={interviewsColor}
                 icon={<Icon icon={getBalanceIcon(interviewsCurrent, interviewsTotal)} />}
@@ -280,7 +280,7 @@ const BalanceInfo = () => {
                 />
               ) : (
                 <Chip
-                  label={`${testsCurrent} из ${testsTotal}`}
+                  label={_(msg`${testsCurrent} из ${testsTotal}`)}
                   size="small"
                   color={testsColor}
                   icon={<Icon icon={getBalanceIcon(testsCurrent || 0, testsTotal)} />}

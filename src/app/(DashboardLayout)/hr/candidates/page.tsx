@@ -100,9 +100,9 @@ interface SortConfig {
 }
 
 // Компонент улучшенной таблицы кандидатов
-function EnhancedCandidateTable({ 
-  candidates, 
-  sortConfig, 
+function EnhancedCandidateTable({
+  candidates,
+  sortConfig,
   onSort,
   statusFilter,
   onStatusFilterChange,
@@ -114,7 +114,7 @@ function EnhancedCandidateTable({
   setCurrentPage,
   itemsPerPage,
   filteredCandidates,
-}: { 
+}: {
   candidates: CandidateRow[];
   sortConfig: SortConfig;
   onSort: (field: SortField) => void;
@@ -195,8 +195,8 @@ function EnhancedCandidateTable({
 
 
   const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
-    <TableCell 
-      sx={{ 
+    <TableCell
+      sx={{
         cursor: 'pointer',
         userSelect: 'none',
         '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' }
@@ -206,8 +206,8 @@ function EnhancedCandidateTable({
       <Box display="flex" alignItems="center" gap={1}>
         {children}
         {sortConfig.field === field && (
-          sortConfig.order === 'asc' ? 
-            <IconSortAscending size={16} /> : 
+          sortConfig.order === 'asc' ?
+            <IconSortAscending size={16} /> :
             <IconSortDescending size={16} />
         )}
       </Box>
@@ -241,18 +241,18 @@ function EnhancedCandidateTable({
         </TableHead>
         <TableBody>
           {candidates.map((candidate) => (
-            <TableRow 
-              key={candidate.id} 
+            <TableRow
+              key={candidate.id}
               hover
-              sx={{ 
+              sx={{
                 '&:hover': { backgroundColor: 'rgba(25, 118, 210, 0.04)' },
                 transition: 'background-color 0.2s'
               }}
             >
               <TableCell>
                 <Box display="flex" alignItems="center" gap={2}>
-                  <Avatar 
-                    sx={{ 
+                  <Avatar
+                    sx={{
                       bgcolor: 'primary.main',
                       width: 40,
                       height: 40,
@@ -263,15 +263,15 @@ function EnhancedCandidateTable({
                   </Avatar>
                   <Box>
                     <Link href={`/hr/candidates/${candidate.id}`} style={{ textDecoration: 'none' }}>
-                      <Typography 
-                        variant="subtitle2" 
+                      <Typography
+                        variant="subtitle2"
                         fontWeight="bold"
-                        sx={{ 
+                        sx={{
                           cursor: 'pointer',
                           color: 'text.primary',
-                          '&:hover': { 
+                          '&:hover': {
                             color: 'primary.main',
-                            textDecoration: 'underline' 
+                            textDecoration: 'underline'
                           }
                         }}
                       >
@@ -301,10 +301,10 @@ function EnhancedCandidateTable({
                   <Link href={`/hr/vacancies/${candidate.vacancy.id}`} style={{ textDecoration: 'none' }}>
                     <Box display="flex" alignItems="center" gap={1}>
                       <IconBriefcase size={16} color="#1976d2" />
-                      <Typography 
-                        variant="body2" 
-                        color="primary" 
-                        sx={{ 
+                      <Typography
+                        variant="body2"
+                        color="primary"
+                        sx={{
                           cursor: 'pointer',
                           '&:hover': { textDecoration: 'underline' }
                         }}
@@ -354,13 +354,13 @@ function EnhancedCandidateTable({
               </TableCell>
               <TableCell>
                 <Box>
-                  <DateDisplay 
+                  <DateDisplay
                     utcDate={candidate.createdAt}
                     format="full"
                     variant="body2"
                     fontWeight="bold"
                   />
-                  <DateDisplay 
+                  <DateDisplay
                     utcDate={candidate.createdAt}
                     format="relative"
                     variant="caption"
@@ -390,7 +390,7 @@ function EnhancedCandidateTable({
                   <IconButton
                     size="small"
                     onClick={() => router.push(`/hr/candidates/${candidate.id}`)}
-                    sx={{ 
+                    sx={{
                       color: 'primary.main',
                       '&:hover': { backgroundColor: 'primary.light', color: 'white' }
                     }}
@@ -465,16 +465,16 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Box>
             <Link href={`/hr/candidates/${candidate.id}`} style={{ textDecoration: 'none' }}>
-              <Typography 
-                variant="h6" 
-                fontWeight="bold" 
+              <Typography
+                variant="h6"
+                fontWeight="bold"
                 gutterBottom
-                sx={{ 
+                sx={{
                   cursor: 'pointer',
                   color: 'text.primary',
-                  '&:hover': { 
+                  '&:hover': {
                     color: 'primary.main',
-                    textDecoration: 'underline' 
+                    textDecoration: 'underline'
                   }
                 }}
               >
@@ -502,10 +502,10 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
         {candidate.vacancy && (
           <Box mb={2}>
             <Link href={`/hr/vacancies/${candidate.vacancy.id}`} style={{ textDecoration: 'none' }}>
-              <Typography 
-                variant="body2" 
-                color="primary" 
-                sx={{ 
+              <Typography
+                variant="body2"
+                color="primary"
+                sx={{
                   cursor: 'pointer',
                   '&:hover': { textDecoration: 'underline' }
                 }}
@@ -524,7 +524,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
             </Typography>
             {candidate.score !== null && candidate.score !== undefined && (
               <Chip
-                label={`Оценка: ${candidate.score}/10`}
+                label={_(msg`Оценка`): ${candidate.score}`/10`}
                 color={getScoreColor(candidate.score) as any}
                 size="small"
                 sx={{ mt: 1 }}
@@ -621,7 +621,7 @@ export default function HRCandidatesPage() {
 
   const filteredCandidates = candidates.filter((candidate) => {
     // Поиск по тексту
-    const searchMatch = 
+    const searchMatch =
       candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (candidate.email && candidate.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (candidate.phone && candidate.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -646,7 +646,7 @@ export default function HRCandidatesPage() {
     }
 
     // Фильтр по вакансии
-    const vacancyMatch = !vacancyFilter || 
+    const vacancyMatch = !vacancyFilter ||
       (candidate.vacancy && candidate.vacancy.id.toString() === vacancyFilter);
 
     return searchMatch && statusMatch && scoreMatch && vacancyMatch;
@@ -858,9 +858,9 @@ export default function HRCandidatesPage() {
           </Box>
         ) : viewMode === "table" ? (
           <>
-            <EnhancedCandidateTable 
-              candidates={paginatedCandidates} 
-              sortConfig={sortConfig} 
+            <EnhancedCandidateTable
+              candidates={paginatedCandidates}
+              sortConfig={sortConfig}
               onSort={(field) => {
                 setSortConfig(prev => {
                   if (prev.field === field) {
@@ -889,7 +889,7 @@ export default function HRCandidatesPage() {
               itemsPerPage={itemsPerPage}
               filteredCandidates={filteredCandidates}
             />
-            
+
             {/* Пагинация */}
             {filteredCandidates.length > itemsPerPage && (
               <Box display="flex" justifyContent="center" mt={3}>
@@ -916,4 +916,4 @@ export default function HRCandidatesPage() {
       </Box>
     </PageContainer>
   );
-} 
+}

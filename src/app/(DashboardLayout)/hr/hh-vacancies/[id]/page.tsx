@@ -38,21 +38,21 @@ import { msg } from '@lingui/macro';
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 // Мемоизированная карточка статуса для производительности
-const StateCard = memo(({ 
-  stateData, 
-  isSelected, 
-  onToggle 
-}: { 
-  stateData: StateStats; 
-  isSelected: boolean; 
+const StateCard = memo(({
+  stateData,
+  isSelected,
+  onToggle
+}: {
+  stateData: StateStats;
+  isSelected: boolean;
   onToggle: (state: string) => void;
 }) => {
   const hasNew = stateData.count_hh > stateData.count;
-  
+
   return (
-    <Card 
+    <Card
       variant="outlined"
-      sx={{ 
+      sx={{
         cursor: 'pointer',
         border: isSelected ? 2 : 1,
         borderColor: isSelected ? 'primary.main' : 'divider',
@@ -280,7 +280,7 @@ export default function HhVacancyDetailPage() {
       // Затем запускаем синхронизацию с выбранными статусами
       const response = await apiFetch(
         `${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-candidates`,
-        { 
+        {
           method: 'POST',
           body: JSON.stringify({ states: selectedStates })
         }
@@ -340,13 +340,13 @@ export default function HhVacancyDetailPage() {
 
         if (result.success && result.data) {
           const syncStatus = result.data.status;
-          
+
           if (syncStatus === 'synced' || syncStatus === 'error') {
             clearInterval(interval);
             setPollingStatus(false);
             setSyncing(false);
             fetchVacancyDetails(); // Перезагружаем данные
-            
+
             if (syncStatus === 'error') {
               setError(result.data.error || _(msg`Ошибка синхронизации`));
             } else {
@@ -467,7 +467,7 @@ export default function HhVacancyDetailPage() {
                     <List>
                       <ListItem>
                         <ListItemText
-                          primary="Статус"
+                          primary={_(msg`Статус`)}
                           secondary={
                             <Chip
                               label={vacancy.status === 'active' ? _(msg`Активна`) : _(msg`Архив`)}
@@ -479,7 +479,7 @@ export default function HhVacancyDetailPage() {
                       </ListItem>
                       <ListItem>
                         <ListItemText
-                          primary="Зарплата"
+                          primary={_(msg`Зарплата`)}
                           secondary={
                             vacancy.salary_from || vacancy.salary_to
                               ? `${vacancy.salary_from ? vacancy.salary_from.toLocaleString() : '...'} - ${vacancy.salary_to ? vacancy.salary_to.toLocaleString() : '...'} ${vacancy.salary_currency}`
@@ -488,7 +488,7 @@ export default function HhVacancyDetailPage() {
                         />
                       </ListItem>
                       <ListItem>
-                        <ListItemText primary="Опыт" secondary={vacancy.experience} />
+                        <ListItemText primary={_(msg`Опыт`)} secondary={vacancy.experience} />
                       </ListItem>
                     </List>
                   </Grid>
@@ -496,17 +496,17 @@ export default function HhVacancyDetailPage() {
                   <Grid item xs={12} md={6}>
                     <List>
                       <ListItem>
-                        <ListItemText primary="Город" secondary={vacancy.area_name} />
+                        <ListItemText primary={_(msg`Город`)} secondary={vacancy.area_name} />
                       </ListItem>
                       <ListItem>
                         <ListItemText primary="HH ID" secondary={vacancy.hh_id} />
                       </ListItem>
                       <ListItem>
                         <ListItemText
-                          primary="Ссылка на HH"
+                          primary={_(msg`Ссылка на HH`)}
                           secondary={
                             <a href={vacancy.url} target="_blank" rel="noopener noreferrer">
-                              Открыть на hh.ru
+                              <Trans>Открыть на hh.ru</Trans>
                             </a>
                           }
                         />
@@ -570,7 +570,7 @@ export default function HhVacancyDetailPage() {
                   <Grid container spacing={2}>
                     {candidates_by_state.map((stateData) => (
                       <Grid item xs={12} sm={6} md={4} key={stateData.state}>
-                        <StateCard 
+                        <StateCard
                           stateData={stateData}
                           isSelected={selectedStates.includes(stateData.state)}
                           onToggle={handleToggleState}
@@ -631,20 +631,20 @@ export default function HhVacancyDetailPage() {
                   <List>
                     <ListItem>
                       <ListItemText
-                        primary="Последняя синхронизация"
+                        primary={_(msg`Последняя синхронизация`)}
                         secondary={new Date(sync_status.last_synced_at).toLocaleString('ru-RU')}
                       />
                     </ListItem>
                     <ListItem>
                       <ListItemText
-                        primary="Синхронизировано кандидатов"
+                        primary={_(msg`Синхронизировано кандидатов`)}
                         secondary={`${sync_status.synced} / ${sync_status.total}`}
                       />
                     </ListItem>
                     {candidates_by_state.length > 0 && (
                       <ListItem>
                         <ListItemText
-                          primary="Кандидатов с AI-анализом"
+                          primary={_(msg`Кандидатов с AI-анализом`)}
                           secondary={`${candidates_by_state.reduce((sum, s) => sum + s.with_ai_score, 0)} (${Math.round((candidates_by_state.reduce((sum, s) => sum + s.with_ai_score, 0) / candidates_by_state.reduce((sum, s) => sum + s.count, 0)) * 100)}%)`}
                         />
                       </ListItem>

@@ -69,7 +69,7 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
             <Typography variant="h5" fontWeight="600"><Trans>Слабые вопросы</Trans></Typography>
           </Box>
           <Chip
-            label={`${data.length} вопросов`}
+            label={_(msg`${data.length} вопросов`)}
             size="small"
             color="warning"
             variant="outlined"

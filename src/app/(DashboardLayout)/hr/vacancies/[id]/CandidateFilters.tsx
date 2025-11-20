@@ -380,7 +380,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
         <Box display="flex" gap={1} mt={2} flexWrap="wrap">
           {filters.search && (
             <Chip
-              label={`Поиск: ${filters.search}`}
+              label={_(msg`Поиск: ${filters.search}`)}
               size="small"
               onDelete={() => handleRemoveFilter('search')}
             />
@@ -459,7 +459,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.datePreset === 'custom' && (filters.dateFrom || filters.dateTo) && (
             <Chip
-              label={`Дата: ${filters.dateFrom || '...'} — ${filters.dateTo || '...'}`}
+              label={_(msg`Дата: ${filters.dateFrom || '...'} — ${filters.dateTo || '...'}`)}
               size="small"
               onDelete={() => {
                 const newFilters = { ...filters };
@@ -473,7 +473,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.hhStage && (
             <Chip
-              label={`HH Стадия: ${filters.hhStage}`}
+              label={_(msg`HH Стадия: ${filters.hhStage}`)}
               size="small"
               onDelete={() => handleRemoveFilter('hhStage')}
             />

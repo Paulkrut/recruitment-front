@@ -634,7 +634,7 @@ export default function HRVacancyCreatePage() {
                   }}>
                     <Box display="flex" alignItems="center" gap={2} mb={3}>
                       <Chip 
-                        label={`Вопрос ${qIndex + 1}`} 
+                        label={_(msg`Вопрос ${qIndex + 1}`)} 
                         sx={{ 
                           backgroundColor: '#e3f2fd',
                           color: '#1976d2',

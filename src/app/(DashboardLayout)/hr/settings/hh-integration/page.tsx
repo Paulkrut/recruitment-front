@@ -432,8 +432,8 @@ export default function HhIntegrationPage() {
                             <IconBriefcase color="primary" />
                           </ListItemIcon>
                           <ListItemText
-                            primary="Автоматическая загрузка ваших вакансий"
-                            secondary="Все опубликованные на HH.ru вакансии будут синхронизированы"
+                            primary={_(msg`Автоматическая загрузка ваших вакансий`)}
+                            secondary={_(msg`Все опубликованные на HH.ru вакансии будут синхронизированы`)}
                           />
                         </ListItem>
                         <ListItem>
@@ -441,8 +441,8 @@ export default function HhIntegrationPage() {
                             <IconUsers color="primary" />
                           </ListItemIcon>
                           <ListItemText
-                            primary="Получение откликов кандидатов"
-                            secondary="Все отклики на вакансии будут автоматически импортированы"
+                            primary={_(msg`Получение откликов кандидатов`)}
+                            secondary={_(msg`Все отклики на вакансии будут автоматически импортированы`)}
                           />
                         </ListItem>
                         <ListItem>
@@ -450,8 +450,8 @@ export default function HhIntegrationPage() {
                             <IconClock color="primary" />
                           </ListItemIcon>
                           <ListItemText
-                            primary="Автоматическая синхронизация"
-                            secondary="Новые данные будут обновляться каждые 2 часа"
+                            primary={_(msg`Автоматическая синхронизация`)}
+                            secondary={_(msg`Новые данные будут обновляться каждые 2 часа`)}
                           />
                         </ListItem>
                       </List>

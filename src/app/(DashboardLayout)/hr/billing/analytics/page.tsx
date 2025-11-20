@@ -235,9 +235,7 @@ export default function BillingAnalyticsPage() {
             <Alert severity="success" icon={<IconGift size={24} />}>
               <Typography variant="body1" fontWeight="medium"><Trans>Спасибо за использование нашей платформы! 🎁</Trans></Typography>
               <Typography variant="body2">
-                Вы получили {stats.gifts.count} бонусных{' '}
-                {stats.gifts.count === 1 ? _(msg`интервью`) : _(msg`интервью`)} благодаря нашей системе
-                защиты от одновременных запусков. Мы ценим ваше доверие!
+                <Trans>Вы получили {stats.gifts.count} бонусных интервью благодаря нашей системе защиты от одновременных запусков. Мы ценим ваше доверие!</Trans>
               </Typography>
             </Alert>
           </Grid>

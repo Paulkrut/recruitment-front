@@ -90,11 +90,11 @@ function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: ()
         <List>
           <ListItem button onClick={() => { onCopy(); handleClose(); }}>
             <ListItemIcon><ContentCopyIcon fontSize="small" /></ListItemIcon>
-            <ListItemText primary="Скопировать ссылку" />
+            <ListItemText primary={_(msg`Скопировать ссылку`)} />
           </ListItem>
           <ListItem button onClick={() => { onShowQR(); handleClose(); }}>
             <ListItemIcon><QrCodeIcon fontSize="small" /></ListItemIcon>
-            <ListItemText primary="Показать QR-код" />
+            <ListItemText primary={_(msg`Показать QR-код`)} />
           </ListItem>
         </List>
       </Popover>
@@ -282,8 +282,8 @@ export default function HRVacancyDetailPage() {
             <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
             <Box display="flex" gap={2} mt={2} flexWrap="wrap">
               <Chip icon={<IconFileText size={18}/>} label={template?.title || _(msg`Без шаблона`)} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
-              <Chip icon={<IconFileText size={18}/>} label={`Вопросов: ${(questions||[]).length}`} color="primary" sx={{ fontWeight: 600 }} />
-              <Chip icon={<IconUsers size={18}/>} label={`Кандидатов: ${candidates.length}`} color="success" sx={{ fontWeight: 600 }} />
+              <Chip icon={<IconFileText size={18}/>} label={_(msg`Вопросов: ${(questions||[]).length}`)} color="primary" sx={{ fontWeight: 600 }} />
+              <Chip icon={<IconUsers size={18}/>} label={_(msg`Кандидатов: ${candidates.length}`)} color="success" sx={{ fontWeight: 600 }} />
             </Box>
 
             {/* Публичная ссылка для самозаписи */}
@@ -362,7 +362,7 @@ export default function HRVacancyDetailPage() {
   );
 
   return (
-    <PageContainer title={`Вакансия: ${title}`}>
+    <PageContainer title={_(msg`Вакансия: ${title}`)}>
       <style jsx global>{`
         .highlight-question {
           background-color: #fff3cd !important;
@@ -375,9 +375,9 @@ export default function HRVacancyDetailPage() {
       <TabContext value={tab}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <TabList onChange={(_, v) => setTab(v)} aria-label="vacancy tabs">
-            <Tab icon={<IconUsers size={20}/>} iconPosition="start" label={`Кандидаты (${candidates.length})`} value="1" />
+            <Tab icon={<IconUsers size={20}/>} iconPosition="start" label={_(msg`Кандидаты (${candidates.length})`)} value="1" />
             <Tab icon={<IconBriefcase size={20}/>} iconPosition="start" label={_(msg`Описание`)} value="2" />
-            <Tab icon={<IconFileText size={20}/>} iconPosition="start" label={`Вопросы (${(questions||[]).length})`} value="3" />
+            <Tab icon={<IconFileText size={20}/>} iconPosition="start" label={_(msg`Вопросы (${(questions||[]).length})`)} value="3" />
           </TabList>
         </Box>
         <TabPanel value="1" sx={{p:0}}>

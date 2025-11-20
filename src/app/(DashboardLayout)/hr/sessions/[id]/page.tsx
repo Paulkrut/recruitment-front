@@ -52,7 +52,7 @@ export default function HRSessionDetailPage() {
   const { sessionId, status, startedAt, finishedAt, candidate, template, answers, result } = data;
 
   return (
-    <PageContainer title={`Интервью-сессия #${sessionId}`}>
+    <PageContainer title={_(msg`Интервью-сессия #${sessionId}`)}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <Card sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
           <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>

@@ -3,6 +3,9 @@ import React from 'react';
 import { Box, Container, Typography, Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemIcon, ListItemText, Grid, Paper, Alert } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 const PricingFAQ: React.FC = () => {
@@ -58,28 +61,28 @@ const PricingFAQ: React.FC = () => {
                   <ListItemIcon><Icon icon="mdi:gift" color="#4CAF50" width={24} /></ListItemIcon>
                   <ListItemText 
                     primary={<Typography fontWeight={600}><Trans>Пробный тариф</Trans></Typography>}
-                    secondary="Поддержка по email (ответ в течение 48 часов). Доступ к базе знаний и документации."
+                    secondary={_(msg`Поддержка по email (ответ в течение 48 часов). Доступ к базе знаний и документации.`)}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:rocket" color="#2196F3" width={24} /></ListItemIcon>
                   <ListItemText 
                     primary={<Typography fontWeight={600}><Trans>Старт</Trans></Typography>}
-                    secondary="Поддержка по email (ответ в течение 24 часов). Доступ к базе знаний, документации и видео-инструкциям."
+                    secondary={_(msg`Поддержка по email (ответ в течение 24 часов). Доступ к базе знаний, документации и видео-инструкциям.`)}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:briefcase" color="#2196F3" width={24} /></ListItemIcon>
                   <ListItemText 
                     primary={<Typography fontWeight={600}><Trans>Бизнес (рекомендуем)</Trans></Typography>}
-                    secondary="Приоритетная поддержка (ответ в течение 4 часов в рабочее время). Email, чат и телефон. Помощь с настройкой интеграций."
+                    secondary={_(msg`Приоритетная поддержка (ответ в течение 4 часов в рабочее время). Email, чат и телефон. Помощь с настройкой интеграций.`)}
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:crown" color="#9C27B0" width={24} /></ListItemIcon>
                   <ListItemText 
                     primary={<Typography fontWeight={600}><Trans>Премиум</Trans></Typography>}
-                    secondary="Персональный менеджер 24/7. Мгновенная поддержка по любым каналам. Помощь с настройкой, обучение команды, консультации по оптимизации процессов."
+                    secondary={_(msg`Персональный менеджер 24/7. Мгновенная поддержка по любым каналам. Помощь с настройкой, обучение команды, консультации по оптимизации процессов.`)}
                   />
                 </ListItem>
               </List>
@@ -97,15 +100,15 @@ const PricingFAQ: React.FC = () => {
               <List dense>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:credit-card" color="#2196F3" width={24} /></ListItemIcon>
-                  <ListItemText primary="Банковские карты (Visa, Mastercard, МИР)" />
+                  <ListItemText primary={_(msg`Банковские карты (Visa, Mastercard, МИР)`)} />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:bank" color="#2196F3" width={24} /></ListItemIcon>
-                  <ListItemText primary="Система быстрых платежей (СБП)" />
+                  <ListItemText primary={_(msg`Система быстрых платежей (СБП)`)} />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:wallet" color="#2196F3" width={24} /></ListItemIcon>
-                  <ListItemText primary="Электронные кошельки (ЮMoney, Qiwi)" />
+                  <ListItemText primary={_(msg`Электронные кошельки (ЮMoney, Qiwi)`)} />
                 </ListItem>
               </List>
               <Alert severity="info" sx={{ mt: 2 }}>

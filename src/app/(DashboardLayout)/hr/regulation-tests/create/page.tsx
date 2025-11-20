@@ -70,14 +70,14 @@ const QuestionCard = memo(({
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
           <Chip
-            label={`Вопрос ${index + 1}`}
+            label={_(msg`Вопрос`) ${index + 1}}
             size="small"
             color="primary"
             sx={{ mr: 1 }}
           />
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Chip
-              label={`Сложность: ${question.difficulty}`}
+              label={_(msg`Сложность`): ${question.difficulty}}
               size="small"
               variant="outlined"
             />

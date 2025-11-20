@@ -230,7 +230,7 @@ export default function CandidateDetailPage() {
         sessionDetail,
         evalData
       };
-      
+
       await exportCandidateToPDFWithFont(pdfData);
     } catch (error) {
       console.error('Ошибка при экспорте PDF:', error);
@@ -239,7 +239,7 @@ export default function CandidateDetailPage() {
   };
 
   return (
-    <PageContainer title={`Кандидат: ${candidate}`}> 
+    <PageContainer title={_(msg`Кандидат`): ${candidate}}>
       <Stack spacing={3}>
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb">
@@ -267,10 +267,10 @@ export default function CandidateDetailPage() {
                   {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
                   {statusData?.candidateOpinion && (
                     <Tooltip title={_(msg`Кандидат оставил мнение о результатах`)}>
-                      <Chip 
-                        label={_(msg`Есть мнение`)} 
-                        color="info" 
-                        size="small" 
+                      <Chip
+                        label={_(msg`Есть мнение`)}
+                        color="info"
+                        size="small"
                         icon={<IconMoodHappy size={16} />}
                         onClick={() => setTab('opinion')}
                         sx={{ cursor: 'pointer' }}
@@ -297,10 +297,10 @@ export default function CandidateDetailPage() {
                   </Link>
                 </Tooltip>
                 <Tooltip title={_(msg`Экспорт в PDF`)}>
-                  <Button 
-                    variant="outlined" 
-                    color="primary" 
-                    size="small" 
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    size="small"
                     startIcon={<PictureAsPdfIcon />}
                     onClick={handleExportPDF}
                   >
@@ -391,10 +391,10 @@ export default function CandidateDetailPage() {
                         <Stack direction="row" alignItems="center" spacing={2}>
                           <Typography variant="subtitle1"><b>Вопрос {idx+1}:</b> {a.question}</Typography>
                           {a.score !== undefined && a.score !== null && (
-                            <Chip 
-                              label={`Оценка: ${a.score}`} 
-                              color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'} 
-                              size="small" 
+                            <Chip
+                              label={_(msg`Оценка`): ${a.score}}
+                              color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
+                              size="small"
                             />
                           )}
                         </Stack>
@@ -494,12 +494,12 @@ export default function CandidateDetailPage() {
                               };
                               return labels[metric] || metric;
                             };
-                            
+
                             return (
                               <Grid item xs={12} sm={6} md={4} key={metric}>
-                                <Card 
-                                  sx={{ 
-                                    p: 2, 
+                                <Card
+                                  sx={{
+                                    p: 2,
                                     height: '100%',
                                     border: '1px solid',
                                     borderColor: 'divider',
@@ -517,26 +517,26 @@ export default function CandidateDetailPage() {
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ flexGrow: 1 }}>
                                       {getLabel(metric)}
                                     </Typography>
-                                    <Chip 
-                                      label={`${score}/100`} 
-                                      size="small" 
+                                    <Chip
+                                      label={`${score}/100`}
+                                      size="small"
                                       color={getColor(score) as any}
                                       sx={{ fontWeight: 600 }}
                                     />
                                   </Box>
-                                  
+
                                   <Box sx={{ width: '100%', mb: 1 }}>
-                                    <Box 
-                                      sx={{ 
-                                        width: `${score}%`, 
-                                        height: 8, 
+                                    <Box
+                                      sx={{
+                                        width: `${score}%`,
+                                        height: 8,
                                         borderRadius: 4,
                                         backgroundColor: score >= 80 ? 'success.main' : score >= 60 ? 'warning.main' : 'error.main',
                                         transition: 'width 0.3s ease'
-                                      }} 
+                                      }}
                                     />
                                   </Box>
-                                  
+
                                   <Typography variant="caption" color="textSecondary">
                                     {score >= 80 ? _(msg`Отлично`) : score >= 60 ? _(msg`Хорошо`) : score >= 40 ? _(msg`Средне`) : _(msg`Требует улучшения`)}
                                   </Typography>
@@ -560,54 +560,54 @@ export default function CandidateDetailPage() {
                   <IconFileDescription size={32} color="#1976d2" />
                   <Typography variant="h6" fontWeight="700"><Trans>Резюме кандидата</Trans></Typography>
                 </Stack>
-                
+
                 {resumeLoading && (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <CircularProgress />
                     <Typography variant="body2" sx={{ mt: 2, opacity: 0.7 }}><Trans>Загрузка резюме...</Trans></Typography>
                   </Box>
                 )}
-                
+
                 {resumeData && !resumeLoading && (
                   <>
                     {/* Информация о резюме */}
                     <Stack direction="row" spacing={2} mb={2} flexWrap="wrap" alignItems="center">
                       {resumeData.source && (
-                        <Chip 
-                          label={`Источник: ${resumeData.source === 'headhunter' ? 'HeadHunter.ru' : resumeData.source}`} 
-                          color="primary" 
-                          size="small" 
+                        <Chip
+                          label={_(msg`Источник`): ${resumeData.source === 'headhunter' ? 'HeadHunter.ru' : resumeData.source}}
+                          color="primary"
+                          size="small"
                         />
                       )}
                       {resumeData.hasResume && (
-                        <Chip 
-                          label={_(msg`Резюме доступно`)} 
-                          color="success" 
-                          size="small" 
+                        <Chip
+                          label={_(msg`Резюме доступно`)}
+                          color="success"
+                          size="small"
                           icon={<CheckCircleIcon />}
                         />
                       )}
                       {!resumeData.hasResume && resumeData.canLoadFromHh && (
-                        <Chip 
-                          label={_(msg`Можно загрузить из HH`)} 
-                          color="info" 
-                          size="small" 
+                        <Chip
+                          label={_(msg`Можно загрузить из HH`)}
+                          color="info"
+                          size="small"
                         />
                       )}
                     </Stack>
-                    
+
                     {resumeText ? (
-                      <Box sx={{ 
-                        bgcolor: 'grey.50', 
-                        p: 3, 
-                        borderRadius: 2, 
-                        border: '1px solid', 
+                      <Box sx={{
+                        bgcolor: 'grey.50',
+                        p: 3,
+                        borderRadius: 2,
+                        border: '1px solid',
                         borderColor: 'grey.200',
                         mt: 2,
                         maxHeight: '70vh',
                         overflow: 'auto'
                       }}>
-                        <Typography variant="body1" sx={{ 
+                        <Typography variant="body1" sx={{
                           whiteSpace: 'pre-wrap',
                           lineHeight: 1.8,
                         }}>
@@ -618,11 +618,11 @@ export default function CandidateDetailPage() {
                       <Box sx={{ textAlign: 'center', py: 4 }}>
                         <IconFileDescription size={48} color="#ccc" style={{ marginBottom: 16 }} />
                         <Typography variant="body1" color="text.secondary" gutterBottom><Trans>Резюме отсутствует в базе</Trans></Typography>
-                        
+
                         {resumeData.canLoadFromHh && (
-                          <Button 
-                            variant="contained" 
-                            color="primary" 
+                          <Button
+                            variant="contained"
+                            color="primary"
                             sx={{ mt: 2 }}
                             onClick={async () => {
                               setResumeLoading(true);
@@ -631,7 +631,7 @@ export default function CandidateDetailPage() {
                                   method: 'POST',
                                 });
                                 const data = await response.json();
-                                
+
                                 if (data.success) {
                                   setResumeText(data.resumeText);
                                   setResumeData({
@@ -654,7 +654,7 @@ export default function CandidateDetailPage() {
                             Загрузить из HeadHunter.ru
                           </Button>
                         )}
-                        
+
                         {!resumeData.canLoadFromHh && (
                           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}><Trans>Для загрузки резюме необходимо добавить его вручную</Trans></Typography>
                         )}
@@ -710,7 +710,7 @@ export default function CandidateDetailPage() {
                         return (
                           <Box>
                             <Typography variant="body2" color="text.secondary" gutterBottom><Trans>Это та же обратная связь, которую видит кандидат после интервью</Trans></Typography>
-                            
+
                             {feedback.average_score > 0 && (
                               <Box sx={{ textAlign: 'center', mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
                                 <Typography variant="h6" gutterBottom>
@@ -753,7 +753,7 @@ export default function CandidateDetailPage() {
                             )}
 
                             <Divider sx={{ my: 3 }} />
-                            
+
                             <Typography variant="caption" color="text.secondary" align="center" display="block">
                               {feedback.disclaimer}
                             </Typography>
@@ -786,15 +786,15 @@ export default function CandidateDetailPage() {
                   <Typography variant="h6" fontWeight="700"><Trans>Мнение кандидата о своей оценке</Trans></Typography>
                 </Stack>
                 {statusData?.candidateOpinion ? (
-                  <Box sx={{ 
-                    bgcolor: 'grey.50', 
-                    p: 3, 
-                    borderRadius: 2, 
-                    border: '1px solid', 
+                  <Box sx={{
+                    bgcolor: 'grey.50',
+                    p: 3,
+                    borderRadius: 2,
+                    border: '1px solid',
                     borderColor: 'grey.200',
                     mt: 2
                   }}>
-                    <Typography variant="body1" sx={{ 
+                    <Typography variant="body1" sx={{
                       whiteSpace: 'pre-wrap',
                       lineHeight: 1.6,
                       fontStyle: 'italic'
@@ -840,14 +840,14 @@ export default function CandidateDetailPage() {
             }}><Trans>Сравнить</Trans></Button>
           </DialogActions>
         </Dialog>
-        <Snackbar 
-          open={!!copyMsg} 
-          autoHideDuration={2000} 
-          onClose={()=>setCopyMsg(null)} 
+        <Snackbar
+          open={!!copyMsg}
+          autoHideDuration={2000}
+          onClose={()=>setCopyMsg(null)}
           message={copyMsg}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         />
       </Stack>
     </PageContainer>
   );
-} 
+}

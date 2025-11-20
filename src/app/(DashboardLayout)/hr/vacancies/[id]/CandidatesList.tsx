@@ -605,7 +605,7 @@ export default function CandidatesList({
                   {/* Оценка за тест */}
                   <TableCell>
                     {r.score !== null && r.score !== undefined ? (
-                      <Tooltip title={`Оценка за прохождение теста: ${r.score}/10`} arrow>
+                      <Tooltip title={_(msg`Оценка за прохождение теста: ${r.score}/10`)} arrow>
                         <Chip
                           label={`${r.score}/10`}
                           size="small"

@@ -110,7 +110,7 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
             <Typography variant="h5" fontWeight="600"><Trans>Просроченные кандидаты</Trans></Typography>
           </Box>
           <Chip
-            label={`${data.length} кандидатов`}
+            label={_(msg`${data.length} кандидатов`)}
             size="small"
             color="error"
             variant="outlined"
