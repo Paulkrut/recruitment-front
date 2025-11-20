@@ -51,7 +51,7 @@ export default function ForgetMePage() {
     if (!formData.email.trim() || !formData.name.trim()) {
       setSubmitResult({
         success: false,
-        message: 'Пожалуйста, заполните обязательные поля'
+        message: _(msg`Пожалуйста, заполните обязательные поля`)
       });
       return;
     }
@@ -120,7 +120,7 @@ export default function ForgetMePage() {
     } catch (error) {
       setSubmitResult({
         success: false,
-        message: 'Ошибка соединения. Проверьте интернет-соединение и попробуйте снова.'
+        message: _(msg`Ошибка соединения. Проверьте интернет-соединение и попробуйте снова.`)
       });
     } finally {
       setSubmitting(false);
@@ -176,7 +176,7 @@ export default function ForgetMePage() {
             }
           >
             <Typography variant="h6" gutterBottom fontWeight={600}>
-              {submitResult.success ? '✅ Запрос успешно отправлен!' : '❌ Ошибка отправки'}
+              {submitResult.success ? _(msg`✅ Запрос успешно отправлен!`) : _(msg`❌ Ошибка отправки`)}
             </Typography>
             <Typography variant="body1">
               {submitResult.message}
@@ -313,7 +313,7 @@ export default function ForgetMePage() {
                   startIcon={submitting ? <Info /> : <DeleteForever />}
                   sx={{ px: 4, py: 1.5 }}
                 >
-                  {submitting ? 'Отправляем...' : 'Отправить запрос на удаление'}
+                  {submitting ? _(msg`Отправляем...`) : _(msg`Отправить запрос на удаление`)}
                 </Button>
               </Box>
             </Box>

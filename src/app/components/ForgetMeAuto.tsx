@@ -35,7 +35,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         },
         body: JSON.stringify({
           candidateToken,
-          reason: 'Автоматический запрос через интерфейс интервью'
+          reason: _(msg`Автоматический запрос через интерфейс интервью`)
         }),
       });
 
@@ -44,13 +44,13 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         setSuccessMessage(result.message || _(msg`Ваши данные успешно удалены с платформы`));
         setShowSuccess(true);
         setOpen(false);
-        
+
         // Запускаем счетчик обратного отсчета
         let secondsLeft = 3;
         const countdownInterval = setInterval(() => {
           secondsLeft--;
           setCountdown(secondsLeft);
-          
+
           if (secondsLeft <= 0) {
             clearInterval(countdownInterval);
             window.location.href = '/';
@@ -58,7 +58,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         }, 1000);
       } else {
         const errorData = await response.json();
-        alert('Ошибка при удалении данных: ' + (errorData.error || _(msg`Неизвестная ошибка`)));
+        alert(_(msg`Ошибка при удалении данных:`) + (errorData.error || _(msg`Неизвестная ошибка`)));
       }
     } catch (error) {
       console.error('Error:', error);
@@ -146,41 +146,41 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Отмена</Button>
-          <Button 
+          <Button
             onClick={handleForgetMe}
             disabled={confirmed !== _(msg`УДАЛИТЬ`) || loading}
             color="error"
             variant="contained"
           >
-            {loading ? 'Удаление...' : 'Удалить данные'}
+            {loading ? _(msg`Удаление...`) : _(msg`Удалить данные`)}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Юридический текст и кнопка для открытия диалога */}
-      <Box sx={{ 
-        mt: 'auto', 
-        pt: 3, 
+      <Box sx={{
+        mt: 'auto',
+        pt: 3,
         borderTop: '1px solid #e0e0e0',
         textAlign: 'center',
         opacity: 0.6
       }}>
-        <Typography variant="caption" color="text.secondary" sx={{ 
-          fontSize: '0.7rem', 
+        <Typography variant="caption" color="text.secondary" sx={{
+          fontSize: '0.7rem',
           lineHeight: 1.4,
           display: 'block'
         }}>
           Используя данную платформу, вы соглашаетесь с{' '}
-          <Button 
+          <Button
             component="a"
             href="/privacy-policy"
             target="_blank"
-            variant="text" 
-            size="small" 
-            sx={{ 
-              p: 0, 
-              minWidth: 'auto', 
-              textTransform: 'none', 
+            variant="text"
+            size="small"
+            sx={{
+              p: 0,
+              minWidth: 'auto',
+              textTransform: 'none',
               textDecoration: 'underline',
               color: 'text.secondary',
               fontSize: '0.7rem',
@@ -194,16 +194,16 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
             }}
           ><Trans>политикой конфиденциальности</Trans></Button>
           {' '}и{' '}
-          <Button 
+          <Button
             component="a"
             href="/terms-of-service"
             target="_blank"
-            variant="text" 
-            size="small" 
-            sx={{ 
-              p: 0, 
-              minWidth: 'auto', 
-              textTransform: 'none', 
+            variant="text"
+            size="small"
+            sx={{
+              p: 0,
+              minWidth: 'auto',
+              textTransform: 'none',
               textDecoration: 'underline',
               color: 'text.secondary',
               fontSize: '0.7rem',
@@ -217,14 +217,14 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
             }}
           ><Trans>условиями обработки персональных данных</Trans></Button>
           . В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ "О персональных данных" вы имеете право на{' '}
-          <Button 
-            variant="text" 
-            size="small" 
+          <Button
+            variant="text"
+            size="small"
             onClick={() => setOpen(true)}
-            sx={{ 
-              p: 0, 
-              minWidth: 'auto', 
-              textTransform: 'none', 
+            sx={{
+              p: 0,
+              minWidth: 'auto',
+              textTransform: 'none',
               textDecoration: 'underline',
               color: 'text.secondary',
               fontSize: '0.7rem',
@@ -244,4 +244,4 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
       </Box>
     </>
   );
-} 
+}

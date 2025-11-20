@@ -353,7 +353,7 @@ export default function ForgetMeRequestsPage() {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">
-                        {request.processedAt ? formatDate(request.processedAt) : 'Не указана'}
+                        {request.processedAt ? formatDate(request.processedAt) : _(msg`Не указана`)}
                       </Typography>
                     </TableCell>
                     <TableCell>
@@ -448,7 +448,7 @@ export default function ForgetMeRequestsPage() {
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle2" color="text.secondary"><Trans>Дата интервью</Trans></Typography>
                 <Typography variant="body1" gutterBottom>
-                  {selectedRequest.interviewDate ? formatDate(selectedRequest.interviewDate) : 'Не указана'}
+                  {selectedRequest.interviewDate ? formatDate(selectedRequest.interviewDate) : _(msg`Не указана`)}
                 </Typography>
               </Grid>
               
@@ -547,7 +547,7 @@ export default function ForgetMeRequestsPage() {
             disabled={!adminNotes.trim() || processing}
             startIcon={processing ? <Info /> : <CheckCircle />}
           >
-            {processing ? 'Подтверждаем...' : 'Подтвердить удаление'}
+            {processing ? _(msg`Подтверждаем...`) : _(msg`Подтвердить удаление`)}
           </Button>
         </DialogActions>
       </Dialog>

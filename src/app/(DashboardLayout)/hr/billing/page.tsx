@@ -144,12 +144,12 @@ export default function BillingPage() {
 
   const renderFeatures = (features: Record<string, any>) => {
     const featuresList = [
-      { key: 'ai_questions', label: 'AI генерация вопросов', icon: features?.ai_questions },
-      { key: 'video_answers', label: 'Видео-ответы', icon: features?.video_answers },
-      { key: 'screenings', label: 'Скрининги AI - безлимит', icon: true, highlight: true }, // Всегда бесплатно
-      { key: 'regulation_tests', label: 'Тесты сотрудников - безлимит', icon: true, highlight: true }, // Всегда бесплатно
-      { key: 'full_analytics', label: 'Полная аналитика', icon: features?.full_analytics || features?.basic_analytics },
-      { key: 'priority_support', label: 'Приоритетная поддержка', icon: features?.priority_support },
+      { key: 'ai_questions', label: _(msg`AI генерация вопросов`), icon: features?.ai_questions },
+      { key: 'video_answers', label: _(msg`Видео-ответы`), icon: features?.video_answers },
+      { key: 'screenings', label: _(msg`Скрининги AI - безлимит`), icon: true, highlight: true }, // Всегда бесплатно
+      { key: 'regulation_tests', label: _(msg`Тесты сотрудников - безлимит`), icon: true, highlight: true }, // Всегда бесплатно
+      { key: 'full_analytics', label: _(msg`Полная аналитика`), icon: features?.full_analytics || features?.basic_analytics },
+      { key: 'priority_support', label: _(msg`Приоритетная поддержка`), icon: features?.priority_support },
     ];
 
     return (
@@ -260,7 +260,7 @@ export default function BillingPage() {
                       setPurchaseDialogOpen(true);
                     }}
                   >
-                    {plan.is_free ? 'Получить бесплатно' : 'Купить'}
+                    {plan.is_free ? _(msg`Получить бесплатно`) : _(msg`Купить`)}
                   </Button>
                 </CardActions>
               </Card>
@@ -301,7 +301,7 @@ export default function BillingPage() {
             disabled={purchasing}
             startIcon={purchasing && <CircularProgress size={20} />}
           >
-            {purchasing ? 'Обработка...' : selectedPlan?.is_free ? 'Получить' : 'Перейти к оплате'}
+            {purchasing ? _(msg`Обработка...`) : selectedPlan?.is_free ? _(msg`Получить`) : _(msg`Перейти к оплате`)}
           </Button>
         </DialogActions>
       </Dialog>

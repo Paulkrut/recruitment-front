@@ -72,7 +72,7 @@ const HhTokenStatus = () => {
       return {
         color: 'error' as const,
         icon: <Icon icon="solar:shield-warning-bold" width="18" />,
-        label: 'HH.ru требует авторизации',
+        label: _(msg`HH.ru требует авторизации`),
       };
     }
     
@@ -80,7 +80,7 @@ const HhTokenStatus = () => {
       return {
         color: 'warning' as const,
         icon: <Icon icon="solar:clock-circle-bold" width="18" />,
-        label: 'HH.ru токен истекает',
+        label: _(msg`HH.ru токен истекает`),
       };
     }
 

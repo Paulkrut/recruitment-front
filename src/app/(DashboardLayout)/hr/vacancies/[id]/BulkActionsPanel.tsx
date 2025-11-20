@@ -170,7 +170,7 @@ export default function BulkActionsPanel({
         fullWidth
       >
         <DialogTitle>
-          Переместить {totalSelectedCount} {totalSelectedCount === 1 ? 'кандидата' : 'кандидатов'}?
+          Переместить {totalSelectedCount} {totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)}?
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" gutterBottom>
@@ -223,14 +223,14 @@ export default function BulkActionsPanel({
                 ) : daysNeeded === 1 ? (
                   <>✅ AI скрининг будет выполнен <strong>сегодня</strong></>
                 ) : (
-                  <>⏳ AI скрининг займёт примерно <strong>{daysNeeded} {daysNeeded === 2 || daysNeeded === 3 || daysNeeded === 4 ? 'дня' : 'дней'}</strong></>
+                  <>⏳ AI скрининг займёт примерно <strong>{daysNeeded} {daysNeeded === 2 || daysNeeded === 3 || daysNeeded === 4 ? _(msg`дня`) : _(msg`дней`)}</strong></>
                 )}
               </Typography>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}><Trans>ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.</Trans></Typography>
               
               {resumeQueueCount !== undefined && resumeQueueCount > 0 && (
                 <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>
-                  ⚠️ Уже в очереди на загрузку резюме: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? 'кандидат' : resumeQueueCount < 5 ? 'кандидата' : 'кандидатов'} по всем вакансиям
+                  ⚠️ Уже в очереди на загрузку резюме: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} по всем вакансиям
                 </Typography>
               )}
             </Alert>
@@ -253,7 +253,7 @@ export default function BulkActionsPanel({
             disabled={loading}
             startIcon={loading && <CircularProgress size={16} />}
           >
-            {loading ? 'Перемещение...' : 'Подтвердить'}
+            {loading ? _(msg`Перемещение...`) : _(msg`Подтвердить`)}
           </Button>
         </DialogActions>
       </Dialog>

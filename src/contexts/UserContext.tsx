@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiFetch } from '@/utils/api';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -42,6 +45,8 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const useUser = () => {
+  const { _ } = useLingui();
+
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');
@@ -80,11 +85,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const companiesData = await response.json();
         console.log('UserContext: Загружены компании:', companiesData);
         setCompanies(companiesData);
-        
+
         if (!currentCompany && companiesData.length > 0) {
           const storedCompanyId = localStorage.getItem('current_company');
           console.log('UserContext: Сохраненная компания в localStorage:', storedCompanyId);
-          
+
           if (storedCompanyId) {
             const storedCompany = companiesData.find((c: Company) => c.id === Number(storedCompanyId));
             if (storedCompany) {
@@ -153,7 +158,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const loadInitialData = async () => {
       setIsLoading(true);
       setError(null);
-      
+
       try {
         await Promise.all([
           refreshUser(),
@@ -192,4 +197,4 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
-}; 
+};

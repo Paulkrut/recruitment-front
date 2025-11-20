@@ -470,7 +470,7 @@ export default function HhVacancyDetailPage() {
                           primary="Статус"
                           secondary={
                             <Chip
-                              label={vacancy.status === 'active' ? 'Активна' : 'Архив'}
+                              label={vacancy.status === 'active' ? _(msg`Активна`) : _(msg`Архив`)}
                               color={vacancy.status === 'active' ? 'success' : 'default'}
                               size="small"
                             />
@@ -483,7 +483,7 @@ export default function HhVacancyDetailPage() {
                           secondary={
                             vacancy.salary_from || vacancy.salary_to
                               ? `${vacancy.salary_from ? vacancy.salary_from.toLocaleString() : '...'} - ${vacancy.salary_to ? vacancy.salary_to.toLocaleString() : '...'} ${vacancy.salary_currency}`
-                              : 'Не указана'
+                              : _(msg`Не указана`)
                           }
                         />
                       </ListItem>

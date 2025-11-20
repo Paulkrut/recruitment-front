@@ -132,7 +132,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             type="submit"
             disabled={loading}
           >
-            {loading ? "Вход..." : "Войти"}
+            {loading ? _(msg`Вход...`) : _(msg`Войти`)}
           </Button>
         </Box>
         {error && (

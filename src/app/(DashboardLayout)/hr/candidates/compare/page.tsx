@@ -212,7 +212,7 @@ export default function ComparePage() {
       console.log('✅ Базовое сравнение загружено:', data);
         setCandidates(data.candidates || []);
     } catch (err) {
-      console.error('❌ Ошибка загрузки базового сравнения:', err);
+      console.error('❌ Ошибка загрузки базового сравнения: _(msg`, err);
         setError(_(msg`Не удалось загрузить данные кандидатов`));
     } finally {
         setIsLoadingBasic(false);
@@ -222,7 +222,7 @@ export default function ComparePage() {
   // Запуск AI-анализа
   const startAiAnalysis = async () => {
     if (isLoadingAi || hasInitialized) {
-      console.log('⏳ AI-анализ уже запускается или уже запущен, пропускаем');
+      console.log(`)⏳ AI-анализ уже запускается или уже запущен, пропускаем');
       return;
     }
     
@@ -856,7 +856,7 @@ export default function ComparePage() {
                 startIcon={isLoadingAi ? <CircularProgress size={16} /> : <IconBrain size={16} />}
                 sx={{ mt: 1 }}
               >
-                {isLoadingAi ? 'Повторная попытка...' : 'Повторить AI-анализ'}
+                {isLoadingAi ? _(msg`Повторная попытка...`) : _(msg`Повторить AI-анализ`)}
               </Button>
               </>
             )}
@@ -872,7 +872,7 @@ export default function ComparePage() {
                 disabled={isLoadingAi}
                 startIcon={isLoadingAi ? <CircularProgress size={16} /> : <IconBrain size={16} />}
               >
-                {isLoadingAi ? 'Запуск...' : 'Запустить AI-анализ'}
+                {isLoadingAi ? _(msg`Запуск...`) : _(msg`Запустить AI-анализ`)}
               </Button>
             </Box>
             )}
@@ -928,7 +928,7 @@ export default function ComparePage() {
                   {candidates.map(candidate => (
                     <TableCell key={candidate.id} align="center">
                       <Chip 
-                        label={candidate.status === 'new' ? 'Новый' : candidate.status}
+                        label={candidate.status === 'new' ? _(msg`Новый`) : candidate.status}
                         color={candidate.status === 'finished' ? 'success' : 'default'}
                         size="small"
                         variant="outlined"

@@ -289,7 +289,7 @@ function ProfileDialog({
     setForm({ ...form, [field]: value });
     setErrors(prev => ({ ...prev, [field]: '' }));
     if (field === 'email' && value && !validateEmail(value)) {
-      setErrors(prev => ({ ...prev, email: 'Введите корректный email адрес' }));
+      setErrors(prev => ({ ...prev, email: _(msg`Введите корректный email адрес`) }));
     }
   };
 

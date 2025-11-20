@@ -144,7 +144,7 @@ export default function CandidateDetailPage() {
         })
         .catch(error => {
           console.error('Error loading resume:', error);
-          setResumeData({ error: 'Ошибка при загрузке' });
+          setResumeData({ error: _(msg`Ошибка при загрузке`) });
         })
         .finally(() => setResumeLoading(false));
     }
@@ -211,7 +211,7 @@ export default function CandidateDetailPage() {
   };
   const shareInterviewUrl = async () => {
     if (navigator.share && interviewUrl) {
-      await navigator.share({ title: 'Интервью', url: interviewUrl });
+      await navigator.share({ title: _(msg`Интервью`), url: interviewUrl });
     } else {
       copyInterviewUrl();
     }
@@ -484,13 +484,13 @@ export default function CandidateDetailPage() {
                             };
                             const getLabel = (metric: string) => {
                               const labels: { [key: string]: string } = {
-                                'COMMUNICATION': 'Коммуникация',
-                                'PROBLEM_SOLVING': 'Решение проблем',
-                                'LEADERSHIP': 'Лидерство',
-                                'TECHNICAL': 'Технические навыки',
-                                'TEAMWORK': 'Работа в команде',
-                                'MOTIVATION': 'Мотивация',
-                                'Стрессоустойчивость': 'Стрессоустойчивость'
+                                'COMMUNICATION': _(msg`Коммуникация`),
+                                'PROBLEM_SOLVING': _(msg`Решение проблем`),
+                                'LEADERSHIP': _(msg`Лидерство`),
+                                'TECHNICAL': _(msg`Технические навыки`),
+                                'TEAMWORK': _(msg`Работа в команде`),
+                                'MOTIVATION': _(msg`Мотивация`),
+                                'Стрессоустойчивость': _(msg`Стрессоустойчивость`)
                               };
                               return labels[metric] || metric;
                             };
@@ -538,7 +538,7 @@ export default function CandidateDetailPage() {
                                   </Box>
                                   
                                   <Typography variant="caption" color="textSecondary">
-                                    {score >= 80 ? 'Отлично' : score >= 60 ? 'Хорошо' : score >= 40 ? 'Средне' : 'Требует улучшения'}
+                                    {score >= 80 ? _(msg`Отлично`) : score >= 60 ? _(msg`Хорошо`) : score >= 40 ? _(msg`Средне`) : _(msg`Требует улучшения`)}
                                   </Typography>
                                 </Card>
                               </Grid>

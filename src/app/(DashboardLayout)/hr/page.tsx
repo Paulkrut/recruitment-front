@@ -19,11 +19,16 @@ import OverdueCandidatesCard from "@/app/components/hr/OverdueCandidatesCard";
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function HRDashboard() {
+  const { _ } = useLingui();
+
   const { currentCompany, companies, user } = useUser();
   const [data, setData] = useState<any | null>(null);
   const [isLoading, setLoading] = useState(true);
@@ -58,10 +63,10 @@ export default function HRDashboard() {
   const hasCandidate = data && data.overdueCandidates && data.overdueCandidates.length > 0;
   const hasSelectedCompany = !!currentCompany;
   const steps = [
-    { label: "Создайте компанию", done: hasCompany, href: "/hr/choose-company" },
-    { label: "Пригласите коллег", done: hasColleagues, href: "/hr/employees" },
-    { label: "Создайте вакансию", done: hasVacancy, href: "/hr/vacancy-create" },
-    { label: "Пригласите кандидата", done: hasCandidate, href: "/hr/vacancies" },
+    { label: _(msg`Создайте компанию`), done: hasCompany, href: "/hr/choose-company" },
+    { label: _(msg`Пригласите коллег`), done: hasColleagues, href: "/hr/employees" },
+    { label: _(msg`Создайте вакансию`), done: hasVacancy, href: "/hr/vacancy-create" },
+    { label: _(msg`Пригласите кандидата`), done: hasCandidate, href: "/hr/vacancies" },
   ];
   const activeStep = steps.findIndex(s => !s.done);
 

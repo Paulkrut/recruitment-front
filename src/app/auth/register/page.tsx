@@ -116,7 +116,7 @@ export default function RegisterPage() {
     }
 
     if (!pdnOk) {
-      setErrors({ general: "Для регистрации необходимо согласие на обработку персональных данных" });
+      setErrors({ general: _(msg`Для регистрации необходимо согласие на обработку персональных данных`) });
       return;
     }
 
@@ -154,7 +154,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       setErrors({
-        general: "Ошибка соединения. Проверьте интернет и попробуйте еще раз.",
+        general: _(msg`Ошибка соединения. Проверьте интернет и попробуйте еще раз.`),
       });
     } finally {
       setLoading(false);

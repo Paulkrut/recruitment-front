@@ -437,11 +437,11 @@ export default function CreateTestPage() {
                 max={300}
                 step={10}
                 marks={[
-                  { value: 30, label: '30с' },
-                  { value: 60, label: '1м' },
-                  { value: 120, label: '2м' },
-                  { value: 180, label: '3м' },
-                  { value: 300, label: '5м' },
+                  { value: 30, label: _(msg`30с`) },
+                  { value: 60, label: _(msg`1м`) },
+                  { value: 120, label: _(msg`2м`) },
+                  { value: 180, label: _(msg`3м`) },
+                  { value: 300, label: _(msg`5м`) },
                 ]}
                 valueLabelDisplay="auto"
               />
@@ -618,8 +618,8 @@ export default function CreateTestPage() {
               </Select>
               <FormHelperText>
                 {questionGenerationMode === 'pre_generated'
-                  ? 'Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее.'
-                  : 'Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее.'}
+                  ? _(msg`Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее.`)
+                  : _(msg`Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее.`)}
               </FormHelperText>
             </FormControl>
 
@@ -649,7 +649,7 @@ export default function CreateTestPage() {
                       onClick={handleGenerateQuestions}
                       disabled={generatingQuestions}
                     >
-                      {generatingQuestions ? 'Генерация...' : 'Сгенерировать вопросы'}
+                      {generatingQuestions ? _(msg`Генерация...`) : _(msg`Сгенерировать вопросы`)}
                     </Button>
                   </>
                 ) : (

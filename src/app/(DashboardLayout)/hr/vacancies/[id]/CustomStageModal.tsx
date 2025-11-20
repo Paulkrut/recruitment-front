@@ -58,7 +58,7 @@ export default function CustomStageModal({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        {initialName ? 'Редактировать стадию' : 'Новая кастомная стадия'}
+        {initialName ? _(msg`Редактировать стадию`) : _(msg`Новая кастомная стадия`)}
       </DialogTitle>
       
       <DialogContent>
@@ -120,7 +120,7 @@ export default function CustomStageModal({
       <DialogActions>
         <Button onClick={onClose}><Trans>Отмена</Trans></Button>
         <Button onClick={handleSave} variant="contained" color="primary">
-          {initialName ? 'Сохранить' : 'Создать'}
+          {initialName ? _(msg`Сохранить`) : _(msg`Создать`)}
         </Button>
       </DialogActions>
     </Dialog>

@@ -121,12 +121,12 @@ export default function TransactionsPage() {
     if (isGifted) return _(msg`🎁 Бонус`);
     
     const labels: Record<string, string> = {
-      purchase: 'Покупка',
-      interview_usage: 'Использование интервью',
-      interview_gifted: '🎁 Подарок',
-      test_usage: 'Использование теста',
-      refund: 'Возврат',
-      bonus: 'Бонус',
+      purchase: _(msg`Покупка`),
+      interview_usage: _(msg`Использование интервью`),
+      interview_gifted: _(msg`🎁 Подарок`),
+      test_usage: _(msg`Использование теста`),
+      refund: _(msg`Возврат`),
+      bonus: _(msg`Бонус`),
     };
     return labels[category] || category;
   };
@@ -144,11 +144,11 @@ export default function TransactionsPage() {
 
   const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
-      succeeded: 'Успешно',
-      pending: 'В обработке',
-      waiting_for_capture: 'Ожидает подтверждения',
-      canceled: 'Отменён',
-      failed: 'Ошибка',
+      succeeded: _(msg`Успешно`),
+      pending: _(msg`В обработке`),
+      waiting_for_capture: _(msg`Ожидает подтверждения`),
+      canceled: _(msg`Отменён`),
+      failed: _(msg`Ошибка`),
     };
     return labels[status] || status;
   };

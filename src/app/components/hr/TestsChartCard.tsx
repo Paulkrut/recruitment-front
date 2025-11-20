@@ -67,7 +67,7 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
     labels: data.map((d) => d.date),
     datasets: [
       {
-        label: "Тестов",
+        label: _(msg`Тестов`),
         data: data.map((d) => d.count),
         borderColor: "#2196f3",
         backgroundColor: "rgba(33, 150, 243, 0.1)",

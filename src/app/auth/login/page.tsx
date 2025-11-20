@@ -110,7 +110,7 @@ export default function LoginPage() {
       }
     } catch (error) {
       setErrors({
-        general: "Ошибка соединения. Проверьте интернет и попробуйте еще раз.",
+        general: _(msg`Ошибка соединения. Проверьте интернет и попробуйте еще раз.`),
       });
     } finally {
       setLoading(false);

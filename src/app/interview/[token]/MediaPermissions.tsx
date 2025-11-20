@@ -1,6 +1,9 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface MediaPermissionsProps {
@@ -38,13 +41,13 @@ const MediaPermissions: React.FC<MediaPermissionsProps> = ({
       borderColor: 'warning.main'
     }}>
       <Typography variant="h6" color="warning.dark" gutterBottom>
-        ⚠️ {cameraEnabled ? 'Требуется доступ к камере и микрофону' : 'Требуется доступ к микрофону'}
+        ⚠️ {cameraEnabled ? _(msg`Требуется доступ к камере и микрофону`) : _(msg`Требуется доступ к микрофону`)}
       </Typography>
       
       <Typography variant="body2" sx={{ mb: 2 }}>
         {cameraEnabled
-          ? 'Для прохождения интервью необходимо разрешить доступ к камере и микрофону.'
-          : 'Для прохождения интервью необходимо разрешить доступ к микрофону.'}
+          ? _(msg`Для прохождения интервью необходимо разрешить доступ к камере и микрофону.`)
+          : _(msg`Для прохождения интервью необходимо разрешить доступ к микрофону.`)}
         {mediaPermissions.status === 'denied' && ' Пожалуйста, разрешите доступ в настройках браузера.'}
       </Typography>
       
@@ -64,7 +67,7 @@ const MediaPermissions: React.FC<MediaPermissionsProps> = ({
           fullWidth={isMobile}
           size={isMobile ? 'large' : 'medium'}
         >
-          {cameraEnabled ? 'Разрешить камеру и микрофон' : 'Разрешить микрофон'}
+          {cameraEnabled ? _(msg`Разрешить камеру и микрофон`) : _(msg`Разрешить микрофон`)}
         </Button>
       )}
     </Box>

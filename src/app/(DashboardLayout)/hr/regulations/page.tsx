@@ -442,7 +442,7 @@ export default function RegulationsPage() {
                     <TableRow>
                       <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                         <Typography color="text.secondary">
-                          {loading ? 'Загрузка...' : 'Регламенты не найдены'}
+                          {loading ? _(msg`Загрузка...`) : _(msg`Регламенты не найдены`)}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -467,7 +467,7 @@ export default function RegulationsPage() {
                             <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center' }}>
                               <Chip label={`v${regulation.version}`} size="small" color="default" />
                               <Chip
-                                label={regulation.isActive ? 'Активен' : 'Неактивен'}
+                                label={regulation.isActive ? _(msg`Активен`) : _(msg`Неактивен`)}
                                 size="small"
                                 color={regulation.isActive ? 'success' : 'default'}
                               />
@@ -549,7 +549,7 @@ export default function RegulationsPage() {
 
       {/* Folder Dialog */}
       <Dialog open={folderDialogOpen} onClose={() => setFolderDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingFolder ? 'Редактировать папку' : 'Создать папку'}</DialogTitle>
+        <DialogTitle>{editingFolder ? _(msg`Редактировать папку`) : _(msg`Создать папку`)}</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
@@ -574,14 +574,14 @@ export default function RegulationsPage() {
             variant="contained"
             onClick={editingFolder ? handleUpdateFolder : handleCreateFolder}
           >
-            {editingFolder ? 'Сохранить' : 'Создать'}
+            {editingFolder ? _(msg`Сохранить`) : _(msg`Создать`)}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Regulation Dialog */}
       <Dialog open={regulationDialogOpen} onClose={() => setRegulationDialogOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>{editingRegulation ? 'Редактировать регламент' : 'Создать регламент'}</DialogTitle>
+        <DialogTitle>{editingRegulation ? _(msg`Редактировать регламент`) : _(msg`Создать регламент`)}</DialogTitle>
         <DialogContent>
           <Box sx={{ pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
             <TextField
@@ -640,7 +640,7 @@ export default function RegulationsPage() {
             variant="contained"
             onClick={editingRegulation ? handleUpdateRegulation : handleCreateRegulation}
           >
-            {editingRegulation ? 'Сохранить' : 'Создать'}
+            {editingRegulation ? _(msg`Сохранить`) : _(msg`Создать`)}
           </Button>
         </DialogActions>
       </Dialog>

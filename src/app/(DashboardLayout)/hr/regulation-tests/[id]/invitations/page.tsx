@@ -163,12 +163,12 @@ export default function InvitationsPage() {
   const getInvitationStatus = (invitation: Invitation): { label: string; color: 'success' | 'warning' | 'default' } => {
     // Проверка истечения срока
     if (invitation.expiresAt && new Date(invitation.expiresAt) < new Date()) {
-      return { label: 'Истекло', color: 'default' };
+      return { label: _(msg`Истекло`), color: 'default' };
     }
 
     // Проверка лимита использований
     if (invitation.maxUses !== null && invitation.usesCount >= invitation.maxUses) {
-      return { label: 'Исчерпано', color: 'success' };
+      return { label: _(msg`Исчерпано`), color: 'success' };
     }
 
     // Проверка использования
@@ -176,7 +176,7 @@ export default function InvitationsPage() {
       return { label: `Использовано ${invitation.usesCount} раз`, color: 'warning' };
     }
 
-    return { label: 'Активно', color: 'success' };
+    return { label: _(msg`Активно`), color: 'success' };
   };
 
   return (
@@ -248,7 +248,7 @@ export default function InvitationsPage() {
                   <TableRow key={invitation.id} hover>
                     <TableCell>
                       <Chip
-                        label={invitation.type === 'named' ? 'Именное' : 'Общее'}
+                        label={invitation.type === 'named' ? _(msg`Именное`) : _(msg`Общее`)}
                         size="small"
                         color={invitation.type === 'named' ? 'primary' : 'secondary'}
                       />
@@ -265,7 +265,7 @@ export default function InvitationsPage() {
                     <TableCell>
                       {invitation.expiresAt
                         ? new Date(invitation.expiresAt).toLocaleDateString('ru-RU')
-                        : 'Бессрочно'}
+                        : _(msg`Бессрочно`)}
                     </TableCell>
                     <TableCell>{new Date(invitation.createdAt).toLocaleDateString('ru-RU')}</TableCell>
                     <TableCell align="right">
@@ -328,8 +328,8 @@ export default function InvitationsPage() {
 
             <Alert severity="info">
               {invitationType === 'named'
-                ? 'Именное приглашение будет отправлено на указанный email.'
-                : 'Общее приглашение можно использовать для массовой рассылки. Каждый сотрудник введёт свои данные при старте теста.'}
+                ? _(msg`Именное приглашение будет отправлено на указанный email.`)
+                : _(msg`Общее приглашение можно использовать для массовой рассылки. Каждый сотрудник введёт свои данные при старте теста.`)}
             </Alert>
           </Box>
         </DialogContent>

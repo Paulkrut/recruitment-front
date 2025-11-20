@@ -174,14 +174,14 @@ export default function EmployeesPage() {
       sortable: false,
       filterable: false,
     },
-    { field: "name", headerName: "Имя", flex: 1 },
-    { field: "phone", headerName: "Телефон", flex: 1 },
+    { field: "name", headerName: _(msg`Имя`), flex: 1 },
+    { field: "phone", headerName: _(msg`Телефон`), flex: 1 },
     { field: "email", headerName: "Email", flex: 1 },
-    { field: "role", headerName: "Роль", flex: 1 },
-    { field: "createdAt", headerName: "Добавлен", flex: 1 },
+    { field: "role", headerName: _(msg`Роль`), flex: 1 },
+    { field: "createdAt", headerName: _(msg`Добавлен`), flex: 1 },
     {
       field: "actions",
-      headerName: "Действия",
+      headerName: _(msg`Действия`),
       width: 180,
       renderCell: (params) => (
         <Stack direction="row" spacing={1}>
@@ -263,16 +263,16 @@ export default function EmployeesPage() {
                 email: inv.email,
                 role: inv.role,
                 createdAt: inv.createdAt,
-                status: "Ожидает", // можно доработать если появится статус
+                status: _(msg`Ожидает`), // можно доработать если появится статус
               }))}
               columns={[
                 { field: "email", headerName: "Email", flex: 1 },
-                { field: "role", headerName: "Роль", flex: 1 },
-                { field: "createdAt", headerName: "Дата", flex: 1 },
-                { field: "status", headerName: "Статус", flex: 1 },
+                { field: "role", headerName: _(msg`Роль`), flex: 1 },
+                { field: "createdAt", headerName: _(msg`Дата`), flex: 1 },
+                { field: "status", headerName: _(msg`Статус`), flex: 1 },
                 {
                   field: "actions",
-                  headerName: "Действия",
+                  headerName: _(msg`Действия`),
                   width: 120,
                   renderCell: (params) => (
                     isLead ? (

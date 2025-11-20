@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import MaintenanceThemeProvider from './ThemeProvider';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export const metadata: Metadata = {
-  title: 'Технические работы - Сайт временно недоступен',
-  description: 'Мы проводим плановые технические работы. Сайт скоро будет доступен.',
+  title: _(msg`Технические работы - Сайт временно недоступен`),
+  description: _(msg`Мы проводим плановые технические работы. Сайт скоро будет доступен.`),
   robots: 'noindex, nofollow',
 };
 
@@ -12,6 +15,8 @@ export default function MaintenanceLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { _ } = useLingui();
+
   return (
     <html lang="ru">
       <head>

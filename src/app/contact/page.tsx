@@ -109,7 +109,7 @@ export default function ContactPage() {
       if (result.success) {
         setSubmitResult({
           success: true,
-          message: 'Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.'
+          message: _(msg`Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время.`)
         });
         
         // Логируем согласие, если есть ID сообщения
@@ -135,7 +135,7 @@ export default function ContactPage() {
     } catch (error) {
       setSubmitResult({
         success: false,
-        message: 'Ошибка соединения. Проверьте интернет-соединение и попробуйте снова.'
+        message: _(msg`Ошибка соединения. Проверьте интернет-соединение и попробуйте снова.`)
       });
     } finally {
       setSubmitting(false);
@@ -276,7 +276,7 @@ export default function ContactPage() {
                   startIcon={submitting ? <Info /> : <Send />}
                   sx={{ px: 4, py: 1.5 }}
                 >
-                  {submitting ? 'Отправляем...' : 'Отправить сообщение'}
+                  {submitting ? _(msg`Отправляем...`) : _(msg`Отправить сообщение`)}
                 </Button>
 
                 <Typography variant="caption" color="text.secondary"><Trans>* - обязательные поля</Trans></Typography>

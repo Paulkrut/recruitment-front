@@ -187,7 +187,7 @@ export default function HRVacancyCreatePage() {
 
     setIsGenerating(true);
     setError(null);
-    setGenerationProgress({ status: 'starting', message: 'Запуск генерации...' });
+    setGenerationProgress({ status: 'starting', message: _(msg`Запуск генерации...`) });
 
     try {
       // Запускаем асинхронную генерацию
@@ -327,7 +327,7 @@ export default function HRVacancyCreatePage() {
               sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
             >
               {isLoading ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
-              {isLoading ? "Создание..." : "Создать вакансию"}
+              {isLoading ? _(msg`Создание...`) : _(msg`Создать вакансию`)}
             </Button>
           </Stack>
         </Box>
@@ -355,7 +355,7 @@ export default function HRVacancyCreatePage() {
                   }
                     placeholder={_(msg`Например: Frontend-разработчик`)}
                     error={!vacancyData.title}
-                    helperText={!vacancyData.title ? "Название обязательно" : "Введите название вакансии, которое будет видно кандидатам"}
+                    helperText={!vacancyData.title ? _(msg`Название обязательно`) : _(msg`Введите название вакансии, которое будет видно кандидатам`)}
                     FormHelperTextProps={{ sx: { color: !vacancyData.title ? 'error.main' : 'text.secondary', opacity: 0.9 } }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -892,7 +892,7 @@ export default function HRVacancyCreatePage() {
                 sx={{ fontWeight: 700, fontSize: '1.1rem', px: 4, py: 1.5 }}
               >
                 {isLoading ? <CircularProgress size={22} color="inherit" sx={{ mr: 1 }} /> : null}
-                {isLoading ? "Создание..." : "Создать вакансию"}
+                {isLoading ? _(msg`Создание...`) : _(msg`Создать вакансию`)}
                 </Button>
               </Box>
             </CardContent>
@@ -1023,7 +1023,7 @@ export default function HRVacancyCreatePage() {
                 }
               }}
             >
-              {isGenerating ? "Генерация..." : "Сгенерировать"}
+              {isGenerating ? _(msg`Генерация...`) : _(msg`Сгенерировать`)}
             </Button>
           </DialogActions>
         </Dialog>

@@ -1,5 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 import {
   Dialog,
@@ -67,7 +70,7 @@ const GenerateQuestionsDialog = React.memo(({
 
   // Мемоизируем текст количества вопросов
   const questionText = useMemo(() => {
-    return genCount === 1 ? 'вопрос' : genCount < 5 ? 'вопроса' : 'вопросов';
+    return genCount === 1 ? _(msg`вопрос`) : genCount < 5 ? _(msg`вопроса`) : _(msg`вопросов`);
   }, [genCount]);
 
   // Мемоизируем стили слайдера
@@ -177,7 +180,7 @@ const GenerateQuestionsDialog = React.memo(({
           onClick={handleGenerate}
           disabled={isGenerating}
         >
-          {isGenerating ? "Генерация..." : "Сгенерировать"}
+          {isGenerating ? _(msg`Генерация...`) : _(msg`Сгенерировать`)}
         </Button>
       </DialogActions>
     </Dialog>

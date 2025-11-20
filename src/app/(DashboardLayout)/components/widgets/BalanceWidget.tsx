@@ -138,7 +138,7 @@ export default function BalanceWidget() {
                 <Typography variant="body2" color="text.secondary"><Trans>Интервью кандидатов</Trans></Typography>
               </Box>
               <Chip
-                label={balance?.interviews === 0 ? 'Нет интервью' : `${balance?.interviews} шт.`}
+                label={balance?.interviews === 0 ? _(msg`Нет интервью`) : `${balance?.interviews} шт.`}
                 color={getBalanceColor(balance?.interviews || 0)}
                 size="small"
               />
@@ -174,7 +174,7 @@ export default function BalanceWidget() {
                 <Typography variant="body2" color="text.secondary"><Trans>Тесты по регламентам</Trans></Typography>
               </Box>
               <Chip
-                label={balance?.regulation_tests === 0 ? 'Нет тестов' : `${balance?.regulation_tests} шт.`}
+                label={balance?.regulation_tests === 0 ? _(msg`Нет тестов`) : `${balance?.regulation_tests} шт.`}
                 color={getBalanceColor(balance?.regulation_tests || 0)}
                 size="small"
               />

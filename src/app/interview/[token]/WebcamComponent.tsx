@@ -5,6 +5,9 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicIcon from '@mui/icons-material/Mic';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface WebcamComponentProps {
@@ -156,8 +159,8 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
           )}
           <Typography variant="body2" sx={{ fontSize: '14px' }}>
             {cameraEnabled
-              ? (isReady ? 'Камера подключена' : 'Подключение камеры...')
-              : 'Камера отключена'
+              ? (isReady ? _(msg`Камера подключена`) : _(msg`Подключение камеры...`))
+              : _(msg`Камера отключена`)
             }
           </Typography>
         </Box>
@@ -165,7 +168,7 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <MicIcon color={isReady ? "success" : "error"} />
           <Typography variant="body2" sx={{ fontSize: '14px' }}>
-            {isReady ? 'Микрофон подключен' : 'Подключение микрофона...'}
+            {isReady ? _(msg`Микрофон подключен`) : _(msg`Подключение микрофона...`)}
           </Typography>
         </Box>
       </Box>

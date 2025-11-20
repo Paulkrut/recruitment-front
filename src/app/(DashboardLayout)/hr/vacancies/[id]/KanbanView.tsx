@@ -357,17 +357,17 @@ const DraggableCandidateCard = memo(({
             {candidate.source === 'manual' && 'Ручной ввод'}
             {candidate.source === 'linkedin' && 'LinkedIn'}
           </Typography>
-          
+
           {/* Блок тестирования (если есть сессия или оценка) */}
           {(candidate.sessionId || candidate.score !== null) && (
-            <Box sx={{ 
+            <Box sx={{
               bgcolor: 'grey.50',
               borderRadius: 1,
               p: 1,
               mb: 0.5
             }}>
               <Typography variant="caption" fontWeight="600" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}><Trans>📝 Тестирование</Trans></Typography>
-              
+
               {/* Статус */}
               {candidate.sessionId && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
@@ -376,12 +376,12 @@ const DraggableCandidateCard = memo(({
                     candidate.sessionStatus === 'finished' ? 'success.main' :
                     candidate.sessionStatus === 'started' ? 'info.main' : 'text.secondary'
                   }>
-                    {candidate.sessionStatus === 'finished' ? '✅ Завершён' :
-                     candidate.sessionStatus === 'started' ? '⏳ В процессе' : '⚪ Не начат'}
+                    {candidate.sessionStatus === 'finished' ? _(msg`✅ Завершён`) :
+                     candidate.sessionStatus === 'started' ? _(msg`⏳ В процессе`) : _(msg`⚪ Не начат`)}
                   </Typography>
                 </Box>
               )}
-              
+
               {/* Средний балл */}
               {candidate.score !== null && candidate.score !== undefined && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
@@ -396,7 +396,7 @@ const DraggableCandidateCard = memo(({
                   </Typography>
                 </Box>
               )}
-              
+
               {/* Количество ответов (если в процессе) */}
               {candidate.sessionStatus === 'started' && candidate.answersCount > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.3 }}>
@@ -406,7 +406,7 @@ const DraggableCandidateCard = memo(({
                   </Typography>
                 </Box>
               )}
-              
+
               {/* Дата завершения (если завершён) */}
               {candidate.sessionStatus === 'finished' && candidate.finishedAt && (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -430,7 +430,7 @@ const DraggableCandidateCard = memo(({
             <Typography variant="caption" color="text.secondary" display="block">
               Добавлен: {formatBitrixDate(candidate.createdAt)}
             </Typography>
-            
+
             {/* Последний контакт (если есть) */}
             {candidate.lastContactedAt && (
               <Typography variant="caption" color="text.secondary" display="block">
@@ -518,11 +518,11 @@ const DroppableColumn = ({
   );
 };
 
-export default function KanbanView({ 
-  vacancyId, 
-  filters, 
+export default function KanbanView({
+  vacancyId,
+  filters,
   selectedCandidates: externalSelectedCandidates = [],
-  onSelectedCandidatesChange 
+  onSelectedCandidatesChange
 }: KanbanViewProps) {
   const { _ } = useLingui();
 
@@ -544,10 +544,10 @@ export default function KanbanView({
 
   // Состояние для массового выделения
   const [selectionMode, setSelectionMode] = useState(false);
-  
+
   // Используем внешнее состояние для выбранных кандидатов (для синхронизации с главной страницей)
   const selectedCandidatesSet = useMemo(() => new Set(externalSelectedCandidates), [externalSelectedCandidates]);
-  
+
   const updateSelectedCandidates = useCallback((newSet: Set<number>) => {
     if (onSelectedCandidatesChange) {
       onSelectedCandidatesChange(Array.from(newSet));
@@ -1103,13 +1103,13 @@ export default function KanbanView({
         // Проверяем специфичную ошибку HH token
         if (response.status === 403) {
           const error = await response.json();
-          
+
           if (error.error === 'hh_token_required') {
             // Откатываем UI
             await loadCandidatesForStatus(oldStatus, 1, false);
             await loadCandidatesForStatus(newStatus, 1, false);
             fetchStats();
-            
+
             // Показываем модальное окно
             setHhTokenError({
               candidateName: error.candidateName,
@@ -1119,7 +1119,7 @@ export default function KanbanView({
             return;
           }
         }
-        
+
         console.error('Failed to update candidate status - rolling back');
         // Откатываем - перезагружаем эти две колонки
         await loadCandidatesForStatus(oldStatus, 1, false);
@@ -1181,20 +1181,20 @@ export default function KanbanView({
 
         // Проверяем есть ли ошибки HH token
         const hhTokenErrors = result.errors?.filter((e: any) => e.error === 'hh_token_required') || [];
-        
+
         if (hhTokenErrors.length > 0) {
           // Если есть ошибки HH token - показываем Snackbar
           const successCount = result.updated || 0;
           const totalCount = result.total || 0;
           const errorCount = hhTokenErrors.length;
-          
-          setSnackbarMessage(_(msg`${successCount} из ${totalCount} кандидатов переведены. ${errorCount} ${errorCount === 1 ? 'кандидат требует' : 'кандидатов требуют'} авторизации HH.ru`)
+
+          setSnackbarMessage(_(msg`${successCount} из ${totalCount} кандидатов переведены. ${errorCount} ${errorCount === 1 ? _(msg`кандидат требует`) : _(msg`кандидатов требуют`)} авторизации HH.ru`)
           );
           setSnackbarSeverity('warning');
           setSnackbarOpen(true);
         } else if (result.updated === result.total) {
           // Все успешно
-          setSnackbarMessage(_(msg`✅ Успешно перемещено ${result.updated} ${result.updated === 1 ? 'кандидат' : 'кандидатов'}`));
+          setSnackbarMessage(_(msg`✅ Успешно перемещено ${result.updated} ${result.updated === 1 ? _(msg`кандидат`) : _(msg`кандидатов`)}`));
           setSnackbarSeverity('success');
           setSnackbarOpen(true);
         }
@@ -1235,7 +1235,7 @@ export default function KanbanView({
       } else {
         // Обработка ошибок от API
         const error = await response.json();
-        
+
         // Если это ошибка HH token для одиночной операции - показываем Dialog
         if (response.status === 403 && error.error === 'hh_token_required') {
           setHhTokenError({
@@ -1321,7 +1321,7 @@ export default function KanbanView({
             }
           }}
         >
-          {selectionMode ? `Режим выделения (${selectedCandidatesSet.size})` : 'Выбрать кандидатов'}
+          {selectionMode ? `Режим выделения (${selectedCandidatesSet.size})` : _(msg`Выбрать кандидатов`)}
         </Button>
 
         {selectionMode && selectedCandidatesSet.size > 0 && (
@@ -1412,10 +1412,10 @@ export default function KanbanView({
                         <Typography variant="subtitle1" fontWeight="bold">
                           {column.icon} {column.label}
                         </Typography>
-                        
+
                         {/* Иконка автоматизации для AI Скрининг */}
                         {column.value === 'screening' && (
-                          <Tooltip 
+                          <Tooltip
                             title={
                               <Box sx={{ p: 0.5 }}>
                                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom><Trans>🤖 Автоматизация AI Скрининга</Trans></Typography>

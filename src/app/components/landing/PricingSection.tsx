@@ -3,6 +3,9 @@ import React from 'react';
 import { Box, Container, Typography, Grid, Button, Paper } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface PricingPlan {
@@ -75,7 +78,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
                     fontWeight: 600,
                     whiteSpace: 'nowrap'
                   }}>
-                    {plan.id === 'trial' ? '🎁 Бесплатно' : '⭐ Популярный'}
+                    {plan.id === 'trial' ? _(msg`🎁 Бесплатно`) : _(msg`⭐ Популярный`)}
                   </Box>
                 )}
 
@@ -140,7 +143,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
                     }
                   }}
                 >
-                  {plan.id === 'trial' ? 'Попробовать' : 'Выбрать тариф'}
+                  {plan.id === 'trial' ? _(msg`Попробовать`) : _(msg`Выбрать тариф`)}
                 </Button>
               </Box>
             </Grid>

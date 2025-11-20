@@ -72,9 +72,8 @@ export default function DeleteStageDialog({
           <>
             <Alert severity="warning" sx={{ mb: 3 }}>
               В этой стадии находится <strong>{candidatesCount}</strong> {
-                candidatesCount === 1 ? 'кандидат' :
-                candidatesCount < 5 ? 'кандидата' :
-                'кандидатов'
+                candidatesCount === 1 ? _(msg`кандидат`) :
+                candidatesCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)
               } (во всех вакансиях компании)
             </Alert>
 
@@ -110,8 +109,8 @@ export default function DeleteStageDialog({
           color="error"
         >
           {candidatesCount > 0 
-            ? `Удалить и переместить ${candidatesCount} ${candidatesCount === 1 ? 'кандидата' : candidatesCount < 5 ? 'кандидатов' : 'кандидатов'}`
-            : 'Удалить стадию'
+            ? `Удалить и переместить ${candidatesCount} ${candidatesCount === 1 ? _(msg`кандидата`) : candidatesCount < 5 ? _(msg`кандидатов`) : _(msg`кандидатов`)}`
+            : _(msg`Удалить стадию`)
           }
         </Button>
       </DialogActions>

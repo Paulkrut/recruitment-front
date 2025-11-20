@@ -50,10 +50,10 @@ interface CandidatesListProps {
   onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
 }
 
-export default function CandidatesList({ 
-  vacancyId, 
-  filters, 
-  onSnackbar, 
+export default function CandidatesList({
+  vacancyId,
+  filters,
+  onSnackbar,
   onShowQR,
   selectedCandidates: externalSelectedCandidates = [],
   onSelectedCandidatesChange
@@ -62,7 +62,7 @@ export default function CandidatesList({
 
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Используем внешнее состояние для выбранных кандидатов (для синхронизации с главной страницей)
   const selectedCandidates = externalSelectedCandidates;
   const setSelectedCandidates = (ids: number[]) => {
@@ -76,7 +76,7 @@ export default function CandidatesList({
   const [total, setTotal] = useState(0);
   const [sortBy, setSortBy] = useState<string>('aiScore');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
-  
+
   // Состояние для HH Token Required Dialog
   const [hhTokenDialogOpen, setHhTokenDialogOpen] = useState(false);
   const [hhTokenError, setHhTokenError] = useState<{
@@ -90,15 +90,15 @@ export default function CandidatesList({
       setLoading(true);
       try {
         const queryParams = new URLSearchParams();
-        
+
         // Пагинация
         queryParams.append('page', (page + 1).toString()); // Backend uses 1-based page
         queryParams.append('perPage', rowsPerPage.toString());
-        
+
         // Сортировка
         queryParams.append('sortBy', sortBy);
         queryParams.append('sortOrder', sortOrder);
-        
+
         // Фильтры
         if (filters.source) queryParams.append('source', filters.source);
         if (filters.status) queryParams.append('status', filters.status);
@@ -116,7 +116,7 @@ export default function CandidatesList({
           `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`
         );
         const result = await response.json();
-        
+
         setCandidates(result.data || []);
         setTotal(result.total || 0);
       } catch (error) {
@@ -160,16 +160,16 @@ export default function CandidatesList({
   const handleLoadResumeFromHh = async (candidateId: number) => {
     try {
       // Оптимистичное обновление UI - сразу показываем индикатор загрузки
-      setCandidates(prev => prev.map(c => 
-        c.id === candidateId 
+      setCandidates(prev => prev.map(c =>
+        c.id === candidateId
           ? { ...c, aiAnalysisStatus: 'loading_resume' }
           : c
       ));
-      
+
       const response = await apiFetch(`${API_BASE}/api/admin/candidates/${candidateId}/resume/load-from-hh`, {
         method: 'POST',
       });
-      
+
       if (response.ok) {
         onSnackbar('Резюме загружено из HH.ru');
         // Перезагружаем список кандидатов
@@ -182,7 +182,7 @@ export default function CandidatesList({
         if (filters.status) queryParams.append('status', filters.status);
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        
+
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
         setCandidates(result.data || []);
@@ -204,7 +204,7 @@ export default function CandidatesList({
         if (filters.status) queryParams.append('status', filters.status);
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        
+
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
         setCandidates(result.data || []);
@@ -223,7 +223,7 @@ export default function CandidatesList({
       if (filters.status) queryParams.append('status', filters.status);
       if (filters.search) queryParams.append('search', filters.search);
       if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-      
+
       const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
       const result = await reloadResponse.json();
       setCandidates(result.data || []);
@@ -235,12 +235,12 @@ export default function CandidatesList({
   const handleSendToAiScreening = async (candidateId: number) => {
     try {
       // Оптимистичное обновление UI - сразу показываем статус "загрузка резюме"
-      setCandidates(prev => prev.map(c => 
-        c.id === candidateId 
+      setCandidates(prev => prev.map(c =>
+        c.id === candidateId
           ? { ...c, status: 'screening', aiAnalysisStatus: 'loading_resume' }
           : c
       ));
-      
+
       const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates/bulk-status`, {
         method: 'PATCH',
         body: JSON.stringify({
@@ -248,13 +248,13 @@ export default function CandidatesList({
           status: 'screening',
         }),
       });
-      
+
       if (response.ok) {
         const result = await response.json();
-        
+
         // Проверяем есть ли ошибки HH token
         const hhTokenErrors = result.errors?.filter((e: any) => e.error === 'hh_token_required') || [];
-        
+
         if (hhTokenErrors.length > 0 && hhTokenErrors[0]) {
           // Показываем диалог для HH token
           setHhTokenError({
@@ -265,7 +265,7 @@ export default function CandidatesList({
         } else {
           onSnackbar('Кандидат отправлен на AI скрининг');
         }
-        
+
         // Перезагружаем список кандидатов для получения актуальных данных
         const queryParams = new URLSearchParams();
         queryParams.append('page', (page + 1).toString());
@@ -276,7 +276,7 @@ export default function CandidatesList({
         if (filters.status) queryParams.append('status', filters.status);
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        
+
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result2 = await reloadResponse.json();
         setCandidates(result2.data || []);
@@ -291,7 +291,7 @@ export default function CandidatesList({
               message: error.message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
             });
             setHhTokenDialogOpen(true);
-            
+
             // Откатываем оптимистичное обновление
             const queryParams = new URLSearchParams();
             queryParams.append('page', (page + 1).toString());
@@ -302,7 +302,7 @@ export default function CandidatesList({
             if (filters.status) queryParams.append('status', filters.status);
             if (filters.search) queryParams.append('search', filters.search);
             if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-            
+
             const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
             const result = await reloadResponse.json();
             setCandidates(result.data || []);
@@ -310,7 +310,7 @@ export default function CandidatesList({
             return;
           }
         }
-        
+
         const error = await response.json();
         onSnackbar(error.error || _(msg`Ошибка отправки на скрининг`));
         // Откатываем оптимистичное обновление
@@ -323,7 +323,7 @@ export default function CandidatesList({
         if (filters.status) queryParams.append('status', filters.status);
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        
+
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
         setCandidates(result.data || []);
@@ -342,7 +342,7 @@ export default function CandidatesList({
       if (filters.status) queryParams.append('status', filters.status);
       if (filters.search) queryParams.append('search', filters.search);
       if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-      
+
       const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
       const result = await reloadResponse.json();
       setCandidates(result.data || []);
@@ -368,12 +368,12 @@ export default function CandidatesList({
       if (response.ok) {
         const result = await response.json();
         onSnackbar(`✅ Перемещено ${result.updated} кандидатов`);
-        
+
         // Обновляем список
         const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates`);
         const updatedData = await updatedResponse.json();
         setCandidates(updatedData);
-        
+
         setSelectedCandidates([]);
         setBulkStatus('');
       } else {
@@ -545,7 +545,7 @@ export default function CandidatesList({
                       color="primary"
                     />
                   </TableCell>
-                  
+
                   {/* Имя */}
                   <TableCell>
                     <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
@@ -563,7 +563,7 @@ export default function CandidatesList({
                   {/* Источник */}
                   <TableCell>
                     <Chip
-                      label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? 'Ручной' : r.source}`}
+                      label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
                       size="small"
                       variant="outlined"
                     />
@@ -658,7 +658,7 @@ export default function CandidatesList({
                           </IconButton>
                         </Tooltip>
                       )}
-                      
+
                       {/* Кнопка отправки на AI скрининг (для кандидатов с резюме, но без AI оценки) */}
                       {r.status !== 'screening' && (r.resumeText || r.source === 'headhunter') && r.aiScore === null && r.aiAnalysisStatus !== 'loading_resume' && r.aiAnalysisStatus !== 'analyzing' && (
                         <Tooltip title={_(msg`Отправить на AI скрининг`)}>
@@ -671,7 +671,7 @@ export default function CandidatesList({
                           </IconButton>
                         </Tooltip>
                       )}
-                      
+
                       <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                         <IconButton
                           size="small"
@@ -737,12 +737,12 @@ export default function CandidatesList({
               setPage(0);
             }}
             rowsPerPageOptions={[25, 50, 100]}
-            labelRowsPerPage="Строк на странице:"
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to} из ${count !== -1 ? count : `более ${to}`}`}
+            labelRowsPerPage={_(msg`Строк на странице:`)}
+            labelDisplayedRows={({ from, to, count }) => `${from}-${to} ${_(msg`из`)} ${count !== -1 ? count : `${_(msg`более`)} ${to}`}`}
           />
         </Box>
       )}
-      
+
       {/* Диалог HH Token Required */}
       <Dialog
         open={hhTokenDialogOpen}

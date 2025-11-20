@@ -371,7 +371,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             },
           }}
         >
-          {hasUnappliedChanges ? 'Применить фильтры' : 'Фильтры применены'}
+          {hasUnappliedChanges ? _(msg`Применить фильтры`) : _(msg`Фильтры применены`)}
         </Button>
       </Box>
 
@@ -387,7 +387,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.source && (
             <Chip
-              label={`Источник: ${filters.source === 'manual' ? 'Ручной' : filters.source === 'headhunter' ? 'HH.ru' : filters.source}`}
+              label={`Источник: ${filters.source === 'manual' ? _(msg`Ручной`) : filters.source === 'headhunter' ? 'HH.ru' : filters.source}`}
               size="small"
               onDelete={() => handleRemoveFilter('source')}
             />
@@ -395,14 +395,14 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           {filters.status && viewMode === 'list' && (
             <Chip
               label={`Статус: ${
-                filters.status === 'new' ? 'Новый' :
-                filters.status === 'screening' ? 'AI Скрининг' :
-                filters.status === 'contacted' ? 'Связались' :
-                filters.status === 'testing' ? 'Тестирование' :
-                filters.status === 'finalist' ? 'Финалист' :
-                filters.status === 'offer' ? 'Оффер' :
-                filters.status === 'hired' ? 'Принят' :
-                filters.status === 'rejected' ? 'Отклонён' :
+                filters.status === 'new' ? _(msg`Новый`) :
+                filters.status === 'screening' ? _(msg`AI Скрининг`) :
+                filters.status === 'contacted' ? _(msg`Связались`) :
+                filters.status === 'testing' ? _(msg`Тестирование`) :
+                filters.status === 'finalist' ? _(msg`Финалист`) :
+                filters.status === 'offer' ? _(msg`Оффер`) :
+                filters.status === 'hired' ? _(msg`Принят`) :
+                filters.status === 'rejected' ? _(msg`Отклонён`) :
                 filters.status
               }`}
               size="small"
@@ -413,10 +413,10 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <Chip
               label={`AI анализ: ${
                 filters.minScore ? `≥ ${filters.minScore}%` :
-                filters.aiAnalysisStatus === 'loading_resume' ? 'Загрузка резюме' : 
-                filters.aiAnalysisStatus === 'analyzing' ? 'Анализируется' : 
-                filters.aiAnalysisStatus === 'completed' ? 'Завершено' : 
-                filters.aiAnalysisStatus === 'failed' ? 'Ошибка' : 'Без анализа'
+                filters.aiAnalysisStatus === 'loading_resume' ? _(msg`Загрузка резюме`) : 
+                filters.aiAnalysisStatus === 'analyzing' ? _(msg`Анализируется`) : 
+                filters.aiAnalysisStatus === 'completed' ? _(msg`Завершено`) : 
+                filters.aiAnalysisStatus === 'failed' ? _(msg`Ошибка`) : _(msg`Без анализа`)
               }`}
               size="small"
               onDelete={() => {
@@ -431,8 +431,8 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           {filters.testScore && (
             <Chip
               label={`Тест: ${
-                filters.testScore === 'passed' ? 'Прошли' :
-                filters.testScore === 'not_passed' ? 'Не проходили' :
+                filters.testScore === 'passed' ? _(msg`Прошли`) :
+                filters.testScore === 'not_passed' ? _(msg`Не проходили`) :
                 `≥ ${filters.testScore}`
               }`}
               size="small"
@@ -441,7 +441,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.hasResume && (
             <Chip
-              label={`Резюме: ${filters.hasResume === 'true' ? 'Есть' : 'Нет'}`}
+              label={`Резюме: ${filters.hasResume === 'true' ? _(msg`Есть`) : _(msg`Нет`)}`}
               size="small"
               onDelete={() => handleRemoveFilter('hasResume')}
             />
@@ -449,9 +449,9 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           {filters.datePreset && filters.datePreset !== 'custom' && (
             <Chip
               label={`Дата: ${
-                filters.datePreset === 'today' ? 'Сегодня' : 
-                filters.datePreset === '3days' ? 'Последние 3 дня' : 
-                filters.datePreset === 'week' ? 'Последняя неделя' : 'Последний месяц'
+                filters.datePreset === 'today' ? _(msg`Сегодня`) : 
+                filters.datePreset === '3days' ? _(msg`Последние 3 дня`) : 
+                filters.datePreset === 'week' ? _(msg`Последняя неделя`) : _(msg`Последний месяц`)
               }`}
               size="small"
               onDelete={() => handleRemoveFilter('datePreset')}

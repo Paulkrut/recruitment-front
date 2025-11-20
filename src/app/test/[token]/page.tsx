@@ -96,7 +96,7 @@ export default function RegulationTestPage() {
   const [finalScore, setFinalScore] = useState<number>(0);
 
   const currentQuestion = questions[currentQuestionIndex];
-  
+
   // Определяем активный шаг
   useEffect(() => {
     if (finished) setCurrentStep(3);
@@ -133,10 +133,10 @@ export default function RegulationTestPage() {
   const loadInvitation = async () => {
     try {
       const response = await fetch(`${API_BASE}/api/public/regulation-tests/invitation/${token}`);
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         if (response.status === 404 || errorData.error === 'invitation_not_found') {
           setTestInfo(null);
           alert('❌ Приглашение не найдено\n\n' +
@@ -175,7 +175,7 @@ export default function RegulationTestPage() {
   const handleStartTest = async () => {
     try {
       const body: any = { token };
-      
+
       if (invitationType === 'general') {
         if (!name || !email) {
           alert(_(msg`Пожалуйста, заполните все обязательные поля`));
@@ -197,7 +197,7 @@ export default function RegulationTestPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         // Обрабатываем разные типы ошибок
         if (response.status === 402 || errorData.error === 'insufficient_balance') {
           alert('❌ У компании закончились тесты на балансе\n\n' +
@@ -206,7 +206,7 @@ export default function RegulationTestPage() {
                 'Они смогут приобрести дополнительные тесты в личном кабинете.');
           return;
         }
-        
+
         if (response.status === 404 || errorData.error === 'invitation_not_found') {
           alert('❌ Приглашение не найдено\n\n' +
                 'Возможные причины:\n' +
@@ -216,21 +216,21 @@ export default function RegulationTestPage() {
                 '📧 Запросите новое приглашение у вашего HR-менеджера.');
           return;
         }
-        
+
         if (response.status === 403 || errorData.error === 'invitation_expired') {
           alert('❌ Срок действия приглашения истёк\n\n' +
                 'Данное приглашение больше недействительно.\n\n' +
                 '📧 Пожалуйста, запросите новое приглашение у вашего HR-менеджера.');
           return;
         }
-        
+
         if (response.status === 410 || errorData.error === 'invitation_used') {
           alert('❌ Приглашение уже использовано\n\n' +
                 'Вы уже проходили тест по этому приглашению, или лимит использований исчерпан.\n\n' +
                 '📧 Если вам нужно пройти тест повторно, запросите новое приглашение у вашего HR-менеджера.');
           return;
         }
-        
+
         // Общая ошибка с деталями, если они есть
         const errorMessage = errorData.message || _(msg`Не удалось начать тест`);
         alert('❌ Ошибка при запуске теста\n\n' + errorMessage + '\n\n' +
@@ -241,7 +241,7 @@ export default function RegulationTestPage() {
       const data = await response.json();
       setSessionId(data.sessionId);
       setQuestions(data.questions);
-      
+
       // Начинаем таймер для первого вопроса
       if (data.questions && data.questions.length > 0) {
         setTimeLeft(data.questions[0].maxTime || 120);
@@ -258,27 +258,27 @@ export default function RegulationTestPage() {
 
   const handleStartRecording = useCallback(() => {
     console.log('Starting recording...', { testStream, hasGetWebcamStream: !!(window as any).getWebcamStream });
-    
+
     let stream = testStream;
-    
+
     if (!stream && (window as any).getWebcamStream) {
       console.log('Trying to get stream from window.getWebcamStream()');
       stream = (window as any).getWebcamStream();
     }
-    
+
     if (!stream) {
       console.error('No stream available. testStream:', testStream, 'getWebcamStream:', (window as any).getWebcamStream);
       alert(_(msg`Нет доступного потока для записи. Проверьте, что камера/микрофон подключены.`));
       return;
     }
-    
+
     console.log('Stream found:', stream, 'Video tracks:', stream.getVideoTracks().length, 'Audio tracks:', stream.getAudioTracks().length);
 
     try {
       // Определяем тип записи: видео или только аудио
       const hasVideo = stream.getVideoTracks().length > 0;
       const hasAudio = stream.getAudioTracks().length > 0;
-      
+
       console.log('Recording mode:', hasVideo ? 'video+audio' : 'audio-only');
 
       // Выбираем MIME тип в зависимости от наличия видео
@@ -331,24 +331,24 @@ export default function RegulationTestPage() {
 
   const handleAutoSubmit = () => {
     console.log('Auto-submitting due to timeout');
-    
+
     // Если идёт запись - останавливаем и ждём blob
     if (recording && mediaRecorder) {
       console.log('Recording in progress, stopping...');
-      
+
       // Создаём одноразовый обработчик для автоотправки после остановки
       const originalOnStop = mediaRecorder.onstop;
       mediaRecorder.onstop = (event) => {
         // Вызываем оригинальный обработчик (который создаёт blob)
         if (originalOnStop) originalOnStop.call(mediaRecorder, event);
-        
+
         // Ждём создания blob и отправляем
         setTimeout(() => {
           console.log('Blob created after auto-stop, submitting...');
           handleSubmitAnswer();
         }, 200);
       };
-      
+
       handleStopRecording();
     } else if (audioBlob) {
       // Есть готовая запись - отправляем
@@ -391,7 +391,7 @@ export default function RegulationTestPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         if (response.status === 402 || errorData.error === 'insufficient_balance') {
           alert('❌ Тест прерван: закончились тесты на балансе\n\n' +
                 'К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n' +
@@ -399,7 +399,7 @@ export default function RegulationTestPage() {
           setSubmitting(false);
           return;
         }
-        
+
         if (response.status === 404 || response.status === 410) {
           alert('❌ Сессия тестирования не найдена или истекла\n\n' +
                 'Возможные причины:\n' +
@@ -409,7 +409,7 @@ export default function RegulationTestPage() {
           setSubmitting(false);
           return;
         }
-        
+
         const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
       }
@@ -445,12 +445,12 @@ export default function RegulationTestPage() {
     try {
       const formData = new FormData();
       formData.append('questionId', currentQuestion.id.toString());
-      
+
       // Определяем тип файла по MIME типу blob
       const isVideo = audioBlob.type.includes('video');
       const fileExtension = 'webm';
       const filename = `answer_q${currentQuestion.id}_${Date.now()}.${fileExtension}`;
-      
+
       // Отправляем в правильное поле: video или audio
       const fieldName = isVideo ? 'video' : 'audio';
       formData.append(fieldName, audioBlob, filename);
@@ -467,7 +467,7 @@ export default function RegulationTestPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         if (response.status === 402 || errorData.error === 'insufficient_balance') {
           alert('❌ Тест прерван: закончились тесты на балансе\n\n' +
                 'К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n' +
@@ -476,7 +476,7 @@ export default function RegulationTestPage() {
           setSubmitting(false);
           return;
         }
-        
+
         if (response.status === 404 || response.status === 410) {
           alert('❌ Сессия тестирования не найдена или истекла\n\n' +
                 'Возможные причины:\n' +
@@ -486,7 +486,7 @@ export default function RegulationTestPage() {
           setSubmitting(false);
           return;
         }
-        
+
         if (response.status === 413) {
           alert('❌ Файл слишком большой\n\n' +
                 'Размер записи превышает допустимый лимит.\n\n' +
@@ -498,7 +498,7 @@ export default function RegulationTestPage() {
           }
           return;
         }
-        
+
         // Общая ошибка
         const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
@@ -513,7 +513,7 @@ export default function RegulationTestPage() {
             (error.message || _(msg`Произошла ошибка при отправке.`)) + '\n\n' +
             '🔄 Пожалуйста, попробуйте ещё раз.\n\n' +
             '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
-      
+
       // Возвращаем возможность повторной отправки
       setSubmitting(false);
       // Перезапускаем таймер, если время ещё есть
@@ -528,7 +528,7 @@ export default function RegulationTestPage() {
     setAudioBlob(null);
     setMediaRecorder(null);
     setTimerStarted(false);
-    
+
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
@@ -551,7 +551,7 @@ export default function RegulationTestPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         if (response.status === 404 || response.status === 410) {
           alert('❌ Сессия не найдена или уже завершена\n\n' +
                 'Возможно, тест уже был завершён ранее.\n\n' +
@@ -559,7 +559,7 @@ export default function RegulationTestPage() {
           setFinished(true);
           return;
         }
-        
+
         const errorMessage = errorData.message || _(msg`Не удалось завершить тест`);
         throw new Error(errorMessage);
       }
@@ -646,7 +646,7 @@ export default function RegulationTestPage() {
                   onChange={(e) => setDepartment(e.target.value)}
                   sx={{ mb: 2 }}
                 />
-                
+
                 {/* Согласие на обработку ПДн */}
                 <FormControlLabel
                   control={
@@ -673,7 +673,7 @@ export default function RegulationTestPage() {
                 <Alert severity="info" sx={{ mt: 3 }}>
                   Вы приглашены на тестирование как: <strong>{employeeEmail}</strong>
                 </Alert>
-                
+
                 {/* Согласие на обработку ПДн для именного приглашения */}
                 <FormControlLabel
                   control={
@@ -729,10 +729,10 @@ export default function RegulationTestPage() {
           <Paper sx={{ p: 4 }}>
             <Typography variant="h5" gutterBottom><Trans>Настройка оборудования</Trans></Typography>
             <Typography variant="body2" paragraph>
-              Тестирование состоит из {testInfo.questionsPerRegulation} вопросов. 
+              Тестирование состоит из {testInfo.questionsPerRegulation} вопросов.
               На каждый вопрос отводится ограниченное время.
             </Typography>
-            <Typography variant="body2" paragraph><Trans>Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы. 
+            <Typography variant="body2" paragraph><Trans>Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы.
               Отвечайте последовательно и не перегружайте страницу.</Trans></Typography>
 
             <ProductionWebcamComponent
@@ -862,8 +862,8 @@ export default function RegulationTestPage() {
             {/* 5. Таймер (Осталось + countdown) */}
             {timeLeft !== null && (
               <Box sx={{ mb: 3 }}>
-                <Typography 
-                  variant="h5" 
+                <Typography
+                  variant="h5"
                   color={timeLeft < 30 ? 'error.main' : 'primary.main'}
                   sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}
                 >
@@ -880,10 +880,10 @@ export default function RegulationTestPage() {
 
             {/* Яркий индикатор записи */}
             {recording && (
-              <Alert 
-                severity="error" 
+              <Alert
+                severity="error"
                 icon={<GraphicEqIcon sx={{ fontSize: 28 }} />}
-                sx={{ 
+                sx={{
                   mb: 3,
                   animation: `${blink} 1s infinite`,
                   fontSize: '18px',
@@ -907,7 +907,7 @@ export default function RegulationTestPage() {
                   size="large"
                   onClick={handleStartRecording}
                   fullWidth={isMobile}
-                  sx={{ 
+                  sx={{
                     minWidth: isMobile ? 'auto' : 250,
                     py: 1.5,
                     fontSize: '18px',
@@ -923,7 +923,7 @@ export default function RegulationTestPage() {
                   size="large"
                   onClick={handleStopRecording}
                   fullWidth={isMobile}
-                  sx={{ 
+                  sx={{
                     minWidth: isMobile ? 'auto' : 250,
                     py: 1.5,
                     fontSize: '18px',
@@ -957,14 +957,14 @@ export default function RegulationTestPage() {
                     disabled={submitting}
                     startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <CheckCircleIcon />}
                     fullWidth={isMobile}
-                    sx={{ 
+                    sx={{
                       minWidth: isMobile ? 'auto' : 200,
                       py: 1.5,
                       fontSize: '18px',
                       fontWeight: 'bold'
                     }}
                   >
-                    {submitting ? 'Отправка...' : '✓ Отправить ответ'}
+                    {submitting ? _(msg`Отправка...`) : _(msg`✓ Отправить ответ`)}
                   </Button>
                 </>
               )}
@@ -976,18 +976,18 @@ export default function RegulationTestPage() {
         {currentStep === 3 && (
           <Paper sx={{ p: 5, textAlign: 'center', maxWidth: 600, mx: 'auto' }}>
             <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 3 }} />
-            
+
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}><Trans>Спасибо за прохождение теста!</Trans></Typography>
-            
+
             <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}><Trans>Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании.</Trans></Typography>
-            
+
             <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3, lineHeight: 1.8 }}><Trans>Результаты тестирования будут проанализированы, и вы получите обратную связь от вашего руководителя или HR-отдела в ближайшее время.</Trans></Typography>
 
-            <Box 
-              sx={{ 
-                mt: 4, 
-                p: 3, 
-                bgcolor: 'primary.50', 
+            <Box
+              sx={{
+                mt: 4,
+                p: 3,
+                bgcolor: 'primary.50',
                 borderRadius: 2,
                 border: '1px solid',
                 borderColor: 'primary.100'

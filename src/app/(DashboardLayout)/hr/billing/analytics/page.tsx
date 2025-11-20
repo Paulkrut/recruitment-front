@@ -236,7 +236,7 @@ export default function BillingAnalyticsPage() {
               <Typography variant="body1" fontWeight="medium"><Trans>Спасибо за использование нашей платформы! 🎁</Trans></Typography>
               <Typography variant="body2">
                 Вы получили {stats.gifts.count} бонусных{' '}
-                {stats.gifts.count === 1 ? 'интервью' : 'интервью'} благодаря нашей системе
+                {stats.gifts.count === 1 ? _(msg`интервью`) : _(msg`интервью`)} благодаря нашей системе
                 защиты от одновременных запусков. Мы ценим ваше доверие!
               </Typography>
             </Alert>

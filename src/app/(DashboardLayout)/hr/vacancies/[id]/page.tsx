@@ -536,7 +536,7 @@ export default function HRVacancyDetailPage() {
                         )}
                       </Box>
                     )},
-                    {field:'name',header:'Имя',render:(r:any)=>(
+                    {field:'name',header: _(msg`Имя`),render:(r:any)=>(
                       <Box display="flex" alignItems="center" gap={1}>
                       <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
                         <Box display="flex" alignItems="center" gap={1}>
@@ -551,7 +551,7 @@ export default function HRVacancyDetailPage() {
                         )}
                       </Box>
                     )},
-                    {field:'contact',header:'Контакты',render:(r:any)=>(
+                    {field:'contact',header: _(msg`Контакты`),render:(r:any)=>(
                       <Box>
                         <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
                           {r.phone || '-'}
@@ -561,8 +561,8 @@ export default function HRVacancyDetailPage() {
                         </Typography>
                       </Box>
                     )},
-                    {field:'status',header:'Статус', render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
-                    {field:'score',header:'Оценка',render:(r:any)=>{
+                    {field:'status',header: _(msg`Статус`), render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
+                    {field:'score',header: _(msg`Оценка`),render:(r:any)=>{
                       if (r.score !== undefined && r.score !== null) {
                         return (
                           <Chip 
@@ -589,12 +589,12 @@ export default function HRVacancyDetailPage() {
                         );
                       }
                     }},
-                    {field:'createdAt',header:'Дата',render:(r:any)=>r.createdAt ? (
+                    {field:'createdAt',header: _(msg`Дата`),render:(r:any)=>r.createdAt ? (
                         <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
                         {formatDateToLocal(r.createdAt)}
                         </Typography>
                     ) : '-'},
-                    {field:'trustLevel',header:'Доверие',render:(r:any)=>{
+                    {field:'trustLevel',header: _(msg`Доверие`),render:(r:any)=>{
                       // Если нет fingerprint'а - показываем пустой кружок
                       if (!r.deviceFingerprint) {
                         return (
@@ -619,9 +619,7 @@ export default function HRVacancyDetailPage() {
                       );
                       
                       return (
-                        <Tooltip title={hasDuplicateDevice ? 
-                          "⚠️ Устройство использовалось другими кандидатами" : 
-                          "✅ Уникальное устройство"
+                        <Tooltip title={hasDuplicateDevice ? _(msg`⚠️ Устройство использовалось другими кандидатами`) : _(msg`✅ Уникальное устройство`)
                         } arrow>
                           <Box sx={{ 
                             width: 14, 
@@ -912,10 +910,10 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
     
     // Валидация в реальном времени
     if (field === 'email' && value && !validateEmail(value)) {
-      setErrors(prev => ({...prev, email: 'Введите корректный email адрес'}));
+      setErrors(prev => ({...prev, email: _(msg`Введите корректный email адрес`)}));
     }
     if (field === 'phone' && value && !validatePhone(value)) {
-      setErrors(prev => ({...prev, phone: 'Введите корректный номер телефона'}));
+      setErrors(prev => ({...prev, phone: _(msg`Введите корректный номер телефона`)}));
     }
   };
   
@@ -981,7 +979,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}><Trans>Отмена</Trans></Button>
-        <Button variant="contained" disabled={!canSubmit} onClick={handleSubmit}>{loading?'Добавление…':'Добавить'}</Button>
+        <Button variant="contained" disabled={!canSubmit} onClick={handleSubmit}>{loading? _(msg`Добавление…`): _(msg`Добавить`)}</Button>
       </DialogActions>
     </Dialog>
   );

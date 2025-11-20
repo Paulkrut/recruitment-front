@@ -664,10 +664,10 @@ export default function HRVacanciesPage() {
         {filtered.length === 0 && (
           <Box textAlign="center" py={4}>
             <Typography variant="h6" color="textSecondary" gutterBottom>
-              {search ? "Вакансии не найдены" : "Нет вакансий"}
+              {search ? _(msg`Вакансии не найдены`) : _(msg`Нет вакансий`)}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              {search ? "Попробуйте изменить поисковый запрос" : "Создайте первую вакансию, чтобы начать работу"}
+              {search ? _(msg`Попробуйте изменить поисковый запрос`) : _(msg`Создайте первую вакансию, чтобы начать работу`)}
             </Typography>
           </Box>
         )}

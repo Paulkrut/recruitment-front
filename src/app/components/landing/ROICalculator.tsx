@@ -2,6 +2,9 @@
 import React, { useMemo, useState } from 'react';
 import { Box, Container, Typography, Paper, Slider, Grid, Alert } from '@mui/material';
 import { Trans } from '@lingui/react';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 
 interface PricingPlan {
@@ -22,8 +25,8 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
 
   // Оптимальный тариф с мемоизацией
   const optimalPlan = useMemo(() => {
-    return hiresPerMonth <= 10 ? plans[1] : 
-           hiresPerMonth <= 40 ? plans[2] : 
+    return hiresPerMonth <= 10 ? plans[1] :
+           hiresPerMonth <= 40 ? plans[2] :
            plans[3];
   }, [hiresPerMonth, plans]);
 
@@ -46,7 +49,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
         platformPrice = parseInt(numericValue, 10) || 0;
       }
     }
-    
+
     const timeSaved = Math.round(totalTraditionalTime * 0.7);
     const timeSavedCost = Math.round(timeSaved * hrHourlyCost);
 
@@ -123,7 +126,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                 <Typography variant="caption" color="text.secondary" display="block" mt={2}><Trans>Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час</Trans></Typography>
               </Paper>
             </Grid>
-            
+
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 3, bgcolor: `${optimalPlan.color}10`, border: `2px solid ${optimalPlan.color}`, height: '100%' }}>
                 <Typography variant="body2" color="text.secondary" mb={1}>
@@ -150,7 +153,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                 </Typography>
                 <Typography variant="body1" color="text.secondary" fontWeight={600}><Trans>Ваша экономия в месяц</Trans></Typography>
                 <Typography variant="caption" color="text.secondary">
-                  При {hiresPerMonth} найм{hiresPerMonth === 1 ? 'е' : (hiresPerMonth < 5 ? 'ах' : 'ах')}
+                  При {hiresPerMonth} {_(msg`наймах`)}
                 </Typography>
               </Grid>
               <Grid item xs={12} md={6}>

@@ -1,13 +1,18 @@
 'use client';
 
 import Script from 'next/script';
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export default function StructuredData() {
+  const { _ } = useLingui();
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "SofiHR",
-    "description": "Современная HR-система для управления вакансиями, кандидатами и процессами найма",
+    "description": _(msg`Современная HR-система для управления вакансиями, кандидатами и процессами найма`),
     "url": "https://www.sofihr.ru",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web Browser",
@@ -46,7 +51,7 @@ export default function StructuredData() {
     "name": "SofiHR",
     "url": "https://www.sofihr.ru",
     "logo": "https://www.sofihr.ru/logo.png",
-    "description": "Современная HR-система для управления рекрутингом",
+    "description": _(msg`Современная HR-система для управления рекрутингом`),
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "RU"

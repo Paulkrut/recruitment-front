@@ -133,47 +133,47 @@ export default function LandingPage() {
     { icon: "vscode-icons:file-type-light-js", label: "JavaScript" },
   ];
   const features = [
-    { icon: "mdi:account-tie", title: "Экспертная поддержка", description: "HR-автоматизация и консультации от экспертов.", iconBg: "#FFF1F0" },
-    { icon: "mdi:bank", title: "Интеграции", description: "Интеграция с мессенджерами, job-сайтами и корпоративными сервисами.", iconBg: "#E3F2FD" },
-    { icon: "mdi:calculator", title: "Гибкие тарифы", description: "Доступно для команд любого размера.", iconBg: "#E6F7F0" },
-    { icon: "mdi:chart-line", title: "Аналитика", description: "Вся статистика по вакансиям и кандидатам в одном месте.", iconBg: "#FFF4E5" },
+    { icon: "mdi:account-tie", title: _(msg`Экспертная поддержка`), description: _(msg`HR-автоматизация и консультации от экспертов.`), iconBg: "#FFF1F0" },
+    { icon: "mdi:bank", title: _(msg`Интеграции`), description: _(msg`Интеграция с мессенджерами, job-сайтами и корпоративными сервисами.`), iconBg: "#E3F2FD" },
+    { icon: "mdi:calculator", title: _(msg`Гибкие тарифы`), description: _(msg`Доступно для команд любого размера.`), iconBg: "#E6F7F0" },
+    { icon: "mdi:chart-line", title: _(msg`Аналитика`), description: _(msg`Вся статистика по вакансиям и кандидатам в одном месте.`), iconBg: "#FFF4E5" },
   ];
   const features1 = [
-    { icon: "mdi:account-group", title: "Командная работа", isActive: true },
-    { icon: "mdi:bank", title: "Платежи", isActive: false },
-    { icon: "mdi:code-brackets", title: "Встраивание", isActive: false },
-    { icon: "mdi:workflow", title: "Автоматизация", isActive: false },
+    { icon: "mdi:account-group", title: _(msg`Командная работа`), isActive: true },
+    { icon: "mdi:bank", title: _(msg`Платежи`), isActive: false },
+    { icon: "mdi:code-brackets", title: _(msg`Встраивание`), isActive: false },
+    { icon: "mdi:workflow", title: _(msg`Автоматизация`), isActive: false },
   ];
   const accordionItems = [
-    { title: "Внешние коллеги", content: "Можно приглашать подрядчиков и консультантов в процессы найма." },
-    { title: "Объединение расписаний", content: "Автоматическое согласование времени для всех участников интервью.", expanded: true },
-    { title: "Ротация кандидатов", content: "Гибкие сценарии распределения кандидатов между HR-менеджерами." },
+    { title: _(msg`Внешние коллеги`), content: _(msg`Можно приглашать подрядчиков и консультантов в процессы найма.`) },
+    { title: _(msg`Объединение расписаний`), content: _(msg`Автоматическое согласование времени для всех участников интервью.`), expanded: true },
+    { title: _(msg`Ротация кандидатов`), content: _(msg`Гибкие сценарии распределения кандидатов между HR-менеджерами.`) },
   ];
   const testimonials = [
     {
-      text: "SofiHR полностью изменил наш процесс найма. Теперь мы тратим в 5 раз меньше времени на первичные интервью и получаем более качественных кандидатов.",
-      name: "Екатерина Иванова",
+      text: _(msg`SofiHR полностью изменил наш процесс найма. Теперь мы тратим в 5 раз меньше времени на первичные интервью и получаем более качественных кандидатов.`),
+      name: _(msg`Екатерина Иванова`),
       position: "HR Lead, TechCorp",
       avatar: "/images/profile/user-9.jpg"
     },
     {
-      text: "ИИ-интервью помогли нам обработать в 10 раз больше кандидатов при том же количестве HR-специалистов. ROI проекта составил 400%.",
-      name: "Андрей Смирнов",
+      text: _(msg`ИИ-интервью помогли нам обработать в 10 раз больше кандидатов при том же количестве HR-специалистов. ROI проекта составил 400%.`),
+      name: _(msg`Андрей Смирнов`),
       position: "HR Director, SalesForce",
       avatar: user2.src
     },
     {
-      text: "Автоматизация интервью позволила нам масштабировать бизнес в 3 раза. Теперь мы можем обрабатывать в 5 раз больше вакансий.",
-      name: "Мария Петрова",
+      text: _(msg`Автоматизация интервью позволила нам масштабировать бизнес в 3 раза. Теперь мы можем обрабатывать в 5 раз больше вакансий.`),
+      name: _(msg`Мария Петрова`),
       position: "CEO, RecruitPro",
       avatar: "/images/profile/user3.jpg"
     }
   ];
   const companies = [ { name: "Intel" }, { name: "Oracle" }, { name: "Dell" }, { name: "Samsung" }, { name: "Infosys" }, { name: "Capgemini" } ];
   const sections = [
-    { title: "Возможности", links: ["Вакансии", "Кандидаты", "Интервью", "Аналитика", "Интеграции"] },
-    { title: "Документация", links: ["API", "FAQ", "Поддержка"] },
-    { title: "Компания", links: ["О нас", "Блог", "Контакты"] },
+    { title: _(msg`Возможности`), links: ["Вакансии", "Кандидаты", "Интервью", "Аналитика", "Интеграции"] },
+    { title: _(msg`Документация`), links: ["API", "FAQ", "Поддержка"] },
+    { title: _(msg`Компания`), links: ["О нас", "Блог", "Контакты"] },
   ];
   const socialLinks = [
     { icon: "mdi:facebook", url: "#" },
@@ -201,12 +201,12 @@ export default function LandingPage() {
   const pricingPlans: PricingPlan[] = [
     {
       id: 'trial',
-      name: 'Пробный',
-      price: 'Бесплатно',
-      interviewCount: '10 интервью',
+      name: _(msg`Пробный`),
+      price: _(msg`Бесплатно`),
+      interviewCount: _(msg`10 интервью`),
       pricePerInterview: '0₽',
       color: '#607D8B',
-      targetAudience: 'Для тестирования платформы без финансовых вложений',
+      targetAudience: _(msg`Для тестирования платформы без финансовых вложений`),
       features: [
         '10 AI-интервью бесплатно',
         'Базовый анализ ИИ',
@@ -216,26 +216,26 @@ export default function LandingPage() {
         'Поддержка по email'
       ],
       detailedFeatures: [
-        { text: '10 AI-интервью для тестирования платформы', included: true },
-        { text: 'Базовый анализ ответов с помощью ИИ', included: true },
-        { text: 'Автоматическое ранжирование кандидатов', included: true },
-        { text: 'Запись видео и аудио ответов', included: true },
-        { text: 'Доступ к базовым шаблонам интервью', included: true },
-        { text: 'Поддержка по email (ответ в течение 48 часов)', included: true },
-        { text: 'Детальные отчеты', included: false },
-        { text: 'Кастомные шаблоны', included: false },
-        { text: 'Мультикомпанийность', included: false },
-        { text: 'API доступ', included: false }
+        { text: _(msg`10 AI-интервью для тестирования платформы`), included: true },
+        { text: _(msg`Базовый анализ ответов с помощью ИИ`), included: true },
+        { text: _(msg`Автоматическое ранжирование кандидатов`), included: true },
+        { text: _(msg`Запись видео и аудио ответов`), included: true },
+        { text: _(msg`Доступ к базовым шаблонам интервью`), included: true },
+        { text: _(msg`Поддержка по email (ответ в течение 48 часов)`), included: true },
+        { text: _(msg`Детальные отчеты`), included: false },
+        { text: _(msg`Кастомные шаблоны`), included: false },
+        { text: _(msg`Мультикомпанийность`), included: false },
+        { text: _(msg`API доступ`), included: false }
       ]
     },
     {
       id: 'start',
-      name: 'Старт',
+      name: _(msg`Старт`),
       price: '13,500₽',
-      interviewCount: '100 интервью',
+      interviewCount: _(msg`100 интервью`),
       pricePerInterview: '135₽',
       color: '#4CAF50',
-      targetAudience: 'Для небольших компаний и стартапов до 10 найма/месяц',
+      targetAudience: _(msg`Для небольших компаний и стартапов до 10 найма/месяц`),
       features: [
         '100 AI-интервью',
         'Полный анализ ответов ИИ',
@@ -245,28 +245,28 @@ export default function LandingPage() {
         'Поддержка по email'
       ],
       detailedFeatures: [
-        { text: '100 AI-интервью', included: true },
-        { text: 'Полный анализ ответов с помощью ИИ', included: true },
-        { text: 'Автоматическое ранжирование кандидатов', included: true },
-        { text: 'Запись видео и аудио ответов', included: true },
-        { text: 'Базовые шаблоны интервью', included: true },
-        { text: 'Поддержка по email', included: true },
-        { text: 'Экспорт базовых отчетов', included: true },
-        { text: 'Детальные отчеты', included: false },
-        { text: 'Кастомные шаблоны', included: false },
-        { text: 'Мультикомпанийность', included: false }
+        { text: _(msg`100 AI-интервью`), included: true },
+        { text: _(msg`Полный анализ ответов с помощью ИИ`), included: true },
+        { text: _(msg`Автоматическое ранжирование кандидатов`), included: true },
+        { text: _(msg`Запись видео и аудио ответов`), included: true },
+        { text: _(msg`Базовые шаблоны интервью`), included: true },
+        { text: _(msg`Поддержка по email`), included: true },
+        { text: _(msg`Экспорт базовых отчетов`), included: true },
+        { text: _(msg`Детальные отчеты`), included: false },
+        { text: _(msg`Кастомные шаблоны`), included: false },
+        { text: _(msg`Мультикомпанийность`), included: false }
       ]
     },
     {
       id: 'business',
-      name: 'Бизнес',
+      name: _(msg`Бизнес`),
       price: '54,000₽',
-      interviewCount: '500 интервью',
+      interviewCount: _(msg`500 интервью`),
       pricePerInterview: '108₽',
-      discount: 'Экономия 20%',
+      discount: _(msg`Экономия 20%`),
       color: '#2196F3',
       popular: true,
-      targetAudience: 'Для средних компаний с активным процессом найма',
+      targetAudience: _(msg`Для средних компаний с активным процессом найма`),
       features: [
         '500 AI-интервью',
         'Расширенный анализ ИИ',
@@ -277,27 +277,27 @@ export default function LandingPage() {
         'Экспорт данных'
       ],
       detailedFeatures: [
-        { text: '500 AI-интервью', included: true },
-        { text: 'Расширенный анализ ответов с помощью ИИ', included: true },
-        { text: 'Детальные отчеты по всем кандидатам', included: true },
-        { text: 'Создание кастомных шаблонов интервью', included: true },
-        { text: 'Работа с несколькими компаниями', included: true },
-        { text: 'Приоритетная поддержка (ответ в течение 4 часов)', included: true },
-        { text: 'Экспорт данных в различных форматах', included: true },
-        { text: 'Интеграции с внешними системами', included: true },
-        { text: 'Персональный менеджер', included: false },
-        { text: 'API доступ', included: false }
+        { text: _(msg`500 AI-интервью`), included: true },
+        { text: _(msg`Расширенный анализ ответов с помощью ИИ`), included: true },
+        { text: _(msg`Детальные отчеты по всем кандидатам`), included: true },
+        { text: _(msg`Создание кастомных шаблонов интервью`), included: true },
+        { text: _(msg`Работа с несколькими компаниями`), included: true },
+        { text: _(msg`Приоритетная поддержка (ответ в течение 4 часов)`), included: true },
+        { text: _(msg`Экспорт данных в различных форматах`), included: true },
+        { text: _(msg`Интеграции с внешними системами`), included: true },
+        { text: _(msg`Персональный менеджер`), included: false },
+        { text: _(msg`API доступ`), included: false }
       ]
     },
     {
       id: 'premium',
-      name: 'Премиум',
+      name: _(msg`Премиум`),
       price: '90,000₽',
-      interviewCount: '1000 интервью',
+      interviewCount: _(msg`1000 интервью`),
       pricePerInterview: '90₽',
-      discount: 'Экономия 33%',
+      discount: _(msg`Экономия 33%`),
       color: '#9C27B0',
-      targetAudience: 'Для крупных компаний и HR-агентств с высокой нагрузкой',
+      targetAudience: _(msg`Для крупных компаний и HR-агентств с высокой нагрузкой`),
       features: [
         '1000 AI-интервью',
         'AI-генерация вопросов',
@@ -308,16 +308,16 @@ export default function LandingPage() {
         'API доступ'
       ],
       detailedFeatures: [
-        { text: '1000 AI-интервью', included: true },
-        { text: 'AI-генерация вопросов на основе вакансии', included: true },
-        { text: 'Детальное сравнение кандидатов', included: true },
-        { text: 'Неограниченное количество шаблонов', included: true },
-        { text: 'Продвинутая аналитика и дашборды', included: true },
-        { text: 'Персональный менеджер (24/7)', included: true },
-        { text: 'Полный API доступ', included: true },
-        { text: 'Интеграции с любыми системами', included: true },
-        { text: 'Приоритетная разработка функций', included: true },
-        { text: 'SLA гарантия 99.9%', included: true }
+        { text: _(msg`1000 AI-интервью`), included: true },
+        { text: _(msg`AI-генерация вопросов на основе вакансии`), included: true },
+        { text: _(msg`Детальное сравнение кандидатов`), included: true },
+        { text: _(msg`Неограниченное количество шаблонов`), included: true },
+        { text: _(msg`Продвинутая аналитика и дашборды`), included: true },
+        { text: _(msg`Персональный менеджер (24/7)`), included: true },
+        { text: _(msg`Полный API доступ`), included: true },
+        { text: _(msg`Интеграции с любыми системами`), included: true },
+        { text: _(msg`Приоритетная разработка функций`), included: true },
+        { text: _(msg`SLA гарантия 99.9%`), included: true }
       ]
     }
   ];

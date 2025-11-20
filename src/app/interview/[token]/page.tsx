@@ -317,7 +317,7 @@ export default function CandidateInterviewPage() {
           threshold: 2000
         });
         if (timeSinceLastAnswer < 2000) { // 2 секунды
-          console.log('Skipping auto-submit - recent answer detected:', {
+          console.log('Skipping auto-submit - recent answer detected: ', {
             timeSinceLastAnswer,
             questionId: question.id
           });
@@ -327,7 +327,7 @@ export default function CandidateInterviewPage() {
 
       // Проверка - отправляем пустой ответ только если у вопроса есть таймер
       if (question.maxTime === null || question.maxTime === undefined || question.maxTime === 0) {
-        console.log('Skipping auto-submit - no max time for current question:', {
+        console.log('Skipping auto-submit - no max time for current question: ', {
           questionId: question.id,
           maxTime: question.maxTime
         });
@@ -335,7 +335,7 @@ export default function CandidateInterviewPage() {
       }
 
       // Отправляем пустой ответ
-      console.log('Auto-submit triggered:', {
+      console.log('Auto-submit triggered: ', {
         timeLeft,
         questionId: question.id,
         answered,
@@ -635,7 +635,7 @@ export default function CandidateInterviewPage() {
           updateLevel();
           console.log('Audio analysis setup complete');
         } catch (error) {
-          console.error('Не удалось настроить анализ аудио для записи:', error);
+          console.error('Не удалось настроить анализ аудио для записи: ', error);
         }
       }
 
@@ -648,13 +648,13 @@ export default function CandidateInterviewPage() {
         // Добавляем видео-сообщение в чат с live-потоком
         setChat((p) => [
           ...p,
-          { role: "user", text: "🎥 Запись...", video: "live", timestamp: Date.now() }
+          { role: 'user', text: '🎥 Запись...', video: "live", timestamp: Date.now() }
         ]);
       } else {
         // Для аудио-режима добавляем сообщение с индикатором записи
         setChat((p) => [
           ...p,
-          { role: "user", text: "🎤 Запись аудио...", timestamp: Date.now() }
+          { role: "user", text: '🎤 Запись аудио...', timestamp: Date.now() }
         ]);
       }
 
@@ -788,7 +788,7 @@ export default function CandidateInterviewPage() {
                 newChat[i] = {
                   ...newChat[i],
                   video: videoUrl,
-                  text: "🎥 Запись готова. Выберите действие ниже",
+                  text: _(msg`🎥 Запись готова. Выберите действие ниже`),
                   timestamp: newChat[i].timestamp || Date.now()
                 };
                 break;
@@ -804,7 +804,7 @@ export default function CandidateInterviewPage() {
               if (newChat[i].role === 'user' && newChat[i].text.includes('🎤 Запись')) {
                 newChat[i] = {
                   ...newChat[i],
-                  text: "🎤 Запись готова. Выберите действие ниже",
+                  text: _(msg`🎤 Запись готова. Выберите действие ниже`),
                   timestamp: newChat[i].timestamp || Date.now()
                 };
                 break;
@@ -836,13 +836,13 @@ export default function CandidateInterviewPage() {
       setRecording(true);
     } catch (err: any) {
       console.error('startRecording error:', err);
-      let msg = cameraEnabled ? "Не удалось получить доступ к камере и микрофону." : "Не удалось получить доступ к микрофону.";
+      let msg = cameraEnabled ? _(msg`Не удалось получить доступ к камере и микрофону.`) : _(msg`Не удалось получить доступ к микрофону.`);
 
       // Специальная обработка для Safari
       if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
         msg += cameraEnabled
-          ? "\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон"
-          : "\n\nВ Safari необходимо:\n1. Разрешить доступ к микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Микрофон";
+          ? _(msg`\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон`)
+          : _(msg`\n\nВ Safari необходимо:\n1. Разрешить доступ к микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Микрофон`);
 
         // В Safari иногда ошибка показывается, но запись все равно работает
         if (previewStream && previewStream.active) {
@@ -851,20 +851,20 @@ export default function CandidateInterviewPage() {
         }
       } else if (typeof window !== "undefined" && !window.isSecureContext) {
         msg += cameraEnabled
-          ? "\nБраузер требует HTTPS или http://localhost для доступа к камере и микрофону. Откройте страницу по безопасному протоколу или через localhost."
-          : "\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.";
+          ? _(msg`\nБраузер требует HTTPS или http://localhost для доступа к камере и микрофону. Откройте страницу по безопасному протоколу или через localhost.`)
+          : _(msg`\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.`);
       } else if (err?.name === "NotAllowedError") {
         msg += cameraEnabled
-          ? "\nРазрешите доступ к камере и микрофону в настройках браузера (значок камеры/микрофона в адресной строке)."
-          : "\nРазрешите доступ к микрофону в настройках браузера (значок микрофона в адресной строке).";
+          ? _(msg`\nРазрешите доступ к камере и микрофону в настройках браузера (значок камеры/микрофона в адресной строке).`)
+          : _(msg`\nРазрешите доступ к микрофону в настройках браузера (значок микрофона в адресной строке).`);
       } else if (err?.name === "NotFoundError") {
-        msg += cameraEnabled ? "\nКамера или микрофон не найдены." : "\nУстройство микрофона не найдено.";
+        msg += cameraEnabled ? _(msg`\nКамера или микрофон не найдены.`) : _(msg`\nУстройство микрофона не найдено.`);
       } else if (err?.name === "NotSupportedError") {
-        msg += cameraEnabled ? "\nВаш браузер не поддерживает запись видео." : "\nВаш браузер не поддерживает запись аудио.";
+        msg += cameraEnabled ? _(msg`\nВаш браузер не поддерживает запись видео.`) : _(msg`\nВаш браузер не поддерживает запись аудио.`);
       } else if (err?.name === "NotReadableError") {
         msg += cameraEnabled
-          ? "\nКамера или микрофон уже используются другим приложением."
-          : "\nМикрофон уже используется другим приложением.";
+          ? _(msg`\nКамера или микрофон уже используются другим приложением.`)
+          : _(msg`\nМикрофон уже используется другим приложением.`);
       }
 
       alert(msg);
@@ -1068,7 +1068,7 @@ export default function CandidateInterviewPage() {
               newChat[i] = {
                 ...newChat[i],
                 video: finalVideoUrl,
-                text: "🎥 Видео ответ отправлен",
+                text: _(msg`🎥 Видео ответ отправлен`),
                 timestamp: newChat[i].timestamp || Date.now()
               };
               break;
@@ -1085,7 +1085,7 @@ export default function CandidateInterviewPage() {
           if (newChat[i].role === 'user' && newChat[i].text.includes('🎤')) {
             newChat[i] = {
               ...newChat[i],
-              text: "🎤 Аудио ответ отправлен",
+              text: _(msg`🎤 Аудио ответ отправлен`),
               timestamp: newChat[i].timestamp || Date.now()
             };
             break;
@@ -1201,7 +1201,7 @@ export default function CandidateInterviewPage() {
     // optimistic UI
     setChat((p)=>[
       ...p,
-      {role:'user',text:'(нет ответа)', timestamp: Date.now()},
+      {role:'user',text: _(msg`(нет ответа)`), timestamp: Date.now()},
       {role:'bot',text:'typing', timestamp: Date.now()},
     ]);
     const typingIdx = chat.length + 1; // Индекс typing (после user и bot)
@@ -1761,7 +1761,7 @@ export default function CandidateInterviewPage() {
                       onClick={sendFeedbackToEmail}
                       disabled={sendingFeedback || !feedbackEmail.trim()}
                     >
-                      {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
+                      {sendingFeedback ? <CircularProgress size={20} /> : _(msg`Отправить`)}
                     </Button>
                     <Button
                       variant="outlined"
@@ -1896,7 +1896,7 @@ export default function CandidateInterviewPage() {
               </Box>
               {/* Показываем дополнительную информацию о текущем этапе */}
               <Typography variant="caption" color="text.primary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
-                {elapsedTime < 30 ? 'Обрабатываем ваши ответы...' : 'Генерируем обратную связь...'}
+                {elapsedTime < 30 ? _(msg`Обрабатываем ваши ответы...`) : _(msg`Генерируем обратную связь...`)}
               </Typography>
             </Box>
           )}
@@ -1904,9 +1904,9 @@ export default function CandidateInterviewPage() {
           <Typography variant="body2" color="text.secondary">
             {feedbackLoading
               ? (elapsedTime < 30
-                  ? "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
-                  : "Система AI анализирует ваши ответы для создания персональных рекомендаций")
-              : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
+                  ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
+                  : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
+              : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
             }
           </Typography>
 
@@ -2149,7 +2149,7 @@ export default function CandidateInterviewPage() {
                         onClick={sendFeedbackToEmail}
                         disabled={sendingFeedback || !feedbackEmail.trim()}
                       >
-                        {sendingFeedback ? <CircularProgress size={20} /> : 'Отправить'}
+                        {sendingFeedback ? <CircularProgress size={20} /> : _(msg`Отправить`)}
                       </Button>
                       <Button
                         variant="outlined"
@@ -2283,7 +2283,7 @@ export default function CandidateInterviewPage() {
                 </Box>
                 {/* Показываем дополнительную информацию о текущем этапе */}
                 <Typography variant="caption" color="text.primary" sx={{ mt: 1, display: 'block', textAlign: 'center' }}>
-                  {elapsedTime < 30 ? 'Обрабатываем ваши ответы...' : 'Генерируем обратную связь...'}
+                  {elapsedTime < 30 ? _(msg`Обрабатываем ваши ответы...`) : _(msg`Генерируем обратную связь...`)}
                 </Typography>
               </Box>
             )}
@@ -2291,9 +2291,9 @@ export default function CandidateInterviewPage() {
             <Typography variant="body2" color="text.secondary">
               {feedbackLoading
                 ? (elapsedTime < 30
-                    ? "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
-                    : "Система AI анализирует ваши ответы для создания персональных рекомендаций")
-                : "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
+                    ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
+                    : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
+                : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
               }
             </Typography>
 
@@ -2963,7 +2963,7 @@ export default function CandidateInterviewPage() {
                 color: '#ff4444',
                 letterSpacing: '0.5px'
               }}>
-                Идёт запись... Говорите в {cameraEnabled ? 'камеру' : 'микрофон'}
+                Идёт запись... Говорите в {cameraEnabled ? _(msg`камеру`) : _(msg`микрофон`)}
               </Typography>
               <Box sx={{
                 display: 'flex',
@@ -3018,7 +3018,7 @@ export default function CandidateInterviewPage() {
                     px: 3
                   }}
                 >
-                  {loadingNextQuestion ? 'Обработка ответа...' : '🎤 Записать ответ'}
+                  {loadingNextQuestion ? _(msg`Обработка ответа...`) : _(msg`🎤 Записать ответ`)}
                 </Button>
                 <Button
                   variant="outlined"
@@ -3113,7 +3113,7 @@ export default function CandidateInterviewPage() {
                     px: 3
                   }}
                 >
-                  {loadingNextQuestion ? 'Отправка...' : '✓ Отправить ответ'}
+                  {loadingNextQuestion ? _(msg`Отправка...`) : _(msg`✓ Отправить ответ`)}
                 </Button>
               </>
             ) : null}
@@ -3269,7 +3269,7 @@ export default function CandidateInterviewPage() {
             disabled={forgetMeConfirmed !== _(msg`УДАЛИТЬ`) || forgetMeLoading}
             startIcon={forgetMeLoading ? <CircularProgress size={20} /> : null}
           >
-            {forgetMeLoading ? 'Удаляю...' : 'Удалить навсегда'}
+            {forgetMeLoading ? _(msg`Удаляю...`) : _(msg`Удалить навсегда`)}
           </Button>
         </DialogActions>
       </Dialog>

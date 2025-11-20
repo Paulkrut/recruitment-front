@@ -295,7 +295,7 @@ export default function RegulationTestsPage() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={test.questionGenerationMode === 'pre_generated' ? 'Заранее' : 'При старте'}
+                        label={test.questionGenerationMode === 'pre_generated' ? _(msg`Заранее`) : _(msg`При старте`)}
                         size="small"
                         color={test.questionGenerationMode === 'on_start' ? 'success' : 'default'}
                       />
@@ -332,7 +332,7 @@ export default function RegulationTestsPage() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={test.isActive ? 'Активен' : 'Неактивен'}
+                        label={test.isActive ? _(msg`Активен`) : _(msg`Неактивен`)}
                         size="small"
                         color={test.isActive ? 'success' : 'default'}
                       />

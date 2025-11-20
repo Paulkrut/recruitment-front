@@ -243,7 +243,7 @@ export default function HhIntegrationPage() {
       await response.json(); // Парсим ответ
 
       setStatus(prev => prev ? { ...prev, autoSync: enabled } : null);
-      setSuccess(_(msg`Автоматическая синхронизация ${enabled ? 'включена' : 'отключена'}`));
+      setSuccess(_(msg`Автоматическая синхронизация ${enabled ? _(msg`включена`) : _(msg`отключена`)}`));
     } catch (err: any) {
       setError(err.message || _(msg`Ошибка обновления настроек`));
     }
@@ -403,7 +403,7 @@ export default function HhIntegrationPage() {
                   {status?.isConnected && (
                     <Chip
                       icon={<IconCheck size={16} />}
-                      label={status.hasValidToken ? "Подключено" : "Требуется переавторизация"}
+                      label={status.hasValidToken ? _(msg`Подключено`) : _(msg`Требуется переавторизация`)}
                       color={status.hasValidToken ? "success" : "warning"}
                       size="small"
                     />
@@ -421,7 +421,7 @@ export default function HhIntegrationPage() {
                       disabled={connecting}
                       startIcon={connecting ? <CircularProgress size={20} /> : <IconExternalLink />}
                     >
-                      {connecting ? 'Подключение...' : 'Подключить HH.ru'}
+                      {connecting ? _(msg`Подключение...`) : _(msg`Подключить HH.ru`)}
                     </Button>
 
                     <Box mt={3}>
@@ -483,20 +483,20 @@ export default function HhIntegrationPage() {
                             onClick={startOAuthFlow}
                           >
                             {status.tokenStatus === 'disconnected_with_data' 
-                              ? 'Подключить заново' 
-                              : 'Переавторизоваться'
+                              ? _(msg`Подключить заново`) 
+                              : _(msg`Переавторизоваться`)
                             }
                           </Button>
                         }
                       >
                         <Typography variant="body2" fontWeight="bold">
                           {status.tokenStatus === 'disconnected_with_data'
-                            ? '📊 Интеграция отключена'
+                            ? _(msg`📊 Интеграция отключена`)
                             : status.tokenStatus === 'revoked' 
-                            ? '⚠️ Токен доступа был отозван' 
+                            ? _(msg`⚠️ Токен доступа был отозван`) 
                             : status.tokenStatus === 'refresh_failed'
-                            ? '⚠️ Не удалось обновить токен'
-                            : '⚠️ Проблема с токеном доступа'
+                            ? _(msg`⚠️ Не удалось обновить токен`)
+                            : _(msg`⚠️ Проблема с токеном доступа`)
                           }
                         </Typography>
                         <Typography variant="body2" mt={0.5}>
@@ -536,7 +536,7 @@ export default function HhIntegrationPage() {
                         <Typography variant="body1">
                           {status.lastSyncAt
                             ? new Date(status.lastSyncAt).toLocaleString('ru-RU')
-                            : 'Еще не выполнялась'
+                            : _(msg`Еще не выполнялась`)
                           }
                         </Typography>
                       </Grid>
@@ -545,7 +545,7 @@ export default function HhIntegrationPage() {
                         <Typography variant="body1">
                           {status.tokenExpiresAt
                             ? new Date(status.tokenExpiresAt).toLocaleString('ru-RU')
-                            : 'Не указано'
+                            : _(msg`Не указано`)
                           }
                         </Typography>
                       </Grid>
@@ -636,7 +636,7 @@ export default function HhIntegrationPage() {
                               }}
                             >
                               <Typography variant="body2" color="text.primary">
-                                📋 В очереди на загрузку резюме: <strong>{status.resumeQueueCount}</strong> {status.resumeQueueCount === 1 ? 'кандидат' : status.resumeQueueCount < 5 ? 'кандидата' : 'кандидатов'}
+                                📋 В очереди на загрузку резюме: <strong>{status.resumeQueueCount}</strong> {status.resumeQueueCount === 1 ? _(msg`кандидат`) : status.resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)}
                               </Typography>
                               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}><Trans>Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга</Trans></Typography>
                             </Box>
@@ -725,7 +725,7 @@ export default function HhIntegrationPage() {
                       startIcon={syncing ? <CircularProgress size={20} /> : <IconRefresh />}
                       size="small"
                     >
-                      {syncing ? 'Обновление...' : 'Обновить список'}
+                      {syncing ? _(msg`Обновление...`) : _(msg`Обновить список`)}
                     </Button>
                   </Box>
 
@@ -761,7 +761,7 @@ export default function HhIntegrationPage() {
                                   </Typography>
                                   <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
                                     <Chip
-                                      label={vacancy.status === 'active' ? 'Активна' : 'Архивная'}
+                                      label={vacancy.status === 'active' ? _(msg`Активна`) : _(msg`Архивная`)}
                                       color={vacancy.status === 'active' ? 'success' : 'default'}
                                       size="small"
                                     />

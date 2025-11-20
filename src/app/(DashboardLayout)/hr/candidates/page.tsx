@@ -850,10 +850,10 @@ export default function HRCandidatesPage() {
           <Box textAlign="center" py={4}>
             <IconUsers size={48} color="#ccc" />
             <Typography variant="h6" color="text.secondary" mt={2}>
-              {searchTerm || statusFilter || scoreFilter || vacancyFilter ? "Кандидаты не найдены" : "Кандидаты отсутствуют"}
+              {searchTerm || statusFilter || scoreFilter || vacancyFilter ? _(msg`Кандидаты не найдены`) : _(msg`Кандидаты отсутствуют`)}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {searchTerm || statusFilter || scoreFilter || vacancyFilter ? "Попробуйте изменить фильтры" : "Кандидаты появятся после прохождения интервью"}
+              {searchTerm || statusFilter || scoreFilter || vacancyFilter ? _(msg`Попробуйте изменить фильтры`) : _(msg`Кандидаты появятся после прохождения интервью`)}
             </Typography>
           </Box>
         ) : viewMode === "table" ? (

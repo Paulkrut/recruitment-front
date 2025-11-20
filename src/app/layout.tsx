@@ -5,18 +5,21 @@ import "./global.css";
 import YandexMetrika from "@/components/YandexMetrika";
 import StructuredData from "@/components/StructuredData";
 import CookieBanner from "@/app/components/CookieBanner";
+import { useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
+
 
 export const metadata = {
-  title: "SofiHR - Система управления рекрутингом",
-  description: "Современная HR-система для управления вакансиями, кандидатами и процессами найма. Автоматизация рекрутинга с AI-оценкой кандидатов.",
-  keywords: "рекрутинг, HR, найм, вакансии, кандидаты, управление персоналом, автоматизация рекрутинга, AI-оценка",
+  title: _(msg`SofiHR - Система управления рекрутингом`),
+  description: _(msg`Современная HR-система для управления вакансиями, кандидатами и процессами найма. Автоматизация рекрутинга с AI-оценкой кандидатов.`),
+  keywords: _(msg`рекрутинг, HR, найм, вакансии, кандидаты, управление персоналом, автоматизация рекрутинга, AI-оценка`),
   authors: [{ name: "SofiHR Team" }],
   creator: "SofiHR",
   publisher: "SofiHR",
   robots: "index, follow",
   openGraph: {
-    title: "SofiHR - Система управления рекрутингом",
-    description: "Современная HR-система для управления вакансиями, кандидатами и процессами найма",
+    title: _(msg`SofiHR - Система управления рекрутингом`),
+    description: _(msg`Современная HR-система для управления вакансиями, кандидатами и процессами найма`),
     url: "https://www.sofihr.ru",
     siteName: "SofiHR",
     locale: "ru_RU",
@@ -26,14 +29,14 @@ export const metadata = {
         url: "https://www.sofihr.ru/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "SofiHR - Система управления рекрутингом",
+        alt: _(msg`SofiHR - Система управления рекрутингом`),
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SofiHR - Система управления рекрутингом",
-    description: "Современная HR-система для управления вакансиями, кандидатами и процессами найма",
+    title: _(msg`SofiHR - Система управления рекрутингом`),
+    description: _(msg`Современная HR-система для управления вакансиями, кандидатами и процессами найма`),
     images: ["https://www.sofihr.ru/og-image.jpg"],
   },
   alternates: {
@@ -50,6 +53,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { _ } = useLingui();
+
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>

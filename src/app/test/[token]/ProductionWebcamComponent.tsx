@@ -91,7 +91,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       return [{
         video: false,
         audio: true,
-        description: 'Только микрофон'
+        description: _(msg`Только микрофон`)
       }];
     }
 
@@ -103,22 +103,22 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           facingMode: 'user'
         },
         audio: true,
-        description: 'Стандартные настройки'
+        description: _(msg`Стандартные настройки`)
       },
       {
         video: { facingMode: 'user' },
         audio: true,
-        description: 'Упрощенные настройки'
+        description: _(msg`Упрощенные настройки`)
       },
       {
         video: true,
         audio: true,
-        description: 'Любая камера'
+        description: _(msg`Любая камера`)
       },
       {
         video: false,
         audio: true,
-        description: 'Только микрофон'
+        description: _(msg`Только микрофон`)
       }
     ];
   }, [cameraEnabled]);
@@ -202,10 +202,10 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           onMicReady(audioTracks.length > 0);
 
           const status = videoTracks.length > 0 && audioTracks.length > 0
-            ? '✅ Камера и микрофон подключены'
+            ? _(msg`✅ Камера и микрофон подключены`)
             : videoTracks.length > 0
-            ? '✅ Камера подключена'
-            : '✅ Продолжаем только с микрофоном';
+            ? _(msg`✅ Камера подключена`)
+            : _(msg`✅ Продолжаем только с микрофоном`);
 
           onError(status);
           return;
@@ -440,8 +440,8 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
           )}
           <Typography variant="body2" sx={{ fontSize: '14px' }}>
             {cameraEnabled
-              ? (hasVideo ? 'Камера подключена' : (isInitializing ? 'Подключение камеры...' : 'Камера недоступна'))
-              : 'Камера отключена'
+              ? (hasVideo ? _(msg`Камера подключена`) : (isInitializing ? _(msg`Подключение камеры...`) : _(msg`Камера недоступна`)))
+              : _(msg`Камера отключена`)
             }
           </Typography>
         </Box>
@@ -453,7 +453,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
             <MicOffIcon color="error" />
           )}
           <Typography variant="body2" sx={{ fontSize: '14px' }}>
-            {hasAudio ? 'Микрофон подключен' : (isInitializing ? 'Подключение микрофона...' : 'Микрофон недоступен')}
+            {hasAudio ? _(msg`Микрофон подключен`) : (isInitializing ? _(msg`Подключение микрофона...`) : _(msg`Микрофон недоступен`))}
           </Typography>
         </Box>
 

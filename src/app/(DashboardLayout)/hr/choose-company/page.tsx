@@ -201,7 +201,7 @@ export default function ChooseCompanyPage() {
               onClick={create} 
               disabled={!name.trim() || creating}
             >
-              {creating ? <CircularProgress size={20} /> : "Создать"}
+              {creating ? <CircularProgress size={20} /> : _(msg`Создать`)}
             </Button>
           </Stack>
           {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
