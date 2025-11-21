@@ -203,9 +203,9 @@ export default function EditTestPage() {
           </FormControl>
 
           <Box>
-            <Typography gutterBottom>
+            <Typography gutterBottom><Trans>
               Вопросов на каждый регламент: {questionsPerRegulation}
-            </Typography>
+            </Trans></Typography>
             <Slider
               value={questionsPerRegulation}
               onChange={(_, value) => setQuestionsPerRegulation(value as number)}
@@ -218,9 +218,9 @@ export default function EditTestPage() {
           </Box>
 
           <Box>
-            <Typography gutterBottom>
+            <Typography gutterBottom><Trans>
               Время на один вопрос: {maxTimePerQuestion} секунд
-            </Typography>
+            </Trans></Typography>
             <Slider
               value={maxTimePerQuestion}
               onChange={(_, value) => setMaxTimePerQuestion(value as number)}

@@ -171,7 +171,7 @@ export default function CandidatesList({
       });
 
       if (response.ok) {
-        onSnackbar('Резюме загружено из HH.ru');
+        onSnackbar(_(msg`Резюме загружено из HH.ru`));
         // Перезагружаем список кандидатов
         const queryParams = new URLSearchParams();
         queryParams.append('page', (page + 1).toString());
@@ -190,7 +190,7 @@ export default function CandidatesList({
       } else {
         const error = await response.json();
         if (error.errorType === 'limit_exceeded') {
-          onSnackbar('Превышен лимит просмотров резюме на HH.ru');
+          onSnackbar(_(msg`Превышен лимит просмотров резюме на HH.ru`));
         } else {
           onSnackbar(error.error || _(msg`Ошибка загрузки резюме`));
         }
@@ -212,7 +212,7 @@ export default function CandidatesList({
       }
     } catch (error) {
       console.error('Error loading resume from HH:', error);
-      onSnackbar('Ошибка загрузки резюме');
+      onSnackbar(_(msg`Ошибка загрузки резюме`));
       // Откатываем оптимистичное обновление
       const queryParams = new URLSearchParams();
       queryParams.append('page', (page + 1).toString());
@@ -263,7 +263,7 @@ export default function CandidatesList({
           });
           setHhTokenDialogOpen(true);
         } else {
-          onSnackbar('Кандидат отправлен на AI скрининг');
+          onSnackbar(_(msg`Кандидат отправлен на AI скрининг`));
         }
 
         // Перезагружаем список кандидатов для получения актуальных данных
@@ -331,7 +331,7 @@ export default function CandidatesList({
       }
     } catch (error) {
       console.error('Error sending to AI screening:', error);
-      onSnackbar('Ошибка отправки на скрининг');
+      onSnackbar(_(msg`Ошибка отправки на скрининг`));
       // Откатываем оптимистичное обновление
       const queryParams = new URLSearchParams();
       queryParams.append('page', (page + 1).toString());
@@ -377,11 +377,11 @@ export default function CandidatesList({
         setSelectedCandidates([]);
         setBulkStatus('');
       } else {
-        onSnackbar('❌ Ошибка при перемещении');
+        onSnackbar(_(msg`❌ Ошибка при перемещении`));
       }
     } catch (error) {
       console.error('Error in bulk status change:', error);
-      onSnackbar('❌ Ошибка при перемещении');
+      onSnackbar(_(msg`❌ Ошибка при перемещении`));
     }
   };
 
@@ -424,9 +424,9 @@ export default function CandidatesList({
       {/* Панель массовых действий */}
       {selectedCandidates.length > 0 && (
         <Box display="flex" alignItems="center" gap={2} mb={2} p={2} bgcolor="primary.light" borderRadius={1}>
-          <Typography variant="body1" fontWeight={600}>
+          <Typography variant="body1" fontWeight={600}><Trans>
             Выбрано: {selectedCandidates.length}
-          </Typography>
+          </Trans></Typography>
           <FormControl size="small" sx={{ minWidth: 200 }}>
             <Select
               value={bulkStatus}
@@ -679,7 +679,7 @@ export default function CandidatesList({
                           onClick={() => {
                             const url = `${window.location.origin}/interview/${r.token}`;
                             navigator.clipboard.writeText(url);
-                            onSnackbar('Ссылка скопирована!');
+                            onSnackbar(_(msg`Ссылка скопирована!`));
                           }}
                         >
                           <ContentCopyIcon fontSize="small" />
@@ -703,16 +703,16 @@ export default function CandidatesList({
                               try {
                                 const response = await apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' });
                                 if (response.ok) {
-                                  onSnackbar('Кандидат удален!');
+                                  onSnackbar(_(msg`Кандидат удален!`));
                                   // Обновляем список
                                   const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates`);
                                   const updatedData = await updatedResponse.json();
                                   setCandidates(updatedData);
                                 } else {
-                                  onSnackbar('Ошибка удаления');
+                                  onSnackbar(_(msg`Ошибка удаления`));
                                 }
                               } catch (e) {
-                                onSnackbar('Ошибка удаления');
+                                onSnackbar(_(msg`Ошибка удаления`));
                               }
                             }
                           }}
@@ -756,9 +756,9 @@ export default function CandidatesList({
         <DialogContent>
           <DialogContentText>
             {hhTokenError?.candidateName && (
-              <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}>
+              <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}><Trans>
                 Кандидат: {hhTokenError.candidateName}
-              </Box>
+              </Trans></Box>
             )}
             {hhTokenError?.message || _(msg`Для загрузки резюме с HeadHunter необходимо обновить токен доступа.`)}
           </DialogContentText>

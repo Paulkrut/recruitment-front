@@ -62,9 +62,9 @@ export default function DeleteStageDialog({
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>
-          <WarningIcon color="warning" />
+          <WarningIcon color="warning" /><Trans>
           Удалить стадию "{stageName}"?
-        </Box>
+        </Trans></Box>
       </DialogTitle>
       
       <DialogContent>

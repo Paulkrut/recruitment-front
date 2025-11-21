@@ -173,17 +173,17 @@ export default function ForgotPasswordPage() {
 
           {/* Ссылки */}
           <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}><Trans>
               Вспомнили пароль?{" "}
-              <Link href="/auth/login" passHref>
+              </Trans><Link href="/auth/login" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
                   Войти в систему
                 </MuiLink>
               </Link>
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary"><Trans>
               Нет аккаунта?{" "}
-              <Link href="/auth/register" passHref>
+              </Trans><Link href="/auth/register" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
                   <Trans>Зарегистрироваться</Trans>
                 </MuiLink>

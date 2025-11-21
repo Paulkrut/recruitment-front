@@ -714,9 +714,9 @@ export default function HhIntegrationPage() {
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                     <Box display="flex" alignItems="center" gap={2}>
                       <IconBriefcase size={24} />
-                      <Typography variant="h5">
+                      <Typography variant="h5"><Trans>
                         Вакансии из HH.ru ({vacancies.length})
-                      </Typography>
+                      </Trans></Typography>
                     </Box>
                     <Button
                       variant="contained"

@@ -427,15 +427,15 @@ const DraggableCandidateCard = memo(({
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
           {/* Дата добавления */}
           <Box sx={{ flex: 1 }}>
-            <Typography variant="caption" color="text.secondary" display="block">
+            <Typography variant="caption" color="text.secondary" display="block"><Trans>
               Добавлен: {formatBitrixDate(candidate.createdAt)}
-            </Typography>
+            </Trans></Typography>
 
             {/* Последний контакт (если есть) */}
             {candidate.lastContactedAt && (
-              <Typography variant="caption" color="text.secondary" display="block">
+              <Typography variant="caption" color="text.secondary" display="block"><Trans>
                 Контакт: {formatBitrixDate(candidate.lastContactedAt)}
-              </Typography>
+              </Trans></Typography>
             )}
           </Box>
 
@@ -1325,9 +1325,9 @@ export default function KanbanView({
         </Button>
 
         {selectionMode && selectedCandidatesSet.size > 0 && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary"><Trans>
             Выбрано: {selectedCandidatesSet.size}
-          </Typography>
+          </Trans></Typography>
         )}
       </Box>
 
@@ -1623,9 +1623,9 @@ export default function KanbanView({
       <DialogContent>
         <DialogContentText>
           {hhTokenError?.candidateName && (
-            <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}>
+            <Box component="span" sx={{ display: 'block', fontWeight: 600, mb: 1 }}><Trans>
               Кандидат: {hhTokenError.candidateName}
-            </Box>
+            </Trans></Box>
           )}
           {hhTokenError?.message || _(msg`Для загрузки резюме с HeadHunter необходимо обновить токен доступа.`)}
         </DialogContentText>

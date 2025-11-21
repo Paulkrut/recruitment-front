@@ -133,9 +133,9 @@ export default function BillingAnalyticsPage() {
               </Typography>
               <Typography variant="body1" color="white" sx={{ opacity: 0.9 }}><Trans>🎁 Бонусных интервью</Trans></Typography>
               {stats.gifts.value > 0 && (
-                <Typography variant="caption" color="white" sx={{ opacity: 0.8 }}>
+                <Typography variant="caption" color="white" sx={{ opacity: 0.8 }}><Trans>
                   на сумму {stats.gifts.value.toLocaleString('ru-RU')}₽
-                </Typography>
+                </Trans></Typography>
               )}
             </CardContent>
           </Card>

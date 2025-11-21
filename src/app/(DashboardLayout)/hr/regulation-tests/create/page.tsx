@@ -414,9 +414,9 @@ export default function CreateTestPage() {
             />
 
             <Box>
-              <Typography gutterBottom>
+              <Typography gutterBottom><Trans>
                 Вопросов на каждый регламент: {questionsPerRegulation}
-              </Typography>
+              </Trans></Typography>
               <Slider
                 value={questionsPerRegulation}
                 onChange={(_, value) => setQuestionsPerRegulation(value as number)}
@@ -429,7 +429,7 @@ export default function CreateTestPage() {
             </Box>
 
             <Box>
-              <Typography gutterBottom>Время на один вопрос: {maxTimePerQuestion} секунд</Typography>
+              <Typography gutterBottom><Trans>Время на один вопрос: {maxTimePerQuestion} секунд</Trans></Typography>
               <Slider
                 value={maxTimePerQuestion}
                 onChange={(_, value) => setMaxTimePerQuestion(value as number)}
@@ -526,9 +526,9 @@ export default function CreateTestPage() {
                               {folder.description}
                             </Typography>
                           )}
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary"><Trans>
                             Регламентов: {folder.regulationsCount}
-                          </Typography>
+                          </Trans></Typography>
                         </Box>
                       }
                     />

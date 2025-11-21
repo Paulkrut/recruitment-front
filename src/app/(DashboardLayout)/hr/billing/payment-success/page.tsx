@@ -117,9 +117,9 @@ export default function PaymentSuccessPage() {
               <>
                 <IconX size={80} color="orange" style={{ marginBottom: 16 }} />
                 <Typography variant="h5" gutterBottom color="warning.main"><Trans>Платёж отменён</Trans></Typography>
-                <Typography variant="body1" color="text.secondary" paragraph>
+                <Typography variant="body1" color="text.secondary" paragraph><Trans>
                   Статус: {payment?.status}
-                </Typography>
+                </Trans></Typography>
                 <Button variant="contained" onClick={() => router.push('/hr/billing')}>
                   <Trans>Попробовать снова</Trans>
                 </Button>

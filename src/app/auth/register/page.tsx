@@ -318,9 +318,9 @@ export default function RegisterPage() {
 
           {/* Ссылка на вход */}
           <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary"><Trans>
               Уже есть аккаунт?{" "}
-              <Link href="/auth/login" passHref>
+              </Trans><Link href="/auth/login" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
                   Войти в систему
                 </MuiLink>

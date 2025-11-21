@@ -90,9 +90,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
               <Typography variant="body1" paragraph>
                 {successMessage}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}><Trans>
                 🕐 Через{' '}
-                <Box
+                </Trans><Box
                   component="span"
                   sx={{
                     display: 'inline-block',
@@ -169,9 +169,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
           fontSize: '0.7rem',
           lineHeight: 1.4,
           display: 'block'
-        }}>
+        }}><Trans>
           Используя данную платформу, вы соглашаетесь с{' '}
-          <Button
+          </Trans><Button
             component="a"
             href="/privacy-policy"
             target="_blank"

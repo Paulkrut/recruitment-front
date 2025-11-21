@@ -716,9 +716,9 @@ export default function RegulationTestPage() {
             {micReady && (
               <Box sx={{ mt: 2 }}>
                 <Typography variant="body2" gutterBottom><Trans>Микрофон подключен</Trans></Typography>
-                <Typography variant="body2" gutterBottom>
+                <Typography variant="body2" gutterBottom><Trans>
                   Уровень микрофона: {Math.round(micLevel)}%
-                </Typography>
+                </Trans></Typography>
                 <LinearProgress
                   variant="determinate"
                   value={micLevel}
@@ -782,9 +782,9 @@ export default function RegulationTestPage() {
           <Paper sx={{ p: 3 }}>
             {/* 1. Вопрос N из N с регламентом */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}><Trans>
                 Вопрос {currentQuestionIndex + 1} из {questions.length}
-              </Typography>
+              </Trans></Typography>
               <Chip
                 label={currentQuestion.regulationTitle}
                 color="primary"

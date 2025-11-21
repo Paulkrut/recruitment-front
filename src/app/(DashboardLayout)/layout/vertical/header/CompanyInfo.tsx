@@ -161,9 +161,9 @@ const CompanyInfo = () => {
               )}
             </Stack>
             {displayInn && (
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary"><Trans>
                 ИНН: {displayInn}
-              </Typography>
+              </Trans></Typography>
             )}
           </Box>
         </Stack>

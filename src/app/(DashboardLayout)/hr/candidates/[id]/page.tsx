@@ -280,11 +280,11 @@ export default function CandidateDetailPage() {
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mt={1} flexWrap="wrap">
                   <Typography variant="body2" color="text.secondary">Email: {candidateEmail || '-'}</Typography>
-                  <Typography variant="body2" color="text.secondary">Телефон: {candidatePhone || '-'}</Typography>
-                  <Typography variant="body2" color="text.secondary">Вопросов: {sessionDetail?.answers?.length || 0}</Typography>
-                  <Typography variant="body2" color="text.secondary">Оценка: {sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'}</Typography>
-                  <Typography variant="body2" color="text.secondary">Создано: {createdAt || '-'}</Typography>
-                  <Typography variant="body2" color="text.secondary">Завершено: {sessionDetail?.finishedAt || '-'}</Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Телефон: {candidatePhone || '-'}</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Вопросов: {sessionDetail?.answers?.length || 0}</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Оценка: {sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'}</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Создано: {createdAt || '-'}</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Завершено: {sessionDetail?.finishedAt || '-'}</Trans></Typography>
                 </Stack>
               </Box>
               <Stack direction="row" spacing={1}>
@@ -389,7 +389,7 @@ export default function CandidateDetailPage() {
                     <Accordion key={a.id} defaultExpanded={idx<3} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
                       <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
                         <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle1"><b>Вопрос {idx+1}:</b> {a.question}</Typography>
+                          <Typography variant="subtitle1"><b><Trans>Вопрос {idx+1}:</Trans></b> {a.question}</Typography>
                           {a.score !== undefined && a.score !== null && (
                             <Chip
                               label={_(msg`Оценка`): ${a.score}}
@@ -417,7 +417,7 @@ export default function CandidateDetailPage() {
                             <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}><Trans>Видео</Trans></Button>
                           </Box>
                         )}
-                        <Typography variant="caption" sx={{opacity:0.7}}>Время ответа: {a.createdAt || '-'}</Typography>
+                        <Typography variant="caption" sx={{opacity:0.7}}><Trans>Время ответа: {a.createdAt || '-'}</Trans></Typography>
                       </AccordionDetails>
                     </Accordion>
                   )) : (
@@ -441,7 +441,7 @@ export default function CandidateDetailPage() {
                     <Typography variant="h5" fontWeight="700"><Trans>AI-оценка кандидата</Trans></Typography>
                     <Stack direction="row" alignItems="center" spacing={2}>
                       <Chip label={aiStatus || _(msg`нет данных`)} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
-                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}>Обновлено: {aiUpdatedAt}</Typography>}
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
                     </Stack>
                     {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><b>Резюме:</b> {aiSummary}</Typography>}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (

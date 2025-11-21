@@ -123,9 +123,9 @@ export default function BulkActionsPanel({
           }}
         >
           <Box>
-            <Typography variant="subtitle1" fontWeight="bold">
+            <Typography variant="subtitle1" fontWeight="bold"><Trans>
               Выбрано: {totalSelectedCount}
-            </Typography>
+            </Trans></Typography>
             {selectedAllInColumns.length > 0 && (
               <Typography variant="caption" color="text.secondary">
                 {selectedAllInColumns.map(col =>
@@ -212,8 +212,8 @@ export default function BulkActionsPanel({
             >
               <Typography variant="body2" fontWeight="bold" gutterBottom><Trans>📊 Лимиты HeadHunter.ru (менеджер):</Trans></Typography>
               <Typography variant="body2">
-                • Осталось сегодня: <strong>{hhLimits.left.resumeView}</strong> из {hhLimits.limits.resumeView}
-              </Typography>
+                • Осталось сегодня: <strong>{hhLimits.left.resumeView}</strong><Trans> из {hhLimits.limits.resumeView}
+              </Trans></Typography>
               <Typography variant="body2">
                 • Выбрано кандидатов: <strong>{totalSelectedCount}</strong>
               </Typography>

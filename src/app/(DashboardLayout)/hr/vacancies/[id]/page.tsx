@@ -279,7 +279,7 @@ export default function HRVacancyDetailPage() {
         <Box p={4} display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap">
           <Box flex={1}>
             <Typography variant="h3" fontWeight={800} sx={{ mb: 1, color: 'text.primary' }}>{title}</Typography>
-            <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
+            <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}><Trans>Создана: {createdAt}</Trans></Typography>
             <Box display="flex" gap={2} mt={2} flexWrap="wrap">
               <Chip icon={<IconFileText size={18}/>} label={template?.title || _(msg`Без шаблона`)} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
               <Chip icon={<IconFileText size={18}/>} label={_(msg`Вопросов: ${(questions||[]).length}`)} color="primary" sx={{ fontWeight: 600 }} />
@@ -400,7 +400,7 @@ export default function HRVacancyDetailPage() {
                       </Box>
                       <Box>
                         <Typography variant="h4" fontWeight="700" sx={{ mb: 1, color: 'text.primary' }}><Trans>Кандидаты</Trans></Typography>
-                        <Typography variant="body1" sx={{ opacity: 0.9, color: 'text.secondary' }}>Всего: {totalCandidates}</Typography>
+                        <Typography variant="body1" sx={{ opacity: 0.9, color: 'text.secondary' }}><Trans>Всего: {totalCandidates}</Trans></Typography>
                       </Box>
                     </Box>
                     <Box display="flex" gap={2} alignItems="center">
@@ -699,7 +699,7 @@ export default function HRVacancyDetailPage() {
                     <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вакансия</Trans></Typography>
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{title}</Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}>Создана: {createdAt}</Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}><Trans>Создана: {createdAt}</Trans></Typography>
                   <Typography
                     variant="body2"
                     sx={{
@@ -853,9 +853,9 @@ export default function HRVacancyDetailPage() {
                 setCompareOpen(false);
                 router.push(`/hr/candidates/compare?ids=${selectedCandidates.join(',')}`);
               }}
-            >
+            ><Trans>
               AI-сравнение ({selectedCandidates.length})
-            </Button>
+            </Trans></Button>
           )}
         </DialogActions>
       </Dialog>

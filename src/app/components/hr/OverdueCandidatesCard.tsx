@@ -194,9 +194,9 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
                   }
                   secondary={
                     <Box mt={0.5}>
-                      <Typography variant="caption" color="textSecondary">
+                      <Typography variant="caption" color="textSecondary"><Trans>
                         Создан: {formatDate(candidate.created_at)}
-                      </Typography>
+                      </Trans></Typography>
                     </Box>
                   }
                 />

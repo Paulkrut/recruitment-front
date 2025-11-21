@@ -281,9 +281,9 @@ export default function BillingPage() {
               <Typography variant="body2" color="text.secondary" gutterBottom>
                 Количество интервью: <strong>{selectedPlan.interviews_included}</strong>
               </Typography>
-              <Typography variant="h5" sx={{ mt: 2 }}>
+              <Typography variant="h5" sx={{ mt: 2 }}><Trans>
                 К оплате: {selectedPlan.price.toLocaleString('ru-RU')}₽
-              </Typography>
+              </Trans></Typography>
 
               {selectedPlan.is_free && (
                 <Alert severity="info" sx={{ mt: 2 }}><Trans>Бесплатный тариф доступен только один раз для каждой компании</Trans></Alert>

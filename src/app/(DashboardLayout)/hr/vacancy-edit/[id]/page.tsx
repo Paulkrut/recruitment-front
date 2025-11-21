@@ -725,7 +725,7 @@ export default function HRVacancyEditPage() {
                       >
                         <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                           <Box sx={{ width: 36, height: 36, borderRadius: '50%', background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem' }}>{qIndex + 1}</Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="text.primary">Вопрос {qIndex + 1}</Typography>
+                          <Typography variant="subtitle1" fontWeight={700} color="text.primary"><Trans>Вопрос {qIndex + 1}</Trans></Typography>
                           <Box flexGrow={1} />
                           <Stack direction="row" spacing={1}>
                             <Tooltip title={_(msg`Вверх`)}><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "up")} disabled={qIndex === 0}><IconArrowUp size={18} /></IconButton></span></Tooltip>

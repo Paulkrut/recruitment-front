@@ -58,7 +58,7 @@ export default function HRSessionDetailPage() {
           <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
             <Box display="flex" alignItems="center" gap={2} mb={2}>
               <IconFileText size={32} color="white" />
-              <Typography variant="h4" fontWeight="700">Интервью-сессия #{sessionId}</Typography>
+              <Typography variant="h4" fontWeight="700"><Trans>Интервью-сессия #{sessionId}</Trans></Typography>
               <Chip label={status} color={status==='completed'?'success':status==='in_progress'?'warning':'default'} size="medium" />
             </Box>
             <Grid container spacing={2} mb={2}>

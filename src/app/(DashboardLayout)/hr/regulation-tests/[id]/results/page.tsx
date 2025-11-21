@@ -327,9 +327,9 @@ export default function TestResultsPage() {
                   {selectedSession.employee.name} ({selectedSession.employee.email})
                 </Typography>
                 {selectedSession.employee.department && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary"><Trans>
                     Отдел: {selectedSession.employee.department}
-                  </Typography>
+                  </Trans></Typography>
                 )}
               </Box>
 

@@ -110,9 +110,9 @@ export default function CustomStageModal({
           </Box>
 
           {!initialName && (
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}><Trans>
               Стадия будет добавлена на позицию {position}
-            </Typography>
+            </Trans></Typography>
           )}
         </Box>
       </DialogContent>

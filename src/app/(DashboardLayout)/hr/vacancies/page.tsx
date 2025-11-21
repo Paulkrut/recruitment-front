@@ -415,9 +415,9 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
       {/* Информация о создании */}
       <Box mb={1}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={0.5}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary"><Trans>
             Создано: {createdDate}
-          </Typography>
+          </Trans></Typography>
           <Typography variant="caption" color="textSecondary">
             {vacancy.createdBy}
           </Typography>

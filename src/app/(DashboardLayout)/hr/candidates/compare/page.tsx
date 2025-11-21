@@ -409,9 +409,9 @@ export default function ComparePage() {
         </Button>
 
         <Typography variant="h4" gutterBottom><Trans>Сравнение кандидатов</Trans></Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary"><Trans>
           Детальный анализ и сравнение {candidates.length} кандидатов
-        </Typography>
+        </Trans></Typography>
       </Box>
 
       {/* Информация о базовом сравнении */}
@@ -467,24 +467,24 @@ export default function ComparePage() {
                       <Typography variant="body2" color="text.secondary">
                         📅 Создан: {new Date(candidate.createdAt).toLocaleDateString('ru-RU')}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary"><Trans>
                         🎯 Статус: {candidate.status}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      </Trans></Typography>
+                      <Typography variant="body2" color="text.secondary"><Trans>
                         📝 Сессий: {candidate.sessionsCount}
-                      </Typography>
+                      </Trans></Typography>
                       {candidate.score ? (
-                        <Typography variant="body2" color="success.main" fontWeight="600">
+                        <Typography variant="body2" color="success.main" fontWeight="600"><Trans>
                           ⭐ Оценка: {candidate.score}/10
-                        </Typography>
+                        </Trans></Typography>
                       ) : (
                         <Typography variant="body2" color="warning.main"><Trans>⚠️ Оценка не доступна</Trans></Typography>
                       )}
                       {candidate.skills && candidate.skills.length > 0 ? (
                         <Box sx={{ mt: 1 }}>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2" color="text.secondary"><Trans>
                             🚀 Навыки: {candidate.skills.length}
-                          </Typography>
+                          </Trans></Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
                             {candidate.skills.slice(0, 3).map((skill, index) => (
                               <Chip
@@ -555,9 +555,9 @@ export default function ComparePage() {
                 <LinearProgress sx={{ mb: 2 }} />
                 <Box sx={{ textAlign: 'center', py: 2 }}>
                   <Typography variant="h6" gutterBottom color="primary"><Trans>🤖 AI анализирует кандидатов...</Trans></Typography>
-                  <Typography variant="body1" gutterBottom>
+                  <Typography variant="body1" gutterBottom><Trans>
                     Обрабатываем {stableIds.length} кандидатов
-                  </Typography>
+                  </Trans></Typography>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
                     ⏱️ Примерное время: <strong>{estimatedTime}</strong>
                   </Typography>

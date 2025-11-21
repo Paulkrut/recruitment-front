@@ -88,7 +88,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       <Stack spacing={2}>
         {invites.map(inv => (
           <Stack key={inv.id} direction="row" spacing={2} alignItems="center">
-            <Typography><b>{inv.company}</b> — роль: {inv.role}</Typography>
+            <Typography><b>{inv.company}</b><Trans> — роль: {inv.role}</Trans></Typography>
             <Button variant="contained" onClick={() => handleAccept(inv.id)}><Trans>Принять</Trans></Button>
             <Button variant="outlined" color="error" onClick={() => handleDecline(inv.id)}><Trans>Отклонить</Trans></Button>
           </Stack>
@@ -153,9 +153,9 @@ export default function ChooseCompanyPage() {
     return (
       <PageContainer title={_(msg`Выбор компании`)}>
         <Box minHeight="100vh" display="flex" justifyContent="center" alignItems="center">
-          <Alert severity="error" sx={{ maxWidth: 600 }}>
+          <Alert severity="error" sx={{ maxWidth: 600 }}><Trans>
             Ошибка загрузки данных: {contextError}
-          </Alert>
+          </Trans></Alert>
         </Box>
       </PageContainer>
     );

@@ -166,9 +166,9 @@ const GenerateQuestionsDialog = React.memo(({
               </Typography>
             </Box>
             {generationProgress.elapsed_time && (
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}><Trans>
                 Прошло времени: {generationProgress.elapsed_time} секунд
-              </Typography>
+              </Trans></Typography>
             )}
           </Box>
         )}

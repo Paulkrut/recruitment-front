@@ -111,9 +111,9 @@ export default function HRDashboard() {
       <Box>
         {/* Персональное приветствие */}
         <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
+          <Typography variant="h4" fontWeight={700} gutterBottom><Trans>
             Добро пожаловать{user?.name ? `, ${user.name}` : ''}!
-          </Typography>
+          </Trans></Typography>
           <Typography variant="body1" color="text.secondary" mb={2}><Trans>Это ваша HR-панель. Здесь вы управляете вакансиями, сотрудниками и кандидатами.</Trans></Typography>
         </Box>
 

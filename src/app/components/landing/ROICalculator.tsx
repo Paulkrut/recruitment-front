@@ -129,9 +129,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
 
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 3, bgcolor: `${optimalPlan.color}10`, border: `2px solid ${optimalPlan.color}`, height: '100%' }}>
-                <Typography variant="body2" color="text.secondary" mb={1}>
+                <Typography variant="body2" color="text.secondary" mb={1}><Trans>
                   С SofiHR ({optimalPlan.name})
-                </Typography>
+                </Trans></Typography>
                 <Typography variant="h4" fontWeight={700} color={optimalPlan.color} mb={2}>
                   {savings.platformPrice.toLocaleString()}₽
                 </Typography>
@@ -152,9 +152,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                   💰 {savings.totalSavings.toLocaleString()}₽
                 </Typography>
                 <Typography variant="body1" color="text.secondary" fontWeight={600}><Trans>Ваша экономия в месяц</Trans></Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="text.secondary"><Trans>
                   При {hiresPerMonth} {_(msg`наймах`)}
-                </Typography>
+                </Trans></Typography>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography variant="h4" fontWeight={700} color="#4caf50" mb={1}>

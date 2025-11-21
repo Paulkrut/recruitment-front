@@ -218,9 +218,9 @@ export default function LoginPage() {
 
           {/* Ссылка на регистрацию */}
           <Box textAlign="center">
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary"><Trans>
               Нет аккаунта?{" "}
-              <Link href="/auth/register" passHref>
+              </Trans><Link href="/auth/register" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
                   <Trans>Зарегистрироваться</Trans>
                 </MuiLink>

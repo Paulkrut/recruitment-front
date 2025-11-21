@@ -1612,9 +1612,9 @@ export default function CandidateInterviewPage() {
 
                 {feedbackData.feedback.average_score > 0 && (
                   <Box sx={{ textAlign: 'center', mb: 3 }}>
-                    <Typography variant="h5" gutterBottom>
+                    <Typography variant="h5" gutterBottom><Trans>
                       Общая оценка: {feedbackData.feedback.average_score}/10
-                    </Typography>
+                    </Trans></Typography>
                     <Rating value={feedbackData.feedback.average_score / 2} readOnly size="large" />
                   </Box>
                 )}

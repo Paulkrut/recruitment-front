@@ -519,9 +519,9 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
 
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Box>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary"><Trans>
               Ответов: {candidate.answersCount}
-            </Typography>
+            </Trans></Typography>
             {candidate.score !== null && candidate.score !== undefined && (
               <Chip
                 label={_(msg`Оценка`): ${candidate.score}`/10`}
@@ -534,9 +534,9 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
         </Box>
 
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="caption" color="text.secondary">
+          <Typography variant="caption" color="text.secondary"><Trans>
             Создан: {formatDateToLocal(candidate.createdAt)}
-          </Typography>
+          </Trans></Typography>
           <Tooltip title={_(msg`Просмотреть детали`)}>
             <IconButton
               size="small"
@@ -720,9 +720,9 @@ export default function HRCandidatesPage() {
     <PageContainer title={_(msg`Кандидаты`)} description="Список всех кандидатов">
       <Box sx={{ mb: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h4" fontWeight="bold"><Trans>
             Кандидаты ({candidates.length})
-          </Typography>
+          </Trans></Typography>
           <Box display="flex" gap={1}>
             <Tooltip title={_(msg`Таблица`)}>
               <IconButton
@@ -839,9 +839,9 @@ export default function HRCandidatesPage() {
             </Button>
 
             <Box sx={{ ml: 'auto' }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary"><Trans>
                 Найдено: {filteredCandidates.length} кандидатов
-              </Typography>
+              </Trans></Typography>
             </Box>
           </Box>
         </Card>
