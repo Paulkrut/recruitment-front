@@ -65,34 +65,34 @@ export default function RegisterPage() {
 
     // Валидация имени
     if (!formData.name.trim()) {
-      newErrors.name = "Введите ваше имя";
+      newErrors.name = _(msg`Введите ваше имя`);
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Имя должно содержать минимум 2 символа";
+      newErrors.name = _(msg`Имя должно содержать минимум 2 символа`);
     }
 
     // Валидация должности
     if (!formData.position.trim()) {
-      newErrors.position = "Введите вашу должность";
+      newErrors.position = _(msg`Введите вашу должность`);
     }
 
     // Валидация компании
     if (!formData.company.trim()) {
-      newErrors.company = "Введите название компании";
+      newErrors.company = _(msg`Введите название компании`);
     }
 
     // Валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = "Введите email адрес";
+      newErrors.email = _(msg`Введите email адрес`);
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Введите корректный email адрес";
+      newErrors.email = _(msg`Введите корректный email адрес`);
     }
 
     // Валидация телефона (опционально, но если введен - должен быть корректным)
     if (formData.phone.trim()) {
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
       if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
-        newErrors.phone = "Введите корректный номер телефона";
+        newErrors.phone = _(msg`Введите корректный номер телефона`);
       }
     }
 

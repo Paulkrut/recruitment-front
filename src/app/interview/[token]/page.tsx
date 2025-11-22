@@ -522,7 +522,7 @@ export default function CandidateInterviewPage() {
 
         // Показываем сообщение о прогрессе
         setChat([
-          {role:'bot',text:`Добро пожаловать обратно! Продолжаем интервью с вопроса ${progressData.progress.current} из ${progressData.progress.total}.`, timestamp: Date.now()},
+          {role:'bot',text: _(msg`Добро пожаловать обратно! Продолжаем интервью с вопроса ${progressData.progress.current} из ${progressData.progress.total}.`), timestamp: Date.now()},
           {role:'bot',text:progressData.nextQuestion.text, timestamp: Date.now()}
         ]);
         return;

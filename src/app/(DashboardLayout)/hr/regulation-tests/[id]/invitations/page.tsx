@@ -173,7 +173,7 @@ export default function InvitationsPage() {
 
     // Проверка использования
     if (invitation.usesCount > 0) {
-      return { label: `Использовано ${invitation.usesCount} раз`, color: 'warning' };
+      return { label: _(msg`Использовано ${invitation.usesCount} раз`), color: 'warning' };
     }
 
     return { label: _(msg`Активно`), color: 'success' };

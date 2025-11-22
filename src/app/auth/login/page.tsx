@@ -50,14 +50,14 @@ export default function LoginPage() {
     // Валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = "Введите email адрес";
+      newErrors.email = _(msg`Введите email адрес`);
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Введите корректный email адрес";
+      newErrors.email = _(msg`Введите корректный email адрес`);
     }
 
     // Валидация пароля
     if (!formData.password.trim()) {
-      newErrors.password = "Введите пароль";
+      newErrors.password = _(msg`Введите пароль`);
     }
 
     setErrors(newErrors);

@@ -371,7 +371,7 @@ const Notifications = () => {
                     )}
                     <Typography variant="caption" color="text.disabled" sx={{ mt: 0.5, display: 'block' }}>
                       {getTimeAgo(notification)}
-                      {notification.count > 1 && ' (обновлено)'}
+                      {notification.count > 1 && <Trans> (обновлено)</Trans>}
                     </Typography>
                   </Box>
                 </Stack>

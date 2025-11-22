@@ -265,8 +265,8 @@ function ProfileDialog({
 
   const save = async () => {
     const newErrors = { name: '', email: '', position: '' };
-    if (!(form.name && form.name.trim())) newErrors.name = 'Имя обязательно';
-    if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
+    if (!(form.name && form.name.trim())) newErrors.name = _(msg`Имя обязательно`);
+    if (form.email && !validateEmail(form.email)) newErrors.email = _(msg`Введите корректный email адрес`);
 
     if (newErrors.name || newErrors.email || newErrors.position) {
       setErrors(newErrors);

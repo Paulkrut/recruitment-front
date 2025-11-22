@@ -47,27 +47,27 @@ export default function ContactPage() {
     const newErrors: Partial<ContactFormData> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Имя обязательно для заполнения';
+      newErrors.name = _(msg`Имя обязательно для заполнения`);
     } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Имя должно содержать минимум 2 символа';
+      newErrors.name = _(msg`Имя должно содержать минимум 2 символа`);
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email обязателен для заполнения';
+      newErrors.email = _(msg`Email обязателен для заполнения`);
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
-      newErrors.email = 'Введите корректный email адрес';
+      newErrors.email = _(msg`Введите корректный email адрес`);
     }
 
     if (!formData.subject.trim()) {
-      newErrors.subject = 'Тема обязательна для заполнения';
+      newErrors.subject = _(msg`Тема обязательна для заполнения`);
     } else if (formData.subject.trim().length < 5) {
-      newErrors.subject = 'Тема должна содержать минимум 5 символов';
+      newErrors.subject = _(msg`Тема должна содержать минимум 5 символов`);
     }
 
     if (!formData.message.trim()) {
-      newErrors.message = 'Сообщение обязательно для заполнения';
+      newErrors.message = _(msg`Сообщение обязательно для заполнения`);
     } else if (formData.message.trim().length < 10) {
-      newErrors.message = 'Сообщение должно содержать минимум 10 символов';
+      newErrors.message = _(msg`Сообщение должно содержать минимум 10 символов`);
     }
 
     setErrors(newErrors);

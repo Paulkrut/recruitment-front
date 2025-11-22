@@ -237,8 +237,8 @@ export default function EditTestPage() {
               valueLabelDisplay="auto"
             />
             <FormHelperText>
-              Каждый вопрос должен быть отвечен в течение указанного времени
-            </FormHelperText>
+              <Trans>Каждый вопрос должен быть отвечен в течение указанного времени
+            </Trans></FormHelperText>
           </Box>
 
           <FormControlLabel

@@ -445,7 +445,7 @@ export default function CreateTestPage() {
                 ]}
                 valueLabelDisplay="auto"
               />
-              <FormHelperText>Время отведенное на один вопрос. За это время надо прочитать вопрос и дать на него ответ.</FormHelperText>
+              <FormHelperText><Trans>Время отведенное на один вопрос. За это время надо прочитать вопрос и дать на него ответ.</Trans></FormHelperText>
             </Box>
 
             <FormControlLabel

@@ -455,8 +455,8 @@ export default function HRVacancyDetailPage() {
                       }
                     >
                       Выбрано кандидатов: {selectedCandidates.length}
-                      {selectedCandidates.length < 2 && " (минимум 2 для сравнения)"}
-                      {selectedCandidates.length >= 2 && finishedCandidates.length < 2 && " (но нет завершенных кандидатов для сравнения)"}
+                      {selectedCandidates.length < 2 && <Trans> (минимум 2 для сравнения)</Trans>}
+                      {selectedCandidates.length >= 2 && finishedCandidates.length < 2 && <Trans> (но нет завершенных кандидатов для сравнения)</Trans>}
                     </Alert>
                   )}
 
@@ -922,9 +922,9 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
 
     // Финальная валидация перед отправкой
     const newErrors = {name:'',email:'',phone:''};
-    if (!form.name.trim()) newErrors.name = 'Имя обязательно';
-    if (form.email && !validateEmail(form.email)) newErrors.email = 'Введите корректный email адрес';
-    if (form.phone && !validatePhone(form.phone)) newErrors.phone = 'Введите корректный номер телефона';
+    if (!form.name.trim()) newErrors.name = _(msg`Имя обязательно`);
+    if (form.email && !validateEmail(form.email)) newErrors.email = _(msg`Введите корректный email адрес`);
+    if (form.phone && !validatePhone(form.phone)) newErrors.phone = _(msg`Введите корректный номер телефона`);
 
     if (newErrors.name || newErrors.email || newErrors.phone) {
       setErrors(newErrors);

@@ -156,8 +156,8 @@ export default function HRVacancyCreatePage() {
         body: JSON.stringify({
           title: vacancyData.title,
           description: vacancyData.description,
-          templateTitle: `Тест для вакансии: ${vacancyData.title}`,
-          templateDescription: `Тест для вакансии "${vacancyData.title}"`,
+          templateTitle: _(msg`Тест для вакансии: ${vacancyData.title}`),
+          templateDescription: _(msg`Тест для вакансии "${vacancyData.title}"`),
           questions: questions,
           companyId: currentCompanyId, // Добавляем ID компании
         }),

@@ -354,7 +354,7 @@ const DraggableCandidateCard = memo(({
           {/* Источник */}
           <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
             {getSourceIcon(candidate.source)} {candidate.source === 'headhunter' && 'HH.ru'}
-            {candidate.source === 'manual' && 'Ручной ввод'}
+            {candidate.source === 'manual' && <Trans>Ручной ввод</Trans>}
             {candidate.source === 'linkedin' && 'LinkedIn'}
           </Typography>
 
