@@ -8,6 +8,7 @@ import { DeleteForever, Warning, Info, CheckCircle } from '@mui/icons-material';
 import Link from 'next/link';
 import { useLingui } from '@lingui/react';
 import { msg } from '@lingui/macro';
+import { Trans } from '@lingui/react';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
@@ -75,7 +76,7 @@ export default function ForgetMePage() {
       if (result.success) {
         setSubmitResult({
           success: true,
-          message: 'Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: ' + (result.request_id || 'N/A')
+          message: _(msg`Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: ${result.request_id || 'N/A'}`)
         });
         
         // Показываем модальное окно успеха
@@ -190,8 +191,8 @@ export default function ForgetMePage() {
         {/* Информация */}
         <Alert severity="info" sx={{ mb: 4 }}>
           <Typography variant="body1">
-            <strong>Важно:</strong> Если у вас есть активная ссылка на интервью, 
-            используйте кнопку "Удалить мои данные" прямо на странице интервью для мгновенного удаления.
+            <Trans><strong>Важно:</strong> Если у вас есть активная ссылка на интервью, 
+            используйте кнопку "Удалить мои данные" прямо на странице интервью для мгновенного удаления.</Trans>
           </Typography>
         </Alert>
 
@@ -199,21 +200,21 @@ export default function ForgetMePage() {
         <Alert severity="warning" sx={{ mb: 4, p: 3 }}>
           <Typography variant="h6" gutterBottom fontWeight={600} color="warning.dark"><Trans>🚀 Быстрый способ удаления данных!</Trans></Typography>
           <Typography variant="body1" paragraph>
-            <strong>Если вы кандидат и проходили интервью:</strong>
+            <Trans><strong>Если вы кандидат и проходили интервью:</strong></Trans>
           </Typography>
-          <Typography variant="body2" paragraph sx={{ pl: 2 }}>
+          <Typography variant="body2" paragraph sx={{ pl: 2 }}><Trans>
             1️⃣ <strong>Откройте ссылку на интервью</strong> (если она у вас есть)
-          </Typography>
-          <Typography variant="body2" paragraph sx={{ pl: 2 }}>
+          </Trans></Typography>
+          <Typography variant="body2" paragraph sx={{ pl: 2 }}><Trans>
             2️⃣ <strong>Найдите внизу страницы</strong> текст "удаление своих персональных данных"
-          </Typography>
-          <Typography variant="body2" paragraph sx={{ pl: 2 }}>
+          </Trans></Typography>
+          <Typography variant="body2" paragraph sx={{ pl: 2 }}><Trans>
             3️⃣ <strong>Нажмите на ссылку</strong> и подтвердите удаление
-          </Typography>
+          </Trans></Typography>
           <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'success.main' }}><Trans>✅ Тогда удаление будет мгновенным!</Trans></Typography>
           <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
-            Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже. 
-            <strong>Это займет больше времени, так как мы должны проверить вашу личность.</strong>
+            <Trans>Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже. 
+            <strong>Это займет больше времени, так как мы должны проверить вашу личность.</strong></Trans>
           </Typography>
         </Alert>
 
@@ -328,40 +329,40 @@ export default function ForgetMePage() {
                   <Trans>Важная информация</Trans>
                 </Typography>
                 
-                <Typography variant="body2" paragraph>
+                <Typography variant="body2" paragraph><Trans>
                   <strong>Срок обработки:</strong> До 30 дней согласно 152-ФЗ
-                </Typography>
+                </Trans></Typography>
                 
-                <Typography variant="body2" paragraph>
+                <Typography variant="body2" paragraph><Trans>
                   <strong>Подтверждение:</strong> Мы свяжемся с вами для подтверждения
-                </Typography>
+                </Trans></Typography>
                 
-                <Typography variant="body2" paragraph>
+                <Typography variant="body2" paragraph><Trans>
                   <strong>Уведомления:</strong> HR-клиенты будут уведомлены о запросе
-                </Typography>
+                </Trans></Typography>
                 
-                <Typography variant="body2" paragraph>
+                <Typography variant="body2" paragraph><Trans>
                   <strong>Безвозвратность:</strong> Удаленные данные восстановить невозможно
-                </Typography>
+                </Trans></Typography>
 
                 <Divider sx={{ my: 2 }} />
                 
                 <Alert severity="success" sx={{ mb: 2 }}>
                   <Typography variant="body2" fontWeight={600}>
-                    <strong>⚡ Мгновенное удаление!</strong>
+                    <Trans><strong>⚡ Мгновенное удаление!</strong></Trans>
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 1 }}><Trans>Если у вас есть ссылка на интервью, используйте кнопку "Удалить мои данные" прямо на странице интервью.</Trans></Typography>
                 </Alert>
                 
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary"><Trans>
                   <strong>Полное удаление:</strong> При отправке формы будут удалены ВСЕ ваши данные с платформы.
-                </Typography>
+                </Trans></Typography>
 
                 <Divider sx={{ my: 2 }} />
                 
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Важно:</strong> Запросы без ссылки на интервью обрабатываются вручную администраторами 
-                  для проверки вашей личности. Это занимает больше времени, но обеспечивает безопасность.
+                  <Trans><strong>Важно:</strong> Запросы без ссылки на интервью обрабатываются вручную администраторами 
+                  для проверки вашей личности. Это занимает больше времени, но обеспечивает безопасность.</Trans>
                 </Typography>
               </CardContent>
             </Card>
@@ -404,7 +405,7 @@ export default function ForgetMePage() {
         <DialogContent>
           <Typography variant="body1" paragraph><Trans>Ваш запрос на удаление данных успешно зарегистрирован в нашей системе.</Trans></Typography>
           <Typography variant="body1" paragraph>
-            <strong>Что дальше:</strong>
+            <Trans><strong>Что дальше:</strong></Trans>
           </Typography>
           <Box component="ul" sx={{ pl: 2 }}>
             <Typography component="li" variant="body2" paragraph><Trans>📧 Мы отправили подтверждение на указанный email</Trans></Typography>
@@ -414,9 +415,9 @@ export default function ForgetMePage() {
           </Box>
           {submitResult?.message.includes('Номер вашего запроса:') && (
             <Alert severity="info" sx={{ mt: 2 }}>
-              <Typography variant="body2">
+              <Typography variant="body2"><Trans>
                 <strong>Номер запроса:</strong> {submitResult.message.split('Номер вашего запроса: ')[1]}
-              </Typography>
+              </Trans></Typography>
             </Alert>
           )}
         </DialogContent>

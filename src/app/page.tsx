@@ -87,7 +87,7 @@ export default function LandingPage() {
         platformPrice = parseInt(numericValue, 10) || 0;
       }
     }
-    
+
     const timeSaved = Math.round(totalTraditionalTime * 0.7);
     const timeSavedCost = Math.round(timeSaved * hrHourlyCost);
 
@@ -180,9 +180,9 @@ export default function LandingPage() {
   ];
   const companies = [ { name: "Intel" }, { name: "Oracle" }, { name: "Dell" }, { name: "Samsung" }, { name: "Infosys" }, { name: "Capgemini" } ];
   const sections = [
-    { title: _(msg`Возможности`), links: ["Вакансии", "Кандидаты", "Интервью", "Аналитика", "Интеграции"] },
-    { title: _(msg`Документация`), links: ["API", "FAQ", "Поддержка"] },
-    { title: _(msg`Компания`), links: ["О нас", "Блог", "Контакты"] },
+    { title: _(msg`Возможности`), links: [_(msg`Вакансии`), _(msg`Кандидаты`), _(msg`Интервью`), _(msg`Аналитика`), _(msg`Интеграции`)] },
+    { title: _(msg`Документация`), links: [_(msg`API`), _(msg`FAQ`), _(msg`Поддержка`)] },
+    { title: _(msg`Компания`), links: [_(msg`О нас`), _(msg`Блог`), _(msg`Контакты`)] },
   ];
   const socialLinks = [
     { icon: "mdi:facebook", url: "#" },
@@ -217,11 +217,11 @@ export default function LandingPage() {
       color: '#607D8B',
       targetAudience: _(msg`Для тестирования платформы без финансовых вложений`),
       features: [
-        '10 AI-интервью бесплатно',
-        'Базовый анализ ИИ',
-        'Ранжирование кандидатов',
-        'Видео и аудио запись',
-        'Базовые шаблоны',
+        _(msg`10 AI-интервью бесплатно`),
+        _(msg`Базовый анализ ИИ`),
+        _(msg`Ранжирование кандидатов`),
+        _(msg`Видео и аудио запись`),
+        _(msg`Базовые шаблоны`),
         'Поддержка по email'
       ],
       detailedFeatures: [
@@ -246,12 +246,12 @@ export default function LandingPage() {
       color: '#4CAF50',
       targetAudience: _(msg`Для небольших компаний и стартапов до 10 найма/месяц`),
       features: [
-        '100 AI-интервью',
-        'Полный анализ ответов ИИ',
-        'Ранжирование кандидатов',
-        'Видео и аудио запись',
-        'Базовые шаблоны',
-        'Поддержка по email'
+        _(msg`100 AI-интервью`),
+        _(msg`Полный анализ ответов ИИ`),
+        _(msg`Ранжирование кандидатов`),
+        _(msg`Видео и аудио запись`),
+        _(msg`Базовые шаблоны`),
+        _(msg`Поддержка по email`)
       ],
       detailedFeatures: [
         { text: _(msg`100 AI-интервью`), included: true },
@@ -277,13 +277,13 @@ export default function LandingPage() {
       popular: true,
       targetAudience: _(msg`Для средних компаний с активным процессом найма`),
       features: [
-        '500 AI-интервью',
-        'Расширенный анализ ИИ',
-        'Детальные отчеты',
-        'Кастомные шаблоны',
-        'Мультикомпанийность',
-        'Приоритетная поддержка',
-        'Экспорт данных'
+        _(msg`500 AI-интервью`),
+        _(msg`Расширенный анализ ИИ`),
+        _(msg`Детальные отчеты`),
+        _(msg`Кастомные шаблоны`),
+        _(msg`Мультикомпанийность`),
+        _(msg`Приоритетная поддержка`),
+        _(msg`Экспорт данных`)
       ],
       detailedFeatures: [
         { text: _(msg`500 AI-интервью`), included: true },
@@ -308,13 +308,13 @@ export default function LandingPage() {
       color: '#9C27B0',
       targetAudience: _(msg`Для крупных компаний и HR-агентств с высокой нагрузкой`),
       features: [
-        '1000 AI-интервью',
-        'AI-генерация вопросов',
-        'Сравнение кандидатов',
-        'Неограниченные шаблоны',
-        'Аналитика и дашборды',
-        'Персональный менеджер',
-        'API доступ'
+        _(msg`1000 AI-интервью`),
+        _(msg`AI-генерация вопросов`),
+        _(msg`Сравнение кандидатов`),
+        _(msg`Неограниченные шаблоны`),
+        _(msg`Аналитика и дашборды`),
+        _(msg`Персональный менеджер`),
+        _(msg`API доступ`)
       ],
       detailedFeatures: [
         { text: _(msg`1000 AI-интервью`), included: true },
@@ -1346,7 +1346,7 @@ export default function LandingPage() {
               <Typography variant="body2" color="grey.500" mb={2}><Trans>© 2025 SofiHR. Все права защищены.</Trans></Typography>
               <Typography variant="body2" color="grey.500"><Trans>Система соответствует требованиям 152-ФЗ "О персональных данных"</Trans></Typography>
             </Grid>
-            
+
             {/* Ссылки на документы */}
             <Grid item xs={12} md={6} textAlign="center">
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3, flexWrap: 'wrap' }}>
@@ -1354,8 +1354,8 @@ export default function LandingPage() {
                   href="/privacy-policy"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}
@@ -1366,8 +1366,8 @@ export default function LandingPage() {
                   href="/terms-of-service"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}
@@ -1378,8 +1378,8 @@ export default function LandingPage() {
                   href="/forget-me"
                   target="_blank"
                   underline="none"
-                  sx={{ 
-                    color: 'grey.400', 
+                  sx={{
+                    color: 'grey.400',
                     fontSize: '14px',
                     '&:hover': { color: 'white' }
                   }}

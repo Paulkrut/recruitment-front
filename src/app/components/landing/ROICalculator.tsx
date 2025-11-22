@@ -136,8 +136,8 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                   {savings.platformPrice.toLocaleString()}₽
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Экономия {savings.timeSaved} часов ({savings.timeSavedCost.toLocaleString()}₽)
-                </Typography>
+                  <Trans>Экономия {savings.timeSaved} часов ({savings.timeSavedCost.toLocaleString()}₽)
+                </Trans></Typography>
                 <Typography variant="caption" color="text.secondary" display="block" mt={2}>
                   {optimalPlan.interviewCount} • {optimalPlan.pricePerInterview}
                 </Typography>
@@ -169,8 +169,8 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
           <Alert severity="success" sx={{ mt: 3 }}>
             <Typography variant="body2" fontWeight={600} mb={1}><Trans>🎯 Почему SofiHR выгоднее традиционного найма?</Trans></Typography>
             <Typography variant="body2">
-              • <strong><Trans>Автоматизация</Trans></strong> — экономия до 70% времени HR-специалистов<br/>
-              • <strong>ИИ-анализ</strong> — снижение ошибок при найме на 60%<br/>
+              • <strong><Trans>Автоматизация</Trans></strong> — экономия до 70% времени HR-специалистов<br/><Trans>
+              • <strong>ИИ-анализ</strong> — снижение ошибок при найме на 60%</Trans><br/>
               • <strong><Trans>Масштабируемость</Trans></strong> — обрабатывайте в 10 раз больше кандидатов<br/>
               • <strong><Trans>Единая платформа</Trans></strong> — не нужно несколько дорогих инструментов
             </Typography>

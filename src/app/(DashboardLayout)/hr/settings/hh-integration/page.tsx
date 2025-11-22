@@ -611,8 +611,8 @@ export default function HhIntegrationPage() {
                                 </Typography>
                                 <Typography variant="caption" color="text.secondary" display="block"><Trans>Осталось просмотров резюме</Trans></Typography>
                                 <Typography variant="caption" color="text.secondary">
-                                  из {status.hhLimits.limits.resumeView} на сегодня
-                                </Typography>
+                                  <Trans>из {status.hhLimits.limits.resumeView} на сегодня
+                                </Trans></Typography>
                               </Box>
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -739,9 +739,9 @@ export default function HhIntegrationPage() {
                         💡 <strong>Как это работает:</strong>
                       </Typography>
                       <Typography variant="body2" mt={1}><Trans>1. Вакансии автоматически синхронизируются с вашим профилем HH.ru</Trans></Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body2"><Trans>
                         2. Нажмите <strong>"Настроить"</strong> на любой вакансии чтобы:
-                      </Typography>
+                      </Trans></Typography>
                       <Typography variant="body2" ml={2}><Trans>• Выбрать какие статусы кандидатов синхронизировать (отклики, приглашения, интервью и т.д.)</Trans></Typography>
                       <Typography variant="body2" ml={2}><Trans>• Загрузить кандидатов из выбранных статусов</Trans></Typography>
                       <Typography variant="body2" ml={2}><Trans>• Запустить AI-анализ резюме для автоматической оценки кандидатов</Trans></Typography>
@@ -845,12 +845,12 @@ export default function HhIntegrationPage() {
                                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                                       <IconCheck size={16} color="green" />
                                       <Typography variant="body2" color="success.main">
-                                        Синхронизировано: {vacancy.candidates_synced} кандидатов
-                                      </Typography>
+                                        <Trans>Синхронизировано: {vacancy.candidates_synced} кандидатов
+                                      </Trans></Typography>
                                     </Box>
                                     {vacancy.candidates_last_synced_at && (
                                       <Typography variant="caption" color="text.secondary">
-                                        Последняя синхронизация: {new Date(vacancy.candidates_last_synced_at).toLocaleString('ru-RU')}
+                                        <Trans>Последняя синхронизация: {new Date(vacancy.candidates_last_synced_at).toLocaleString('ru-RU')}</Trans>
                                       </Typography>
                                     )}
                                   </Box>

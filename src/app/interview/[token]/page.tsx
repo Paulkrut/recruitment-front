@@ -2538,8 +2538,8 @@ export default function CandidateInterviewPage() {
               {interviewProgress && canContinue && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="body2" sx={{ color: '#25d366', fontSize: '13px', fontWeight: 600 }}>
-                    Продолжение: {interviewProgress.current} из {interviewProgress.total}
-                  </Typography>
+                    <Trans>Продолжение: {interviewProgress.current} из {interviewProgress.total}
+                  </Trans></Typography>
                 </Box>
               )}
               {timeLeft !== null && question?.maxTime && (
@@ -2963,7 +2963,7 @@ export default function CandidateInterviewPage() {
                 color: '#ff4444',
                 letterSpacing: '0.5px'
               }}>
-                Идёт запись... Говорите в {cameraEnabled ? _(msg`камеру`) : _(msg`микрофон`)}
+                <Trans>Идёт запись... Говорите в {cameraEnabled ? _(msg`камеру`) : _(msg`микрофон`)}</Trans>
               </Typography>
               <Box sx={{
                 display: 'flex',
@@ -3221,15 +3221,15 @@ export default function CandidateInterviewPage() {
         fullWidth
       >
         <DialogTitle sx={{ color: 'warning.main', textAlign: 'center' }}>
-          🗑️ Удаление данных
+          <Trans>🗑️ Удаление данных</Trans>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body1" paragraph sx={{ mb: 2 }}>
+          <Typography variant="body1" paragraph sx={{ mb: 2 }}><Trans>
             <strong>Внимание!</strong> Вы собираетесь удалить все свои данные с платформы SofiHR.
-          </Typography>
+          </Trans></Typography>
 
           <Typography variant="body2" paragraph>
-            <strong>Что будет удалено:</strong>
+            <strong><Trans>Что будет удалено:</Trans></strong>
           </Typography>
           <Box sx={{ pl: 2, mb: 2 }}>
             <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Ваши персональные данные (имя, email, телефон)</Trans></Typography>
@@ -3238,12 +3238,12 @@ export default function CandidateInterviewPage() {
             <Typography variant="body2" sx={{ mb: 1 }}><Trans>• Все согласия на обработку данных</Trans></Typography>
           </Box>
 
-          <Typography variant="body2" paragraph color="error.main">
+          <Typography variant="body2" paragraph color="error.main"><Trans>
             <strong>Это действие нельзя отменить!</strong> После удаления данные будут потеряны навсегда.
-          </Typography>
+          </Trans></Typography>
 
           <Typography variant="body2" paragraph>
-            <strong>Для подтверждения введите "УДАЛИТЬ":</strong>
+            <strong><Trans>Для подтверждения введите "УДАЛИТЬ":</Trans></strong>
           </Typography>
 
           <TextField

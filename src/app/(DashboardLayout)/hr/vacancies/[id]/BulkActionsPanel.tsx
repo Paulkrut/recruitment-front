@@ -238,8 +238,8 @@ export default function BulkActionsPanel({
 
           {totalSelectedCount > 50 && !isScreening && (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              ⚠️ Обработка {totalSelectedCount} кандидатов может занять несколько минут.
-            </Alert>
+              <Trans>⚠️ Обработка {totalSelectedCount} кандидатов может занять несколько минут.
+            </Trans></Alert>
           )}
         </DialogContent>
         <DialogActions>

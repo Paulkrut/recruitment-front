@@ -465,7 +465,7 @@ export default function ComparePage() {
                         📱 {candidate.phone || _(msg`Телефон не указан`)}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        📅 Создан: {new Date(candidate.createdAt).toLocaleDateString('ru-RU')}
+                        <Trans>📅 Создан: {new Date(candidate.createdAt).toLocaleDateString('ru-RU')}</Trans>
                       </Typography>
                       <Typography variant="body2" color="text.secondary"><Trans>
                         🎯 Статус: {candidate.status}
@@ -518,17 +518,17 @@ export default function ComparePage() {
           {/* Предупреждение о недостатке данных */}
           {candidates.every(c => !c.score && c.skills.length === 0) && (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              <Typography variant="body2" gutterBottom>
+              <Typography variant="body2" gutterBottom><Trans>
                 ⚠️ <strong>Внимание:</strong> У выбранных кандидатов недостаточно данных для AI-анализа
-              </Typography>
+              </Trans></Typography>
               <Typography variant="body2" component="ul" sx={{ mt: 1, pl: 2 }}>
                 <li>Нет оценок по интервью</li>
                 <li>Не оценены навыки</li>
                 <li>AI-анализ может быть неточным</li>
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
+              <Typography variant="body2" sx={{ mt: 1 }}><Trans>
                 💡 <strong>Рекомендация:</strong> Дождитесь завершения интервью кандидатами для получения более точного анализа
-              </Typography>
+              </Trans></Typography>
             </Alert>
           )}
         </CardContent>
@@ -644,10 +644,10 @@ export default function ComparePage() {
                       borderColor: 'primary.main'
                     }}>
                       <Typography variant="body2">
-                        <strong>Должность:</strong> {comparisonData.result.vacancy.title || _(msg`Не указана`)}<br />
+                        <strong><Trans>Должность</Trans>:</strong> {comparisonData.result.vacancy.title || _(msg`Не указана`)}<br />
                         {comparisonData.result.vacancy.description && (
                           <>
-                            <strong>Описание:</strong> {comparisonData.result.vacancy.description}
+                            <strong><Trans>Описание</Trans>:</strong> {comparisonData.result.vacancy.description}
                           </>
                         )}
                       </Typography>
