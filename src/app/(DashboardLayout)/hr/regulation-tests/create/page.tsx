@@ -636,10 +636,10 @@ export default function CreateTestPage() {
                     <Alert severity="info" sx={{ mb: 3, textAlign: 'left' }}>
                       <Typography variant="subtitle2" gutterBottom><Trans>Что будет сгенерировано:</Trans></Typography>
                       <ul style={{ margin: 0, paddingLeft: 20 }}>
-                        <li>Текстовые вопросы по содержанию регламентов</li>
-                        <li>Вопросы с вариантами ответов</li>
-                        <li>Эталонные ответы для проверки AI</li>
-                        <li>Распределение по уровням сложности</li>
+                        <li><Trans>Текстовые вопросы по содержанию регламентов</Trans></li>
+                        <li><Trans>Вопросы с вариантами ответов</Trans></li>
+                        <li><Trans>Эталонные ответы для проверки AI</Trans></li>
+                        <li><Trans>Распределение по уровням сложности</Trans></li>
                       </ul>
                     </Alert>
 

@@ -801,7 +801,7 @@ export default function CandidateInterviewPage() {
           setChat((p) => {
             const newChat = [...p];
             for (let i = newChat.length - 1; i >= 0; i--) {
-              if (newChat[i].role === 'user' && newChat[i].text.includes('🎤 Запись')) {
+              if (newChat[i].role === 'user' && newChat[i].text.includes(_(msg`🎤 Запись`))) {
                 newChat[i] = {
                   ...newChat[i],
                   text: _(msg`🎤 Запись готова. Выберите действие ниже`),
@@ -2432,7 +2432,7 @@ export default function CandidateInterviewPage() {
 
 
               {/* Кнопка диагностики камер */}
-              {debugError.includes('Видео: нет') && (
+              {debugError.includes(_(msg`Видео: нет`)) && (
                 <Button
                   size="small"
                   variant="outlined"
@@ -2448,7 +2448,7 @@ export default function CandidateInterviewPage() {
                   }}
                   sx={{ mt: 1 }}
                 >
-                  🔍 Найти камеры
+                  🔍 <Trans>Найти камеры</Trans>
                 </Button>
               )}
             </Box>
@@ -2842,7 +2842,7 @@ export default function CandidateInterviewPage() {
                       )}
 
                       {/* Аудио-визуализация для записи без камеры */}
-                      {!cameraEnabled && m.text.includes('🎤 Запись аудио') && (
+                      {!cameraEnabled && m.text.includes(_(msg`🎤 Запись аудио`)) && (
                         <Box sx={{
                           mb: 1,
                           p: 2,

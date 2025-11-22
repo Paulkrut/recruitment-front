@@ -473,13 +473,13 @@ export default function CandidateDetailPage() {
                             };
                             const getIcon = (metric: string) => {
                               const metricLower = metric.toLowerCase();
-                              if (metricLower.includes('communication') || metricLower.includes('общение')) return '💬';
-                              if (metricLower.includes('problem') || metricLower.includes('решение')) return '🧩';
-                              if (metricLower.includes('leadership') || metricLower.includes('лидерство')) return '👑';
-                              if (metricLower.includes('technical') || metricLower.includes('технический')) return '⚙️';
-                              if (metricLower.includes('teamwork') || metricLower.includes('команда')) return '🤝';
-                              if (metricLower.includes('motivation') || metricLower.includes('мотивация')) return '🚀';
-                              if (metricLower.includes('стресс') || metricLower.includes('stress')) return '🛡️';
+                              if (metricLower.includes('communication') || metricLower.includes(_(msg`общение`))) return '💬';
+                              if (metricLower.includes('problem') || metricLower.includes(_(msg`решение`))) return '🧩';
+                              if (metricLower.includes('leadership') || metricLower.includes(_(msg`лидерство`))) return '👑';
+                              if (metricLower.includes('technical') || metricLower.includes(_(msg`технический`))) return '⚙️';
+                              if (metricLower.includes('teamwork') || metricLower.includes(_(msg`команда`))) return '🤝';
+                              if (metricLower.includes('motivation') || metricLower.includes(_(msg`мотивация`))) return '🚀';
+                              if (metricLower.includes(_(msg`стресс`)) || metricLower.includes('stress')) return '🛡️';
                               return '📊';
                             };
                             const getLabel = (metric: string) => {
@@ -816,7 +816,7 @@ export default function CandidateDetailPage() {
         </TabContext>
         {/* Попап сравнения кандидатов */}
         <Dialog open={compareOpen} onClose={()=>setCompareOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>Сравнить с другими кандидатами</DialogTitle>
+          <DialogTitle><Trans>Сравнить с другими кандидатами</Trans></DialogTitle>
           <DialogContent sx={{ pt: '16px !important' }}>
             <Typography variant="body2" sx={{mb:2}}><Trans>Выберите кандидатов для сравнения (минимум 1):</Trans></Typography>
             <Stack spacing={1}>

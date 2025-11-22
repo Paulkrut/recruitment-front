@@ -522,9 +522,9 @@ export default function ComparePage() {
                 ⚠️ <strong>Внимание:</strong> У выбранных кандидатов недостаточно данных для AI-анализа
               </Trans></Typography>
               <Typography variant="body2" component="ul" sx={{ mt: 1, pl: 2 }}>
-                <li>Нет оценок по интервью</li>
-                <li>Не оценены навыки</li>
-                <li>AI-анализ может быть неточным</li>
+                <li><Trans>Нет оценок по интервью</Trans></li>
+                <li><Trans>Не оценены навыки</Trans></li>
+                <li><Trans>AI-анализ может быть неточным</Trans></li>
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}><Trans>
                 💡 <strong>Рекомендация:</strong> Дождитесь завершения интервью кандидатами для получения более точного анализа
@@ -804,8 +804,8 @@ export default function ComparePage() {
                                     label={candidate.recommendation}
                                   size="small"
                                     color={
-                                      candidate.recommendation?.toLowerCase().includes('брать') ? 'success' :
-                                      candidate.recommendation?.toLowerCase().includes('отказать') ? 'error' :
+                                      candidate.recommendation?.toLowerCase().includes(_(msg`брать`)) ? 'success' :
+                                      candidate.recommendation?.toLowerCase().includes(_(msg`отказать`)) ? 'error' :
                                       'warning'
                                     }
                                     variant="outlined"
@@ -830,19 +830,19 @@ export default function ComparePage() {
                 {comparisonData.error && (
                   <Box sx={{ mt: 1, p: 1, bgcolor: 'error.50', borderRadius: 1, border: '1px solid', borderColor: 'error.200' }}>
                     <Typography variant="caption" color="error.dark" sx={{ fontFamily: 'monospace' }}>
-                      <strong>Детали ошибки:</strong><br />
+                      <strong><Trans>Детали ошибки</Trans>:</strong><br />
                       {comparisonData.error}
                     </Typography>
                   </Box>
                 )}
                 <Box sx={{ mt: 2 }}>
                   <Typography variant="body2" color="text.secondary">
-                    💡 <strong>Возможные причины:</strong>
+                    💡 <strong><Trans>Возможные причины</Trans>:</strong>
                   </Typography>
                   <Typography variant="body2" color="text.secondary" component="ul" sx={{ mt: 1, pl: 2 }}>
-                    <li>Недостаточно данных для анализа</li>
-                    <li>Проблемы с AI-сервисом</li>
-                    <li>Ошибка в обработке данных</li>
+                    <li><Trans>Недостаточно данных для анализа</Trans></li>
+                    <li><Trans>Проблемы с AI-сервисом</Trans></li>
+                    <li><Trans>Ошибка в обработке данных</Trans></li>
                   </Typography>
                 </Box>
               </Alert>

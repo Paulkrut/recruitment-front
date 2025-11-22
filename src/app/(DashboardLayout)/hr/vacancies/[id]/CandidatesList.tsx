@@ -751,8 +751,8 @@ export default function CandidatesList({
         fullWidth
       >
         <DialogTitle>
-          🔑 Требуется авторизация HH.ru
-        </DialogTitle>
+          <Trans>🔑 Требуется авторизация HH.ru
+        </Trans></DialogTitle>
         <DialogContent>
           <DialogContentText>
             {hhTokenError?.candidateName && (

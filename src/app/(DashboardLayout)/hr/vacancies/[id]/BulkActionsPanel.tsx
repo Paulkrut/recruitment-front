@@ -170,11 +170,11 @@ export default function BulkActionsPanel({
         fullWidth
       >
         <DialogTitle>
-          Переместить {totalSelectedCount} {totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)}?
+          <Trans>Переместить</Trans> {' '} {totalSelectedCount} {totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)}?
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" gutterBottom>
-            Переместить в стадию: <strong>{STATUS_LABELS[selectedStatus]}</strong>
+            <Trans>Переместить в стадию</Trans>: <strong>{STATUS_LABELS[selectedStatus]}</strong>
           </Typography>
 
           {selectedAllInColumns.length > 0 && (
@@ -182,7 +182,7 @@ export default function BulkActionsPanel({
               <Typography variant="body2" fontWeight="bold"><Trans>Выбраны ВСЕ кандидаты из колонок:</Trans></Typography>
               {selectedAllInColumns.map(col => (
                 <Typography key={col.columnId} variant="body2">
-                  • {STATUS_LABELS[col.columnId]}: {col.count} кандидатов
+                  • {STATUS_LABELS[col.columnId]}: {col.count} <Trans>кандидатов</Trans>
                 </Typography>
               ))}
             </Alert>
@@ -212,10 +212,10 @@ export default function BulkActionsPanel({
             >
               <Typography variant="body2" fontWeight="bold" gutterBottom><Trans>📊 Лимиты HeadHunter.ru (менеджер):</Trans></Typography>
               <Typography variant="body2">
-                • Осталось сегодня: <strong>{hhLimits.left.resumeView}</strong><Trans> из {hhLimits.limits.resumeView}
+                • <Trans>Осталось сегодня</Trans>: <strong>{hhLimits.left.resumeView}</strong><Trans> из {hhLimits.limits.resumeView}
               </Trans></Typography>
               <Typography variant="body2">
-                • Выбрано кандидатов: <strong>{totalSelectedCount}</strong>
+                • <Trans>Выбрано кандидатов</Trans>: <strong>{totalSelectedCount}</strong>
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }}>
                 {daysNeeded === 0 ? (
@@ -223,14 +223,14 @@ export default function BulkActionsPanel({
                 ) : daysNeeded === 1 ? (
                   <>✅ <Trans>AI скрининг будет выполнен</Trans> <strong><Trans>сегодня</Trans></strong></>
                 ) : (
-                  <>⏳ <Trans>AI скрининг займёт примерно <strong>{daysNeeded}</strong> дней</Trans></strong></>
+                  <>⏳ <Trans>AI скрининг займёт примерно <strong>{daysNeeded}</strong> дней</Trans></>
                 )}
               </Typography>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}><Trans>ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.</Trans></Typography>
 
               {resumeQueueCount !== undefined && resumeQueueCount > 0 && (
                 <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>
-                  ⚠️ Уже в очереди на загрузку резюме: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} по всем вакансиям
+                  ⚠️ <Trans>Уже в очереди на загрузку резюме</Trans>: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} <Trans>по всем вакансиям</Trans>
                 </Typography>
               )}
             </Alert>

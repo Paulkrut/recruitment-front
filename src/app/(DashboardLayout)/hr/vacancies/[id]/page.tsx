@@ -780,7 +780,7 @@ export default function HRVacancyDetailPage() {
         setSnackbar(_(msg`Кандидат добавлен успешно!`));
       }} />
       <Dialog open={qrDialog.open} onClose={()=>setQrDialog({open:false,url:''})}>
-        <DialogTitle>QR-код для прохождения теста</DialogTitle>
+        <DialogTitle><Trans>QR-код для прохождения теста</Trans></DialogTitle>
         <DialogContent sx={{ pt: '16px !important' }}>
           <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
             <QRCode value={qrDialog.url} size={200} />
@@ -799,7 +799,7 @@ export default function HRVacancyDetailPage() {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
               }
-            }}>Скачать QR-код (SVG)</Button>
+            }}><Trans>Скачать QR-код (SVG)</Trans></Button>
           </Box>
           <Box id="qr-download" style={{display:'none'}}><QRCode value={qrDialog.url} size={400} /></Box>
         </DialogContent>

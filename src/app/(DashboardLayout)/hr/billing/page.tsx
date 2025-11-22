@@ -26,9 +26,11 @@ import DashboardCard from '@/app/components/shared/DashboardCard';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
 import { msg } from '@lingui/macro';
+import { Trans } from '@lingui/react';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+const REGION = process.env.NEXT_PUBLIC_REGION || 'RU'; // RU or US
 
 interface Plan {
   id: number;
@@ -51,6 +53,23 @@ export default function BillingPage() {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
+  const [showPaymentWidget, setShowPaymentWidget] = useState(false);
+
+  // Функция локализации цены
+  const formatPrice = (price: number): string => {
+    if (REGION === 'US') {
+      // Конвертируем рубли в доллары (примерный курс 1 USD = 90 RUB)
+      const usdPrice = Math.ceil(price / 90);
+      return `$${usdPrice}`;
+    } else {
+      // RU - рубли
+      return `${price.toLocaleString('ru-RU')}₽`;
+    }
+  };
+
+  const getCurrencySymbol = (): string => {
+    return REGION === 'US' ? '$' : '₽';
+  };
 
   useEffect(() => {
     loadPlans();
@@ -98,13 +117,13 @@ export default function BillingPage() {
           // Перезагружаем страницу или обновляем баланс
           window.location.reload();
         } else {
-          // Платный тариф - открываем виджет ЮKassa
+          // Платный тариф - открываем виджет оплаты
           const confirmationToken = data.payment.confirmation_token;
           if (confirmationToken) {
-            // Загружаем и открываем виджет ЮKassa
+            // Загружаем и открываем виджет оплаты
             openYookassaWidget(confirmationToken, data.payment.id);
           } else {
-            throw new Error(_(msg`Не получен токен подтверждения от ЮKassa`));
+            throw new Error(_(msg`Не получен токен подтверждения от платежной системы`));
           }
         }
       }
@@ -116,7 +135,7 @@ export default function BillingPage() {
   };
 
   const openYookassaWidget = (confirmationToken: string, paymentId: number) => {
-    // Загружаем скрипт виджета ЮKassa
+    // Загружаем скрипт виджета платежной системы
     const script = document.createElement('script');
     script.src = 'https://yookassa.ru/checkout-widget/v1/checkout-widget.js';
     script.async = true;
@@ -126,7 +145,7 @@ export default function BillingPage() {
         confirmation_token: confirmationToken,
         return_url: `${window.location.origin}/hr/billing/payment-success?payment_id=${paymentId}`,
         error_callback: (error: any) => {
-          console.error('ЮKassa error:', error);
+          console.error(_(msg`Ошибка платежной системы`), error);
           setError(_(msg`Ошибка при открытии формы оплаты`));
         },
       });
@@ -140,7 +159,6 @@ export default function BillingPage() {
     setShowPaymentWidget(true);
   };
 
-  const [showPaymentWidget, setShowPaymentWidget] = useState(false);
 
   const renderFeatures = (features: Record<string, any>) => {
     const featuresList = [
@@ -163,7 +181,7 @@ export default function BillingPage() {
                 <IconX size={20} color="gray" />
               )}
             </ListItemIcon>
-            <ListItemText 
+            <ListItemText
               primary={feature.label}
               primaryTypographyProps={{
                 color: feature.icon ? 'text.primary' : 'text.disabled',
@@ -178,7 +196,7 @@ export default function BillingPage() {
 
   if (loading) {
     return (
-      <PageContainer title={_(msg`Тарифы и оплата`)} description="Управление подпиской">
+      <PageContainer title={_(msg`Тарифы и оплата`)} description={_(msg`Управление подпиской`)}>
         <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
           <CircularProgress />
         </Box>
@@ -187,7 +205,7 @@ export default function BillingPage() {
   }
 
   return (
-    <PageContainer title={_(msg`Тарифы и оплата`)} description="Выберите подходящий тариф">
+    <PageContainer title={_(msg`Тарифы и оплата`)} description={_(msg`Выберите подходящий тариф`)}>
       <DashboardCard title={_(msg`Тарифные планы`)}>
         {error && (
           <Alert severity="error" sx={{ mb: 3 }}>
@@ -231,11 +249,11 @@ export default function BillingPage() {
 
                   <Box sx={{ my: 3 }}>
                     <Typography variant="h3" component="div">
-                      {plan.price.toLocaleString('ru-RU')}₽
+                      {formatPrice(plan.price)}
                     </Typography>
                     {!plan.is_free && (
                       <Typography variant="caption" color="text.secondary">
-                        {plan.price_per_interview}₽ за интервью
+                        <Trans>{formatPrice(plan.price_per_interview)} за интервью</Trans>
                       </Typography>
                     )}
                   </Box>
@@ -271,19 +289,19 @@ export default function BillingPage() {
 
       {/* Диалог подтверждения покупки */}
       <Dialog open={purchaseDialogOpen} onClose={() => !purchasing && setPurchaseDialogOpen(false)}>
-        <DialogTitle>Подтверждение покупки</DialogTitle>
+        <DialogTitle><Trans>Подтверждение покупки</Trans></DialogTitle>
         <DialogContent>
           {selectedPlan && (
             <Box>
               <Typography gutterBottom>
-                Вы собираетесь приобрести тариф <strong>{selectedPlan.name}</strong>
+                <Trans>Вы собираетесь приобрести тариф <strong>{selectedPlan.name}</strong></Trans>
               </Typography>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Количество интервью: <strong>{selectedPlan.interviews_included}</strong>
+                <Trans>Количество интервью: <strong>{selectedPlan.interviews_included}</strong></Trans>
               </Typography>
-              <Typography variant="h5" sx={{ mt: 2 }}><Trans>
-                К оплате: {selectedPlan.price.toLocaleString('ru-RU')}₽
-              </Trans></Typography>
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                <Trans>К оплате: {formatPrice(selectedPlan.price)}</Trans>
+              </Typography>
 
               {selectedPlan.is_free && (
                 <Alert severity="info" sx={{ mt: 2 }}><Trans>Бесплатный тариф доступен только один раз для каждой компании</Trans></Alert>

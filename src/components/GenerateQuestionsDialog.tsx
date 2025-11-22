@@ -99,7 +99,7 @@ const GenerateQuestionsDialog = React.memo(({
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Сгенерировать вопросы</DialogTitle>
+      <DialogTitle><Trans>Сгенерировать вопросы</Trans></DialogTitle>
       <DialogContent sx={{ pt: '16px !important' }}>
         <Box sx={{ mb: 3 }}>
           <Typography variant="body2" color="textSecondary" gutterBottom><Trans>Количество вопросов для генерации:</Trans></Typography>

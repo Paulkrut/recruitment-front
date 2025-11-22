@@ -129,7 +129,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
 
       {/* Диалог подтверждения удаления */}
       <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>🗑️ Удаление персональных данных</DialogTitle>
+        <DialogTitle><Trans>🗑️ Удаление персональных данных</Trans></DialogTitle>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 2 }}><Trans>Внимание! Это действие необратимо. Все ваши данные будут полностью удалены с платформы.</Trans></Typography>
           <Typography variant="body2" sx={{ mb: 2 }}>

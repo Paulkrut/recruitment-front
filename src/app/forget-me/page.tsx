@@ -413,7 +413,7 @@ export default function ForgetMePage() {
             <Typography component="li" variant="body2" paragraph><Trans>🔍 Мы свяжемся с вами для подтверждения личности</Trans></Typography>
             <Typography component="li" variant="body2" paragraph><Trans>🗑️ После подтверждения все данные будут удалены</Trans></Typography>
           </Box>
-          {submitResult?.message.includes('Номер вашего запроса:') && (
+          {submitResult?.message.includes(_(msg`Номер вашего запроса:`)) && (
             <Alert severity="info" sx={{ mt: 2 }}>
               <Typography variant="body2"><Trans>
                 <strong>Номер запроса:</strong> {submitResult.message.split('Номер вашего запроса: ')[1]}
