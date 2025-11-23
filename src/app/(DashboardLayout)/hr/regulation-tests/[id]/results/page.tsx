@@ -180,7 +180,7 @@ export default function TestResultsPage() {
           startIcon={<ArrowBackIcon />}
           onClick={() => router.push('/hr/regulation-tests')}
         >
-          Назад к тестам
+          <Trans>Назад к тестам</Trans>
         </Button>
       </Box>
 

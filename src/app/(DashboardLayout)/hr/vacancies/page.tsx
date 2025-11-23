@@ -165,7 +165,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
               <Tooltip title={_(msg`Показывает общее количество кандидатов, завершивших интервью и находящихся в процессе`)}>
                 <Box display="flex" alignItems="center" gap={1}>
                   <IconUsers size={16} />
-                  Статистика кандидатов
+                  <Trans>Статистика кандидатов</Trans>
                 </Box>
               </Tooltip>
             </TableCell>

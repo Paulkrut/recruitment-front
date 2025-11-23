@@ -70,12 +70,12 @@ export default function DeleteStageDialog({
       <DialogContent>
         {candidatesCount > 0 ? (
           <>
-            <Alert severity="warning" sx={{ mb: 3 }}>
+            <Alert severity="warning" sx={{ mb: 3 }}><Trans>
               В этой стадии находится <strong>{candidatesCount}</strong> {
                 candidatesCount === 1 ? _(msg`кандидат`) :
                 candidatesCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)
               } (во всех вакансиях компании)
-            </Alert>
+            </Trans></Alert>
 
             <Typography variant="body2" gutterBottom sx={{ mb: 2 }}><Trans>Выберите стадию, в которую будут перемещены все кандидаты:</Trans></Typography>
 

@@ -20,7 +20,7 @@ const Maintenance = () => (
     <Container maxWidth="md">
       <Image
         src={"/images/backgrounds/maintenance2.svg"}
-        alt="Техническое обслуживание" width={500} height={500}
+        alt={_(msg`Техническое обслуживание`)} width={500} height={500}
         style={{ width: "100%", maxWidth: "500px", maxHeight: "500px" }}
       />
       <Typography align="center" variant="h1" mb={4}><Trans>Техническое обслуживание!!!</Trans></Typography>

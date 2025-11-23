@@ -2592,9 +2592,9 @@ export default function CandidateInterviewPage() {
             />
           )}
           {timeLeft !== null && (
-            <Typography variant="caption" sx={{ color: '#666', fontSize: '11px' }}>
+            <Typography variant="caption" sx={{ color: '#666', fontSize: '11px' }}><Trans>
               {timeLeft} сек
-            </Typography>
+            </Trans></Typography>
           )}
 
           {/* Уведомление о продолжении интервью */}
@@ -2623,10 +2623,9 @@ export default function CandidateInterviewPage() {
               }}>
                 ✓
               </Box>
-              <Typography variant="body2" sx={{ color: '#2e7d32', fontSize: '13px' }}>
-                Интервью продолжается с вопроса {interviewProgress.current} из {interviewProgress.total}
-                ({interviewProgress.percentage}% завершено)
-              </Typography>
+              <Typography variant="body2" sx={{ color: '#2e7d32', fontSize: '13px' }}><Trans>
+                Интервью продолжается с вопроса {interviewProgress.current} из {interviewProgress.total} ({interviewProgress.percentage}% завершено)
+              </Trans></Typography>
             </Box>
           )}
         </Box>
@@ -3044,7 +3043,7 @@ export default function CandidateInterviewPage() {
                     px: 3
                   }}
                 >
-                  ⏭️ Пропустить
+                  <Trans>⏭️ Пропустить</Trans>
                 </Button>
               </>
             ) : recording ? (
@@ -3163,14 +3162,14 @@ export default function CandidateInterviewPage() {
               lineHeight: 1.5,
               textAlign: 'center',
               fontSize: '14px'
-            }}>
+            }}><Trans>
               Вы уверены, что хотите пропустить этот вопрос?
-              <br />
+              </Trans><br />
               <Box component="span" sx={{
                 color: '#ff9800',
                 fontWeight: 600,
                 fontSize: '13px'
-              }}><Trans>Внимание:</Trans></Box> Пропущенный вопрос будет засчитан как отсутствие ответа.
+              }}><Trans>Внимание:</Trans></Box> <Trans>Пропущенный вопрос будет засчитан как отсутствие ответа.</Trans>
             </Typography>
           </DialogContent>
           <DialogActions sx={{

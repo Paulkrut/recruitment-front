@@ -99,8 +99,8 @@ export default function TestsChartCard({ data, onRefresh }: TestsChartCardProps)
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          title: (context: any) => `Дата: ${context[0].label}`,
-          label: (context: any) => `Тестов: ${context.parsed.y}`,
+          title: (context: any) => _(msg`Дата: ${context[0].label}`),
+          label: (context: any) => _(msg`Тестов: ${context.parsed.y}`),
         },
       },
     },

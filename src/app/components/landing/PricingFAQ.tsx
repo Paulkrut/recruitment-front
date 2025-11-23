@@ -33,10 +33,9 @@ const PricingFAQ: React.FC = () => {
               <Typography fontWeight={600} variant="h6"><Trans>Сгорают ли интервью после покупки?</Trans></Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body1" color="text.secondary">
-                Нет, интервью <strong>не сгорают и действуют бессрочно</strong>. Вы можете использовать их в любое время, 
-                без ограничений по срокам. Купили 100 интервью — они будут доступны, пока вы их не израсходуете.
-              </Typography>
+              <Typography variant="body1" color="text.secondary"><Trans>
+                Нет, интервью <strong>не сгорают и действуют бессрочно</strong>. Вы можете использовать их в любое время, без ограничений по срокам. Купили 100 интервью — они будут доступны, пока вы их не израсходуете.
+              </Trans></Typography>
             </AccordionDetails>
           </Accordion>
 
@@ -94,9 +93,9 @@ const PricingFAQ: React.FC = () => {
               <Typography fontWeight={600} variant="h6"><Trans>Как происходит оплата?</Trans></Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body1" color="text.secondary" paragraph>
-                Оплата производится онлайн через <strong>ЮKassa</strong>:
-              </Typography>
+              <Typography variant="body1" color="text.secondary" paragraph><Trans>
+                Оплата производится онлайн через <strong>платежную систему</strong>:
+              </Trans></Typography>
               <List dense>
                 <ListItem>
                   <ListItemIcon><Icon icon="mdi:credit-card" color="#2196F3" width={24} /></ListItemIcon>
@@ -112,10 +111,9 @@ const PricingFAQ: React.FC = () => {
                 </ListItem>
               </List>
               <Alert severity="info" sx={{ mt: 2 }}>
-                <Typography variant="body2">
-                  <strong>Для юридических лиц</strong> доступна оплата по счёту. После оплаты интервью сразу 
-                  зачисляются на ваш баланс.
-                </Typography>
+                <Typography variant="body2"><Trans>
+                  <strong>Для юридических лиц</strong> доступна оплата по счёту. После оплаты интервью сразу зачисляются на ваш баланс.
+                </Trans></Typography>
               </Alert>
             </AccordionDetails>
           </Accordion>
@@ -125,9 +123,9 @@ const PricingFAQ: React.FC = () => {
               <Typography fontWeight={600} variant="h6"><Trans>Безопасны ли данные кандидатов?</Trans></Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography variant="body1" color="text.secondary" paragraph>
+              <Typography variant="body1" color="text.secondary" paragraph><Trans>
                 Да, <strong>безопасность данных — наш приоритет</strong>:
-              </Typography>
+              </Trans></Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                   <Paper sx={{ p: 2, bgcolor: '#e8f5e9' }}>

@@ -719,7 +719,7 @@ export default function KanbanView({
           fetchStats();
         }
 
-        alert(`Стадия удалена. ${result.movedCandidates > 0 ? `Перемещено кандидатов: ${result.movedCandidates}` : ''}`);
+        alert(_(msg`Стадия удалена. ${result.movedCandidates > 0 ? `Перемещено кандидатов: ${result.movedCandidates}` : ''}`));
       } else {
         const error = await response.json();
         alert(_(msg`Ошибка: ${error.message || _(msg`Не удалось удалить стадию`)}`));
@@ -1382,8 +1382,8 @@ export default function KanbanView({
                     {selectionMode && (
                       <Tooltip
                         title={selectedAllInColumn.has(column.value)
-                          ? `Снять выделение со ВСЕХ ${totalCount} кандидатов`
-                          : `Выбрать ВСЕХ ${totalCount} кандидатов (включая не загруженные)`
+                          ? _(msg`Снять выделение со ВСЕХ ${totalCount} кандидатов`)
+                          : _(msg`Выбрать ВСЕХ ${totalCount} кандидатов (включая не загруженные)`)
                         }
                         arrow
                       >
@@ -1669,7 +1669,7 @@ export default function KanbanView({
                 window.location.href = '/hr/settings/hh-integration';
               }}
             >
-              Подключить HH.ru
+              <Trans>Подключить HH.ru</Trans>
             </Button>
           ) : undefined
         }

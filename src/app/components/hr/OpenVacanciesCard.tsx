@@ -106,9 +106,9 @@ export default function OpenVacanciesCard({ data }: OpenVacanciesCardProps) {
                           {vacancy.title}
                         </Typography>
                       </Link>
-                      <Typography variant="caption" color="textSecondary">
+                      <Typography variant="caption" color="textSecondary"><Trans>
                         {vacancy.finished} из {vacancy.total} кандидатов
-                      </Typography>
+                      </Trans></Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Box sx={{ width: "100%", mb: 1 }}>

@@ -120,9 +120,9 @@ export default function OverdueCandidatesCard({ data }: OverdueCandidatesCardPro
         {/* Настройки пагинации */}
         {data.length > 0 && (
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary"><Trans>
               Показано {paginationData.startIndex}-{paginationData.endIndex} из {paginationData.total}
-            </Typography>
+            </Trans></Typography>
             <FormControl size="small" sx={{ minWidth: 120 }}>
               <Select
                 value={pageSize}

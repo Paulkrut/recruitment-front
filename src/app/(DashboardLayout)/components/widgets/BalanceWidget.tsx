@@ -147,9 +147,9 @@ export default function BalanceWidget() {
             <Typography variant="h3">{balance?.interviews || 0}</Typography>
 
             <Box display="flex" alignItems="center" gap={1}>
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary"><Trans>
                 Использовано: {balance?.total_interviews_used || 0} из {balance?.total_interviews_purchased || 0}
-              </Typography>
+              </Trans></Typography>
               {balance?.total_interviews_purchased && balance.total_interviews_purchased > 0 && (
                 <Chip label={`${interviewsUsagePercent}%`} size="small" variant="outlined" />
               )}
@@ -182,9 +182,9 @@ export default function BalanceWidget() {
 
             <Typography variant="h3">{balance?.regulation_tests || 0}</Typography>
 
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" color="text.secondary"><Trans>
               Использовано: {balance?.total_regulation_tests_used || 0} из {balance?.total_regulation_tests_purchased || 0}
-            </Typography>
+            </Trans></Typography>
           </Stack>
         </Box>
 
@@ -204,7 +204,7 @@ export default function BalanceWidget() {
             startIcon={<IconTrendingUp size={18} />}
             onClick={() => router.push('/hr/billing/transactions')}
           >
-            История и статистика
+            <Trans>История и статистика</Trans>
           </Button>
         </Box>
       </CardContent>

@@ -247,9 +247,9 @@ export default function EditTestPage() {
           />
 
           <Alert severity="info">
-            <Typography variant="body2">
+            <Typography variant="body2"><Trans>
               <strong>Примечание:</strong> Изменение настроек не влияет на уже начатые тесты. Список регламентов можно изменить только при создании теста.
-            </Typography>
+            </Trans></Typography>
           </Alert>
         </Box>
 

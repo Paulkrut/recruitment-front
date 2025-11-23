@@ -202,9 +202,9 @@ export default function BillingAnalyticsPage() {
                           {stats.gifts.count}
                         </Typography>
                       </Box>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary"><Trans>
                         Стоимость: {stats.gifts.value.toLocaleString('ru-RU')}₽
-                      </Typography>
+                      </Trans></Typography>
                     </Box>
 
                     <Divider />
@@ -219,10 +219,9 @@ export default function BillingAnalyticsPage() {
                       {stats.used.total}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Из них {stats.used.paid} оплаченных
-                    {stats.gifts.count > 0 && ` и ${stats.gifts.count} бонусных`}
-                  </Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>
+                    Из них {stats.used.paid} оплаченных{stats.gifts.count > 0 && ` и ${stats.gifts.count} бонусных`}
+                  </Trans></Typography>
                 </Box>
               </Stack>
             </CardContent>

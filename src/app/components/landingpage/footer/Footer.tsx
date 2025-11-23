@@ -34,7 +34,7 @@ const Footer = () => {
                 color="primary"
                 sx={{ fontSize: '14px' }}
               >
-                Политика конфиденциальности
+                <Trans>Политика конфиденциальности</Trans>
               </Link>
               <Link
                 href="/terms-of-service"
@@ -43,7 +43,7 @@ const Footer = () => {
                 color="primary"
                 sx={{ fontSize: '14px' }}
               >
-                Условия использования
+                <Trans>Условия использования</Trans>
               </Link>
             </Box>
           </Grid>

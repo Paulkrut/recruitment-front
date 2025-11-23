@@ -167,9 +167,9 @@ export default function RegisterPage() {
         <Paper elevation={3} sx={{ p: 4, textAlign: "center" }}>
           <Icon icon="mdi:check-circle" color="#4caf50" width={64} height={64} />
           <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}><Trans>Регистрация успешна!</Trans></Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}><Trans>
             Мы отправили пароль на ваш email: <strong>{formData.email}</strong>
-          </Typography>
+          </Trans></Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}><Trans>Проверьте почту и используйте полученный пароль для входа в систему.</Trans></Typography>
           <CircularProgress size={24} sx={{ mr: 1 }} />
           <Typography variant="body2" color="text.secondary"><Trans>Переходим на страницу входа...</Trans></Typography>
@@ -301,7 +301,7 @@ export default function RegisterPage() {
                 {loading ? (
                   <>
                     <CircularProgress size={20} sx={{ mr: 1 }} />
-                    Создание аккаунта...
+                    <Trans>Создание аккаунта...</Trans>
                   </>
                 ) : (
                   <>
@@ -322,7 +322,7 @@ export default function RegisterPage() {
               Уже есть аккаунт?{" "}
               </Trans><Link href="/auth/login" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
-                  Войти в систему
+                  <Trans>Войти в систему</Trans>
                 </MuiLink>
               </Link>
             </Typography>
@@ -341,7 +341,7 @@ export default function RegisterPage() {
           >
             <Typography variant="body2" color="info.dark" sx={{ display: "flex", alignItems: "center" }}>
               <Icon icon="mdi:information" width={16} height={16} style={{ marginRight: 8 }} />
-              После регистрации система автоматически сгенерирует безопасный пароль и отправит его на ваш email.
+              <Trans>После регистрации система автоматически сгенерирует безопасный пароль и отправит его на ваш email.</Trans>
             </Typography>
           </Box>
         </CardContent>

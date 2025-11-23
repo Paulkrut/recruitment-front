@@ -211,9 +211,9 @@ export default function RegulationTestsPage() {
 
       {/* Active Filter Alert */}
       {selectedRegulationId && selectedRegulation && (
-        <Alert severity="info" sx={{ mb: 3 }}>
+        <Alert severity="info" sx={{ mb: 3 }}><Trans>
           Показаны тесты, использующие регламент: <strong>{selectedRegulation.title}</strong>
-        </Alert>
+        </Trans></Alert>
       )}
 
       {/* Tests Table */}
@@ -287,7 +287,7 @@ export default function RegulationTestsPage() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        label={${test.regulationsCount} {_(msg`шт.`)}}
+                        label={test.regulationsCount + ' ' +  _(msg`шт.`)}
                         size="small"
                         color="primary"
                         variant="outlined"

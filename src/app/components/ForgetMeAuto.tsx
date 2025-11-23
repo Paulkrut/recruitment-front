@@ -174,9 +174,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          ><Trans>политикой конфиденциальности</Trans></Button><Trans>
-          {' '}и{' '}
-          </Trans><Button
+          ><Trans>политикой конфиденциальности</Trans></Button>
+          <Trans>{' '}и{' '}</Trans>
+          <Button
             component="a"
             href="/terms-of-service"
             target="_blank"
@@ -197,9 +197,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          ><Trans>условиями обработки персональных данных</Trans></Button><Trans>
-          . В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ "О персональных данных" вы имеете право на{' '}
-          </Trans><Button
+          ><Trans>условиями обработки персональных данных</Trans></Button>
+          <Trans>. В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ "О персональных данных" вы имеете право на{' '}</Trans>
+          <Button
             variant="text"
             size="small"
             onClick={() => setOpen(true)}

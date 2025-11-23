@@ -183,9 +183,9 @@ export default function TransactionsPage() {
                 </Box>
                 <Typography variant="h4">{stats.current_balance.interviews}</Typography>
                 <Typography variant="caption" color="text.secondary"><Trans>интервью</Trans></Typography>
-                <Typography variant="body2" sx={{ mt: 1 }}>
+                <Typography variant="body2" sx={{ mt: 1 }}><Trans>
                   {stats.current_balance.regulation_tests} тестов по регламентам
-                </Typography>
+                </Trans></Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -212,9 +212,9 @@ export default function TransactionsPage() {
                   <Typography variant="h6"><Trans>Использование</Trans></Typography>
                 </Box>
                 <Typography variant="h4">{stats.usage_rate}%</Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" color="text.secondary"><Trans>
                   {stats.lifetime.interviews_used} из {stats.lifetime.interviews_purchased} интервью
-                </Typography>
+                </Trans></Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -283,9 +283,9 @@ export default function TransactionsPage() {
                       <TableCell>
                         <Typography variant="body2">{transaction.description}</Typography>
                         {transaction.is_gifted && transaction.gift_value && (
-                          <Typography variant="caption" color="warning.main">
+                          <Typography variant="caption" color="warning.main"><Trans>
                             (стоимость {transaction.gift_value.toLocaleString('ru-RU')}₽)
-                          </Typography>
+                          </Trans></Typography>
                         )}
                         {transaction.created_by && (
                           <Typography variant="caption" color="text.secondary" display="block">

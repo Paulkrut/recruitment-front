@@ -792,9 +792,9 @@ export default function RegulationTestPage() {
                 value={((currentQuestionIndex + 1) / questions.length) * 100}
                 sx={{ height: 10, borderRadius: 1, mb: 1 }}
               />
-              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}><Trans>
                 Прогресс: {currentQuestionIndex + 1} / {questions.length} ({Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%)
-              </Typography>
+              </Trans></Typography>
             </Box>
 
             {/* 3. Видео */}
@@ -821,9 +821,9 @@ export default function RegulationTestPage() {
                   variant="h5"
                   color={timeLeft < 30 ? 'error.main' : 'primary.main'}
                   sx={{ fontWeight: 'bold', textAlign: 'center', mb: 1 }}
-                >
+                ><Trans>
                   Осталось: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                </Typography>
+                </Trans></Typography>
                 <LinearProgress
                   variant="determinate"
                   value={(timeLeft / (currentQuestion.maxTime || 120)) * 100}
@@ -849,7 +849,7 @@ export default function RegulationTestPage() {
                   }
                 }}
               >
-                🔴 ИДЁТ ЗАПИСЬ ОТВЕТА - Говорите в микрофон
+                <Trans>🔴 ИДЁТ ЗАПИСЬ ОТВЕТА - Говорите в микрофон</Trans>
               </Alert>
             )}
 
@@ -902,7 +902,7 @@ export default function RegulationTestPage() {
                     fullWidth={isMobile}
                     sx={{ minWidth: isMobile ? 'auto' : 150 }}
                   >
-                    🔄 Переписать
+                    <Trans>🔄 Переписать</Trans>
                   </Button>
                   <Button
                     variant="contained"

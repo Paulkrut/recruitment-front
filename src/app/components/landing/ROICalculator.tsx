@@ -42,7 +42,7 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
 
     let platformPrice = 0;
     if (typeof optimalPlan.price === 'string') {
-      if (optimalPlan.price === 'Бесплатно') {
+      if (optimalPlan.price === _(msg`Бесплатно`)) {
         platformPrice = 0;
       } else {
         const numericValue = optimalPlan.price.replace(/[^\d]/g, '');
@@ -109,9 +109,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
             }}
           />
 
-          <Typography variant="body1" color="text.secondary" textAlign="center" mb={4}>
+          <Typography variant="body1" color="text.secondary" textAlign="center" mb={4}><Trans>
             Рекомендуемый тариф: <strong style={{ color: optimalPlan.color }}>{optimalPlan.name}</strong>
-          </Typography>
+          </Trans></Typography>
 
           <Grid container spacing={3} mb={4}>
             <Grid item xs={12} md={6}>
@@ -120,9 +120,9 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
                 <Typography variant="h4" fontWeight={700} color="#ff9800" mb={2}>
                   {savings.traditionalCost.toLocaleString()}₽
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary"><Trans>
                   + {savings.traditionalTime} часов ({savings.traditionalTimeCost.toLocaleString()}₽)
-                </Typography>
+                </Trans></Typography>
                 <Typography variant="caption" color="text.secondary" display="block" mt={2}><Trans>Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час</Trans></Typography>
               </Paper>
             </Grid>

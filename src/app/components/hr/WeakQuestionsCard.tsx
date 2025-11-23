@@ -155,9 +155,9 @@ export default function WeakQuestionsCard({ data }: WeakQuestionsCardProps) {
                         color={getScoreColor(question.avgScore) as any}
                         variant="outlined"
                       />
-                      <Typography variant="caption" color="textSecondary">
+                      <Typography variant="caption" color="textSecondary"><Trans>
                         {getScoreLabel(question.avgScore)} • {question.answerCount} ответов
-                      </Typography>
+                      </Trans></Typography>
                       <Typography variant="caption" color="primary.main" fontWeight="500">
                         {question.vacancyTitle}
                       </Typography>

@@ -190,7 +190,7 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <CircularProgress size={20} sx={{ mr: 1 }} />
-                    Вход в систему...
+                    <Trans>Вход в систему...</Trans>
                   </>
                 ) : (
                   <>
@@ -207,7 +207,7 @@ export default function LoginPage() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               <Link href="/auth/forgot-password" passHref>
                 <MuiLink color="primary" sx={{ textDecoration: "none" }}>
-                  Забыли пароль?
+                  <Trans>Забыли пароль?</Trans>
                 </MuiLink>
               </Link>
             </Typography>

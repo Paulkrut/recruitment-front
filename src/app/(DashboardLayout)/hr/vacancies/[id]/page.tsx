@@ -449,12 +449,12 @@ export default function HRVacancyDetailPage() {
                             onClick={() => setCompareOpen(true)}
                             startIcon={<IconArrowsDiff />}
                           >
-                            Сравнить ({selectedCandidates.length})
+                            <Trans>Сравнить ({selectedCandidates.length})</Trans>
                           </Button>
                         )
                       }
                     >
-                      Выбрано кандидатов: {selectedCandidates.length}
+                      <Trans>Выбрано кандидатов: {selectedCandidates.length}</Trans>
                       {selectedCandidates.length < 2 && <Trans> (минимум 2 для сравнения)</Trans>}
                       {selectedCandidates.length >= 2 && finishedCandidates.length < 2 && <Trans> (но нет завершенных кандидатов для сравнения)</Trans>}
                     </Alert>
@@ -462,12 +462,12 @@ export default function HRVacancyDetailPage() {
 
                   {/* Информация о доступных для сравнения кандидатах */}
                   {finishedCandidates.length > 0 && (
-                    <Alert severity="success" sx={{ mb: 2 }}>
+                    <Alert severity="success" sx={{ mb: 2 }}><Trans>
                       ✅ Доступно для сравнения: <strong>{finishedCandidates.length}</strong> кандидатов
                       {candidates.length > finishedCandidates.length && (
                         <span> (еще {candidates.length - finishedCandidates.length} не завершили тест)</span>
                       )}
-                    </Alert>
+                    </Trans></Alert>
                   )}
 
                   {/* Фильтры - общие для обоих режимов */}
@@ -709,7 +709,7 @@ export default function HRVacancyDetailPage() {
                       wordBreak: 'break-word'
                     }}
                   >
-                    {description || <span style={{opacity:0.6}}>Описание не заполнено</span>}
+                    {description || <span style={{opacity:0.6}}><Trans>Описание не заполнено</Trans></span>}
                   </Typography>
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>

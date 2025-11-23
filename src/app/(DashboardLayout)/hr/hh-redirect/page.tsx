@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { apiFetch } from "@/utils/api";
+import { Trans } from '@lingui/react';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -47,8 +48,8 @@ export default function HhRedirectPage() {
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
-      <h2>Обработка авторизации HH.ru...</h2>
-      <p>Пожалуйста, подождите...</p>
+      <h2><Trans>Обработка авторизации HH.ru...</Trans></h2>
+      <p><Trans>Пожалуйста, подождите...</Trans></p>
     </div>
   );
 }

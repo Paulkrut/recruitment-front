@@ -169,7 +169,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
 
     try {
       const strategies = createStrategies();
-      onError('🔄 Подключение к камере и микрофону...');
+      onError(_(msg`🔄 Подключение к камере и микрофону...`));
 
       for (let i = 0; i < strategies.length; i++) {
         const strategy = strategies[i];
@@ -364,7 +364,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
                     variant="outlined"
                     size="small"
                   >
-                    Продолжить с микрофоном
+                    <Trans>Продолжить с микрофоном</Trans>
                   </Button>
                 </Box>
               </>

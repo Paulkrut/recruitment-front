@@ -374,7 +374,7 @@ export default function HRVacancyEditPage() {
   }, [token, vacancyData.title, vacancyData.description, genCount, templateData.questionTime, templateData.allowFollowups, questions.length]);
 
   const getProgressMessage = (status: string, elapsedTime?: number) => {
-    const timeStr = elapsedTime ? ` (${elapsedTime}с)` : '';
+    const timeStr = elapsedTime ? _(msg` (${elapsedTime}с)`) : '';
     
     switch (status) {
       case 'pending':
@@ -544,7 +544,7 @@ export default function HRVacancyEditPage() {
                       mb: 2
                     }}
                   >
-                    Время на один вопрос
+                    <Trans>Время на один вопрос</Trans>
                   </CustomFormLabel>
                   
                   {/* Preset buttons */}
@@ -572,7 +572,7 @@ export default function HRVacancyEditPage() {
                             '&:hover': { backgroundColor: "#bbdefb" }
                           }}
                         >
-                          {time} сек
+                          <Trans>{time} сек</Trans>
                         </Button>
                       ))}
                     </Box>
@@ -615,7 +615,7 @@ export default function HRVacancyEditPage() {
                       mb: 2
                     }}
                   >
-                    Дополнительные вопросы
+                    <Trans>Дополнительные вопросы</Trans>
                   </CustomFormLabel>
                   
                   <Box sx={{ mb: 3 }}>
@@ -696,7 +696,7 @@ export default function HRVacancyEditPage() {
                     onClick={() => setGenOpen(true)}
                     sx={{ background: '#f5f5f5', color: '#1976d2', fontWeight: 600, px: 3, py: 1.5, '&:hover': { background: '#e3e3e3' } }}
                   >
-                    Сгенерировать AI
+                    <Trans>Сгенерировать AI</Trans>
                   </Button>
                 </Stack>
                 {questions.length === 0 ? (

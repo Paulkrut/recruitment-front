@@ -367,7 +367,7 @@ export default function CandidatesList({
 
       if (response.ok) {
         const result = await response.json();
-        onSnackbar(`✅ Перемещено ${result.updated} кандидатов`);
+        onSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
 
         // Обновляем список
         const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates`);
@@ -503,7 +503,7 @@ export default function CandidatesList({
                     direction={sortBy === 'score' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'desc'}
                     onClick={() => handleSort('score')}
                   >
-                    📝 Тестирование
+                    <Trans>📝 Тестирование</Trans>
                   </TableSortLabel>
                 </TableCell>
                 <TableCell>

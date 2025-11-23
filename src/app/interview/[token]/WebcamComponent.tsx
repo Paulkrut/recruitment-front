@@ -45,7 +45,7 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
     const hasAudio = stream.getAudioTracks().length > 0;
     onMicReady(hasAudio);
     
-    onError('✅ Камера и микрофон подключены успешно!');
+    onError(_(msg`✅ Камера и микрофон подключены успешно!`));
   }, [onStreamReady, onMicReady, onError]);
 
   // Обработка ошибок
@@ -56,7 +56,7 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
     onMicReady(false);
     
     const errorMessage = typeof error === 'string' ? error : error.message;
-    onError(`❌ Ошибка камеры: ${errorMessage}`);
+    onError(_(msg`❌ Ошибка камеры: ${errorMessage}`));
   }, [onStreamReady, onMicReady, onError]);
 
   // Получение потока для записи

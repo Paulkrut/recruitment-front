@@ -373,9 +373,9 @@ export default function PublicApplyPage() {
                 />
               }
               label={
-                <Typography variant="body2">
+                <Typography variant="body2"><Trans>
                   Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <a href="/privacy-policy" target="_blank">Политика обработки ПДн</a>.
-                </Typography>
+                </Trans></Typography>
               }
             />
           </Box>
@@ -391,10 +391,10 @@ export default function PublicApplyPage() {
               {submitting ? (
                 <>
                   <CircularProgress size={20} sx={{ mr: 1 }} />
-                  Отправляем...
+                  <Trans>Отправляем...</Trans>
                 </>
               ) : (
-                'Начать интервью'
+                <Trans>Начать интервью</Trans>
               )}
             </Button>
           </Box>

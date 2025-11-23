@@ -48,7 +48,7 @@ const MediaPermissions: React.FC<MediaPermissionsProps> = ({
         {cameraEnabled
           ? _(msg`Для прохождения интервью необходимо разрешить доступ к камере и микрофону.`)
           : _(msg`Для прохождения интервью необходимо разрешить доступ к микрофону.`)}
-        {mediaPermissions.status === 'denied' && ' Пожалуйста, разрешите доступ в настройках браузера.'}
+        {mediaPermissions.status === 'denied' && _(msg` Пожалуйста, разрешите доступ в настройках браузера.`)}
       </Typography>
       
       {mediaPermissions.status === 'requesting' ? (

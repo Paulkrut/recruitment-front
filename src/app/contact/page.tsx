@@ -254,13 +254,13 @@ export default function ContactPage() {
                   />
                 }
                 label={
-                  <Typography variant="body2">
+                  <Typography variant="body2"><Trans>
                     Даю согласие на обработку персональных данных в соответствии с{' '}
                     <Link href="/privacy-policy" style={{ color: '#1976d2', textDecoration: 'underline' }}>
                       Политикой конфиденциальности
                     </Link>
                     {' '}*
-                  </Typography>
+                  </Trans></Typography>
                 }
               />
             </Grid>

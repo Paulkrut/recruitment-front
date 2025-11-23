@@ -74,7 +74,7 @@ export default function HRDashboard() {
     return (
       <PageContainer title="HR Dashboard" description="HR Dashboard">
         <Box sx={{ p: 4 }}>
-          <div>Загрузка...</div>
+          <div><Trans>Загрузка...</Trans></div>
         </Box>
       </PageContainer>
     );
@@ -84,7 +84,7 @@ export default function HRDashboard() {
     return (
       <PageContainer title="HR Dashboard" description="HR Dashboard">
         <Box sx={{ p: 4 }}>
-          <div>Пожалуйста, выберите компанию</div>
+          <div><Trans>Пожалуйста, выберите компанию</Trans></div>
         </Box>
       </PageContainer>
     );
@@ -94,7 +94,7 @@ export default function HRDashboard() {
     return (
       <PageContainer title="HR Dashboard" description="HR Dashboard">
         <Box sx={{ p: 4 }}>
-          <div>Ошибка загрузки данных</div>
+          <div><Trans>Ошибка загрузки данных</Trans></div>
         </Box>
       </PageContainer>
     );

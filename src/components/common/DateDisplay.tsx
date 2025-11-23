@@ -68,7 +68,7 @@ export const DateDisplay: React.FC<DateDisplayProps> = ({
     }
 
     if (showTimezone) {
-      content += `\nЧасовой пояс: ${timezone}`;
+      content += _(msg`\nЧасовой пояс: ${timezone}`);
     }
 
     return content;

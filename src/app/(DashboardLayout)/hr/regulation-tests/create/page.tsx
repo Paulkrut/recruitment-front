@@ -749,7 +749,7 @@ export default function CreateTestPage() {
               onClick={handleGenerateGeneralLink}
               sx={{ py: 2 }}
             >
-              🔗 Сгенерировать общую ссылку
+              <Trans>🔗 Сгенерировать общую ссылку</Trans>
               <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}><Trans>Для самостоятельной регистрации сотрудников</Trans></Typography>
             </Button>
 
@@ -759,7 +759,7 @@ export default function CreateTestPage() {
               onClick={handleGoToInvitations}
               sx={{ py: 2 }}
             >
-              ✉️ Отправить приглашения конкретным сотрудникам
+              <Trans>✉️ Отправить приглашения конкретным сотрудникам</Trans>
               <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}><Trans>Создать именные приглашения по email</Trans></Typography>
             </Button>
 
@@ -769,7 +769,7 @@ export default function CreateTestPage() {
               variant="text"
               onClick={() => router.push('/hr/regulation-tests')}
             >
-              Вернуться к списку тестов
+              <Trans>Вернуться к списку тестов</Trans>
             </Button>
           </Box>
         </Box>

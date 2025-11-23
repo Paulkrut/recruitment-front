@@ -37,10 +37,10 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
 
   const [hhStages, setHhStages] = useState<string[]>([]);
   const [loadingStages, setLoadingStages] = useState(false);
-  
+
   // Локальное состояние для фильтров (до применения)
   const [localFilters, setLocalFilters] = useState(filters);
-  
+
   // Debounce таймер для поиска
   const searchDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -82,13 +82,13 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
   const handleLocalChange = (key: string, value: any) => {
     const newFilters = { ...localFilters, [key]: value };
     setLocalFilters(newFilters);
-    
+
     // Поиск применяется автоматически с debounce
     if (key === 'search') {
       if (searchDebounceRef.current) {
         clearTimeout(searchDebounceRef.current);
       }
-      
+
       searchDebounceRef.current = setTimeout(() => {
         onFilterChange(newFilters);
       }, 500); // Задержка 500мс
@@ -125,7 +125,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <FilterListIcon />
         <Box flex={1} fontWeight="bold"><Trans>Фильтры</Trans></Box>
-        
+
         {hasActiveFilters && (
           <Button
             size="small"
@@ -196,25 +196,25 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             <InputLabel><Trans>AI анализ резюме</Trans></InputLabel>
             <Select
               value={
-                localFilters.minScore ? `score_${localFilters.minScore}` : 
+                localFilters.minScore ? `score_${localFilters.minScore}` :
                 localFilters.aiAnalysisStatus ? `status_${localFilters.aiAnalysisStatus}` : ''
               }
               label={_(msg`AI анализ резюме`)}
               onChange={(e) => {
                 const value = e.target.value;
                 const newFilters = { ...localFilters };
-                
+
                 // Удаляем оба старых фильтра
                 delete newFilters.minScore;
                 delete newFilters.aiAnalysisStatus;
-                
+
                 // Устанавливаем новый фильтр в зависимости от типа
                 if (value.startsWith('score_')) {
                   newFilters.minScore = parseInt(value.replace('score_', ''));
                 } else if (value.startsWith('status_')) {
                   newFilters.aiAnalysisStatus = value.replace('status_', '');
                 }
-                
+
                 setLocalFilters(newFilters);
               }}
             >
@@ -277,13 +277,13 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               onChange={(e) => {
                 const value = e.target.value;
                 const newFilters = { ...localFilters, datePreset: value };
-                
+
                 // Если выбран не "custom", очищаем dateFrom и dateTo
                 if (value !== 'custom') {
                   delete newFilters.dateFrom;
                   delete newFilters.dateTo;
                 }
-                
+
                 setLocalFilters(newFilters);
               }}
             >
@@ -357,7 +357,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           startIcon={<CheckIcon />}
           onClick={handleApply}
           disabled={!hasUnappliedChanges}
-          sx={{ 
+          sx={{
             minWidth: 200,
             fontWeight: 700,
             fontSize: '1rem',
@@ -394,7 +394,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.status && viewMode === 'list' && (
             <Chip
-              label={`Статус: ${
+              label={_(msg`Статус: ${
                 filters.status === 'new' ? _(msg`Новый`) :
                 filters.status === 'screening' ? _(msg`AI Скрининг`) :
                 filters.status === 'contacted' ? _(msg`Связались`) :
@@ -404,20 +404,20 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 filters.status === 'hired' ? _(msg`Принят`) :
                 filters.status === 'rejected' ? _(msg`Отклонён`) :
                 filters.status
-              }`}
+              }`)}
               size="small"
               onDelete={() => handleRemoveFilter('status')}
             />
           )}
           {(filters.minScore || filters.aiAnalysisStatus) && (
             <Chip
-              label={`AI анализ: ${
+              label={_(msg`AI анализ: ${
                 filters.minScore ? `≥ ${filters.minScore}%` :
                 filters.aiAnalysisStatus === 'loading_resume' ? _(msg`Загрузка резюме`) : 
                 filters.aiAnalysisStatus === 'analyzing' ? _(msg`Анализируется`) : 
                 filters.aiAnalysisStatus === 'completed' ? _(msg`Завершено`) : 
                 filters.aiAnalysisStatus === 'failed' ? _(msg`Ошибка`) : _(msg`Без анализа`)
-              }`}
+              }`)}
               size="small"
               onDelete={() => {
                 const newFilters = { ...filters };
@@ -430,11 +430,13 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.testScore && (
             <Chip
-              label={`Тест: ${
-                filters.testScore === 'passed' ? _(msg`Прошли`) :
-                filters.testScore === 'not_passed' ? _(msg`Не проходили`) :
-                `≥ ${filters.testScore}`
-              }`}
+              label={
+                filters.testScore === 'passed'
+                  ? _(msg`Тест: Прошли`)
+                  : filters.testScore === 'not_passed'
+                    ? _(msg`Тест: Не проходили`)
+                    : _(msg`Тест: ≥ ${filters.testScore}`)
+              }
               size="small"
               onDelete={() => handleRemoveFilter('testScore')}
             />
@@ -448,11 +450,11 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.datePreset && filters.datePreset !== 'custom' && (
             <Chip
-              label={`Дата: ${
+              label={_(msg`Дата: ${
                 filters.datePreset === 'today' ? _(msg`Сегодня`) : 
                 filters.datePreset === '3days' ? _(msg`Последние 3 дня`) : 
                 filters.datePreset === 'week' ? _(msg`Последняя неделя`) : _(msg`Последний месяц`)
-              }`}
+              }`)}
               size="small"
               onDelete={() => handleRemoveFilter('datePreset')}
             />

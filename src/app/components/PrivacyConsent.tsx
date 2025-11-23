@@ -38,22 +38,22 @@ export default function PrivacyConsent({
           sx={{ mt: 0.5 }}
         />
         <Box>
-          <Typography variant="body2" sx={{ mb: 1 }}>
+          <Typography variant="body2" sx={{ mb: 1 }}><Trans>
             Я даю согласие на обработку моих персональных данных в соответствии с{' '}
-            <Link 
+            </Trans><Link 
               href="/privacy-policy" 
               target="_blank"
               style={{ color: 'primary.main', textDecoration: 'none' }}
             >
-              Политикой конфиденциальности
-            </Link>{' '}
+              <Trans>Политикой конфиденциальности</Trans>
+            </Link><Trans>{' '}
             и{' '}
-            <Link 
+            </Trans><Link 
               href="/terms-of-service" 
               target="_blank"
               style={{ color: 'primary.main', textDecoration: 'none' }}
             >
-              Условиями использования
+              <Trans>Условиями использования</Trans>
             </Link>
           </Typography>
           <Typography variant="caption" color="text.secondary"><Trans>Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время.</Trans></Typography>

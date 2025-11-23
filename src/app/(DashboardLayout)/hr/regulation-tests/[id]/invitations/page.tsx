@@ -239,7 +239,7 @@ export default function InvitationsPage() {
                   <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                     <Typography color="text.secondary" gutterBottom><Trans>Приглашения не созданы</Trans></Typography>
                     <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setDialogOpen(true)}>
-                      Создать первое приглашение
+                      <Trans>Создать первое приглашение</Trans>
                     </Button>
                   </TableCell>
                 </TableRow>

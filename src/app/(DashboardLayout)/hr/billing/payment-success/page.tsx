@@ -83,7 +83,7 @@ export default function PaymentSuccessPage() {
                   {error}
                 </Typography>
                 <Button variant="contained" onClick={() => router.push('/hr/billing')}>
-                  Вернуться к тарифам
+                  <Trans>Вернуться к тарифам</Trans>
                 </Button>
               </>
             ) : isSuccess ? (
