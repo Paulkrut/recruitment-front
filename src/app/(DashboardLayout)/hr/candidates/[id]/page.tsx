@@ -239,7 +239,7 @@ export default function CandidateDetailPage() {
   };
 
   return (
-    <PageContainer title={_(msg`Кандидат`): ${candidate}}>
+    <PageContainer title={_(msg`Кандидат`) + ': ' + candidate}>
       <Stack spacing={3}>
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb">
@@ -348,10 +348,10 @@ export default function CandidateDetailPage() {
                   </Stack>
                   <Grid container spacing={2} mb={2}>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Начата:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.startedAt || '-'}</Typography>
+                      <Typography variant="body2"><Trans><b>Начата:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.startedAt || '-'}</Trans></Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Завершена:</b> <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.finishedAt || '-'}</Typography>
+                      <Typography variant="body2"><Trans><b>Завершена:</b> <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.finishedAt || '-'}</Trans></Typography>
                     </Grid>
                     <Grid item xs={12} sm={6} md={4}>
                       <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary" sx={{ml:1}}><Trans>Открыть</Trans></Button>)}</Typography>
@@ -364,7 +364,7 @@ export default function CandidateDetailPage() {
                     {/* Длительность интервью */}
                     {sessionDetail.startedAt && (sessionDetail.finishedAt || (sessionDetail.answers && sessionDetail.answers.length > 0)) && (
                       <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b>Длительность:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {(() => {
+                        <Typography variant="body2"><b><Trans>Длительность</Trans>:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {(() => {
                           const start = sessionDetail.startedAt ? new Date(sessionDetail.startedAt) : null;
                           let end = sessionDetail.finishedAt ? new Date(sessionDetail.finishedAt) : null;
                           if (!end && sessionDetail.answers && sessionDetail.answers.length > 0) {
@@ -392,7 +392,7 @@ export default function CandidateDetailPage() {
                           <Typography variant="subtitle1"><b><Trans>Вопрос {idx+1}:</Trans></b> {a.question}</Typography>
                           {a.score !== undefined && a.score !== null && (
                             <Chip
-                              label={_(msg`Оценка`): ${a.score}}
+                              label={_(msg`Оценка`) + ': ' + a.score}
                               color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
                               size="small"
                             />
@@ -403,7 +403,7 @@ export default function CandidateDetailPage() {
                         <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
                         <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
                         {a.aiComment && (
-                          <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><b>AI-характеристика:</b> {a.aiComment}</Typography>
+                          <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><Trans><b>AI-характеристика:</b> {a.aiComment}</Trans></Typography>
                         )}
                         {a.audio && (
                           <Box mb={1} display="flex" alignItems="center" gap={1}>
@@ -443,7 +443,7 @@ export default function CandidateDetailPage() {
                       <Chip label={aiStatus || _(msg`нет данных`)} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
                       {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
                     </Stack>
-                    {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><b>Резюме:</b> {aiSummary}</Typography>}
+                    {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><Trans><b>Резюме:</b> {aiSummary}</Trans></Typography>}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
                       <Box mb={1}>
                         <Typography variant="subtitle2"><Trans>Сильные стороны:</Trans></Typography>
@@ -574,7 +574,7 @@ export default function CandidateDetailPage() {
                     <Stack direction="row" spacing={2} mb={2} flexWrap="wrap" alignItems="center">
                       {resumeData.source && (
                         <Chip
-                          label={_(msg`Источник`): ${resumeData.source === 'headhunter' ? 'HeadHunter.ru' : resumeData.source}}
+                          label={_(msg`Источник`) + ': ' + (resumeData.source === 'headhunter' ? 'HeadHunter.ru' : resumeData.source)}
                           color="primary"
                           size="small"
                         />
@@ -651,7 +651,7 @@ export default function CandidateDetailPage() {
                               }
                             }}
                           >
-                            Загрузить из HeadHunter.ru
+                            <Trans>Загрузить из HeadHunter.ru</Trans>
                           </Button>
                         )}
 
@@ -714,7 +714,7 @@ export default function CandidateDetailPage() {
                             {feedback.average_score > 0 && (
                               <Box sx={{ textAlign: 'center', mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
                                 <Typography variant="h6" gutterBottom>
-                                  Общая оценка: {feedback.average_score}/10
+                                  <Trans>Общая оценка: {feedback.average_score}/10</Trans>
                                 </Typography>
                                 <Rating value={feedback.average_score / 2} readOnly />
                               </Box>

@@ -28,6 +28,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ProductionWebcamComponent from './ProductionWebcamComponent';
 import { useLingui } from '@lingui/react';
 import { msg } from '@lingui/macro';
+import { Trans } from '@lingui/react';
 
 
 interface Question {
@@ -48,10 +49,11 @@ interface TestInfo {
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
-const steps = [_(msg`Подготовка`), _(msg`Настройка оборудования`), _(msg`Тестирование`), _(msg`Завершено`)];
 
 export default function RegulationTestPage() {
   const { _ } = useLingui();
+
+  const steps = [_(msg`Подготовка`), _(msg`Настройка оборудования`), _(msg`Тестирование`), _(msg`Завершено`)];
 
   const { token } = useParams<{ token: string }>();
   const theme = useTheme();
@@ -145,8 +147,7 @@ export default function RegulationTestPage() {
           alert(_(msg`❌ Приглашение истекло или уже использовано\n\n📧 Запросите новое приглашение у вашего HR-менеджера.`));
         } else {
           setTestInfo(null);
-          alert('❌ Ошибка загрузки приглашения\n\n' +
-                (errorData.message || _(msg`Не удалось загрузить информацию о тесте.`)));
+          alert(_(msg`❌ Ошибка загрузки приглашения\n\n${errorData.message || 'Не удалось загрузить информацию о тесте.'}`));
         }
         setLoading(false);
         return;
@@ -214,8 +215,7 @@ export default function RegulationTestPage() {
 
         // Общая ошибка с деталями, если они есть
         const errorMessage = errorData.message || _(msg`Не удалось начать тест`);
-        alert('❌ Ошибка при запуске теста\n\n' + errorMessage + '\n\n' +
-              '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
+        alert(_(msg`❌ Ошибка при запуске теста\n\n${errorMessage}\n\n📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.`));
         return;
       }
 
@@ -391,9 +391,7 @@ export default function RegulationTestPage() {
       skipToNextQuestion();
     } catch (error: any) {
       console.error('Error submitting empty answer:', error);
-      alert('❌ Не удалось зарегистрировать пропуск вопроса\n\n' +
-            (error.message || _(msg`Произошла ошибка при отправке.`)) + '\n\n' +
-            '📧 Обратитесь к вашему HR-менеджеру.');
+      alert(_(msg`❌ Не удалось зарегистрировать пропуск вопроса\n\n${error.message || 'Произошла ошибка при отправке.'}\n\n📧 Обратитесь к вашему HR-менеджеру.`));
       setSubmitting(false);
     }
   };
@@ -473,10 +471,7 @@ export default function RegulationTestPage() {
       skipToNextQuestion();
     } catch (error: any) {
       console.error('Error submitting answer:', error);
-      alert('❌ Не удалось отправить ответ\n\n' +
-            (error.message || _(msg`Произошла ошибка при отправке.`)) + '\n\n' +
-            '🔄 Пожалуйста, попробуйте ещё раз.\n\n' +
-            '📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.');
+      alert(_(msg`❌ Не удалось отправить ответ\n\n${error.message || 'Произошла ошибка при отправке.'}\n\n🔄 Пожалуйста, попробуйте ещё раз.\n\n📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.`));
 
       // Возвращаем возможность повторной отправки
       setSubmitting(false);
@@ -531,9 +526,7 @@ export default function RegulationTestPage() {
       setFinished(true);
     } catch (error: any) {
       console.error('Error finishing test:', error);
-      alert('❌ Ошибка при завершении теста\n\n' +
-            (error.message || _(msg`Произошла ошибка.`)) + '\n\n' +
-            '📧 Ваши ответы сохранены. Обратитесь к вашему HR-менеджеру если возникли вопросы.');
+      alert(_(msg`❌ Ошибка при завершении теста\n\n${error.message || 'Произошла ошибка.'}\n\n📧 Ваши ответы сохранены. Обратитесь к вашему HR-менеджеру если возникли вопросы.`));
       // Всё равно показываем экран завершения
       setFinished(true);
     }
@@ -620,8 +613,8 @@ export default function RegulationTestPage() {
                   }
                   label={
                     <Typography variant="body2" component="span">
-                      Соглашаюсь на обработку моих персональных данных для прохождения тестирования.{' '}
-                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+                      <Trans>Соглашаюсь на обработку моих персональных данных для прохождения тестирования</Trans>.{' '}
+                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"><Trans>Политика конфиденциальности</Trans></a>
                       {' '}<span style={{ color: 'red' }}>*</span>
                     </Typography>
                   }
@@ -633,7 +626,7 @@ export default function RegulationTestPage() {
             {invitationType === 'named' && employeeEmail && (
               <>
                 <Alert severity="info" sx={{ mt: 3 }}>
-                  Вы приглашены на тестирование как: <strong>{employeeEmail}</strong>
+                  <Trans>Вы приглашены на тестирование как: <strong>{employeeEmail}</strong></Trans>
                 </Alert>
 
                 {/* Согласие на обработку ПДн для именного приглашения */}
@@ -647,8 +640,8 @@ export default function RegulationTestPage() {
                   }
                   label={
                     <Typography variant="body2" component="span">
-                      Соглашаюсь на обработку моих персональных данных для прохождения тестирования.{' '}
-                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Политика конфиденциальности</a>
+                      <Trans>Соглашаюсь на обработку моих персональных данных для прохождения тестирования</Trans>.{' '}
+                      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"><Trans>Политика конфиденциальности</Trans></a>
                       {' '}<span style={{ color: 'red' }}>*</span>
                     </Typography>
                   }
@@ -691,8 +684,8 @@ export default function RegulationTestPage() {
           <Paper sx={{ p: 4 }}>
             <Typography variant="h5" gutterBottom><Trans>Настройка оборудования</Trans></Typography>
             <Typography variant="body2" paragraph>
-              Тестирование состоит из {testInfo.questionsPerRegulation} вопросов.
-              На каждый вопрос отводится ограниченное время.
+              <Trans>Тестирование состоит из {testInfo.questionsPerRegulation} вопросов.
+              На каждый вопрос отводится ограниченное время.</Trans>
             </Typography>
             <Typography variant="body2" paragraph><Trans>Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы.
               Отвечайте последовательно и не перегружайте страницу.</Trans></Typography>
@@ -758,8 +751,8 @@ export default function RegulationTestPage() {
                 }
                 label={
                   <Typography variant="body2" component="span">
-                    Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам.{' '}
-                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"><Trans>Политика ПДн</Trans></a>. Медиа хранятся до 60 дней.
+                    <Trans>Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам</Trans>.{' '}
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"><Trans>Политика ПДн</Trans></a>. <Trans>Медиа хранятся до 60 дней.</Trans>
                   </Typography>
                 }
                 sx={{ alignItems: 'center' }}

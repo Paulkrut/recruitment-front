@@ -275,7 +275,7 @@ export default function HRVacancyCreatePage() {
   };
 
   const getProgressMessage = (status: string, elapsedTime?: number) => {
-    const timeStr = elapsedTime ? ` (${elapsedTime}с)` : '';
+    const timeStr = elapsedTime ? _(msg` (${elapsedTime}с)`) : '';
     
     switch (status) {
       case 'pending':
@@ -426,7 +426,7 @@ export default function HRVacancyCreatePage() {
                     mb: 2
                   }}
                 >
-                  Время на один вопрос
+                  <Trans>Время на один вопрос</Trans>
                 </CustomFormLabel>
                 
                 {/* Preset buttons */}
@@ -450,7 +450,7 @@ export default function HRVacancyCreatePage() {
                             '&:hover': { backgroundColor: "#bbdefb" }
                         }}
                       >
-                        {time} сек
+                        <Trans>{time} сек</Trans>
                       </Button>
                     ))}
                   </Box>
@@ -486,7 +486,7 @@ export default function HRVacancyCreatePage() {
                       {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
                     </Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mt: 0.5 }}>
-                      {templateData.questionTime} секунд
+                      <Trans>{templateData.questionTime} секунд</Trans>
                     </Typography>
                   </Box>
                 </Box>
@@ -506,7 +506,7 @@ export default function HRVacancyCreatePage() {
                     mb: 2
                   }}
                 >
-                  Дополнительные вопросы
+                  <Trans>Дополнительные вопросы</Trans>
                 </CustomFormLabel>
                 
                 <Box sx={{ mb: 3 }}>
@@ -559,7 +559,7 @@ export default function HRVacancyCreatePage() {
                         border: '1px solid #e0e0e0'
                     }}>
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-                        <strong>Как это работает:</strong>
+                        <Trans><strong>Как это работает:</strong></Trans>
                       </Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Максимум 3 дополнительных вопроса на каждый основной вопрос</Trans></Typography>
                         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Дополнительные вопросы задаются автоматически, если кандидат ответил неполно</Trans></Typography>
@@ -620,7 +620,7 @@ export default function HRVacancyCreatePage() {
                       }
                     }}
                   >
-                    Сгенерировать AI
+                    <Trans>Сгенерировать AI</Trans>
                   </Button>
                 </Box>
               </Box>
@@ -808,7 +808,7 @@ export default function HRVacancyCreatePage() {
                           }
                         }}
                       >
-                        Сгенерировать AI
+                        <Trans>Сгенерировать AI</Trans>
                       </Button>
                     </Box>
                   </Box>
@@ -851,7 +851,7 @@ export default function HRVacancyCreatePage() {
                         }
                       }}
                     >
-                      Сгенерировать AI
+                      <Trans>Сгенерировать AI</Trans>
                     </Button>
                   </Box>
                 )}

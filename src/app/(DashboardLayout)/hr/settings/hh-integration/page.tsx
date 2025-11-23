@@ -253,7 +253,7 @@ export default function HhIntegrationPage() {
   const syncVacancyCandidates = async (vacancyId: number) => {
     try {
       setPollingVacancyId(vacancyId);
-      
+
       const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-candidates`, {
         method: 'POST',
       });
@@ -300,10 +300,10 @@ export default function HhIntegrationPage() {
 
       if (data.success) {
         const vacancyStatus = data.data;
-        
+
         // Обновляем вакансию в списке
-        setVacancies(prev => prev.map(v => 
-          v.id === vacancyId 
+        setVacancies(prev => prev.map(v =>
+          v.id === vacancyId
             ? {
                 ...v,
                 candidates_sync_status: vacancyStatus.candidates_sync_status,
@@ -320,7 +320,7 @@ export default function HhIntegrationPage() {
           setTimeout(() => pollVacancyStatus(vacancyId), 2000); // Проверяем каждые 2 секунды
         } else {
           setPollingVacancyId(null);
-          
+
           if (vacancyStatus.candidates_sync_status === 'synced') {
             setSuccess(_(msg`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`));
           } else if (vacancyStatus.candidates_sync_status === 'error') {
@@ -461,29 +461,29 @@ export default function HhIntegrationPage() {
                   <Box>
                     {/* Предупреждение о проблемах с токеном */}
                     {status.isConnected && !status.hasValidToken && status.tokenMessage && (
-                      <Alert 
+                      <Alert
                         severity={
-                          status.tokenStatus === 'revoked' || 
-                          status.tokenStatus === 'refresh_failed' || 
+                          status.tokenStatus === 'revoked' ||
+                          status.tokenStatus === 'refresh_failed' ||
                           status.tokenStatus === 'disconnected_with_data'
-                            ? 'error' 
+                            ? 'error'
                             : 'warning'
-                        } 
-                        sx={{ 
-                          mb: 3, 
-                          position: 'relative', 
+                        }
+                        sx={{
+                          mb: 3,
+                          position: 'relative',
                           zIndex: 11, // Выше оверлея
                           boxShadow: 3,
                         }}
                         action={
-                          <Button 
-                            color="inherit" 
+                          <Button
+                            color="inherit"
                             size="small"
                             variant="outlined"
                             onClick={startOAuthFlow}
                           >
-                            {status.tokenStatus === 'disconnected_with_data' 
-                              ? _(msg`Подключить заново`) 
+                            {status.tokenStatus === 'disconnected_with_data'
+                              ? _(msg`Подключить заново`)
                               : _(msg`Переавторизоваться`)
                             }
                           </Button>
@@ -492,8 +492,8 @@ export default function HhIntegrationPage() {
                         <Typography variant="body2" fontWeight="bold">
                           {status.tokenStatus === 'disconnected_with_data'
                             ? _(msg`📊 Интеграция отключена`)
-                            : status.tokenStatus === 'revoked' 
-                            ? _(msg`⚠️ Токен доступа был отозван`) 
+                            : status.tokenStatus === 'revoked'
+                            ? _(msg`⚠️ Токен доступа был отозван`)
                             : status.tokenStatus === 'refresh_failed'
                             ? _(msg`⚠️ Не удалось обновить токен`)
                             : _(msg`⚠️ Проблема с токеном доступа`)
@@ -504,15 +504,15 @@ export default function HhIntegrationPage() {
                         </Typography>
                         {status.tokenStatus === 'disconnected_with_data' && (
                           <Typography variant="caption" display="block" mt={1} color="text.secondary">
-                            Данные от HH.ru ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов) 
-                            сохранены и доступны для просмотра. Для получения новых обновлений подключитесь заново.
+                            <Trans>Данные от HH.ru ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов)
+                            сохранены и доступны для просмотра. Для получения новых обновлений подключитесь заново.</Trans>
                           </Typography>
                         )}
                         {(status.tokenStatus === 'revoked' || status.tokenStatus === 'refresh_failed') && (
                           <Typography variant="caption" display="block" mt={1} color="text.secondary">
-                            Это может произойти если вы отозвали доступ к приложению в настройках HH.ru.
-                            Ваши данные ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов) 
-                            сохранены. Переавторизуйтесь для продолжения работы.
+                            <Trans>Это может произойти если вы отозвали доступ к приложению в настройках HH.ru.</Trans>
+                          <Trans>Ваши данные ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов)
+                            сохранены.</Trans> <Trans>Переавторизуйтесь для продолжения работы.</Trans>
                           </Typography>
                         )}
                       </Alert>
@@ -587,23 +587,23 @@ export default function HhIntegrationPage() {
                     {/* Лимиты HeadHunter.ru */}
                     {status.hhLimits && (
                       <Box mb={3}>
-                        <Alert 
+                        <Alert
                           severity={
-                            status.hhLimits.left.resumeView > 500 ? "success" : 
+                            status.hhLimits.left.resumeView > 500 ? "success" :
                             status.hhLimits.left.resumeView > 100 ? "warning" : "error"
-                          } 
+                          }
                           icon={<IconShield size={20} />}
                         >
                           <Typography variant="subtitle2" gutterBottom>
-                            Дневной лимит просмотра резюме на {status.hhLimits.source}:
+                            <Trans>Дневной лимит просмотра резюме на {status.hhLimits.source}:</Trans>
                           </Typography>
                           <Grid container spacing={2} mt={0.5}>
                             <Grid item xs={12} md={6}>
                               <Box textAlign="center">
-                                <Typography 
-                                  variant="h3" 
+                                <Typography
+                                  variant="h3"
                                   color={
-                                    status.hhLimits.left.resumeView > 500 ? "success.main" : 
+                                    status.hhLimits.left.resumeView > 500 ? "success.main" :
                                     status.hhLimits.left.resumeView > 100 ? "warning.main" : "error.main"
                                   }
                                 >
@@ -625,14 +625,14 @@ export default function HhIntegrationPage() {
                             </Grid>
                           </Grid>
                           <Typography variant="caption" color="text.secondary" mt={1} display="block"><Trans>⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00</Trans></Typography>
-                          
+
                           {status.resumeQueueCount !== undefined && status.resumeQueueCount > 0 && (
-                            <Box 
-                              sx={{ 
-                                mt: 2, 
-                                pt: 2, 
-                                borderTop: '1px solid', 
-                                borderColor: 'divider' 
+                            <Box
+                              sx={{
+                                mt: 2,
+                                pt: 2,
+                                borderTop: '1px solid',
+                                borderColor: 'divider'
                               }}
                             >
                               <Typography variant="body2" color="text.primary">
@@ -693,10 +693,10 @@ export default function HhIntegrationPage() {
                       <Alert severity="info" sx={{ mt: 2 }}>
                         <Typography variant="body2">
                           <IconShield size={16} style={{ marginRight: 8, verticalAlign: 'middle' }} />
-                          Автоматическая синхронизация выполняется в фоновом режиме.
+                          <Trans>Автоматическая синхронизация выполняется в фоновом режиме.
                           Следующая синхронизация запланирована на {
                             new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleString('ru-RU')
-                          }
+                          }</Trans>
                         </Typography>
                       </Alert>
                     )}
@@ -736,7 +736,7 @@ export default function HhIntegrationPage() {
                   ) : (
                     <Alert severity="info" sx={{ mb: 3 }}>
                       <Typography variant="body2">
-                        💡 <strong>Как это работает:</strong>
+                        <Trans>💡 <strong>Как это работает:</strong></Trans>
                       </Typography>
                       <Typography variant="body2" mt={1}><Trans>1. Вакансии автоматически синхронизируются с вашим профилем HH.ru</Trans></Typography>
                       <Typography variant="body2"><Trans>
@@ -802,7 +802,7 @@ export default function HhIntegrationPage() {
                                     <Trans>Настроить</Trans>
                                   </Button>
                                 </Box>
-                                
+
                                 {(!vacancy.candidates_sync_status || vacancy.candidates_sync_status === 'not_synced') && (
                                   <Box display="flex" alignItems="center" gap={1}>
                                     <Chip
@@ -818,7 +818,7 @@ export default function HhIntegrationPage() {
                                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                                       <CircularProgress size={16} />
                                       <Typography variant="body2">
-                                        Синхронизация... ({vacancy.candidates_synced}/{vacancy.candidates_total})
+                                        <Trans>Синхронизация...</Trans>{' '} ({vacancy.candidates_synced}/{vacancy.candidates_total})
                                       </Typography>
                                     </Box>
                                     <Box sx={{ width: '100%' }}>

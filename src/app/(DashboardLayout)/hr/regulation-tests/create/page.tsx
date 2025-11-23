@@ -77,7 +77,7 @@ const QuestionCard = memo(({
           />
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Chip
-              label={_(msg`Сложность`): ${question.difficulty}}
+              label={_(msg`Сложность`) + ': '+ question.difficulty }
               size="small"
               variant="outlined"
             />
@@ -460,14 +460,14 @@ export default function CreateTestPage() {
           <Box>
             {preselectedFromUrl && selectedRegulations.length > 0 && (
               <Alert severity="success" sx={{ mb: 2 }}>
-                ✅ Регламент "{regulations.find(r => r.id === selectedRegulations[0])?.title}" был автоматически выбран.
-                Вы можете добавить дополнительные регламенты ниже.
+                <Trans>✅ Регламент "{regulations.find(r => r.id === selectedRegulations[0])?.title}" был автоматически выбран.
+                Вы можете добавить дополнительные регламенты ниже.</Trans>
               </Alert>
             )}
 
             <Alert severity="info" sx={{ mb: 2 }}>
-              Выберите регламенты, по которым будет проводиться тестирование. Будет создано{' '}
-              <strong>{questionsPerRegulation} вопросов</strong> на каждый регламент.
+              <Trans>Выберите регламенты, по которым будет проводиться тестирование. Будет создано{' '}
+              <strong>{questionsPerRegulation} вопросов</strong> на каждый регламент.</Trans>
             </Alert>
 
             {/* Breadcrumbs для навигации */}
@@ -478,7 +478,7 @@ export default function CreateTestPage() {
                   onClick={() => setSelectedFolderId(null)}
                   size="small"
                 >
-                  Назад к корню
+                  <Trans>Назад к корню</Trans>
                 </Button>
                 <Typography variant="body2" color="text.secondary">
                   / {folders.find(f => f.id === selectedFolderId)?.name}
@@ -594,9 +594,9 @@ export default function CreateTestPage() {
 
             {selectedRegulations.length > 0 && (
               <Alert severity="success" sx={{ mt: 2 }}>
-                Выбрано регламентов: <strong>{selectedRegulations.length}</strong>
+                <Trans>Выбрано регламентов: <strong>{selectedRegulations.length}</strong>
                 <br />
-                Всего вопросов: <strong>{selectedRegulations.length * questionsPerRegulation}</strong>
+                Всего вопросов: <strong>{selectedRegulations.length * questionsPerRegulation}</strong></Trans>
               </Alert>
             )}
           </Box>
@@ -629,8 +629,8 @@ export default function CreateTestPage() {
                   <>
                     <Typography variant="h6" gutterBottom><Trans>Генерация вопросов</Trans></Typography>
                     <Typography color="text.secondary" sx={{ mb: 3 }}>
-                      Система создаст {selectedRegulations.length * questionsPerRegulation} вопросов на основе
-                      выбранных регламентов с помощью AI.
+                      <Trans>Система создаст {selectedRegulations.length * questionsPerRegulation} вопросов на основе
+                      выбранных регламентов с помощью AI.</Trans>
                     </Typography>
 
                     <Alert severity="info" sx={{ mb: 3, textAlign: 'left' }}>
@@ -658,7 +658,7 @@ export default function CreateTestPage() {
                       <CheckCircleIcon sx={{ fontSize: 60, color: 'success.main', mb: 1 }} />
                     <Typography variant="h6" gutterBottom><Trans>Вопросы успешно сгенерированы!</Trans></Typography>
                     <Typography color="text.secondary">
-                        Создано {generatedQuestions.length} вопросов. Вы можете отредактировать их ниже.
+                        <Trans>Создано {generatedQuestions.length} вопросов. Вы можете отредактировать их ниже.</Trans>
                     </Typography>
                     </Box>
 

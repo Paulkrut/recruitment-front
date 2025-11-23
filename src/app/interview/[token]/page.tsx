@@ -1342,7 +1342,7 @@ export default function CandidateInterviewPage() {
   };
 
   const handleForgetMe = async () => {
-    if (forgetMeConfirmed !== 'УДАЛИТЬ') {
+    if (forgetMeConfirmed !== _(msg`УДАЛИТЬ`)) {
       return;
     }
 
@@ -1781,7 +1781,7 @@ export default function CandidateInterviewPage() {
                     onClick={() => setShowEmailForm(true)}
                     sx={{ mb: 2 }}
                   >
-                    📧 Отправить результаты на email
+                    <Trans>📧 Отправить результаты на email</Trans>
                   </Button>
                 </CardContent>
               </Card>
@@ -1875,7 +1875,7 @@ export default function CandidateInterviewPage() {
                 {elapsedTime < 30 ? processingMessages[generationStep] : progressMessages[generationStep]}
               </>
             ) : (
-              '🎯 Получить персональную обратную связь'
+              <Trans>🎯 Получить персональную обратную связь</Trans>
             )}
           </Button>
 
@@ -1888,10 +1888,10 @@ export default function CandidateInterviewPage() {
               />
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
                 <Typography variant="caption" color="text.secondary">
-                  Прогресс: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
+                  <Trans>Прогресс</Trans>: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
+                  ~{Math.max(estimatedTime - elapsedTime, 5)} {' '}<Trans>сек осталось</Trans>
                 </Typography>
               </Box>
               {/* Показываем дополнительную информацию о текущем этапе */}
@@ -1994,7 +1994,7 @@ export default function CandidateInterviewPage() {
                   {feedbackData.feedback.average_score > 0 && (
                     <Box sx={{ textAlign: 'center', mb: 3 }}>
                       <Typography variant="h5" gutterBottom>
-                        Общая оценка: {feedbackData.feedback.average_score}/10
+                        <Trans>Общая оценка</Trans>: {feedbackData.feedback.average_score}/10
                       </Typography>
                       <Rating value={feedbackData.feedback.average_score / 2} readOnly size="large" />
                     </Box>
@@ -2169,7 +2169,7 @@ export default function CandidateInterviewPage() {
                       onClick={() => setShowEmailForm(true)}
                       sx={{ mb: 2 }}
                     >
-                      📧 Отправить результаты на email
+                      <Trans>📧 Отправить результаты на email</Trans>
                     </Button>
                   </CardContent>
                 </Card>
@@ -2262,7 +2262,7 @@ export default function CandidateInterviewPage() {
                   {elapsedTime < 30 ? processingMessages[generationStep] : progressMessages[generationStep]}
                 </>
               ) : (
-                '🎯 Получить персональную обратную связь'
+                _(msg`🎯 Получить персональную обратную связь`)
               )}
             </Button>
 
@@ -2275,10 +2275,10 @@ export default function CandidateInterviewPage() {
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>
                   <Typography variant="caption" color="text.secondary">
-                    Прогресс: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
+                    <Trans>Прогресс</Trans>: {Math.min(Math.floor((elapsedTime / estimatedTime) * 100), 95)}%
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    ~{Math.max(estimatedTime - elapsedTime, 5)} сек осталось
+                    ~{Math.max(estimatedTime - elapsedTime, 5)}{' '}<Trans>сек осталось</Trans>
                   </Typography>
                 </Box>
                 {/* Показываем дополнительную информацию о текущем этапе */}
@@ -2348,7 +2348,7 @@ export default function CandidateInterviewPage() {
         }}>
         {stepperComp}
         <Typography variant="h4" gutterBottom><Trans>Перед началом</Trans></Typography>
-        <Typography sx={{mb:2}}>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Typography>
+        <Typography sx={{mb:2}}><Trans>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Trans></Typography>
           <Typography sx={{mb:2}}><Trans>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Trans></Typography>
           <Box sx={{mt:2}}>
             <FormControlLabel
@@ -2530,7 +2530,7 @@ export default function CandidateInterviewPage() {
               {total && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="body2" sx={{ color: '#666', fontSize: '13px' }}>
-                    {getQuestionNumber(question.position)} из {total}
+                    <Trans>{getQuestionNumber(question.position)} из {total}</Trans>
                   </Typography>
                 </Box>
               )}
