@@ -86,16 +86,16 @@ export default function ForgotPasswordPage() {
           <CardContent sx={{ p: 4, textAlign: "center" }}>
             <Icon icon="mdi:email-check" color="#4caf50" width={64} height={64} />
             <Typography variant="h4" fontWeight={700} color="success.main" sx={{ mt: 2, mb: 2 }}><Trans>Новый пароль отправлен!</Trans></Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}><Trans>
               Мы отправили новый пароль на ваш email: <strong>{email}</strong>
-            </Typography>
+            </Trans></Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}><Trans>Проверьте почту и используйте новый пароль для входа в систему.</Trans></Typography>
             <Button
               variant="contained"
               onClick={() => router.push("/auth/login")}
               sx={{ mt: 2 }}
             >
-              Перейти к входу
+              <Trans>Перейти к входу</Trans>
             </Button>
           </CardContent>
         </Card>
@@ -156,12 +156,12 @@ export default function ForgotPasswordPage() {
                 {loading ? (
                   <>
                     <CircularProgress size={20} sx={{ mr: 1 }} />
-                    Отправка...
+                    <Trans>Отправка...</Trans>
                   </>
                 ) : (
                   <>
                     <Icon icon="mdi:email-send" width={20} height={20} style={{ marginRight: 8 }} />
-                    Отправить новый пароль
+                    <Trans>Отправить новый пароль</Trans>
                   </>
                 )}
               </Button>
@@ -177,7 +177,7 @@ export default function ForgotPasswordPage() {
               Вспомнили пароль?{" "}
               </Trans><Link href="/auth/login" passHref>
                 <MuiLink color="primary" sx={{ fontWeight: 600, textDecoration: "none" }}>
-                  Войти в систему
+                  <Trans>Войти в систему</Trans>
                 </MuiLink>
               </Link>
             </Typography>
@@ -204,7 +204,7 @@ export default function ForgotPasswordPage() {
           >
             <Typography variant="body2" color="warning.dark" sx={{ display: "flex", alignItems: "center" }}>
               <Icon icon="mdi:information" width={16} height={16} style={{ marginRight: 8 }} />
-              Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email.
+              <Trans>Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email.</Trans>
             </Typography>
           </Box>
         </CardContent>

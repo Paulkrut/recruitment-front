@@ -558,9 +558,9 @@ export default function ComparePage() {
                   <Typography variant="body1" gutterBottom><Trans>
                     Обрабатываем {stableIds.length} кандидатов
                   </Trans></Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <Typography variant="body2" color="text.secondary" gutterBottom><Trans>
                     ⏱️ Примерное время: <strong>{estimatedTime}</strong>
-                  </Typography>
+                  </Trans></Typography>
                 <Typography variant="body2" color="text.secondary"><Trans>💡 Чем больше кандидатов и вопросов, тем дольше анализ</Trans></Typography>
 
                   {/* Прогресс-бар с анимацией */}
@@ -592,13 +592,13 @@ export default function ComparePage() {
 
                   {/* Дополнительная информация */}
                   <Box sx={{ mt: 3, p: 2, bgcolor: 'info.50', borderRadius: 2, border: '1px solid', borderColor: 'info.200' }}>
-                    <Typography variant="body2" color="info.dark">
+                    <Typography variant="body2" color="info.dark"><Trans>
                       💡 <strong>Почему это занимает время?</strong><br />
                       • AI анализирует каждый ответ каждого кандидата<br />
                       • Сравнивает навыки и опыт<br />
                       • Формирует детальные критерии оценки<br />
                       • Дает обоснованные рекомендации
-                </Typography>
+                    </Trans></Typography>
                   </Box>
                 </Box>
               </>

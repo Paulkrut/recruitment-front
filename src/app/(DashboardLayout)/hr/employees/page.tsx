@@ -97,7 +97,7 @@ export default function EmployeesPage() {
     const data = await res.json();
     if (data.ok) {
       if (data.emailSent) {
-        setSuccess("Приглашение отправлено! Email с приглашением отправлен на " + email);
+        setSuccess(_(msg`Приглашение отправлено! Email с приглашением отправлен на ${email}`));
       } else {
         setSuccess(_(msg`Приглашение создано, но email не отправлен. Проверьте настройки почты.`));
       }
@@ -147,11 +147,11 @@ export default function EmployeesPage() {
 
   const exportCSV = () => {
     const rows = employees.map((e: any) => ({
-      Имя: e.name || e.phone,
-      Телефон: e.phone,
+      [_(msg`Имя`)]: e.name || e.phone,
+      [_(msg`Телефон`)]: e.phone,
       Email: e.email || "",
-      Роль: e.role,
-      "Дата добавления": e.createdAt || "-",
+      [_(msg`Роль`)]: e.role,
+      [_(msg`Дата добавления`)]: e.createdAt || "-",
     }));
     const csv = [Object.keys(rows[0]).join(",")].concat(rows.map(r => Object.values(r).join(","))).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -215,7 +215,7 @@ export default function EmployeesPage() {
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h5"><Trans>Сотрудники компании</Trans></Typography>
             {isLead && (
-              <Button startIcon={<DownloadIcon />} onClick={exportCSV} variant="outlined">Экспорт в CSV</Button>
+              <Button startIcon={<DownloadIcon />} onClick={exportCSV} variant="outlined"><Trans>Экспорт в CSV</Trans></Button>
             )}
           </Stack>
           <Box sx={{ height: 480, width: "100%" }}>

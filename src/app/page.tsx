@@ -80,7 +80,7 @@ export default function LandingPage() {
     // Безопасное извлечение числа из цены
     let platformPrice = 0;
     if (typeof plan.price === 'string') {
-      if (plan.price === 'Бесплатно') {
+      if (plan.price === _(msg`Бесплатно`)) {
         platformPrice = 0;
       } else {
         const numericValue = plan.price.replace(/[^\d]/g, '');
@@ -222,7 +222,7 @@ export default function LandingPage() {
         _(msg`Ранжирование кандидатов`),
         _(msg`Видео и аудио запись`),
         _(msg`Базовые шаблоны`),
-        'Поддержка по email'
+        _(msg`Поддержка по email`)
       ],
       detailedFeatures: [
         { text: _(msg`10 AI-интервью для тестирования платформы`), included: true },
@@ -409,9 +409,9 @@ export default function LandingPage() {
                   <Avatar alt="User 2" src={user2.src} />
                   <Avatar alt="User 3" src={user3.src} />
                 </AvatarGroup>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" color="text.secondary"                ><Trans>
                   {totalClients.toLocaleString()}+ HR и компаний уже с нами
-                </Typography>
+                </Trans></Typography>
               </Box>
               <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -463,8 +463,8 @@ export default function LandingPage() {
                   </Grid>
                 </Grid>
                 <Box mb={2}>
-                  <Typography variant="body2" color="text.secondary">Среднее время закрытия вакансии: <b>7 дней</b></Typography>
-                  <Typography variant="body2" color="text.secondary">Автоматизировано: <b>80%</b> <Trans>интервью</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Среднее время закрытия вакансии: <b>7 дней</b></Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>Автоматизировано: <b>80%</b> интервью</Trans></Typography>
                 </Box>
                 <Box mb={3}>
                   <Typography variant="body2" color="text.secondary" mb={1}><Trans>Интеграции:</Trans></Typography>
@@ -1360,7 +1360,7 @@ export default function LandingPage() {
                     '&:hover': { color: 'white' }
                   }}
                 >
-                  Политика конфиденциальности
+                  <Trans>Политика конфиденциальности</Trans>
                 </Link>
                 <Link
                   href="/terms-of-service"
@@ -1372,7 +1372,7 @@ export default function LandingPage() {
                     '&:hover': { color: 'white' }
                   }}
                 >
-                  Условия использования
+                  <Trans>Условия использования</Trans>
                 </Link>
                 <Link
                   href="/forget-me"
@@ -1384,7 +1384,7 @@ export default function LandingPage() {
                     '&:hover': { color: 'white' }
                   }}
                 >
-                  Удалить мои данные
+                  <Trans>Удалить мои данные</Trans>
                 </Link>
               </Box>
             </Grid>

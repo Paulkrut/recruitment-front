@@ -22,7 +22,7 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
   const [countdown, setCountdown] = useState(3);
 
   const handleForgetMe = async () => {
-    if (confirmed !== 'УДАЛИТЬ') {
+    if (confirmed !== _(msg`УДАЛИТЬ`)) {
       return;
     }
 
@@ -91,26 +91,8 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 {successMessage}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}><Trans>
-                🕐 Через{' '}
-                </Trans><Box
-                  component="span"
-                  sx={{
-                    display: 'inline-block',
-                    fontWeight: 'bold',
-                    color: 'primary.main',
-                    fontSize: '1.2em',
-                    animation: 'pulse 1s infinite',
-                    '@keyframes pulse': {
-                      '0%': { transform: 'scale(1)' },
-                      '50%': { transform: 'scale(1.1)' },
-                      '100%': { transform: 'scale(1)' }
-                    }
-                  }}
-                >
-                  {countdown}
-                </Box>
-                {' '}секунд вы будете перенаправлены на главную страницу...
-              </Typography>
+                🕐 Через {countdown} секунд вы будете перенаправлены на главную страницу...
+              </Trans></Typography>
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
                 <Button
                   variant="contained"
@@ -192,9 +174,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          ><Trans>политикой конфиденциальности</Trans></Button>
+          ><Trans>политикой конфиденциальности</Trans></Button><Trans>
           {' '}и{' '}
-          <Button
+          </Trans><Button
             component="a"
             href="/terms-of-service"
             target="_blank"
@@ -215,9 +197,9 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
                 textDecoration: 'underline'
               }
             }}
-          ><Trans>условиями обработки персональных данных</Trans></Button>
+          ><Trans>условиями обработки персональных данных</Trans></Button><Trans>
           . В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ "О персональных данных" вы имеете право на{' '}
-          <Button
+          </Trans><Button
             variant="text"
             size="small"
             onClick={() => setOpen(true)}
@@ -237,10 +219,10 @@ export default function ForgetMeAuto({ candidateToken }: ForgetMeAutoProps) {
               }
             }}
           >
-            удаление своих персональных данных
-          </Button>
+            <Trans>удаление своих персональных данных</Trans>
+          </Button><Trans>
           {' '}с платформы в любое время.
-        </Typography>
+        </Trans></Typography>
       </Box>
     </>
   );
