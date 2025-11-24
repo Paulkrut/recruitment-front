@@ -13,8 +13,9 @@ export const defaultLocale: SupportedLocale = 'ru';
  * Динамически загружает каталог переводов для указанной локали
  */
 export async function loadCatalog(locale: SupportedLocale) {
+  // Используем скомпилированные .js файлы вместо .po
   const { messages } = await import(
-    `@lingui/loader!../locales/${locale}/messages.po`
+    `@/locales/${locale}/messages.js`
   );
 
   i18n.load(locale, messages);

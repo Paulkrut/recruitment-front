@@ -7,6 +7,14 @@ const nextConfig: NextConfig = {
     domains: ['www.sofihr.ru', 'sofihr.ru'],
     formats: ['image/webp', 'image/avif'],
   },
+  
+  // Настройка SWC для работы с Lingui макросами
+  experimental: {
+    swcPlugins: [
+      ['@lingui/swc-plugin', {}]
+    ],
+  },
+  
   webpack: (config) => {
     // Поддержка Lingui Loader
     config.module.rules.push({

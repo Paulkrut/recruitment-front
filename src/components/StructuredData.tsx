@@ -1,65 +1,85 @@
-'use client';
-
 import Script from 'next/script';
-import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
 
+interface StructuredDataProps {
+  locale?: 'ru' | 'en';
+}
 
-export default function StructuredData() {
-  const { _ } = useLingui();
+export default function StructuredData({ locale = 'ru' }: StructuredDataProps) {
+  // Статические переводы для серверного компонента
+  const translations = {
+    ru: {
+      description: "Современная HR-система для управления вакансиями, кандидатами и процессами найма",
+      organizationDescription: "Современная HR-система для управления рекрутингом",
+      features: [
+        "Управление вакансиями",
+        "Управление кандидатами",
+        "AI-оценка кандидатов",
+        "Автоматизация рекрутинга",
+        "Аналитика и отчеты"
+      ]
+    },
+    en: {
+      description: "Modern HR system for managing vacancies, candidates, and hiring processes",
+      organizationDescription: "Modern HR system for recruitment management",
+      features: [
+        "Vacancy management",
+        "Candidate management",
+        "AI candidate assessment",
+        "Recruitment automation",
+        "Analytics and reports"
+      ]
+    }
+  };
+
+  const t = translations[locale];
+  const domain = locale === 'en' ? 'https://www.sofihr.com' : 'https://www.sofihr.ru';
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": "SofiHR",
-    "description": _(msg`Современная HR-система для управления вакансиями, кандидатами и процессами найма`),
-    "url": "https://www.sofihr.ru",
+    "description": t.description,
+    "url": domain,
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web Browser",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "RUB"
+      "priceCurrency": locale === 'en' ? 'USD' : 'RUB'
     },
     "author": {
       "@type": "Organization",
       "name": "SofiHR",
-      "url": "https://www.sofihr.ru"
+      "url": domain
     },
     "publisher": {
       "@type": "Organization",
       "name": "SofiHR",
-      "url": "https://www.sofihr.ru"
+      "url": domain
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.8",
       "ratingCount": "150"
     },
-    "featureList": [
-      _(msg`Управление вакансиями`),
-      _(msg`Управление кандидатами`),
-      _(msg`AI-оценка кандидатов`),
-      _(msg`Автоматизация рекрутинга`),
-      _(msg`Аналитика и отчеты`)
-    ]
+    "featureList": t.features
   };
 
   const organizationData = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "SofiHR",
-    "url": "https://www.sofihr.ru",
-    "logo": "https://www.sofihr.ru/logo.png",
-    "description": _(msg`Современная HR-система для управления рекрутингом`),
+    "url": domain,
+    "logo": `${domain}/logo.png`,
+    "description": t.organizationDescription,
     "address": {
       "@type": "PostalAddress",
-      "addressCountry": "RU"
+      "addressCountry": locale === 'en' ? 'US' : 'RU'
     },
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "availableLanguage": "Russian"
+      "availableLanguage": locale === 'en' ? 'English' : 'Russian'
     },
     "sameAs": [
       "https://t.me/sofihr",

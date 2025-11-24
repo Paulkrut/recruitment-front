@@ -1,5 +1,6 @@
+'use client';
+
 import { Trans } from '@lingui/macro';
-"use client";
 import React from 'react';
 
 

@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import { fetchBlogPosts, fetchBlogPost } from "@/store/apps/blog/BlogSlice";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";

@@ -1,5 +1,6 @@
+'use client';
+
 import { Trans } from '@lingui/macro';
-"use client";
 import React, { memo, useState, useCallback, useMemo } from 'react';
 import { Box, IconButton, Menu, MenuItem, Typography, Divider, Button } from '@mui/material';
 import { Icon } from '@iconify/react';

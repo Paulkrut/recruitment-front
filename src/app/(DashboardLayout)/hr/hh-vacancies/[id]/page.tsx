@@ -32,7 +32,7 @@ import {
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
-import { msg, Trans } from '@lingui/macro';
+import { msg } from '@lingui/macro';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -415,7 +415,7 @@ export default function HhVacancyDetailPage() {
   return (
     <PageContainer
       title={vacancy.name}
-      description={_(msg`Настройка синхронизации вакансии`)}
+      description="Настройка синхронизации вакансии"
     >
       <Box>
         {/* Кнопка назад */}
@@ -424,7 +424,7 @@ export default function HhVacancyDetailPage() {
           onClick={() => router.push('/hr/settings/hh-integration')}
           sx={{ mb: 3 }}
         >
-          <Trans>Назад к списку вакансий</Trans>
+          Назад к списку вакансий
         </Button>
 
         {/* Алерты */}
@@ -582,17 +582,18 @@ export default function HhVacancyDetailPage() {
 
                 {/* Предупреждение */}
                 {getTotalSelectedCandidates() > 100 && (
-                  <Alert severity="warning" sx={{ mt: 2 }}><Trans>
-                    ⚠️ Внимание: Синхронизация {getTotalSelectedCandidates()} кандидатов может занять несколько минут.
-                  </Trans></Alert>
+                  <Alert severity="warning" sx={{ mt: 2 }}>
+                    ⚠️ Внимание: Синхронизация {getTotalSelectedCandidates()} кандидатов может занять
+                    несколько минут.
+                  </Alert>
                 )}
 
                 {/* Прогресс синхронизации */}
                 {syncing && sync_status && (
                   <Box mt={2}>
-                    <Typography variant="body2" color="text.secondary" mb={1}><Trans>
+                    <Typography variant="body2" color="text.secondary" mb={1}>
                       Синхронизация: {sync_status.synced} / {sync_status.total}
-                    </Trans></Typography>
+                    </Typography>
                     <LinearProgress
                       variant="determinate"
                       value={(sync_status.synced / sync_status.total) * 100}
@@ -613,7 +614,7 @@ export default function HhVacancyDetailPage() {
                     disabled={syncing || selectedStates.length === 0}
                     startIcon={syncing ? <CircularProgress size={16} /> : <IconCheck />}
                   >
-                    <Trans>Синхронизировать кандидатов</Trans>
+                    Синхронизировать кандидатов
                   </Button>
                 </Box>
               </CardContent>
@@ -657,7 +658,7 @@ export default function HhVacancyDetailPage() {
                     disabled={analyzing}
                     sx={{ mt: 2 }}
                   >
-                    <Trans>Запустить AI-анализ для всех</Trans>
+                    Запустить AI-анализ для всех
                   </Button>
                 </CardContent>
               </Card>

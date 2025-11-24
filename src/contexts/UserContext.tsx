@@ -1,8 +1,7 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiFetch } from '@/utils/api';
-import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
-
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -45,8 +44,6 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const useUser = () => {
-  const { _ } = useLingui();
-
   const context = useContext(UserContext);
   if (context === undefined) {
     throw new Error('useUser must be used within a UserProvider');

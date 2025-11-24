@@ -34,9 +34,10 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
 
   // Расчёт экономии с мемоизацией
   const savings = useMemo(() => {
-    const traditionalCostPerHire = 15000;
-    const traditionalTime = 40;
-    const hrHourlyCost = 1500;
+    // Реалистичные затраты на традиционный найм
+    const traditionalCostPerHire = 25000; // Средняя стоимость найма: объявления, агентства, проверки
+    const traditionalTime = 10; // Среднее время HR-специалиста на одного кандидата (часов)
+    const hrHourlyCost = 1500; // Стоимость часа работы HR-специалиста
 
     const totalTraditionalCost = hiresPerMonth * traditionalCostPerHire;
     const totalTraditionalTime = hiresPerMonth * traditionalTime;
@@ -119,13 +120,19 @@ const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
             <Grid item xs={12} md={6}>
               <Paper sx={{ p: 3, bgcolor: '#fff3e0', border: '2px solid #ff9800', height: '100%' }}>
                 <Typography variant="body2" color="text.secondary" mb={1}><Trans>Традиционный метод найма</Trans></Typography>
-                <Typography variant="h4" fontWeight={700} color="#ff9800" mb={2}>
+                <Typography variant="h5" fontWeight={600} color="#ff9800" mb={0.5}>
                   {savings.traditionalCost.toLocaleString()}₽
                 </Typography>
-                <Typography variant="body2" color="text.secondary"><Trans>
+                <Typography variant="body2" color="text.secondary" mb={1}><Trans>
                   + {savings.traditionalTime} часов ({savings.traditionalTimeCost.toLocaleString()}₽)
                 </Trans></Typography>
-                <Typography variant="caption" color="text.secondary" display="block" mt={2}><Trans>Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час</Trans></Typography>
+                <Box sx={{ borderTop: '1px solid #ff9800', pt: 1, mt: 1 }}>
+                  <Typography variant="h4" fontWeight={700} color="#ff9800">
+                    {(savings.traditionalCost + savings.traditionalTimeCost).toLocaleString()}₽
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary"><Trans>Полная стоимость</Trans></Typography>
+                </Box>
+                <Typography variant="caption" color="text.secondary" display="block" mt={2}><Trans>Средняя стоимость: 25,000₽ на кандидата + 10 часов работы HR @ 1,500₽/час</Trans></Typography>
               </Paper>
             </Grid>
 
