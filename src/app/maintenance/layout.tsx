@@ -1,26 +1,45 @@
-'use client';
-
 import type { Metadata } from 'next';
 import MaintenanceThemeProvider from './ThemeProvider';
-import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
 
+// Динамическая генерация metadata с переводами
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
+  
+  // Загружаем переводы из скомпилированных .js файлов
+  const { i18n } = await import('@lingui/core');
+  const { messages } = locale === 'en' 
+    ? await import('@/locales/en/messages.js')
+    : await import('@/locales/ru/messages.js');
+  
+  i18n.load(locale, messages);
+  i18n.activate(locale);
 
-export const metadata: Metadata = {
-  title: _(msg`Технические работы - Сайт временно недоступен`),
-  description: _(msg`Мы проводим плановые технические работы. Сайт скоро будет доступен.`),
-  robots: 'noindex, nofollow',
-};
+  const titles = {
+    ru: "Технические работы - Сайт временно недоступен",
+    en: "Maintenance - Site Temporarily Unavailable"
+  };
+  
+  const descriptions = {
+    ru: "Мы проводим плановые технические работы. Сайт скоро будет доступен.",
+    en: "We are performing scheduled maintenance. The site will be available soon."
+  };
+
+  return {
+    title: titles[locale],
+    description: descriptions[locale],
+    robots: 'noindex, nofollow',
+  };
+}
 
 export default function MaintenanceLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { _ } = useLingui();
+  const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
 
   return (
-    <html lang="ru">
+    <html lang={locale}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

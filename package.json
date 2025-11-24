@@ -9,7 +9,8 @@
     "lint": "next lint",
     "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
-    "i18n:extract-compile": "lingui extract && lingui compile"
+    "i18n:extract-compile": "lingui extract && lingui compile",
+    "check:metadata": "node scripts/check-metadata-use-client.js"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.16.0",
