@@ -6,10 +6,14 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Image from "next/image";
 import Link from "next/link";
-import { Trans } from '@lingui/react';
+import { Trans, useLingui } from '@lingui/react';
+import { msg } from '@lingui/macro';
 
 
-const Maintenance = () => (
+const Maintenance = () => {
+  const { _ } = useLingui();
+  
+  return (
   <Box
     display="flex"
     flexDirection="column"
@@ -34,6 +38,7 @@ const Maintenance = () => (
       ><Trans>Вернуться на главную</Trans></Button>
     </Container>
   </Box>
-);
+  );
+};
 
 export default Maintenance;

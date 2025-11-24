@@ -50,7 +50,7 @@ import {
 import PageContainer from "@/app/components/container/PageContainer";
 import { formatDateToLocal, formatDateOnly } from "@/utils/dateUtils";
 import { apiFetch } from "@/utils/api";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

@@ -34,7 +34,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import ClearIcon from '@mui/icons-material/Clear';
 import { apiFetch } from '@/utils/api';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

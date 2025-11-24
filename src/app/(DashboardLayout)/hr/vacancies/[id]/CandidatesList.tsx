@@ -35,7 +35,7 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import Link from 'next/link';
 import { apiFetch } from '@/utils/api';
 import moment from 'moment';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

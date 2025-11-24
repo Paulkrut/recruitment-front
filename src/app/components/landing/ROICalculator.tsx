@@ -21,6 +21,8 @@ interface ROICalculatorProps {
 }
 
 const ROICalculator: React.FC<ROICalculatorProps> = ({ plans }) => {
+  const { _ } = useLingui();
+
   const [hiresPerMonth, setHiresPerMonth] = useState(10);
 
   // Оптимальный тариф с мемоизацией

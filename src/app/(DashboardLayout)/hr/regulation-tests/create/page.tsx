@@ -43,7 +43,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FolderIcon from '@mui/icons-material/Folder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

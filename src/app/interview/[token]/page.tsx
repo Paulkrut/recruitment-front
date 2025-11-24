@@ -46,7 +46,7 @@ import ChatBubble from "@/app/components/apps/chats/ChatBubble";
 import Scrollbar from "@/app/components/custom-scroll/Scrollbar";
 import ForgetMeAuto from "@/app/components/ForgetMeAuto";
 import ProductionWebcamComponent from "./ProductionWebcamComponent";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

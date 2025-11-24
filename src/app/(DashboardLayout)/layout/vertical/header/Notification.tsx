@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,7 +16,7 @@ import { Icon } from "@iconify/react";
 import { Stack } from "@mui/system";
 import Link from "next/link";
 import { apiFetch } from '@/utils/api';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

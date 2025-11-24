@@ -1,3 +1,7 @@
+'use client';
+import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+
 import React from 'react';
 import { Typography, TypographyProps, Tooltip } from '@mui/material';
 import { formatDateToLocal, getTimeAgo, formatDateOnly, formatTimeOnly, getUserTimezone } from '@/utils/dateUtils';
@@ -26,6 +30,8 @@ export const DateDisplay: React.FC<DateDisplayProps> = ({
   placeholder = '-',
   ...typographyProps
 }) => {
+  const { _ } = useLingui();
+
   if (!utcDate) {
     return (
       <Typography {...typographyProps}>

@@ -16,7 +16,7 @@ import {
 import { Icon } from '@iconify/react';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/UserContext';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { IconUsers, IconFileText, IconCheck, IconClock, IconArrowLeft, IconMicrophone, IconVideo } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

@@ -9,7 +9,7 @@ import {
   Security, ContactSupport, Business, DeleteForever
 } from '@mui/icons-material';
 import Link from 'next/link';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

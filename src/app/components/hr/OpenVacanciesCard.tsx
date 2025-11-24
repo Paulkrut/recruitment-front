@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { IconEye, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

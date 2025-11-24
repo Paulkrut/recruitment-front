@@ -25,7 +25,7 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { useRouter, useParams } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

@@ -26,6 +26,8 @@ interface PricingSectionProps {
 }
 
 const PricingSection: React.FC<PricingSectionProps> = ({ plans }) => {
+  const { _ } = useLingui();
+
   return (
     <Box id="pricing-section" sx={{ py: 12, bgcolor: 'white', position: 'relative', zIndex: 2, scrollMarginTop: '80px' }}>
       <Container maxWidth="lg">

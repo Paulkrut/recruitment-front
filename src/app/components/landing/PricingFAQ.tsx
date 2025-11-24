@@ -9,6 +9,8 @@ import { msg } from '@lingui/macro';
 
 
 const PricingFAQ: React.FC = () => {
+  const { _ } = useLingui();
+
   return (
     <Box sx={{ py: 12, bgcolor: 'white', position: 'relative', zIndex: 2 }}>
       <Container maxWidth="lg">

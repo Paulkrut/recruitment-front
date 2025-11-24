@@ -34,7 +34,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

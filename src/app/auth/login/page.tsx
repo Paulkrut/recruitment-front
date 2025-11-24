@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

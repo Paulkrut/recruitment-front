@@ -28,7 +28,7 @@ import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLab
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import { apiFetch } from "@/utils/api";
 import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useCallback, useMemo } from 'react';
 import { Trans } from '@lingui/react';
 import { useLingui } from '@lingui/react';
@@ -42,6 +44,7 @@ const GenerateQuestionsDialog = React.memo(({
   generationProgress,
   error
 }: GenerateQuestionsDialogProps) => {
+  const { _ } = useLingui();
   
   // Мемоизируем кнопки быстрого выбора
   const quickSelectButtons = useMemo(() => {

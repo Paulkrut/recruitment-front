@@ -6,7 +6,7 @@ import {
   CircularProgress, Alert, Container, Paper, Divider, Checkbox, FormControlLabel
 } from '@mui/material';
 import { IconUser, IconPhone, IconMail, IconBriefcase } from '@tabler/icons-react';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

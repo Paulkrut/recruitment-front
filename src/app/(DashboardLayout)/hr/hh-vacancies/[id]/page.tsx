@@ -31,7 +31,7 @@ import {
   IconChevronUp,
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

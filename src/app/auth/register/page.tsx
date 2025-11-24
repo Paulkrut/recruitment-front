@@ -20,7 +20,7 @@ import {
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import PrivacyConsent from "@/app/components/PrivacyConsent";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

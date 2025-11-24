@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { addNote } from '@/store/apps/notes/NotesSlice';
 import Button from '@mui/material/Button';

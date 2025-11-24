@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import MaintenanceThemeProvider from './ThemeProvider';
 import { useLingui } from '@lingui/react';

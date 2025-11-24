@@ -15,7 +15,7 @@ import {
   Box,
 } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

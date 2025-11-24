@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

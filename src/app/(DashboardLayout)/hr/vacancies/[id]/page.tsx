@@ -44,7 +44,7 @@ import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import KanbanView from './KanbanView';
 import CandidatesList from './CandidatesList';
 import CandidateFilters from './CandidateFilters';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

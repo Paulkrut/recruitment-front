@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
 import { Box, Typography, Button } from '@mui/material';
@@ -25,6 +27,8 @@ const WebcamComponent: React.FC<WebcamComponentProps> = ({
   onMicReady,
   onError
 }) => {
+  const { _ } = useLingui();
+
   const webcamRef = useRef<Webcam>(null);
   const [isReady, setIsReady] = useState(false);
 

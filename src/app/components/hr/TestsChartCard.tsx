@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { IconRefresh, IconTrendingUp } from "@tabler/icons-react";
 import { Line } from "react-chartjs-2";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 import {

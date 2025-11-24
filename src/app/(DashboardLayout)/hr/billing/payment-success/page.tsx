@@ -13,7 +13,7 @@ import {
 import { IconCheck, IconX } from '@tabler/icons-react';
 import PageContainer from '@/app/components/container/PageContainer';
 import { apiFetch } from '@/utils/api';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

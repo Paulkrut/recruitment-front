@@ -19,7 +19,7 @@ import AddStageButton from './AddStageButton';
 import CustomStageModal from './CustomStageModal';
 import StageMenu from './StageMenu';
 import DeleteStageDialog from './DeleteStageDialog';
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 

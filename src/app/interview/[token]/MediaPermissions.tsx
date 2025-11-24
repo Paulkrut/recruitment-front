@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Trans } from '@lingui/react';
@@ -23,6 +25,8 @@ const MediaPermissions: React.FC<MediaPermissionsProps> = ({
   isMobile,
   onRequestPermissions
 }) => {
+  const { _ } = useLingui();
+
   // Показываем блок только если разрешения отклонены или не получены
   const shouldShow = mediaPermissions.status === 'denied' || 
     (mediaPermissions.status === 'granted' && 

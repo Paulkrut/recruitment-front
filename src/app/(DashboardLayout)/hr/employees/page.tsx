@@ -8,7 +8,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
-import { useLingui } from '@lingui/react';
+import { useLingui, Trans } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
 
