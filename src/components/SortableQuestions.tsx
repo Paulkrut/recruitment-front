@@ -1,4 +1,5 @@
 "use client";
+import { Trans } from '@lingui/macro';
 
 import React from "react";
 import {
@@ -27,7 +28,7 @@ import {
 } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Trans } from '@lingui/react';
+
 
 
 export interface QuestionDraft {

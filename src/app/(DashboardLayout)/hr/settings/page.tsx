@@ -4,8 +4,8 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { Box, Typography, Tab, Tabs, TextField, Button, Paper, Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { apiFetch } from '@/utils/api';
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 export default function SettingsPage(){

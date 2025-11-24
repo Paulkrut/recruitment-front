@@ -19,9 +19,9 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

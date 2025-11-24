@@ -1,4 +1,5 @@
 'use client';
+import { Trans } from '@lingui/macro';
 
 import React from 'react';
 import { 
@@ -12,7 +13,7 @@ import {
   keyframes
 } from '@mui/material';
 import { Settings, Circle } from '@mui/icons-material';
-import { Trans } from '@lingui/react';
+
 
 
 // Анимация для иконки

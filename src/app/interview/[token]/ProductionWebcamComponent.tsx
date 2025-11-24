@@ -9,9 +9,9 @@ import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

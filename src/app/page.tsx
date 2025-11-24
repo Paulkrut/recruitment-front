@@ -17,9 +17,9 @@ import DesktopMenu from "./components/DesktopMenu";
 import PricingSection from "./components/landing/PricingSection";
 import ROICalculator from "./components/landing/ROICalculator";
 import PricingFAQ from "./components/landing/PricingFAQ";
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

@@ -15,8 +15,8 @@ import {
   Box,
 } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 interface Column {

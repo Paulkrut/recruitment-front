@@ -7,8 +7,8 @@ import {
 import { DeleteForever, Warning, Info, CheckCircle } from '@mui/icons-material';
 import Link from 'next/link';
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
-import { Trans } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";

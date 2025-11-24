@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
-import { Trans, useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 import { Box, Button, TextField, Typography } from '@mui/material';
 
 /**

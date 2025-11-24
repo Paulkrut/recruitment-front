@@ -1,4 +1,5 @@
-'use client';
+'use client';import { Trans } from '@lingui/macro';
+
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -14,7 +15,7 @@ import {
 } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useUser } from '@/contexts/UserContext';
-import { Trans } from '@lingui/react';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';

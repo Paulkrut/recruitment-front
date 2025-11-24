@@ -18,9 +18,9 @@ import OverdueCandidatesCard from "@/app/components/hr/OverdueCandidatesCard";
 
 import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

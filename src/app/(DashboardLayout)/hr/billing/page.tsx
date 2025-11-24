@@ -25,8 +25,8 @@ import PageContainer from '@/app/components/container/PageContainer';
 import DashboardCard from '@/app/components/shared/DashboardCard';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
-import { Trans } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';

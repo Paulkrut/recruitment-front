@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/macro';
 "use client";
 import React from 'react';
-import { Trans } from '@lingui/react';
+
 
 import {
   Box, Checkbox, Typography, Link

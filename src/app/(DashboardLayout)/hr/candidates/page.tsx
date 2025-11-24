@@ -60,8 +60,8 @@ import {
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -524,7 +524,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
             </Trans></Typography>
             {candidate.score !== null && candidate.score !== undefined && (
               <Chip
-                label={_(msg`Оценка`): ${candidate.score}`/10`}
+                label={_(msg`Оценка`) + ': ' + ${candidate.score}`/10`}
                 color={getScoreColor(candidate.score) as any}
                 size="small"
                 sx={{ mt: 1 }}

@@ -6,9 +6,9 @@ import { Box, Typography, Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MicIcon from '@mui/icons-material/Mic';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

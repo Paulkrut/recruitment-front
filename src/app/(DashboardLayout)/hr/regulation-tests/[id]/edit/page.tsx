@@ -25,8 +25,8 @@ import PageContainer from '@/app/components/container/PageContainer';
 import { useRouter, useParams } from 'next/navigation';
 import { apiFetch } from '@/utils/api';
 import RegulationTestTabs from '../components/RegulationTestTabs';
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';

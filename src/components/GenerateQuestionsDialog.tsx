@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useCallback, useMemo } from 'react';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 import {

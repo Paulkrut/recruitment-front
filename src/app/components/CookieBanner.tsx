@@ -1,6 +1,7 @@
-"use client";
+"use client";import { Trans } from '@lingui/macro';
+
 import { useEffect, useState } from "react";
-import { Trans } from '@lingui/react';
+
 
 
 export default function CookieBanner(){

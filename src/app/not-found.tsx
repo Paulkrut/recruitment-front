@@ -1,4 +1,5 @@
-"use client";
+"use client";import { Trans } from '@lingui/macro';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -6,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Trans } from '@lingui/react';
+
 
 
 export default function NotFound() {

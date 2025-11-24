@@ -27,8 +27,8 @@ import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ProductionWebcamComponent from './ProductionWebcamComponent';
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
-import { Trans } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
+
 
 
 interface Question {

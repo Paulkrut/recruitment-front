@@ -2,9 +2,9 @@
 import React from 'react';
 import { Box, Container, Typography, Grid, Button, Paper } from '@mui/material';
 import { Icon } from '@iconify/react';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

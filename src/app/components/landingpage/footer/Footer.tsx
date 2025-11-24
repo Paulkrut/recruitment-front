@@ -1,4 +1,5 @@
 'use client';
+import { Trans } from '@lingui/macro';
 
 import React from "react";
 import Box from '@mui/material/Box';
@@ -7,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { Divider } from '@mui/material';
-import { Trans } from '@lingui/react';
+
 
 
 const Footer = () => {

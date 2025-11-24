@@ -16,8 +16,8 @@ import {
 } from "@mui/material";
 import { IconAlertTriangle, IconEdit, IconEye } from "@tabler/icons-react";
 import Link from "next/link";
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 interface WeakQuestion {

@@ -1,8 +1,8 @@
 'use client';
 
 import { Card, CardHeader, CardContent, Chip, Typography, Grid, Box } from '@mui/material';
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 export interface Metrics { [key:string]:number; }

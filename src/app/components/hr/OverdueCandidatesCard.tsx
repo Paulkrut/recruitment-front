@@ -25,9 +25,9 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { OverdueCandidate, PaginationState } from "@/app/(DashboardLayout)/types/dashboard";
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

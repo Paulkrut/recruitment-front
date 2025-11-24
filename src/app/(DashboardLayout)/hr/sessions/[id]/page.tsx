@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import { IconUsers, IconFileText, IconCheck, IconClock, IconArrowLeft, IconMicrophone, IconVideo } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";

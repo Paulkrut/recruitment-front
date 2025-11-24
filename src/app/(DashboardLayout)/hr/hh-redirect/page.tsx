@@ -1,9 +1,10 @@
 "use client";
+import { Trans } from '@lingui/macro';
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { apiFetch } from "@/utils/api";
-import { Trans } from '@lingui/react';
+
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 

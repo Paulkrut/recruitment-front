@@ -6,8 +6,8 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Image from "next/image";
 import Link from "next/link";
-import { Trans, useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 const Maintenance = () => {

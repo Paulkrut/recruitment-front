@@ -1,9 +1,9 @@
 "use client";
 import React, { useMemo, useState } from 'react';
 import { Box, Container, Typography, Paper, Slider, Grid, Alert } from '@mui/material';
-import { Trans } from '@lingui/react';
+
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { msg, Trans } from '@lingui/macro';
 
 
 

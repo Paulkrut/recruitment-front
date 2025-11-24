@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material';
 import { HexColorPicker } from 'react-colorful';
-import { useLingui, Trans } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { msg, Trans } from '@lingui/macro';
 
 
 interface CustomStageModalProps {
