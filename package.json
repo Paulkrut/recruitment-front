@@ -3,15 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3002",
-    "build": "next build",
+    "dev": "lingui compile && next dev --turbopack --port 3002",
+    "build": "lingui extract && lingui compile && next build",
     "start": "next start -p 3002",
     "lint": "next lint",
     "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
-    "i18n:extract-compile": "lingui extract && lingui compile",
-    "migrate:auto": "node scripts/migrate-to-lingui.js",
-    "migrate:check": "node scripts/find-russian-text.js"
+    "i18n:extract-compile": "lingui extract && lingui compile"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.16.0",
