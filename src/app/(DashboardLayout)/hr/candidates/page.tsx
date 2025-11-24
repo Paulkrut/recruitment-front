@@ -524,7 +524,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
             </Trans></Typography>
             {candidate.score !== null && candidate.score !== undefined && (
               <Chip
-                label={_(msg`Оценка`) + ': ' + ${candidate.score}`/10`}
+                label={_(msg`Оценка: ${candidate.score}/10`)}
                 color={getScoreColor(candidate.score) as any}
                 size="small"
                 sx={{ mt: 1 }}
