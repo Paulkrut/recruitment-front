@@ -6,3 +6,5842 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+msgid "Система быстрых платежей (СБП)"
+msgstr ""
+
+msgid "Компаний"
+msgstr ""
+
+msgid "Нет вакансий"
+msgstr ""
+
+msgid "👥 Синхронизация кандидатов"
+msgstr ""
+
+msgid " с платформы в любое время."
+msgstr ""
+
+msgid "Условия использования платформы SofiHR для HR-организаций"
+msgstr ""
+
+msgid "Нет тестов"
+msgstr ""
+
+msgid "Удовлетворительно (4-5)"
+msgstr ""
+
+msgid "<0>Примечание:</0> Изменение настроек не влияет на уже начатые тесты. Список регламентов можно изменить только при создании теста."
+msgstr ""
+
+msgid "≥ 7 (хорошо)"
+msgstr ""
+
+msgid "<0>⚡ Мгновенное удаление!</0>"
+msgstr ""
+
+msgid "<0>Важно:</0> Если у вас есть активная ссылка на интервью, используйте кнопку \"Удалить мои данные\" прямо на странице интервью для мгновенного удаления."
+msgstr ""
+
+msgid "Тест активен"
+msgstr ""
+
+msgid "Ссылка скопирована!"
+msgstr ""
+
+msgid "Выберите стадию, в которую будут перемещены все кандидаты:"
+msgstr ""
+
+msgid "Имя *"
+msgstr ""
+
+msgid "• Запустить AI-анализ резюме для автоматической оценки кандидатов"
+msgstr ""
+
+msgid "⚠️ Не удалось обновить токен"
+msgstr ""
+
+msgid "Время отведенное на один вопрос. За это время надо прочитать вопрос и дать на него ответ."
+msgstr ""
+
+msgid "Стадия HH"
+msgstr ""
+
+msgid "Переходим на страницу входа..."
+msgstr ""
+
+msgid "Управление вакансиями"
+msgstr ""
+
+msgid "Балл"
+msgstr ""
+
+msgid "Ошибка авторизации"
+msgstr ""
+
+msgid "Карточки"
+msgstr ""
+
+msgid "🎥 Видео ответ отправлен"
+msgstr ""
+
+msgid "Современная HR-система для управления вакансиями, кандидатами и процессами найма"
+msgstr ""
+
+msgid "30с"
+msgstr ""
+
+msgid "Создание вакансии"
+msgstr ""
+
+msgid "Система соответствует требованиям 152-ФЗ \"О персональных данных\""
+msgstr ""
+
+msgid "Мы проводим плановые технические работы для улучшения качества сервиса. Приносим извинения за временные неудобства."
+msgstr ""
+
+msgid "⏳ В процессе"
+msgstr ""
+
+msgid "Удаляю..."
+msgstr ""
+
+msgid "Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу."
+msgstr ""
+
+msgid "Полная запись"
+msgstr ""
+
+msgid "Интервью-сессия"
+msgstr ""
+
+msgid "Дата оплаты"
+msgstr ""
+
+msgid "Нет тестов для выбранного регламента"
+msgstr ""
+
+msgid "Аналитика в реальном времени"
+msgstr ""
+
+msgid "Независимо от типа клиента, HR-клиент обязуется:"
+msgstr ""
+
+msgid "Ошибка при анализе резюме. Попробуйте позже."
+msgstr ""
+
+msgid "Для реализации своих прав вы можете:"
+msgstr ""
+
+msgid "Политика ПДн"
+msgstr ""
+
+#. placeholder {0}: sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'
+msgid "Оценка: {0}"
+msgstr ""
+
+msgid "Скорость найма: 3x быстрее"
+msgstr ""
+
+msgid "Легкий"
+msgstr ""
+
+msgid "💰 Рассчитайте вашу экономию"
+msgstr ""
+
+msgid "Внешние коллеги"
+msgstr ""
+
+msgid "Ошибка запуска генерации"
+msgstr ""
+
+msgid "Пожалуйста, заполните все обязательные поля"
+msgstr ""
+
+msgid "Что включено в поддержку разных тарифов?"
+msgstr ""
+
+msgid "FAQ"
+msgstr ""
+
+msgid "Средне"
+msgstr ""
+
+msgid "Выявление сильных и слабых сторон"
+msgstr ""
+
+msgid "Ссылка на HH"
+msgstr ""
+
+msgid "≥ 9 (отлично)"
+msgstr ""
+
+msgid "Повторить AI-анализ"
+msgstr ""
+
+msgid "Фильтр по регламенту"
+msgstr ""
+
+#. placeholder {0}: candidatePhone || '-'
+msgid "Телефон: {0}"
+msgstr ""
+
+msgid "Выберите подходящий тариф"
+msgstr ""
+
+msgid "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
+msgstr ""
+
+msgid "Ошибка при создании платежа"
+msgstr ""
+
+msgid "Открыть на hh.ru"
+msgstr ""
+
+msgid "Переавторизуйтесь для продолжения работы."
+msgstr ""
+
+msgid "Детальный анализ"
+msgstr ""
+
+msgid "AI-генерация вопросов на основе вакансии"
+msgstr ""
+
+msgid "Контакты"
+msgstr ""
+
+msgid "🗑️ После подтверждения все данные будут удалены"
+msgstr ""
+
+msgid ""
+"❌ Приглашение истекло или уже использовано\n"
+"\n"
+"📧 Запросите новое приглашение у вашего HR-менеджера."
+msgstr ""
+
+msgid "Регулярные аудиты"
+msgstr ""
+
+msgid "🤖 Анализируется"
+msgstr ""
+
+msgid "Имя должно содержать минимум 2 символа"
+msgstr ""
+
+msgid "Здесь появится история писем и уведомлений кандидату (в будущем)."
+msgstr ""
+
+msgid "Да, <0>безопасность данных — наш приоритет</0>:"
+msgstr ""
+
+msgid "📧 Проверьте указанный email - мы отправили подтверждение получения вашего запроса."
+msgstr ""
+
+msgid "Назад к тестам"
+msgstr ""
+
+msgid "📊 Оценка соответствия вакансии (0-100%)"
+msgstr ""
+
+msgid "Спасибо за интерес к вакансии! Теперь вы можете пройти интервью."
+msgstr ""
+
+#. placeholder {0}: selectedCandidates.length
+msgid "Сравнить ({0})"
+msgstr ""
+
+msgid "Добавить вакансию"
+msgstr ""
+
+msgid "AI скрининг будет выполнен"
+msgstr ""
+
+msgid "Бесплатно"
+msgstr ""
+
+msgid "Нет транзакций"
+msgstr ""
+
+msgid "Роль"
+msgstr ""
+
+msgid "Дата завершения"
+msgstr ""
+
+msgid "Поиск по регламентам..."
+msgstr ""
+
+msgid "Необходимо выбрать минимум 2 кандидата для сравнения"
+msgstr ""
+
+msgid "Ротация кандидатов"
+msgstr ""
+
+msgid "Подключение..."
+msgstr ""
+
+msgid "500 интервью"
+msgstr ""
+
+msgid "Юридическое лицо (организация):"
+msgstr ""
+
+msgid "15 минут вместо 4 часов"
+msgstr ""
+
+msgid "вопрос"
+msgstr ""
+
+msgid "Кандидат еще не запросил обратную связь"
+msgstr ""
+
+msgid "Шифрование SSL/TLS"
+msgstr ""
+
+msgid "Камера подключена"
+msgstr ""
+
+msgid "Отдел (необязательно)"
+msgstr ""
+
+msgid "Количество вопросов для генерации:"
+msgstr ""
+
+msgid "❌ Отказ"
+msgstr ""
+
+msgid "В среднем в день"
+msgstr ""
+
+msgid "Сотрудник удалён"
+msgstr ""
+
+msgid "Превышено время ожидания подключения камеры."
+msgstr ""
+
+msgid "Осталось сегодня"
+msgstr ""
+
+msgid "Всего потрачено"
+msgstr ""
+
+#. placeholder {0}: getTotalSelectedCandidates()
+msgid "⚠️ Внимание: Синхронизация {0} кандидатов может занять несколько минут."
+msgstr ""
+
+msgid "Публичная оферта для HR-клиентов"
+msgstr ""
+
+msgid "Все кандидаты загружены"
+msgstr ""
+
+msgid "Ваше имя"
+msgstr ""
+
+msgid "ИИ генерирует вопросы на основе описания"
+msgstr ""
+
+msgid "Строк на странице:"
+msgstr ""
+
+msgid "Текст вопроса"
+msgstr ""
+
+msgid "Не удалось получить информацию о платеже"
+msgstr ""
+
+msgid "Заполните форму ниже, и мы свяжемся с вами в ближайшее время"
+msgstr ""
+
+msgid "Удалить стадию \"{stageName}\"?"
+msgstr ""
+
+msgid "Загрузка запросов на удаление данных..."
+msgstr ""
+
+msgid "Ошибка при загрузке теста"
+msgstr ""
+
+msgid "Тема *"
+msgstr ""
+
+msgid "Неудовлетворительно"
+msgstr ""
+
+msgid "Добавьте вопросы вручную или сгенерируйте их автоматически"
+msgstr ""
+
+msgid "5м"
+msgstr ""
+
+msgid "Что будет удалено:"
+msgstr ""
+
+msgid "🗑️ Удаление персональных данных"
+msgstr ""
+
+msgid "500 AI-интервью"
+msgstr ""
+
+#. placeholder {0}: formatPrice(selectedPlan.price)
+msgid "К оплате: {0}"
+msgstr ""
+
+msgid "Вопросы теста"
+msgstr ""
+
+msgid "Все права защищены SofiHR. Система подбора персонала."
+msgstr ""
+
+msgid "🔍 Ищем доступные камеры..."
+msgstr ""
+
+msgid "Назад к списку вакансий"
+msgstr ""
+
+msgid "История операций"
+msgstr ""
+
+msgid "Базовый анализ ИИ"
+msgstr ""
+
+#. placeholder {0}: savings.traditionalTime
+#. placeholder {1}: savings.traditionalTimeCost.toLocaleString()
+msgid "+ {0} часов ({1}₽)"
+msgstr ""
+
+msgid "Перейти сейчас"
+msgstr ""
+
+msgid "Ошибка при отправке заявки"
+msgstr ""
+
+msgid "AI оценка"
+msgstr ""
+
+msgid "Подключите ваш аккаунт работодателя HH.ru для автоматической синхронизации вакансий и получения откликов кандидатов."
+msgstr ""
+
+msgid "Медиа хранятся до 60 дней."
+msgstr ""
+
+msgid "🎯 Выявляем области для развития..."
+msgstr ""
+
+msgid "Поиск"
+msgstr ""
+
+msgid "💼 Оффер"
+msgstr ""
+
+msgid "📌 Используйте для размещения на сайтах вакансий, в соцсетях, массовых рассылках."
+msgstr ""
+
+msgid "Пригласите коллег"
+msgstr ""
+
+msgid "На HH:"
+msgstr ""
+
+msgid "Это та же обратная связь, которую видит кандидат после интервью"
+msgstr ""
+
+msgid "Нет аккаунта?"
+msgstr ""
+
+msgid "AI-анализ может быть неточным"
+msgstr ""
+
+msgid "Экспорт данных в различных форматах"
+msgstr ""
+
+msgid "Для загрузки резюме с HeadHunter необходимо обновить токен доступа."
+msgstr ""
+
+msgid "SLA гарантия 99.9%"
+msgstr ""
+
+msgid "Удалить приглашение?"
+msgstr ""
+
+msgid "Запись не содержит данных. Попробуйте ещё раз."
+msgstr ""
+
+msgid "Ошибка при загрузке запросов"
+msgstr ""
+
+msgid "Удалить"
+msgstr ""
+
+msgid "Завершено"
+msgstr ""
+
+msgid "Отзывы"
+msgstr ""
+
+#. placeholder {0}: status.stats?.totalVacancies || 0
+#. placeholder {1}: status.stats?.totalCandidates || 0
+msgid "Ваши данные ({0} вакансий, {1} кандидатов) сохранены."
+msgstr ""
+
+msgid "Отключить"
+msgstr ""
+
+msgid "Переместить кандидатов в"
+msgstr ""
+
+msgid "Условиями использования"
+msgstr ""
+
+msgid "Заранее"
+msgstr ""
+
+msgid "AI-генерация вопросов"
+msgstr ""
+
+msgid "Вернуться к тарифам"
+msgstr ""
+
+msgid "Скопировать ссылку на интервью"
+msgstr ""
+
+msgid "✅ Сильные стороны (по мнению AI)"
+msgstr ""
+
+msgid "Ошибка при загрузке"
+msgstr ""
+
+msgid "Не удалось загрузить данные кандидатов"
+msgstr ""
+
+msgid "Подтвердить удаление копий данных"
+msgstr ""
+
+msgid "Начать"
+msgstr ""
+
+msgid "Синхронизация кандидатов запущена"
+msgstr ""
+
+msgid "Микрофон недоступен"
+msgstr ""
+
+msgid "Пользователи & роли"
+msgstr ""
+
+msgid "Ошибка при создании ссылки"
+msgstr ""
+
+msgid "Перед началом"
+msgstr ""
+
+msgid "Описание не заполнено"
+msgstr ""
+
+msgid "Создать приглашение"
+msgstr ""
+
+msgid "Баланс заканчивается! Пополните счёт."
+msgstr ""
+
+msgid "Требуется авторизация HH.ru для загрузки резюме"
+msgstr ""
+
+msgid "Имя может содержать только буквы, пробелы и дефисы"
+msgstr ""
+
+msgid "Статус интеграции HH.ru"
+msgstr ""
+
+msgid "Пожалуйста, подождите. Обычно это занимает несколько секунд."
+msgstr ""
+
+msgid "Регистрация успешна!"
+msgstr ""
+
+msgid "Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час"
+msgstr ""
+
+msgid "Видео и аудио запись"
+msgstr ""
+
+msgid "Оплаченные интервью"
+msgstr ""
+
+msgid "💡 <0>Почему это занимает время?</0><1/>• AI анализирует каждый ответ каждого кандидата<2/>• Сравнивает навыки и опыт<3/>• Формирует детальные критерии оценки<4/>• Дает обоснованные рекомендации"
+msgstr ""
+
+msgid "Оплата производится онлайн через <0>платежную систему</0>:"
+msgstr ""
+
+msgid "Письма кандидату"
+msgstr ""
+
+msgid "Пробный"
+msgstr ""
+
+msgid "Не удалось загрузить данные"
+msgstr ""
+
+msgid "Обработка персональных данных осуществляется на следующих основаниях:"
+msgstr ""
+
+msgid "Тест: Прошли"
+msgstr ""
+
+msgid "У вас осталось мало интервью. Рекомендуем пополнить баланс."
+msgstr ""
+
+msgid "Не удалось загрузить тарифы"
+msgstr ""
+
+msgid "Вакансий"
+msgstr ""
+
+msgid "📧 Отправить результаты на email"
+msgstr ""
+
+msgid "📈 Статистика синхронизации"
+msgstr ""
+
+msgid "Перейти к входу"
+msgstr ""
+
+msgid "Прогресс"
+msgstr ""
+
+msgid "Добавить вопрос"
+msgstr ""
+
+msgid "Узнайте, сколько вы сэкономите на автоматизации найма с SofiHR"
+msgstr ""
+
+msgid "Пригласить сотрудника"
+msgstr ""
+
+msgid "Приглашение отправлено! Email с приглашением отправлен на {email}"
+msgstr ""
+
+msgid "Перемещение..."
+msgstr ""
+
+msgid "Вспомнили пароль? "
+msgstr ""
+
+#. placeholder {0}: data.candidatesCount || 0
+msgid "AI-анализ запущен. Будет проанализировано {0} кандидатов."
+msgstr ""
+
+msgid "Нет доступа"
+msgstr ""
+
+msgid "💡 <0>Рекомендация:</0> Дождитесь завершения интервью кандидатами для получения более точного анализа"
+msgstr ""
+
+msgid "только что"
+msgstr ""
+
+msgid "Скопировать ссылку"
+msgstr ""
+
+msgid "Статус:"
+msgstr ""
+
+msgid "❓ Частые вопросы о тарифах"
+msgstr ""
+
+msgid "Расширенный анализ ИИ"
+msgstr ""
+
+msgid "❌ Ошибка анализа"
+msgstr ""
+
+msgid "Логотип"
+msgstr ""
+
+msgid "Уведомлений об удалении данных пока нет"
+msgstr ""
+
+msgid ""
+"❌ Тест прерван: закончились тесты на балансе\n"
+"\n"
+"К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n"
+"\n"
+"📧 Пожалуйста, сообщите об этом вашему HR-менеджеру."
+msgstr ""
+
+msgid "По вопросам обращайтесь к администратору"
+msgstr ""
+
+msgid "🔍 Диагностика камер..."
+msgstr ""
+
+msgid "Дата обработки"
+msgstr ""
+
+msgid "🚀 Старт"
+msgstr ""
+
+msgid "Комментарий о выполненных действиях *"
+msgstr ""
+
+msgid "Автоматизация интервью позволила нам масштабировать бизнес в 3 раза. Теперь мы можем обрабатывать в 5 раз больше вакансий."
+msgstr ""
+
+msgid "Требуется доступ к камере и микрофону"
+msgstr ""
+
+msgid "Экономия времени: 70%"
+msgstr ""
+
+msgid "Неудовлетворительно (0-3)"
+msgstr ""
+
+msgid "кандидатов требуют"
+msgstr ""
+
+msgid "Пригласите кандидата"
+msgstr ""
+
+msgid "По всем вопросам, связанным с настоящей офертой:"
+msgstr ""
+
+msgid "ИИ проводит интервью"
+msgstr ""
+
+msgid "Приоритетная поддержка"
+msgstr ""
+
+msgid "Метрики оценки:"
+msgstr ""
+
+msgid "Срок действия"
+msgstr ""
+
+msgid "Генерация вопросов{timeStr}..."
+msgstr ""
+
+msgid "Ответ сотрудника:"
+msgstr ""
+
+msgid "Пробный тариф"
+msgstr ""
+
+msgid " (но нет завершенных кандидатов для сравнения)"
+msgstr ""
+
+msgid "Кандидат удален!"
+msgstr ""
+
+msgid "{min} мин {sec} сек"
+msgstr ""
+
+msgid "Показывает общее количество кандидатов, завершивших интервью и находящихся в процессе"
+msgstr ""
+
+#. placeholder {0}: prepared.total
+msgid "Тест состоит из {0} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин."
+msgstr ""
+
+msgid "Последние 3 дня"
+msgstr ""
+
+msgid "Комментарий AI:"
+msgstr ""
+
+msgid "Ошибка при регистрации. Попробуйте еще раз."
+msgstr ""
+
+msgid "Загрузка видео..."
+msgstr ""
+
+msgid "Не указан ID платежа"
+msgstr ""
+
+msgid "Транскрибируем речь..."
+msgstr ""
+
+msgid "Медиафайлы и обработчики по поручению:"
+msgstr ""
+
+msgid "Пожалуйста, подождите..."
+msgstr ""
+
+msgid "Последний месяц"
+msgstr ""
+
+msgid "Автоматическая сортировка кандидатов по релевантности и качеству ответов."
+msgstr ""
+
+msgid "Редактировать"
+msgstr ""
+
+msgid "За всё время:"
+msgstr ""
+
+msgid "Соглашаюсь на обработку моих персональных данных для прохождения тестирования"
+msgstr ""
+
+#. placeholder {0}: data.message
+msgid "Успешно! {0}"
+msgstr ""
+
+msgid "Тема обязательна для заполнения"
+msgstr ""
+
+msgid "Просроченные кандидаты"
+msgstr ""
+
+msgid " (минимум 2 для сравнения)"
+msgstr ""
+
+msgid "3 на странице"
+msgstr ""
+
+msgid "<0>Что дальше:</0>"
+msgstr ""
+
+msgid "Создать первый тест"
+msgstr ""
+
+msgid "Интеграции с любыми системами"
+msgstr ""
+
+msgid "Вход в систему..."
+msgstr ""
+
+msgid "Безопасность данных"
+msgstr ""
+
+msgid "Назад к корню"
+msgstr ""
+
+msgid "{diffHours} ч назад"
+msgstr ""
+
+msgid "Компания"
+msgstr ""
+
+msgid "Номер должен начинаться с 7, 8 или +7"
+msgstr ""
+
+msgid "Добавить"
+msgstr ""
+
+msgid "Внедрили для найма специалистов по продажам. Обработали 500+ кандидатов за месяц."
+msgstr ""
+
+msgid "⚪ Без анализа"
+msgstr ""
+
+msgid "💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке \"Кандидаты\" → \"Добавить кандидата\" — так исключите повторные прохождения под разными именами."
+msgstr ""
+
+msgid "Дата добавления"
+msgstr ""
+
+msgid "Произошла ошибка при проверке кандидатов"
+msgstr ""
+
+msgid ""
+"❌ Приглашение не найдено\n"
+"\n"
+"Возможные причины:\n"
+"• Ссылка неверная или устарела\n"
+"• Приглашение было удалено HR-менеджером\n"
+"\n"
+"📧 Пожалуйста, запросите новое приглашение."
+msgstr ""
+
+msgid "Вакансии"
+msgstr ""
+
+msgid "Анализ каждого ответа"
+msgstr ""
+
+msgid "Резюме: Есть"
+msgstr ""
+
+msgid "✅ Ваши сильные стороны"
+msgstr ""
+
+msgid "Гибкие тарифы"
+msgstr ""
+
+msgid "1м"
+msgstr ""
+
+msgid "Управление подпиской"
+msgstr ""
+
+msgid "Настоящие Условия использования (далее — «Условия») регулируют порядок использования системы подбора персонала SofiHR (далее — «Система») и определяют права и обязанности пользователей."
+msgstr ""
+
+msgid "Запуск..."
+msgstr ""
+
+msgid "Ошибка в обработке данных"
+msgstr ""
+
+msgid "Сравнение выбранных кандидатов с анализом сильных и слабых сторон."
+msgstr ""
+
+msgid "Синхронизировано кандидатов"
+msgstr ""
+
+#. placeholder {0}: vacancyStatus.candidates_synced
+msgid "Синхронизация завершена! Загружено {0} кандидатов."
+msgstr ""
+
+msgid "✅ Продолжаем только с микрофоном"
+msgstr ""
+
+#. placeholder {0}: candidate.score
+msgid "Оценка: {0}/10"
+msgstr ""
+
+msgid "Введите название вакансии, которое будет видно кандидатам"
+msgstr ""
+
+msgid "🔗 Генерация ссылки на тест"
+msgstr ""
+
+#. placeholder {0}: filters.search
+msgid "Поиск: {0}"
+msgstr ""
+
+msgid "Создайте аккаунт для работы с SofiHR"
+msgstr ""
+
+msgid "Таймаут синхронизации (превышено 5 минут)"
+msgstr ""
+
+msgid "Обновлён"
+msgstr ""
+
+msgid "Исчерпано"
+msgstr ""
+
+msgid "Попробуйте изменить фильтры"
+msgstr ""
+
+msgid "HR-клиент обязан обеспечить реализацию прав кандидатов:"
+msgstr ""
+
+msgid "AI-оценка кандидатов"
+msgstr ""
+
+msgid "Просмотреть в вакансии"
+msgstr ""
+
+msgid "Здесь вы можете задать параметры теста для кандидатов"
+msgstr ""
+
+msgid "Техническое обслуживание!!!"
+msgstr ""
+
+msgid "Произошла ошибка при синхронизации"
+msgstr ""
+
+msgid "Уточнения"
+msgstr ""
+
+msgid "Введите название теста"
+msgstr ""
+
+msgid "🤖 AI-анализ резюме"
+msgstr ""
+
+msgid "Комментарии"
+msgstr ""
+
+msgid "Синхронизировать кандидатов"
+msgstr ""
+
+msgid "Персональный менеджер"
+msgstr ""
+
+msgid "Типы данных для удаления"
+msgstr ""
+
+msgid "Получение откликов кандидатов"
+msgstr ""
+
+msgid "📋 Тесты на знание регламентов"
+msgstr ""
+
+msgid "Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга"
+msgstr ""
+
+msgid "Результаты внедрения SofiHR"
+msgstr ""
+
+msgid "Не удалось получить доступ к требуемым устройствам"
+msgstr ""
+
+#. placeholder {0}: _(msg`наймах`)
+msgid "При {hiresPerMonth} {0}"
+msgstr ""
+
+msgid "Подтверждено"
+msgstr ""
+
+msgid "🎁 Подарок"
+msgstr ""
+
+msgid "📝 Краткий итог"
+msgstr ""
+
+msgid "Что говорят наши клиенты"
+msgstr ""
+
+msgid "Создание аккаунта..."
+msgstr ""
+
+#. placeholder {0}: selectedCandidates.length
+#. placeholder {0}: selectedCandidatesSet.size
+msgid "Выбрано: {0}"
+msgstr ""
+
+msgid "Получаете готовый отчёт"
+msgstr ""
+
+msgid "Гибкие планы для компаний любого размера. Начните с бесплатного пробного периода"
+msgstr ""
+
+msgid "Полный анализ ответов с помощью ИИ"
+msgstr ""
+
+msgid "Обновить статус"
+msgstr ""
+
+msgid "Обработка ответа..."
+msgstr ""
+
+msgid "Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации."
+msgstr ""
+
+msgid "Приглашение отозвано"
+msgstr ""
+
+msgid "Эффективность AI-интервью"
+msgstr ""
+
+msgid "Редактировать папку"
+msgstr ""
+
+msgid "Пропустить"
+msgstr ""
+
+msgid "Результаты тестирования будут проанализированы, и вы получите обратную связь от вашего руководителя или HR-отдела в ближайшее время."
+msgstr ""
+
+msgid "1. Вакансии автоматически синхронизируются с вашим профилем HH.ru"
+msgstr ""
+
+msgid "🎯 Ваши результаты интервью"
+msgstr ""
+
+msgid "Автоматический запрос через интерфейс интервью"
+msgstr ""
+
+msgid "🎁 Бесплатно"
+msgstr ""
+
+msgid "Все опубликованные на HH.ru вакансии будут синхронизированы"
+msgstr ""
+
+msgid "Детали интервью-сессии"
+msgstr ""
+
+msgid "Рекомендация"
+msgstr ""
+
+msgid "Ожидание в очереди{timeStr}..."
+msgstr ""
+
+msgid "Обработка..."
+msgstr ""
+
+#. placeholder {0}: r.score
+msgid "Оценка за прохождение теста: {0}/10"
+msgstr ""
+
+msgid "Выбор тарифа зависит от интенсивности найма:"
+msgstr ""
+
+msgid "Кандидатов в процессе"
+msgstr ""
+
+msgid "Автоматическое ранжирование кандидатов"
+msgstr ""
+
+msgid "Автоматическое согласование времени для всех участников интервью."
+msgstr ""
+
+msgid "Для защиты ваших персональных данных применяются следующие меры:"
+msgstr ""
+
+msgid "⚠️ Внимание! Будут удалены ВСЕ ваши данные:"
+msgstr ""
+
+msgid "Ваши данные для идентификации:"
+msgstr ""
+
+msgid "Открытых вакансий"
+msgstr ""
+
+#. placeholder {0}: getScoreLabel(question.avgScore)
+#. placeholder {1}: question.answerCount
+msgid "{0} • {1} ответов"
+msgstr ""
+
+msgid "⚠️ Навыки не оценены"
+msgstr ""
+
+msgid "Среднее время закрытия вакансии: <0>7 дней</0>"
+msgstr ""
+
+msgid "Папки"
+msgstr ""
+
+msgid "Ошибка при восстановлении пароля"
+msgstr ""
+
+msgid "Политикой конфиденциальности"
+msgstr ""
+
+msgid "3️⃣ <0>Нажмите на ссылку</0> и подтвердите удаление"
+msgstr ""
+
+msgid "Безопасность данных гарантирована"
+msgstr ""
+
+msgid "Ошибка подключения"
+msgstr ""
+
+msgid "Список вакансий"
+msgstr ""
+
+msgid "2️⃣ <0>Найдите внизу страницы</0> текст \"удаление своих персональных данных\""
+msgstr ""
+
+msgid "Автоматическая синхронизация включена"
+msgstr ""
+
+msgid "Отклонено"
+msgstr ""
+
+msgid "Проходим аудит безопасности каждые 6 месяцев"
+msgstr ""
+
+msgid "Информация для HR-клиентов о кандидатах, чьи данные были удалены с платформы"
+msgstr ""
+
+#. placeholder {0}: 42
+msgid "Количество кандидатов: {0}"
+msgstr ""
+
+msgid "Количество сессий"
+msgstr ""
+
+msgid "Введите ваши учетные данные для доступа"
+msgstr ""
+
+msgid "✅ Данные успешно удалены!"
+msgstr ""
+
+msgid "Результаты отсутствуют"
+msgstr ""
+
+msgid "Дополнительные вопросы"
+msgstr ""
+
+msgid "📧 Мы отправили подтверждение на указанный email"
+msgstr ""
+
+msgid "⏳ Загрузка резюме..."
+msgstr ""
+
+msgid "⚪ Не начат"
+msgstr ""
+
+msgid "⏱️ Примерное время: <0>{estimatedTime}</0>"
+msgstr ""
+
+msgid "Ошибка при отображении обратной связи"
+msgstr ""
+
+msgid "AI создаст релевантные вопросы для вашей вакансии"
+msgstr ""
+
+msgid "Балл:"
+msgstr ""
+
+msgid "Поиск по имени, email, телефону или вакансии..."
+msgstr ""
+
+msgid "Все данные хранятся на защищённых серверах в РФ"
+msgstr ""
+
+msgid "Причина удаления"
+msgstr ""
+
+msgid "HR-агентство"
+msgstr ""
+
+msgid "Отправленные приглашения"
+msgstr ""
+
+msgid "Полное соответствие закону \"О персональных данных\""
+msgstr ""
+
+msgid "Объединение расписаний"
+msgstr ""
+
+msgid "Ваши данные успешно удалены с платформы"
+msgstr ""
+
+msgid "Введите название компании"
+msgstr ""
+
+msgid "✓ Отправить ответ"
+msgstr ""
+
+msgid "На этот email будет отправлен пароль"
+msgstr ""
+
+msgid "Далее"
+msgstr ""
+
+msgid "⏹ Остановить запись"
+msgstr ""
+
+msgid "Соглашение для HR-клиентов"
+msgstr ""
+
+msgid "Добавлен"
+msgstr ""
+
+msgid "⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00"
+msgstr ""
+
+msgid "Тест оборудования"
+msgstr ""
+
+msgid "Важная информация"
+msgstr ""
+
+msgid "нет"
+msgstr ""
+
+msgid "Дешевле интервью"
+msgstr ""
+
+msgid "Пожалуйста, заполните обязательные поля"
+msgstr ""
+
+msgid "⚠️ Оценка не доступна"
+msgstr ""
+
+msgid "Запрос отправлен!"
+msgstr ""
+
+msgid "Безопасны ли данные кандидатов?"
+msgstr ""
+
+msgid "📋 Информация о вакансии"
+msgstr ""
+
+msgid "🎤 Запись"
+msgstr ""
+
+msgid "Ошибка загрузки кандидатов"
+msgstr ""
+
+msgid "Телефон обязателен для заполнения"
+msgstr ""
+
+msgid "Система прав доступа"
+msgstr ""
+
+msgid "Подтверждаем..."
+msgstr ""
+
+msgid "Тема должна содержать минимум 5 символов"
+msgstr ""
+
+msgid "Какой тариф выбрать для моей компании?"
+msgstr ""
+
+#. placeholder {0}: filters.minScore ? `≥ ${filters.minScore}%` : filters.aiAnalysisStatus === 'loading_resume' ? _(msg`Загрузка резюме`) : filters.aiAnalysisStatus === 'analyzing' ? _(msg`Анализируется`) : filters.aiAnalysisStatus === 'completed' ? _(msg`Завершено`) : filters.aiAnalysisStatus === 'failed' ? _(msg`Ошибка`) : _(msg`Без анализа`)
+msgid "AI анализ: {0}"
+msgstr ""
+
+msgid "Ошибка при проверке статуса платежа"
+msgstr ""
+
+msgid "🎉 Камера подключена! {label}"
+msgstr ""
+
+msgid "Оплата прошла успешно!"
+msgstr ""
+
+msgid "Все права на Систему принадлежат разработчикам:"
+msgstr ""
+
+msgid "При использовании Системы запрещается:"
+msgstr ""
+
+msgid "Настоящая публичная оферта (далее — «Оферта») определяет условия использования платформы SofiHR для HR-специалистов и организаций, независимо от их организационно-правовой формы."
+msgstr ""
+
+msgid "❌ Без резюме"
+msgstr ""
+
+msgid "Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов."
+msgstr ""
+
+msgid "ИИ-интервью помогли нам обработать в 10 раз больше кандидатов при том же количестве HR-специалистов. ROI проекта составил 400%."
+msgstr ""
+
+msgid "Сколько сотрудников вы планируете нанять в месяц?"
+msgstr ""
+
+msgid "Email не указан"
+msgstr ""
+
+msgid "Ошибка сохранения настроек"
+msgstr ""
+
+msgid "Основные настройки"
+msgstr ""
+
+#. placeholder {0}: filters.status === 'new' ? _(msg`Новый`) : filters.status === 'screening' ? _(msg`AI Скрининг`) : filters.status === 'contacted' ? _(msg`Связались`) : filters.status === 'testing' ? _(msg`Тестирование`) : filters.status === 'finalist' ? _(msg`Финалист`) : filters.status === 'offer' ? _(msg`Оффер`) : filters.status === 'hired' ? _(msg`Принят`) : filters.status === 'rejected' ? _(msg`Отклонён`) : filters.status
+#. placeholder {0}: payment?.status
+msgid "Статус: {0}"
+msgstr ""
+
+msgid "Количество:"
+msgstr ""
+
+msgid "ИНН: {displayInn}"
+msgstr ""
+
+#. placeholder {0}: vacancy.finished
+#. placeholder {1}: vacancy.total
+msgid "{0} из {1} кандидатов"
+msgstr ""
+
+msgid "Архивная"
+msgstr ""
+
+msgid "Неизвестная ошибка"
+msgstr ""
+
+msgid "🚀 Готовы создать первую вакансию?"
+msgstr ""
+
+msgid "Это ваша HR-панель. Здесь вы управляете вакансиями, сотрудниками и кандидатами."
+msgstr ""
+
+msgid "Сохранить заметку"
+msgstr ""
+
+#. placeholder {0}: currentQuestionIndex + 1
+#. placeholder {1}: questions.length
+#. placeholder {2}: Math.round(((currentQuestionIndex + 1) / questions.length) * 100)
+msgid "Прогресс: {0} / {1} ({2}%)"
+msgstr ""
+
+msgid "Экономия времени HR"
+msgstr ""
+
+msgid "Ошибка при создании общей ссылки"
+msgstr ""
+
+msgid "Переместить в..."
+msgstr ""
+
+msgid "Описание"
+msgstr ""
+
+msgid "Отклонён"
+msgstr ""
+
+msgid "(нет ответа)"
+msgstr ""
+
+msgid "Средний"
+msgstr ""
+
+msgid "Анализ..."
+msgstr ""
+
+msgid "Оценка качества и полноты ответов"
+msgstr ""
+
+msgid "Описание:"
+msgstr ""
+
+msgid "• Выбрать какие статусы кандидатов синхронизировать (отклики, приглашения, интервью и т.д.)"
+msgstr ""
+
+msgid "📊 Детальное сравнение по критериям"
+msgstr ""
+
+msgid "Дата запроса"
+msgstr ""
+
+msgid "Для прохождения интервью необходимо разрешить доступ к камере и микрофону."
+msgstr ""
+
+msgid "HH.ru успешно подключен!"
+msgstr ""
+
+msgid "Обрабатываем ваши ответы..."
+msgstr ""
+
+msgid "Пополнить"
+msgstr ""
+
+msgid "Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам"
+msgstr ""
+
+msgid "🗑️ Удаление данных"
+msgstr ""
+
+msgid "Запись интервью в реальном времени с возможностью просмотра и анализа."
+msgstr ""
+
+msgid "Автоматические интервью"
+msgstr ""
+
+#. placeholder {0}: candidates.length
+msgid "Кандидаты ({0})"
+msgstr ""
+
+#. placeholder {0}: result.request_id || 'N/A'
+msgid "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
+msgstr ""
+
+msgid "Сохранить"
+msgstr ""
+
+msgid "Можно загрузить из HH"
+msgstr ""
+
+msgid "Премиум"
+msgstr ""
+
+msgid "Вверх"
+msgstr ""
+
+msgid "Обновлено: {aiUpdatedAt}"
+msgstr ""
+
+msgid "Синхронизация кандидатов:"
+msgstr ""
+
+#. placeholder {0}: data.length
+msgid "{0} кандидатов"
+msgstr ""
+
+msgid "Создать тест"
+msgstr ""
+
+msgid "Ошибка авторизации. Проверьте данные."
+msgstr ""
+
+msgid "Выбрано: {totalSelectedCount}"
+msgstr ""
+
+msgid "Новые данные будут обновляться каждые 2 часа"
+msgstr ""
+
+msgid "Введите ваше имя"
+msgstr ""
+
+#. placeholder {0}: hhTokenError.candidateName
+msgid "Кандидат: {0}"
+msgstr ""
+
+msgid "API доступ"
+msgstr ""
+
+msgid "Подтверждено удаление"
+msgstr ""
+
+msgid "Завершён"
+msgstr ""
+
+#. placeholder {0}: paginationData.startIndex
+#. placeholder {1}: paginationData.endIndex
+#. placeholder {2}: paginationData.total
+msgid "Показано {0}-{1} из {2}"
+msgstr ""
+
+msgid "Открыть карточку"
+msgstr ""
+
+msgid "Настоящая оферта вступает в силу с момента размещения на платформе и действует до момента её отмены или замены новой офертой."
+msgstr ""
+
+msgid "10 AI-интервью бесплатно"
+msgstr ""
+
+msgid "Фильтры"
+msgstr ""
+
+#. placeholder {0}: result.updated
+msgid "✅ Успешно перемещено {0} {candidateText}"
+msgstr ""
+
+msgid "Мы проводим плановые технические работы. Сайт скоро будет доступен."
+msgstr ""
+
+msgid "Эта стадия не содержит кандидатов и будет удалена безвозвратно."
+msgstr ""
+
+msgid "Снять выделение со ВСЕХ {totalCount} кандидатов"
+msgstr ""
+
+msgid "🔴 ИДЁТ ЗАПИСЬ ОТВЕТА - Говорите в микрофон"
+msgstr ""
+
+msgid "Спасибо за прохождение теста!"
+msgstr ""
+
+msgid "Для небольших компаний и стартапов до 10 найма/месяц"
+msgstr ""
+
+msgid "{time} сек"
+msgstr ""
+
+msgid "🎁 Пробный"
+msgstr ""
+
+#. placeholder {0}: error.message || 'Произошла ошибка при отправке.'
+msgid ""
+"❌ Не удалось зарегистрировать пропуск вопроса\n"
+"\n"
+"{0}\n"
+"\n"
+"📧 Обратитесь к вашему HR-менеджеру."
+msgstr ""
+
+msgid "Отклонить"
+msgstr ""
+
+msgid "Отдел"
+msgstr ""
+
+msgid "Ручной"
+msgstr ""
+
+#. placeholder {0}: createdAt || '-'
+msgid "Создано: {0}"
+msgstr ""
+
+msgid "Удалить мои данные"
+msgstr ""
+
+msgid "Сообщение *"
+msgstr ""
+
+msgid "Ошибка отключения"
+msgstr ""
+
+msgid "AI-анализ"
+msgstr ""
+
+msgid "Оплата"
+msgstr ""
+
+msgid "Запустить AI-анализ для всех"
+msgstr ""
+
+msgid "Добавление…"
+msgstr ""
+
+msgid "Успешно"
+msgstr ""
+
+msgid "Создайте компанию"
+msgstr ""
+
+msgid "Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже.<0>Это займет больше времени, так как мы должны проверить вашу личность.</0>"
+msgstr ""
+
+msgid "Используя платформу SofiHR, клиент (физическое или юридическое лицо) принимает настоящую Оферту и соглашается следовать её условиям."
+msgstr ""
+
+msgid "Экономия 20%"
+msgstr ""
+
+msgid "Вопрос:"
+msgstr ""
+
+#. placeholder {0}: balance?.total_interviews_used || 0
+#. placeholder {0}: balance?.total_regulation_tests_used || 0
+#. placeholder {1}: balance?.total_interviews_purchased || 0
+#. placeholder {1}: balance?.total_regulation_tests_purchased || 0
+msgid "Использовано: {0} из {1}"
+msgstr ""
+
+msgid "Неограниченные шаблоны"
+msgstr ""
+
+msgid "Телефон слишком длинный"
+msgstr ""
+
+msgid "Блог"
+msgstr ""
+
+msgid "Ответов"
+msgstr ""
+
+msgid "Открыть интервью"
+msgstr ""
+
+#. placeholder {0}: stats.current_balance.regulation_tests
+msgid "{0} тестов по регламентам"
+msgstr ""
+
+msgid "кандидат"
+msgstr ""
+
+msgid "Упрощенные настройки"
+msgstr ""
+
+msgid "Персональный менеджер 24/7. Мгновенная поддержка по любым каналам. Помощь с настройкой, обучение команды, консультации по оптимизации процессов."
+msgstr ""
+
+msgid "Именное (для конкретного сотрудника)"
+msgstr ""
+
+msgid "Заметки HR"
+msgstr ""
+
+msgid "Имя обязательно для заполнения"
+msgstr ""
+
+msgid "Все оценки"
+msgstr ""
+
+msgid "100 AI-интервью"
+msgstr ""
+
+msgid "✅ Завершён"
+msgstr ""
+
+msgid "Тип приглашения"
+msgstr ""
+
+msgid "Операция"
+msgstr ""
+
+msgid "Редактировать регламент"
+msgstr ""
+
+msgid "Ошибка при обновлении вакансии"
+msgstr ""
+
+msgid "Средний балл"
+msgstr ""
+
+msgid "Ошибка при создании теста"
+msgstr ""
+
+msgid "Отозвать"
+msgstr ""
+
+msgid "Начата"
+msgstr ""
+
+msgid "Ошибка загрузки данных"
+msgstr ""
+
+msgid "Полная аналитика"
+msgstr ""
+
+msgid "Используя платформу SofiHR, HR-клиент подтверждает, что ознакомился с настоящей офертой и согласен следовать её условиям."
+msgstr ""
+
+msgid ". В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ \"О персональных данных\" вы имеете право на "
+msgstr ""
+
+msgid "Отменить"
+msgstr ""
+
+#. placeholder {0}: date.format('HH:mm')
+msgid "вчера, {0}"
+msgstr ""
+
+msgid "Создайте первую вакансию, чтобы начать работу"
+msgstr ""
+
+msgid "AI-интервью: революция в найме"
+msgstr ""
+
+msgid "Имя, email, телефон..."
+msgstr ""
+
+msgid "Выберите компанию"
+msgstr ""
+
+msgid "Недостаточно лимита"
+msgstr ""
+
+msgid "Найдено тестов"
+msgstr ""
+
+msgid "Сообщение обязательно для заполнения"
+msgstr ""
+
+msgid "Поддержка"
+msgstr ""
+
+msgid "Информация"
+msgstr ""
+
+msgid "Экономия: 85% времени HR"
+msgstr ""
+
+msgid "Не удалось получить URL авторизации"
+msgstr ""
+
+msgid "Вакансии, кандидаты, интервью — всё в одном месте"
+msgstr ""
+
+msgid "УДАЛИТЬ"
+msgstr ""
+
+#. placeholder {0}: optimalPlan.name
+msgid "С SofiHR ({0})"
+msgstr ""
+
+msgid "≥ 90% (отличные)"
+msgstr ""
+
+msgid "Ошибка синхронизации"
+msgstr ""
+
+msgid "Введите email адрес"
+msgstr ""
+
+msgid "Версия"
+msgstr ""
+
+msgid "Для загрузки резюме необходимо добавить его вручную"
+msgstr ""
+
+msgid "Ошибка обновления вакансии"
+msgstr ""
+
+msgid "Произошла ошибка при запуске генерации. Попробуйте позже."
+msgstr ""
+
+msgid "✅ Тогда удаление будет мгновенным!"
+msgstr ""
+
+msgid "AI-оценка"
+msgstr ""
+
+msgid "Сделать лидером"
+msgstr ""
+
+msgid "📊 Использование интервью"
+msgstr ""
+
+#. placeholder {0}: formatDate(candidate.created_at)
+#. placeholder {0}: formatDateToLocal(candidate.createdAt)
+msgid "Создан: {0}"
+msgstr ""
+
+msgid "Пожалуйста, добавьте комментарий"
+msgstr ""
+
+msgid "Переместить вниз"
+msgstr ""
+
+msgid "В 3 раза быстрее"
+msgstr ""
+
+msgid "* - обязательные поля"
+msgstr ""
+
+msgid "Истории успеха"
+msgstr ""
+
+msgid "Вас пригласили в компании:"
+msgstr ""
+
+msgid "⭐ Популярный"
+msgstr ""
+
+msgid "AI оценка резюме"
+msgstr ""
+
+msgid "Автоматизация"
+msgstr ""
+
+msgid "Отправить запрос на удаление"
+msgstr ""
+
+msgid "Серверы в России"
+msgstr ""
+
+msgid "Статистика кандидатов:"
+msgstr ""
+
+#. placeholder {0}: interviewProgress.current
+#. placeholder {1}: interviewProgress.total
+#. placeholder {2}: interviewProgress.percentage
+msgid "Интервью продолжается с вопроса {0} из {1} ({2}% завершено)"
+msgstr ""
+
+msgid "Пример использования переводов"
+msgstr ""
+
+msgid "Редактировать тест"
+msgstr ""
+
+#. placeholder {0}: result.data.synced
+#. placeholder {1}: result.data.total
+msgid "Синхронизация завершена! Обработано: {0} из {1}"
+msgstr ""
+
+msgid "Фильтры применены"
+msgstr ""
+
+msgid "Ошибка сети. Проверьте подключение к интернету"
+msgstr ""
+
+msgid "Удалить кандидата"
+msgstr ""
+
+msgid "Приглашение не найдено или истекло"
+msgstr ""
+
+msgid "Для подачи заявки необходимо согласие на обработку персональных данных"
+msgstr ""
+
+msgid "Технические работы - Сайт временно недоступен"
+msgstr ""
+
+msgid "Вопрос"
+msgstr ""
+
+msgid "Анализируем..."
+msgstr ""
+
+msgid "Запустить AI-анализ"
+msgstr ""
+
+msgid "Применить"
+msgstr ""
+
+msgid "Например: example@mail.ru"
+msgstr ""
+
+msgid "В процессе прохождения интервью система может записывать видео и аудио кандидата. Эти данные не используются для установления личности; биометрические шаблоны (слепки голоса/лица) не формируются."
+msgstr ""
+
+msgid "• Сохранение доказательств удаления"
+msgstr ""
+
+msgid "{diffMins} мин назад"
+msgstr ""
+
+msgid "<0>Полное удаление:</0> При отправке формы будут удалены ВСЕ ваши данные с платформы."
+msgstr ""
+
+msgid "Забыли пароль?"
+msgstr ""
+
+msgid "🎥 Запись готова. Выберите действие ниже"
+msgstr ""
+
+msgid "Компания создана!"
+msgstr ""
+
+msgid "Отправить на AI скрининг"
+msgstr ""
+
+msgid "Кандидаты"
+msgstr ""
+
+#. placeholder {0}: e.message
+msgid "❌ Ошибка поиска камер: {0}"
+msgstr ""
+
+msgid "Нет уведомлений"
+msgstr ""
+
+msgid "Отправляем..."
+msgstr ""
+
+msgid "Мы скоро вернёмся!"
+msgstr ""
+
+msgid ""
+"❌ Сессия не найдена или уже завершена\n"
+"\n"
+"Возможно, тест уже был завершён ранее.\n"
+"\n"
+"📧 Если у вас возникли вопросы, обратитесь к вашему HR-менеджеру."
+msgstr ""
+
+msgid "Настроить"
+msgstr ""
+
+msgid " Пожалуйста, разрешите доступ в настройках браузера."
+msgstr ""
+
+msgid "Сообщение успешно отправлено! Мы свяжемся с вами в ближайшее время."
+msgstr ""
+
+msgid "<0>Срок обработки:</0> До 30 дней согласно 152-ФЗ"
+msgstr ""
+
+msgid "Имя и фамилия"
+msgstr ""
+
+msgid "Обработка{timeStr}..."
+msgstr ""
+
+msgid "Цели обработки видео и аудио данных:"
+msgstr ""
+
+msgid "технический"
+msgstr ""
+
+msgid "рекрутинг, HR, найм, вакансии, кандидаты, управление персоналом, автоматизация рекрутинга, AI-оценка"
+msgstr ""
+
+msgid "Должность"
+msgstr ""
+
+msgid "Добавьте вопросы для тестирования кандидатов. Вы можете создать их вручную или использовать AI для генерации."
+msgstr ""
+
+msgid "Продолжить с микрофоном"
+msgstr ""
+
+msgid "Вакансии не найдены"
+msgstr ""
+
+msgid "Зарегистрироваться"
+msgstr ""
+
+msgid "Шаблон"
+msgstr ""
+
+msgid "⭐ Бизнес (рекомендуем!)"
+msgstr ""
+
+msgid "✨ Финализируем результаты..."
+msgstr ""
+
+msgid "ИЛИ"
+msgstr ""
+
+msgid "Вы приглашены на тестирование как: <0>{employeeEmail}</0>"
+msgstr ""
+
+msgid "Нет данных для отображения"
+msgstr ""
+
+msgid "Срочно"
+msgstr ""
+
+msgid "Обновлено: 22.09.2025"
+msgstr ""
+
+msgid "{totalSeconds} секунд"
+msgstr ""
+
+msgid "Начало"
+msgstr ""
+
+msgid "Единая платформа"
+msgstr ""
+
+msgid "🎤 Запись готова. Выберите действие ниже"
+msgstr ""
+
+msgid "🤖 AI анализирует кандидатов..."
+msgstr ""
+
+msgid "Смешанный тип (HR-специалист + организация):"
+msgstr ""
+
+msgid "Создать вакансию"
+msgstr ""
+
+msgid "⚠️ <0>Внимание:</0> У выбранных кандидатов недостаточно данных для AI-анализа"
+msgstr ""
+
+msgid "Настройка синхронизации вакансии"
+msgstr ""
+
+msgid "Интервью автоматизировано"
+msgstr ""
+
+msgid "Как это работает"
+msgstr ""
+
+msgid "AI Скрининг"
+msgstr ""
+
+msgid "Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее."
+msgstr ""
+
+msgid "Сотрудник"
+msgstr ""
+
+msgid "Физическое лицо (HR-специалист):"
+msgstr ""
+
+msgid "🎤 Запись аудио..."
+msgstr ""
+
+msgid "Длительность"
+msgstr ""
+
+msgid "Коммуникация"
+msgstr ""
+
+msgid "Уведомления"
+msgstr ""
+
+msgid "Отменено"
+msgstr ""
+
+#. placeholder {0}: selectedSession.employee.department
+msgid "Отдел: {0}"
+msgstr ""
+
+msgid "Что вы хотите сделать дальше?"
+msgstr ""
+
+msgid "Создаёте вакансию"
+msgstr ""
+
+msgid "Интервью зачислены на ваш баланс. Теперь вы можете создавать кандидатов и проводить интервью."
+msgstr ""
+
+#. placeholder {0}: formatPrice(plan.price_per_interview)
+msgid "{0} за интервью"
+msgstr ""
+
+#. placeholder {0}: submitResult.message.split('Номер вашего запроса: ')[1]
+msgid "<0>Номер запроса:</0> {0}"
+msgstr ""
+
+msgid "Кастомные шаблоны"
+msgstr ""
+
+msgid "Не удалось загрузить баланс"
+msgstr ""
+
+msgid "Для реализации своих прав обращайтесь к нам через форму обратной связи или по указанным контактным данным."
+msgstr ""
+
+msgid "Удалить стадию"
+msgstr ""
+
+msgid "Создание кастомных шаблонов интервью"
+msgstr ""
+
+msgid "Последняя неделя"
+msgstr ""
+
+msgid "При старте"
+msgstr ""
+
+msgid "Не удалось запустить AI-анализ"
+msgstr ""
+
+msgid "• Все согласия на обработку данных"
+msgstr ""
+
+msgid "QR-код для прохождения теста"
+msgstr ""
+
+#. placeholder {0}: selectedCandidates.length
+msgid "AI-сравнение ({0})"
+msgstr ""
+
+msgid "• Удаление всех копий данных из своих систем"
+msgstr ""
+
+msgid "Имя слишком длинное"
+msgstr ""
+
+msgid "Просмотр"
+msgstr ""
+
+msgid "Недостаточно данных для анализа"
+msgstr ""
+
+msgid "Ошибка загрузки информации о вакансии"
+msgstr ""
+
+#. placeholder {0}: stats.gifts.count
+msgid "Вы получили {0} бонусных интервью благодаря нашей системе защиты от одновременных запусков. Мы ценим ваше доверие!"
+msgstr ""
+
+msgid "Статистика кандидатов"
+msgstr ""
+
+msgid "Новая кастомная стадия"
+msgstr ""
+
+msgid "Вакансия обновлена"
+msgstr ""
+
+msgid "Загрузка резюме..."
+msgstr ""
+
+msgid "Выбрано кандидатов"
+msgstr ""
+
+msgid "Сбросить фильтр"
+msgstr ""
+
+msgid "HEX код"
+msgstr ""
+
+msgid "Все время"
+msgstr ""
+
+#. placeholder {0}: sessionDetail.startedAt || '-'
+msgid "<0>Начата:</0> <1/> {0}"
+msgstr ""
+
+msgid "Это поле обязательно для заполнения"
+msgstr ""
+
+msgid "✨ Создать новую вакансию"
+msgstr ""
+
+msgid "🎤 Запись аудио"
+msgstr ""
+
+msgid "SofiHR - Система управления рекрутингом"
+msgstr ""
+
+msgid "Современная HR-система для управления вакансиями, кандидатами и процессами найма. Автоматизация рекрутинга с AI-оценкой кандидатов."
+msgstr ""
+
+msgid "Без шаблона"
+msgstr ""
+
+msgid "Номер вашего запроса:"
+msgstr ""
+
+msgid "до {minutes} минут"
+msgstr ""
+
+msgid "Произошла ошибка при входе"
+msgstr ""
+
+msgid "Удалить навсегда"
+msgstr ""
+
+msgid "Кандидат еще не оставил свое мнение о результатах"
+msgstr ""
+
+msgid "Слабые стороны:"
+msgstr ""
+
+msgid "✅ Спасибо за ваше мнение! Оно отправлено HR-менеджеру."
+msgstr ""
+
+msgid "Не оценены навыки"
+msgstr ""
+
+msgid "Удалить и переместить {candidatesCount} кандидатов"
+msgstr ""
+
+msgid "Подробнее"
+msgstr ""
+
+msgid "более {to}"
+msgstr ""
+
+msgid "Открыть"
+msgstr ""
+
+msgid "✅ Прошли тест"
+msgstr ""
+
+msgid "Встраивание"
+msgstr ""
+
+#. placeholder {0}: transaction.gift_value.toLocaleString('ru-RU')
+msgid "(стоимость {0}₽)"
+msgstr ""
+
+msgid "Хорошо"
+msgstr ""
+
+msgid "Действия"
+msgstr ""
+
+msgid ""
+"❌ Файл слишком большой\n"
+"\n"
+"Размер записи превышает допустимый лимит.\n"
+"\n"
+"💡 Совет: Попробуйте записать более короткий ответ или отключите видео (только аудио)."
+msgstr ""
+
+#. placeholder {0}: result.updated
+msgid "✅ Перемещено {0} кандидатов"
+msgstr ""
+
+msgid "Ошибка загрузки баланса"
+msgstr ""
+
+msgid "Не синхронизированы"
+msgstr ""
+
+msgid "🤖 Запускаем AI-анализ качества ответов..."
+msgstr ""
+
+msgid "AI анализ резюме"
+msgstr ""
+
+msgid "Пожалуйста, запишите ответ"
+msgstr ""
+
+msgid "Обратная связь, полученная кандидатом"
+msgstr ""
+
+msgid "У вас пока нет компаний. Создайте новую компанию или примите приглашение."
+msgstr ""
+
+msgid "Сотрудники компании"
+msgstr ""
+
+msgid "Принять все"
+msgstr ""
+
+msgid "Имя"
+msgstr ""
+
+msgid "Сгорают ли интервью после покупки?"
+msgstr ""
+
+msgid "10 AI-интервью для тестирования платформы"
+msgstr ""
+
+msgid "Типы HR-клиентов платформы:"
+msgstr ""
+
+msgid "Идёт запись... Говорите в камеру"
+msgstr ""
+
+msgid "≥ 80% (хорошие)"
+msgstr ""
+
+msgid "Попробовать снова"
+msgstr ""
+
+msgid "∞ Безлимит"
+msgstr ""
+
+msgid "Детальные отчеты по всем кандидатам"
+msgstr ""
+
+msgid ""
+"❌ Ошибка соединения\n"
+"\n"
+"Не удалось связаться с сервером.\n"
+"\n"
+"🔄 Проверьте подключение к интернету и попробуйте ещё раз.\n"
+"\n"
+"📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру."
+msgstr ""
+
+#. placeholder {0}: candidatesCount === 1 ? _(msg`кандидат`) : candidatesCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)
+msgid "В этой стадии находится <0>{candidatesCount}</0> {0} (во всех вакансиях компании)"
+msgstr ""
+
+#. placeholder {0}: cameraError.message
+msgid "❌ {label} не работает: {0}"
+msgstr ""
+
+msgid "Настройка критериев"
+msgstr ""
+
+msgid "Ошибка загрузки данных. Проверьте выбранную компанию в хедере."
+msgstr ""
+
+msgid "Получить бесплатно"
+msgstr ""
+
+msgid "⏸️ Отложен"
+msgstr ""
+
+msgid "Открытые вакансии"
+msgstr ""
+
+msgid "Ваша экономия в месяц"
+msgstr ""
+
+msgid "Осталось просмотров резюме"
+msgstr ""
+
+msgid "Телефон"
+msgstr ""
+
+msgid "Скачать QR-код (SVG)"
+msgstr ""
+
+msgid "💡 Рекомендация: Рассмотрите возможность пересмотра вопросов с низким средним баллом"
+msgstr ""
+
+#. placeholder {0}: sync_status.synced
+#. placeholder {1}: sync_status.total
+msgid "Синхронизация: {0} / {1}"
+msgstr ""
+
+msgid "Нет аккаунта? "
+msgstr ""
+
+msgid "Превышен лимит просмотров резюме на HH.ru"
+msgstr ""
+
+msgid "Детальные отчеты"
+msgstr ""
+
+msgid "Попробуйте изменить поисковый запрос"
+msgstr ""
+
+msgid "Синхронизация..."
+msgstr ""
+
+msgid "Заполняете требования к позиции"
+msgstr ""
+
+msgid "AI-анализ еще не запущен"
+msgstr ""
+
+#. placeholder {0}: sessionDetail.finishedAt || '-'
+msgid "<0>Завершена:</0> <1/> {0}"
+msgstr ""
+
+#. placeholder {0}: cameras.length
+msgid "📷 Найдено камер: {0}"
+msgstr ""
+
+msgid "кандидатов"
+msgstr ""
+
+msgid "Подключить заново"
+msgstr ""
+
+msgid "Для самостоятельной регистрации сотрудников"
+msgstr ""
+
+msgid "10 на странице"
+msgstr ""
+
+#. placeholder {0}: interviewProgress.current
+#. placeholder {1}: interviewProgress.total
+msgid "Продолжение: {0} из {1}"
+msgstr ""
+
+msgid "Требует улучшения"
+msgstr ""
+
+msgid "💡 Рекомендация"
+msgstr ""
+
+msgid "📅 Последний месяц"
+msgstr ""
+
+msgid "Используют для клиентов из разных отраслей. Масштабировали бизнес в 3 раза."
+msgstr ""
+
+#. placeholder {0}: result.movedCandidates > 0 ? `Перемещено кандидатов: ${result.movedCandidates}` : ''
+msgid "Стадия удалена. {0}"
+msgstr ""
+
+msgid "{testsCurrent} из {testsTotal}"
+msgstr ""
+
+msgid "Спасибо за прохождение интервью!"
+msgstr ""
+
+msgid "Создание..."
+msgstr ""
+
+msgid "🎤 Аудио ответ отправлен"
+msgstr ""
+
+msgid "Ручной ввод"
+msgstr ""
+
+msgid "HR-клиент еще не подтвердил удаление копий данных"
+msgstr ""
+
+msgid "Подтвердить удаление"
+msgstr ""
+
+#. placeholder {0}: selectedPlan.name
+msgid "Вы собираетесь приобрести тариф <0>{0}</0>"
+msgstr ""
+
+msgid "Сохранить настройки"
+msgstr ""
+
+msgid "Тестов"
+msgstr ""
+
+#. placeholder {0}: vacancies.length
+msgid "Вакансии из HH.ru ({0})"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Готовы автоматизировать найм?"
+msgstr ""
+
+msgid "Форма обратной связи"
+msgstr ""
+
+msgid "Результаты теста"
+msgstr ""
+
+msgid "Масштабируемость"
+msgstr ""
+
+msgid "📁 Добавление в талант-пул"
+msgstr ""
+
+msgid "Выберите хотя бы один статус для синхронизации"
+msgstr ""
+
+msgid "• <0>ИИ-анализ</0> — снижение ошибок при найме на 60%"
+msgstr ""
+
+msgid "Приглашения не созданы"
+msgstr ""
+
+msgid "Бизнес (рекомендуем)"
+msgstr ""
+
+msgid "Документация"
+msgstr ""
+
+msgid "Резюме отсутствует в базе"
+msgstr ""
+
+msgid "Создайте вакансию"
+msgstr ""
+
+msgid "Возможные причины"
+msgstr ""
+
+msgid "завершили"
+msgstr ""
+
+msgid "Принять"
+msgstr ""
+
+msgid "API"
+msgstr ""
+
+msgid "Анализируется"
+msgstr ""
+
+#. placeholder {0}: totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)
+msgid "Переместить {totalSelectedCount} {0}?"
+msgstr ""
+
+msgid "Внимание"
+msgstr ""
+
+msgid "У вас есть вопросы? Мы готовы помочь!"
+msgstr ""
+
+msgid "Слабые вопросы"
+msgstr ""
+
+msgid "Принят"
+msgstr ""
+
+msgid "При старте (вопросы генерируются для каждого сотрудника индивидуально)"
+msgstr ""
+
+msgid "Проведённых интервью"
+msgstr ""
+
+#. placeholder {0}: stats.used.paid
+#. placeholder {1}: stats.gifts.count > 0 && ` и ${stats.gifts.count} бонусных`
+msgid "Из них {0} оплаченных{1}"
+msgstr ""
+
+#. placeholder {0}: formatBitrixDate(candidate.createdAt)
+msgid "Добавлен: {0}"
+msgstr ""
+
+msgid "Реализуйте свое право на забвение согласно 152-ФЗ"
+msgstr ""
+
+msgid "Это действие нельзя отменить."
+msgstr ""
+
+msgid "Название вакансии"
+msgstr ""
+
+msgid "Сложный"
+msgstr ""
+
+msgid "Отключение камеры не влияет на возможность прохождения интервью и оценку по обязательным критериям. Видео помогает HR лучше увидеть коммуникативные навыки. Видео и аудио не используются для установления личности; биометрические шаблоны не формируются."
+msgstr ""
+
+msgid "Сотрудник повышен до HR-Лидера"
+msgstr ""
+
+msgid "Время ответа"
+msgstr ""
+
+#. placeholder {0}: error.message || 'Произошла ошибка при отправке.'
+msgid ""
+"❌ Не удалось отправить ответ\n"
+"\n"
+"{0}\n"
+"\n"
+"🔄 Пожалуйста, попробуйте ещё раз.\n"
+"\n"
+"📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру."
+msgstr ""
+
+#. placeholder {0}: Math.floor(timeLeft / 60)
+#. placeholder {1}: (timeLeft % 60).toString().padStart(2, '0')
+msgid "Осталось: {0}:{1}"
+msgstr ""
+
+msgid "Email обязателен"
+msgstr ""
+
+msgid "Загрузить из HeadHunter.ru"
+msgstr ""
+
+msgid "📊 Лимиты HeadHunter.ru (менеджер):"
+msgstr ""
+
+msgid "🚀 Создаем план персонального роста..."
+msgstr ""
+
+msgid "Ошибка AI-анализа"
+msgstr ""
+
+msgid "Тесты по регламентам"
+msgstr ""
+
+msgid "Согласие на запись видео (снимите галочку — будет только аудио)"
+msgstr ""
+
+msgid "Необходимо выбрать минимум 2 кандидатов"
+msgstr ""
+
+msgid "Активна"
+msgstr ""
+
+msgid "Попробовать бесплатно"
+msgstr ""
+
+msgid "🔄 Подключение к камере и микрофону..."
+msgstr ""
+
+msgid "Неограниченное количество шаблонов"
+msgstr ""
+
+msgid "В случае возникновения разногласий стороны обязуются решать их путем переговоров. При невозможности достижения соглашения спор разрешается в судебном порядке."
+msgstr ""
+
+msgid "Завершена"
+msgstr ""
+
+msgid "Выберите количество вопросов от 1 до 20"
+msgstr ""
+
+msgid "Создать именные приглашения по email"
+msgstr ""
+
+msgid "• Ваши персональные данные (имя, email, телефон)"
+msgstr ""
+
+msgid "Автоматизация рекрутинга"
+msgstr ""
+
+msgid "⭐ Финалист"
+msgstr ""
+
+msgid "Транзакции"
+msgstr ""
+
+msgid "Вы можете включить камеру для более полного ответа, но это не обязательно."
+msgstr ""
+
+msgid "ООО «Ваша компания»"
+msgstr ""
+
+#. placeholder {0}: candidate.sessionsCount
+msgid "📝 Сессий: {0}"
+msgstr ""
+
+msgid "HR-Лидер"
+msgstr ""
+
+msgid "Всего"
+msgstr ""
+
+msgid "Система предоставляет следующие возможности:"
+msgstr ""
+
+msgid "Как работает платформа:"
+msgstr ""
+
+msgid "Ошибка: {errorMessage}"
+msgstr ""
+
+msgid "Описание вакансии:"
+msgstr ""
+
+#. placeholder {0}: idx+1
+msgid "Вопрос {0}:"
+msgstr ""
+
+msgid "Введите ваш email"
+msgstr ""
+
+msgid "Нет открытых вакансий"
+msgstr ""
+
+msgid "Проведено интервью:"
+msgstr ""
+
+msgid "• Персональные данные (имя, email, телефон)"
+msgstr ""
+
+msgid "📞 На связи"
+msgstr ""
+
+msgid "Генерация..."
+msgstr ""
+
+msgid "Ошибка генерации вопросов"
+msgstr ""
+
+msgid "Ошибка загрузки приглашений"
+msgstr ""
+
+msgid "Ошибка соединения. Проверьте интернет и попробуйте еще раз."
+msgstr ""
+
+msgid "Вы уверены, что хотите пропустить этот вопрос?"
+msgstr ""
+
+msgid "Стандартные настройки"
+msgstr ""
+
+msgid "Шаблоны интервью"
+msgstr ""
+
+msgid "Текст"
+msgstr ""
+
+msgid "Реальные результаты клиентов"
+msgstr ""
+
+msgid "Новый"
+msgstr ""
+
+#. placeholder {0}: filters.hhStage
+msgid "HH Стадия: {0}"
+msgstr ""
+
+msgid "HR-специалист может привязать свой аккаунт к организации для расширения функциональности и корпоративной работы."
+msgstr ""
+
+msgid "🔔 Уведомление HR менеджера"
+msgstr ""
+
+msgid "🤖 AI Скрининг"
+msgstr ""
+
+msgid "Плохо"
+msgstr ""
+
+msgid "за всё время"
+msgstr ""
+
+msgid "Соответствие 152-ФЗ"
+msgstr ""
+
+#. placeholder {0}: context[0].label
+#. placeholder {0}: filters.datePreset === 'today' ? _(msg`Сегодня`) : filters.datePreset === '3days' ? _(msg`Последние 3 дня`) : filters.datePreset === 'week' ? _(msg`Последняя неделя`) : _(msg`Последний месяц`)
+msgid "Дата: {0}"
+msgstr ""
+
+msgid "Обратная связь пока не готова"
+msgstr ""
+
+msgid "всего"
+msgstr ""
+
+msgid "Связаться с нами"
+msgstr ""
+
+msgid "Статус"
+msgstr ""
+
+msgid "Тесты не созданы"
+msgstr ""
+
+msgid "Нет вопросов"
+msgstr ""
+
+msgid "Подтверждение покупки"
+msgstr ""
+
+msgid "Введите заметку или комментарий..."
+msgstr ""
+
+msgid "📊 Результаты тестирования"
+msgstr ""
+
+msgid "🎁 Бонусных интервью"
+msgstr ""
+
+msgid "Развёрнутый отчёт"
+msgstr ""
+
+msgid " (обновлено)"
+msgstr ""
+
+msgid "Количество вопросов, которые будут сгенерированы ИИ"
+msgstr ""
+
+msgid "Эталонные ответы для проверки AI"
+msgstr ""
+
+msgid "⏹️ Остановить запись"
+msgstr ""
+
+msgid "Проверьте почту и используйте полученный пароль для входа в систему."
+msgstr ""
+
+msgid "Ошибка при удалении регламента"
+msgstr ""
+
+msgid "Заметка хранится только локально в браузере (MVP)."
+msgstr ""
+
+#. placeholder {0}: candidates.length
+msgid "Кандидатов: {0}"
+msgstr ""
+
+msgid "Ошибка при удалении данных"
+msgstr ""
+
+msgid "Ответы на популярные вопросы о ценах и возможностях"
+msgstr ""
+
+msgid "💬 Дополнительная информация"
+msgstr ""
+
+msgid "Ответы на вопросы:"
+msgstr ""
+
+msgid "Связались"
+msgstr ""
+
+msgid "Пропустить вопрос?"
+msgstr ""
+
+msgid "Все регламенты"
+msgstr ""
+
+msgid "Техподдержка 24/7"
+msgstr ""
+
+msgid "Скрининги AI - безлимит"
+msgstr ""
+
+msgid "Даю согласие на обработку персональных данных в соответствии с <0>Политикой конфиденциальности</0> *"
+msgstr ""
+
+msgid "Можно ли перейти на другой тариф?"
+msgstr ""
+
+msgid "Есть мнение"
+msgstr ""
+
+msgid "Сравнить выбранных"
+msgstr ""
+
+msgid "Ошибка создания вакансии с тестом"
+msgstr ""
+
+msgid "20 на странице"
+msgstr ""
+
+msgid "кандидат требует"
+msgstr ""
+
+msgid "⏰ Обработка займет до 30 дней согласно 152-ФЗ"
+msgstr ""
+
+msgid "Удалить тест? Все связанные данные (приглашения, результаты) будут удалены."
+msgstr ""
+
+msgid "Динамическая генерация вопросов"
+msgstr ""
+
+msgid "Увеличение прибыли: 250%"
+msgstr ""
+
+msgid "Телефон не указан"
+msgstr ""
+
+msgid "Без оценки"
+msgstr ""
+
+msgid "Мой профиль"
+msgstr ""
+
+msgid "Идёт распознавание речи..."
+msgstr ""
+
+msgid "Обновить вакансию"
+msgstr ""
+
+msgid "Отклик на вакансию"
+msgstr ""
+
+msgid "в процессе"
+msgstr ""
+
+msgid "Настройки теста"
+msgstr ""
+
+msgid "Вернуться к списку тестов"
+msgstr ""
+
+msgid "Все стадии"
+msgstr ""
+
+msgid "Телефон должен содержать минимум 10 цифр"
+msgstr ""
+
+#. placeholder {0}: candidate.status
+msgid "🎯 Статус: {0}"
+msgstr ""
+
+msgid "🔍 Анализируем ваши ответы..."
+msgstr ""
+
+msgid "интервью"
+msgstr ""
+
+msgid "1000 интервью"
+msgstr ""
+
+msgid "У нас:"
+msgstr ""
+
+msgid "Запрос на удаление отклонен по веским причинам"
+msgstr ""
+
+msgid "✉️ Отправка письма отказа"
+msgstr ""
+
+msgid "Вопросы будут автоматически генерироваться при старте теста для каждого сотрудника индивидуально. Это обеспечит уникальность заданий и предотвратит списывание."
+msgstr ""
+
+msgid "Вакансия: {title}"
+msgstr ""
+
+msgid "Обрабатываем аудио и видео ответы..."
+msgstr ""
+
+msgid "Доступ к камере запрещен. Разрешите доступ в настройках браузера."
+msgstr ""
+
+msgid "Камера не найдена. Проверьте подключение камеры."
+msgstr ""
+
+msgid "ИИ-интервью"
+msgstr ""
+
+msgid "Детали результата"
+msgstr ""
+
+msgid "Будет автоматически выполнено:"
+msgstr ""
+
+msgid "AI-ассистент"
+msgstr ""
+
+msgid "История платежей"
+msgstr ""
+
+msgid "Интеграция с мессенджерами, job-сайтами и корпоративными сервисами."
+msgstr ""
+
+msgid "Тесты на знание регламентов"
+msgstr ""
+
+msgid "Без анализа"
+msgstr ""
+
+msgid "Защищённая передача данных по HTTPS"
+msgstr ""
+
+msgid "Покупка"
+msgstr ""
+
+msgid "Ошибка соединения"
+msgstr ""
+
+#. placeholder {0}: folder.regulationsCount
+msgid "Регламентов: {0}"
+msgstr ""
+
+msgid "Вакансия"
+msgstr ""
+
+msgid "Источник"
+msgstr ""
+
+msgid "Тестов за 7 дней"
+msgstr ""
+
+msgid "Загрузка..."
+msgstr ""
+
+msgid "Архив"
+msgstr ""
+
+msgid "Загрузить"
+msgstr ""
+
+msgid "Произошла ошибка при удалении стадии"
+msgstr ""
+
+#. placeholder {0}: testInfo.questionsPerRegulation
+msgid "Тестирование состоит из {0} вопросов. На каждый вопрос отводится ограниченное время."
+msgstr ""
+
+msgid "Регулярные обновления"
+msgstr ""
+
+msgid "Резюме: Нет"
+msgstr ""
+
+msgid "Кандидатов с AI-анализом"
+msgstr ""
+
+msgid "Режим генерации вопросов"
+msgstr ""
+
+msgid "Автоматическая синхронизация отключена"
+msgstr ""
+
+msgid "Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер."
+msgstr ""
+
+msgid "Система использует cookies для:"
+msgstr ""
+
+msgid "Аудио"
+msgstr ""
+
+msgid "Интеграция с HH.ru"
+msgstr ""
+
+msgid "Отлично"
+msgstr ""
+
+msgid "Завершили"
+msgstr ""
+
+msgid "🔄 Переписать"
+msgstr ""
+
+msgid "Пополнить баланс"
+msgstr ""
+
+msgid "Доступно для команд любого размера."
+msgstr ""
+
+msgid "Обработка и хранение персональных данных осуществляются на территории Российской Федерации; трансграничная передача не осуществляется."
+msgstr ""
+
+msgid "Автоматизация HR-процессов"
+msgstr ""
+
+msgid "Используя Систему, вы подтверждаете, что ознакомились с настоящими Условиями и согласны следовать им."
+msgstr ""
+
+msgid "Снижение затрат на найм"
+msgstr ""
+
+msgid "🔍 Мы свяжемся с вами для подтверждения личности"
+msgstr ""
+
+msgid "Анализ недоступен"
+msgstr ""
+
+msgid "Регламенты не найдены"
+msgstr ""
+
+msgid "Превышено время ожидания генерации"
+msgstr ""
+
+msgid ""
+"❌ Ошибка при запуске теста\n"
+"\n"
+"{errorMessage}\n"
+"\n"
+"📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру."
+msgstr ""
+
+msgid "Пропущенный вопрос будет засчитан как отсутствие ответа."
+msgstr ""
+
+msgid "AI скрининг займёт примерно <0>{daysNeeded}</0> дней"
+msgstr ""
+
+msgid "Перейдите в настройки интеграции HH.ru и авторизуйтесь заново"
+msgstr ""
+
+msgid "условиями обработки персональных данных"
+msgstr ""
+
+msgid "Не удалось начать запись"
+msgstr ""
+
+msgid "Количество вопросов"
+msgstr ""
+
+msgid "Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании."
+msgstr ""
+
+msgid "Обязательства при привязке к организации:"
+msgstr ""
+
+msgid "Вся статистика по вакансиям и кандидатам в одном месте."
+msgstr ""
+
+msgid "Адаптивные вопросы"
+msgstr ""
+
+msgid "Для тестирования платформы без финансовых вложений. 10 бесплатных интервью для знакомства с функционалом."
+msgstr ""
+
+msgid "Как происходит оплата?"
+msgstr ""
+
+msgid "Ошибка загрузки статуса интеграции"
+msgstr ""
+
+msgid "Для регистрации необходимо согласие на обработку персональных данных"
+msgstr ""
+
+msgid "Пользователи не имеют права копировать, модифицировать или распространять элементы Системы без разрешения."
+msgstr ""
+
+msgid "🔍 Тестируем: {label}..."
+msgstr ""
+
+msgid "3м"
+msgstr ""
+
+msgid "Показать QR-код"
+msgstr ""
+
+msgid "Сгенерировать AI"
+msgstr ""
+
+msgid "Обновить список"
+msgstr ""
+
+msgid "Камера недоступна"
+msgstr ""
+
+msgid "Сохранить (demo)"
+msgstr ""
+
+msgid "Все планы включают"
+msgstr ""
+
+msgid "Детальный анализ каждого ответа"
+msgstr ""
+
+#. placeholder {0}: generationProgress.elapsed_time
+msgid "Прошло времени: {0} секунд"
+msgstr ""
+
+msgid "Сильные стороны:"
+msgstr ""
+
+msgid "Использовано оплаченных"
+msgstr ""
+
+msgid "Умная сортировка"
+msgstr ""
+
+msgid "Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email."
+msgstr ""
+
+msgid "Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <0>Политика обработки ПДн</0>."
+msgstr ""
+
+msgid "Статистика"
+msgstr ""
+
+msgid "Название стадии"
+msgstr ""
+
+msgid "Ваш email"
+msgstr ""
+
+msgid "Активен"
+msgstr ""
+
+#. placeholder {0}: Math.floor(diffDays / 30)
+msgid "{0} месяцев назад"
+msgstr ""
+
+msgid "Неизвестная камера"
+msgstr ""
+
+msgid "💡 <0>Как это работает:</0>"
+msgstr ""
+
+msgid "Тип"
+msgstr ""
+
+#. placeholder {0}: status.hhLimits.limits.resumeView
+msgid "из {0} на сегодня"
+msgstr ""
+
+msgid "Можно приглашать подрядчиков и консультантов в процессы найма."
+msgstr ""
+
+msgid "Простой процесс автоматизации найма за 4 шага"
+msgstr ""
+
+msgid "Кандидатов"
+msgstr ""
+
+msgid "нет ответа"
+msgstr ""
+
+msgid "Для средних компаний с активным процессом найма"
+msgstr ""
+
+msgid "Получить"
+msgstr ""
+
+msgid "�� Понимание статусов уведомлений"
+msgstr ""
+
+msgid ""
+"❌ Срок действия приглашения истёк\n"
+"\n"
+"Данное приглашение больше недействительно.\n"
+"\n"
+"📧 Пожалуйста, запросите новое приглашение у вашего HR-менеджера."
+msgstr ""
+
+msgid "Подтвердить"
+msgstr ""
+
+msgid "Применить фильтры"
+msgstr ""
+
+#. placeholder {0}: invitation.usesCount
+msgid "Использовано {0} раз"
+msgstr ""
+
+msgid "Обучение команды"
+msgstr ""
+
+msgid "Загрузка резюме"
+msgstr ""
+
+msgid "Создать новую компанию"
+msgstr ""
+
+msgid "Кандидаты отсутствуют"
+msgstr ""
+
+msgid "Именное"
+msgstr ""
+
+msgid "Резюме"
+msgstr ""
+
+msgid "Отзыв"
+msgstr ""
+
+msgid "Например: Тест на знание политики безопасности"
+msgstr ""
+
+msgid "Тест: Не проходили"
+msgstr ""
+
+msgid "Краткое описание теста для сотрудников"
+msgstr ""
+
+msgid "Ошибка отправки"
+msgstr ""
+
+msgid "Не указан"
+msgstr ""
+
+msgid "Параметр"
+msgstr ""
+
+msgid "Генерация завершена!"
+msgstr ""
+
+msgid "Ранжирование кандидатов"
+msgstr ""
+
+msgid "Параметры интервью"
+msgstr ""
+
+msgid "стресс"
+msgstr ""
+
+msgid "Папка"
+msgstr ""
+
+msgid "Вход..."
+msgstr ""
+
+msgid "Требует подтверждения"
+msgstr ""
+
+msgid "Общее приглашение можно использовать для массовой рассылки. Каждый сотрудник введёт свои данные при старте теста."
+msgstr ""
+
+msgid "Без кредитной карты • 14 дней бесплатно • Отмена в любое время"
+msgstr ""
+
+msgid "Войдите в свой аккаунт SofiHR"
+msgstr ""
+
+msgid "Понятно"
+msgstr ""
+
+#. placeholder {0}: (questions||[]).length
+msgid "Вопросы ({0})"
+msgstr ""
+
+msgid "Заранее (вопросы генерируются при создании теста)"
+msgstr ""
+
+msgid "Минимум 3 символа"
+msgstr ""
+
+msgid "Загрузить резюме из HH.ru"
+msgstr ""
+
+msgid "1 день назад"
+msgstr ""
+
+msgid "Сумма"
+msgstr ""
+
+msgid "Настоящая Политика вступает в силу с момента размещения на сайте и действует до момента ее отмены или замены новой Политикой."
+msgstr ""
+
+msgid "Редактирование"
+msgstr ""
+
+msgid "Истекло"
+msgstr ""
+
+#. placeholder {0}: formatBitrixDate(candidate.lastContactedAt)
+msgid "Контакт: {0}"
+msgstr ""
+
+msgid "Выбрать кандидатов"
+msgstr ""
+
+msgid "⏱️ Обработка ответов может занимать до 20 минут"
+msgstr ""
+
+msgid "Назад"
+msgstr ""
+
+msgid "• Данные, переданные HR-клиентам"
+msgstr ""
+
+msgid "• Ответственность за несоблюдение сроков"
+msgstr ""
+
+msgid "Нет кандидатов"
+msgstr ""
+
+msgid "Пароль"
+msgstr ""
+
+msgid "Удалить регламент?"
+msgstr ""
+
+msgid "Не создана"
+msgstr ""
+
+msgid "Время на один вопрос"
+msgstr ""
+
+msgid "Выбор компании"
+msgstr ""
+
+msgid "Произошла ошибка при отправке сообщения"
+msgstr ""
+
+msgid "БЕСПЛАТНО"
+msgstr ""
+
+msgid "Производственная компания"
+msgstr ""
+
+msgid "Ответов:"
+msgstr ""
+
+msgid "Создать регламент"
+msgstr ""
+
+msgid ""
+"❌ Приглашение уже использовано\n"
+"\n"
+"Вы уже проходили тест по этому приглашению, или лимит использований исчерпан.\n"
+"\n"
+"📧 Если вам нужно пройти тест повторно, запросите новое приглашение у вашего HR-менеджера."
+msgstr ""
+
+msgid "Мнение кандидата"
+msgstr ""
+
+#. placeholder {0}: stableIds.length
+msgid "Обрабатываем {0} кандидатов"
+msgstr ""
+
+msgid "Не удалось провести анализ кандидатов с помощью искусственного интеллекта."
+msgstr ""
+
+msgid "✍️ Ручной"
+msgstr ""
+
+msgid "Для транскрибации аудио и вспомогательной обработки оператор привлекает обработчиков по поручению на территории РФ. Обработка осуществляется строго по инструкциям оператора, без использования данных в целях обучения, с ограниченными сроками хранения и без трансграничной передачи."
+msgstr ""
+
+msgid "Оффер"
+msgstr ""
+
+msgid "Изменение настроек теста"
+msgstr ""
+
+msgid "<0>Важно:</0> Запросы без ссылки на интервью обрабатываются вручную администраторами для проверки вашей личности. Это занимает больше времени, но обеспечивает безопасность."
+msgstr ""
+
+msgid "✅ Камера подключена"
+msgstr ""
+
+msgid "Создано: {createdDate}"
+msgstr ""
+
+msgid "Email обязателен для заполнения"
+msgstr ""
+
+msgid "Выбор регламентов"
+msgstr ""
+
+msgid "⚠️ Токен доступа был отозван"
+msgstr ""
+
+msgid "Мария Петрова"
+msgstr ""
+
+msgid "Быстрее найм"
+msgstr ""
+
+msgid "Если у вас есть ссылка на интервью, используйте кнопку \"Удалить мои данные\" прямо на странице интервью."
+msgstr ""
+
+msgid "Ошибка запуска генерации вопросов"
+msgstr ""
+
+msgid "🧠 AI анализ резюме через DeepInfra"
+msgstr ""
+
+msgid "HH.ru требует авторизации"
+msgstr ""
+
+msgid "Опишите требования, обязанности и условия работы"
+msgstr ""
+
+msgid "Настройки"
+msgstr ""
+
+msgid "Сравнить"
+msgstr ""
+
+msgid "Обработка персональных данных в системе подбора персонала"
+msgstr ""
+
+msgid "Старт"
+msgstr ""
+
+msgid "Транскрипция:"
+msgstr ""
+
+msgid "💡 Рекомендации для развития"
+msgstr ""
+
+msgid "Возврат"
+msgstr ""
+
+msgid "Все"
+msgstr ""
+
+msgid "Потрачено сегодня"
+msgstr ""
+
+msgid "Современная HR-система для управления рекрутингом"
+msgstr ""
+
+#. placeholder {0}: stats.lifetime.interviews_used
+#. placeholder {1}: stats.lifetime.interviews_purchased
+msgid "{0} из {1} интервью"
+msgstr ""
+
+msgid "Вопросы не добавлены"
+msgstr ""
+
+msgid "📅 Последние 3 дня"
+msgstr ""
+
+msgid "Кандидаты появятся после прохождения интервью"
+msgstr ""
+
+msgid "Ошибка генерации"
+msgstr ""
+
+msgid "Произошла ошибка при сохранении стадии"
+msgstr ""
+
+#. placeholder {0}: selectedRegulations.length * questionsPerRegulation
+msgid "Система создаст {0} вопросов на основе выбранных регламентов с помощью AI."
+msgstr ""
+
+msgid "Отправить новый пароль"
+msgstr ""
+
+msgid "<0>Это действие нельзя отменить!</0> После удаления данные будут потеряны навсегда."
+msgstr ""
+
+msgid ""
+"❌ Приглашение не найдено\n"
+"\n"
+"Возможные причины:\n"
+"• Ссылка устарела или была удалена\n"
+"• Приглашение уже было использовано\n"
+"• Срок действия приглашения истёк\n"
+"\n"
+"📧 Запросите новое приглашение у вашего HR-менеджера."
+msgstr ""
+
+msgid "Название регламента"
+msgstr ""
+
+msgid "Использование"
+msgstr ""
+
+msgid "Ключевые навыки:"
+msgstr ""
+
+msgid "Мы храним ваши персональные данные только в течение времени, необходимого для достижения целей обработки, указанных в настоящей Политике."
+msgstr ""
+
+msgid "Приоритетная разработка функций"
+msgstr ""
+
+msgid "К кандидатам"
+msgstr ""
+
+msgid "Сохранено!"
+msgstr ""
+
+msgid "Ошибка при создании PDF"
+msgstr ""
+
+msgid "✅ Камера и микрофон подключены"
+msgstr ""
+
+msgid "Общее (для самостоятельной регистрации)"
+msgstr ""
+
+msgid "Ошибка загрузки данных вакансии"
+msgstr ""
+
+msgid "Не удалось обновить стадию"
+msgstr ""
+
+msgid "По всем вопросам, связанным с обработкой персональных данных, обращайтесь:"
+msgstr ""
+
+msgid "5 на странице"
+msgstr ""
+
+msgid "Нажмите \"Обновить список\" чтобы загрузить вакансии из HH.ru"
+msgstr ""
+
+msgid "AI-оценка кандидата"
+msgstr ""
+
+msgid "Итоговый балл"
+msgstr ""
+
+#. placeholder {0}: totalClients.toLocaleString()
+msgid "{0}+ HR и компаний уже с нами"
+msgstr ""
+
+msgid "Андрей Смирнов"
+msgstr ""
+
+msgid "Возможности"
+msgstr ""
+
+msgid "Решение проблем"
+msgstr ""
+
+msgid "Например: +7 (999) 123-45-67"
+msgstr ""
+
+#. placeholder {0}: selectedRegulations.length
+#. placeholder {1}: selectedRegulations.length * questionsPerRegulation
+msgid "Выбрано регламентов: <0>{0}</0><1/>Всего вопросов: <2>{1}</2>"
+msgstr ""
+
+msgid "Добавить кандидата"
+msgstr ""
+
+msgid "Тест успешно создан!"
+msgstr ""
+
+msgid "🎁 Бонус"
+msgstr ""
+
+msgid "брать"
+msgstr ""
+
+msgid "Цели обработки данных:"
+msgstr ""
+
+msgid "≥ 3 (слабо)"
+msgstr ""
+
+msgid "Экспорт в PDF"
+msgstr ""
+
+msgid "Создать папку"
+msgstr ""
+
+#. placeholder {0}: vacancy.candidates_synced
+msgid "Синхронизировано: {0} кандидатов"
+msgstr ""
+
+msgid "Добавить кастомную стадию"
+msgstr ""
+
+msgid "Вернуться к списку"
+msgstr ""
+
+msgid "нет данных"
+msgstr ""
+
+msgid "Наш менеджер свяжется с вами после проверки ответов."
+msgstr ""
+
+msgid "🗑️ Это действие нельзя отменить!"
+msgstr ""
+
+msgid "Кандидат отправлен на AI скрининг"
+msgstr ""
+
+msgid "Преимущества процесса"
+msgstr ""
+
+msgid "Бессрочно"
+msgstr ""
+
+msgid "Подключение микрофона..."
+msgstr ""
+
+msgid "Платформа SofiHR поддерживает работу с разными типами HR-клиентов:"
+msgstr ""
+
+msgid "Ошибка при запуске синхронизации"
+msgstr ""
+
+msgid "Сообщение должно содержать минимум 10 символов"
+msgstr ""
+
+msgid "✅ С резюме"
+msgstr ""
+
+msgid "Проблемы с AI-сервисом"
+msgstr ""
+
+msgid "📥 Новые"
+msgstr ""
+
+msgid "Все тесты"
+msgstr ""
+
+msgid "Присоединяйтесь к тысячам HR-специалистов, которые уже используют SofiHR для эффективного найма"
+msgstr ""
+
+msgid "Нет ответа"
+msgstr ""
+
+msgid "❌ Камеры не найдены в системе"
+msgstr ""
+
+#. placeholder {0}: selectedPlan.interviews_included
+msgid "Количество интервью: <0>{0}</0>"
+msgstr ""
+
+msgid "Описание вакансии"
+msgstr ""
+
+msgid "Вопросов на каждый регламент: {questionsPerRegulation}"
+msgstr ""
+
+msgid "Введите корректный номер телефона"
+msgstr ""
+
+msgid "Нет ответов"
+msgstr ""
+
+msgid "Управление пользователями"
+msgstr ""
+
+msgid "Екатерина Иванова"
+msgstr ""
+
+msgid "Цвет заливки:"
+msgstr ""
+
+msgid "Отправить сообщение"
+msgstr ""
+
+msgid "Не удалось отправить ответ"
+msgstr ""
+
+msgid "Выбраны ВСЕ кандидаты из колонок:"
+msgstr ""
+
+msgid "Ошибка загрузки данных: {contextError}"
+msgstr ""
+
+msgid "Переместить в стадию"
+msgstr ""
+
+msgid "Готов к интервью"
+msgstr ""
+
+msgid "Бизнес"
+msgstr ""
+
+msgid "2. Нажмите <0>\"Настроить\"</0> на любой вакансии чтобы:"
+msgstr ""
+
+msgid "Система подбора персонала SofiHR"
+msgstr ""
+
+msgid "Преимущества"
+msgstr ""
+
+#. placeholder {0}: (questions||[]).length
+#. placeholder {0}: sessionDetail?.answers?.length || 0
+msgid "Вопросов: {0}"
+msgstr ""
+
+msgid "Это обязательное требование в соответствии с 152-ФЗ \"О персональных данных\"."
+msgstr ""
+
+msgid "📆 Выбрать диапазон..."
+msgstr ""
+
+msgid "Время, отведенное на ответ на каждый вопрос"
+msgstr ""
+
+#. placeholder {0}: stats.gifts.value.toLocaleString('ru-RU')
+msgid "Стоимость: {0}₽"
+msgstr ""
+
+msgid "Запрашиваем разрешения..."
+msgstr ""
+
+msgid "Баланс"
+msgstr ""
+
+msgid "Название компании"
+msgstr ""
+
+msgid "Сначала заполните название вакансии"
+msgstr ""
+
+msgid "Окончание"
+msgstr ""
+
+msgid "Ошибка синхронизации: {syncError}"
+msgstr ""
+
+msgid "Запись видео и аудио ответов"
+msgstr ""
+
+msgid "🎯 Области для развития"
+msgstr ""
+
+msgid "Базовый анализ ответов с помощью ИИ"
+msgstr ""
+
+msgid "Новый пароль отправлен!"
+msgstr ""
+
+msgid "Тесты сотрудников - безлимит"
+msgstr ""
+
+#. placeholder {0}: formData.email
+msgid "Мы отправили пароль на ваш email: <0>{0}</0>"
+msgstr ""
+
+msgid "<0>Безвозвратность:</0> Удаленные данные восстановить невозможно"
+msgstr ""
+
+msgid "Именное приглашение будет отправлено на указанный email."
+msgstr ""
+
+msgid "SofiHR полностью изменил наш процесс найма. Теперь мы тратим в 5 раз меньше времени на первичные интервью и получаем более качественных кандидатов."
+msgstr ""
+
+msgid "Настоящие Условия вступают в силу с момента размещения на сайте и действуют до момента их отмены или замены новыми Условиями."
+msgstr ""
+
+msgid "удаление своих персональных данных"
+msgstr ""
+
+msgid "Ожидает"
+msgstr ""
+
+msgid "Нет доступа к управлению сотрудниками. Требуются права HR-Лидера."
+msgstr ""
+
+msgid "Используя Систему, вы подтверждаете, что ознакомились с настоящей Политикой и согласны с условиями обработки ваших персональных данных."
+msgstr ""
+
+msgid "Автоматическая загрузка ваших вакансий"
+msgstr ""
+
+msgid "Выберите статусы HH.ru для синхронизации:"
+msgstr ""
+
+msgid "Отмена"
+msgstr ""
+
+msgid "AI генерация вопросов"
+msgstr ""
+
+msgid "Ошибка отклонения приглашения"
+msgstr ""
+
+msgid "Работа в команде"
+msgstr ""
+
+msgid "Новых сегодня"
+msgstr ""
+
+msgid "Распределение по уровням сложности"
+msgstr ""
+
+msgid "Подготавливаем данные для оценки..."
+msgstr ""
+
+msgid "Все вакансии"
+msgstr ""
+
+msgid "Отправить мнение"
+msgstr ""
+
+msgid "Заполните форму для запроса удаления всех ваших данных:"
+msgstr ""
+
+msgid "Мнение появится после того, как кандидат получит обратную связь"
+msgstr ""
+
+#. placeholder {0}: templateData.questionTime
+msgid "{0} секунд"
+msgstr ""
+
+msgid "Активно"
+msgstr ""
+
+#. placeholder {0}: getQuestionNumber(question.position)
+msgid "{0} из {total}"
+msgstr ""
+
+#. placeholder {0}: vacancyData.title
+msgid "Тест для вакансии: {0}"
+msgstr ""
+
+msgid "Сбросить"
+msgstr ""
+
+msgid "Идёт запись... Говорите в микрофон"
+msgstr ""
+
+msgid "Обработка авторизации HH.ru..."
+msgstr ""
+
+msgid "Не удалось загрузить статистику"
+msgstr ""
+
+msgid "Поиск по вакансиям"
+msgstr ""
+
+msgid "Не авторизован"
+msgstr ""
+
+msgid "Ваши персональные данные полностью удалены с платформы"
+msgstr ""
+
+#. placeholder {0}: stats.gifts.value.toLocaleString('ru-RU')
+msgid "на сумму {0}₽"
+msgstr ""
+
+msgid "Поле поиска вакансий"
+msgstr ""
+
+msgid "Ошибка при открытии формы оплаты"
+msgstr ""
+
+msgid "Прочитать все"
+msgstr ""
+
+msgid "Резюме загружено из HH.ru"
+msgstr ""
+
+msgid "Дата создания"
+msgstr ""
+
+msgid "Название теста"
+msgstr ""
+
+msgid "📊 Информация о вакансии"
+msgstr ""
+
+msgid "Для дополнительной безопасности входа (необязательно)"
+msgstr ""
+
+msgid "Время, сек"
+msgstr ""
+
+msgid "Для тестирования платформы без финансовых вложений"
+msgstr ""
+
+msgid "Кто создал"
+msgstr ""
+
+msgid "Лидерство"
+msgstr ""
+
+msgid "Номер телефона"
+msgstr ""
+
+msgid "Кандидат добавлен успешно!"
+msgstr ""
+
+msgid "Сессия истекла. Пожалуйста, войдите в систему заново."
+msgstr ""
+
+msgid "Предпросмотр цвета"
+msgstr ""
+
+msgid "Удалить папку?"
+msgstr ""
+
+msgid "Используя Систему, вы даете согласие на обработку ваших персональных данных в соответствии с настоящей Политикой."
+msgstr ""
+
+msgid "неизвестная ошибка"
+msgstr ""
+
+msgid "HR менеджер, Рекрутер, Директор по персоналу"
+msgstr ""
+
+#. placeholder {0}: finishedCandidates.length
+#. placeholder {1}: candidates.length > finishedCandidates.length && ( <span> (еще {candidates.length - finishedCandidates.length} не завершили тест)</span> )
+msgid "✅ Доступно для сравнения: <0>{0}</0> кандидатов{1}"
+msgstr ""
+
+msgid "политикой конфиденциальности"
+msgstr ""
+
+msgid "Упс!!!"
+msgstr ""
+
+msgid "• Результаты анализа и оценки"
+msgstr ""
+
+msgid "Отправка..."
+msgstr ""
+
+msgid "Не удалось завершить тест"
+msgstr ""
+
+msgid "Запись видео и аудио в реальном времени"
+msgstr ""
+
+msgid "Публичная ссылка создана!"
+msgstr ""
+
+msgid "❌ Ошибка при перемещении"
+msgstr ""
+
+msgid "Нет просроченных кандидатов"
+msgstr ""
+
+msgid "Тестирование"
+msgstr ""
+
+msgid "Условия использования"
+msgstr ""
+
+msgid "Запуск генерации..."
+msgstr ""
+
+msgid "HH.ru токен истекает"
+msgstr ""
+
+msgid "Ожидаемое время завершения работ: в течение нескольких часов"
+msgstr ""
+
+msgid "⏱️ Время обработки: 5-30 секунд"
+msgstr ""
+
+msgid "Анализ завершен"
+msgstr ""
+
+#. placeholder {0}: status.stats?.totalVacancies || 0
+#. placeholder {1}: status.stats?.totalCandidates || 0
+msgid "Данные от HH.ru ({0} вакансий, {1} кандидатов) сохранены и доступны для просмотра. Для получения новых обновлений подключитесь заново."
+msgstr ""
+
+msgid "Финиш"
+msgstr ""
+
+msgid "Последняя синхронизация"
+msgstr ""
+
+msgid "Введите корректный email адрес"
+msgstr ""
+
+msgid "Всего проведено интервью"
+msgstr ""
+
+msgid "Ошибка при генерации вопросов"
+msgstr ""
+
+msgid "Публичная ссылка для массовой рассылки"
+msgstr ""
+
+msgid "Начать интервью"
+msgstr ""
+
+#. placeholder {0}: result.data.analyzed
+msgid "AI-анализ завершён: {0} кандидатов проанализировано"
+msgstr ""
+
+msgid "⚠️ Обработка {totalSelectedCount} кандидатов может занять несколько минут."
+msgstr ""
+
+msgid "Обновить данные"
+msgstr ""
+
+msgid "Заполните форму для подачи заявки:"
+msgstr ""
+
+msgid "�� Базовое сравнение"
+msgstr ""
+
+msgid "Введите УДАЛИТЬ"
+msgstr ""
+
+msgid "Ошибка запуска авторизации"
+msgstr ""
+
+msgid "Не удалось удалить стадию"
+msgstr ""
+
+msgid ""
+"❌ Ошибка соединения\n"
+"\n"
+"Не удалось загрузить приглашение.\n"
+"\n"
+"🔄 Проверьте подключение к интернету и обновите страницу."
+msgstr ""
+
+msgid "Видео: нет"
+msgstr ""
+
+msgid "Создано"
+msgstr ""
+
+msgid "Автоматизировано: <0>80%</0> интервью"
+msgstr ""
+
+msgid "Экспертная поддержка"
+msgstr ""
+
+msgid "Ошибка при сохранении настроек"
+msgstr ""
+
+msgid "Таблица"
+msgstr ""
+
+msgid "Дата интервью"
+msgstr ""
+
+msgid "Кандидат"
+msgstr ""
+
+msgid "Ошибка при удалении папки"
+msgstr ""
+
+msgid "Введите вашу должность"
+msgstr ""
+
+msgid "Ошибка при сохранении теста"
+msgstr ""
+
+msgid "Ошибка при обработке запроса"
+msgstr ""
+
+msgid "⚠️ Что именно нужно удалить у HR-клиентов!"
+msgstr ""
+
+msgid "Детальные рекомендации для принятия решения"
+msgstr ""
+
+msgid "Ваш баланс"
+msgstr ""
+
+msgid "Текстовые вопросы по содержанию регламентов"
+msgstr ""
+
+msgid "Система обрабатывает следующие категории персональных данных:"
+msgstr ""
+
+msgid "Введите название вакансии"
+msgstr ""
+
+msgid "Сгенерировать вопросы"
+msgstr ""
+
+msgid "Дополнительные возможности"
+msgstr ""
+
+msgid "Email сотрудника"
+msgstr ""
+
+msgid "Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта."
+msgstr ""
+
+msgid "🕐 Через {countdown} секунд вы будете перенаправлены на главную страницу..."
+msgstr ""
+
+#. placeholder {0}: status.hhLimits.source
+msgid "Дневной лимит просмотра резюме на {0}:"
+msgstr ""
+
+msgid "Ошибка запуска синхронизации"
+msgstr ""
+
+msgid "Создать первое приглашение"
+msgstr ""
+
+msgid "• Обязательное уведомление о результатах"
+msgstr ""
+
+msgid "Требуется доступ к микрофону"
+msgstr ""
+
+msgid "Пользователи обязаны:"
+msgstr ""
+
+msgid "Произошла ошибка при отправке запроса"
+msgstr ""
+
+msgid "Не удалось начать тест"
+msgstr ""
+
+msgid "сегодня"
+msgstr ""
+
+msgid "Итог интервью"
+msgstr ""
+
+msgid ""
+"❌ Сессия тестирования не найдена или истекла\n"
+"\n"
+"Возможные причины:\n"
+"• Превышено максимальное время прохождения теста\n"
+"• Сессия была прервана\n"
+"\n"
+"📧 Обратитесь к вашему HR-менеджеру для получения нового приглашения."
+msgstr ""
+
+msgid "Неверный телефон или пароль"
+msgstr ""
+
+msgid "Просмотреть"
+msgstr ""
+
+msgid "1️⃣ <0>Откройте ссылку на интервью</0> (если она у вас есть)"
+msgstr ""
+
+msgid "Техническое обслуживание"
+msgstr ""
+
+msgid "Неактивен"
+msgstr ""
+
+msgid "Настройки камеры не поддерживаются."
+msgstr ""
+
+msgid "Ошибка обновления вакансии с тестом"
+msgstr ""
+
+msgid "Ссылка скопирована в буфер обмена"
+msgstr ""
+
+msgid "Доступность системы"
+msgstr ""
+
+msgid "📊 Вычисляем персональную оценку..."
+msgstr ""
+
+msgid "📅 Сегодня"
+msgstr ""
+
+msgid "Это может произойти если вы отозвали доступ к приложению в настройках HH.ru."
+msgstr ""
+
+msgid "💡 Камеры найдены, но не работают с микрофоном одновременно"
+msgstr ""
+
+msgid "🎯 Получить персональную обратную связь"
+msgstr ""
+
+msgid "+7 (999) 123-45-67 или 89991234567"
+msgstr ""
+
+msgid "Не удалось создать стадию"
+msgstr ""
+
+msgid "Введите вопрос, на который должен ответить кандидат"
+msgstr ""
+
+msgid "Резюме загружено из HeadHunter.ru"
+msgstr ""
+
+msgid " и "
+msgstr ""
+
+msgid "Создайте вакансию и начните привлекать талантливых кандидатов уже сегодня"
+msgstr ""
+
+msgid "Укажите причину удаления данных, если хотите..."
+msgstr ""
+
+msgid "❌ Ошибка отправки"
+msgstr ""
+
+msgid "Список"
+msgstr ""
+
+msgid "Управление сотрудниками"
+msgstr ""
+
+msgid "Введите полный текст регламента..."
+msgstr ""
+
+#. placeholder {0}: candidates.length
+msgid "Детальный анализ и сравнение {0} кандидатов"
+msgstr ""
+
+msgid "Дата"
+msgstr ""
+
+msgid "Поделитесь любой информацией, которая может быть важна для рекрутера..."
+msgstr ""
+
+msgid "Для небольших компаний и стартапов до 10 найма/месяц. Базовый функционал для начала автоматизации."
+msgstr ""
+
+msgid "Хорошо (6-7)"
+msgstr ""
+
+msgid "Брендирование"
+msgstr ""
+
+msgid "лидерство"
+msgstr ""
+
+msgid "🤖 Автоматизация AI Скрининга"
+msgstr ""
+
+msgid "Мы отправили новый пароль на ваш email: <0>{email}</0>"
+msgstr ""
+
+msgid "Интеграция с HeadHunter"
+msgstr ""
+
+msgid "Сгенерировать вопросы с помощью AI"
+msgstr ""
+
+msgid "⚠️ Проблема с токеном доступа"
+msgstr ""
+
+msgid "🎯 Области для развития (по мнению AI)"
+msgstr ""
+
+msgid "15 минут на интервью"
+msgstr ""
+
+msgid "Результаты"
+msgstr ""
+
+msgid "Сегодня"
+msgstr ""
+
+msgid "Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру."
+msgstr ""
+
+msgid "Конкретные сроки хранения:"
+msgstr ""
+
+msgid "• Загрузить кандидатов из выбранных статусов"
+msgstr ""
+
+msgid "Объективная оценка"
+msgstr ""
+
+msgid "{diffDays} дней назад"
+msgstr ""
+
+#. placeholder {0}: settings.width
+#. placeholder {1}: settings.height
+msgid "✅ {label} работает! ({0}x{1})"
+msgstr ""
+
+msgid "Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки персональных данных пользователей системы подбора персонала (далее — «Система») в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных» (далее — «152-ФЗ»)."
+msgstr ""
+
+msgid "Платформа SofiHR оставляет за собой право изменять условия оферты:"
+msgstr ""
+
+msgid "Переместить вверх"
+msgstr ""
+
+msgid "Улучшение качества найма: 40%"
+msgstr ""
+
+msgid "Завершить создание"
+msgstr ""
+
+msgid "🤖 AI анализ..."
+msgstr ""
+
+msgid "Я даю согласие на обработку моих персональных данных в соответствии с "
+msgstr ""
+
+msgid "Для подтверждения введите \"УДАЛИТЬ\":"
+msgstr ""
+
+msgid "👑 Премиум"
+msgstr ""
+
+msgid "Экспорт в CSV"
+msgstr ""
+
+msgid "По всем вопросам, связанным с использованием Системы:"
+msgstr ""
+
+msgid "Тарифы"
+msgstr ""
+
+msgid "Дата интервью (приблизительно)"
+msgstr ""
+
+msgid "Время на один вопрос: {maxTimePerQuestion} секунд"
+msgstr ""
+
+msgid "Проверка платежа"
+msgstr ""
+
+msgid "вопросов"
+msgstr ""
+
+msgid "Например: Техническое собеседование"
+msgstr ""
+
+msgid "ИИ анализирует ответы"
+msgstr ""
+
+msgid "Метрики оценки"
+msgstr ""
+
+msgid "🔗 Сгенерировать общую ссылку"
+msgstr ""
+
+msgid "Еще не выполнялась"
+msgstr ""
+
+msgid "В процессе"
+msgstr ""
+
+msgid "С даты"
+msgstr ""
+
+#. placeholder {0}: mainError.message
+msgid "⚠️ {label} работает отдельно, но не с микрофоном: {0}"
+msgstr ""
+
+msgid "🔗 Приглашения на тест"
+msgstr ""
+
+msgid "Вакансия не найдена"
+msgstr ""
+
+msgid "Автоматизировали найм разработчиков. Сократили время закрытия вакансии с 45 до 7 дней."
+msgstr ""
+
+msgid "Камера отключена"
+msgstr ""
+
+msgid "⚖️ Юридические аспекты и ответственность"
+msgstr ""
+
+msgid "Описание должно содержать минимум 3 символа"
+msgstr ""
+
+msgid "О нас"
+msgstr ""
+
+msgid "Кандидаты не найдены"
+msgstr ""
+
+msgid "Ошибка при удалении данных:"
+msgstr ""
+
+msgid "Подготовка"
+msgstr ""
+
+msgid "❌ Ошибка камеры: {errorMessage}"
+msgstr ""
+
+msgid "Возможности при привязке к организации:"
+msgstr ""
+
+msgid "Общее"
+msgstr ""
+
+msgid "Интервью-сессия #{sessionId}"
+msgstr ""
+
+msgid "Измените фильтры или добавьте первого кандидата"
+msgstr ""
+
+msgid "Токен действует до"
+msgstr ""
+
+msgid "Вход в систему"
+msgstr ""
+
+msgid "Имя кандидата"
+msgstr ""
+
+msgid "Приоритетная поддержка (ответ в течение 4 часов в рабочее время). Email, чат и телефон. Помощь с настройкой интеграций."
+msgstr ""
+
+msgid "Неизвестный статус ответа"
+msgstr ""
+
+msgid "Письма"
+msgstr ""
+
+msgid "Ошибка при загрузке данных вакансии"
+msgstr ""
+
+msgid "Ошибка отправки на скрининг"
+msgstr ""
+
+msgid "Интервью уже завершено"
+msgstr ""
+
+msgid "Генерация вопросов"
+msgstr ""
+
+msgid "Настраиваете критерии оценки"
+msgstr ""
+
+msgid "✨ Создать вакансию"
+msgstr ""
+
+msgid "{interviewsCurrent} из {interviewsTotal}"
+msgstr ""
+
+msgid "Сохранение..."
+msgstr ""
+
+msgid "Настоящие Условия регулируются законодательством Российской Федерации. Все споры разрешаются в соответствии с российским правом."
+msgstr ""
+
+msgid "Обновление..."
+msgstr ""
+
+msgid "Для крупных компаний и HR-агентств с высокой нагрузкой"
+msgstr ""
+
+msgid "Страница, которую вы ищете, не найдена."
+msgstr ""
+
+msgid "создайте регламенты"
+msgstr ""
+
+msgid "Вернуться на главную"
+msgstr ""
+
+msgid "Поиск вакансий..."
+msgstr ""
+
+msgid "Сложность"
+msgstr ""
+
+#. placeholder {0}: optimalPlan.name
+msgid "Рекомендуемый тариф: <0>{0}</0>"
+msgstr ""
+
+msgid "Банковские карты (Visa, Mastercard, МИР)"
+msgstr ""
+
+msgid "Камера занята другим приложением. Закройте все приложения, которые могут её использовать."
+msgstr ""
+
+msgid "Ваши персональные данные обрабатываются исключительно в следующих целях:"
+msgstr ""
+
+msgid "Критично"
+msgstr ""
+
+msgid "Рост клиентов: 3x"
+msgstr ""
+
+msgid "Выбрать ВСЕХ {totalCount} кандидатов (включая не загруженные)"
+msgstr ""
+
+msgid "Обработано кандидатов: 500+"
+msgstr ""
+
+msgid "Полный анализ ответов ИИ"
+msgstr ""
+
+msgid "Адаптивные вопросы на основе ответов"
+msgstr ""
+
+msgid "Автоматизируйте весь процесс интервью с помощью искусственного интеллекта"
+msgstr ""
+
+msgid "Сильные стороны"
+msgstr ""
+
+#. placeholder {0}: Math.floor(diffDays / 7)
+msgid "{0} недель назад"
+msgstr ""
+
+msgid "Стрессоустойчивость"
+msgstr ""
+
+msgid "Ваш браузер не поддерживает запись видео"
+msgstr ""
+
+msgid "Произошла ошибка при перемещении кандидатов"
+msgstr ""
+
+msgid "🌐 Ссылка для самозаписи на интервью"
+msgstr ""
+
+msgid "Ошибка запуска AI-анализа"
+msgstr ""
+
+msgid "• Видео и аудио записи интервью"
+msgstr ""
+
+msgid "Перейти в HR панель"
+msgstr ""
+
+msgid "Куплено интервью"
+msgstr ""
+
+msgid "Войти в систему"
+msgstr ""
+
+msgid "Введите пароль из email"
+msgstr ""
+
+msgid "Нет, интервью <0>не сгорают и действуют бессрочно</0>. Вы можете использовать их в любое время, без ограничений по срокам. Купили 100 интервью — они будут доступны, пока вы их не израсходуете."
+msgstr ""
+
+msgid "Ошибка при запуске AI-анализа"
+msgstr ""
+
+msgid "💼 Для кого:"
+msgstr ""
+
+msgid "Автоматизируйте найм с помощью ИИ. Создавайте вакансии, проводите интервью и нанимайте лучших кандидатов в 3 раза быстрее."
+msgstr ""
+
+msgid "Введите описание заметки..."
+msgstr ""
+
+msgid "кандидата"
+msgstr ""
+
+msgid "Регламенты"
+msgstr ""
+
+msgid "Довольных клиентов"
+msgstr ""
+
+msgid "💭 Мнение кандидата о результатах интервью"
+msgstr ""
+
+msgid "Мультикомпанийность"
+msgstr ""
+
+msgid "Название"
+msgstr ""
+
+msgid "Возврат инвестиций"
+msgstr ""
+
+msgid "Ожидаемый ответ (для AI проверки)"
+msgstr ""
+
+msgid "Традиционный метод найма"
+msgstr ""
+
+msgid "Рекомендации по найму"
+msgstr ""
+
+msgid "Поддержка по email"
+msgstr ""
+
+msgid "Анализируем содержание ответов..."
+msgstr ""
+
+msgid "IT-компания"
+msgstr ""
+
+msgid "Ошибка проверки статуса"
+msgstr ""
+
+#. placeholder {0}: selectedCandidates.length
+msgid "Выбрано кандидатов: {0}"
+msgstr ""
+
+msgid "Например: Frontend-разработчик"
+msgstr ""
+
+msgid "{diffDays} дн назад"
+msgstr ""
+
+msgid "Потрачено:"
+msgstr ""
+
+msgid "Сайт находится на техническом обслуживании. Загляните позже!"
+msgstr ""
+
+msgid "Подключение к камере..."
+msgstr ""
+
+msgid "Мнение кандидата о своей оценке"
+msgstr ""
+
+msgid "Проверьте почту и используйте новый пароль для входа в систему."
+msgstr ""
+
+msgid "Тесты"
+msgstr ""
+
+msgid "≥ 5 (средне)"
+msgstr ""
+
+msgid "По истечении указанных сроков все персональные данные подлежат автоматическому удалению или обезличиванию."
+msgstr ""
+
+msgid "Улучшение качества найма"
+msgstr ""
+
+msgid "Быстрый выбор:"
+msgstr ""
+
+msgid "Что даст интеграция:"
+msgstr ""
+
+msgid "📥 Загрузка резюме из HH.ru (для HH кандидатов)"
+msgstr ""
+
+msgid "Без папки"
+msgstr ""
+
+msgid "Нет интервью"
+msgstr ""
+
+msgid "Работа с несколькими компаниями"
+msgstr ""
+
+msgid "🎯 Как работать с этой страницей?"
+msgstr ""
+
+msgid "Введите ваш email и мы отправим новый пароль"
+msgstr ""
+
+msgid "Опыт"
+msgstr ""
+
+msgid "Зарплата"
+msgstr ""
+
+msgid "Мы оставляем за собой право вносить изменения в настоящую Политику. При внесении существенных изменений:"
+msgstr ""
+
+msgid "{successCount} из {totalCount} кандидатов переведены. {errorCount} {requireText} авторизации HH.ru"
+msgstr ""
+
+msgid "Необходимо согласие на обработку персональных данных"
+msgstr ""
+
+msgid "Загрузка…"
+msgstr ""
+
+#. placeholder {0}: hhLimits.limits.resumeView
+msgid " из {0}"
+msgstr ""
+
+msgid "Войти"
+msgstr ""
+
+msgid "Ошибка получения статуса генерации"
+msgstr ""
+
+msgid "Любой человек может записаться на интервью, указав свои данные."
+msgstr ""
+
+msgid "шт."
+msgstr ""
+
+msgid "решение"
+msgstr ""
+
+msgid "Ответы на вопросы"
+msgstr ""
+
+msgid "Завершён:"
+msgstr ""
+
+msgid "Это демонстрационный компонент, показывающий как правильно использовать LinguiJS для интернационализации вашего приложения."
+msgstr ""
+
+#. placeholder {0}: data.syncedCount || 0
+msgid "Синхронизация завершена. Загружено вакансий: {0}"
+msgstr ""
+
+msgid "Продвинутая аналитика и дашборды"
+msgstr ""
+
+msgid "Результат оплаты"
+msgstr ""
+
+#. placeholder {0}: currentQuestionIndex + 1
+#. placeholder {1}: questions.length
+msgid "Вопрос {0} из {1}"
+msgstr ""
+
+msgid "HH.ru отключен"
+msgstr ""
+
+msgid "Создать"
+msgstr ""
+
+msgid "Ошибка принятия приглашения"
+msgstr ""
+
+msgid "Название папки"
+msgstr ""
+
+msgid "Редактирование вакансии"
+msgstr ""
+
+msgid "Обратная связь еще не сгенерирована"
+msgstr ""
+
+msgid "Ссылка откроется в новом окне"
+msgstr ""
+
+msgid "Узнайте свои сильные стороны, области для развития и персональные рекомендации"
+msgstr ""
+
+msgid "Ошибка при сохранении"
+msgstr ""
+
+msgid "Командная работа"
+msgstr ""
+
+msgid "1000 AI-интервью"
+msgstr ""
+
+msgid "Тарифные планы"
+msgstr ""
+
+msgid "Всего: {totalCandidates}"
+msgstr ""
+
+msgid "📝 Тестирование"
+msgstr ""
+
+msgid "Полный API доступ"
+msgstr ""
+
+msgid "{from}-{to} из {countText}"
+msgstr ""
+
+msgid "Настройки синхронизации"
+msgstr ""
+
+#. placeholder {0}: generatedQuestions.length
+msgid "Создано {0} вопросов. Вы можете отредактировать их ниже."
+msgstr ""
+
+msgid "Спасибо за использование нашей платформы! 🎁"
+msgstr ""
+
+msgid "Купить"
+msgstr ""
+
+msgid "Управление стадией"
+msgstr ""
+
+msgid "Нормальная"
+msgstr ""
+
+msgid "Автоматическая синхронизация"
+msgstr ""
+
+msgid "Разрешить камеру и микрофон"
+msgstr ""
+
+msgid "Высокая"
+msgstr ""
+
+msgid "Выбрать тариф"
+msgstr ""
+
+msgid "отказать"
+msgstr ""
+
+msgid "Каждый вопрос должен быть отвечен в течение указанного времени"
+msgstr ""
+
+msgid "Введите текст вопроса"
+msgstr ""
+
+msgid "Ошибка создания компании"
+msgstr ""
+
+msgid "Поддержка по email (ответ в течение 48 часов)"
+msgstr ""
+
+msgid "Приглашения"
+msgstr ""
+
+msgid "Город"
+msgstr ""
+
+msgid "Поддержка по email (ответ в течение 48 часов). Доступ к базе знаний и документации."
+msgstr ""
+
+msgid ""
+"\n"
+"Часовой пояс: {timezone}"
+msgstr ""
+
+#. placeholder {0}: date.format('HH:mm')
+msgid "сегодня, {0}"
+msgstr ""
+
+msgid "Всего сессий"
+msgstr ""
+
+msgid "По дату"
+msgstr ""
+
+msgid "Имя обязательно"
+msgstr ""
+
+msgid "Нет платежей"
+msgstr ""
+
+msgid "1 мин"
+msgstr ""
+
+msgid "Канбан"
+msgstr ""
+
+msgid "Скрининги AI"
+msgstr ""
+
+msgid "Говорите в микрофон"
+msgstr ""
+
+msgid "Закрыть"
+msgstr ""
+
+msgid "ответов"
+msgstr ""
+
+msgid "• Подтверждение выполнения требований"
+msgstr ""
+
+msgid "Поддержка по email (ответ в течение 24 часов). Доступ к базе знаний, документации и видео-инструкциям."
+msgstr ""
+
+msgid "📧 Отправка приглашения на тестирование"
+msgstr ""
+
+msgid "≥ 70% (средние)"
+msgstr ""
+
+msgid "Персональный менеджер (24/7)"
+msgstr ""
+
+msgid "Сокращение затрат: 5x"
+msgstr ""
+
+msgid "Переместить"
+msgstr ""
+
+msgid "Запомнить меня"
+msgstr ""
+
+msgid "Аналитика и отчеты"
+msgstr ""
+
+msgid "<0>Для юридических лиц</0> доступна оплата по счёту. После оплаты интервью сразу зачисляются на ваш баланс."
+msgstr ""
+
+msgid "✅ Запрос успешно отправлен!"
+msgstr ""
+
+msgid "❌ Ошибка AI-анализа"
+msgstr ""
+
+msgid "Введите УДАЛИТЬ для подтверждения"
+msgstr ""
+
+msgid "Название обязательно"
+msgstr ""
+
+msgid "100 интервью"
+msgstr ""
+
+msgid "Вопросы с вариантами ответов"
+msgstr ""
+
+msgid "Детальная оценка"
+msgstr ""
+
+msgid "Приглашение создано, но email не отправлен. Проверьте настройки почты."
+msgstr ""
+
+msgid "Уже есть аккаунт? "
+msgstr ""
+
+msgid "Удаление..."
+msgstr ""
+
+msgid "Ожидает подтверждения"
+msgstr ""
+
+msgid "Разрешить дополнительные вопросы"
+msgstr ""
+
+msgid "Сохранить изменения"
+msgstr ""
+
+msgid "общение"
+msgstr ""
+
+#. placeholder {0}: new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleString('ru-RU')
+msgid "Автоматическая синхронизация выполняется в фоновом режиме. Следующая синхронизация запланирована на {0}"
+msgstr ""
+
+msgid "Генерируем обратную связь..."
+msgstr ""
+
+msgid "📊 Таблица оценок"
+msgstr ""
+
+msgid "💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру"
+msgstr ""
+
+msgid "Слабые стороны"
+msgstr ""
+
+#. placeholder {0}: inv.role
+msgid " — роль: {0}"
+msgstr ""
+
+msgid "Режим генерации"
+msgstr ""
+
+msgid "✅ Нанят"
+msgstr ""
+
+msgid "Подключить HH.ru"
+msgstr ""
+
+msgid "© 2025 SofiHR. Система соответствует требованиям 152-ФЗ \"О персональных данных\""
+msgstr ""
+
+msgid "Настройка оборудования"
+msgstr ""
+
+msgid "Требуется переавторизация"
+msgstr ""
+
+msgid "Внимание! Это действие необратимо. Все ваши данные будут полностью удалены с платформы."
+msgstr ""
+
+msgid "Интеграции:"
+msgstr ""
+
+msgid "⏳ Загрузка резюме"
+msgstr ""
+
+msgid "Система предоставляется «как есть» без каких-либо гарантий:"
+msgstr ""
+
+msgid "Ошибка обработки авторизации"
+msgstr ""
+
+msgid "Все статусы"
+msgstr ""
+
+msgid "При переносе кандидата на эту стадию автоматически запускается:"
+msgstr ""
+
+msgid "Брендирование компании"
+msgstr ""
+
+msgid "уведомления"
+msgstr ""
+
+#. placeholder {0}: candidate.skills.length
+msgid "🚀 Навыки: {0}"
+msgstr ""
+
+msgid "В этой папке пока нет регламентов"
+msgstr ""
+
+msgid "Сравнение кандидатов"
+msgstr ""
+
+#. placeholder {0}: sessionDetail?.finishedAt || '-'
+msgid "Завершено: {0}"
+msgstr ""
+
+msgid "Текущий баланс"
+msgstr ""
+
+msgid "Нет доступного потока для записи. Проверьте, что камера/микрофон подключены."
+msgstr ""
+
+msgid "Ошибка соединения. Попробуйте еще раз."
+msgstr ""
+
+msgid "⏱️ Активация таймера тестирования"
+msgstr ""
+
+msgid "Запись аудио"
+msgstr ""
+
+msgid "Причина удаления данных (необязательно)"
+msgstr ""
+
+msgid "Интеграции с внешними системами"
+msgstr ""
+
+#. placeholder {0}: a.aiComment
+msgid "<0>AI-характеристика:</0> {0}"
+msgstr ""
+
+msgid "Интеграции"
+msgstr ""
+
+#. placeholder {0}: a.createdAt || '-'
+msgid "Время ответа: {0}"
+msgstr ""
+
+msgid "AI анализирует резюме"
+msgstr ""
+
+msgid "Удалить и переместить {candidatesCount} кандидата"
+msgstr ""
+
+msgid "Управление кандидатами"
+msgstr ""
+
+msgid "Отправить"
+msgstr ""
+
+msgid "Запрос на удаление данных"
+msgstr ""
+
+msgid "<0>Если вы кандидат и проходили интервью:</0>"
+msgstr ""
+
+#. placeholder {0}: savings.timeSaved
+#. placeholder {1}: savings.timeSavedCost.toLocaleString()
+msgid "Экономия {0} часов ({1}₽)"
+msgstr ""
+
+msgid "Ошибка при загрузке резюме из HeadHunter.ru"
+msgstr ""
+
+msgid "🎤 Записать ответ"
+msgstr ""
+
+msgid "Не выбрана компания"
+msgstr ""
+
+msgid "Ответ"
+msgstr ""
+
+msgid "Email слишком длинный"
+msgstr ""
+
+msgid "В соответствии с Федеральным законом \"О персональных данных\" вы имеете следующие права:"
+msgstr ""
+
+msgid "Найти камеры"
+msgstr ""
+
+msgid "сек осталось"
+msgstr ""
+
+msgid "Создана: {createdAt}"
+msgstr ""
+
+msgid "Назад к кандидатам"
+msgstr ""
+
+#. placeholder {0}: filters.dateFrom || '...'
+#. placeholder {1}: filters.dateTo || '...'
+msgid "Дата: {0} — {1}"
+msgstr ""
+
+msgid "📝 Формируем развивающую обратную связь..."
+msgstr ""
+
+msgid "Вниз"
+msgstr ""
+
+msgid "<0>Подтверждение:</0> Мы свяжемся с вами для подтверждения"
+msgstr ""
+
+msgid "Ошибка авторизации: {error}"
+msgstr ""
+
+msgid "Произошла ошибка при отправке. Попробуйте позже."
+msgstr ""
+
+msgid "Экспорт данных"
+msgstr ""
+
+msgid "Платежи"
+msgstr ""
+
+msgid "Микрофон подключен"
+msgstr ""
+
+msgid "мотивация"
+msgstr ""
+
+msgid "Финалист"
+msgstr ""
+
+msgid "HR-автоматизация и консультации от экспертов."
+msgstr ""
+
+msgid "Только микрофон"
+msgstr ""
+
+msgid "Аналитика и дашборды"
+msgstr ""
+
+msgid "Перейти к оплате"
+msgstr ""
+
+msgid "Бонус"
+msgstr ""
+
+msgid "Содержание регламента"
+msgstr ""
+
+msgid "Дефолтное время ответа (сек)"
+msgstr ""
+
+#. placeholder {0}: candidate.score
+msgid "⭐ Оценка: {0}/10"
+msgstr ""
+
+msgid "Кандидат проходит автоматическое интервью"
+msgstr ""
+
+msgid "© 2025 SofiHR. Все права защищены."
+msgstr ""
+
+msgid "Что будет сгенерировано:"
+msgstr ""
+
+msgid "Введите пароль"
+msgstr ""
+
+msgid "Активность"
+msgstr ""
+
+msgid "🎁 Бонусные интервью"
+msgstr ""
+
+msgid "Сравнить с другими кандидатами"
+msgstr ""
+
+msgid "Детальное сравнение кандидатов"
+msgstr ""
+
+msgid "Статистика по статусам пока недоступна. Запустите синхронизацию кандидатов."
+msgstr ""
+
+msgid "📋 Что это за страница и зачем она нужна?"
+msgstr ""
+
+msgid "В обработке"
+msgstr ""
+
+msgid "Истории успеха и конкретные цифры экономии от реальных компаний"
+msgstr ""
+
+msgid "Да, вы можете в любой момент докупить любой пакет интервью. Неиспользованные интервью остаются на балансе. При переходе на более высокий тариф вы сразу получаете доступ ко всем его функциям (кастомные шаблоны, детальные отчеты, мультикомпанийность и т.д.)."
+msgstr ""
+
+msgid "Введите название стадии"
+msgstr ""
+
+msgid "Используя данную платформу, вы соглашаетесь с "
+msgstr ""
+
+msgid "Платёж отменён"
+msgstr ""
+
+msgid " ({elapsedTime}с)"
+msgstr ""
+
+msgid "Экспорт базовых отчетов"
+msgstr ""
+
+msgid "Вы уверены, что хотите удалить этого кандидата?"
+msgstr ""
+
+#. placeholder {0}: selectedRegulation.title
+msgid "Показаны тесты, использующие регламент: <0>{0}</0>"
+msgstr ""
+
+msgid "Тариф"
+msgstr ""
+
+msgid "Проверяем статус платежа..."
+msgstr ""
+
+msgid "{timeLeft} сек"
+msgstr ""
+
+#. placeholder {0}: regulations.find(r => r.id === selectedRegulations[0])?.title
+msgid "✅ Регламент \"{0}\" был автоматически выбран. Вы можете добавить дополнительные регламенты ниже."
+msgstr ""
+
+msgid "ROI (окупаемость)"
+msgstr ""
+
+msgid "команда"
+msgstr ""
+
+msgid "Ваши персональные данные НЕ передаются третьим лицам, за исключением случаев:"
+msgstr ""
+
+msgid "Просмотреть детали"
+msgstr ""
+
+msgid "✉️ Отправить приглашения конкретным сотрудникам"
+msgstr ""
+
+msgid "вопроса"
+msgstr ""
+
+msgid "Назад к вакансии"
+msgstr ""
+
+msgid "ID работодателя"
+msgstr ""
+
+msgid "⏭️ Пропустить"
+msgstr ""
+
+msgid "Использование Системы может быть прекращено:"
+msgstr ""
+
+msgid "Для средних компаний с активным процессом найма. Оптимальный баланс функций и стоимости. Экономия 20%!"
+msgstr ""
+
+msgid "Отлично (8-10)"
+msgstr ""
+
+msgid "ИИ оценивает качество, полноту и релевантность каждого ответа кандидата."
+msgstr ""
+
+msgid "🚀 Быстрый способ удаления данных!"
+msgstr ""
+
+#. placeholder {0}: feedback.average_score
+#. placeholder {0}: feedbackData.feedback.average_score
+msgid "Общая оценка: {0}/10"
+msgstr ""
+
+msgid "Подключено"
+msgstr ""
+
+msgid "Платёж обрабатывается"
+msgstr ""
+
+msgid "Система обеспечивает конфиденциальность данных:"
+msgstr ""
+
+msgid "Технические навыки"
+msgstr ""
+
+msgid "Оператором персональных данных является Индивидуальный предприниматель Филипенко Анна Евгеньевна (ОГРНИП 324774600106007, ИНН 772154932804)."
+msgstr ""
+
+#. placeholder {0}: filteredCandidates.length
+msgid "Найдено: {0} кандидатов"
+msgstr ""
+
+msgid "Гибкие сценарии распределения кандидатов между HR-менеджерами."
+msgstr ""
+
+msgid "💡 Развивающая обратная связь"
+msgstr ""
+
+msgid "Удалить данные"
+msgstr ""
+
+msgid "Как это работает?"
+msgstr ""
+
+msgid "Подключение камеры..."
+msgstr ""
+
+msgid "Заявка принята! 🎉"
+msgstr ""
+
+msgid "Бесплатный тариф доступен только один раз для каждой компании"
+msgstr ""
+
+msgid "Резюме доступно"
+msgstr ""
+
+msgid "Email (необязательно)"
+msgstr ""
+
+msgid "Попробовать"
+msgstr ""
+
+msgid "Не получен токен подтверждения от платежной системы"
+msgstr ""
+
+msgid "Для крупных компаний и HR-агентств с высокой нагрузкой. Максимум функций и персональная поддержка 24/7."
+msgstr ""
+
+msgid "🎯 Специфичные критерии для этой вакансии"
+msgstr ""
+
+#. placeholder {0}: new Date(candidate.createdAt).toLocaleDateString('ru-RU')
+msgid "📅 Создан: {0}"
+msgstr ""
+
+msgid "Переавторизоваться"
+msgstr ""
+
+msgid "Опишите какие копии данных были удалены и из каких систем..."
+msgstr ""
+
+msgid "Вопросы успешно сгенерированы!"
+msgstr ""
+
+msgid "Создайте вакансию и пригласите кандидатов, чтобы увидеть статистику"
+msgstr ""
+
+msgid "Мотивация"
+msgstr ""
+
+msgid "Загрузка резюме из HH.ru"
+msgstr ""
+
+msgid "📊 Сравнительная таблица"
+msgstr ""
+
+msgid "Ошибка при загрузке резюме"
+msgstr ""
+
+msgid "Не удалось переместить кандидатов"
+msgstr ""
+
+msgid "<0>Внимание!</0> Вы собираетесь удалить все свои данные с платформы SofiHR."
+msgstr ""
+
+#. placeholder {0}: index + 1
+#. placeholder {0}: qIndex + 1
+msgid "Вопрос {0}"
+msgstr ""
+
+msgid "Система AI анализирует ваши ответы для создания персональных рекомендаций"
+msgstr ""
+
+msgid "Удовлетворительно"
+msgstr ""
+
+msgid "HR-клиент является оператором персональных данных кандидатов и несет ответственность за их обработку согласно 152-ФЗ."
+msgstr ""
+
+msgid "Стадия будет добавлена на позицию {position}"
+msgstr ""
+
+msgid "Детали"
+msgstr ""
+
+msgid "Начать тестирование"
+msgstr ""
+
+#. placeholder {0}: i + 1
+msgid "Камера {0}"
+msgstr ""
+
+msgid "Сумма платежа"
+msgstr ""
+
+msgid "Ошибка загрузки сотрудников"
+msgstr ""
+
+msgid "Политика конфиденциальности"
+msgstr ""
+
+msgid "Резюме кандидата"
+msgstr ""
+
+msgid "Функционал в разработке: добавление HR-пользователей, назначение ролей."
+msgstr ""
+
+msgid "Доступ к базовым шаблонам интервью"
+msgstr ""
+
+msgid "Регистрация"
+msgstr ""
+
+msgid "Аналитика"
+msgstr ""
+
+msgid "Тест не найден"
+msgstr ""
+
+msgid "💬 Генерация комментария с рекомендацией"
+msgstr ""
+
+msgid "Двойная обработка данных:"
+msgstr ""
+
+msgid "🎥 Запись..."
+msgstr ""
+
+#. placeholder {0}: errorData.message || 'Не удалось загрузить информацию о тесте.'
+msgid ""
+"❌ Ошибка загрузки приглашения\n"
+"\n"
+"{0}"
+msgstr ""
+
+msgid ""
+"❌ У компании закончились тесты на балансе\n"
+"\n"
+"К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов.\n"
+"\n"
+"📧 Пожалуйста, свяжитесь с вашим руководителем или HR-менеджером для пополнения баланса.\n"
+"\n"
+"Они смогут приобрести дополнительные тесты в личном кабинете."
+msgstr ""
+
+msgid "Выберите минимум 2 кандидатов для сравнения."
+msgstr ""
+
+msgid "Всего тестов"
+msgstr ""
+
+msgid "История и статистика"
+msgstr ""
+
+#. placeholder {0}: resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)
+msgid "⚠️ Уже в очереди на загрузку резюме: <0>{resumeQueueCount}</0> {0} по всем вакансиям"
+msgstr ""
+
+msgid "Ваш браузер не поддерживает запись аудио"
+msgstr ""
+
+msgid "Экспорт данных в любом формате"
+msgstr ""
+
+msgid "Электронные кошельки (ЮMoney, Qiwi)"
+msgstr ""
+
+msgid "Интервью"
+msgstr ""
+
+msgid "Не указано"
+msgstr ""
+
+msgid "🎯 Общие критерии для позиции"
+msgstr ""
+
+msgid "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе."
+msgstr ""
+
+msgid "Ошибка платежной системы"
+msgstr ""
+
+msgid "🤖 Анализ кандидатов"
+msgstr ""
+
+msgid "Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата"
+msgstr ""
+
+msgid "Видео"
+msgstr ""
+
+msgid "Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее."
+msgstr ""
+
+msgid "Разрешить микрофон"
+msgstr ""
+
+msgid "Технические работы"
+msgstr ""
+
+msgid "Ошибка: {errorMessage}. Возможно, вы выбрали неправильную компанию в хедере."
+msgstr ""
+
+msgid "🔑 Требуется авторизация HH.ru"
+msgstr ""
+
+msgid "📚 Регламенты компании"
+msgstr ""
+
+msgid "Регламенты не созданы. Сначала"
+msgstr ""
+
+msgid "Использование теста"
+msgstr ""
+
+#. placeholder {0}: vacancyData.title
+msgid "Тест для вакансии \"{0}\""
+msgstr ""
+
+#. placeholder {0}: user?.name ? `, ${user.name}` : ''
+msgid "Добро пожаловать{0}!"
+msgstr ""
+
+msgid "💡 Чем больше кандидатов и вопросов, тем дольше анализ"
+msgstr ""
+
+msgid "Ошибка"
+msgstr ""
+
+msgid "🎤 Начать ответ"
+msgstr ""
+
+msgid "Ошибка синхронизации кандидатов"
+msgstr ""
+
+msgid "ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH."
+msgstr ""
+
+msgid "Комментарий"
+msgstr ""
+
+msgid "Выйти"
+msgstr ""
+
+msgid "📅 Последняя неделя"
+msgstr ""
+
+msgid "Оценка за тест"
+msgstr ""
+
+msgid "2м"
+msgstr ""
+
+msgid "Введите ваш пароль"
+msgstr ""
+
+msgid "Готовимся к генерации обратной связи..."
+msgstr ""
+
+msgid "Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время."
+msgstr ""
+
+msgid "Все отклики на вакансии будут автоматически импортированы"
+msgstr ""
+
+msgid "10 интервью"
+msgstr ""
+
+msgid "Комментарий администратора"
+msgstr ""
+
+msgid "Повторная попытка..."
+msgstr ""
+
+msgid "Сравнить с другими"
+msgstr ""
+
+msgid "5 мин"
+msgstr ""
+
+msgid "Обратная связь появится после того, как кандидат нажмет соответствующую кнопку на странице результатов"
+msgstr ""
+
+msgid "Ошибка загрузки резюме"
+msgstr ""
+
+#. placeholder {0}: new Date(vacancy.candidates_last_synced_at).toLocaleString('ru-RU')
+msgid "Последняя синхронизация: {0}"
+msgstr ""
+
+msgid "ИИ проводит интервью без участия интервьюера. Адаптивные вопросы на основе предыдущих ответов."
+msgstr ""
+
+msgid "Не указана"
+msgstr ""
+
+msgid "Мы оставляем за собой право изменять настоящие Условия:"
+msgstr ""
+
+msgid "Главная"
+msgstr ""
+
+msgid "Отсутствует"
+msgstr ""
+
+msgid "Требуют подтверждения"
+msgstr ""
+
+msgid "Отменить выделение"
+msgstr ""
+
+#. placeholder {0}: Math.round(micLevel)
+msgid "Уровень микрофона: {0}%"
+msgstr ""
+
+msgid "❌ Не проходили"
+msgstr ""
+
+msgid "Дополнительная информация"
+msgstr ""
+
+msgid "Клиентов рекомендуют SofiHR"
+msgstr ""
+
+msgid "Экономия 33%"
+msgstr ""
+
+#. placeholder {0}: filters.testScore
+msgid "Тест: ≥ {0}"
+msgstr ""
+
+msgid "Ошибка подключения камеры: {errorMessage}"
+msgstr ""
+
+msgid "Пока нет данных для отображения"
+msgstr ""
+
+msgid "Нет слабых вопросов"
+msgstr ""
+
+msgid "Выберите регламенты, по которым будет проводиться тестирование. Будет создано <0>{questionsPerRegulation} вопросов</0> на каждый регламент."
+msgstr ""
+
+msgid "Оценка"
+msgstr ""
+
+msgid "Редактировать стадию"
+msgstr ""
+
+msgid "Для прохождения интервью необходимо разрешить доступ к микрофону."
+msgstr ""
+
+msgid "Сроки хранения данных:"
+msgstr ""
+
+msgid "Срок действия (дней)"
+msgstr ""
+
+#. placeholder {0}: error.message || 'Произошла ошибка.'
+msgid ""
+"❌ Ошибка при завершении теста\n"
+"\n"
+"{0}\n"
+"\n"
+"📧 Ваши ответы сохранены. Обратитесь к вашему HR-менеджеру если возникли вопросы."
+msgstr ""
+
+#. placeholder {0}: candidate.answersCount
+msgid "Ответов: {0}"
+msgstr ""
+
+msgid "Базовые шаблоны"
+msgstr ""
+
+#. placeholder {0}: progressData.progress.current
+#. placeholder {1}: progressData.progress.total
+msgid "Добро пожаловать обратно! Продолжаем интервью с вопроса {0} из {1}."
+msgstr ""
+
+msgid "Детали ошибки"
+msgstr ""
+
+#. placeholder {0}: context.parsed.y
+msgid "Тестов: {0}"
+msgstr ""
+
+msgid "Вопросы:"
+msgstr ""
+
+msgid "Работы выполняются"
+msgstr ""
+
+msgid "Обратная связь отправлена на ваш email!"
+msgstr ""
+
+msgid "Интервью кандидатов"
+msgstr ""
+
+msgid "Использование интервью"
+msgstr ""
+
+msgid "При включении данные будут автоматически обновляться каждые 2 часа"
+msgstr ""
+
+#. placeholder {0}: data.length
+msgid "{0} вопросов"
+msgstr ""
+
+msgid "Согласен(на) получать новости и предложения на указанный email"
+msgstr ""
+
+msgid "<0>Резюме:</0> {aiSummary}"
+msgstr ""
+
+msgid "Расширенный анализ ответов с помощью ИИ"
+msgstr ""
+
+msgid "<0>Уведомления:</0> HR-клиенты будут уведомлены о запросе"
+msgstr ""
+
+msgid "наймах"
+msgstr ""
+
+msgid "Настройки HR"
+msgstr ""
+
+msgid "Ошибка при распознавании речи"
+msgstr ""
+
+msgid "Проведено тестов:"
+msgstr ""
+
+msgid "Низкая"
+msgstr ""
+
+msgid "Видео-ответы"
+msgstr ""
+
+msgid "Выберите кандидатов для сравнения (минимум 1):"
+msgstr ""
+
+msgid "Общая оценка"
+msgstr ""
+
+msgid "Ошибка удаления"
+msgstr ""
+
+msgid "Тарифы и оплата"
+msgstr ""
+
+msgid "Ошибка обновления настроек"
+msgstr ""
+
+msgid "HR-платформа для автоматизации найма и интервью"
+msgstr ""
+
+msgid "Восстановление пароля"
+msgstr ""
+
+msgid "Время на ответ (сек)"
+msgstr ""
+
+msgid "Кандидат оставил мнение о результатах"
+msgstr ""
+
+msgid "Вакансия из HH.ru"
+msgstr ""
+
+msgid "Внимание:"
+msgstr ""
+
+msgid "Отменён"
+msgstr ""
+
+msgid "Удалить вопрос"
+msgstr ""
+
+msgid "Любая камера"
+msgstr ""
+
+#. placeholder {0}: error.message
+msgid "❌ Ошибка диагностики: {0}"
+msgstr ""
+
+msgid "Вход HR"
+msgstr ""
+
+msgid "ИИ создаёт адаптивные вопросы"
+msgstr ""
+
+msgid "💪 Определяем ваши сильные стороны..."
+msgstr ""
+
+msgid "Пожалуйста, выберите компанию"
+msgstr ""
+
+msgid "Настройки синхронизации сохранены"
+msgstr ""
+
+msgid "🎯 Почему SofiHR выгоднее традиционного найма?"
+msgstr ""
+
+msgid "Кандидаты будут обрабатываться по мере обновления лимита"
+msgstr ""
+
+msgid "После регистрации система автоматически сгенерирует безопасный пароль и отправит его на ваш email."
+msgstr ""
+
+msgid "Приоритетная поддержка (ответ в течение 4 часов)"
+msgstr ""
+
+msgid "Базовые шаблоны интервью"
+msgstr ""
+
+msgid "ИИ автоматически задаёт уточняющие вопросы на основе контекста ответов."
+msgstr ""
+
+msgid "Используя Систему, вы принимаете настоящие Условия и соглашаетесь следовать им."
+msgstr ""
+
+msgid "HR-клиент подтвердил удаление копий данных из своих систем"
+msgstr ""
+
+msgid "Аналитика использования"
+msgstr ""
+
+msgid "Сгенерировать"
+msgstr ""
+
+msgid "≥ 60% (слабые)"
+msgstr ""
+
+msgid "Ответы"
+msgstr ""
+
+msgid "Нет оценок по интервью"
+msgstr ""
+
+msgid "Ошибка соединения. Проверьте интернет-соединение и попробуйте снова."
+msgstr ""
+
+msgid "Иван Иванов"
+msgstr ""
+
+msgid "✅ Камера и микрофон подключены успешно!"
+msgstr ""
+
+msgid "📊 Интеграция отключена"
+msgstr ""
+
+msgid "Ошибка инициализации"
+msgstr ""
+
+msgid "Экономия бюджета: 300,000₽"
+msgstr ""
