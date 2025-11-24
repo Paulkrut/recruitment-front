@@ -644,8 +644,9 @@ export default function ComparePage() {
                       borderColor: 'primary.main'
                     }}>
                       <Typography variant="body2">
-                        <strong><Trans>Должность</Trans>:</strong> {comparisonData.result.vacancy.title || _(msg`Не указана`)}<br />
-                        {comparisonData.result.vacancy.description && (
+                        <strong><Trans>Должность</Trans>:</strong> {comparisonData.result.vacancy.title || '—'}
+                      <br />
+                      {comparisonData.result.vacancy.description && (
                           <>
                             <strong><Trans>Описание</Trans>:</strong> {comparisonData.result.vacancy.description}
                           </>

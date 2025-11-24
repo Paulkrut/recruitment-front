@@ -109,7 +109,9 @@ export default function DeleteStageDialog({
           color="error"
         >
           {candidatesCount > 0 
-            ? `Удалить и переместить ${candidatesCount} ${candidatesCount === 1 ? _(msg`кандидата`) : candidatesCount < 5 ? _(msg`кандидатов`) : _(msg`кандидатов`)}`
+            ? candidatesCount === 1 
+              ? _(msg`Удалить и переместить ${candidatesCount} кандидата`)
+              : _(msg`Удалить и переместить ${candidatesCount} кандидатов`)
             : _(msg`Удалить стадию`)
           }
         </Button>

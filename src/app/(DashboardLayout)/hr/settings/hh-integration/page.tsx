@@ -243,7 +243,7 @@ export default function HhIntegrationPage() {
       await response.json(); // Парсим ответ
 
       setStatus(prev => prev ? { ...prev, autoSync: enabled } : null);
-      setSuccess(_(msg`Автоматическая синхронизация ${enabled ? _(msg`включена`) : _(msg`отключена`)}`));
+      setSuccess(enabled ? _(msg`Автоматическая синхронизация включена`) : _(msg`Автоматическая синхронизация отключена`));
     } catch (err: any) {
       setError(err.message || _(msg`Ошибка обновления настроек`));
     }
@@ -324,7 +324,8 @@ export default function HhIntegrationPage() {
           if (vacancyStatus.candidates_sync_status === 'synced') {
             setSuccess(_(msg`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`));
           } else if (vacancyStatus.candidates_sync_status === 'error') {
-            setError(_(msg`Ошибка синхронизации: ${vacancyStatus.candidates_sync_error || _(msg`Неизвестная ошибка`)}`));
+            const syncError = vacancyStatus.candidates_sync_error || _(msg`Неизвестная ошибка`);
+            setError(_(msg`Ошибка синхронизации: ${syncError}`));
           }
         }
       }

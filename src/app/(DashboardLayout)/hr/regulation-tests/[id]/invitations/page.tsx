@@ -90,7 +90,8 @@ export default function InvitationsPage() {
       
       if (!testResponse.ok) {
         const errorData = await testResponse.json();
-        alert(_(msg`Ошибка: ${errorData.error || _(msg`Тест не найден`)}. Возможно, вы выбрали неправильную компанию в хедере.`));
+        const errorMessage = errorData.error || _(msg`Тест не найден`);
+        alert(_(msg`Ошибка: ${errorMessage}. Возможно, вы выбрали неправильную компанию в хедере.`));
         router.push('/hr/regulation-tests');
         return;
       }

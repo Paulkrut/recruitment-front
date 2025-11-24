@@ -169,9 +169,9 @@ export default function BulkActionsPanel({
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>
-          <Trans>Переместить</Trans> {' '} {totalSelectedCount} {totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)}?
-        </DialogTitle>
+        <DialogTitle><Trans>
+          Переместить {totalSelectedCount} {totalSelectedCount === 1 ? _(msg`кандидата`) : _(msg`кандидатов`)}?
+        </Trans></DialogTitle>
         <DialogContent>
           <Typography variant="body1" gutterBottom>
             <Trans>Переместить в стадию</Trans>: <strong>{STATUS_LABELS[selectedStatus]}</strong>
@@ -229,9 +229,9 @@ export default function BulkActionsPanel({
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}><Trans>ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH.</Trans></Typography>
 
               {resumeQueueCount !== undefined && resumeQueueCount > 0 && (
-                <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}>
-                  ⚠️ <Trans>Уже в очереди на загрузку резюме</Trans>: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} <Trans>по всем вакансиям</Trans>
-                </Typography>
+                <Typography variant="caption" color="warning.main" display="block" sx={{ mt: 1 }}><Trans>
+                  ⚠️ Уже в очереди на загрузку резюме: <strong>{resumeQueueCount}</strong> {resumeQueueCount === 1 ? _(msg`кандидат`) : resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)} по всем вакансиям
+                </Trans></Typography>
               )}
             </Alert>
           )}

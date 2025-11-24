@@ -256,7 +256,7 @@ export default function HRVacancyDetailPage() {
       });
   }, [token, id]);
 
-  if (!token) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4}}><Typography><Trans>Нет доступа</Trans></Typography></Box></PageContainer>;
+  if (!token) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4}}><Typography>{_(msg`Нет доступа`)}</Typography></Box></PageContainer>;
   if (loading || !data) return <PageContainer title={_(msg`Вакансия`)}><Box sx={{p:4, textAlign:'center'}}><CircularProgress /></Box></PageContainer>;
 
   const { title, description, template, questions } = data;

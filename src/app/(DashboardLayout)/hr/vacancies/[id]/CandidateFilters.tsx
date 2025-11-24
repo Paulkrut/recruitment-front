@@ -443,7 +443,7 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.hasResume && (
             <Chip
-              label={`Резюме: ${filters.hasResume === 'true' ? _(msg`Есть`) : _(msg`Нет`)}`}
+              label={filters.hasResume === 'true' ? _(msg`Резюме: Есть`) : _(msg`Резюме: Нет`)}
               size="small"
               onDelete={() => handleRemoveFilter('hasResume')}
             />

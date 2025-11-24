@@ -738,7 +738,10 @@ export default function CandidatesList({
             }}
             rowsPerPageOptions={[25, 50, 100]}
             labelRowsPerPage={_(msg`Строк на странице:`)}
-            labelDisplayedRows={({ from, to, count }) => `${from}-${to} ${_(msg`из`)} ${count !== -1 ? count : `${_(msg`более`)} ${to}`}`}
+            labelDisplayedRows={({ from, to, count }) => {
+              const countText = count !== -1 ? count : _(msg`более ${to}`);
+              return _(msg`${from}-${to} из ${countText}`);
+            }}
           />
         </Box>
       )}

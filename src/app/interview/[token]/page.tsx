@@ -2962,7 +2962,10 @@ export default function CandidateInterviewPage() {
                 color: '#ff4444',
                 letterSpacing: '0.5px'
               }}>
-                <Trans>Идёт запись... Говорите в {cameraEnabled ? _(msg`камеру`) : _(msg`микрофон`)}</Trans>
+                {cameraEnabled 
+                  ? <Trans>Идёт запись... Говорите в камеру</Trans>
+                  : <Trans>Идёт запись... Говорите в микрофон</Trans>
+                }
               </Typography>
               <Box sx={{
                 display: 'flex',

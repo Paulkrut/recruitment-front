@@ -81,7 +81,8 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       case 'TimeoutError':
         return _(msg`Превышено время ожидания подключения камеры.`);
       default:
-        return _(msg`Ошибка подключения камеры: ${error?.message || _(msg`неизвестная ошибка`)}`);
+        const errorMessage = error?.message || _(msg`неизвестная ошибка`);
+        return _(msg`Ошибка подключения камеры: ${errorMessage}`);
     }
   };
 
