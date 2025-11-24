@@ -3,8 +3,7 @@
  */
 
 declare module '@lingui/loader!*' {
-  const messages: any;
-  export { messages };
+  export default any;
 }
 
 declare module '*.po' {
@@ -13,7 +12,8 @@ declare module '*.po' {
 }
 
 // Расширяем типы Trans для поддержки children без обязательного id
-declare module '@lingui/react' {
+// ВАЖНО: Теперь Trans импортируется из @lingui/macro, а не @lingui/react
+declare module '@lingui/macro' {
   import * as React from 'react';
   
   export interface TransProps {
@@ -28,6 +28,12 @@ declare module '@lingui/react' {
   }
   
   export const Trans: React.FC<TransProps>;
+  
+  export function msg(strings: TemplateStringsArray, ...values: any[]): any;
+  export function t(id: string): string;
+}
+
+declare module '@lingui/react' {
   export const useLingui: () => {
     i18n: any;
     _: (descriptor: any) => string;
