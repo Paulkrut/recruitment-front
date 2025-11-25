@@ -32,31 +32,6 @@ moment.locale('ru');
 const CARD_HEIGHT = 160; // Уменьшена для компактности (стиль Битрикс)
 const CARD_GAP = 8;
 
-// Форматирование даты в стиле Битрикс24
-const formatBitrixDate = (dateString: string | null | undefined): string => {
-  if (!dateString) return '';
-
-  const date = moment(dateString);
-  const now = moment();
-
-  // Сегодня - показываем время
-  if (date.isSame(now, 'day')) {
-    return _(msg`сегодня, ${date.format('HH:mm')}`);
-  }
-
-  // Вчера
-  if (date.isSame(now.clone().subtract(1, 'day'), 'day')) {
-    return _(msg`вчера, ${date.format('HH:mm')}`);
-  }
-
-  // В этом году - без года
-  if (date.isSame(now, 'year')) {
-    return date.format('D MMM');
-  }
-
-  // Старше года - с годом
-  return date.format('D MMM YYYY');
-};
 
 interface CandidateCard {
   id: number;
@@ -171,27 +146,6 @@ const getColumnHoverColor = (column: Column): string => {
   return colorMap[column.value] || '#616161';
 };
 
-// Информация о триггерах для каждого статуса
-const STATUS_TRIGGERS: Record<string, string[]> = {
-  'screening': [
-    _(msg`🤖 AI-анализ резюме`),
-  ],
-  'contacted': [
-    _(msg`📧 Отправка приглашения на тестирование`),
-    _(msg`🔗 Генерация ссылки на тест`),
-  ],
-  'testing': [
-    _(msg`⏱️ Активация таймера тестирования`),
-  ],
-  'finalist': [
-    _(msg`🔔 Уведомление HR менеджера`),
-  ],
-  'offer': [],
-  'rejected': [
-    _(msg`✉️ Отправка письма отказа`),
-    _(msg`📁 Добавление в талант-пул`),
-  ],
-};
 
 // Нативный HTML5 Drag & Drop (БЫСТРО!)
 const DraggableCandidateCard = memo(({
@@ -213,6 +167,9 @@ const DraggableCandidateCard = memo(({
   onDragStart: (candidateId: number) => void;
   onDragEnd: (candidateId: number, newStatus: string | null) => void;
 }) => {
+
+  const { _ } = useLingui();
+
   const handleDragStart = useCallback((e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('candidateId', candidate.id.toString());
@@ -243,6 +200,52 @@ const DraggableCandidateCard = memo(({
     if (candidate.aiScore >= 75) return 'info';
     if (candidate.aiScore >= 60) return 'warning';
     return 'error';
+  };
+// Форматирование даты в стиле Битрикс24
+  const formatBitrixDate = (dateString: string | null | undefined): string => {
+    if (!dateString) return '';
+
+    const date = moment(dateString);
+    const now = moment();
+
+    // Сегодня - показываем время
+    if (date.isSame(now, 'day')) {
+      return _(msg`сегодня, ${date.format('HH:mm')}`);
+    }
+
+    // Вчера
+    if (date.isSame(now.clone().subtract(1, 'day'), 'day')) {
+      return _(msg`вчера, ${date.format('HH:mm')}`);
+    }
+
+    // В этом году - без года
+    if (date.isSame(now, 'year')) {
+      return date.format('D MMM');
+    }
+
+    // Старше года - с годом
+    return date.format('D MMM YYYY');
+  };
+// Информация о триггерах для каждого статуса
+  const STATUS_TRIGGERS: Record<string, string[]> = {
+    'screening': [
+      _(msg`🤖 AI-анализ резюме`),
+    ],
+    'contacted': [
+      _(msg`📧 Отправка приглашения на тестирование`),
+      _(msg`🔗 Генерация ссылки на тест`),
+    ],
+    'testing': [
+      _(msg`⏱️ Активация таймера тестирования`),
+    ],
+    'finalist': [
+      _(msg`🔔 Уведомление HR менеджера`),
+    ],
+    'offer': [],
+    'rejected': [
+      _(msg`✉️ Отправка письма отказа`),
+      _(msg`📁 Добавление в талант-пул`),
+    ],
   };
 
   return (
@@ -478,6 +481,7 @@ const DroppableColumn = ({
   onDrop: (candidateId: number, newStatus: string) => void;
 }) => {
   const [isOver, setIsOver] = useState(false);
+  const { _ } = useLingui();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -525,7 +529,6 @@ export default function KanbanView({
   onSelectedCandidatesChange
 }: KanbanViewProps) {
   const { _ } = useLingui();
-
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);
@@ -1271,6 +1274,27 @@ export default function KanbanView({
       default: return '📥';
     }
   }, []);
+
+  const STATUS_TRIGGERS: Record<string, string[]> = {
+    'screening': [
+      _(msg`🤖 AI-анализ резюме`),
+    ],
+    'contacted': [
+      _(msg`📧 Отправка приглашения на тестирование`),
+      _(msg`🔗 Генерация ссылки на тест`),
+    ],
+    'testing': [
+      _(msg`⏱️ Активация таймера тестирования`),
+    ],
+    'finalist': [
+      _(msg`🔔 Уведомление HR менеджера`),
+    ],
+    'offer': [],
+    'rejected': [
+      _(msg`✉️ Отправка письма отказа`),
+      _(msg`📁 Добавление в талант-пул`),
+    ],
+  };
 
   // Получить цвет полоски для карточки по статусу
   const getCardBorderColor = useCallback((status: string) => {

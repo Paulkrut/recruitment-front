@@ -39,18 +39,6 @@ interface BulkActionsPanelProps {
   resumeQueueCount?: number;
 }
 
-// Лейблы для статусов
-const STATUS_LABELS: Record<string, string> = {
-  'new': _(msg`📥 Новые`),
-  'screening': _(msg`🤖 AI Скрининг`),
-  'contacted': _(msg`📞 На связи`),
-  'testing': _(msg`📝 Тестирование`),
-  'finalist': _(msg`⭐ Финалист`),
-  'offer': _(msg`💼 Оффер`),
-  'hired': _(msg`✅ Нанят`),
-  'deferred': _(msg`⏸️ Отложен`),
-  'rejected': _(msg`❌ Отказ`),
-};
 
 export default function BulkActionsPanel({
   selectedCount,
@@ -95,6 +83,18 @@ export default function BulkActionsPanel({
   };
 
   const triggers = selectedStatus ? statusTriggers[selectedStatus] || [] : [];
+// Лейблы для статусов
+  const STATUS_LABELS: Record<string, string> = {
+    'new': _(msg`📥 Новые`),
+    'screening': _(msg`🤖 AI Скрининг`),
+    'contacted': _(msg`📞 На связи`),
+    'testing': _(msg`📝 Тестирование`),
+    'finalist': _(msg`⭐ Финалист`),
+    'offer': _(msg`💼 Оффер`),
+    'hired': _(msg`✅ Нанят`),
+    'deferred': _(msg`⏸️ Отложен`),
+    'rejected': _(msg`❌ Отказ`),
+  };
 
   return (
     <>

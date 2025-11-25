@@ -124,7 +124,7 @@ const Profile = () => {
         >
           {initials}
         </Avatar>
-        
+
         {lgUp && (
           <Box textAlign="left">
             <Typography variant="body2" color="textPrimary" fontWeight={600}>
@@ -249,6 +249,7 @@ function ProfileDialog({
   onClose: () => void;
   onUpdated: (u: any) => void;
 }) {
+  const { _ } = useLingui();
   const [form, setForm] = useState({ name: '', email: '', position: '' });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ name: '', email: '', position: '' });

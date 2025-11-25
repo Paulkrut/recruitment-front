@@ -81,6 +81,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
   onDelete: (id: number) => void;
 }) {
   const router = useRouter();
+  const { _ } = useLingui();
 
   const getProgressColor = (percent: number) => {
     if (percent === 0) return "info";
@@ -118,13 +119,13 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
     <TableContainer component={Paper} sx={{ boxShadow: 1, borderRadius: 2 }}>
       <Table>
         <TableHead>
-          <TableRow sx={{ 
+          <TableRow sx={{
             backgroundColor: 'grey.50',
             borderBottom: '2px solid',
             borderColor: 'primary.main'
           }}>
-            <TableCell sx={{ 
-              fontWeight: 600, 
+            <TableCell sx={{
+              fontWeight: 600,
               fontSize: '0.875rem',
               color: 'text.secondary',
               width: '35%'
@@ -134,8 +135,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 <Trans>Название</Trans>
               </Box>
             </TableCell>
-            <TableCell sx={{ 
-              fontWeight: 600, 
+            <TableCell sx={{
+              fontWeight: 600,
               fontSize: '0.875rem',
               color: 'text.secondary',
               width: '12%'
@@ -145,8 +146,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 <Trans>Создано</Trans>
               </Box>
             </TableCell>
-            <TableCell sx={{ 
-              fontWeight: 600, 
+            <TableCell sx={{
+              fontWeight: 600,
               fontSize: '0.875rem',
               color: 'text.secondary',
               width: '12%'
@@ -156,8 +157,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 <Trans>Кто создал</Trans>
               </Box>
             </TableCell>
-            <TableCell sx={{ 
-              fontWeight: 600, 
+            <TableCell sx={{
+              fontWeight: 600,
               fontSize: '0.875rem',
               color: 'text.secondary',
               width: '18%'
@@ -169,8 +170,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                 </Box>
               </Tooltip>
             </TableCell>
-            <TableCell sx={{ 
-              fontWeight: 600, 
+            <TableCell sx={{
+              fontWeight: 600,
               fontSize: '0.875rem',
               color: 'text.secondary',
               width: '8%',
@@ -186,10 +187,10 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
             const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
 
             return (
-              <TableRow 
-                key={vacancy.id} 
-                sx={{ 
-                  '&:hover': { 
+              <TableRow
+                key={vacancy.id}
+                sx={{
+                  '&:hover': {
                     backgroundColor: 'action.hover',
                     transform: 'scale(1.001)',
                     transition: 'all 0.2s ease'
@@ -201,23 +202,23 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                     <Box display="flex" alignItems="center" gap={1}>
                       {vacancy.source === 'headhunter' && (
                         <Tooltip title={_(msg`Вакансия из HH.ru`)}>
-                          <Chip 
-                            label="HH" 
-                            size="small" 
-                            sx={{ 
+                          <Chip
+                            label="HH"
+                            size="small"
+                            sx={{
                               height: 20,
                               fontSize: '0.65rem',
                               fontWeight: 700,
                               backgroundColor: '#D6001C',
                               color: 'white',
                               '& .MuiChip-label': { px: 0.75 }
-                            }} 
+                            }}
                           />
                         </Tooltip>
                       )}
-                      <Typography 
-                        variant="subtitle2" 
-                        fontWeight={600} 
+                      <Typography
+                        variant="subtitle2"
+                        fontWeight={600}
                         color="primary.main"
                         sx={{
                           cursor: 'pointer',
@@ -280,8 +281,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         size="small"
                         color="primary"
                         onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
-                        sx={{ 
-                          width: 28, 
+                        sx={{
+                          width: 28,
                           height: 28,
                           '&:hover': { backgroundColor: 'primary.light' }
                         }}
@@ -294,8 +295,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         size="small"
                         color="primary"
                         onClick={() => onEdit(vacancy.id)}
-                        sx={{ 
-                          width: 28, 
+                        sx={{
+                          width: 28,
                           height: 28,
                           '&:hover': { backgroundColor: 'primary.light' }
                         }}
@@ -308,8 +309,8 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         size="small"
                         color="error"
                         onClick={() => onDelete(vacancy.id)}
-                        sx={{ 
-                          width: 28, 
+                        sx={{
+                          width: 28,
                           height: 28,
                           '&:hover': { backgroundColor: 'error.light' }
                         }}
@@ -335,6 +336,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
 }) {
+  const { _ } = useLingui();
   const router = useRouter();
   const total = vacancy.candidatesTotal || 0;
   const finished = vacancy.candidatesFinished || 0;
@@ -374,17 +376,17 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
         <Box display="flex" alignItems="center" gap={1} flexGrow={1}>
           {vacancy.source === 'headhunter' && (
             <Tooltip title={_(msg`Вакансия из HH.ru`)}>
-              <Chip 
-                label="HH" 
-                size="small" 
-                sx={{ 
+              <Chip
+                label="HH"
+                size="small"
+                sx={{
                   height: 20,
                   fontSize: '0.65rem',
                   fontWeight: 700,
                   backgroundColor: '#D6001C',
                   color: 'white',
                   '& .MuiChip-label': { px: 0.75 }
-                }} 
+                }}
               />
             </Tooltip>
           )}
@@ -514,7 +516,6 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
 
 export default function HRVacanciesPage() {
   const { _ } = useLingui();
-
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [rows, setRows] = useState<VacancyRow[]>([]);
@@ -525,7 +526,7 @@ export default function HRVacanciesPage() {
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
     if (t) setToken(t);
-    
+
     // Загружаем сохраненный режим просмотра
     const savedViewMode = localStorage.getItem("vacancy_view_mode") as 'card' | 'table';
     if (savedViewMode) {
@@ -571,7 +572,7 @@ export default function HRVacanciesPage() {
 
   return (
     <PageContainer title={_(msg`Вакансии`)} description="Управление вакансиями">
-      <Box sx={{ 
+      <Box sx={{
         overflow: "hidden", // Предотвращаем скроллбар на уровне страницы
         "& *": { // Применяем ко всем элементам
           "&::-webkit-scrollbar": { display: "none" }, // Скрываем скроллбар в WebKit браузерах

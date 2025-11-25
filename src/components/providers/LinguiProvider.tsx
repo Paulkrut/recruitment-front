@@ -1,23 +1,24 @@
 'use client';
 
-import { i18n } from '@lingui/core';
-import { I18nProvider } from '@lingui/react';
 import { useEffect, useState } from 'react';
-import { getCurrentLocale, initI18n, type SupportedLocale } from '@/utils/i18n';
+import { getCurrentLocale, initI18n } from '@/utils/i18n';
 
 interface LinguiProviderProps {
   children: React.ReactNode;
 }
 
+/**
+ * LinguiProvider инициализирует i18n глобально
+ * В LinguiJS v5 не требуется оборачивать в I18nProvider,
+ * так как i18n настраивается глобально
+ */
 export function LinguiProvider({ children }: LinguiProviderProps) {
-  const [locale, setLocale] = useState<SupportedLocale>('ru');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function loadLocale() {
       const currentLocale = getCurrentLocale();
       await initI18n(currentLocale);
-      setLocale(currentLocale);
       setIsLoading(false);
     }
 
@@ -28,11 +29,7 @@ export function LinguiProvider({ children }: LinguiProviderProps) {
     return null; // или loader
   }
 
-  return (
-    <I18nProvider i18n={i18n}>
-      {children}
-    </I18nProvider>
-  );
+  return <>{children}</>;
 }
 
 

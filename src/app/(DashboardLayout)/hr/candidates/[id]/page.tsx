@@ -59,6 +59,7 @@ function getStatusLabel(status: string, _: any) {
   switch (status) {
     case "completed":
     case "finished":
+
       return _(msg`Завершено`);
     case "in_progress":
       return _(msg`В процессе`);
@@ -82,9 +83,9 @@ function getStatusLabel(status: string, _: any) {
 }
 
 export default function CandidateDetailPage() {
+  const { _ } = useLingui();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { _ } = useLingui();
   const [token, setToken] = useState<string | null>(null);
   const [statusData, setStatusData] = useState<any>(null);
   const [evalData, setEvalData] = useState<any>(null);

@@ -25,9 +25,9 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { _ } = useLingui();
 
   async function handleLogin(e: React.FormEvent) {
-  const { _ } = useLingui();
 
     e.preventDefault();
     setError(null);
@@ -111,7 +111,8 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             <FormGroup>
               <FormControlLabel
                 control={<CustomCheckbox defaultChecked />}
-                label={_(msg`Запомнить меня`)}
+                label={
+                _(msg`Запомнить меня`)}
               />
             </FormGroup>
             <Typography

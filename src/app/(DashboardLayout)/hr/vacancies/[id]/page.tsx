@@ -76,6 +76,7 @@ function getStatusLabel(status: string, _: any) {
 }
 
 function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: () => void, onShowQR: () => void }) {
+  const { _ } = useLingui();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -101,9 +102,9 @@ function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: ()
 }
 
 export default function HRVacancyDetailPage() {
+  const { _ } = useLingui();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { _ } = useLingui();
   const [token, setToken] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const [candidates, setCandidates] = useState<any[]>([]);
@@ -882,6 +883,7 @@ export default function HRVacancyDetailPage() {
 
 // --- AddCandidateDialog component ---
 function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; onClose:()=>void; vacancyId:string; onAdded:()=>void}){
+  const { _ } = useLingui();
   const [form,setForm] = React.useState({name:'',email:'',phone:''});
   const [loading,setLoading]=React.useState(false);
   const [errors, setErrors] = React.useState({name:'',email:'',phone:''});

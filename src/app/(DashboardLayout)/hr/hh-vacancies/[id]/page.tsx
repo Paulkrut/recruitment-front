@@ -32,7 +32,7 @@ import {
 } from '@tabler/icons-react';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
-import { msg } from '@lingui/macro';
+import {msg, Trans} from '@lingui/macro';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';

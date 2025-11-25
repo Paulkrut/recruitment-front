@@ -15,7 +15,8 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
   const [invites, setInvites] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
+  const { _ } = useLingui();
+
   const load = async () => {
     setLoading(true);
     setError(null);
@@ -35,9 +36,9 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => { load(); }, []);
-  
+
   const handleAccept = async (id: number) => {
     setError(null);
     try {
@@ -53,7 +54,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       setError(_(msg`Ошибка принятия приглашения`));
     }
   };
-  
+
   const handleDecline = async (id: number) => {
     setError(null);
     try {
@@ -68,7 +69,7 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       setError(_(msg`Ошибка отклонения приглашения`));
     }
   };
-  
+
   if (loading) {
     return (
       <Paper sx={{ p: 4, width: "100%", maxWidth: 600, mb: 4 }}>
@@ -78,9 +79,9 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
       </Paper>
     );
   }
-  
+
   if (invites.length === 0) return null;
-  
+
   return (
     <Paper sx={{ p: 4, width: "100%", maxWidth: 600, mb: 4 }}>
       <Typography variant="h6" gutterBottom><Trans>Вас пригласили в компании:</Trans></Typography>
@@ -100,7 +101,6 @@ function InvitesBlock({ onAccept }: { onAccept: () => void }) {
 
 export default function ChooseCompanyPage() {
   const { _ } = useLingui();
-
   const { companies, isLoading, error: contextError, refreshCompanies, setCurrentCompany } = useUser();
   const router = useRouter();
   const [name, setName] = useState("");
@@ -114,15 +114,15 @@ export default function ChooseCompanyPage() {
   };
 
   const create = async () => {
-    setError(null); 
+    setError(null);
     setSuccess(null);
     setCreating(true);
-    
+
     try {
-      const res = await apiFetch(`${API_BASE}/api/company`, { 
-        method: "POST", 
-        headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify({ name }) 
+      const res = await apiFetch(`${API_BASE}/api/company`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
       });
       const d = await res.json();
       if (d.id) {
@@ -165,16 +165,16 @@ export default function ChooseCompanyPage() {
     <PageContainer title={_(msg`Выбор компании`)}>
       <Box minHeight="100vh" display="flex" flexDirection="column" alignItems="center" pt={8} gap={4}>
         <InvitesBlock onAccept={refreshCompanies} />
-        
+
         <Paper sx={{ p: 4, width: "100%", maxWidth: 600, mb: 4 }}>
           <Typography variant="h5" gutterBottom><Trans>Выберите компанию</Trans></Typography>
           <Stack spacing={2} mt={2}>
             {companies && companies.length > 0 ? companies.map((c: any) => (
-              <Button 
-                key={c.id} 
-                variant="outlined" 
-                size="large" 
-                sx={{ fontSize: 18, py: 2 }} 
+              <Button
+                key={c.id}
+                variant="outlined"
+                size="large"
+                sx={{ fontSize: 18, py: 2 }}
                 onClick={() => select(c)}
               >
                 {c.name} ({c.role})
@@ -184,21 +184,21 @@ export default function ChooseCompanyPage() {
             )}
           </Stack>
         </Paper>
-        
+
         <Paper sx={{ p: 4, width: "100%", maxWidth: 600 }}>
           <Typography variant="h6" gutterBottom><Trans>Создать новую компанию</Trans></Typography>
           <Stack direction="row" spacing={2} mt={2}>
-            <TextField 
-              value={name} 
-              onChange={e => setName(e.target.value)} 
-              size="small" 
-              fullWidth 
+            <TextField
+              value={name}
+              onChange={e => setName(e.target.value)}
+              size="small"
+              fullWidth
               placeholder={_(msg`Название компании`)}
               disabled={creating}
             />
-            <Button 
-              variant="contained" 
-              onClick={create} 
+            <Button
+              variant="contained"
+              onClick={create}
               disabled={!name.trim() || creating}
             >
               {creating ? <CircularProgress size={20} /> : _(msg`Создать`)}
@@ -210,4 +210,4 @@ export default function ChooseCompanyPage() {
       </Box>
     </PageContainer>
   );
-} 
+}

@@ -49,8 +49,6 @@ import { msg, Trans } from '@lingui/macro';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
-const steps = [_(msg`Основные настройки`), _(msg`Выбор регламентов`), _(msg`Генерация вопросов`)];
-
 // Мемоизированный компонент карточки вопроса для предотвращения ненужных перерендеров
 const QuestionCard = memo(({
   question,
@@ -65,6 +63,9 @@ const QuestionCard = memo(({
   onUpdate: (index: number, field: keyof GeneratedQuestion, value: any) => void;
   onDelete: (index: number) => void;
 }) => {
+
+  const { _ } = useLingui();
+
   return (
     <Card sx={{ mb: 2, border: '1px solid', borderColor: 'divider' }}>
       <CardContent>
@@ -214,6 +215,10 @@ export default function CreateTestPage() {
 
   // Success dialog
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+
+
+  const steps = [_(msg`Основные настройки`), _(msg`Выбор регламентов`), _(msg`Генерация вопросов`)];
+
 
   useEffect(() => {
     loadRegulations();

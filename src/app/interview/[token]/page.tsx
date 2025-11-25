@@ -61,10 +61,10 @@ interface Question {
 const API_BASE =
   process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-const steps = [_(msg`Подготовка`), _(msg`Тест оборудования`), _(msg`Ответы`), _(msg`Финиш`)];
 
 export default function CandidateInterviewPage() {
   const { _ } = useLingui();
+  const steps = [_(msg`Подготовка`), _(msg`Тест оборудования`), _(msg`Ответы`), _(msg`Финиш`)];
 
   const { token } = useParams<{ token: string }>();
   const theme = useTheme();
@@ -836,11 +836,11 @@ export default function CandidateInterviewPage() {
       setRecording(true);
     } catch (err: any) {
       console.error('startRecording error:', err);
-      let msg = cameraEnabled ? _(msg`Не удалось получить доступ к камере и микрофону.`) : _(msg`Не удалось получить доступ к микрофону.`);
+      let msgText = cameraEnabled ? _(msg`Не удалось получить доступ к камере и микрофону.`) : _(msg`Не удалось получить доступ к микрофону.`);
 
       // Специальная обработка для Safari
       if (navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-        msg += cameraEnabled
+        msgText += cameraEnabled
           ? _(msg`\n\nВ Safari необходимо:\n1. Разрешить доступ к камере и микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Камера/Микрофон`)
           : _(msg`\n\nВ Safari необходимо:\n1. Разрешить доступ к микрофону\n2. Убедиться, что сайт открыт по HTTPS\n3. Проверить настройки в Safari > Настройки > Веб-сайты > Микрофон`);
 
@@ -850,24 +850,24 @@ export default function CandidateInterviewPage() {
           return;
         }
       } else if (typeof window !== "undefined" && !window.isSecureContext) {
-        msg += cameraEnabled
+        msgText += cameraEnabled
           ? _(msg`\nБраузер требует HTTPS или http://localhost для доступа к камере и микрофону. Откройте страницу по безопасному протоколу или через localhost.`)
           : _(msg`\nБраузер требует HTTPS или http://localhost для доступа к микрофону. Откройте страницу по безопасному протоколу или через localhost.`);
       } else if (err?.name === "NotAllowedError") {
-        msg += cameraEnabled
+        msgText += cameraEnabled
           ? _(msg`\nРазрешите доступ к камере и микрофону в настройках браузера (значок камеры/микрофона в адресной строке).`)
           : _(msg`\nРазрешите доступ к микрофону в настройках браузера (значок микрофона в адресной строке).`);
       } else if (err?.name === "NotFoundError") {
-        msg += cameraEnabled ? _(msg`\nКамера или микрофон не найдены.`) : _(msg`\nУстройство микрофона не найдено.`);
+        msgText += cameraEnabled ? _(msg`\nКамера или микрофон не найдены.`) : _(msg`\nУстройство микрофона не найдено.`);
       } else if (err?.name === "NotSupportedError") {
-        msg += cameraEnabled ? _(msg`\nВаш браузер не поддерживает запись видео.`) : _(msg`\nВаш браузер не поддерживает запись аудио.`);
+        msgText += cameraEnabled ? _(msg`\nВаш браузер не поддерживает запись видео.`) : _(msg`\nВаш браузер не поддерживает запись аудио.`);
       } else if (err?.name === "NotReadableError") {
-        msg += cameraEnabled
+        msgText += cameraEnabled
           ? _(msg`\nКамера или микрофон уже используются другим приложением.`)
           : _(msg`\nМикрофон уже используется другим приложением.`);
       }
 
-      alert(msg);
+      alert(msgText);
 
       // Удаляем сообщение при ошибке
       setChat((p) => {
@@ -2962,7 +2962,7 @@ export default function CandidateInterviewPage() {
                 color: '#ff4444',
                 letterSpacing: '0.5px'
               }}>
-                {cameraEnabled 
+                {cameraEnabled
                   ? <Trans>Идёт запись... Говорите в камеру</Trans>
                   : <Trans>Идёт запись... Говорите в микрофон</Trans>
                 }
