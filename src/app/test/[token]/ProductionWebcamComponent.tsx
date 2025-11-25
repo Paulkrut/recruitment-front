@@ -32,8 +32,6 @@ interface AttemptStrategy {
 
 // Timeout функция от BigBlueButton
 const promiseTimeout = (ms: number, promise: Promise<any>) => {
-  const { _ } = useLingui();
-
   const timeout = new Promise((resolve, reject) => {
     const id = setTimeout(() => {
       clearTimeout(id);

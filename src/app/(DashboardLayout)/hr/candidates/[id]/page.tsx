@@ -55,9 +55,7 @@ import { msg, Trans } from '@lingui/macro';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-function getStatusLabel(status: string) {
-  const { _ } = useLingui();
-
+function getStatusLabel(status: string, _: any) {
   switch (status) {
     case "completed":
     case "finished":
@@ -86,6 +84,7 @@ function getStatusLabel(status: string) {
 export default function CandidateDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { _ } = useLingui();
   const [token, setToken] = useState<string | null>(null);
   const [statusData, setStatusData] = useState<any>(null);
   const [evalData, setEvalData] = useState<any>(null);
@@ -263,8 +262,8 @@ export default function CandidateDetailPage() {
               <Box flexGrow={1}>
                 <Stack direction="row" alignItems="center" spacing={2}>
                   <Typography variant="h4" fontWeight="700">{candidate}</Typography>
-                  {candidateStatus && <Chip label={getStatusLabel(candidateStatus)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
-                  {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
+                  {candidateStatus && <Chip label={getStatusLabel(candidateStatus, _)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
+                  {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status, _)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
                   {statusData?.candidateOpinion && (
                     <Tooltip title={_(msg`Кандидат оставил мнение о результатах`)}>
                       <Chip
@@ -344,7 +343,7 @@ export default function CandidateDetailPage() {
                   <Stack direction="row" alignItems="center" spacing={2} mb={2}>
                     <IconFileText size={32} color="#1976d2" />
                     <Typography variant="h4" fontWeight="700"><Trans>Детали интервью-сессии</Trans></Typography>
-                    <Chip label={getStatusLabel(sessionDetail.status)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
+                    <Chip label={getStatusLabel(sessionDetail.status, _)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
                   </Stack>
                   <Grid container spacing={2} mb={2}>
                     <Grid item xs={12} sm={6} md={4}>

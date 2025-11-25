@@ -50,9 +50,7 @@ import { msg, Trans } from '@lingui/macro';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
-function getStatusLabel(status: string) {
-  const { _ } = useLingui();
-
+function getStatusLabel(status: string, _: any) {
   switch (status) {
     case "completed":
       return _(msg`Завершено`);
@@ -105,6 +103,7 @@ function CandidateActions({ link, onCopy, onShowQR }: { link: string, onCopy: ()
 export default function HRVacancyDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { _ } = useLingui();
   const [token, setToken] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
   const [candidates, setCandidates] = useState<any[]>([]);
@@ -561,7 +560,7 @@ export default function HRVacancyDetailPage() {
                         </Typography>
                       </Box>
                     )},
-                    {field:'status',header: _(msg`Статус`), render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status)} />)} ,
+                    {field:'status',header: _(msg`Статус`), render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status, _)} />)} ,
                     {field:'score',header: _(msg`Оценка`),render:(r:any)=>{
                       if (r.score !== undefined && r.score !== null) {
                         return (
@@ -829,7 +828,7 @@ export default function HRVacancyDetailPage() {
                         </Box>
                         <Typography variant="body2">Email: {cand.email || '-'}</Typography>
                         <Typography variant="body2"><Trans>Телефон</Trans>: {cand.phone || '-'}</Typography>
-                        <Typography variant="body2"><Trans>Статус</Trans>: {getStatusLabel(cand.status)}</Typography>
+                        <Typography variant="body2"><Trans>Статус</Trans>: {getStatusLabel(cand.status, _)}</Typography>
                         <Typography variant="body2"><Trans>Оценка</Trans>: {cand.score !== undefined && cand.score !== null ? cand.score : '-'}</Typography>
                         <Typography variant="body2"><Trans>Дата добавления</Trans>: {cand.createdAt ? formatDateToLocal(cand.createdAt) : '-'}</Typography>
                         <Button variant="outlined" color="primary" fullWidth sx={{mt:2}} onClick={()=>router.push(`/hr/candidates/${cand.id}`)}><Trans>Подробнее</Trans></Button>

@@ -15,8 +15,6 @@ import { msg, Trans } from '@lingui/macro';
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 function stringAvatar(name: string) {
-  const { _ } = useLingui();
-
   if (!name) return { children: "?" };
   const parts = name.split(" ");
   return {
