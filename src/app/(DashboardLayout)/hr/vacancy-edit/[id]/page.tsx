@@ -28,6 +28,7 @@ import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLab
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import { apiFetch } from "@/utils/api";
 import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -491,23 +492,15 @@ export default function HRVacancyEditPage() {
                   >
                     Описание вакансии
                   </CustomFormLabel>
-                  <CustomTextField
-                    id="vacancy-description"
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={5}
+                  <RichTextEditor
                     value={vacancyData.description}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, description: e.target.value })}
+                    onChange={(value) => setVacancyData({ ...vacancyData, description: value })}
                     placeholder="Опишите требования, обязанности и условия работы"
-                    helperText="Опишите требования, обязанности и условия работы"
-                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#f7f7f7',
-                        borderRadius: 2,
-                      },
-                      '& .MuiInputBase-input': {
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    Используйте форматирование для лучшей читаемости
+                  </Typography>
+                  <Box sx={{ display: 'none', '& .MuiInputBase-input': {
                         fontSize: '1.1rem',
                         padding: '16px 20px'
                       }

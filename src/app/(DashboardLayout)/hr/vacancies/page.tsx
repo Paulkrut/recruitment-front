@@ -100,6 +100,15 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
     return text.substring(0, maxLength) + '...';
   };
 
+  // Функция для обрезки HTML текста (удаляет теги и обрезает)
+  const truncateHtml = (html: string, maxLength: number) => {
+    if (!html) return '';
+    // Удаляем HTML теги
+    const text = html.replace(/<[^>]*>/g, '');
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
 
 
   // Функция для получения короткого имени
@@ -233,7 +242,7 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                     </Box>
                     {vacancy.description && (
                       <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
-                        {truncateText(vacancy.description, 60)}
+                        {truncateHtml(vacancy.description, 60)}
                       </Typography>
                     )}
                   </Box>
@@ -477,6 +486,7 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
       {/* Описание */}
       {vacancy.description && (
         <Typography
+          component="div"
           variant="body2"
           color="textSecondary"
           sx={{
@@ -487,10 +497,11 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
             overflow: "hidden",
             textOverflow: "ellipsis",
             wordBreak: "break-word",
+            '& p': { margin: 0 },
+            '& ul, & ol': { paddingLeft: 2, margin: 0 }
           }}
-        >
-          {vacancy.description}
-        </Typography>
+          dangerouslySetInnerHTML={{ __html: vacancy.description }}
+        />
       )}
 
       {/* Кнопки действий */}

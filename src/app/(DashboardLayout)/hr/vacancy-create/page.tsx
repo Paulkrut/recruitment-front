@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   IconPlus,
   IconTrash,
@@ -367,36 +368,20 @@ export default function HRVacancyCreatePage() {
                 />
               </Box>
               <Box>
-                <CustomFormLabel 
-                  htmlFor="vacancy-description"
-                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
-                >
-                  Описание вакансии
-                </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-description"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={5}
-                  value={vacancyData.description}
-                  onChange={(e: any) =>
-                    setVacancyData({ ...vacancyData, description: e.target.value })
-                  }
-                    placeholder="Опишите требования, обязанности и условия работы"
-                  helperText="Опишите требования, обязанности и условия работы"
-                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#f7f7f7',
-                      borderRadius: 2,
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
-                />
+              <CustomFormLabel 
+                htmlFor="vacancy-description"
+                sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+              >
+                Описание вакансии
+              </CustomFormLabel>
+              <RichTextEditor
+                value={vacancyData.description}
+                onChange={(value) => setVacancyData({ ...vacancyData, description: value })}
+                placeholder="Опишите требования, обязанности и условия работы"
+              />
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                Используйте форматирование для лучшей читаемости
+              </Typography>
               </Box>
               </Stack>
             </CardContent>
