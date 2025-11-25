@@ -130,6 +130,7 @@ function EnhancedCandidateTable({
   filteredCandidates: CandidateRow[];
 }) {
   const router = useRouter();
+  const { _ } = useLingui();
 
   const getStatusColor = (status: string) => {
     switch (status) {
