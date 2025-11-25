@@ -553,6 +553,7 @@ function CandidateCard({ candidate }: { candidate: CandidateRow }) {
 
 export default function HRCandidatesPage() {
   const router = useRouter();
+  const { _ } = useLingui();
   const [candidates, setCandidates] = useState<CandidateRow[]>([]);
   const [vacancies, setVacancies] = useState<VacancyOption[]>([]);
   const [loading, setLoading] = useState(true);
