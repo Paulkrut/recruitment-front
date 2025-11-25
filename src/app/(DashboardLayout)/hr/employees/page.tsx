@@ -24,6 +24,7 @@ function stringAvatar(name: string) {
 
 export default function EmployeesPage() {
   const { currentCompany, refreshInvites } = useUser();
+  const { _ } = useLingui();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("HR");
   const [invites, setInvites] = useState<any[]>([]);

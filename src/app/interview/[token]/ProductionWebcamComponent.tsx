@@ -54,6 +54,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   onMicReady,
   onError
 }) => {
+  const { _ } = useLingui();
   const webcamRef = useRef<Webcam>(null);
   const [isReady, setIsReady] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
