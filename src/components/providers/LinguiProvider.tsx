@@ -1,9 +1,8 @@
 "use client";
 
-// @ts-ignore - I18nProvider существует в runtime
 import { I18nProvider } from "@lingui/react";
 import { type Messages, setupI18n } from "@lingui/core";
-import { useMemo } from "react";
+import { useState } from "react";
 
 type LinguiProviderProps = {
   children: React.ReactNode;
@@ -16,13 +15,14 @@ export function LinguiProvider({
   initialLocale,
   initialMessages,
 }: LinguiProviderProps) {
-  // Создаём экземпляр i18n один раз с сообщениями от сервера
-  const i18n = useMemo(() => {
+  // Создаём экземпляр i18n один раз при монтировании компонента
+  // useState гарантирует, что i18n создаётся только один раз
+  const [i18n] = useState(() => {
     return setupI18n({
       locale: initialLocale,
       messages: { [initialLocale]: initialMessages },
     });
-  }, [initialLocale, initialMessages]);
+  });
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
 }
