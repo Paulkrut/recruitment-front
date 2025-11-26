@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "lingui compile && next dev --turbopack --port 3002",
-    "build": "lingui extract && lingui compile && next build",
+    "dev": "npx lingui compile && next dev --turbopack --port 3002",
+    "build": "npx lingui extract && npx lingui compile && next build",
     "start": "next start -p 3002",
     "lint": "next lint",
-    "i18n:extract": "lingui extract",
-    "i18n:compile": "lingui compile",
-    "i18n:extract-compile": "lingui extract && lingui compile",
+    "i18n:extract": "npx lingui extract",
+    "i18n:compile": "npx lingui compile",
+    "i18n:extract-compile": "npx lingui extract && npx lingui compile",
     "check:metadata": "node scripts/check-metadata-use-client.js"
   },
   "dependencies": {

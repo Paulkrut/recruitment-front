@@ -1,4 +1,6 @@
 import { i18n } from '@lingui/core';
+import { messages as ruMessages } from '@/locales/ru/messages';
+import { messages as enMessages } from '@/locales/en/messages';
 
 export type SupportedLocale = 'ru' | 'en';
 
@@ -8,6 +10,15 @@ export const locales: Record<SupportedLocale, string> = {
 };
 
 export const defaultLocale: SupportedLocale = 'ru';
+
+/**
+ * Синхронная загрузка каталога переводов (для начальной инициализации)
+ */
+export function loadCatalogSync(locale: SupportedLocale) {
+  const messages = locale === 'en' ? enMessages : ruMessages;
+  i18n.load(locale, messages);
+  i18n.activate(locale);
+}
 
 /**
  * Динамически загружает каталог переводов для указанной локали
