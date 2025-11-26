@@ -6,7 +6,6 @@ import { ThemeSettings } from "@/utils/theme/Theme";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import "@/app/api/index";
 import { UserProvider } from "@/contexts/UserContext";
-import { LinguiProvider } from "@/components/providers/LinguiProvider";
 
 const MyApp = ({ children }: { children: React.ReactNode }) => {
     const theme = ThemeSettings();
@@ -14,14 +13,12 @@ const MyApp = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-                <LinguiProvider>
-                    <ThemeProvider theme={theme}>
-                        <UserProvider>
-                            <CssBaseline />
-                            {children}
-                        </UserProvider>
-                    </ThemeProvider>
-                </LinguiProvider>
+                <ThemeProvider theme={theme}>
+                    <UserProvider>
+                        <CssBaseline />
+                        {children}
+                    </UserProvider>
+                </ThemeProvider>
             </AppRouterCacheProvider>
         </>
     );

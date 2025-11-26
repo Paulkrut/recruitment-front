@@ -1,4 +1,6 @@
 import React from "react";
+import { setI18n } from "@lingui/react/server";
+import { getI18nInstance, getLocale } from "./appRouterI18n";
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
 import "./global.css";
@@ -12,17 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
   // Определяем локаль по домену или переменной окружения
   const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
   const domain = locale === 'en' ? 'https://www.sofihr.com' : 'https://www.sofihr.ru';
-  
-  // Загружаем переводы из скомпилированных .js файлов
-  const { i18n } = await import('@lingui/core');
-  const { messages } = locale === 'en' 
-    ? await import('@/locales/en/messages.js')
-    : await import('@/locales/ru/messages.js');
-  
-  i18n.load(locale, messages);
-  i18n.activate(locale);
-
-  const t = i18n._;
   
   // Используем переводы или дефолтные значения
   const titles = {
@@ -84,12 +75,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
+  const locale = getLocale();
+  
+  // Инициализируем i18n для серверных компонентов
+  const i18n = await getI18nInstance(locale);
+  setI18n(i18n);
   
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -120,7 +115,10 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </head>
       <body>
-        <Providers>
+        <Providers 
+          initialLocale={locale} 
+          initialMessages={i18n.messages[locale] as any}
+        >
           <MyApp>{children}</MyApp>
         </Providers>
         <CookieBanner />

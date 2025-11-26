@@ -1,46 +1,30 @@
-'use client';
+"use client";
 
-import { i18n } from '@lingui/core';
-import { useEffect, useState } from 'react';
-import { getCurrentLocale, loadCatalogSync, type SupportedLocale } from '@/utils/i18n';
+// @ts-ignore - I18nProvider существует в runtime
+import { I18nProvider } from "@lingui/react";
+import { type Messages, setupI18n } from "@lingui/core";
+import { useMemo } from "react";
 
-// @ts-ignore - TypeScript не видит экспорт, но он есть в runtime
-import { I18nProvider } from '@lingui/react';
-
-interface LinguiProviderProps {
+type LinguiProviderProps = {
   children: React.ReactNode;
-}
+  initialLocale: string;
+  initialMessages: Messages;
+};
 
-// Инициализируем i18n синхронно при загрузке модуля
-// Это гарантирует, что i18n доступен до первого рендера
-if (typeof window !== 'undefined') {
-  const initialLocale = getCurrentLocale();
-  loadCatalogSync(initialLocale);
-}
+export function LinguiProvider({
+  children,
+  initialLocale,
+  initialMessages,
+}: LinguiProviderProps) {
+  // Создаём экземпляр i18n один раз с сообщениями от сервера
+  const i18n = useMemo(() => {
+    return setupI18n({
+      locale: initialLocale,
+      messages: { [initialLocale]: initialMessages },
+    });
+  }, [initialLocale, initialMessages]);
 
-export function LinguiProvider({ children }: LinguiProviderProps) {
-  const [locale, setLocale] = useState<SupportedLocale>(() => {
-    if (typeof window !== 'undefined') {
-      return getCurrentLocale();
-    }
-    return 'ru';
-  });
-
-  useEffect(() => {
-    // Проверяем, нужно ли переключить локаль
-    const currentLocale = getCurrentLocale();
-    if (currentLocale !== locale) {
-      loadCatalogSync(currentLocale);
-      setLocale(currentLocale);
-    }
-  }, [locale]);
-
-  // Всегда рендерим I18nProvider с уже инициализированным i18n
-  return (
-    <I18nProvider i18n={i18n}>
-      {children}
-    </I18nProvider>
-  );
+  return <I18nProvider i18n={i18n}>{children}</I18nProvider>;
 }
 
 
