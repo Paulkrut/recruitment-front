@@ -120,8 +120,8 @@ export default async function RootLayout({
           initialMessages={i18n.messages[locale] as any}
         >
           <MyApp>{children}</MyApp>
+          <CookieBanner />
         </Providers>
-        <CookieBanner />
         <YandexMetrika />
         <StructuredData locale={locale} />
       </body>
