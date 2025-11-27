@@ -10,8 +10,9 @@ export function getLocale(): SupportedLocale {
 
 // Асинхронная загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
-  const { messages } = await import(`@/locales/${locale}/messages.js`);
-  return messages;
+  const messagesModule = await import(`@/locales/${locale}/messages.js`);
+  // messages.js использует CommonJS: module.exports = {messages: ...}
+  return messagesModule.messages || messagesModule.default?.messages || {};
 }
 
 // Создаём и настраиваем экземпляр i18n для сервера

@@ -117,7 +117,7 @@ export default async function RootLayout({
       <body>
         <Providers 
           initialLocale={locale} 
-          initialMessages={i18n.messages[locale] as any}
+          initialMessages={(i18n.messages?.[locale] || {}) as any}
         >
           <MyApp>{children}</MyApp>
           <CookieBanner />
