@@ -41,12 +41,17 @@ export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
   i18n.load(locale, messages);
   i18n.activate(locale);
   
+  // Тестируем перевод напрямую
+  const testTranslation = i18n._('L7S2Qo');
+  
   console.log('✅ [appRouterI18n] After load:', {
     locale: i18n.locale,
-    allMessages: i18n.messages,
-    messagesForLocale: i18n.messages[locale],
-    messagesLoaded: Object.keys(i18n.messages[locale] || {}).length,
-    messagesInCatalog: Object.keys(messages).length
+    messagesType: typeof i18n.messages,
+    messagesKeys: Object.keys(i18n.messages).length,
+    messagesForLocale: i18n.messages[locale] ? 'EXISTS' : 'MISSING',
+    messagesLoadedCount: i18n.messages[locale] ? Object.keys(i18n.messages[locale]).length : 0,
+    messagesInCatalog: Object.keys(messages).length,
+    testTranslation: testTranslation
   });
   
   return i18n;
