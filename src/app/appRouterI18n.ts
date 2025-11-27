@@ -1,4 +1,7 @@
 import { setupI18n, type I18n } from "@lingui/core";
+// Статические импорты для production
+import { messages as ruMessages } from "@/locales/ru/messages";
+import { messages as enMessages } from "@/locales/en/messages";
 
 export type SupportedLocale = "ru" | "en";
 
@@ -8,20 +11,32 @@ export function getLocale(): SupportedLocale {
   return region === "US" ? "en" : "ru";
 }
 
-// Асинхронная загрузка сообщений для серверного рендеринга
-async function loadCatalog(locale: SupportedLocale) {
-  const messagesModule = await import(`@/locales/${locale}/messages.js`);
-  // messages.js использует CommonJS: module.exports = {messages: ...}
-  return messagesModule.messages || messagesModule.default?.messages || {};
+// Статическая загрузка сообщений для серверного рендеринга
+function loadCatalog(locale: SupportedLocale) {
+  const messages = locale === "en" ? enMessages : ruMessages;
+  console.log('🔍 [appRouterI18n] loadCatalog:', {
+    locale,
+    messagesType: typeof messages,
+    messagesKeys: messages ? Object.keys(messages).length : 0,
+    firstKeys: messages ? Object.keys(messages).slice(0, 5) : []
+  });
+  return messages;
 }
 
 // Создаём и настраиваем экземпляр i18n для сервера
 export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
-  const messages = await loadCatalog(locale);
+  console.log('🚀 [appRouterI18n] getI18nInstance called with locale:', locale);
+  
+  const messages = loadCatalog(locale);
   
   const i18n = setupI18n({
     locale,
     messages: { [locale]: messages },
+  });
+  
+  console.log('✅ [appRouterI18n] i18n created:', {
+    locale: i18n.locale,
+    messagesCount: Object.keys(i18n.messages[locale] || {}).length
   });
   
   return i18n;

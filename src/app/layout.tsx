@@ -82,9 +82,18 @@ export default async function RootLayout({
 }) {
   const locale = getLocale();
   
+  console.log('🏠 [layout] Starting with locale:', locale);
+  
   // Инициализируем i18n для серверных компонентов
   const i18n = await getI18nInstance(locale);
   setI18n(i18n);
+  
+  const messagesToPass = i18n.messages?.[locale] || {};
+  console.log('📦 [layout] Passing to Providers:', {
+    locale,
+    messagesCount: Object.keys(messagesToPass).length,
+    firstKeys: Object.keys(messagesToPass).slice(0, 5)
+  });
   
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -117,7 +126,7 @@ export default async function RootLayout({
       <body>
         <Providers 
           initialLocale={locale} 
-          initialMessages={(i18n.messages?.[locale] || {}) as any}
+          initialMessages={messagesToPass as any}
         >
           <MyApp>{children}</MyApp>
           <CookieBanner />
