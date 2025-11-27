@@ -29,14 +29,14 @@ export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
   
   const messages = loadCatalog(locale);
   
-  const i18n = setupI18n({
-    locale,
-    messages: { [locale]: messages },
-  });
+  const i18n = setupI18n();
+  i18n.load(locale, messages);
+  i18n.activate(locale);
   
   console.log('✅ [appRouterI18n] i18n created:', {
     locale: i18n.locale,
-    messagesCount: Object.keys(i18n.messages[locale] || {}).length
+    messagesLoaded: Object.keys(i18n.messages[locale] || {}).length,
+    messagesInCatalog: Object.keys(messages).length
   });
   
   return i18n;

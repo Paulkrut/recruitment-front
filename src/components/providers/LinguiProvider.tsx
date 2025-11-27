@@ -25,14 +25,14 @@ export function LinguiProvider({
       firstKeys: initialMessages ? Object.keys(initialMessages).slice(0, 5) : []
     });
     
-    const newI18n = setupI18n({
-      locale: initialLocale,
-      messages: { [initialLocale]: initialMessages },
-    });
+    const newI18n = setupI18n();
+    newI18n.load(initialLocale, initialMessages);
+    newI18n.activate(initialLocale);
     
     console.log('✅ [LinguiProvider] i18n created:', {
       locale: newI18n.locale,
-      messagesCount: Object.keys(newI18n.messages[initialLocale] || {}).length
+      messagesLoaded: Object.keys(newI18n.messages[initialLocale] || {}).length,
+      messagesReceived: Object.keys(initialMessages).length
     });
     
     return newI18n;
