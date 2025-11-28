@@ -1,7 +1,7 @@
 import { setupI18n, type I18n } from "@lingui/core";
-// Статические импорты для production
-import { messages as ruMessages } from "@/locales/ru/messages";
-import { messages as enMessages } from "@/locales/en/messages";
+// Импортируем скомпилированные каталоги целиком
+import ruCatalog from "@/locales/ru/messages";
+import enCatalog from "@/locales/en/messages";
 
 export type SupportedLocale = "ru" | "en";
 
@@ -13,7 +13,9 @@ export function getLocale(): SupportedLocale {
 
 // Статическая загрузка сообщений для серверного рендеринга
 function loadCatalog(locale: SupportedLocale) {
-  const messages = locale === "en" ? enMessages : ruMessages;
+  const catalog = locale === "en" ? enCatalog : ruCatalog;
+  const messages = catalog.messages; // Извлекаем messages из каталога
+  
   console.log('🔍 [appRouterI18n] loadCatalog:', {
     locale,
     messagesType: typeof messages,
