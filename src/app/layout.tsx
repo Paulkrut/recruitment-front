@@ -1,6 +1,6 @@
 import React from "react";
 import { setI18n } from "@lingui/react/server";
-import { getI18nInstance, getLocale } from "./appRouterI18n";
+import { getI18nInstance, getLocale } from "./i18nStaticLoader"; // Используем статический загрузчик
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
 import "./global.css";
@@ -88,11 +88,13 @@ export default async function RootLayout({
   const i18n = await getI18nInstance(locale);
   setI18n(i18n);
   
-  const messagesToPass = i18n.messages?.[locale] || {};
-  console.log('📦 [layout] Passing to Providers:', {
+  // Получаем сообщения из i18n._messages (внутреннее поле)
+  const messagesToPass = (i18n as any)._messages?.[locale] || {};
+  
+  console.log('📦 [layout] Messages to pass:', {
     locale,
     messagesCount: Object.keys(messagesToPass).length,
-    firstKeys: Object.keys(messagesToPass).slice(0, 5)
+    hasMessages: Object.keys(messagesToPass).length > 0,
   });
   
   return (
