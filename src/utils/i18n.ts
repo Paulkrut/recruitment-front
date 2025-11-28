@@ -14,12 +14,10 @@ export const defaultLocale: SupportedLocale = 'ru';
  */
 export async function loadCatalog(locale: SupportedLocale) {
   try {
-    // Используем относительный путь вместо алиаса @/
-    // @ts-expect-error - файлы создаются при билде командой lingui compile
-    const catalog = await import(`../locales/${locale}/messages.js`);
+    // Используем @lingui/loader для загрузки .po файлов напрямую
+    const catalog = await import(`@lingui/loader!../locales/${locale}/messages.po`);
     
-    // Обрабатываем CommonJS формат
-    const messages = catalog.messages || catalog.default?.messages || catalog.default || catalog;
+    const messages = catalog.messages || {};
     
     i18n.load(locale, messages);
     i18n.activate(locale);

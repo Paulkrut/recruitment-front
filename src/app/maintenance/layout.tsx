@@ -10,14 +10,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const { i18n } = await import('@lingui/core');
   
   try {
+    // Используем @lingui/loader для загрузки .po файлов напрямую
     const catalog = locale === 'en' 
-      // @ts-expect-error - файлы создаются при билде
-      ? await import('../../locales/en/messages.js')
-      // @ts-expect-error - файлы создаются при билде
-      : await import('../../locales/ru/messages.js');
+      ? await import('@lingui/loader!../../locales/en/messages.po')
+      : await import('@lingui/loader!../../locales/ru/messages.po');
     
-    // Обрабатываем CommonJS формат
-    const messages = catalog.messages || catalog.default?.messages || catalog.default || catalog;
+    const messages = catalog.messages || {};
     
     i18n.load(locale, messages);
     i18n.activate(locale);

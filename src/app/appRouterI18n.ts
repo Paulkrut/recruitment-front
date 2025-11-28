@@ -19,44 +19,27 @@ async function loadCatalog(locale: SupportedLocale) {
   try {
     console.log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
     
-    // Динамически импортируем скомпилированные каталоги
-    // Путь: src/app/appRouterI18n.ts -> src/locales/
-    // @ts-expect-error - файлы создаются при билде командой lingui compile
-    const catalog = await import(`../locales/${locale}/messages.js`);
+    // Используем @lingui/loader для прямой загрузки .po файлов
+    // Это работает как в dev, так и в production, без предварительной компиляции
+    const catalog = await import(
+      `@lingui/loader!../locales/${locale}/messages.po`
+    );
     
     console.log(`📦 [appRouterI18n] Catalog imported:`, {
       locale,
       hasCatalog: !!catalog,
       hasMessages: !!catalog?.messages,
-      hasDefault: !!catalog?.default,
-      catalogKeys: Object.keys(catalog),
+      messagesCount: catalog?.messages ? Object.keys(catalog.messages).length : 0,
     });
     
-    // Обрабатываем разные форматы экспорта
-    let messages;
-    
-    // 1. CommonJS: module.exports = {messages: {...}}
-    if (catalog.messages && typeof catalog.messages === 'object') {
-      messages = catalog.messages;
-    }
-    // 2. CommonJS с default: module.exports = {default: {messages: {...}}}
-    else if (catalog.default?.messages) {
-      messages = catalog.default.messages;
-    }
-    // 3. ES Module: export default {...}
-    else if (catalog.default && typeof catalog.default === 'object') {
-      messages = catalog.default;
-    }
-    // 4. Прямой экспорт
-    else {
-      messages = catalog;
-    }
+    // @lingui/loader возвращает { messages: {...} }
+    const messages = catalog.messages || {};
     
     console.log(`✅ [appRouterI18n] Messages extracted:`, {
       locale,
       messagesType: typeof messages,
-      messagesCount: messages && typeof messages === 'object' ? Object.keys(messages).length : 0,
-      firstKeys: messages && typeof messages === 'object' ? Object.keys(messages).slice(0, 3) : [],
+      messagesCount: Object.keys(messages).length,
+      firstKeys: Object.keys(messages).slice(0, 3),
     });
     
     return messages;

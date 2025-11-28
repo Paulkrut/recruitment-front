@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx lingui compile && next dev --turbopack --port 3002",
-    "build": "npx lingui extract && npx lingui compile && next build",
+    "dev": "next dev --turbopack --port 3002",
+    "build": "npx lingui extract && next build",
     "start": "next start -p 3002",
     "lint": "next lint",
     "i18n:extract": "npx lingui extract",
