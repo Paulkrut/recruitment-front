@@ -20,24 +20,42 @@ async function loadCatalog(locale: SupportedLocale) {
     console.log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
     
     // Динамически импортируем скомпилированные каталоги
-    // webpack/turbopack обработает этот импорт во время билда
-    const catalog = await import(`@/locales/${locale}/messages.js`);
+    // Это работает на сервере после того, как lingui compile создаст файлы
+    const catalog = await import(`../../locales/${locale}/messages.js`);
     
     console.log(`📦 [appRouterI18n] Catalog imported:`, {
       locale,
       hasCatalog: !!catalog,
       hasMessages: !!catalog?.messages,
       hasDefault: !!catalog?.default,
-      keys: Object.keys(catalog),
+      catalogKeys: Object.keys(catalog),
     });
     
-    // После компиляции с compileNamespace: 'es', каталоги экспортируют { messages: {...} }
-    const messages = catalog.messages || catalog.default?.messages || catalog.default || catalog;
+    // Обрабатываем разные форматы экспорта
+    let messages;
+    
+    // 1. CommonJS: module.exports = {messages: {...}}
+    if (catalog.messages && typeof catalog.messages === 'object') {
+      messages = catalog.messages;
+    }
+    // 2. CommonJS с default: module.exports = {default: {messages: {...}}}
+    else if (catalog.default?.messages) {
+      messages = catalog.default.messages;
+    }
+    // 3. ES Module: export default {...}
+    else if (catalog.default && typeof catalog.default === 'object') {
+      messages = catalog.default;
+    }
+    // 4. Прямой экспорт
+    else {
+      messages = catalog;
+    }
     
     console.log(`✅ [appRouterI18n] Messages extracted:`, {
       locale,
       messagesType: typeof messages,
       messagesCount: messages && typeof messages === 'object' ? Object.keys(messages).length : 0,
+      firstKeys: messages && typeof messages === 'object' ? Object.keys(messages).slice(0, 3) : [],
     });
     
     return messages;

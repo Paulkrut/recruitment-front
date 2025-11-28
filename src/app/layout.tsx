@@ -1,6 +1,6 @@
 import React from "react";
 import { setI18n } from "@lingui/react/server";
-import { getI18nInstance, getLocale } from "./i18nStaticLoader"; // Используем статический загрузчик
+import { getI18nInstance, getLocale } from "./appRouterI18n"; // Используем динамический загрузчик
 import { Providers } from "@/store/providers";
 import MyApp from "./app";
 import "./global.css";
