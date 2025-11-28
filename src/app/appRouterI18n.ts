@@ -21,6 +21,7 @@ async function loadCatalog(locale: SupportedLocale) {
     
     // Динамически импортируем скомпилированные каталоги
     // Путь: src/app/appRouterI18n.ts -> src/locales/
+    // @ts-expect-error - файлы создаются при билде командой lingui compile
     const catalog = await import(`../locales/${locale}/messages.js`);
     
     console.log(`📦 [appRouterI18n] Catalog imported:`, {

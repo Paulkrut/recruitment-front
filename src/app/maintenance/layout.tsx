@@ -10,9 +10,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const { i18n } = await import('@lingui/core');
   
   try {
-    // @ts-ignore - файлы создаются при билде
     const catalog = locale === 'en' 
+      // @ts-expect-error - файлы создаются при билде
       ? await import('../../locales/en/messages.js')
+      // @ts-expect-error - файлы создаются при билде
       : await import('../../locales/ru/messages.js');
     
     // Обрабатываем CommonJS формат

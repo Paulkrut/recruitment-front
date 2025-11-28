@@ -15,6 +15,7 @@ export const defaultLocale: SupportedLocale = 'ru';
 export async function loadCatalog(locale: SupportedLocale) {
   try {
     // Используем относительный путь вместо алиаса @/
+    // @ts-expect-error - файлы создаются при билде командой lingui compile
     const catalog = await import(`../locales/${locale}/messages.js`);
     
     // Обрабатываем CommonJS формат
