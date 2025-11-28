@@ -14,46 +14,19 @@ export function getLocale(): SupportedLocale {
 // Статическая загрузка сообщений для серверного рендеринга
 function loadCatalog(locale: SupportedLocale) {
   const catalog = locale === "en" ? enCatalog : ruCatalog;
-  const messages = catalog.messages; // Извлекаем messages из каталога
-  
-  console.log('🔍 [appRouterI18n] loadCatalog:', {
-    locale,
-    messagesType: typeof messages,
-    messagesKeys: messages ? Object.keys(messages).length : 0,
-    firstKeys: messages ? Object.keys(messages).slice(0, 5) : [],
-    sampleMessage: messages ? messages[Object.keys(messages)[0]] : null,
-    isArray: Array.isArray(messages)
-  });
-  return messages;
+  // Скомпилированные каталоги LinguiJS уже в правильном формате
+  // просто возвращаем их напрямую
+  return catalog.messages;
 }
 
 // Создаём и настраиваем экземпляр i18n для сервера
 export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
-  console.log('🚀 [appRouterI18n] getI18nInstance called with locale:', locale);
-  
   const messages = loadCatalog(locale);
   
-  const i18n = setupI18n();
-  
-  console.log('🔧 [appRouterI18n] Before load:', {
-    i18nMessages: i18n.messages,
-    messagesToLoad: Object.keys(messages).slice(0, 3)
-  });
-  
-  i18n.load(locale, messages);
-  i18n.activate(locale);
-  
-  // Тестируем перевод напрямую
-  const testTranslation = i18n._('L7S2Qo');
-  
-  console.log('✅ [appRouterI18n] After load:', {
-    locale: i18n.locale,
-    messagesType: typeof i18n.messages,
-    messagesKeys: Object.keys(i18n.messages).length,
-    messagesForLocale: i18n.messages[locale] ? 'EXISTS' : 'MISSING',
-    messagesLoadedCount: i18n.messages[locale] ? Object.keys(i18n.messages[locale]).length : 0,
-    messagesInCatalog: Object.keys(messages).length,
-    testTranslation: testTranslation
+  // Используем правильный способ загрузки скомпилированных каталогов
+  const i18n = setupI18n({
+    locale: locale,
+    messages: { [locale]: messages }
   });
   
   return i18n;
