@@ -6,7 +6,11 @@ module.exports = {
     {
       path: 'src/locales/{locale}/messages',
       include: ['src/'],
-      exclude: ['**/node_modules/**'],
+      exclude: [
+        '**/node_modules/**',
+        '**/types/**',        // Исключаем TypeScript декларации
+        '**/*.d.ts',          // Исключаем все .d.ts файлы
+      ],
     },
   ],
   format: 'po',
