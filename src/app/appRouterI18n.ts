@@ -20,8 +20,8 @@ async function loadCatalog(locale: SupportedLocale) {
     console.log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
     
     // Динамически импортируем скомпилированные каталоги
-    // Это работает на сервере после того, как lingui compile создаст файлы
-    const catalog = await import(`../../locales/${locale}/messages.js`);
+    // Путь: src/app/appRouterI18n.ts -> src/locales/
+    const catalog = await import(`../locales/${locale}/messages.js`);
     
     console.log(`📦 [appRouterI18n] Catalog imported:`, {
       locale,

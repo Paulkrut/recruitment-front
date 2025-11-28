@@ -6,10 +6,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
   
   // Загружаем переводы из скомпилированных .js файлов
-  // Используем относительный путь вместо алиаса @/
+  // Путь: src/app/maintenance/layout.tsx -> src/locales/
   const { i18n } = await import('@lingui/core');
   
   try {
+    // @ts-ignore - файлы создаются при билде
     const catalog = locale === 'en' 
       ? await import('../../locales/en/messages.js')
       : await import('../../locales/ru/messages.js');
