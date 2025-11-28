@@ -4,14 +4,22 @@ export type SupportedLocale = "ru" | "en";
 
 // Определяем локаль по региону или переменной окружения
 export function getLocale(): SupportedLocale {
+  console.log('🌍 [getLocale] Environment variables:', {
+    NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
+    NEXT_PUBLIC_REGION: process.env.NEXT_PUBLIC_REGION,
+  });
+  
   // Проверяем NEXT_PUBLIC_DEFAULT_LOCALE сначала, потом NEXT_PUBLIC_REGION
   const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
   if (defaultLocale === 'en' || defaultLocale === 'ru') {
+    console.log(`✅ [getLocale] Using NEXT_PUBLIC_DEFAULT_LOCALE: ${defaultLocale}`);
     return defaultLocale;
   }
   
   const region = process.env.NEXT_PUBLIC_REGION;
-  return region === "US" ? "en" : "ru";
+  const locale = region === "US" ? "en" : "ru";
+  console.log(`✅ [getLocale] Using NEXT_PUBLIC_REGION ${region} -> locale: ${locale}`);
+  return locale;
 }
 
 // Статическая загрузка сообщений для серверного рендеринга
