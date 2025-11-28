@@ -6,13 +6,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = process.env.NEXT_PUBLIC_REGION === 'US' ? 'en' : 'ru';
   
   // Загружаем переводы из скомпилированных .js файлов
+  // Используем относительный путь вместо алиаса @/
   const { i18n } = await import('@lingui/core');
-  const { messages } = locale === 'en' 
-    ? await import('@/locales/en/messages.js')
-    : await import('@/locales/ru/messages.js');
   
-  i18n.load(locale, messages);
-  i18n.activate(locale);
+  try {
+    const catalog = locale === 'en' 
+      ? await import('../../locales/en/messages.js')
+      : await import('../../locales/ru/messages.js');
+    
+    // Обрабатываем CommonJS формат
+    const messages = catalog.messages || catalog.default?.messages || catalog.default || catalog;
+    
+    i18n.load(locale, messages);
+    i18n.activate(locale);
+  } catch (error) {
+    console.error('Failed to load maintenance translations:', error);
+  }
 
   const titles = {
     ru: "Технические работы - Сайт временно недоступен",
