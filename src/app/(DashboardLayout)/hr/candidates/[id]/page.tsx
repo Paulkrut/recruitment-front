@@ -83,7 +83,7 @@ function getStatusLabel(status: string, _: any) {
 }
 
 export default function CandidateDetailPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
@@ -231,7 +231,7 @@ export default function CandidateDetailPage() {
         evalData
       };
 
-      await exportCandidateToPDFWithFont(pdfData);
+      await exportCandidateToPDFWithFont(pdfData, i18n);
     } catch (error) {
       console.error('Ошибка при экспорте PDF:', error);
       setCopyMsg(_(msg`Ошибка при создании PDF`));

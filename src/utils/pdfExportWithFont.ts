@@ -1,5 +1,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-font';
+import { msg } from '@lingui/macro';
+import type { I18n } from '@lingui/core';
 
 interface CandidateData {
   candidate: string;
@@ -23,7 +25,7 @@ interface AnswerData {
   createdAt?: string;
 }
 
-export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
+export const exportCandidateToPDFWithFont = async (data: CandidateData, i18n: I18n) => {
   // Создаем новый PDF документ
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -59,7 +61,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     doc.setFontSize(10);
     doc.setFont('Roboto', 'normal');
     doc.setTextColor(128, 128, 128); // Серый
-    doc.text('Система рекрутинга', margin, yPosition + 6);
+    doc.text(i18n._(msg`Система рекрутинга`), margin, yPosition + 6);
     
     // Дата генерации справа
     doc.setFontSize(9);
@@ -189,22 +191,22 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
   // Главный заголовок
   doc.setFontSize(22);
   doc.setFont('Roboto', 'bold');
-  doc.text('Отчет по кандидату', pageWidth / 2, yPosition, { align: 'center' });
+  doc.text(i18n._(msg`Отчет по кандидату`), pageWidth / 2, yPosition, { align: 'center' });
   yPosition += 15;
   
   // Информация о кандидате
-  addSectionHeader('Основная информация', '👤');
+  addSectionHeader(i18n._(msg`Основная информация`), '👤');
   
   doc.setFontSize(12);
   doc.setFont('Roboto', 'normal');
   
   const candidateInfo = [
-    `Имя: ${data.candidate}`,
-    `Email: ${data.email || 'Не указан'}`,
-    `Телефон: ${data.phone || 'Не указан'}`,
-    `Статус: ${data.status || 'Не указан'}`,
-    `Создано: ${data.createdAt || 'Не указано'}`,
-    `Завершено: ${data.finishedAt || 'Не указано'}`
+    i18n._(msg`Имя: ${data.candidate}`),
+    i18n._(msg`Email: ${data.email || i18n._(msg`Не указан`)}`),
+    i18n._(msg`Телефон: ${data.phone || i18n._(msg`Не указан`)}`),
+    i18n._(msg`Статус: ${data.status || i18n._(msg`Не указан`)}`),
+    i18n._(msg`Создано: ${data.createdAt || i18n._(msg`Не указано`)}`),
+    i18n._(msg`Завершено: ${data.finishedAt || i18n._(msg`Не указано`)}`),
   ];
   
   candidateInfo.forEach(info => {
@@ -217,17 +219,17 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
   
   // Информация о сессии интервью
   if (data.sessionDetail) {
-    addSectionHeader('Детали интервью', '💼');
+    addSectionHeader(i18n._(msg`Детали интервью`), '💼');
     
     doc.setFontSize(12);
     doc.setFont('Roboto', 'normal');
     
     const sessionInfo = [
-      `Статус сессии: ${data.sessionDetail.status || 'Не указан'}`,
-      `Начата: ${data.sessionDetail.startedAt || 'Не указано'}`,
-      `Завершена: ${data.sessionDetail.finishedAt || 'Не указано'}`,
-      `Количество ответов: ${data.sessionDetail.answers?.length || 0}`,
-      `Общая оценка: ${data.sessionDetail.result?.totalScore || 'Не указана'}`
+      i18n._(msg`Статус сессии: ${data.sessionDetail.status || i18n._(msg`Не указан`)}`),
+      i18n._(msg`Начата: ${data.sessionDetail.startedAt || i18n._(msg`Не указано`)}`),
+      i18n._(msg`Завершена: ${data.sessionDetail.finishedAt || i18n._(msg`Не указано`)}`),
+      i18n._(msg`Количество ответов: ${data.sessionDetail.answers?.length || 0}`),
+      i18n._(msg`Общая оценка: ${data.sessionDetail.result?.totalScore || i18n._(msg`Не указана`)}`),
     ];
     
     sessionInfo.forEach(info => {
@@ -240,14 +242,14 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     
     // Ответы на вопросы
     if (data.sessionDetail.answers && data.sessionDetail.answers.length > 0) {
-      addSectionHeader('Ответы на вопросы', '💬');
+      addSectionHeader(i18n._(msg`Ответы на вопросы`), '💬');
       
       data.sessionDetail.answers.forEach((answer: AnswerData, index: number) => {
         checkNewPage(80);
         
         doc.setFontSize(16);
         doc.setFont('Roboto', 'bold');
-        doc.text(`Вопрос ${index + 1}:`, margin, yPosition);
+        doc.text(i18n._(msg`Вопрос ${index + 1}:`), margin, yPosition);
         yPosition += 10;
         
         doc.setFontSize(12);
@@ -260,11 +262,11 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
         // Ответ
         checkNewPage(15);
         doc.setFont('Roboto', 'bold');
-        doc.text('Ответ:', margin, yPosition);
+        doc.text(i18n._(msg`Ответ:`), margin, yPosition);
         yPosition += 8;
         
         doc.setFont('Roboto', 'normal');
-        const answerText = answer.text || 'Нет ответа';
+        const answerText = answer.text || i18n._(msg`Нет ответа`);
         addWrappedText(answerText, margin, contentWidth, 12);
         yPosition += 10; // Увеличен отступ после ответа
         
@@ -272,7 +274,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
         if (answer.score !== undefined && answer.score !== null) {
           checkNewPage(12);
           doc.setFont('Roboto', 'bold');
-          doc.text(`Оценка: ${answer.score}`, margin, yPosition);
+          doc.text(i18n._(msg`Оценка: ${answer.score}`), margin, yPosition);
           yPosition += 8;
         }
         
@@ -280,7 +282,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
         if (answer.aiComment) {
           checkNewPage(15);
           doc.setFont('Roboto', 'bold');
-          doc.text('AI-характеристика:', margin, yPosition);
+          doc.text(i18n._(msg`AI-характеристика:`), margin, yPosition);
           yPosition += 8;
           
           doc.setFont('Roboto', 'normal');
@@ -292,7 +294,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
         if (answer.createdAt) {
           checkNewPage(8);
           doc.setFontSize(10);
-          doc.text(`Время ответа: ${answer.createdAt}`, margin, yPosition);
+          doc.text(i18n._(msg`Время ответа: ${answer.createdAt}`), margin, yPosition);
           yPosition += 6;
         }
         
@@ -303,14 +305,14 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
   
   // AI-оценка
   if (data.evalData) {
-    addSectionHeader('AI-оценка кандидата', '🤖');
+    addSectionHeader(i18n._(msg`AI-оценка кандидата`), '🤖');
     
     doc.setFontSize(12);
     doc.setFont('Roboto', 'normal');
     
     // Статус AI-оценки
     if (data.evalData.status) {
-      doc.text(`Статус: ${data.evalData.status}`, margin, yPosition);
+      doc.text(i18n._(msg`Статус: ${data.evalData.status}`), margin, yPosition);
       yPosition += 8;
     }
     
@@ -318,7 +320,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     if (data.evalData.summary) {
       checkNewPage(15);
       doc.setFont('Roboto', 'bold');
-      doc.text('Резюме:', margin, yPosition);
+      doc.text(i18n._(msg`Резюме:`), margin, yPosition);
       yPosition += 8;
       
       doc.setFont('Roboto', 'normal');
@@ -330,7 +332,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     if (data.evalData.strengths && Array.isArray(data.evalData.strengths) && data.evalData.strengths.length > 0) {
       checkNewPage(20);
       doc.setFont('Roboto', 'bold');
-      doc.text('Сильные стороны:', margin, yPosition);
+      doc.text(i18n._(msg`Сильные стороны:`), margin, yPosition);
       yPosition += 8;
       
       doc.setFont('Roboto', 'normal');
@@ -346,7 +348,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     if (data.evalData.weaknesses && Array.isArray(data.evalData.weaknesses) && data.evalData.weaknesses.length > 0) {
       checkNewPage(20);
       doc.setFont('Roboto', 'bold');
-      doc.text('Слабые стороны:', margin, yPosition);
+      doc.text(i18n._(msg`Слабые стороны:`), margin, yPosition);
       yPosition += 8;
       
       doc.setFont('Roboto', 'normal');
@@ -364,7 +366,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
       
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(14);
-      doc.text('📊 Метрики оценки:', margin, yPosition);
+      doc.text(i18n._(msg`📊 Метрики оценки:`), margin, yPosition);
       yPosition += 10;
       
       doc.setFont('Roboto', 'normal');
@@ -373,7 +375,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
       Object.entries(data.evalData.metrics).forEach(([metric, value]) => {
         checkNewPage(12);
         const score = typeof value === 'number' ? value : 0;
-        const label = getMetricLabel(metric);
+        const label = getMetricLabel(metric, i18n);
         
         // Название метрики
         doc.text(`${label}:`, margin, yPosition);
@@ -418,7 +420,7 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
     doc.setFontSize(9);
     doc.setFont('Roboto', 'normal');
     doc.setTextColor(128, 128, 128);
-    const footerText = `Страница ${i} из ${pageCount}`;
+    const footerText = i18n._(msg`Страница ${i} из ${pageCount}`);
     doc.text(footerText, pageWidth / 2, pageHeight - 10, { align: 'center' });
     
     // Подпись справа
@@ -431,16 +433,16 @@ export const exportCandidateToPDFWithFont = async (data: CandidateData) => {
   doc.save(fileName);
 };
 
-// Функция для перевода метрик на русский язык
-const getMetricLabel = (metric: string): string => {
+// Функция для перевода метрик
+const getMetricLabel = (metric: string, i18n: I18n): string => {
   const labels: { [key: string]: string } = {
-    'COMMUNICATION': 'Коммуникация',
-    'PROBLEM_SOLVING': 'Решение проблем',
-    'LEADERSHIP': 'Лидерство',
-    'TECHNICAL': 'Технические навыки',
-    'TEAMWORK': 'Работа в команде',
-    'MOTIVATION': 'Мотивация',
-    'Стрессоустойчивость': 'Стрессоустойчивость'
+    'COMMUNICATION': i18n._(msg`Коммуникация`),
+    'PROBLEM_SOLVING': i18n._(msg`Решение проблем`),
+    'LEADERSHIP': i18n._(msg`Лидерство`),
+    'TECHNICAL': i18n._(msg`Технические навыки`),
+    'TEAMWORK': i18n._(msg`Работа в команде`),
+    'MOTIVATION': i18n._(msg`Мотивация`),
+    'Стрессоустойчивость': i18n._(msg`Стрессоустойчивость`)
   };
   return labels[metric] || metric;
 }; 

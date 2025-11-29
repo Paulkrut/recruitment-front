@@ -1,10 +1,13 @@
 import { uniqueId } from "lodash";
+import { msg } from "@lingui/macro";
+import { MessageDescriptor } from "@lingui/core";
+
 interface MenuitemsType {
   [x: string]: any;
   id?: string;
   navlabel?: boolean;
-  subheader?: string;
-  title?: string;
+  subheader?: string | MessageDescriptor;
+  title?: string | MessageDescriptor;
   icon?: any;
   href?: string;
   children?: MenuitemsType[];
@@ -18,49 +21,49 @@ interface MenuitemsType {
 const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
-    title: "Главная",
+    title: msg`Главная`,
     icon: 'home-2-linear',
     href: "/hr/",
     bgcolor: "primary",
   },
   {
     id: uniqueId(),
-    title: "Вакансии",
+    title: msg`Вакансии`,
     icon: 'checklist-linear',
     href: "/hr/vacancies",
     bgcolor: "warning",
   },
   {
     id: uniqueId(),
-    title: "Кандидаты",
+    title: msg`Кандидаты`,
     icon: 'user-check-linear',
     href: "/hr/candidates",
     bgcolor: "secondary",
   },
   {
     id: uniqueId(),
-    title: "Брендирование",
+    title: msg`Брендирование`,
     icon: 'palette-linear',
     href: "/hr/settings?tab=branding",
     bgcolor: "success",
   },
   {
     id: uniqueId(),
-    title: "Компании",
+    title: msg`Компании`,
     icon: 'buildings-3-linear',
     href: "/hr/choose-company",
     bgcolor: "warning",
   },
   {
     id: uniqueId(),
-    title: "Сотрудники",
+    title: msg`Сотрудники`,
     icon: 'users-group-rounded-linear',
     href: "/hr/employees",
     bgcolor: "info",
   },
   {
     id: uniqueId(),
-    title: "HH.ru интеграция",
+    title: msg`HH.ru интеграция`,
     icon: 'link-square-linear',
     href: "/hr/settings/hh-integration",
     bgcolor: "error",
@@ -68,18 +71,18 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     navlabel: true,
-    subheader: "Тестирование сотрудников",
+    subheader: msg`Тестирование сотрудников`,
   },
   {
     id: uniqueId(),
-    title: "Регламенты",
+    title: msg`Регламенты`,
     icon: 'document-text-linear',
     href: "/hr/regulations",
     bgcolor: "success",
   },
   {
     id: uniqueId(),
-    title: "Тесты",
+    title: msg`Тесты`,
     icon: 'clipboard-text-linear',
     href: "/hr/regulation-tests",
     bgcolor: "info",
@@ -87,25 +90,25 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     navlabel: true,
-    subheader: "Биллинг и тарифы",
+    subheader: msg`Биллинг и тарифы`,
   },
   {
     id: uniqueId(),
-    title: "Тарифные планы",
+    title: msg`Тарифные планы`,
     icon: 'card-linear',
     href: "/hr/billing",
     bgcolor: "primary",
   },
   {
     id: uniqueId(),
-    title: "История операций",
+    title: msg`История операций`,
     icon: 'bill-list-linear',
     href: "/hr/billing/transactions",
     bgcolor: "info",
   },
   {
     id: uniqueId(),
-    title: "Аналитика",
+    title: msg`Аналитика`,
     icon: 'chart-2-linear',
     href: "/hr/billing/analytics",
     bgcolor: "success",
@@ -113,11 +116,11 @@ const Menuitems: MenuitemsType[] = [
   {
     id: uniqueId(),
     navlabel: true,
-    subheader: "Система",
+    subheader: msg`Система`,
   },
   {
     id: uniqueId(),
-    title: "Настройки",
+    title: msg`Настройки`,
     icon: 'settings-linear',
     href: "/hr/settings",
     bgcolor: "grey",
@@ -125,7 +128,7 @@ const Menuitems: MenuitemsType[] = [
 
   {
     id: uniqueId(),
-    title: "Запросы на удаление",
+    title: msg`Запросы на удаление`,
     icon: 'close-circle-linear',
     href: "/hr/forget-me-requests",
     bgcolor: "warning",

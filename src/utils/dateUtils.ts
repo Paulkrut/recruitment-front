@@ -3,6 +3,9 @@
  * Все даты в базе хранятся в UTC, конвертируем в местное время пользователя
  */
 
+import { msg } from '@lingui/macro';
+import type { I18n } from '@lingui/core';
+
 /**
  * Парсит строку даты как UTC, даже если в ней нет указания часового пояса
  */
@@ -78,8 +81,9 @@ export const formatTimeOnly = (utcDateString: string | null | undefined): string
 
 /**
  * Получает относительное время ("2 часа назад", "вчера" и т.д.)
+ * Принимает i18n для локализации
  */
-export const getTimeAgo = (utcDateString: string | null | undefined): string => {
+export const getTimeAgo = (utcDateString: string | null | undefined, i18n: I18n): string => {
   if (!utcDateString) return "-";
   
   try {
@@ -100,21 +104,21 @@ export const getTimeAgo = (utcDateString: string | null | undefined): string => 
     const diffYears = Math.floor(diffDays / 365);
     
     if (diffSeconds < 60) {
-      return 'только что';
+      return i18n._(msg`только что`);
     } else if (diffMinutes < 60) {
-      return `${diffMinutes} мин назад`;
+      return i18n._(msg`${diffMinutes} мин назад`);
     } else if (diffHours < 24) {
-      return `${diffHours} ч назад`;
+      return i18n._(msg`${diffHours} ч назад`);
     } else if (diffDays === 1) {
-      return 'вчера';
+      return i18n._(msg`вчера`);
     } else if (diffDays < 7) {
-      return `${diffDays} дн назад`;
+      return i18n._(msg`${diffDays} дн назад`);
     } else if (diffWeeks < 4) {
-      return `${diffWeeks} нед назад`;
+      return i18n._(msg`${diffWeeks} нед назад`);
     } else if (diffMonths < 12) {
-      return `${diffMonths} мес назад`;
+      return i18n._(msg`${diffMonths} мес назад`);
     } else {
-      return `${diffYears} г назад`;
+      return i18n._(msg`${diffYears} г назад`);
     }
   } catch (error) {
     console.error('Error calculating time ago:', error, utcDateString);

@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+import { useLingui } from "@lingui/react";
 
 // mui imports
 import Box from '@mui/material/Box';
@@ -14,7 +15,6 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSelector } from "@/store/hooks";
-import { useTranslation } from "react-i18next";
 import { AppState } from "@/store/store";
 
 type NavGroup = {
@@ -52,7 +52,7 @@ export default function NavItem({
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
   const customizer = useSelector((state: AppState) => state.customizer);
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { _ } = useLingui();
 
   const ListItemStyled = styled(ListItemButton)(() => ({
     whiteSpace: "nowrap",
@@ -195,7 +195,7 @@ export default function NavItem({
             )}
           </ListItemIcon>
           <ListItemText>
-            {hideMenu ? "" : <>{t(`${item?.title}`)}</>}
+            {hideMenu ? "" : <>{_(item?.title)}</>}
             <br />
             {item?.subtitle ? (
               <Typography variant="caption">

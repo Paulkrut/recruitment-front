@@ -415,7 +415,7 @@ export default function HhVacancyDetailPage() {
   return (
     <PageContainer
       title={vacancy.name}
-      description="Настройка синхронизации вакансии"
+      description={_(msg`Настройка синхронизации вакансии`)}
     >
       <Box>
         {/* Кнопка назад */}
@@ -424,7 +424,7 @@ export default function HhVacancyDetailPage() {
           onClick={() => router.push('/hr/settings/hh-integration')}
           sx={{ mb: 3 }}
         >
-          Назад к списку вакансий
+          <Trans>Назад к списку вакансий</Trans>
         </Button>
 
         {/* Алерты */}
@@ -583,8 +583,10 @@ export default function HhVacancyDetailPage() {
                 {/* Предупреждение */}
                 {getTotalSelectedCandidates() > 100 && (
                   <Alert severity="warning" sx={{ mt: 2 }}>
-                    ⚠️ Внимание: Синхронизация {getTotalSelectedCandidates()} кандидатов может занять
-                    несколько минут.
+                    <Trans>
+                      ⚠️ Внимание: Синхронизация {getTotalSelectedCandidates()} кандидатов может занять
+                      несколько минут.
+                    </Trans>
                   </Alert>
                 )}
 
@@ -592,7 +594,9 @@ export default function HhVacancyDetailPage() {
                 {syncing && sync_status && (
                   <Box mt={2}>
                     <Typography variant="body2" color="text.secondary" mb={1}>
-                      Синхронизация: {sync_status.synced} / {sync_status.total}
+                      <Trans>
+                        Синхронизация: {sync_status.synced} / {sync_status.total}
+                      </Trans>
                     </Typography>
                     <LinearProgress
                       variant="determinate"
@@ -614,7 +618,7 @@ export default function HhVacancyDetailPage() {
                     disabled={syncing || selectedStates.length === 0}
                     startIcon={syncing ? <CircularProgress size={16} /> : <IconCheck />}
                   >
-                    Синхронизировать кандидатов
+                    <Trans>Синхронизировать кандидатов</Trans>
                   </Button>
                 </Box>
               </CardContent>
@@ -658,7 +662,7 @@ export default function HhVacancyDetailPage() {
                     disabled={analyzing}
                     sx={{ mt: 2 }}
                   >
-                    Запустить AI-анализ для всех
+                    <Trans>Запустить AI-анализ для всех</Trans>
                   </Button>
                 </CardContent>
               </Card>

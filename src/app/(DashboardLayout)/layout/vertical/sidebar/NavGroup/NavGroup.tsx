@@ -3,6 +3,7 @@ import { Theme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { IconDots } from '@tabler/icons-react';
 import React from 'react';
+import { useLingui } from '@lingui/react';
 
 type NavGroup = {
   navlabel?: boolean;
@@ -15,6 +16,8 @@ interface ItemType {
 }
 
 const NavGroup = ({ item, hideMenu }: ItemType) => {
+  const { _ } = useLingui();
+  
   const ListSubheaderStyle = styled((props: Theme | any) => (
     <ListSubheader disableSticky {...props} />
   ))(({ theme }) => ({
@@ -30,7 +33,7 @@ const NavGroup = ({ item, hideMenu }: ItemType) => {
   }));
 
   return (
-    <ListSubheaderStyle>{hideMenu ? <IconDots size="14" /> : item?.subheader}</ListSubheaderStyle>
+    <ListSubheaderStyle>{hideMenu ? <IconDots size="14" /> : _(item?.subheader)}</ListSubheaderStyle>
   );
 };
 

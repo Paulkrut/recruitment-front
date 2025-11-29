@@ -30,7 +30,7 @@ export const DateDisplay: React.FC<DateDisplayProps> = ({
   placeholder = '-',
   ...typographyProps
 }) => {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   if (!utcDate) {
     return (
@@ -48,7 +48,7 @@ export const DateDisplay: React.FC<DateDisplayProps> = ({
       case 'time':
         return formatTimeOnly(utcDate);
       case 'relative':
-        return getTimeAgo(utcDate);
+        return getTimeAgo(utcDate, i18n);
       case 'full':
       default:
         return formatDateToLocal(utcDate);
@@ -62,7 +62,7 @@ export const DateDisplay: React.FC<DateDisplayProps> = ({
     if (!showTooltip) return null;
 
     const fullDate = formatDateToLocal(utcDate);
-    const relativeTime = getTimeAgo(utcDate);
+    const relativeTime = getTimeAgo(utcDate, i18n);
     const timezone = getUserTimezone();
 
     let content = '';

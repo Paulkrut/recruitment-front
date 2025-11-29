@@ -130,7 +130,7 @@ function EnhancedCandidateTable({
   filteredCandidates: CandidateRow[];
 }) {
   const router = useRouter();
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -291,7 +291,7 @@ function EnhancedCandidateTable({
                         </Tooltip>
                       )}
                       <Typography variant="caption" color="text.secondary">
-                        {getTimeAgo(candidate.createdAt)}
+                        {getTimeAgo(candidate.createdAt, i18n)}
                       </Typography>
                     </Box>
                   </Box>
@@ -377,7 +377,7 @@ function EnhancedCandidateTable({
                       {formatDateToLocal(candidate.finishedAt)}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {getTimeAgo(candidate.finishedAt)}
+                      {getTimeAgo(candidate.finishedAt, i18n)}
                     </Typography>
                   </Box>
                 ) : (
