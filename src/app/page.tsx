@@ -25,6 +25,18 @@ import { msg, Trans } from '@lingui/macro';
 
 const { useMemo } = React;
 
+// Определяем регион
+const isUS = typeof window !== 'undefined' && process.env.NEXT_PUBLIC_REGION === 'US';
+
+// Функция для форматирования цены в зависимости от региона
+const formatPrice = (price: number) => {
+  if (isUS) {
+    // Цена уже в долларах
+    return `$${price.toLocaleString('en-US')}`;
+  }
+  return `${price.toLocaleString('ru-RU')}₽`;
+};
+
 // Технические ID для навигации (не переводятся)
 const PAGE_IDS = {
   HOME: 'home',
@@ -213,7 +225,7 @@ export default function LandingPage() {
       name: _(msg`Пробный`),
       price: _(msg`Бесплатно`),
       interviewCount: _(msg`10 интервью`),
-      pricePerInterview: '0₽',
+      pricePerInterview: isUS ? '$0' : '0₽',
       color: '#607D8B',
       targetAudience: _(msg`Для тестирования платформы без финансовых вложений`),
       features: [
@@ -240,9 +252,9 @@ export default function LandingPage() {
     {
       id: 'start',
       name: _(msg`Старт`),
-      price: '13,500₽',
+      price: formatPrice(isUS ? 999 : 13500),
       interviewCount: _(msg`100 интервью`),
-      pricePerInterview: '135₽',
+      pricePerInterview: formatPrice(isUS ? 10 : 135), // $0.10 или 135₽ за интервью
       color: '#4CAF50',
       targetAudience: _(msg`Для небольших компаний и стартапов до 10 найма/месяц`),
       features: [
@@ -269,9 +281,9 @@ export default function LandingPage() {
     {
       id: 'business',
       name: _(msg`Бизнес`),
-      price: '54,000₽',
+      price: formatPrice(isUS ? 3999 : 54000),
       interviewCount: _(msg`500 интервью`),
-      pricePerInterview: '108₽',
+      pricePerInterview: formatPrice(isUS ? 7.99 : 108),
       discount: _(msg`Экономия 20%`),
       color: '#2196F3',
       popular: true,
@@ -301,9 +313,9 @@ export default function LandingPage() {
     {
       id: 'premium',
       name: _(msg`Премиум`),
-      price: '90,000₽',
+      price: formatPrice(isUS ? 6999 : 90000),
       interviewCount: _(msg`1000 интервью`),
-      pricePerInterview: '90₽',
+      pricePerInterview: formatPrice(isUS ? 6.99 : 90),
       discount: _(msg`Экономия 33%`),
       color: '#9C27B0',
       targetAudience: _(msg`Для крупных компаний и HR-агентств с высокой нагрузкой`),

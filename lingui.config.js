@@ -14,7 +14,7 @@ module.exports = {
     },
   ],
   format: 'po',
-  compileNamespace: 'es', // ES modules вместо CommonJS
+  compileNamespace: 'cjs', // CommonJS для создания .js файлов
   fallbackLocales: {
     default: 'ru',
   },
