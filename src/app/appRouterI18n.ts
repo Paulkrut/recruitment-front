@@ -16,28 +16,17 @@ export function getLocale(): SupportedLocale {
 
 // Статическая загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
-  const isDev = process.env.NODE_ENV === 'development';
+  const isProduction = process.env.NEXT_PUBLIC_APP_ENV === 'prod';
   
-  // В dev используем скомпилированные .js файлы
-  if (isDev) {
-    const catalog = locale === 'en' 
-      ? await import('@/locales/en/messages.js')
-      : await import('@/locales/ru/messages.js');
-    
-    return catalog.messages || {};
-  }
-  
-  // В production используем @lingui/loader
-  try {
+  if (isProduction) {
+    // Production: используем @lingui/loader для прямой загрузки .po файлов
     const catalog = await import(
       `@lingui/loader!../locales/${locale}/messages.po`
     );
     
     return catalog.messages || {};
-  } catch (error) {
-    console.error(`Failed to load catalog with @lingui/loader for locale ${locale}:`, error);
-    
-    // Fallback на скомпилированные .js файлы
+  } else {
+    // Development: используем скомпилированные .js файлы
     const catalog = locale === 'en' 
       ? await import('@/locales/en/messages.js')
       : await import('@/locales/ru/messages.js');
