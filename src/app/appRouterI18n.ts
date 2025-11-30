@@ -16,20 +16,20 @@ export function getLocale(): SupportedLocale {
 
 // Статическая загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
-  const isProduction = process.env.NEXT_PUBLIC_APP_ENV === 'prod';
+  const isDevelopment = process.env.NODE_ENV === 'development';
   
-  if (isProduction) {
-    // Production: используем @lingui/loader для прямой загрузки .po файлов
-    const catalog = await import(
-      `@lingui/loader!../locales/${locale}/messages.po`
-    );
-    
-    return catalog.messages || {};
-  } else {
-    // Development: используем скомпилированные .js файлы
+  if (isDevelopment) {
+    // Development: используем скомпилированные .js файлы (быстрее)
     const catalog = locale === 'en' 
       ? await import('@/locales/en/messages.js')
       : await import('@/locales/ru/messages.js');
+    
+    return catalog.messages || {};
+  } else {
+    // Production/Build: используем @lingui/loader для прямой загрузки .po файлов
+    const catalog = await import(
+      `@lingui/loader!../locales/${locale}/messages.po`
+    );
     
     return catalog.messages || {};
   }
