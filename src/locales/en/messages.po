@@ -1795,9 +1795,6 @@ msgstr "AI Assessment"
 msgid "AI-оценка кандидата"
 msgstr "AI Candidate Assessment"
 
-#~ msgid "AI-оценка кандидатов"
-#~ msgstr "AI Candidate Assessment"
-
 #. placeholder {0}: selectedCandidates.length
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:856
 msgid "AI-сравнение ({0})"
@@ -1899,17 +1896,9 @@ msgstr "HR Agency"
 msgid "HR-клиент еще не подтвердил удаление копий данных"
 msgstr "HR Client Has Not Yet Confirmed Deletion of Data Copies"
 
-#: src/app/hr-agreement/page.tsx:315
-msgid "HR-клиент обязан обеспечить реализацию прав кандидатов:"
-msgstr "HR client is obliged to ensure the realization of candidate rights:"
-
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:289
 msgid "HR-клиент подтвердил удаление копий данных из своих систем"
 msgstr "HR Client Confirmed Deletion of Data Copies from Their Systems"
-
-#: src/app/hr-agreement/page.tsx:237
-msgid "HR-клиент является оператором персональных данных кандидатов и несет ответственность за их обработку согласно 152-ФЗ."
-msgstr "The HR client is the operator of candidate personal data and is responsible for their processing according to 152-FZ."
 
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:249
 msgid "HR-Лидер"
@@ -1918,10 +1907,6 @@ msgstr "HR Leader"
 #: src/app/page.tsx:416
 msgid "HR-платформа для автоматизации найма и интервью"
 msgstr "HR Platform for Hiring and Interview Automation"
-
-#: src/app/hr-agreement/page.tsx:368
-msgid "HR-специалист может привязать свой аккаунт к организации для расширения функциональности и корпоративной работы."
-msgstr "An HR specialist can link their account to an organization to expand functionality and for corporate work."
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/BulkActionsPanel.tsx:229
 msgid "ℹ️ Лимит общий для всех вакансий, обнуляется в 00:00. Скрининг требует загрузки резюме из HH."
@@ -1947,9 +1932,6 @@ msgstr "ROI (Return on Investment)"
 msgid "SLA гарантия 99.9%"
 msgstr "SLA Guarantee 99.9%"
 
-#~ msgid "SofiHR - Система управления рекрутингом"
-#~ msgstr "SofiHR - Recruiting Management System"
-
 #: src/app/page.tsx:175
 msgid "SofiHR полностью изменил наш процесс найма. Теперь мы тратим в 5 раз меньше времени на первичные интервью и получаем более качественных кандидатов."
 msgstr "SofiHR Completely Changed Our Hiring Process. We Now Spend 5 Times Less Time on Initial Interviews and Get Higher Quality Candidates."
@@ -1966,9 +1948,6 @@ msgstr "HR Process Automation"
 #: src/app/page.tsx:187
 msgid "Автоматизация интервью позволила нам масштабировать бизнес в 3 раза. Теперь мы можем обрабатывать в 5 раз больше вакансий."
 msgstr "Interview automation allowed us to scale the business 3 times. We can now process 5 times more vacancies."
-
-#~ msgid "Автоматизация рекрутинга"
-#~ msgstr "Recruiting Automation"
 
 #: src/app/page.tsx:911
 msgid "Автоматизировали найм разработчиков. Сократили время закрытия вакансии с 45 до 7 дней."
@@ -2100,9 +2079,6 @@ msgstr "Real-time Analytics"
 #: src/app/page.tsx:327
 msgid "Аналитика и дашборды"
 msgstr "Analytics and Dashboards"
-
-#~ msgid "Аналитика и отчеты"
-#~ msgstr "Analytics and Reports"
 
 #: src/app/(DashboardLayout)/hr/billing/analytics/page.tsx:92
 msgid "Аналитика использования"
@@ -2289,18 +2265,6 @@ msgstr "in progress"
 msgid "В процессе"
 msgstr "In Progress"
 
-#: src/app/privacy-policy/page.tsx:233
-msgid "В процессе прохождения интервью система может записывать видео и аудио кандидата. Эти данные не используются для установления личности; биометрические шаблоны (слепки голоса/лица) не формируются."
-msgstr "During the interview process, the system may record video and audio of the candidate. This data is not used for identification; biometric templates (voice/face prints) are not created."
-
-#: src/app/terms-of-service/page.tsx:400
-msgid "В случае возникновения разногласий стороны обязуются решать их путем переговоров. При невозможности достижения соглашения спор разрешается в судебном порядке."
-msgstr "In case of disagreements, the parties undertake to resolve them through negotiations. If agreement cannot be reached, the dispute is resolved in court."
-
-#: src/app/privacy-policy/page.tsx:354
-msgid "В соответствии с Федеральным законом \"О персональных данных\" вы имеете следующие права:"
-msgstr "In Accordance with the Federal Law \"On Personal Data\", You Have the Following Rights:"
-
 #: src/app/components/hr/TestsChartCard.tsx:168
 msgid "В среднем в день"
 msgstr "Average per day"
@@ -2437,14 +2401,6 @@ msgstr "Your data has been successfully deleted from the platform"
 msgid "Ваши ответы успешно получены и отправлены на проверку HR-специалисту вашей компании."
 msgstr "Your responses have been successfully received and sent for verification to your company's HR specialist."
 
-#: src/app/privacy-policy/page.tsx:485
-msgid "Ваши персональные данные НЕ передаются третьим лицам, за исключением случаев:"
-msgstr "Your Personal Data is NOT Transferred to Third Parties, Except in Cases:"
-
-#: src/app/privacy-policy/page.tsx:78
-msgid "Ваши персональные данные обрабатываются исключительно в следующих целях:"
-msgstr "Your Personal Data is Processed Exclusively for the Following Purposes:"
-
 #: src/app/components/ForgetMeAuto.tsx:89
 msgid "Ваши персональные данные полностью удалены с платформы"
 msgstr "Your Personal Data Completely Deleted from Platform"
@@ -2580,10 +2536,7 @@ msgstr "Back to Plans"
 #: src/app/auth/maintenance/page.tsx:38
 #: src/app/contact/page.tsx:298
 #: src/app/forget-me/page.tsx:381
-#: src/app/hr-agreement/page.tsx:576
 #: src/app/not-found.tsx:39
-#: src/app/privacy-policy/page.tsx:649
-#: src/app/terms-of-service/page.tsx:457
 msgid "Вернуться на главную"
 msgstr "Return to Home"
 
@@ -2653,10 +2606,6 @@ msgstr "Return on Investment"
 #: src/app/page.tsx:195
 msgid "Возможности"
 msgstr "Capabilities"
-
-#: src/app/hr-agreement/page.tsx:371
-msgid "Возможности при привязке к организации:"
-msgstr "Capabilities When Linking to Organization:"
 
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:841
 msgid "Возможные причины"
@@ -2852,10 +2801,6 @@ msgstr "All Plans Include"
 #: src/app/components/landingpage/footer/Footer.tsx:27
 msgid "Все права защищены SofiHR. Система подбора персонала."
 msgstr "All rights reserved SofiHR. Personnel Selection System."
-
-#: src/app/terms-of-service/page.tsx:259
-msgid "Все права на Систему принадлежат разработчикам:"
-msgstr "All rights to the System belong to the developers:"
 
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:381
 msgid "Все регламенты"
@@ -3232,10 +3177,6 @@ msgstr "I consent to the processing of my personal data for participation in sel
 msgid "Даю согласие на обработку персональных данных в соответствии с <0>Политикой конфиденциальности</0> *"
 msgstr "I consent to the processing of personal data in accordance with the <0>Privacy Policy</0> *"
 
-#: src/app/privacy-policy/page.tsx:321
-msgid "Двойная обработка данных:"
-msgstr "Double Data Processing:"
-
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:240
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:183
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:274
@@ -3334,10 +3275,6 @@ msgstr "To load a resume, you must add it manually"
 msgid "Для загрузки резюме с HeadHunter необходимо обновить токен доступа."
 msgstr "To download resumes from HeadHunter, you need to update the access token."
 
-#: src/app/privacy-policy/page.tsx:446
-msgid "Для защиты ваших персональных данных применяются следующие меры:"
-msgstr "The following measures are applied to protect your personal data:"
-
 #: src/app/page.tsx:321
 msgid "Для крупных компаний и HR-агентств с высокой нагрузкой"
 msgstr "For Large Companies and HR Agencies with High Load"
@@ -3370,14 +3307,6 @@ msgstr "To take the interview, you must allow access to the camera and microphon
 msgid "Для прохождения интервью необходимо разрешить доступ к микрофону."
 msgstr "Microphone access is required to take the interview."
 
-#: src/app/privacy-policy/page.tsx:411
-msgid "Для реализации своих прав вы можете:"
-msgstr "To exercise your rights, you can:"
-
-#: src/app/privacy-policy/page.tsx:401
-msgid "Для реализации своих прав обращайтесь к нам через форму обратной связи или по указанным контактным данным."
-msgstr "To exercise your rights, contact us via the feedback form or the provided contact details."
-
 #: src/app/auth/register/page.tsx:119
 msgid "Для регистрации необходимо согласие на обработку персональных данных"
 msgstr "Registration requires consent to personal data processing"
@@ -3401,10 +3330,6 @@ msgstr "For Testing the Platform Without Financial Investment"
 #: src/app/components/landing/PricingFAQ.tsx:174
 msgid "Для тестирования платформы без финансовых вложений. 10 бесплатных интервью для знакомства с функционалом."
 msgstr "For testing the platform without financial investment. 10 free interviews to get acquainted with the functionality."
-
-#: src/app/privacy-policy/page.tsx:515
-msgid "Для транскрибации аудио и вспомогательной обработки оператор привлекает обработчиков по поручению на территории РФ. Обработка осуществляется строго по инструкциям оператора, без использования данных в целях обучения, с ограниченными сроками хранения и без трансграничной передачи."
-msgstr "For audio transcription and auxiliary processing, the operator engages processors by assignment on the territory of the Russian Federation. Processing is carried out strictly according to the operator's instructions, without using data for training purposes, with limited storage periods and without cross-border transfer."
 
 #. placeholder {0}: status.hhLimits.source
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:599
@@ -3718,7 +3643,6 @@ msgid "Запрашиваем разрешения..."
 msgstr "Requesting Permissions..."
 
 #: src/app/forget-me/page.tsx:137
-#: src/app/privacy-policy/page.tsx:665
 msgid "Запрос на удаление данных"
 msgstr "Data Deletion Request"
 
@@ -4033,10 +3957,6 @@ msgstr "Usage"
 msgid "Использование интервью"
 msgstr "Interview Usage"
 
-#: src/app/terms-of-service/page.tsx:366
-msgid "Использование Системы может быть прекращено:"
-msgstr "System Use May Be Terminated:"
-
 #: src/app/(DashboardLayout)/hr/billing/transactions/page.tsx:127
 msgid "Использование теста"
 msgstr "Test Usage"
@@ -4066,33 +3986,6 @@ msgstr "Used for clients from various industries. Scaled business 3 times."
 #: src/app/components/ForgetMeAuto.tsx:154
 msgid "Используя данную платформу, вы соглашаетесь с "
 msgstr "By Using This Platform, You Agree to "
-
-#: src/app/hr-agreement/page.tsx:563
-msgid "Используя платформу SofiHR, HR-клиент подтверждает, что ознакомился с настоящей офертой и согласен следовать её условиям."
-msgstr "By using the SofiHR platform, the HR client confirms that they have read this offer and agree to follow its terms."
-
-#~ msgid "Используя платформу SofiHR, клиент (физическое или юридическое лицо) принимает настоящую Оферта и соглашается следовать её условиям."
-#~ msgstr "By using the SofiHR platform, the client (individual or legal entity) accepts this Offer and agrees to follow its terms."
-
-#: src/app/hr-agreement/page.tsx:45
-msgid "Используя платформу SofiHR, клиент (физическое или юридическое лицо) принимает настоящую Оферту и соглашается следовать её условиям."
-msgstr "By using the SofiHR platform, the client (an individual or legal entity) accepts this Offer and agrees to follow its terms."
-
-#: src/app/privacy-policy/page.tsx:46
-msgid "Используя Систему, вы даете согласие на обработку ваших персональных данных в соответствии с настоящей Политикой."
-msgstr "By using the System, you consent to the processing of your personal data in accordance with this Policy."
-
-#: src/app/privacy-policy/page.tsx:636
-msgid "Используя Систему, вы подтверждаете, что ознакомились с настоящей Политикой и согласны с условиями обработки ваших персональных данных."
-msgstr "By using the System, you confirm that you have read this Policy and agree to the terms of processing your personal data."
-
-#: src/app/terms-of-service/page.tsx:444
-msgid "Используя Систему, вы подтверждаете, что ознакомились с настоящими Условиями и согласны следовать им."
-msgstr "By using the System, you confirm that you have read these Terms and agree to follow them."
-
-#: src/app/terms-of-service/page.tsx:45
-msgid "Используя Систему, вы принимаете настоящие Условия и соглашаетесь следовать им."
-msgstr "By using the System, you accept these Terms and agree to follow them."
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:167
 msgid "Истекло"
@@ -4162,10 +4055,6 @@ msgstr "Each employee will receive a unique set of questions. Slower but more re
 #: src/app/components/landing/PricingFAQ.tsx:95
 msgid "Как происходит оплата?"
 msgstr "How Does Payment Work?"
-
-#: src/app/privacy-policy/page.tsx:296
-msgid "Как работает платформа:"
-msgstr "How the Platform Works:"
 
 #: src/app/page.tsx:72
 msgid "Как это работает"
@@ -4451,10 +4340,6 @@ msgstr "Company"
 msgid "Компания создана!"
 msgstr "Company Created!"
 
-#: src/app/privacy-policy/page.tsx:191
-msgid "Конкретные сроки хранения:"
-msgstr "Specific Storage Periods:"
-
 #. placeholder {0}: formatBitrixDate(candidate.lastContactedAt)
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:439
 msgid "Контакт: {0}"
@@ -4526,10 +4411,6 @@ msgstr "Scalability"
 #: src/app/test/[token]/page.tsx:755
 msgid "Медиа хранятся до 60 дней."
 msgstr "Media stored for up to 60 days."
-
-#: src/app/hr-agreement/page.tsx:265
-msgid "Медиафайлы и обработчики по поручению:"
-msgstr "Media files and processors by assignment:"
 
 #: src/components/EvaluationResult.tsx:69
 msgid "Метрики оценки"
@@ -4606,14 +4487,6 @@ msgstr "Multi-Company"
 msgid "Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email."
 msgstr "We will automatically generate a new secure password and send it to your email."
 
-#: src/app/privacy-policy/page.tsx:576
-msgid "Мы оставляем за собой право вносить изменения в настоящую Политику. При внесении существенных изменений:"
-msgstr "We Reserve the Right to Make Changes to This Policy. When Making Significant Changes:"
-
-#: src/app/terms-of-service/page.tsx:334
-msgid "Мы оставляем за собой право изменять настоящие Условия:"
-msgstr "We Reserve the Right to Change These Terms:"
-
 #: src/app/auth/forgot-password/page.tsx:89
 msgid "Мы отправили новый пароль на ваш email: <0>{email}</0>"
 msgstr "We Sent a New Password to Your Email: <0>{email}</0>"
@@ -4627,16 +4500,9 @@ msgstr "We Sent the Password to Your Email: <0>{0}</0>"
 msgid "Мы проводим плановые технические работы для улучшения качества сервиса. Приносим извинения за временные неудобства."
 msgstr "We are performing scheduled maintenance to improve service quality. We apologize for the temporary inconvenience."
 
-#~ msgid "Мы проводим плановые технические работы. Сайт скоро будет доступен."
-#~ msgstr "We are performing scheduled maintenance. The site will be available soon."
-
 #: src/app/maintenance/page.tsx:152
 msgid "Мы скоро вернёмся!"
 msgstr "We'll Be Back Soon!"
-
-#: src/app/privacy-policy/page.tsx:188
-msgid "Мы храним ваши персональные данные только в течение времени, необходимого для достижения целей обработки, указанных в настоящей Политике."
-msgstr "We store your personal data only for the time necessary to achieve the processing purposes specified in this Policy."
 
 #: src/app/(DashboardLayout)/hr/hh-vacancies/[id]/page.tsx:93
 msgid "На HH:"
@@ -4766,37 +4632,6 @@ msgstr "For example: Security Policy Knowledge Test"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CustomStageModal.tsx:72
 msgid "Например: Техническое собеседование"
 msgstr "For example: Technical Interview"
-
-#: src/app/hr-agreement/page.tsx:561
-msgid "Настоящая оферта вступает в силу с момента размещения на платформе и действует до момента её отмены или замены новой офертой."
-msgstr "This offer comes into effect from the moment it is posted on the platform and remains in effect until it is canceled or replaced by a new offer."
-
-#: src/app/privacy-policy/page.tsx:634
-msgid "Настоящая Политика вступает в силу с момента размещения на сайте и действует до момента ее отмены или замены новой Политикой."
-msgstr "This Policy comes into effect from the moment it is posted on the site and remains in effect until it is canceled or replaced by a new Policy."
-
-#~ msgid "Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки персональных данных пользователей системы подбора персонала (далее — «Система») в соответствии с требованиями Федерального закон от 27.07.2006 № 152-ФЗ «О персональных данных» (далее — «152-ФЗ»)."
-#~ msgstr "This Privacy Policy (hereinafter — \"Policy\") defines the procedure for processing personal data of users of the personnel selection system (hereinafter — \"System\") in accordance with the requirements of Federal Law No. 152-FZ of July 27, 2006 \"On Personal Data\" (hereinafter — \"152-FZ\")."
-
-#: src/app/privacy-policy/page.tsx:42
-msgid "Настоящая Политика конфиденциальности (далее — «Политика») определяет порядок обработки персональных данных пользователей системы подбора персонала (далее — «Система») в соответствии с требованиями Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных» (далее — «152-ФЗ»)."
-msgstr "This Privacy Policy (hereinafter - \"Policy\") defines the procedure for processing personal data of users of the recruitment system (hereinafter - \"System\") in accordance with the requirements of Federal Law No. 152-FZ of July 27, 2006 \"On Personal Data\" (hereinafter - \"152-FZ\")."
-
-#: src/app/hr-agreement/page.tsx:42
-msgid "Настоящая публичная оферта (далее — «Оферта») определяет условия использования платформы SofiHR для HR-специалистов и организаций, независимо от их организационно-правовой формы."
-msgstr "This Public Offer (hereinafter — \"Offer\") defines the terms of use of the SofiHR platform for HR specialists and organizations, regardless of their legal form."
-
-#: src/app/terms-of-service/page.tsx:442
-msgid "Настоящие Условия вступают в силу с момента размещения на сайте и действуют до момента их отмены или замены новыми Условиями."
-msgstr "These Terms come into effect from the moment they are posted on the site and remain in effect until they are canceled or replaced by new Terms."
-
-#: src/app/terms-of-service/page.tsx:42
-msgid "Настоящие Условия использования (далее — «Условия») регулируют порядок использования системы подбора персонала SofiHR (далее — «Система») и определяют права и обязанности пользователей."
-msgstr "These Terms of Use (hereinafter — \"Terms\") govern the use of the SofiHR personnel selection system (hereinafter — \"System\") and define the rights and obligations of users."
-
-#: src/app/terms-of-service/page.tsx:398
-msgid "Настоящие Условия регулируются законодательством Российской Федерации. Все споры разрешаются в соответствии с российским правом."
-msgstr "These Terms are governed by the legislation of the Russian Federation. All disputes are resolved in accordance with Russian law."
 
 #: src/app/page.tsx:743
 msgid "Настраиваете критерии оценки"
@@ -5029,10 +4864,6 @@ msgstr "Insufficient Data for Analysis"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/BulkActionsPanel.tsx:222
 msgid "Недостаточно лимита"
 msgstr "Insufficient Limit"
-
-#: src/app/hr-agreement/page.tsx:177
-msgid "Независимо от типа клиента, HR-клиент обязуется:"
-msgstr "Regardless of client type, the HR client undertakes to:"
 
 #: src/app/interview/[token]/page.tsx:2444
 msgid "Неизвестная камера"
@@ -5281,12 +5112,6 @@ msgstr "Updating..."
 msgid "Обновлено: {aiUpdatedAt}"
 msgstr "Updated: {aiUpdatedAt}"
 
-#: src/app/hr-agreement/page.tsx:28
-#: src/app/privacy-policy/page.tsx:28
-#: src/app/terms-of-service/page.tsx:28
-msgid "Обновлено: 22.09.2025"
-msgstr "Updated: 09/22/2025"
-
 #. placeholder {0}: stableIds.length
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:558
 msgid "Обрабатываем {0} кандидатов"
@@ -5309,21 +5134,9 @@ msgstr "Candidates Processed: 500+"
 msgid "Обработка авторизации HH.ru..."
 msgstr "Processing HH.ru Authorization..."
 
-#: src/app/privacy-policy/page.tsx:69
-msgid "Обработка и хранение персональных данных осуществляются на территории Российской Федерации; трансграничная передача не осуществляется."
-msgstr "Processing and storage of personal data are carried out on the territory of the Russian Federation; cross-border transfer is not performed."
-
 #: src/app/interview/[token]/page.tsx:3023
 msgid "Обработка ответа..."
 msgstr "Processing response..."
-
-#: src/app/privacy-policy/page.tsx:26
-msgid "Обработка персональных данных в системе подбора персонала"
-msgstr "Processing of Personal Data in the Personnel Selection System"
-
-#: src/app/privacy-policy/page.tsx:156
-msgid "Обработка персональных данных осуществляется на следующих основаниях:"
-msgstr "Processing of personal data is carried out on the following grounds:"
 
 #: src/app/(DashboardLayout)/hr/billing/page.tsx:322
 msgid "Обработка..."
@@ -5404,10 +5217,6 @@ msgstr "Schedule Merging"
 msgid "Объективная оценка"
 msgstr "Objective Assessment"
 
-#: src/app/hr-agreement/page.tsx:403
-msgid "Обязательства при привязке к организации:"
-msgstr "Obligations When Linking to Organization:"
-
 #: src/app/maintenance/page.tsx:153
 msgid "Ожидаемое время завершения работ: в течение нескольких часов"
 msgstr "Expected Completion Time: Within a Few Hours"
@@ -5441,10 +5250,6 @@ msgstr "End"
 #: src/app/auth/register/page.tsx:238
 msgid "ООО «Ваша компания»"
 msgstr "LLC \"Your Company\""
-
-#: src/app/privacy-policy/page.tsx:56
-msgid "Оператором персональных данных является Индивидуальный предприниматель Филипенко Анна Евгеньевна (ОГРНИП 324774600106007, ИНН 772154932804)."
-msgstr "The Operator of Personal Data is Individual Entrepreneur Anna Evgenievna Filipenko (OGRNIP 324774600106007, INN 772154932804)."
 
 #: src/app/(DashboardLayout)/hr/billing/transactions/page.tsx:237
 msgid "Операция"
@@ -6327,14 +6132,6 @@ msgstr "Payment Canceled"
 msgid "Платежи"
 msgstr "Payments"
 
-#: src/app/hr-agreement/page.tsx:497
-msgid "Платформа SofiHR оставляет за собой право изменять условия оферты:"
-msgstr "The SofiHR Platform Reserves the Right to Change the Offer Terms:"
-
-#: src/app/hr-agreement/page.tsx:100
-msgid "Платформа SofiHR поддерживает работу с разными типами HR-клиентов:"
-msgstr "The SofiHR Platform Supports Working with Different Types of HR Clients:"
-
 #: src/app/components/hr/WeakQuestionsCard.tsx:48
 msgid "Плохо"
 msgstr "Poor"
@@ -6343,25 +6140,9 @@ msgstr "Poor"
 msgid "По вопросам обращайтесь к администратору"
 msgstr "Contact the administrator for questions"
 
-#: src/app/terms-of-service/page.tsx:410
-msgid "По всем вопросам, связанным с использованием Системы:"
-msgstr "For All Questions Related to System Use:"
-
-#: src/app/hr-agreement/page.tsx:536
-msgid "По всем вопросам, связанным с настоящей офертой:"
-msgstr "For all questions related to this offer:"
-
-#: src/app/privacy-policy/page.tsx:609
-msgid "По всем вопросам, связанным с обработкой персональных данных, обращайтесь:"
-msgstr "For all questions related to personal data processing, contact:"
-
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:319
 msgid "По дату"
 msgstr "To Date"
-
-#: src/app/privacy-policy/page.tsx:223
-msgid "По истечении указанных сроков все персональные данные подлежат автоматическому удалению или обезличиванию."
-msgstr "After the specified periods, all personal data are subject to automatic deletion or anonymization."
 
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:860
 msgid "Повторить AI-анализ"
@@ -6574,10 +6355,7 @@ msgstr "Vacancy Search Field"
 #: src/app/components/landingpage/footer/Footer.tsx:40
 #: src/app/contact/page.tsx:305
 #: src/app/forget-me/page.tsx:388
-#: src/app/hr-agreement/page.tsx:583
 #: src/app/page.tsx:1375
-#: src/app/privacy-policy/page.tsx:25
-#: src/app/terms-of-service/page.tsx:464
 #: src/app/test/[token]/page.tsx:617
 #: src/app/test/[token]/page.tsx:644
 msgid "Политика конфиденциальности"
@@ -6644,14 +6422,6 @@ msgstr "Get Free"
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:139
 msgid "Пользователи & роли"
 msgstr "Users & Roles"
-
-#: src/app/terms-of-service/page.tsx:283
-msgid "Пользователи не имеют права копировать, модифицировать или распространять элементы Системы без разрешения."
-msgstr "Users do not have the right to copy, modify, or distribute System elements without permission."
-
-#: src/app/terms-of-service/page.tsx:184
-msgid "Пользователи обязаны:"
-msgstr "Users Must:"
 
 #: src/app/forget-me/page.tsx:432
 msgid "Понятно"
@@ -6762,10 +6532,6 @@ msgstr "With {hiresPerMonth} {0}"
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:691
 msgid "При включении данные будут автоматически обновляться каждые 2 часа"
 msgstr "When enabled, data will be automatically updated every 2 hours"
-
-#: src/app/terms-of-service/page.tsx:138
-msgid "При использовании Системы запрещается:"
-msgstr "When using the System, it is prohibited to:"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1451
 msgid "При переносе кандидата на эту стадию автоматически запускается:"
@@ -7039,10 +6805,6 @@ msgstr "Read All"
 msgid "Прошло времени: {0} секунд"
 msgstr "Time Elapsed: {0} seconds"
 
-#: src/app/hr-agreement/page.tsx:25
-msgid "Публичная оферта для HR-клиентов"
-msgstr "Public Offer for HR Clients"
-
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:296
 msgid "Публичная ссылка для массовой рассылки"
 msgstr "Public Link for Mass Mailing"
@@ -7279,9 +7041,6 @@ msgstr "Recommendation"
 msgid "Рекомендуемый тариф: <0>{0}</0>"
 msgstr "Recommended Plan: <0>{0}</0>"
 
-#~ msgid "рекрутинг, HR, найм, вакансии, кандидаты, управление персоналом, автоматизация рекрутинга, AI-оценка"
-#~ msgstr "recruiting, HR, hiring, vacancies, candidates, personnel management, recruiting automation, AI assessment"
-
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:477
 #: src/components/EvaluationResult.tsx:29
 msgid "решение"
@@ -7347,7 +7106,6 @@ msgid "Связались"
 msgstr "Contacted"
 
 #: src/app/contact/page.tsx:150
-#: src/app/privacy-policy/page.tsx:657
 msgid "Связаться с нами"
 msgstr "Contact Us"
 
@@ -7476,38 +7234,14 @@ msgstr "The AI System Analyzes Your Responses to Create Personalized Recommendat
 msgid "Система быстрых платежей (СБП)"
 msgstr "Fast Payment System (FPS)"
 
-#: src/app/privacy-policy/page.tsx:540
-msgid "Система использует cookies для:"
-msgstr "The System uses cookies for:"
-
-#: src/app/terms-of-service/page.tsx:293
-msgid "Система обеспечивает конфиденциальность данных:"
-msgstr "The System Ensures Data Confidentiality:"
-
 #: src/app/interview/[token]/page.tsx:1907
 #: src/app/interview/[token]/page.tsx:2294
 msgid "Система обрабатывает ваши аудио и видео ответы для подготовки к анализу"
 msgstr "The system processes your audio and video responses to prepare for analysis"
 
-#: src/app/privacy-policy/page.tsx:117
-msgid "Система обрабатывает следующие категории персональных данных:"
-msgstr "The System Processes the Following Categories of Personal Data:"
-
-#: src/app/terms-of-service/page.tsx:26
-msgid "Система подбора персонала SofiHR"
-msgstr "SofiHR Personnel Selection System"
-
 #: src/app/page.tsx:634
 msgid "Система прав доступа"
 msgstr "Access Rights System"
-
-#: src/app/terms-of-service/page.tsx:92
-msgid "Система предоставляет следующие возможности:"
-msgstr "The System Provides the Following Capabilities:"
-
-#: src/app/terms-of-service/page.tsx:223
-msgid "Система предоставляется «как есть» без каких-либо гарантий:"
-msgstr "The System is Provided \"As Is\" Without Any Warranties:"
 
 #: src/utils/pdfExportWithFont.ts:64
 msgid "Система рекрутинга"
@@ -7576,10 +7310,6 @@ msgstr "Difficulty"
 msgid "Сложный"
 msgstr "Difficult"
 
-#: src/app/hr-agreement/page.tsx:152
-msgid "Смешанный тип (HR-специалист + организация):"
-msgstr "Mixed Type (HR Specialist + Organization):"
-
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:184
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:283
 msgid "Сначала заполните название вакансии"
@@ -7593,15 +7323,6 @@ msgstr "Reduction in Hiring Costs"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1414
 msgid "Снять выделение со ВСЕХ {totalCount} кандидатов"
 msgstr "Deselect ALL {totalCount} candidates"
-
-#~ msgid "Современная HR-система для управления вакансиями, кандидатами и процессами найма"
-#~ msgstr "Modern HR system for managing vacancies, candidates, and hiring processes"
-
-#~ msgid "Современная HR-система для управления вакансиями, кандидатами и процессами найма. Автоматизация рекрутинга с AI-оценкой кандидатов."
-#~ msgstr "Modern HR system for managing vacancies, candidates, and hiring processes. Recruiting automation with AI candidate assessment."
-
-#~ msgid "Современная HR-система для управления рекрутингом"
-#~ msgstr "Modern HR System for Recruiting Management"
 
 #: src/app/auth/register/page.tsx:283
 msgid "Согласен(на) получать новости и предложения на указанный email"
@@ -7624,10 +7345,6 @@ msgstr "I agree to the processing of my personal data for taking the test"
 #: src/app/test/[token]/page.tsx:754
 msgid "Соглашаюсь на обработку моих персональных данных для прохождения тестирования по регламентам"
 msgstr "I agree to the processing of my personal data for taking regulation tests"
-
-#: src/app/privacy-policy/page.tsx:672
-msgid "Соглашение для HR-клиентов"
-msgstr "Agreement for HR Clients"
 
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:602
 msgid "Содержание регламента"
@@ -7935,9 +7652,6 @@ msgstr "Average"
 msgid "Средний балл"
 msgstr "Average Score"
 
-#~ msgid "Средняя стоимость: 15,000₽ на кандидата + 40 часов работы HR @ 1,500₽/час"
-#~ msgstr "Average cost: 15,000₽ per candidate + 40 hours of HR work @ 1,500₽/hour"
-
 #: src/app/components/landing/ROICalculator.tsx:135
 msgid "Средняя стоимость: 25,000₽ на кандидата + 10 часов работы HR @ 1,500₽/час"
 msgstr "Average Cost: 25,000₽ per Candidate + 10 Hours of HR Work @ 1,500₽/hour"
@@ -7949,10 +7663,6 @@ msgstr "Validity Period"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:322
 msgid "Срок действия (дней)"
 msgstr "Validity Period (days)"
-
-#: src/app/hr-agreement/page.tsx:290
-msgid "Сроки хранения данных:"
-msgstr "Data Storage Periods:"
 
 #: src/app/components/hr/OverdueCandidatesCard.tsx:100
 msgid "Срочно"
@@ -8303,9 +8013,6 @@ msgstr "Technical Skills"
 msgid "Технические работы"
 msgstr "Maintenance"
 
-#~ msgid "Технические работы - Сайт временно недоступен"
-#~ msgstr "Maintenance - Site Temporarily Unavailable"
-
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:479
 #: src/components/EvaluationResult.tsx:31
 msgid "технический"
@@ -8331,10 +8038,6 @@ msgstr "Type"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:301
 msgid "Тип приглашения"
 msgstr "Invitation Type"
-
-#: src/app/privacy-policy/page.tsx:271
-msgid "Типы HR-клиентов платформы:"
-msgstr "Platform HR Client Types:"
 
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:463
 msgid "Типы данных для удаления"
@@ -8563,9 +8266,6 @@ msgstr "Smart Sorting"
 msgid "Управление вакансиями"
 msgstr "Vacancy Management"
 
-#~ msgid "Управление кандидатами"
-#~ msgstr "Candidate Management"
-
 #: src/app/(DashboardLayout)/hr/billing/page.tsx:199
 msgid "Управление подпиской"
 msgstr "Subscription Management"
@@ -8599,13 +8299,8 @@ msgstr "Microphone Level: {0}%"
 
 #: src/app/components/landingpage/footer/Footer.tsx:49
 #: src/app/page.tsx:1387
-#: src/app/terms-of-service/page.tsx:25
 msgid "Условия использования"
 msgstr "Terms of Use"
-
-#: src/app/hr-agreement/page.tsx:26
-msgid "Условия использования платформы SofiHR для HR-организаций"
-msgstr "Terms of Use for the SofiHR Platform for HR Organizations"
 
 #: src/app/components/PrivacyConsent.tsx:58
 msgid "Условиями использования"
@@ -8627,10 +8322,6 @@ msgstr "Success! {0}"
 #: src/components/SortableQuestions.tsx:77
 msgid "Уточнения"
 msgstr "Clarifications"
-
-#: src/app/hr-agreement/page.tsx:102
-msgid "Физическое лицо (HR-специалист):"
-msgstr "Individual (HR Specialist):"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:177
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:180
@@ -8677,14 +8368,6 @@ msgstr "Good (6-7)"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CustomStageModal.tsx:76
 msgid "Цвет заливки:"
 msgstr "Fill Color:"
-
-#: src/app/privacy-policy/page.tsx:235
-msgid "Цели обработки видео и аудио данных:"
-msgstr "Purposes of Video and Audio Data Processing:"
-
-#: src/app/hr-agreement/page.tsx:240
-msgid "Цели обработки данных:"
-msgstr "Data Processing Purposes:"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:642
 msgid "Что будет сгенерировано:"
@@ -8829,10 +8512,6 @@ msgstr "This is the same feedback the candidate sees after the interview"
 #: src/app/page.tsx:671
 msgid "Эффективность AI-интервью"
 msgstr "AI Interview Effectiveness"
-
-#: src/app/hr-agreement/page.tsx:127
-msgid "Юридическое лицо (организация):"
-msgstr "Legal Entity (Organization):"
 
 #: src/app/components/PrivacyConsent.tsx:43
 msgid "Я даю согласие на обработку моих персональных данных в соответствии с "
