@@ -16,7 +16,7 @@ msgstr ""
 #. js-lingui-explicit-id
 #: src/app/appRouterI18n.ts:83
 msgid "L7S2Qo"
-msgstr ""
+msgstr "L7S2Qo"
 
 #: src/app/interview/[token]/page.tsx:844
 msgid ""
@@ -180,7 +180,7 @@ msgstr " from the platform at any time."
 
 #: src/app/components/ForgetMeAuto.tsx:201
 msgid ". В соответствии с Федеральным законом от 27.07.2006 N 152-ФЗ \"О персональных данных\" вы имеете право на "
-msgstr ". In accordance with Federal Law No. 152-FZ of July 27, 2006 \"On Personal Data\", you have the right to "
+msgstr ". In accordance with applicable US privacy laws (including CCPA and VCDPA), you have the right to "
 
 #: src/app/interview/[token]/page.tsx:1204
 msgid "(нет ответа)"
@@ -395,7 +395,7 @@ msgstr "© 2025 SofiHR. All Rights Reserved."
 
 #: src/app/components/landingpage/footer/Footer.tsx:59
 msgid "© 2025 SofiHR. Система соответствует требованиям 152-ФЗ \"О персональных данных\""
-msgstr "© 2025 SofiHR. The System Complies with the Requirements of 152-FZ \"On Personal Data\""
+msgstr "© 2025 SofiHR. Compliant with US Privacy Laws (CCPA, VCDPA)"
 
 #. placeholder {0}: savings.traditionalTime
 #. placeholder {1}: savings.traditionalTimeCost.toLocaleString()
@@ -473,7 +473,7 @@ msgstr "<0>Summary:</0> {aiSummary}"
 
 #: src/app/forget-me/page.tsx:332
 msgid "<0>Срок обработки:</0> До 30 дней согласно 152-ФЗ"
-msgstr "<0>Processing Time:</0> Up to 30 days according to 152-FZ"
+msgstr "<0>Processing Time:</0> Up to 45 days as required by CCPA"
 
 #: src/app/forget-me/page.tsx:340
 msgid "<0>Уведомления:</0> HR-клиенты будут уведомлены о запросе"
@@ -534,7 +534,7 @@ msgstr "⏰ HeadHunter.ru Manager Limit for all vacancies, resets at 00:00"
 
 #: src/app/forget-me/page.tsx:412
 msgid "⏰ Обработка займет до 30 дней согласно 152-ФЗ"
-msgstr "⏰ Processing will take up to 30 days according to 152-FZ"
+msgstr "⏰ Processing will take up to 45 days as required by CCPA"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:239
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1287
@@ -4413,6 +4413,10 @@ msgstr "Maria Petrova"
 msgid "Масштабируемость"
 msgstr "Scalability"
 
+#: src/app/interview/[token]/page.tsx:2358
+msgid "Медиа хранятся до 60 дней"
+msgstr "Media stored for up to 60 days"
+
 #: src/app/test/[token]/page.tsx:755
 msgid "Медиа хранятся до 60 дней."
 msgstr "Media stored for up to 60 days."
@@ -6873,7 +6877,7 @@ msgstr "Extended Response Analysis Using AI"
 
 #: src/app/forget-me/page.tsx:138
 msgid "Реализуйте свое право на забвение согласно 152-ФЗ"
-msgstr "Exercise Your Right to Be Forgotten According to 152-FZ"
+msgstr "Exercise Your Right to Be Forgotten Under US Privacy Laws"
 
 #: src/app/page.tsx:879
 msgid "Реальные результаты клиентов"
@@ -7263,7 +7267,7 @@ msgstr "The System will create {0} questions based on selected regulations using
 
 #: src/app/page.tsx:1359
 msgid "Система соответствует требованиям 152-ФЗ \"О персональных данных\""
-msgstr " "
+msgstr "Compliant with US Privacy Regulations (CCPA, VCDPA)"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:802
 msgid "Скачать QR-код (SVG)"
@@ -7345,6 +7349,10 @@ msgstr "Consent for Video Recording (uncheck — audio only)"
 #: src/app/components/PrivacyConsent.tsx:61
 msgid "Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время."
 msgstr "Consent is required to use the system. You can withdraw consent at any time."
+
+#: src/app/interview/[token]/page.tsx:2358
+msgid "Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии"
+msgstr "I agree to the processing of my personal data for the purpose of conducting the interview and assessing my suitability for the vacancy"
 
 #: src/app/test/[token]/page.tsx:616
 #: src/app/test/[token]/page.tsx:643
@@ -7519,7 +7527,7 @@ msgstr "Message Sent Successfully! We will contact you shortly."
 
 #: src/app/components/landing/PricingFAQ.tsx:135
 msgid "Соответствие 152-ФЗ"
-msgstr "Compliance with 152-FZ"
+msgstr "US Privacy Compliance"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:224
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:229
@@ -7812,6 +7820,10 @@ msgstr "Amount"
 #: src/app/(DashboardLayout)/hr/billing/payment-success/page.tsx:95
 msgid "Сумма платежа"
 msgstr "Payment Amount"
+
+#: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:131
+msgid "Суммарная оценка"
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:729
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:607
@@ -8508,7 +8520,7 @@ msgstr "This can happen if you revoked app access in HH.ru settings."
 
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:521
 msgid "Это обязательное требование в соответствии с 152-ФЗ \"О персональных данных\"."
-msgstr "This is a mandatory requirement in accordance with 152-FZ \"On Personal Data\"."
+msgstr "This is a mandatory requirement under applicable US privacy laws (CCPA, VCDPA)."
 
 #: src/components/examples/ExampleI18n.tsx:39
 msgid "Это поле обязательно для заполнения"

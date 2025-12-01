@@ -4413,6 +4413,10 @@ msgstr "Мария Петрова"
 msgid "Масштабируемость"
 msgstr "Масштабируемость"
 
+#: src/app/interview/[token]/page.tsx:2358
+msgid "Медиа хранятся до 60 дней"
+msgstr "Медиа хранятся до 60 дней"
+
 #: src/app/test/[token]/page.tsx:755
 msgid "Медиа хранятся до 60 дней."
 msgstr "Медиа хранятся до 60 дней."
@@ -7346,6 +7350,10 @@ msgstr "Согласие на запись видео (снимите галоч
 msgid "Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время."
 msgstr "Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время."
 
+#: src/app/interview/[token]/page.tsx:2358
+msgid "Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии"
+msgstr "Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии"
+
 #: src/app/test/[token]/page.tsx:616
 #: src/app/test/[token]/page.tsx:643
 msgid "Соглашаюсь на обработку моих персональных данных для прохождения тестирования"
@@ -7812,6 +7820,10 @@ msgstr "Сумма"
 #: src/app/(DashboardLayout)/hr/billing/payment-success/page.tsx:95
 msgid "Сумма платежа"
 msgstr "Сумма платежа"
+
+#: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:131
+msgid "Суммарная оценка"
+msgstr "Суммарная оценка"
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:729
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:607

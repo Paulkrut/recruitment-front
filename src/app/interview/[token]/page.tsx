@@ -2355,7 +2355,7 @@ export default function CandidateInterviewPage() {
               control={<Checkbox checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} color="primary" />}
               label={
                 <Typography variant="body2">
-                  Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии. <a href="/privacy-policy" target="_blank"><Trans>Политика ПДн</Trans></a>. Медиа хранятся до 60 дней.
+                  <Trans>Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии</Trans>. <a href="/privacy-policy" target="_blank"><Trans>Политика ПДн</Trans></a>.{' '}<Trans>Медиа хранятся до 60 дней</Trans>.
                 </Typography>
               }
               sx={{ alignItems: 'center', mb: 1 }}

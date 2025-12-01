@@ -128,7 +128,7 @@ export default function HRSessionDetailPage() {
           <Card sx={{ background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', color: 'white', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
-              <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {result.totalScore !== undefined && result.totalScore !== null ? result.totalScore : <i><Trans>нет</Trans></i>}</Typography>
+              <Typography variant="body1" sx={{mb:1}}><b><Trans>Суммарная оценка</Trans>:</b> {result.totalScore !== undefined && result.totalScore !== null ? result.totalScore : <i><Trans>нет</Trans></i>}</Typography>
               <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {result.summary || <i><Trans>нет</Trans></i>}</Typography>
             </CardContent>
           </Card>
