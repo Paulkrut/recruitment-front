@@ -138,7 +138,7 @@ export default function NavItem({
   };
 
   return (
-    <List component="li" disablePadding key={item?.id && item.title}>
+    <List component="li" disablePadding key={item?.id}>
       <Link href={item.href}>
         <ListItemStyled
           disabled={item?.disabled}
