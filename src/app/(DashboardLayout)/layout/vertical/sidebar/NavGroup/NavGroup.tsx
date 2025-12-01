@@ -33,8 +33,15 @@ const NavGroup = ({ item, hideMenu }: ItemType) => {
     marginLeft: hideMenu ? '' : '-10px',
   }));
 
+  // Обрабатываем subheader: если это MessageDescriptor - переводим, если строка - используем как есть
+  const getSubheaderText = () => {
+    if (!item?.subheader) return '';
+    if (typeof item.subheader === 'string') return item.subheader;
+    return _(item.subheader);
+  };
+
   return (
-    <ListSubheaderStyle>{hideMenu ? <IconDots size="14" /> : _(item?.subheader)}</ListSubheaderStyle>
+    <ListSubheaderStyle>{hideMenu ? <IconDots size="14" /> : getSubheaderText()}</ListSubheaderStyle>
   );
 };
 

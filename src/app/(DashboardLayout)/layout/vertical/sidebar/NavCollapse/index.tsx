@@ -3,6 +3,8 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { useSelector } from "@/store/hooks";
 import { usePathname } from "next/navigation";
+import { useLingui } from "@lingui/react";
+import type { MessageDescriptor } from "@lingui/core";
 
 // mui imports
 import Box from "@mui/material/Box";
@@ -20,14 +22,13 @@ import { isNull } from "lodash";
 
 // plugins
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
 import { AppState } from "@/store/store";
 
 type NavGroupProps = {
   [x: string]: any;
   navlabel?: boolean;
-  subheader?: string;
-  title?: string;
+  subheader?: string | MessageDescriptor;
+  title?: string | MessageDescriptor;
   icon?: any;
   href?: any;
 };
@@ -55,7 +56,7 @@ export default function NavCollapse({
   const customizer = useSelector((state: AppState) => state.customizer);
   const theme = useTheme();
   const pathname = usePathname();
-  const { t } = useTranslation();
+  const { _ } = useLingui();
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -71,6 +72,13 @@ export default function NavCollapse({
       }
     });
   }, [pathname, menu.children]);
+
+  // Обрабатываем title: если это MessageDescriptor - переводим, если строка - используем как есть
+  const getTitleText = () => {
+    if (!menu?.title) return '';
+    if (typeof menu.title === 'string') return menu.title;
+    return _(menu.title);
+  };
 
   const ListItemStyled = styled(ListItemButton)(() => ({
     marginBottom: "2px",
@@ -204,7 +212,7 @@ export default function NavCollapse({
           )}
         </ListItemIcon>
         <ListItemText color="inherit">
-          {hideMenu ? "" : <>{t(`${menu.title}`)}</>}
+          {hideMenu ? "" : <>{getTitleText()}</>}
         </ListItemText>
         {!open ? (
           <IconChevronDown size="1rem" />

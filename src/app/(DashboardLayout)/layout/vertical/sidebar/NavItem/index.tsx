@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useLingui } from "@lingui/react";
+import type { MessageDescriptor } from "@lingui/core";
 
 // mui imports
 import Box from '@mui/material/Box';
@@ -21,8 +22,8 @@ type NavGroup = {
   [x: string]: any;
   id?: string;
   navlabel?: boolean;
-  subheader?: string;
-  title?: string;
+  subheader?: string | MessageDescriptor;
+  title?: string | MessageDescriptor;
   icon?: any;
   href?: any;
   children?: NavGroup[];
@@ -129,6 +130,13 @@ export default function NavItem({
     target: item?.external ? "_blank" : "",
   };
 
+  // Обрабатываем title: если это MessageDescriptor - переводим, если строка - используем как есть
+  const getTitleText = () => {
+    if (!item?.title) return '';
+    if (typeof item.title === 'string') return item.title;
+    return _(item.title);
+  };
+
   return (
     <List component="li" disablePadding key={item?.id && item.title}>
       <Link href={item.href}>
@@ -195,7 +203,7 @@ export default function NavItem({
             )}
           </ListItemIcon>
           <ListItemText>
-            {hideMenu ? "" : <>{_(item?.title)}</>}
+            {hideMenu ? "" : <>{getTitleText()}</>}
             <br />
             {item?.subtitle ? (
               <Typography variant="caption">
