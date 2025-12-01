@@ -17,26 +17,14 @@ export function getLocale(): SupportedLocale {
   }
 
   const region = process.env.NEXT_PUBLIC_REGION;
+  return region === "US" ? "en" : "ru";
   const locale = region === "US" ? "en" : "ru";
   console.log(`✅ [getLocale] Using NEXT_PUBLIC_REGION ${region} -> locale: ${locale}`);
   return locale;
-  return region === "US" ? "en" : "ru";
 }
 
 // Статическая загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
-  const isDev = process.env.NODE_ENV === 'development';
-
-  // В dev используем скомпилированные .js файлы
-  if (isDev) {
-    const catalog = locale === 'en'
-      ? await import('@/locales/en/messages.js')
-      : await import('@/locales/ru/messages.js');
-
-    return catalog.messages || {};
-  }
-
-  // В production используем @lingui/loader
   try {
     console.log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
 
@@ -64,19 +52,10 @@ async function loadCatalog(locale: SupportedLocale) {
     });
 
     return messages;
-    return catalog.messages || {};
   } catch (error) {
     console.error(`❌ [appRouterI18n] Failed to load catalog for locale ${locale}:`, error);
     // Возвращаем пустой объект как fallback
     return {};
-    console.error(`Failed to load catalog with @lingui/loader for locale ${locale}:`, error);
-
-    // Fallback на скомпилированные .js файлы
-    const catalog = locale === 'en'
-      ? await import('@/locales/en/messages.js')
-      : await import('@/locales/ru/messages.js');
-
-    return catalog.messages || {};
   }
 }
 
