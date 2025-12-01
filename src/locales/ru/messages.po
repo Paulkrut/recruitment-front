@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/app/appRouterI18n.ts:83
+msgid "L7S2Qo"
+msgstr "L7S2Qo"
+
 #: src/app/interview/[token]/page.tsx:844
 msgid ""
 "\n"
@@ -4486,6 +4491,10 @@ msgstr "Мультикомпанийность"
 #: src/app/auth/forgot-password/page.tsx:207
 msgid "Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email."
 msgstr "Мы автоматически сгенерируем новый безопасный пароль и отправим его на ваш email."
+
+#: src/app/components/CookieBanner.tsx:24
+msgid "Мы используем файлы cookie. Подробно"
+msgstr "Мы используем файлы cookie. Подробно"
 
 #: src/app/auth/forgot-password/page.tsx:89
 msgid "Мы отправили новый пароль на ваш email: <0>{email}</0>"
