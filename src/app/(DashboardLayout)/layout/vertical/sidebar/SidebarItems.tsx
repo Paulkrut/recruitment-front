@@ -25,7 +25,7 @@ const SidebarItems = () => {
         {Menuitems.map((item) => {
           // {/********SubHeader**********/}
           if (item.subheader) {
-            return <NavGroup item={item} hideMenu={hideMenu} key={item.subheader} />;
+            return <NavGroup item={item} hideMenu={hideMenu} key={String(item.subheader)} />;
 
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */

@@ -51,7 +51,7 @@ const Breadcrumb = ({ subtitle, items, title, children }: BreadCrumbType) => {
         >
           {items
             ? items.map((item) => (
-                <div key={item.title}>
+                <div key={String(item.title)}>
                   {item.to ? (
                     <NextLink href={item.to} passHref>
                       <Typography color="textSecondary">
