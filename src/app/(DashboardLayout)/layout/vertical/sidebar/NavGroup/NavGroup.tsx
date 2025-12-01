@@ -4,10 +4,11 @@ import { styled } from '@mui/material/styles';
 import { IconDots } from '@tabler/icons-react';
 import React from 'react';
 import { useLingui } from '@lingui/react';
+import type { MessageDescriptor } from '@lingui/core';
 
 type NavGroup = {
   navlabel?: boolean;
-  subheader?: string;
+  subheader?: string | MessageDescriptor;
 };
 
 interface ItemType {
