@@ -699,18 +699,28 @@ export default function HRVacancyDetailPage() {
                     <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вакансия</Trans></Typography>
                   </Box>
                   <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{title}</Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}><Trans>Создана: {createdAt}</Trans></Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      opacity: 0.8,
-                      color: 'text.secondary',
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word'
-                    }}
-                  >
-                    {description || <span style={{opacity:0.6}}><Trans>Описание не заполнено</Trans></span>}
-                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8, mb: 1, color: 'text.secondary' }}><Trans>Создана:</Trans> {createdAt}</Typography>
+                  {description ? (
+                    <Typography
+                      component="div"
+                      variant="body1"
+                      sx={{
+                        opacity: 0.9,
+                        color: 'text.secondary',
+                        wordBreak: 'break-word',
+                        fontSize: '1rem',
+                        lineHeight: 1.7,
+                        '& p': { margin: '8px 0', fontSize: '1rem' },
+                        '& ul, & ol': { paddingLeft: '20px', margin: '8px 0', fontSize: '1rem' },
+                        '& li': { marginBottom: '4px' }
+                      }}
+                      dangerouslySetInnerHTML={{ __html: description }}
+                    />
+                  ) : (
+                    <Typography variant="body2" sx={{ opacity: 0.6, color: 'text.secondary' }}>
+                      <Trans>Описание не заполнено</Trans>
+                    </Typography>
+                  )}
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
                   <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
                     <Trans>Редактировать</Trans>

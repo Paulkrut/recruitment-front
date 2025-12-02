@@ -306,10 +306,19 @@ export default function PublicApplyPage() {
         {/* Описание вакансии */}
         {vacancyInfo?.description && (
           <Box mb={4}>
-            <Typography variant="h6" gutterBottom><Trans>Описание вакансии:</Trans></Typography>
-            <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
-              {vacancyInfo.description}
+            <Typography variant="h6" gutterBottom>
+              <Trans>Описание вакансии:</Trans>
             </Typography>
+            <Typography
+              component="div"
+              variant="body1"
+              dangerouslySetInnerHTML={{ __html: vacancyInfo.description }}
+              sx={{
+                lineHeight: 1.6,
+                '& p': { margin: '8px 0' },
+                '& ul, & ol': { paddingLeft: '20px', margin: '8px 0' }
+              }}
+            />
           </Box>
         )}
 

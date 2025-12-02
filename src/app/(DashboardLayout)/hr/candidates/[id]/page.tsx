@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import dynamic from 'next/dynamic';
 import {
   Box,
   Card,
@@ -18,6 +19,8 @@ import {
 import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
+
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false });
 import MuiLink from '@mui/material/Link';
 import { IconFileText, IconMicrophone, IconVideo } from '@tabler/icons-react';
 import Accordion from '@mui/material/Accordion';
@@ -101,6 +104,7 @@ export default function CandidateDetailPage() {
   const [resumeText, setResumeText] = useState<string | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
+  const [isEditingResume, setIsEditingResume] = useState(false);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -596,24 +600,39 @@ export default function CandidateDetailPage() {
                       )}
                     </Stack>
 
-                    {resumeText ? (
-                      <Box sx={{
-                        bgcolor: 'grey.50',
-                        p: 3,
-                        borderRadius: 2,
-                        border: '1px solid',
-                        borderColor: 'grey.200',
-                        mt: 2,
-                        maxHeight: '70vh',
-                        overflow: 'auto'
-                      }}>
-                        <Typography variant="body1" sx={{
-                          whiteSpace: 'pre-wrap',
-                          lineHeight: 1.8,
+                    {resumeData?.hasResume && !isEditingResume ? (
+                      <>
+                        <Box sx={{
+                          bgcolor: 'grey.50',
+                          p: 3,
+                          borderRadius: 2,
+                          border: '1px solid',
+                          borderColor: 'grey.200',
+                          mt: 2,
+                          maxHeight: '70vh',
+                          overflow: 'auto'
                         }}>
-                          {resumeText}
-                        </Typography>
-                      </Box>
+                          <Typography
+                            component="div"
+                            variant="body1"
+                            sx={{
+                              lineHeight: 1.8,
+                              '& p': { margin: '8px 0' },
+                              '& ul, & ol': { paddingLeft: '20px', margin: '8px 0' },
+                              '& li': { marginBottom: '4px' }
+                            }}
+                            dangerouslySetInnerHTML={{ __html: resumeText }}
+                          />
+                        </Box>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          sx={{ mt: 2 }}
+                          onClick={() => setIsEditingResume(true)}
+                        >
+                          <Trans>Редактировать резюме</Trans>
+                        </Button>
+                      </>
                     ) : (
                       <Box sx={{ textAlign: 'center', py: 4 }}>
                         <IconFileDescription size={48} color="#ccc" style={{ marginBottom: 16 }} />
@@ -655,9 +674,82 @@ export default function CandidateDetailPage() {
                           </Button>
                         )}
 
-                        {!resumeData.canLoadFromHh && (
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}><Trans>Для загрузки резюме необходимо добавить его вручную</Trans></Typography>
-                        )}
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
+                            {isEditingResume ? _(msg`Редактирование резюме`) : _(msg`Добавьте текст резюме`)}
+                          </Typography>
+                          <RichTextEditor
+                            value={resumeText || ''}
+                            onChange={(value: string) => setResumeText(value)}
+                            placeholder={_(msg`Вставьте или введите текст резюме кандидата...`)}
+                          />
+                          <Stack direction="row" spacing={2}>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={async () => {
+                                if (!resumeText || resumeText.trim() === '') {
+                                  setCopyMsg(_(msg`Введите текст резюме`));
+                                  return;
+                                }
+
+                                setResumeLoading(true);
+                                try {
+                                  const response = await apiFetch(`${API_BASE}/api/admin/candidates/${id}/resume`, {
+                                    method: 'POST',
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                      resumeText: resumeText,
+                                      source: 'manual',
+                                    }),
+                                  });
+
+                                  const data = await response.json();
+
+                                  if (response.ok) {
+                                    setResumeData({
+                                      ...resumeData,
+                                      resumeText: resumeText,
+                                      hasResume: true,
+                                      source: 'manual',
+                                    });
+                                    setIsEditingResume(false);
+                                    setCopyMsg(_(msg`Резюме успешно сохранено`));
+                                  } else {
+                                    setCopyMsg(data.error || _(msg`Ошибка при сохранении резюме`));
+                                  }
+                                } catch (error: any) {
+                                  console.error('Error saving resume:', error);
+                                  setCopyMsg(_(msg`Ошибка при сохранении резюме`));
+                                } finally {
+                                  setResumeLoading(false);
+                                }
+                              }}
+                            >
+                              <Trans>Сохранить резюме</Trans>
+                            </Button>
+                            {isEditingResume && (
+                              <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => {
+                                  setIsEditingResume(false);
+                                  // Восстанавливаем оригинальный текст
+                                  if (resumeData?.resumeText) {
+                                    setResumeText(resumeData.resumeText);
+                                  }
+                                }}
+                              >
+                                <Trans>Отмена</Trans>
+                              </Button>
+                            )}
+                          </Stack>
+                          <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
+                            <Trans>Вставьте текст резюме и нажмите "Сохранить"</Trans>
+                          </Typography>
+                        </Box>
                       </Box>
                     )}
                   </>

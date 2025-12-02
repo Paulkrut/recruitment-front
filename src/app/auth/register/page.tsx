@@ -283,6 +283,16 @@ export default function RegisterPage() {
                 label={_(msg`Согласен(на) получать новости и предложения на указанный email`)}
               />
 
+              {/* Юридический блок: акцепт оферты и условий */}
+              <Typography variant="caption" color="text.secondary">
+                Нажимая «Зарегистрироваться», вы принимаете условия{" "}
+                <Link href="/hr-agreement" passHref>
+                  <MuiLink color="primary" sx={{ fontWeight: 500 }}>
+                    Публичной оферты для HR-клиентов
+                  </MuiLink>
+                </Link>
+              </Typography>
+
               {/* Кнопка регистрации */}
               <Button
                 type="submit"

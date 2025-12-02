@@ -31,6 +31,7 @@ import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 
+import RichTextEditor from "@/components/RichTextEditor";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -62,7 +63,7 @@ export default function HRVacancyEditPage() {
   const router = useRouter();
   const params = useParams();
   const vacancyId = params.id as string;
-  
+
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -88,7 +89,7 @@ export default function HRVacancyEditPage() {
 
   // Получаем параметры из URL для скролла
   const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -168,22 +169,22 @@ export default function HRVacancyEditPage() {
 
   const loadVacancyData = async () => {
     if (!token || !vacancyId) return;
-    
+
     setIsLoadingData(true);
     setError(null);
 
     try {
       const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/full`);
-      
+
       if (!response.ok) {
         throw new Error(_(msg`Ошибка загрузки данных вакансии`));
       }
 
       const data = await response.json();
-      
+
       setVacancyData(data);
       setQuestions(data.questions || []);
-      
+
       // Устанавливаем время на вопрос на основе первого вопроса или по умолчанию
       if (data.questions && data.questions.length > 0) {
         setTemplateData({
@@ -192,7 +193,7 @@ export default function HRVacancyEditPage() {
           followupsMax: data.questions[0].followupsMax || 1,
         });
       }
-      
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -233,7 +234,7 @@ export default function HRVacancyEditPage() {
 
     const newQuestions = [...questions];
     const targetIndex = direction === "up" ? index - 1 : index + 1;
-    
+
     [newQuestions[index], newQuestions[targetIndex]] = [
       newQuestions[targetIndex],
       newQuestions[index],
@@ -244,7 +245,7 @@ export default function HRVacancyEditPage() {
 
   const updateVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
-    
+
     setIsSaving(true);
     setError(null);
 
@@ -267,10 +268,10 @@ export default function HRVacancyEditPage() {
       }
 
       const result = await response.json();
-      
+
       // Перенаправляем на детальную страницу вакансии
       router.push(`/hr/vacancies/${vacancyId}`);
-      
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -294,7 +295,7 @@ export default function HRVacancyEditPage() {
       const startRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-async`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           count: count,
           vacancyTitle: vacancyData.title,
           vacancyDescription: vacancyData.description,
@@ -306,18 +307,18 @@ export default function HRVacancyEditPage() {
       }
 
       const { jobId } = await startRes.json();
-      
+
       // Начинаем поллинг статуса
       const pollInterval = setInterval(async () => {
         try {
           const statusRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-status/${jobId}`);
-          
+
           if (!statusRes.ok) {
             throw new Error(_(msg`Ошибка получения статуса генерации`));
           }
 
           const statusData = await statusRes.json();
-          
+
           // Обновляем прогресс
           const progressMessage = getProgressMessage(statusData.status, statusData.elapsed_time);
           setGenerationProgress({
@@ -329,7 +330,7 @@ export default function HRVacancyEditPage() {
           if (statusData.status === 'completed') {
             // Генерация завершена успешно
             clearInterval(pollInterval);
-            
+
             const newQuestions = (statusData.questions || []).map((text: string, i: number) => ({
               text: text,
               type: "text",
@@ -338,18 +339,18 @@ export default function HRVacancyEditPage() {
               followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
               position: questions.length + i,
             }));
-            
+
             setQuestions([...questions, ...newQuestions]);
             setGenOpen(false);
             setIsGenerating(false);
             setGenerationProgress(null);
-            
+
           } else if (statusData.status === 'failed') {
             // Генерация завершилась с ошибкой
             clearInterval(pollInterval);
             throw new Error(statusData.error || _(msg`Ошибка генерации вопросов`));
           }
-          
+
         } catch (pollError: any) {
           clearInterval(pollInterval);
           throw pollError;
@@ -375,7 +376,7 @@ export default function HRVacancyEditPage() {
 
   const getProgressMessage = (status: string, elapsedTime?: number) => {
     const timeStr = elapsedTime ? _(msg` (${elapsedTime}с)`) : '';
-    
+
     switch (status) {
       case 'pending':
         return _(msg`Ожидание в очереди${timeStr}...`);
@@ -458,7 +459,7 @@ export default function HRVacancyEditPage() {
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Stack spacing={3}>
                 <Box>
-                  <CustomFormLabel 
+                  <CustomFormLabel
                     htmlFor="vacancy-title"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                   >
@@ -488,29 +489,21 @@ export default function HRVacancyEditPage() {
                   />
                 </Box>
                 <Box>
-                  <CustomFormLabel 
+                  <CustomFormLabel
                     htmlFor="vacancy-description"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                   >
                     <Trans>Описание вакансии</Trans>
                   </CustomFormLabel>
-                  <CustomTextField
-                    id="vacancy-description"
-                    variant="outlined"
-                    fullWidth
-                    multiline
-                    rows={5}
+                  <RichTextEditor
                     value={vacancyData.description}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVacancyData({ ...vacancyData, description: e.target.value })}
+                    onChange={(value) => setVacancyData({ ...vacancyData, description: value })}
                     placeholder={_(msg`Опишите требования, обязанности и условия работы`)}
-                    helperText={_(msg`Опишите требования, обязанности и условия работы`)}
-                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
-                    sx={{
-                      '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#f7f7f7',
-                        borderRadius: 2,
-                      },
-                      '& .MuiInputBase-input': {
+                  />
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    <Trans>Используйте форматирование для лучшей читаемости</Trans>
+                  </Typography>
+                  <Box sx={{ display: 'none', '& .MuiInputBase-input': {
                         fontSize: '1.1rem',
                         padding: '16px 20px'
                       }
@@ -534,11 +527,11 @@ export default function HRVacancyEditPage() {
                     <IconButton size="small"><IconFileText size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
                 </Box>
-                
+
                 <Box>
-                  <CustomFormLabel 
-                    sx={{ 
-                      color: 'text.primary', 
+                  <CustomFormLabel
+                    sx={{
+                      color: 'text.primary',
                       fontSize: '1.1rem',
                       fontWeight: 600,
                       mb: 2
@@ -546,7 +539,7 @@ export default function HRVacancyEditPage() {
                   >
                     <Trans>Время на один вопрос</Trans>
                   </CustomFormLabel>
-                  
+
                   {/* Preset buttons */}
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
@@ -577,7 +570,7 @@ export default function HRVacancyEditPage() {
                       ))}
                     </Box>
                   </Box>
-                  
+
                   {/* Slider */}
                   <Box sx={{ px: 2 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -600,16 +593,16 @@ export default function HRVacancyEditPage() {
                       }}
                     />
                   </Box>
-                  
+
                   <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
                 </Box>
 
                 <Divider sx={{ my: 0, borderColor: '#eee' }} />
 
                 <Box>
-                  <CustomFormLabel 
-                    sx={{ 
-                      color: 'text.primary', 
+                  <CustomFormLabel
+                    sx={{
+                      color: 'text.primary',
                       fontSize: '1.1rem',
                       fontWeight: 600,
                       mb: 2
@@ -617,7 +610,7 @@ export default function HRVacancyEditPage() {
                   >
                     <Trans>Дополнительные вопросы</Trans>
                   </CustomFormLabel>
-                  
+
                   <Box sx={{ mb: 3 }}>
                     <Box display="flex" alignItems="center" gap={2} mb={2}>
                       <Switch
@@ -625,8 +618,8 @@ export default function HRVacancyEditPage() {
                         onChange={(e) => {
                           setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
                           // Обновляем настройки для всех вопросов
-                          setQuestions(questions.map(q => ({ 
-                            ...q, 
+                          setQuestions(questions.map(q => ({
+                            ...q,
                             allowFollowups: e.target.checked,
                             followupsMax: e.target.checked ? 1 : 0
                           })));
@@ -647,8 +640,8 @@ export default function HRVacancyEditPage() {
                               const value = Number(e.target.value);
                               setTemplateData(prev => ({ ...prev, followupsMax: value }));
                               // Обновляем настройки для всех вопросов
-                              setQuestions(questions.map(q => ({ 
-                                ...q, 
+                              setQuestions(questions.map(q => ({
+                                ...q,
                                 followupsMax: value
                               })));
                             }}
@@ -676,9 +669,9 @@ export default function HRVacancyEditPage() {
                 <Box display="flex" alignItems="center" gap={2} mb={2}>
                   <IconFileText size={32} color="#1976d2" />
                   <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Вопросы теста</Trans></Typography>
-                  <Chip 
-                    label={questions.length} 
-                    sx={{ backgroundColor: '#f5f5f5', color: '#1976d2', fontSize: '1.1rem', fontWeight: 600, height: 32 }} 
+                  <Chip
+                    label={questions.length}
+                    sx={{ backgroundColor: '#f5f5f5', color: '#1976d2', fontSize: '1.1rem', fontWeight: 600, height: 32 }}
                   />
                 </Box>
                 <Stack direction="row" spacing={2} mb={2}>
@@ -707,13 +700,13 @@ export default function HRVacancyEditPage() {
                 ) : (
                   <Stack spacing={3}>
                     {questions.map((question, qIndex) => (
-                      <Paper 
-                        key={qIndex} 
-                        sx={{ 
-                          p: 3, 
-                          mb: 0, 
-                          background: '#f7f7f7', 
-                          borderRadius: 3, 
+                      <Paper
+                        key={qIndex}
+                        sx={{
+                          p: 3,
+                          mb: 0,
+                          background: '#f7f7f7',
+                          borderRadius: 3,
                           border: '1px solid #eee',
                           '&.highlight-question': {
                             backgroundColor: '#e3f2fd',
@@ -765,19 +758,19 @@ export default function HRVacancyEditPage() {
         </Stack>
 
         {/* Generate Questions Dialog */}
-        <GenerateQuestionsDialog 
-          open={genOpen} 
-          onClose={() => setGenOpen(false)} 
-          genCount={genCount} 
-          onGenCountChange={handleGenCountChange} 
-          onGenerate={generateQuestions} 
+        <GenerateQuestionsDialog
+          open={genOpen}
+          onClose={() => setGenOpen(false)}
+          genCount={genCount}
+          onGenCountChange={handleGenCountChange}
+          onGenerate={generateQuestions}
           isGenerating={isGenerating}
           generationProgress={generationProgress}
           error={error}
         />
 
         {/* Save/Cancel Buttons */}
-        <Card sx={{ 
+        <Card sx={{
           background: '#fff',
           color: 'text.primary',
           position: 'relative',
@@ -816,4 +809,4 @@ export default function HRVacancyEditPage() {
       </Box>
     </PageContainer>
   );
-} 
+}

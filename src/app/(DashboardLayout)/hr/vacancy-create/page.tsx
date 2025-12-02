@@ -27,6 +27,7 @@ import {
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   IconPlus,
   IconTrash,
@@ -127,7 +128,7 @@ export default function HRVacancyCreatePage() {
 
     const newQuestions = [...questions];
     const targetIndex = direction === "up" ? index - 1 : index + 1;
-    
+
     [newQuestions[index], newQuestions[targetIndex]] = [
       newQuestions[targetIndex],
       newQuestions[index],
@@ -138,7 +139,7 @@ export default function HRVacancyCreatePage() {
 
   const createVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
-    
+
     setIsLoading(true);
     setError(null);
 
@@ -168,10 +169,10 @@ export default function HRVacancyCreatePage() {
       }
 
       const result = await response.json();
-      
+
       // Перенаправляем на страницу вакансии
       router.push(`/hr/vacancies`);
-      
+
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -195,7 +196,7 @@ export default function HRVacancyCreatePage() {
       const startRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-async`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           count: count,
           vacancyTitle: vacancyData.title,
           vacancyDescription: vacancyData.description,
@@ -207,18 +208,18 @@ export default function HRVacancyCreatePage() {
       }
 
       const { jobId } = await startRes.json();
-      
+
       // Начинаем поллинг статуса
       const pollInterval = setInterval(async () => {
         try {
           const statusRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-status/${jobId}`);
-          
+
           if (!statusRes.ok) {
             throw new Error(_(msg`Ошибка получения статуса генерации`));
           }
 
           const statusData = await statusRes.json();
-          
+
           // Обновляем прогресс
           const progressMessage = getProgressMessage(statusData.status, statusData.elapsed_time);
           setGenerationProgress({
@@ -230,7 +231,7 @@ export default function HRVacancyCreatePage() {
           if (statusData.status === 'completed') {
             // Генерация завершена успешно
             clearInterval(pollInterval);
-            
+
             const newQuestions = (statusData.questions || []).map((text: string, i: number) => ({
               text: text,
               type: "text",
@@ -239,18 +240,18 @@ export default function HRVacancyCreatePage() {
               followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
               position: questions.length + i,
             }));
-            
+
             setQuestions([...questions, ...newQuestions]);
             setGenOpen(false);
             setIsGenerating(false);
             setGenerationProgress(null);
-            
+
           } else if (statusData.status === 'failed') {
             // Генерация завершилась с ошибкой
             clearInterval(pollInterval);
             throw new Error(statusData.error || _(msg`Ошибка генерации вопросов`));
           }
-          
+
         } catch (pollError: any) {
           clearInterval(pollInterval);
           throw pollError;
@@ -276,7 +277,7 @@ export default function HRVacancyCreatePage() {
 
   const getProgressMessage = (status: string, elapsedTime?: number) => {
     const timeStr = elapsedTime ? _(msg` (${elapsedTime}с)`) : '';
-    
+
     switch (status) {
       case 'pending':
         return _(msg`Ожидание в очереди${timeStr}...`);
@@ -339,7 +340,7 @@ export default function HRVacancyCreatePage() {
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Stack spacing={3}>
                 <Box>
-                <CustomFormLabel 
+                <CustomFormLabel
                   htmlFor="vacancy-title"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                 >
@@ -370,36 +371,20 @@ export default function HRVacancyCreatePage() {
                 />
               </Box>
               <Box>
-                <CustomFormLabel 
+                <CustomFormLabel
                   htmlFor="vacancy-description"
                     sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
                 >
                   <Trans>Описание вакансии</Trans>
                 </CustomFormLabel>
-                <CustomTextField
-                  id="vacancy-description"
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={5}
+                <RichTextEditor
                   value={vacancyData.description}
-                  onChange={(e: any) =>
-                    setVacancyData({ ...vacancyData, description: e.target.value })
-                  }
-                    placeholder={_(msg`Опишите требования, обязанности и условия работы`)}
-                  helperText={_(msg`Опишите требования, обязанности и условия работы`)}
-                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                        backgroundColor: '#f7f7f7',
-                      borderRadius: 2,
-                    },
-                    '& .MuiInputBase-input': {
-                      fontSize: '1.1rem',
-                      padding: '16px 20px'
-                    }
-                  }}
+                  onChange={(value) => setVacancyData({ ...vacancyData, description: value })}
+                  placeholder={_(msg`Опишите требования, обязанности и условия работы`)}
                 />
+                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                  <Trans>Используйте форматирование для лучшей читаемости</Trans>
+                </Typography>
               </Box>
               </Stack>
             </CardContent>
@@ -416,11 +401,11 @@ export default function HRVacancyCreatePage() {
                     <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
                   </Tooltip>
               </Box>
-              
+
               <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                      color: 'text.primary', 
+                <CustomFormLabel
+                  sx={{
+                      color: 'text.primary',
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     mb: 2
@@ -428,7 +413,7 @@ export default function HRVacancyCreatePage() {
                 >
                   <Trans>Время на один вопрос</Trans>
                 </CustomFormLabel>
-                
+
                 {/* Preset buttons */}
                 <Box sx={{ mb: 3 }}>
                     <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
@@ -455,7 +440,7 @@ export default function HRVacancyCreatePage() {
                     ))}
                   </Box>
                 </Box>
-                
+
                 {/* Slider */}
                 <Box sx={{ px: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -476,10 +461,10 @@ export default function HRVacancyCreatePage() {
                     }}
                   />
                   <Box sx={{ textAlign: 'center', mt: 2 }}>
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                          color: 'text.primary', 
+                    <Typography
+                      variant="h5"
+                      sx={{
+                          color: 'text.primary',
                         fontWeight: 700,
                       }}
                     >
@@ -490,7 +475,7 @@ export default function HRVacancyCreatePage() {
                     </Typography>
                   </Box>
                 </Box>
-                
+
                   <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
               </Box>
 
@@ -498,9 +483,9 @@ export default function HRVacancyCreatePage() {
 
               {/* ВРЕМЕННО СКРЫТО: Дополнительные вопросы (функционал отключён)
               <Box>
-                <CustomFormLabel 
-                  sx={{ 
-                      color: 'text.primary', 
+                <CustomFormLabel
+                  sx={{
+                      color: 'text.primary',
                     fontSize: '1.1rem',
                     fontWeight: 600,
                     mb: 2
@@ -508,7 +493,7 @@ export default function HRVacancyCreatePage() {
                 >
                   <Trans>Дополнительные вопросы</Trans>
                 </CustomFormLabel>
-                
+
                 <Box sx={{ mb: 3 }}>
                   <Box display="flex" alignItems="center" gap={2} mb={2}>
                     <Switch
@@ -516,8 +501,8 @@ export default function HRVacancyCreatePage() {
                       onChange={(e) => {
                         setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
                         // Обновляем настройки для всех вопросов
-                        setQuestions(questions.map(q => ({ 
-                          ...q, 
+                        setQuestions(questions.map(q => ({
+                          ...q,
                           allowFollowups: e.target.checked,
                           followupsMax: e.target.checked ? 1 : 0
                         })));
@@ -535,8 +520,8 @@ export default function HRVacancyCreatePage() {
                             const value = Number(e.target.value);
                             setTemplateData(prev => ({ ...prev, followupsMax: value }));
                             // Обновляем настройки для всех вопросов
-                            setQuestions(questions.map(q => ({ 
-                              ...q, 
+                            setQuestions(questions.map(q => ({
+                              ...q,
                               followupsMax: value
                             })));
                           }}
@@ -550,11 +535,11 @@ export default function HRVacancyCreatePage() {
                       </Box>
                     )}
                   </Box>
-                  
+
                   {templateData.allowFollowups && (
-                    <Box sx={{ 
-                      p: 3, 
-                        backgroundColor: '#f5f5f5', 
+                    <Box sx={{
+                      p: 3,
+                        backgroundColor: '#f5f5f5',
                       borderRadius: 2,
                         border: '1px solid #e0e0e0'
                     }}>
@@ -581,15 +566,15 @@ export default function HRVacancyCreatePage() {
                 <Box display="flex" alignItems="center" gap={2}>
                     <IconFileText size={32} color="#1976d2" />
                     <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Вопросы теста</Trans></Typography>
-                  <Chip 
-                    label={questions.length} 
-                    sx={{ 
+                  <Chip
+                    label={questions.length}
+                    sx={{
                         backgroundColor: '#e3f2fd',
                         color: '#1976d2',
                       fontSize: '1.1rem',
                       fontWeight: 600,
                       height: 32
-                    }} 
+                    }}
                   />
                 </Box>
                 <Box display="flex" gap={2}>
@@ -626,22 +611,22 @@ export default function HRVacancyCreatePage() {
               </Box>
 
                               {questions.map((question, qIndex) => (
-                  <Paper key={qIndex} sx={{ 
-                    p: 3, 
+                  <Paper key={qIndex} sx={{
+                    p: 3,
                     background: '#fafafa',
                     borderRadius: 2,
                     border: '1px solid #e0e0e0'
                   }}>
                     <Box display="flex" alignItems="center" gap={2} mb={3}>
-                      <Chip 
-                        label={_(msg`Вопрос ${qIndex + 1}`)} 
-                        sx={{ 
+                      <Chip
+                        label={_(msg`Вопрос ${qIndex + 1}`)}
+                        sx={{
                           backgroundColor: '#e3f2fd',
                           color: '#1976d2',
                           fontSize: '1rem',
                           fontWeight: 600,
                           height: 28
-                        }} 
+                        }}
                       />
                       <Box flexGrow={1} />
                       <Tooltip title={_(msg`Переместить вверх`)}>
@@ -702,10 +687,10 @@ export default function HRVacancyCreatePage() {
                     </Box>
 
                     <Box sx={{ mb: 3 }}>
-                      <CustomFormLabel 
+                      <CustomFormLabel
                         htmlFor={`question-${qIndex}-text`}
-                        sx={{ 
-                          color: '#333', 
+                        sx={{
+                          color: '#333',
                           fontSize: '1.1rem',
                           fontWeight: 600,
                           mb: 2
@@ -813,12 +798,12 @@ export default function HRVacancyCreatePage() {
                     </Box>
                   </Box>
                 )}
-                
+
                 {/* Bottom controls for questions */}
                 {questions.length > 0 && (
-                  <Box sx={{ 
-                    mt: 4, 
-                    pt: 3, 
+                  <Box sx={{
+                    mt: 4,
+                    pt: 3,
                     borderTop: '1px solid #e0e0e0',
                     display: 'flex',
                     justifyContent: 'center',
@@ -861,7 +846,7 @@ export default function HRVacancyCreatePage() {
         </Stack>
 
         {/* Save/Cancel Buttons */}
-          <Card sx={{ 
+          <Card sx={{
           background: '#fff',
           color: 'text.primary',
             position: 'relative',
@@ -899,10 +884,10 @@ export default function HRVacancyCreatePage() {
           </Card>
 
         {/* Generate Questions Dialog */}
-        <Dialog 
-          open={genOpen} 
-          onClose={() => setGenOpen(false)} 
-          maxWidth="sm" 
+        <Dialog
+          open={genOpen}
+          onClose={() => setGenOpen(false)}
+          maxWidth="sm"
           fullWidth
           PaperProps={{
             sx: {
@@ -928,10 +913,10 @@ export default function HRVacancyCreatePage() {
           </DialogTitle>
           <DialogContent sx={{ pt: 2 }}>
             <Box sx={{ mb: 3 }}>
-              <CustomFormLabel 
+              <CustomFormLabel
                 htmlFor="gen-count"
-                sx={{ 
-                  color: 'text.primary', 
+                sx={{
+                  color: 'text.primary',
                   fontSize: '1.1rem',
                   fontWeight: 600,
                   mb: 2
@@ -993,8 +978,8 @@ export default function HRVacancyCreatePage() {
             )}
           </DialogContent>
           <DialogActions sx={{ p: 3, pt: 1 }}>
-            <Button 
-              onClick={() => setGenOpen(false)} 
+            <Button
+              onClick={() => setGenOpen(false)}
               disabled={isGenerating}
               sx={{
                 color: 'text.secondary',
@@ -1030,4 +1015,4 @@ export default function HRVacancyCreatePage() {
       </Box>
     </PageContainer>
   );
-} 
+}
