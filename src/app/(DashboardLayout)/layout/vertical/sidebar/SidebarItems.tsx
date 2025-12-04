@@ -22,10 +22,10 @@ const SidebarItems = () => {
   return (
     <Box sx={{ px: "20px" }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
-        {Menuitems.map((item) => {
+        {Menuitems.map((item, key) => {
           // {/********SubHeader**********/}
           if (item.subheader) {
-            return <NavGroup item={item} hideMenu={hideMenu} key={String(item.subheader)} />;
+            return <NavGroup item={item} hideMenu={hideMenu} key={key} />;
 
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */

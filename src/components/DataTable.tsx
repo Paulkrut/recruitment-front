@@ -52,7 +52,7 @@ export default function DataTable<T = any>({
     if (column && typeof column.header !== 'string') {
       return; // Не сортируем колонки с React элементами в header
     }
-    
+
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -60,13 +60,13 @@ export default function DataTable<T = any>({
 
   const sortedRows = React.useMemo(() => {
     if (!orderBy) return rows;
-    
+
     // Проверяем, что колонка для сортировки имеет строковый header
     const column = columns.find(col => col.field === orderBy);
     if (column && typeof column.header !== 'string') {
       return rows; // Не сортируем колонки с React элементами
     }
-    
+
     return [...rows].sort((a: any, b: any) => {
       const aVal = a[orderBy];
       const bVal = b[orderBy];
@@ -114,8 +114,8 @@ export default function DataTable<T = any>({
                 />
               </TableCell>
             )}
-            {columns.map((col) => (
-              <TableCell key={String(col.field)}>
+            {columns.map((col, key) => (
+              <TableCell key={key}>
                 {typeof col.header === 'string' ? (
                   <TableSortLabel
                     active={orderBy === col.field}
@@ -152,8 +152,8 @@ export default function DataTable<T = any>({
                     />
                   </TableCell>
                 )}
-                {columns.map((col) => (
-                  <TableCell key={String(col.field)}>
+                {columns.map((col, key) => (
+                  <TableCell key={key}>
                     {col.render ? col.render(row) : (row as any)[col.field]}
                   </TableCell>
                 ))}
@@ -173,4 +173,4 @@ export default function DataTable<T = any>({
       />
     </Paper>
   );
-} 
+}
