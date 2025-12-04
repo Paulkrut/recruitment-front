@@ -19,13 +19,14 @@ import { Icon } from "@iconify/react";
 
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 export default function ForgotPasswordPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -70,7 +71,14 @@ export default function ForgotPasswordPage() {
       if (response.ok) {
         setSuccess(true);
       } else {
-        setError(data.message || _(msg`Ошибка при восстановлении пароля`));
+        // Backend возвращает:
+        // {error: 'auth.email_required'}
+        // {error: 'auth.user_not_found'}
+        // {error: 'auth.email_send_failed'}
+        // {error: 'auth.password_reset_error'}
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        setError(errorMessage);
       }
     } catch (error) {
       setError(_(msg`Ошибка соединения. Попробуйте еще раз.`));
