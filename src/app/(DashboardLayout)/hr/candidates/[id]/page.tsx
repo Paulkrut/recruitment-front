@@ -54,6 +54,7 @@ import { exportCandidateToPDFWithFont } from '@/utils/pdfExportWithFont';
 import Rating from '@mui/material/Rating';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -660,7 +661,9 @@ export default function CandidateDetailPage() {
                                   });
                                   setCopyMsg(data.message || _(msg`Резюме загружено из HeadHunter.ru`));
                                 } else {
-                                  setCopyMsg(data.error || _(msg`Ошибка при загрузке резюме`));
+                                  // Backend: {error: 'candidate.hh_resume_not_found'}, {error: 'hh.api_error'}
+                                  const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка при загрузке резюме`);
+                                  setCopyMsg(errorMessage);
                                 }
                               } catch (error: any) {
                                 console.error('Error loading resume from HH:', error);
@@ -718,7 +721,9 @@ export default function CandidateDetailPage() {
                                     setIsEditingResume(false);
                                     setCopyMsg(_(msg`Резюме успешно сохранено`));
                                   } else {
-                                    setCopyMsg(data.error || _(msg`Ошибка при сохранении резюме`));
+                                    // Backend: {error: 'candidate.not_found'}, {error: 'candidate.resume_save_failed'}
+                                    const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка при сохранении резюме`);
+                                    setCopyMsg(errorMessage);
                                   }
                                 } catch (error: any) {
                                   console.error('Error saving resume:', error);

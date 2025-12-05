@@ -8,6 +8,7 @@ import {
 import { IconUser, IconPhone, IconMail, IconBriefcase } from '@tabler/icons-react';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -19,7 +20,7 @@ interface VacancyInfo {
 }
 
 export default function PublicApplyPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const { token } = useParams<{ token: string }>();
   const [vacancyInfo, setVacancyInfo] = useState<VacancyInfo | null>(null);
@@ -52,7 +53,9 @@ export default function PublicApplyPage() {
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          setError(data.error);
+          // Backend: {error: 'vacancy.not_found'}
+          const errorMessage = i18n._(getErrorMessage(data.error));
+          setError(errorMessage);
         } else {
           setVacancyInfo(data);
         }
@@ -97,7 +100,9 @@ export default function PublicApplyPage() {
       const data = await response.json();
 
       if (data.error) {
-        setError(data.error);
+        // Backend: {error: 'candidate.name_and_phone_required'}
+        const errorMessage = i18n._(getErrorMessage(data.error));
+        setError(errorMessage);
       } else {
         setSuccess(true);
         // Формируем ссылку на стандартную страницу интервью
