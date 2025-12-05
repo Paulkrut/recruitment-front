@@ -1,0 +1,111 @@
+/* Кастомные стили для react-phone-input-2 для соответствия дизайну */
+
+/* Скрываем встроенный label библиотеки (мы используем свой FormLabel) */
+.react-tel-input .special-label {
+  display: none !important;
+}
+
+/* Hover эффект для input */
+.react-tel-input .form-control:hover {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Focus эффект для input */
+.react-tel-input .form-control:focus {
+  border-width: 2px !important;
+  padding-left: 47px !important; /* Компенсация border-width */
+  padding-right: 13px !important;
+}
+
+/* Hover для button */
+.react-tel-input .flag-dropdown:hover {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Focus для button когда открыт dropdown */
+.react-tel-input .flag-dropdown.open {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Стили для dropdown списка стран */
+.react-tel-input .country-list {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 
+              0px 8px 10px 1px rgba(0,0,0,0.14), 
+              0px 3px 14px 2px rgba(0,0,0,0.12) !important;
+}
+
+/* Highlight для выбранной страны */
+.react-tel-input .country-list .country.highlight,
+.react-tel-input .country-list .country:hover {
+  background-color: rgba(25, 118, 210, 0.08) !important;
+}
+
+/* Поле поиска в dropdown */
+.react-tel-input .search-box {
+  border-radius: 7px !important;
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  padding: 10px !important;
+  margin: 8px !important;
+  width: calc(100% - 16px) !important;
+}
+
+.react-tel-input .search-box:focus {
+  border-color: #1976d2 !important;
+  outline: none !important;
+}
+
+/* Disabled состояние */
+.react-tel-input .form-control:disabled {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(0, 0, 0, 0.38) !important;
+  cursor: not-allowed !important;
+}
+
+.react-tel-input .flag-dropdown.disabled {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+  cursor: not-allowed !important;
+}
+
+/* Error состояние - более насыщенный красный */
+.react-tel-input.error .form-control {
+  border-color: #d32f2f !important;
+}
+
+.react-tel-input.error .flag-dropdown {
+  border-color: #d32f2f !important;
+}
+
+.react-tel-input.error .form-control:focus {
+  border-color: #d32f2f !important;
+}
+
+/* Адаптация под тёмную тему */
+@media (prefers-color-scheme: dark) {
+  .react-tel-input .form-control {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #616161 !important;
+  }
+  
+  .react-tel-input .flag-dropdown {
+    background-color: #1e1e1e !important;
+    border-color: #616161 !important;
+  }
+  
+  .react-tel-input .country-list {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+  }
+  
+  .react-tel-input .country-list .country.highlight,
+  .react-tel-input .country-list .country:hover {
+    background-color: rgba(144, 202, 249, 0.16) !important;
+  }
+  
+  .react-tel-input .search-box {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border-color: #616161 !important;
+  }
+}
+
