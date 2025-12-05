@@ -347,7 +347,7 @@ const ProductTableList = () => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={String(row.title)}
+                        key={index}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">

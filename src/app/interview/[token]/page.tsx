@@ -48,6 +48,7 @@ import ForgetMeAuto from "@/app/components/ForgetMeAuto";
 import ProductionWebcamComponent from "./ProductionWebcamComponent";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 interface Question {
@@ -63,7 +64,7 @@ const API_BASE =
 
 
 export default function CandidateInterviewPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
   const steps = [_(msg`Подготовка`), _(msg`Тест оборудования`), _(msg`Ответы`), _(msg`Финиш`)];
 
   const { token } = useParams<{ token: string }>();
@@ -531,7 +532,14 @@ export default function CandidateInterviewPage() {
 
     // Если прогресса нет, статус ready или нельзя продолжить - начинаем заново
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
-    if(!r.ok) return;
+    if(!r.ok) {
+      const data = await r.json().catch(() => ({}));
+      // Backend: {error: 'interview.session_not_found'}, {error: 'interview.not_ready'}
+      const errorCode = data.error || 'common.internal_error';
+      const errorMessage = i18n._(getErrorMessage(errorCode));
+      alert(errorMessage);
+      return;
+    }
     const d = await r.json();
     setQuestion(d.question);
     setPreviousQuestionId(d.question.id);
@@ -1113,6 +1121,18 @@ export default function CandidateInterviewPage() {
       body: fd,
     });
     console.log('Answer response:', answerResponse.status, answerResponse.ok);
+    
+    // Обработка ошибок при отправке ответа
+    if (!answerResponse.ok) {
+      const errorData = await answerResponse.json().catch(() => ({}));
+      // Backend: {error: 'interview.file_too_large'}, {error: 'interview.file_upload_failed'}
+      const errorCode = errorData.error || 'common.internal_error';
+      const errorMessage = i18n._(getErrorMessage(errorCode));
+      setChat((p) => p.filter((_, i) => i !== typingIdx));
+      alert(_(msg`Ошибка при отправке ответа`) + '\n\n' + errorMessage);
+      setLoadingNextQuestion(false);
+      return;
+    }
 
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
     console.log('Next question response:', r.status, r.ok);
@@ -1216,7 +1236,12 @@ export default function CandidateInterviewPage() {
 
     // Проверяем что ответ успешно отправлен
     if (!answerResponse.ok) {
-      console.error('Failed to send empty answer');
+      const errorData = await answerResponse.json().catch(() => ({}));
+      // Backend: {error: 'interview.session_not_found'}, {error: 'interview.question_required'}
+      const errorCode = errorData.error || 'common.internal_error';
+      const errorMessage = i18n._(getErrorMessage(errorCode));
+      console.error('Failed to send empty answer:', errorMessage);
+      alert(errorMessage);
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       setLoadingNextQuestion(false);
       setAnswered(false);
@@ -1281,12 +1306,16 @@ export default function CandidateInterviewPage() {
           throw new Error(_(msg`Обратная связь еще не сгенерирована`));
         }
       } else {
-        throw new Error(_(msg`Обратная связь пока не готова`));
+        const errorData = await response.json().catch(() => ({}));
+        // Backend: {error: 'interview.feedback_not_found'}, {error: 'interview.feedback_not_ready'}
+        const errorCode = errorData.error || 'interview.feedback_not_ready';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        throw new Error(errorMessage);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading feedback:', error);
       // Показываем сообщение о том, что нужно начать генерацию
-      alert(_(msg`Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.`));
+      alert(error.message || _(msg`Обратная связь еще не сгенерирована. Нажмите кнопку для начала генерации.`));
     } finally {
       setFeedbackLoading(false);
     }
@@ -1311,11 +1340,15 @@ export default function CandidateInterviewPage() {
         setShowEmailForm(false);
         setFeedbackEmail('');
       } else {
-        throw new Error(_(msg`Ошибка отправки`));
+        const errorData = await response.json().catch(() => ({}));
+        // Backend: {error: 'interview.invalid_email'}, {error: 'interview.feedback_send_failed'}
+        const errorCode = errorData.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        throw new Error(errorMessage);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending feedback:', error);
-      alert(_(msg`Произошла ошибка при отправке. Попробуйте позже.`));
+      alert(error.message || _(msg`Произошла ошибка при отправке. Попробуйте позже.`));
     } finally {
       setSendingFeedback(false);
     }
@@ -1335,8 +1368,15 @@ export default function CandidateInterviewPage() {
 
       if (response.ok) {
         setOpinionSubmitted(true);
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        // Backend: {error: 'interview.invalid_email'}, {error: 'interview.opinion_too_short'}
+        const errorCode = errorData.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        console.error('Error submitting opinion:', errorMessage);
+        alert(errorMessage);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting opinion:', error);
     }
   };
@@ -1358,9 +1398,14 @@ export default function CandidateInterviewPage() {
         // Перенаправляем на главную страницу после успешного удаления
         window.location.href = '/';
       } else {
-        console.error('Error forgetting data:', response.statusText);
+        const errorData = await response.json().catch(() => ({}));
+        // Backend: {error: 'interview.session_not_found'}, {error: 'interview.session_not_finished'}
+        const errorCode = errorData.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        console.error('Error forgetting data:', errorMessage);
+        alert(errorMessage);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error forgetting data:', error);
     } finally {
       setForgetMeLoading(false);

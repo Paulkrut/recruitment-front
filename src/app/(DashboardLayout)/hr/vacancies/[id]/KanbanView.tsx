@@ -21,6 +21,7 @@ import StageMenu from './StageMenu';
 import DeleteStageDialog from './DeleteStageDialog';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -168,7 +169,7 @@ const DraggableCandidateCard = memo(({
   onDragEnd: (candidateId: number, newStatus: string | null) => void;
 }) => {
 
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const handleDragStart = useCallback((e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
@@ -481,7 +482,7 @@ const DroppableColumn = ({
   onDrop: (candidateId: number, newStatus: string) => void;
 }) => {
   const [isOver, setIsOver] = useState(false);
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -528,7 +529,7 @@ export default function KanbanView({
   selectedCandidates: externalSelectedCandidates = [],
   onSelectedCandidatesChange
 }: KanbanViewProps) {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
   const [columns, setColumns] = useState<Column[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState<number | null>(null);

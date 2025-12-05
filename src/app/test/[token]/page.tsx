@@ -28,6 +28,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ProductionWebcamComponent from './ProductionWebcamComponent';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 
@@ -51,7 +52,7 @@ interface TestInfo {
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 export default function RegulationTestPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const steps = [_(msg`Подготовка`), _(msg`Настройка оборудования`), _(msg`Тестирование`), _(msg`Завершено`)];
 
@@ -139,15 +140,16 @@ export default function RegulationTestPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
 
-        if (response.status === 404 || errorData.error === 'invitation_not_found') {
-          setTestInfo(null);
-          alert(_(msg`❌ Приглашение не найдено\n\nВозможные причины:\n• Ссылка неверная или устарела\n• Приглашение было удалено HR-менеджером\n\n📧 Пожалуйста, запросите новое приглашение.`));
-        } else if (response.status === 403 || response.status === 410) {
-          setTestInfo(null);
-          alert(_(msg`❌ Приглашение истекло или уже использовано\n\n📧 Запросите новое приглашение у вашего HR-менеджера.`));
+        // Backend: {error: 'regulation_test.invitation_not_found'}
+        if (response.status === 404 || errorData.error === 'regulation_test.invitation_not_found') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.invitation_not_found'));
+          alert(`❌ ${errorMessage}\n\n${_(msg`Возможные причины:\n• Ссылка неверная или устарела\n• Приглашение было удалено HR-менеджером\n\n📧 Пожалуйста, запросите новое приглашение.`)}`);
+        } else if (response.status === 403 || response.status === 410 || errorData.error === 'regulation_test.invitation_expired') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.invitation_expired'));
+          alert(`❌ ${errorMessage}\n\n${_(msg`📧 Запросите новое приглашение у вашего HR-менеджера.`)}`);
         } else {
-          setTestInfo(null);
-          alert(_(msg`❌ Ошибка загрузки приглашения\n\n${errorData.message || 'Не удалось загрузить информацию о тесте.'}`));
+          const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Ошибка загрузки приглашения`);
+          alert(`❌ ${errorMessage}`);
         }
         setLoading(false);
         return;
@@ -192,30 +194,30 @@ export default function RegulationTestPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
 
-        // Обрабатываем разные типы ошибок
-        if (response.status === 402 || errorData.error === 'insufficient_balance') {
-          alert(_(msg`❌ У компании закончились тесты на балансе\n\nК сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов.\n\n📧 Пожалуйста, свяжитесь с вашим руководителем или HR-менеджером для пополнения баланса.\n\nОни смогут приобрести дополнительные тесты в личном кабинете.`));
+        // Backend: {error: 'regulation_test.insufficient_balance'}
+        if (response.status === 402 || errorData.error === 'regulation_test.insufficient_balance') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.insufficient_balance'));
+          alert(`❌ ${errorMessage}\n\n${_(msg`К сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов.\n\n📧 Пожалуйста, свяжитесь с вашим руководителем или HR-менеджером для пополнения баланса.`)}`);
           return;
         }
 
-        if (response.status === 404 || errorData.error === 'invitation_not_found') {
-          alert(_(msg`❌ Приглашение не найдено\n\nВозможные причины:\n• Ссылка устарела или была удалена\n• Приглашение уже было использовано\n• Срок действия приглашения истёк\n\n📧 Запросите новое приглашение у вашего HR-менеджера.`));
+        // Backend: {error: 'regulation_test.invitation_not_found'}
+        if (response.status === 404 || errorData.error === 'regulation_test.invitation_not_found') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.invitation_not_found'));
+          alert(`❌ ${errorMessage}\n\n${_(msg`Возможные причины:\n• Ссылка устарела или была удалена\n• Приглашение уже было использовано\n• Срок действия приглашения истёк`)}`);
           return;
         }
 
-        if (response.status === 403 || errorData.error === 'invitation_expired') {
-          alert(_(msg`❌ Срок действия приглашения истёк\n\nДанное приглашение больше недействительно.\n\n📧 Пожалуйста, запросите новое приглашение у вашего HR-менеджера.`));
+        // Backend: {error: 'regulation_test.invitation_expired'}
+        if (response.status === 403 || errorData.error === 'regulation_test.invitation_expired') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.invitation_expired'));
+          alert(`❌ ${errorMessage}`);
           return;
         }
 
-        if (response.status === 410 || errorData.error === 'invitation_used') {
-          alert(_(msg`❌ Приглашение уже использовано\n\nВы уже проходили тест по этому приглашению, или лимит использований исчерпан.\n\n📧 Если вам нужно пройти тест повторно, запросите новое приглашение у вашего HR-менеджера.`));
-          return;
-        }
-
-        // Общая ошибка с деталями, если они есть
-        const errorMessage = errorData.message || _(msg`Не удалось начать тест`);
-        alert(_(msg`❌ Ошибка при запуске теста\n\n${errorMessage}\n\n📧 Если проблема повторяется, обратитесь к вашему HR-менеджеру.`));
+        // Другие ошибки
+        const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Не удалось начать тест`);
+        alert(`❌ ${_(msg`Ошибка при запуске теста`)}\n\n${errorMessage}`);
         return;
       }
 
@@ -370,19 +372,23 @@ export default function RegulationTestPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
 
-        if (response.status === 402 || errorData.error === 'insufficient_balance') {
-          alert(_(msg`❌ Тест прерван: закончились тесты на балансе\n\nК сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n📧 Пожалуйста, сообщите об этом вашему HR-менеджеру.`));
+        // Backend: {error: 'regulation_test.insufficient_balance'}
+        if (response.status === 402 || errorData.error === 'regulation_test.insufficient_balance') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.insufficient_balance'));
+          alert(`❌ ${_(msg`Тест прерван`)}\n\n${errorMessage}`);
           setSubmitting(false);
           return;
         }
 
+        // Backend: {error: 'regulation_test.session_not_found'}, {error: 'regulation_test.session_not_active'}
         if (response.status === 404 || response.status === 410) {
-          alert(_(msg`❌ Сессия тестирования не найдена или истекла\n\nВозможные причины:\n• Превышено максимальное время прохождения теста\n• Сессия была прервана\n\n📧 Обратитесь к вашему HR-менеджеру для получения нового приглашения.`));
+          const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Сессия тестирования не найдена или истекла`);
+          alert(`❌ ${errorMessage}\n\n${_(msg`Возможные причины:\n• Превышено максимальное время прохождения теста\n• Сессия была прервана`)}`);
           setSubmitting(false);
           return;
         }
 
-        const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
+        const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
       }
 
@@ -438,21 +444,26 @@ export default function RegulationTestPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
 
-        if (response.status === 402 || errorData.error === 'insufficient_balance') {
-          alert(_(msg`❌ Тест прерван: закончились тесты на балансе\n\nК сожалению, HR-отдел вашей компании исчерпал лимит доступных тестов во время вашего прохождения.\n\n📧 Пожалуйста, сообщите об этом вашему HR-менеджеру.`));
-          // Не возвращаем возможность повторной отправки
+        // Backend: {error: 'regulation_test.insufficient_balance'}
+        if (response.status === 402 || errorData.error === 'regulation_test.insufficient_balance') {
+          const errorMessage = i18n._(getErrorMessage('regulation_test.insufficient_balance'));
+          alert(`❌ ${_(msg`Тест прерван`)}\n\n${errorMessage}`);
           setSubmitting(false);
           return;
         }
 
+        // Backend: {error: 'regulation_test.session_not_found'}, {error: 'regulation_test.session_not_active'}
         if (response.status === 404 || response.status === 410) {
-          alert(_(msg`❌ Сессия тестирования не найдена или истекла\n\nВозможные причины:\n• Превышено максимальное время прохождения теста\n• Сессия была прервана\n\n📧 Обратитесь к вашему HR-менеджеру для получения нового приглашения.`));
+          const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Сессия тестирования не найдена или истекла`);
+          alert(`❌ ${errorMessage}`);
           setSubmitting(false);
           return;
         }
 
+        // Backend: {error: 'regulation_test.file_too_large'}
         if (response.status === 413) {
-          alert(_(msg`❌ Файл слишком большой\n\nРазмер записи превышает допустимый лимит.\n\n💡 Совет: Попробуйте записать более короткий ответ или отключите видео (только аудио).`));
+          const errorMessage = i18n._(getErrorMessage('regulation_test.file_too_large'));
+          alert(`❌ ${errorMessage}\n\n${_(msg`💡 Совет: Попробуйте записать более короткий ответ или отключите видео (только аудио).`)}`);
           // Возвращаем возможность переписать
           setSubmitting(false);
           if (timeLeft && timeLeft > 0) {
@@ -462,7 +473,7 @@ export default function RegulationTestPage() {
         }
 
         // Общая ошибка
-        const errorMessage = errorData.message || _(msg`Не удалось отправить ответ`);
+        const errorMessage = errorData.error ? i18n._(getErrorMessage(errorData.error)) : _(msg`Не удалось отправить ответ`);
         throw new Error(errorMessage);
       }
 

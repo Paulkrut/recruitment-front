@@ -10,6 +10,7 @@ import { apiFetch } from "@/utils/api";
 import { useUser } from "@/contexts/UserContext";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -24,7 +25,7 @@ function stringAvatar(name: string) {
 
 export default function EmployeesPage() {
   const { currentCompany, refreshInvites } = useUser();
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("HR");
   const [invites, setInvites] = useState<any[]>([]);
@@ -51,11 +52,15 @@ export default function EmployeesPage() {
 
       const res = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/invites`);
       if (!res.ok) {
+        const data = await res.json();
+        // Backend: {error: 'common.forbidden'} или другие коды
         if (res.status === 403) {
-          setError(_(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`));
+          const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`);
+          setError(errorMessage);
           setInvites([]);
         } else {
-          setError(_(msg`Ошибка загрузки приглашений`));
+          const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка загрузки приглашений`);
+          setError(errorMessage);
           setInvites([]);
         }
       } else {
@@ -65,11 +70,15 @@ export default function EmployeesPage() {
 
       const res2 = await apiFetch(`${API_BASE}/api/company/${localStorage.getItem("current_company")}/employees`);
       if (!res2.ok) {
+        const data = await res2.json();
+        // Backend: {error: 'common.forbidden'} или другие коды
         if (res2.status === 403) {
-          setError(_(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`));
+          const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Нет доступа к управлению сотрудниками. Требуются права HR-Лидера.`);
+          setError(errorMessage);
           setEmployees([]);
         } else {
-          setError(_(msg`Ошибка загрузки сотрудников`));
+          const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка загрузки сотрудников`);
+          setError(errorMessage);
           setEmployees([]);
         }
       } else {
@@ -103,7 +112,9 @@ export default function EmployeesPage() {
       setEmail("");
       load();
     } else {
-      setError(data.error || _(msg`Ошибка`));
+      // Backend: {error: 'company.valid_email_required'}, {error: 'company.already_invited'}
+      const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка`);
+      setError(errorMessage);
     }
   };
 
@@ -115,7 +126,9 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Сотрудник удалён`));
       load();
     } else {
-      setError(data.error || _(msg`Ошибка`));
+      // Backend: {error: 'common.forbidden'}, {error: 'company.cant_remove_self'}
+      const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка`);
+      setError(errorMessage);
     }
     setLoading(false);
   };
@@ -127,7 +140,9 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Сотрудник повышен до HR-Лидера`));
       load();
     } else {
-      setError(data.error || _(msg`Ошибка`));
+      // Backend: {error: 'common.forbidden'}
+      const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка`);
+      setError(errorMessage);
     }
     setLoading(false);
   };
@@ -139,7 +154,9 @@ export default function EmployeesPage() {
       setSuccess(_(msg`Приглашение отозвано`));
       load();
     } else {
-      setError(data.error || _(msg`Ошибка`));
+      // Backend: {error: 'common.forbidden'}, {error: 'company.invite_not_found'}
+      const errorMessage = data.error ? i18n._(getErrorMessage(data.error)) : _(msg`Ошибка`);
+      setError(errorMessage);
     }
     setLoading(false);
   };

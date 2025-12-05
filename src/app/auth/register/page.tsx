@@ -22,6 +22,7 @@ import { Icon } from "@iconify/react";
 import PrivacyConsent from "@/app/components/PrivacyConsent";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -44,7 +45,7 @@ interface FormErrors {
 }
 
 export default function RegisterPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -148,8 +149,14 @@ export default function RegisterPage() {
           router.push("/auth/login");
         }, 3000);
       } else {
+        // Backend возвращает: 
+        // {error: 'auth.field_required', field: 'email'} 
+        // {error: 'auth.email_already_exists'}
+        // {error: 'auth.registration_error'}
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
         setErrors({
-          general: data.message || _(msg`Ошибка при регистрации. Попробуйте еще раз.`),
+          general: errorMessage,
         });
       }
     } catch (error) {

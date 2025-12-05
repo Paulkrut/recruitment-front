@@ -43,6 +43,7 @@ import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -101,7 +102,7 @@ interface HhVacancy {
 }
 
 export default function HhIntegrationPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<HhIntegrationStatus | null>(null);
@@ -175,7 +176,10 @@ export default function HhIntegrationPage() {
         setSuccess(_(msg`HH.ru успешно подключен!`));
         await fetchStatus();
       } else {
-        throw new Error(data.message || _(msg`Ошибка подключения`));
+        // Backend: {success: false, error: 'hh.oauth_callback_failed'}
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        throw new Error(errorMessage);
       }
     } catch (err: any) {
       setError(err.message || _(msg`Ошибка обработки авторизации`));

@@ -50,8 +50,8 @@ const Breadcrumb = ({ subtitle, items, title, children }: BreadCrumbType) => {
           aria-label="breadcrumb"
         >
           {items
-            ? items.map((item) => (
-                <div key={String(item.title)}>
+            ? items.map((item, key) => (
+                <div key={key}>
                   {item.to ? (
                     <NextLink href={item.to} passHref>
                       <Typography color="textSecondary">

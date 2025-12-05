@@ -18,6 +18,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { getErrorMessage } from '@/utils/errorTranslator';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -34,7 +35,7 @@ interface FormErrors {
 }
 
 export default function LoginPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -104,8 +105,11 @@ export default function LoginPage() {
         // Перезагружаем страницу как в старой авторизации
         window.location.href = "/hr/";
       } else {
+        // Backend возвращает: {error: 'auth.email_and_password_required'} или {error: 'auth.invalid_credentials'}
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
         setErrors({
-          general: data.message || _(msg`Ошибка авторизации. Проверьте данные.`),
+          general: errorMessage,
         });
       }
     } catch (error) {

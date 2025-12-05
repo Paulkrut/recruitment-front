@@ -22,10 +22,10 @@ const SidebarItems = () => {
   return (
     <Box sx={{ px: "20px" }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
-        {Menuitems.map((item) => {
+        {Menuitems.map((item, key) => {
           // {/********SubHeader**********/}
           if (item.subheader) {
-            return <NavGroup item={item} hideMenu={hideMenu} key={String(item.subheader)} />;
+            return <NavGroup item={item} hideMenu={hideMenu} key={'group-' + key} />;
 
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */
@@ -37,7 +37,7 @@ const SidebarItems = () => {
                 hideMenu={hideMenu}
                 pathWithoutLastPart={pathWithoutLastPart}
                 level={1}
-                key={item.id}
+                key={'collapse-'+item.id}
                 onClick={() => dispatch(toggleMobileSidebar())}
               />
             );
