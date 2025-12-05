@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { logContactFormConsent } from '@/utils/consentLogger';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://localhost:8000";
@@ -24,7 +25,7 @@ interface ContactFormData {
 }
 
 export default function ContactPage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -206,12 +207,10 @@ export default function ContactPage() {
 
             {/* Телефон */}
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label={_(msg`Телефон`)}
+              <InternationalPhoneInput
                 value={formData.phone}
-                onChange={(e) => handleFieldChange('phone', e.target.value)}
-                placeholder="+7 (999) 123-45-67"
+                onChange={(phone) => handleFieldChange('phone', phone)}
+                label={_(msg`Телефон`)}
               />
             </Grid>
 

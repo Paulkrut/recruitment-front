@@ -46,6 +46,8 @@ import CandidatesList from './CandidatesList';
 import CandidateFilters from './CandidateFilters';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import InternationalPhoneInput from '@/components/InternationalPhoneInput';
+import { isValidInternationalPhone, normalizePhoneForBackend } from '@/utils/phoneUtils';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -893,7 +895,7 @@ export default function HRVacancyDetailPage() {
 
 // --- AddCandidateDialog component ---
 function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; onClose:()=>void; vacancyId:string; onAdded:()=>void}){
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
   const [form,setForm] = React.useState({name:'',email:'',phone:''});
   const [loading,setLoading]=React.useState(false);
   const [errors, setErrors] = React.useState({name:'',email:'',phone:''});
@@ -904,15 +906,9 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
     return emailRegex.test(email);
   };
 
-  // Валидация телефона (российский формат)
-  const validatePhone = (phone: string) => {
-    const phoneRegex = /^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
-    return phoneRegex.test(phone.replace(/\s/g, ''));
-  };
-
   const canSubmit = form.name.trim()!=='' && !loading && !errors.name && !errors.email && !errors.phone;
 
-  const handleChange=(field:keyof typeof form)=>(e:React.ChangeEvent<HTMLInputElement>)=>{
+  const handleChange=(field:'name'|'email')=>(e:React.ChangeEvent<HTMLInputElement>)=>{
     const value = e.target.value;
     setForm({...form,[field]:value});
 
@@ -923,7 +919,16 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
     if (field === 'email' && value && !validateEmail(value)) {
       setErrors(prev => ({...prev, email: _(msg`Введите корректный email адрес`)}));
     }
-    if (field === 'phone' && value && !validatePhone(value)) {
+  };
+
+  const handlePhoneChange = (phone: string) => {
+    setForm({...form, phone});
+    
+    // Очищаем ошибку при вводе
+    setErrors(prev => ({...prev, phone: ''}));
+    
+    // Валидация в реальном времени
+    if (phone && !isValidInternationalPhone(phone)) {
       setErrors(prev => ({...prev, phone: _(msg`Введите корректный номер телефона`)}));
     }
   };
@@ -935,7 +940,7 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
     const newErrors = {name:'',email:'',phone:''};
     if (!form.name.trim()) newErrors.name = _(msg`Имя обязательно`);
     if (form.email && !validateEmail(form.email)) newErrors.email = _(msg`Введите корректный email адрес`);
-    if (form.phone && !validatePhone(form.phone)) newErrors.phone = _(msg`Введите корректный номер телефона`);
+    if (form.phone && !isValidInternationalPhone(form.phone)) newErrors.phone = _(msg`Введите корректный номер телефона`);
 
     if (newErrors.name || newErrors.email || newErrors.phone) {
       setErrors(newErrors);
@@ -943,7 +948,15 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
     }
 
     setLoading(true);
-    const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...form,vacancyId})});
+    const res = await apiFetch(`${API_BASE}/api/admin/candidates`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        ...form,
+        phone: form.phone ? normalizePhoneForBackend(form.phone) : form.phone,
+        vacancyId
+      })
+    });
     setLoading(false);
     if(res.ok){
       setForm({name:'',email:'',phone:''});
@@ -977,15 +990,11 @@ function AddCandidateDialog({open, onClose, vacancyId, onAdded}:{open:boolean; o
           helperText={errors.email || _(msg`Например: example@mail.ru`)}
           placeholder="example@mail.ru"
         />
-        <TextField
-          label={_(msg`Телефон`)}
-          fullWidth
-          sx={{mb:2}}
+        <InternationalPhoneInput
           value={form.phone}
-          onChange={handleChange('phone')}
-          error={!!errors.phone}
-          helperText={errors.phone || _(msg`Например: +7 (999) 123-45-67`)}
-          placeholder="+7 (999) 123-45-67"
+          onChange={handlePhoneChange}
+          label={_(msg`Телефон`)}
+          error={errors.phone}
         />
       </DialogContent>
       <DialogActions>

@@ -8,6 +8,7 @@ import { DeleteForever, Warning, Info, CheckCircle } from '@mui/icons-material';
 import Link from 'next/link';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 
 
 
@@ -22,7 +23,7 @@ interface ForgetMeFormData {
 }
 
 export default function ForgetMePage() {
-  const { _ } = useLingui();
+  const { _, i18n } = useLingui();
 
   const [formData, setFormData] = useState<ForgetMeFormData>({
     email: '',
@@ -265,12 +266,11 @@ export default function ForgetMePage() {
                     </Grid>
                     
                     <Grid item xs={12} sm={6}>
-                      <TextField
-                        fullWidth
-                        label={_(msg`Телефон`)}
+                      <InternationalPhoneInput
                         value={formData.phone}
-                        onChange={(e) => handleFieldChange('phone', e.target.value)}
-                        placeholder="+7 (999) 123-45-67"
+                        onChange={(phone) => handleFieldChange('phone', phone)}
+                        label={_(msg`Телефон`)}
+                      />
                       />
                     </Grid>
                     

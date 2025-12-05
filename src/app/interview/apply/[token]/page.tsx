@@ -8,6 +8,8 @@ import {
 import { IconUser, IconPhone, IconMail, IconBriefcase } from '@tabler/icons-react';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import InternationalPhoneInput from '@/components/InternationalPhoneInput';
+import { normalizePhoneForBackend, isValidInternationalPhone } from '@/utils/phoneUtils';
 import { getErrorMessage } from '@/utils/errorTranslator';
 
 
@@ -93,6 +95,7 @@ export default function PublicApplyPage() {
         },
         body: JSON.stringify({
           ...formData,
+          phone: normalizePhoneForBackend(formData.phone), // Нормализуем перед отправкой
           deviceFingerprint: generateDeviceFingerprint()
         })
       });
@@ -126,21 +129,12 @@ export default function PublicApplyPage() {
     return '';
   };
 
-  // Валидация телефона
+  // Валидация телефона (международная)
   const validatePhone = (phone: string): string => {
     if (!phone.trim()) return _(msg`Телефон обязателен для заполнения`);
 
-    // Убираем все символы кроме цифр для проверки
-    const cleanPhone = phone.replace(/\D/g, '');
-
-    // Проверяем длину (10-15 цифр)
-    if (cleanPhone.length < 10) return _(msg`Телефон должен содержать минимум 10 цифр`);
-    if (cleanPhone.length > 15) return _(msg`Телефон слишком длинный`);
-
-    // Проверяем что номер начинается с 7, 8 или +7
-    const firstDigit = cleanPhone[0];
-    if (firstDigit !== '7' && firstDigit !== '8') {
-      return _(msg`Номер должен начинаться с 7, 8 или +7`);
+    if (!isValidInternationalPhone(phone)) {
+      return _(msg`Введите корректный международный номер`);
     }
 
     return '';
@@ -348,19 +342,13 @@ export default function PublicApplyPage() {
               size="medium"
             />
 
-            <TextField
-              required
-              label={_(msg`Номер телефона`)}
+            <InternationalPhoneInput
               value={formData.phone}
-              onChange={(e) => handleFieldChange('phone', e.target.value)}
-              error={!!fieldErrors.phone}
-              helperText={fieldErrors.phone}
-              InputProps={{
-                startAdornment: <IconPhone size={20} style={{ marginRight: 8, opacity: 0.7 }} />
-              }}
-              fullWidth
-              size="medium"
-              placeholder={_(msg`+7 (999) 123-45-67 или 89991234567`)}
+              onChange={(phone) => handleFieldChange('phone', phone)}
+              label={_(msg`Номер телефона`)}
+              error={fieldErrors.phone}
+              required
+              placeholder={_(msg`+7 (999) 123-45-67`)}
             />
 
             <TextField

@@ -23,6 +23,8 @@ import PrivacyConsent from "@/app/components/PrivacyConsent";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import InternationalPhoneInput from '@/components/InternationalPhoneInput';
+import { normalizePhoneForBackend, isValidInternationalPhone } from '@/utils/phoneUtils';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -90,11 +92,8 @@ export default function RegisterPage() {
     }
 
     // Валидация телефона (опционально, но если введен - должен быть корректным)
-    if (formData.phone.trim()) {
-      const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-      if (!phoneRegex.test(formData.phone.replace(/\s/g, ""))) {
-        newErrors.phone = _(msg`Введите корректный номер телефона`);
-      }
+    if (formData.phone.trim() && !isValidInternationalPhone(formData.phone)) {
+      newErrors.phone = _(msg`Введите корректный международный номер`);
     }
 
     setErrors(newErrors);
@@ -135,7 +134,7 @@ export default function RegisterPage() {
           position: formData.position.trim(),
           company: formData.company.trim(),
           email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim() || null,
+          phone: formData.phone.trim() ? normalizePhoneForBackend(formData.phone) : null,
           marketing_opt_in: marketing
         }),
       });
@@ -149,8 +148,8 @@ export default function RegisterPage() {
           router.push("/auth/login");
         }, 3000);
       } else {
-        // Backend возвращает: 
-        // {error: 'auth.field_required', field: 'email'} 
+        // Backend возвращает:
+        // {error: 'auth.field_required', field: 'email'}
         // {error: 'auth.email_already_exists'}
         // {error: 'auth.registration_error'}
         const errorCode = data.error || 'common.internal_error';
@@ -262,17 +261,18 @@ export default function RegisterPage() {
               />
 
               {/* Телефон */}
-              <TextField
-                label={_(msg`Телефон`)}
-                variant="outlined"
-                fullWidth
+              <InternationalPhoneInput
                 value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
-                error={!!errors.phone}
-                helperText={errors.phone || _(msg`Для дополнительной безопасности входа (необязательно)`)}
-                placeholder="+7 (900) 123-45-67"
+                onChange={(phone) => handleInputChange("phone", phone)}
+                label={_(msg`Телефон`)}
+                error={errors.phone}
                 disabled={loading}
               />
+              {!errors.phone && (
+                <Typography variant="caption" color="text.secondary" sx={{ mt: -1, mb: 2, display: 'block' }}>
+                  {_(msg`Для дополнительной безопасности входа (необязательно)`)}
+                </Typography>
+              )}
 
               {/* Согласие на ПДн (обязательно) */}
               <PrivacyConsent value={pdnOk} onChange={setPdnOk} required />
