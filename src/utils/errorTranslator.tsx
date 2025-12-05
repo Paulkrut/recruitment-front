@@ -103,6 +103,8 @@ export function getErrorMessage(errorCode: string): MessageDescriptor {
   if (errorCode === 'billing.plan_not_found') return msg`Тариф не найден`;
   if (errorCode === 'billing.free_plan_already_used') return msg`Бесплатный тариф доступен только один раз`;
   if (errorCode === 'billing.payment_not_found') return msg`Платёж не найден`;
+  if (errorCode === 'billing.insufficient_balance') return msg`Интервью временно недоступно. Пожалуйста, свяжитесь с компанией для уточнения деталей.`;
+  if (errorCode === 'billing.interview_blocked') return msg`Интервью заблокировано из-за недостаточного баланса`;
 
   // COMMON
   if (errorCode === 'common.not_found') return msg`Не найдено`;

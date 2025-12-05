@@ -534,6 +534,18 @@ export default function CandidateInterviewPage() {
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/start`);
     if(!r.ok) {
       const data = await r.json().catch(() => ({}));
+      
+      // Специальная обработка для 402 - недостаточно баланса компании
+      if (r.status === 402) {
+        alert(
+          '⛔ Интервью временно недоступно\n\n' +
+          'К сожалению, компания временно приостановила прием интервью.\n\n' +
+          'Пожалуйста, свяжитесь с представителем компании для уточнения деталей.\n\n' +
+          'Приносим извинения за неудобства.'
+        );
+        return;
+      }
+      
       // Backend: {error: 'interview.session_not_found'}, {error: 'interview.not_ready'}
       const errorCode = data.error || 'common.internal_error';
       const errorMessage = i18n._(getErrorMessage(errorCode));
