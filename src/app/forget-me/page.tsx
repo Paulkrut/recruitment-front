@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import {
-  Container, Typography, Box, Paper, Divider, TextField, Button, 
+  Container, Typography, Box, Paper, Divider, TextField, Button,
   Alert, FormControlLabel, Checkbox, Grid, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import { DeleteForever, Warning, Info, CheckCircle } from '@mui/icons-material';
@@ -39,7 +39,7 @@ export default function ForgetMePage() {
     success: boolean;
     message: string;
   } | null>(null);
-  
+
   // Состояние для модального окна успеха
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -49,7 +49,7 @@ export default function ForgetMePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.email.trim() || !formData.name.trim()) {
       setSubmitResult({
         success: false,
@@ -79,32 +79,32 @@ export default function ForgetMePage() {
           success: true,
           message: _(msg`Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: ${result.request_id || 'N/A'}`)
         });
-        
+
         // Показываем модальное окно успеха
         setShowSuccessModal(true);
-        
+
         // Воспроизводим звук успеха (если браузер поддерживает)
         try {
           const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
-          
+
           oscillator.connect(gainNode);
           gainNode.connect(audioContext.destination);
-          
+
           oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
           oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
           oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.2);
-          
+
           gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
           gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-          
+
           oscillator.start(audioContext.currentTime);
           oscillator.stop(audioContext.currentTime + 0.3);
         } catch (e) {
           // Игнорируем ошибки звука
         }
-        
+
         // Очищаем форму
         setFormData({
           email: '',
@@ -143,9 +143,9 @@ export default function ForgetMePage() {
 
         {/* Результат отправки - показываем вверху для лучшей видимости */}
         {submitResult && (
-          <Alert 
-            severity={submitResult.success ? 'success' : 'error'} 
-            sx={{ 
+          <Alert
+            severity={submitResult.success ? 'success' : 'error'}
+            sx={{
               mb: 4,
               p: 3,
               fontSize: '1.1rem',
@@ -192,7 +192,7 @@ export default function ForgetMePage() {
         {/* Информация */}
         <Alert severity="info" sx={{ mb: 4 }}>
           <Typography variant="body1">
-            <Trans><strong>Важно:</strong> Если у вас есть активная ссылка на интервью, 
+            <Trans><strong>Важно:</strong> Если у вас есть активная ссылка на интервью,
             используйте кнопку "Удалить мои данные" прямо на странице интервью для мгновенного удаления.</Trans>
           </Typography>
         </Alert>
@@ -214,7 +214,7 @@ export default function ForgetMePage() {
           </Trans></Typography>
           <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'success.main' }}><Trans>✅ Тогда удаление будет мгновенным!</Trans></Typography>
           <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
-            <Trans>Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже. 
+            <Trans>Иначе нам придется вручную искать вас в базе данных по данным, которые вы предоставите в форме ниже.
             <strong>Это займет больше времени, так как мы должны проверить вашу личность.</strong></Trans>
           </Typography>
         </Alert>
@@ -242,7 +242,7 @@ export default function ForgetMePage() {
               <Card sx={{ mb: 3 }}>
                 <CardContent>
                   <Typography variant="h6" gutterBottom fontWeight={600} sx={{ mb: 2 }}><Trans>Ваши данные для идентификации:</Trans></Typography>
-                  
+
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -253,7 +253,7 @@ export default function ForgetMePage() {
                         required
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -264,16 +264,15 @@ export default function ForgetMePage() {
                         required
                       />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <InternationalPhoneInput
                         value={formData.phone}
                         onChange={(phone) => handleFieldChange('phone', phone)}
                         label={_(msg`Телефон`)}
                       />
-                      />
                     </Grid>
-                    
+
                     <Grid item xs={12} sm={6}>
                       <TextField
                         fullWidth
@@ -328,40 +327,40 @@ export default function ForgetMePage() {
                   <Warning sx={{ mr: 1, verticalAlign: 'middle' }} />
                   <Trans>Важная информация</Trans>
                 </Typography>
-                
+
                 <Typography variant="body2" paragraph><Trans>
                   <strong>Срок обработки:</strong> До 30 дней согласно 152-ФЗ
                 </Trans></Typography>
-                
+
                 <Typography variant="body2" paragraph><Trans>
                   <strong>Подтверждение:</strong> Мы свяжемся с вами для подтверждения
                 </Trans></Typography>
-                
+
                 <Typography variant="body2" paragraph><Trans>
                   <strong>Уведомления:</strong> HR-клиенты будут уведомлены о запросе
                 </Trans></Typography>
-                
+
                 <Typography variant="body2" paragraph><Trans>
                   <strong>Безвозвратность:</strong> Удаленные данные восстановить невозможно
                 </Trans></Typography>
 
                 <Divider sx={{ my: 2 }} />
-                
+
                 <Alert severity="success" sx={{ mb: 2 }}>
                   <Typography variant="body2" fontWeight={600}>
                     <Trans><strong>⚡ Мгновенное удаление!</strong></Trans>
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 1 }}><Trans>Если у вас есть ссылка на интервью, используйте кнопку "Удалить мои данные" прямо на странице интервью.</Trans></Typography>
                 </Alert>
-                
+
                 <Typography variant="body2" color="text.secondary"><Trans>
                   <strong>Полное удаление:</strong> При отправке формы будут удалены ВСЕ ваши данные с платформы.
                 </Trans></Typography>
 
                 <Divider sx={{ my: 2 }} />
-                
+
                 <Typography variant="body2" color="text.secondary">
-                  <Trans><strong>Важно:</strong> Запросы без ссылки на интервью обрабатываются вручную администраторами 
+                  <Trans><strong>Важно:</strong> Запросы без ссылки на интервью обрабатываются вручную администраторами
                   для проверки вашей личности. Это занимает больше времени, но обеспечивает безопасность.</Trans>
                 </Typography>
               </CardContent>
@@ -371,17 +370,17 @@ export default function ForgetMePage() {
 
         {/* Кнопки навигации */}
         <Box textAlign="center" mt={6}>
-          <Button 
-            variant="outlined" 
-            color="primary" 
+          <Button
+            variant="outlined"
+            color="primary"
             size="large"
             component={Link}
             href="/"
             sx={{ mr: 2 }}
           ><Trans>Вернуться на главную</Trans></Button>
-          <Button 
-            variant="outlined" 
-            color="primary" 
+          <Button
+            variant="outlined"
+            color="primary"
             size="large"
             component={Link}
             href="/privacy-policy"
@@ -435,4 +434,4 @@ export default function ForgetMePage() {
       </Dialog>
     </Container>
   );
-} 
+}
