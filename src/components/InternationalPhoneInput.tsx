@@ -127,14 +127,6 @@ export default function InternationalPhoneInput({
             transition: 'border-color 0.2s',
             backgroundColor: disabled ? theme.palette.action.disabledBackground : theme.palette.background.paper,
             color: theme.palette.text.primary,
-            '&:hover': {
-              borderColor: error ? theme.palette.error.main : theme.palette.grey[400],
-            },
-            '&:focus': {
-              borderColor: error ? theme.palette.error.main : theme.palette.primary.main,
-              borderWidth: '2px',
-              outline: 'none',
-            },
           }}
           buttonStyle={{
             borderColor: error 
