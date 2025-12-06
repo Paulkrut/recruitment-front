@@ -17,6 +17,7 @@ import Profile from "./Profile";
 import CompanyInfo from "./CompanyInfo";
 import BalanceInfo from "./BalanceInfo";
 import HhTokenStatus from "./HhTokenStatus";
+import ManagerInfo from "./ManagerInfo";
 import { AppState } from "@/store/store";
 import { shadows } from "@/utils/theme/Shadows";
 
@@ -85,6 +86,11 @@ const Header = () => {
           {/* Balance Info - основная информация */}
           {/* ------------------------------------------- */}
           {smUp && <BalanceInfo />}
+          
+          {/* ------------------------------------------- */}
+          {/* Manager Info - персональный менеджер */}
+          {/* ------------------------------------------- */}
+          <ManagerInfo />
           
           {/* ------------------------------------------- */}
           {/* HH Token Status - индикатор статуса токена */}

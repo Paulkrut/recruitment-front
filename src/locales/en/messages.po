@@ -2422,6 +2422,10 @@ msgstr "Your data deletion request has been successfully registered in our syste
 msgid "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
 msgstr "Your data deletion request has been successfully registered in our system. We will contact you within 30 days to verify your identity and completely delete all data. Your request number: {0}"
 
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:89
+msgid "Ваш менеджер"
+msgstr "Your Manager"
+
 #: src/app/components/landing/ROICalculator.tsx:163
 msgid "Ваша экономия в месяц"
 msgstr "Your Monthly Savings"
@@ -5570,6 +5574,10 @@ msgstr "Waiting in queue{timeStr}..."
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:235
 msgid "Окончание"
 msgstr "End"
+
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:168
+msgid "Онлайн"
+msgstr "Online"
 
 #: src/app/auth/register/page.tsx:244
 msgid "ООО «Ваша компания»"

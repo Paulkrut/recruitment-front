@@ -2422,6 +2422,10 @@ msgstr "Ваш запрос на удаление данных успешно з
 msgid "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
 msgstr "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
 
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:89
+msgid "Ваш менеджер"
+msgstr "Ваш менеджер"
+
 #: src/app/components/landing/ROICalculator.tsx:163
 msgid "Ваша экономия в месяц"
 msgstr "Ваша экономия в месяц"
@@ -5570,6 +5574,10 @@ msgstr "Ожидание в очереди{timeStr}..."
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:235
 msgid "Окончание"
 msgstr "Окончание"
+
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:168
+msgid "Онлайн"
+msgstr "Онлайн"
 
 #: src/app/auth/register/page.tsx:244
 msgid "ООО «Ваша компания»"
