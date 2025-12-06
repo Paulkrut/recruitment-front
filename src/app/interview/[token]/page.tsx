@@ -546,6 +546,16 @@ export default function CandidateInterviewPage() {
         return;
       }
       
+      // Специальная обработка для 410 - интервью закрыто компанией
+      if (r.status === 410) {
+        alert(
+          '🚫 Прохождение интервью закрыто\n\n' +
+          'Компания завершила набор по данной вакансии и закрыла возможность прохождения интервью.\n\n' +
+          'Благодарим за интерес к вакансии!'
+        );
+        return;
+      }
+      
       // Backend: {error: 'interview.session_not_found'}, {error: 'interview.not_ready'}
       const errorCode = data.error || 'common.internal_error';
       const errorMessage = i18n._(getErrorMessage(errorCode));

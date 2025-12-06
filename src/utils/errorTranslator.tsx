@@ -57,6 +57,8 @@ export function getErrorMessage(errorCode: string): MessageDescriptor {
   if (errorCode === 'interview.results_not_ready') return msg`Обратная связь еще не сгенерирована. Используйте /request-results для запуска генерации.`;
   if (errorCode === 'interview.results_ready') return msg`Результаты готовы!`;
   if (errorCode === 'interview.generating_feedback') return msg`Генерируется обратная связь. Повторите запрос через несколько секунд.`;
+  if (errorCode === 'interview.template_disabled') return msg`Интервью временно недоступно`;
+  if (errorCode === 'interview.closed_by_company') return msg`Прохождение интервью закрыто компанией`;
 
   // REGULATION TEST
   if (errorCode === 'regulation_test.questions_generated') return msg`Вопросы успешно сгенерированы`;

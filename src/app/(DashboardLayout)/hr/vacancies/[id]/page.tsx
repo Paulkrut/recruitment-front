@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel
 } from "@mui/material";
 import {
   IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
@@ -120,6 +120,8 @@ export default function HRVacancyDetailPage() {
   const [tab, setTab] = useState('1');
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0); // Для обновления списка
+  const [templateActive, setTemplateActive] = useState<boolean>(true);
+  const [toggleLoading, setToggleLoading] = useState(false);
 
   // Состояния для канбана (сохраняем в localStorage)
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>(() => {
@@ -166,6 +168,30 @@ export default function HRVacancyDetailPage() {
       }
     } catch (error) {
       setSnackbar(_(msg`Ошибка при создании ссылки`));
+    }
+  };
+
+  // Функция для переключения статуса активности шаблона
+  const toggleTemplateActive = async () => {
+    if (!data?.template?.id) return;
+    
+    setToggleLoading(true);
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/templates/${data.template.id}/toggle-active`, {
+        method: 'PATCH'
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setTemplateActive(result.isActive);
+        setSnackbar(result.isActive ? _(msg`Интервью включено`) : _(msg`Интервью выключено`));
+      } else {
+        setSnackbar(_(msg`Ошибка при изменении статуса`));
+      }
+    } catch (error) {
+      setSnackbar(_(msg`Ошибка при изменении статуса`));
+    } finally {
+      setToggleLoading(false);
     }
   };
 
@@ -231,7 +257,13 @@ export default function HRVacancyDetailPage() {
   useEffect(() => {
     if (!token || !id) return;
     setLoading(true);
-    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`).then(r => r.json()).then(setData).finally(()=>setLoading(false));
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`).then(r => r.json()).then(data => {
+      setData(data);
+      // Устанавливаем статус активности шаблона
+      if (data.template?.isActive !== undefined) {
+        setTemplateActive(data.template.isActive);
+      }
+    }).finally(()=>setLoading(false));
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`).then(r=>r.json()).then(result => {
       // API теперь возвращает { data: [], total: ... } или старый формат []
       if (Array.isArray(result)) {
@@ -354,6 +386,62 @@ export default function HRVacancyDetailPage() {
                 ><Trans>Создать</Trans></Button>
               )}
             </Box>
+
+            {/* Переключатель активности интервью */}
+            {template && (
+              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FormControlLabel
+                  control={
+                    <Switch 
+                      checked={templateActive} 
+                      onChange={toggleTemplateActive}
+                      disabled={toggleLoading}
+                      color="success"
+                    />
+                  }
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="body2" fontWeight={600} color="text.primary">
+                        {templateActive ? '🟢' : '🔴'} {templateActive ? <Trans>Интервью включено</Trans> : <Trans>Интервью выключено</Trans>}
+                      </Typography>
+                      <Tooltip
+                        title={
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="body2" gutterBottom fontWeight={600}>
+                              {templateActive ? <Trans>Выключение интервью</Trans> : <Trans>Включение интервью</Trans>}
+                            </Typography>
+                            <Typography variant="body2" sx={{ mb: 1 }}>
+                              {templateActive 
+                                ? <Trans>Если выключить, кандидаты не смогут начать новое интервью. Уже начатые интервью продолжат работать.</Trans>
+                                : <Trans>Если включить, кандидаты снова смогут проходить интервью по этой вакансии.</Trans>
+                              }
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontStyle: 'italic', opacity: 0.9 }}>
+                              <Trans>💡 Используйте для временной приостановки набора или после закрытия вакансии.</Trans>
+                            </Typography>
+                          </Box>
+                        }
+                        arrow
+                        placement="top"
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              maxWidth: 400,
+                              bgcolor: 'primary.dark',
+                            }
+                          }
+                        }}
+                      >
+                        <IconButton size="small" sx={{ p: 0.5 }}>
+                          <InfoOutlinedIcon fontSize="small" color="action" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  }
+                />
+                {toggleLoading && <CircularProgress size={20} />}
+              </Box>
+            )}
           </Box>
           <Button variant="contained" color="primary" size="large" startIcon={<IconEdit size={24}/>} sx={{ fontWeight: 700, minWidth: 180, mt: { xs: 2, md: 0 } }} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}>
             <Trans>Редактировать</Trans>
