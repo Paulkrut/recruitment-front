@@ -407,7 +407,7 @@ msgstr "© 2025 SofiHR. Система соответствует требова
 msgid "+ {0} часов ({1}₽)"
 msgstr "+ {0} часов ({1}₽)"
 
-#: src/app/interview/apply/[token]/page.tsx:351
+#: src/app/interview/apply/[token]/page.tsx:396
 msgid "+7 (999) 123-45-67"
 msgstr "+7 (999) 123-45-67"
 
@@ -1246,6 +1246,10 @@ msgstr "💡 Для конкретных кандидатов создавайт
 msgid "💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру"
 msgstr "💡 Если у вас возникли вопросы по тестированию, обратитесь к вашему HR-менеджеру"
 
+#: src/app/interview/apply/[token]/page.tsx:290
+msgid "💡 Если у вас есть вопросы, пожалуйста, свяжитесь с представителем компании."
+msgstr "💡 Если у вас есть вопросы, пожалуйста, свяжитесь с представителем компании."
+
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:420
 msgid "💡 Используйте для временной приостановки набора или после закрытия вакансии."
 msgstr "💡 Используйте для временной приостановки набора или после закрытия вакансии."
@@ -1842,7 +1846,7 @@ msgstr "API доступ"
 msgid "Email"
 msgstr "Email"
 
-#: src/app/interview/apply/[token]/page.tsx:355
+#: src/app/interview/apply/[token]/page.tsx:400
 msgid "Email (необязательно)"
 msgstr "Email (необязательно)"
 
@@ -1867,7 +1871,7 @@ msgstr "Email обязателен"
 msgid "Email обязателен для заполнения"
 msgstr "Email обязателен для заполнения"
 
-#: src/app/interview/apply/[token]/page.tsx:148
+#: src/app/interview/apply/[token]/page.tsx:156
 msgid "Email слишком длинный"
 msgstr "Email слишком длинный"
 
@@ -2248,6 +2252,10 @@ msgstr "Бизнес (рекомендуем)"
 msgid "Биллинг и тарифы"
 msgstr "Биллинг и тарифы"
 
+#: src/app/interview/apply/[token]/page.tsx:277
+msgid "Благодарим за интерес к вакансии!"
+msgstr "Благодарим за интерес к вакансии!"
+
 #: src/app/page.tsx:197
 msgid "Блог"
 msgstr "Блог"
@@ -2422,7 +2430,9 @@ msgstr "Ваш запрос на удаление данных успешно з
 msgid "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
 msgstr "Ваш запрос на удаление данных успешно зарегистрирован в нашей системе. Мы свяжемся с вами в течение 30 дней для подтверждения личности и полного удаления всех данных. Номер вашего запроса: {0}"
 
-#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:89
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:54
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:109
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:358
 msgid "Ваш менеджер"
 msgstr "Ваш менеджер"
 
@@ -2512,12 +2522,12 @@ msgstr "Введите заметку или комментарий..."
 #: src/app/components/ui-components/dialog/FormDialog.tsx:46
 #: src/app/components/ui-components/dialog/FormDialog.tsx:56
 #: src/app/contact/page.tsx:59
-#: src/app/interview/apply/[token]/page.tsx:147
+#: src/app/interview/apply/[token]/page.tsx:155
 msgid "Введите корректный email адрес"
 msgstr "Введите корректный email адрес"
 
 #: src/app/auth/register/page.tsx:96
-#: src/app/interview/apply/[token]/page.tsx:137
+#: src/app/interview/apply/[token]/page.tsx:145
 msgid "Введите корректный международный номер"
 msgstr "Введите корректный международный номер"
 
@@ -3309,7 +3319,7 @@ msgstr "Дата: {0}"
 msgid "Дата: {0} — {1}"
 msgstr "Дата: {0} — {1}"
 
-#: src/app/interview/apply/[token]/page.tsx:378
+#: src/app/interview/apply/[token]/page.tsx:423
 msgid "Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <0>Политика обработки ПДн</0>."
 msgstr "Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <0>Политика обработки ПДн</0>."
 
@@ -3431,7 +3441,7 @@ msgstr "Для небольших компаний и стартапов до 10
 msgid "Для небольших компаний и стартапов до 10 найма/месяц. Базовый функционал для начала автоматизации."
 msgstr "Для небольших компаний и стартапов до 10 найма/месяц. Базовый функционал для начала автоматизации."
 
-#: src/app/interview/apply/[token]/page.tsx:78
+#: src/app/interview/apply/[token]/page.tsx:86
 msgid "Для подачи заявки необходимо согласие на обработку персональных данных"
 msgstr "Для подачи заявки необходимо согласие на обработку персональных данных"
 
@@ -3778,7 +3788,7 @@ msgstr "Запись не содержит данных. Попробуйте е
 msgid "Заполните форму для запроса удаления всех ваших данных:"
 msgstr "Заполните форму для запроса удаления всех ваших данных:"
 
-#: src/app/interview/apply/[token]/page.tsx:328
+#: src/app/interview/apply/[token]/page.tsx:373
 msgid "Заполните форму для подачи заявки:"
 msgstr "Заполните форму для подачи заявки:"
 
@@ -3855,7 +3865,7 @@ msgstr "Зарплата"
 msgid "Защищённая передача данных по HTTPS"
 msgstr "Защищённая передача данных по HTTPS"
 
-#: src/app/interview/apply/[token]/page.tsx:265
+#: src/app/interview/apply/[token]/page.tsx:310
 msgid "Заявка принята! 🎉"
 msgstr "Заявка принята! 🎉"
 
@@ -3970,7 +3980,7 @@ msgstr "Имя *"
 
 #: src/app/auth/register/page.tsx:73
 #: src/app/contact/page.tsx:53
-#: src/app/interview/apply/[token]/page.tsx:126
+#: src/app/interview/apply/[token]/page.tsx:134
 msgid "Имя должно содержать минимум 2 символа"
 msgstr "Имя должно содержать минимум 2 символа"
 
@@ -3978,7 +3988,7 @@ msgstr "Имя должно содержать минимум 2 символа"
 msgid "Имя и телефон обязательны"
 msgstr "Имя и телефон обязательны"
 
-#: src/app/interview/apply/[token]/page.tsx:333
+#: src/app/interview/apply/[token]/page.tsx:378
 msgid "Имя и фамилия"
 msgstr "Имя и фамилия"
 
@@ -3986,7 +3996,7 @@ msgstr "Имя и фамилия"
 msgid "Имя кандидата"
 msgstr "Имя кандидата"
 
-#: src/app/interview/apply/[token]/page.tsx:128
+#: src/app/interview/apply/[token]/page.tsx:136
 msgid "Имя может содержать только буквы, пробелы и дефисы"
 msgstr "Имя может содержать только буквы, пробелы и дефисы"
 
@@ -3997,11 +4007,11 @@ msgid "Имя обязательно"
 msgstr "Имя обязательно"
 
 #: src/app/contact/page.tsx:51
-#: src/app/interview/apply/[token]/page.tsx:125
+#: src/app/interview/apply/[token]/page.tsx:133
 msgid "Имя обязательно для заполнения"
 msgstr "Имя обязательно для заполнения"
 
-#: src/app/interview/apply/[token]/page.tsx:127
+#: src/app/interview/apply/[token]/page.tsx:135
 msgid "Имя слишком длинное"
 msgstr "Имя слишком длинное"
 
@@ -4568,6 +4578,10 @@ msgstr "Компаний"
 msgid "Компания"
 msgstr "Компания"
 
+#: src/app/interview/apply/[token]/page.tsx:274
+msgid "Компания завершила набор по данной вакансии и закрыла возможность прохождения интервью."
+msgstr "Компания завершила набор по данной вакансии и закрыла возможность прохождения интервью."
+
 #: src/utils/errorTranslator.tsx:76
 msgid "Компания не выбрана"
 msgstr "Компания не выбрана"
@@ -4862,6 +4876,10 @@ msgstr "наймах"
 msgid "Найти камеры"
 msgstr "Найти камеры"
 
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:163
+msgid "Написать"
+msgstr "Написать"
+
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:987
 #~ msgid "Например: +7 (999) 123-45-67"
 #~ msgstr "Например: +7 (999) 123-45-67"
@@ -4955,8 +4973,8 @@ msgstr "Начата: {0}"
 msgid "Начать"
 msgstr "Начать"
 
-#: src/app/interview/apply/[token]/page.tsx:273
-#: src/app/interview/apply/[token]/page.tsx:399
+#: src/app/interview/apply/[token]/page.tsx:318
+#: src/app/interview/apply/[token]/page.tsx:444
 msgid "Начать интервью"
 msgstr "Начать интервью"
 
@@ -5394,7 +5412,7 @@ msgstr "Номер вашего запроса:"
 #~ msgid "Номер должен начинаться с 7, 8 или +7"
 #~ msgstr "Номер должен начинаться с 7, 8 или +7"
 
-#: src/app/interview/apply/[token]/page.tsx:348
+#: src/app/interview/apply/[token]/page.tsx:393
 msgid "Номер телефона"
 msgstr "Номер телефона"
 
@@ -5575,7 +5593,8 @@ msgstr "Ожидание в очереди{timeStr}..."
 msgid "Окончание"
 msgstr "Окончание"
 
-#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:168
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:116
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:436
 msgid "Онлайн"
 msgstr "Онлайн"
 
@@ -5602,7 +5621,7 @@ msgstr "Описание"
 msgid "Описание вакансии"
 msgstr "Описание вакансии"
 
-#: src/app/interview/apply/[token]/page.tsx:309
+#: src/app/interview/apply/[token]/page.tsx:354
 msgid "Описание вакансии:"
 msgstr "Описание вакансии:"
 
@@ -5742,7 +5761,7 @@ msgstr "Отзывы"
 msgid "отказать"
 msgstr "отказать"
 
-#: src/app/interview/apply/[token]/page.tsx:290
+#: src/app/interview/apply/[token]/page.tsx:335
 msgid "Отклик на вакансию"
 msgstr "Отклик на вакансию"
 
@@ -5893,7 +5912,7 @@ msgstr "Отправленные приглашения"
 
 #: src/app/contact/page.tsx:278
 #: src/app/forget-me/page.tsx:316
-#: src/app/interview/apply/[token]/page.tsx:396
+#: src/app/interview/apply/[token]/page.tsx:441
 msgid "Отправляем..."
 msgstr "Отправляем..."
 
@@ -6025,7 +6044,7 @@ msgstr "Ошибка загрузки данных: {contextError}"
 msgid "Ошибка загрузки данных. Проверьте выбранную компанию в хедере."
 msgstr "Ошибка загрузки данных. Проверьте выбранную компанию в хедере."
 
-#: src/app/interview/apply/[token]/page.tsx:66
+#: src/app/interview/apply/[token]/page.tsx:74
 msgid "Ошибка загрузки информации о вакансии"
 msgstr "Ошибка загрузки информации о вакансии"
 
@@ -6231,7 +6250,7 @@ msgstr "Ошибка при открытии формы оплаты"
 msgid "Ошибка при отображении обратной связи"
 msgstr "Ошибка при отображении обратной связи"
 
-#: src/app/interview/apply/[token]/page.tsx:116
+#: src/app/interview/apply/[token]/page.tsx:124
 msgid "Ошибка при отправке заявки"
 msgstr "Ошибка при отправке заявки"
 
@@ -6685,6 +6704,10 @@ msgstr "Пожалуйста, подождите. Обычно это заним
 #: src/app/(DashboardLayout)/hr/hh-redirect/page.tsx:53
 msgid "Пожалуйста, подождите..."
 msgstr "Пожалуйста, подождите..."
+
+#: src/app/(DashboardLayout)/layout/vertical/header/ManagerInfo.tsx:141
+msgid "Позвонить"
+msgstr "Позвонить"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:146
 msgid "Поиск"
@@ -7226,6 +7249,10 @@ msgstr "Простой процесс автоматизации найма за
 #: src/app/components/landing/PricingFAQ.tsx:157
 msgid "Проходим аудит безопасности каждые 6 месяцев"
 msgstr "Проходим аудит безопасности каждые 6 месяцев"
+
+#: src/app/interview/apply/[token]/page.tsx:270
+msgid "Прохождение интервью закрыто"
+msgstr "Прохождение интервью закрыто"
 
 #: src/utils/errorTranslator.tsx:61
 msgid "Прохождение интервью закрыто компанией"
@@ -8076,7 +8103,7 @@ msgstr "Сохранить настройки"
 msgid "Сохранить резюме"
 msgstr "Сохранить резюме"
 
-#: src/app/interview/apply/[token]/page.tsx:266
+#: src/app/interview/apply/[token]/page.tsx:311
 msgid "Спасибо за интерес к вакансии! Теперь вы можете пройти интервью."
 msgstr "Спасибо за интерес к вакансии! Теперь вы можете пройти интервью."
 
@@ -8175,7 +8202,7 @@ msgstr "Срочно"
 msgid "Ссылка на HH"
 msgstr "Ссылка на HH"
 
-#: src/app/interview/apply/[token]/page.tsx:274
+#: src/app/interview/apply/[token]/page.tsx:319
 msgid "Ссылка откроется в новом окне"
 msgstr "Ссылка откроется в новом окне"
 
@@ -8390,7 +8417,7 @@ msgstr "Телефон"
 msgid "Телефон не указан"
 msgstr "Телефон не указан"
 
-#: src/app/interview/apply/[token]/page.tsx:134
+#: src/app/interview/apply/[token]/page.tsx:142
 msgid "Телефон обязателен для заполнения"
 msgstr "Телефон обязателен для заполнения"
 
