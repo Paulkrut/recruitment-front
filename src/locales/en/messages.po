@@ -2685,6 +2685,9 @@ msgid ""
 "• Превышено максимальное время прохождения теста\n"
 "• Сессия была прервана"
 msgstr ""
+"Possible reasons:\n"
+"• Maximum test time exceeded\n"
+"• Session was interrupted"
 
 #: src/app/test/[token]/page.tsx:146
 msgid ""
@@ -2694,6 +2697,11 @@ msgid ""
 "\n"
 "📧 Пожалуйста, запросите новое приглашение."
 msgstr ""
+"Possible reasons:\n"
+"• Link is invalid or outdated\n"
+"• Invitation was deleted by HR manager\n"
+"\n"
+"📧 Please request a new invitation."
 
 #: src/app/test/[token]/page.tsx:207
 msgid ""
@@ -2702,6 +2710,10 @@ msgid ""
 "• Приглашение уже было использовано\n"
 "• Срок действия приглашения истёк"
 msgstr ""
+"Possible reasons:\n"
+"• Link is outdated or has been deleted\n"
+"• Invitation has already been used\n"
+"• Invitation has expired"
 
 #: src/app/auth/login/page.tsx:132
 msgid "Войдите в свой аккаунт SofiHR"
@@ -4234,6 +4246,9 @@ msgid ""
 "\n"
 "📧 Пожалуйста, свяжитесь с вашим руководителем или HR-менеджером для пополнения баланса."
 msgstr ""
+"Unfortunately, your company's HR department has exhausted the available test limit.\n"
+"\n"
+"📧 Please contact your manager or HR manager to top up the balance."
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:240
 msgid "Каждый вопрос должен быть отвечен в течение указанного времени"
