@@ -97,7 +97,14 @@ export function getErrorMessage(errorCode: string): MessageDescriptor {
   if (errorCode === 'hh.token_status_check_error') return msg`Ошибка проверки статуса токена`;
   if (errorCode === 'hh.vacancy_info_error') return msg`Ошибка при получении информации о вакансии`;
   if (errorCode === 'hh.sync_error') return msg`Ошибка синхронизации`;
+  if (errorCode === 'hh.no_negotiation_id') return msg`У кандидата нет ID переписки в HH. Невозможно отправить сообщение.`;
+  if (errorCode === 'hh.candidate_not_converted') return msg`Кандидат не импортирован в систему. Сначала импортируйте кандидата.`;
+  if (errorCode === 'hh.message_sent') return msg`Приглашение отправлено в HH.ru`;
+  if (errorCode === 'hh.message_send_failed') return msg`Ошибка отправки сообщения в HH.ru`;
+  if (errorCode === 'hh.interview_link_not_available') return msg`Ссылка на интервью недоступна для этого кандидата`;
+  if (errorCode === 'hh.candidate_not_found') return msg`Кандидат не найден`;
   if (errorCode === 'hh.vacancy_and_company_required') return msg`vacancy_id и company_id обязательны`;
+  if (errorCode === 'hh.message_fetch_failed') return msg`Ошибка загрузки сообщений из HH.ru`;
 
   // BILLING
   if (errorCode === 'billing.company_not_found') return msg`Компания не найдена`;

@@ -99,6 +99,7 @@ export default function CandidateDetailPage() {
   // HR заметки (MVP: localStorage)
   const [hrNote, setHrNote] = useState<string>("");
   const [tab, setTab] = useState('results');
+  const [sendingHhInvitation, setSendingHhInvitation] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
   const [allCandidates, setAllCandidates] = useState<any[]>([]);
   const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
@@ -106,6 +107,13 @@ export default function CandidateDetailPage() {
   const [resumeLoading, setResumeLoading] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
   const [isEditingResume, setIsEditingResume] = useState(false);
+  
+  // Коммуникации
+  const [communications, setCommunications] = useState<any[]>([]);
+  const [communicationsLoading, setCommunicationsLoading] = useState(false);
+  const [syncingMessages, setSyncingMessages] = useState(false);
+  const [hasHhNegotiation, setHasHhNegotiation] = useState(false);
+  const [hhCandidateId, setHhCandidateId] = useState<number | null>(null);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -154,6 +162,65 @@ export default function CandidateDetailPage() {
         .finally(() => setResumeLoading(false));
     }
   }, [tab, resumeData, resumeLoading, token, id]);
+  
+  // Автозагрузка коммуникаций при открытии вкладки
+  useEffect(() => {
+    if (tab === 'communications' && communications.length === 0 && !communicationsLoading && token && id) {
+      loadCommunications();
+    }
+  }, [tab, token, id]);
+  
+  const loadCommunications = async () => {
+    if (!token || !id) return;
+    
+    setCommunicationsLoading(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/api/admin/candidates/${id}/communications`);
+      const data = await res.json();
+      
+      if (res.ok) {
+        setCommunications(data.communications || []);
+        setHasHhNegotiation(data.hasHhNegotiation || false);
+        setHhCandidateId(data.hhCandidateId || null);
+      } else {
+        setCopyMsg(_(msg`Ошибка загрузки коммуникаций`));
+      }
+    } catch (error) {
+      console.error('Error loading communications:', error);
+      setCopyMsg(_(msg`Ошибка загрузки коммуникаций`));
+    } finally {
+      setCommunicationsLoading(false);
+    }
+  };
+  
+  const syncHhMessages = async () => {
+    if (!hhCandidateId) return;
+    
+    setSyncingMessages(true);
+    try {
+      const res = await apiFetch(`${API_BASE}/api/hh-integration/candidate/${hhCandidateId}/sync-messages`, {
+        method: 'POST'
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        setCopyMsg(_(msg`✅ Загружено сообщений: ${data.synced}`));
+        // Перезагружаем коммуникации
+        await loadCommunications();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        setCopyMsg(`❌ ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('Error syncing HH messages:', error);
+      setCopyMsg(_(msg`❌ Ошибка синхронизации`));
+    } finally {
+      setSyncingMessages(false);
+    }
+  };
+  
   const saveNote = () => {
     if (id) localStorage.setItem(`hr_note_${id}`, hrNote);
   };
@@ -243,6 +310,42 @@ export default function CandidateDetailPage() {
     }
   };
 
+  // Отправка приглашения на интервью в HH
+  const handleSendHhInvitation = async () => {
+    if (!statusData?.hhCandidateId) {
+      setCopyMsg(_(msg`Кандидат не из HeadHunter.ru`));
+      return;
+    }
+
+    setSendingHhInvitation(true);
+
+    try {
+      const res = await apiFetch(`${API_BASE}/api/hh-integration/candidate/${statusData.hhCandidateId}/send-interview-link`, {
+        method: 'POST'
+      });
+
+      if (res.ok) {
+        setCopyMsg(_(msg`✅ Приглашение отправлено в HH.ru`));
+        // Автоматически синхронизируем сообщения после отправки
+        if (statusData.hhCandidateId) {
+          setTimeout(() => {
+            syncHhMessages();
+          }, 1000); // Небольшая задержка чтобы HH успел обработать
+        }
+      } else {
+        const data = await res.json().catch(() => ({}));
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        setCopyMsg(`❌ ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('Ошибка при отправке приглашения в HH:', error);
+      setCopyMsg(_(msg`❌ Ошибка при отправке приглашения`));
+    } finally {
+      setSendingHhInvitation(false);
+    }
+  };
+
   return (
     <PageContainer title={_(msg`Кандидат`) + ': ' + candidate}>
       <Stack spacing={3}>
@@ -293,6 +396,21 @@ export default function CandidateDetailPage() {
                 </Stack>
               </Box>
               <Stack direction="row" spacing={1}>
+                {/* Кнопка отправки приглашения в HH */}
+                {statusData?.hhCandidateId && (
+                  <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      onClick={handleSendHhInvitation}
+                      disabled={sendingHhInvitation}
+                      startIcon={sendingHhInvitation ? <CircularProgress size={16} /> : <MailOutlineIcon />}
+                    >
+                      {sendingHhInvitation ? <Trans>Отправка...</Trans> : <Trans>HH</Trans>}
+                    </Button>
+                  </Tooltip>
+                )}
                 <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                   <IconButton color="primary" onClick={copyInterviewUrl}><ContentCopyIcon /></IconButton>
                 </Tooltip>
@@ -336,7 +454,7 @@ export default function CandidateDetailPage() {
               <Tab icon={<AssignmentTurnedInIcon />} iconPosition="start" label={_(msg`Результаты`)} value="results" />
               <Tab icon={<IconFileDescription />} iconPosition="start" label={_(msg`Резюме`)} value="resume" />
               <Tab icon={<CommentIcon />} iconPosition="start" label={_(msg`Комментарии`)} value="comments" />
-              <Tab icon={<MailOutlineIcon />} iconPosition="start" label={_(msg`Письма`)} value="letters" />
+              <Tab icon={<MailOutlineIcon />} iconPosition="start" label={_(msg`Коммуникации`)} value="communications" />
               <Tab icon={<FeedbackIcon />} iconPosition="start" label={_(msg`Отзыв`)} value="feedback" />
               <Tab icon={<IconMoodHappy />} iconPosition="start" label={_(msg`Мнение кандидата`)} value="opinion" />
             </Tabs>
@@ -782,12 +900,116 @@ export default function CandidateDetailPage() {
               </CardContent>
             </Card>
           </TabPanel>
-          {/* Tab: Письма */}
-          <TabPanel value="letters" sx={{p:0}}>
+          {/* Tab: Коммуникации */}
+          <TabPanel value="communications" sx={{p:0}}>
             <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h6" sx={{mb:1}}><Trans>Письма кандидату</Trans></Typography>
-                <Typography variant="body2" sx={{opacity:0.7}}><Trans>Здесь появится история писем и уведомлений кандидату (в будущем).</Trans></Typography>
+                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3}>
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <MailOutlineIcon sx={{ fontSize: 32, color: '#1976d2' }} />
+                    <Typography variant="h6" fontWeight="700"><Trans>История коммуникаций</Trans></Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1}>
+                    {statusData?.hhCandidateId && (
+                      <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={handleSendHhInvitation}
+                          disabled={sendingHhInvitation}
+                          startIcon={
+                            sendingHhInvitation
+                              ? <CircularProgress size={16} />
+                              : <MailOutlineIcon />
+                          }
+                        >
+                          {sendingHhInvitation ? <Trans>Отправка...</Trans> : <Trans>📤 Отправить приглашение</Trans>}
+                        </Button>
+                      </Tooltip>
+                    )}
+                    {hasHhNegotiation && (
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={syncHhMessages}
+                        disabled={syncingMessages}
+                        startIcon={syncingMessages ? <CircularProgress size={16} /> : <MailOutlineIcon />}
+                      >
+                        {syncingMessages ? <Trans>Загрузка...</Trans> : <Trans>🔄 Загрузить из HH</Trans>}
+                      </Button>
+                    )}
+                  </Stack>
+                </Stack>
+                
+                {communicationsLoading ? (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : communications.length === 0 ? (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      <Trans>Пока нет коммуникаций с кандидатом</Trans>
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Stack spacing={2}>
+                    {communications.map((comm) => {
+                      const isOutgoing = comm.direction === 'outgoing';
+                      const sourceIcon = comm.source === 'hh' ? '💬' : '✉️';
+                      const directionText = isOutgoing ? 'SofiHR → HH.ru' : 'HH.ru';
+                      
+                      return (
+                        <Card 
+                          key={comm.id} 
+                          variant="outlined"
+                          sx={{ 
+                            borderLeft: isOutgoing ? '4px solid #1976d2' : '4px solid #f57c00',
+                            bgcolor: isOutgoing ? 'rgba(25, 118, 210, 0.02)' : 'rgba(245, 124, 0, 0.02)'
+                          }}
+                        >
+                          <CardContent sx={{ p: 2 }}>
+                            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
+                              <Stack direction="row" alignItems="center" spacing={1}>
+                                <Typography variant="body2" fontWeight={600} color="text.primary">
+                                  {sourceIcon} {directionText}
+                                </Typography>
+                                {comm.sentBy && (
+                                  <Chip 
+                                    label={comm.sentBy.name} 
+                                    size="small" 
+                                    sx={{ height: 20, fontSize: 11 }}
+                                  />
+                                )}
+                              </Stack>
+                              <Typography variant="caption" color="text.secondary">
+                                {new Date(comm.createdAt).toLocaleString('ru-RU', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </Typography>
+                            </Stack>
+                            
+                            <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', mt: 1 }}>
+                              {comm.message}
+                            </Typography>
+                            
+                            {comm.metadata?.interview_link && (
+                              <Box sx={{ mt: 1, p: 1, bgcolor: 'grey.50', borderRadius: 1 }}>
+                                <Typography variant="caption" color="text.secondary">
+                                  <Trans>🔗 Ссылка на интервью отправлена</Trans>
+                                </Typography>
+                              </Box>
+                            )}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </Stack>
+                )}
               </CardContent>
             </Card>
           </TabPanel>
