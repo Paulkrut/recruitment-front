@@ -32,11 +32,13 @@ import {
   IconCrown,
   IconUser,
   IconBrain,
+  IconFileSpreadsheet,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import * as XLSX from 'xlsx';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -322,6 +324,148 @@ export default function ComparePage() {
 
     setPollingInterval(interval);
     console.log('✅ Поллинг запущен, интервал:', interval);
+  };
+
+  // Экспорт в Excel
+  const exportToExcel = () => {
+    if (!comparisonData?.result || !candidates.length) {
+      alert(_(msg`Нет данных для экспорта`));
+      return;
+    }
+
+    const result = comparisonData.result;
+    const workbook = XLSX.utils.book_new();
+
+    // Лист 1: Общая информация
+    const infoData = [
+      ['📊 Сравнение кандидатов', ''],
+      [''],
+      ['Вакансия:', result.vacancy?.title || 'Не указана'],
+      ['Дата сравнения:', new Date().toLocaleString('ru-RU')],
+      ['Количество кандидатов:', candidates.length],
+      [''],
+    ];
+
+    // Добавляем список кандидатов
+    infoData.push(['Кандидаты:']);
+    candidates.forEach((c, idx) => {
+      const isWinner = c.id === result.winnerId;
+      infoData.push([
+        `${idx + 1}. ${c.name}${isWinner ? ' 👑 ПОБЕДИТЕЛЬ' : ''}`,
+        c.email || '',
+        c.phone || '',
+        `AI Score: ${c.score || '-'}`
+      ]);
+    });
+
+    const infoSheet = XLSX.utils.aoa_to_sheet(infoData);
+    infoSheet['!cols'] = [{ wch: 30 }, { wch: 30 }, { wch: 20 }, { wch: 20 }];
+    XLSX.utils.book_append_sheet(workbook, infoSheet, 'Общая информация');
+
+    // Лист 2: Детальное сравнение по критериям
+    if (result.comparison && result.criteria) {
+      const comparisonDataArray: any[][] = [];
+      
+      // Заголовки
+      const headers = ['Кандидат'];
+      
+      // Общие критерии
+      result.criteria.general?.forEach(criterion => {
+        headers.push(`${criterion} (общее)`);
+      });
+      
+      // Специфичные критерии
+      result.criteria.specific?.forEach(criterion => {
+        headers.push(`${criterion} (специфичное)`);
+      });
+      
+      headers.push('Общая оценка', 'Рекомендация');
+      comparisonDataArray.push(headers);
+
+      // Данные по кандидатам
+      result.comparison.forEach(candidate => {
+        const row: any[] = [candidate.name];
+        
+        // Оценки по общим критериям
+        result.criteria.general?.forEach(criterion => {
+          row.push(candidate.scores[criterion] || '-');
+        });
+        
+        // Оценки по специфичным критериям
+        result.criteria.specific?.forEach(criterion => {
+          row.push(candidate.scores[criterion] || '-');
+        });
+        
+        row.push(candidate.overallScore, candidate.recommendation);
+        comparisonDataArray.push(row);
+      });
+
+      const comparisonSheet = XLSX.utils.aoa_to_sheet(comparisonDataArray);
+      
+      // Устанавливаем ширину колонок
+      const colWidths = [{ wch: 25 }]; // Имя кандидата
+      const criteriasCount = (result.criteria.general?.length || 0) + (result.criteria.specific?.length || 0);
+      for (let i = 0; i < criteriasCount; i++) {
+        colWidths.push({ wch: 20 });
+      }
+      colWidths.push({ wch: 15 }, { wch: 30 }); // Общая оценка, Рекомендация
+      
+      comparisonSheet['!cols'] = colWidths;
+      XLSX.utils.book_append_sheet(workbook, comparisonSheet, 'Детальное сравнение');
+    }
+
+    // Лист 3: AI-анализ и рекомендации
+    if (result.analysis || result.reasoning) {
+      const analysisData = [
+        ['🤖 AI-Анализ'],
+        [''],
+      ];
+
+      if (result.analysis) {
+        analysisData.push(['Общий анализ:']);
+        analysisData.push(['']);
+        // Разбиваем текст на строки для читаемости
+        const lines = result.analysis.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          analysisData.push([line]);
+        });
+        analysisData.push(['']);
+      }
+
+      if (result.reasoning) {
+        analysisData.push(['Обоснование рекомендаций:']);
+        analysisData.push(['']);
+        const lines = result.reasoning.split('\n').filter(line => line.trim());
+        lines.forEach(line => {
+          analysisData.push([line]);
+        });
+      }
+
+      const analysisSheet = XLSX.utils.aoa_to_sheet(analysisData);
+      analysisSheet['!cols'] = [{ wch: 100 }];
+      XLSX.utils.book_append_sheet(workbook, analysisSheet, 'AI-Анализ');
+    }
+
+    // Лист 4: Сравнительная таблица (параметры)
+    const parametersData: any[][] = [
+      ['Параметр', ...candidates.map(c => c.name)],
+      ['AI Score', ...candidates.map(c => c.score?.toFixed(1) || '-')],
+      ['Email', ...candidates.map(c => c.email || '-')],
+      ['Телефон', ...candidates.map(c => c.phone || '-')],
+      ['Статус', ...candidates.map(c => c.status || '-')],
+      ['Количество сессий', ...candidates.map(c => c.sessionsCount || 0)],
+      ['Дата создания', ...candidates.map(c => c.createdAt ? new Date(c.createdAt).toLocaleDateString('ru-RU') : '-')],
+    ];
+
+    const parametersSheet = XLSX.utils.aoa_to_sheet(parametersData);
+    parametersSheet['!cols'] = [{ wch: 25 }, ...candidates.map(() => ({ wch: 25 }))];
+    XLSX.utils.book_append_sheet(workbook, parametersSheet, 'Параметры кандидатов');
+
+    // Генерируем имя файла
+    const fileName = `Сравнение_кандидатов_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    // Сохраняем файл
+    XLSX.writeFile(workbook, fileName);
   };
 
 
@@ -818,6 +962,27 @@ export default function ComparePage() {
                         </TableBody>
                       </Table>
                     </TableContainer>
+
+                    {/* Кнопка экспорта в Excel */}
+                    <Box display="flex" justifyContent="center" mt={3}>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        size="large"
+                        startIcon={<IconFileSpreadsheet size={20} />}
+                        onClick={exportToExcel}
+                        sx={{ 
+                          fontWeight: 700, 
+                          minWidth: 220,
+                          boxShadow: 3,
+                          '&:hover': {
+                            boxShadow: 6,
+                          }
+                        }}
+                      >
+                        <Trans>📊 Выгрузить в Excel</Trans>
+                      </Button>
+                    </Box>
                   </>
                 )}
               </>
