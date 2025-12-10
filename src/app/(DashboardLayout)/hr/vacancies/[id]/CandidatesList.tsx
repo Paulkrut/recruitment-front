@@ -128,6 +128,7 @@ export default function CandidatesList({
         if (filters.search) queryParams.append('search', filters.search);
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
         if (filters.testScore) queryParams.append('testScore', filters.testScore); // Новый фильтр
+        if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent); // Фильтр по приглашениям
         if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
         if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
         if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
