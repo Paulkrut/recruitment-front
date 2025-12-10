@@ -410,12 +410,12 @@ export default function LandingPage() {
           </Container>
         </Box>
         {/* Контент Hero поверх */}
-        <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 12, sm: 10, md: 8 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
+        <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 8, sm: 6, md: 4 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", gap: 4 }}>
             <Box sx={{ flex: 1 }}>
-              <Typography variant="h1" sx={{ fontSize: { xs: "2.5rem", md: "3.5rem" }, fontWeight: 700, mb: 2, lineHeight: 1.2 }}><Trans>HR-платформа для автоматизации найма и интервью</Trans></Typography>
-              <Typography variant="h5" color="text.secondary" mb={4}><Trans>Автоматизируйте найм с помощью ИИ. Создавайте вакансии, проводите интервью и нанимайте лучших кандидатов в 3 раза быстрее.</Trans></Typography>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <Typography variant="h1" sx={{ fontSize: { xs: "2.2rem", md: "3rem" }, fontWeight: 700, mb: 1.5, lineHeight: 1.2 }}><Trans>HR-платформа для автоматизации найма и интервью</Trans></Typography>
+              <Typography variant="h5" color="text.secondary" mb={2.5} sx={{ fontSize: { xs: "1.1rem", md: "1.25rem" } }}><Trans>Платформа для собеседований, генерации вопросов, оценки кандидатов с помощью ИИ.</Trans></Typography>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <AvatarGroup max={3} sx={{ mr: 2 }}>
                   <Avatar alt="User 1" src={user1.src} />
                   <Avatar alt="User 2" src={user2.src} />
@@ -425,25 +425,41 @@ export default function LandingPage() {
                   {totalClients.toLocaleString()}+ HR и компаний уже с нами
                 </Trans></Typography>
               </Box>
-              <Box sx={{ display: 'flex', gap: 3, mb: 4, flexWrap: 'wrap' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Icon icon="mdi:clock-fast" color="#4CAF50" width={20} height={20} />
-                  <Typography variant="body2"><Trans>В 3 раза быстрее</Trans></Typography>
+              <Box sx={{ display: 'flex', gap: 1, mb: 2.5, flexDirection: 'column' }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography variant="body1">📝</Typography>
+                  <Typography variant="body1"><Trans>Генерировать вопросы для любой вакансии за 1 клик</Trans></Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Icon icon="mdi:robot" color="#2196F3" width={20} height={20} />
-                  <Typography variant="body2"><Trans>ИИ-интервью</Trans></Typography>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography variant="body1">🎥</Typography>
+                  <Typography variant="body1"><Trans>Проводить видеоинтервью с помощью ИИ, без ваших усилий</Trans></Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Icon icon="mdi:shield-check" color="#FF9800" width={20} height={20} />
-                  <Typography variant="body2"><Trans>Безопасность данных</Trans></Typography>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography variant="body1">📊</Typography>
+                  <Typography variant="body1"><Trans>Получать объективную оценку и сравнение кандидатов</Trans></Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Icon icon="mdi:chart-line" color="#9C27B0" width={20} height={20} />
-                  <Typography variant="body2"><Trans>Аналитика в реальном времени</Trans></Typography>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography variant="body1">🔍</Typography>
+                  <Typography variant="body1"><Trans>Проверять знание регламентов и внутренних правил</Trans></Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5 }}>
+                  <Typography variant="body1">⚡</Typography>
+                  <Typography variant="body1"><Trans>Обрабатывать большой поток вакансий и кандидатов качественно в сжатые сроки</Trans></Typography>
+                </Box>
+                <Box sx={{ 
+                  mt: 1.5, 
+                  p: 1.5, 
+                  borderRadius: 1, 
+                  bgcolor: 'primary.50',
+                  border: '1px solid',
+                  borderColor: 'primary.200'
+                }}>
+                  <Typography variant="body1" fontWeight={600} sx={{ color: 'primary.main' }}>
+                    <Trans>Первые 10 интервью бесплатно — попробуйте, как это работает.</Trans>
+                  </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4, flexWrap: 'wrap' }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2, flexWrap: 'wrap' }}>
                 {technologies.map((tech) => (
                   <Box key={tech.label} sx={{ width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "background.paper", borderRadius: 1, boxShadow: 1 }}>
                     <Icon icon={tech.icon} width="24" height="24" />
@@ -454,29 +470,30 @@ export default function LandingPage() {
             {/* Dashboard Preview */}
             <Box sx={{ flex: 1, display: { xs: "none", lg: "block" } }}>
               <Paper elevation={3} sx={{ p: 3, borderRadius: 2, bgcolor: "background.paper" }}>
-                <Typography variant="h6" gutterBottom><Trans>Автоматизация HR-процессов</Trans></Typography>
-                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Вакансии, кандидаты, интервью — всё в одном месте</Trans></Typography>
+                <Typography variant="h6" gutterBottom><Trans>Автоматизация собеседований</Trans></Typography>
+                <Typography variant="body2" color="text.secondary" mb={3}><Trans>Работаем с вашими кандидатами — проводим интервью и оцениваем</Trans></Typography>
                 <Grid container spacing={2} mb={2}>
                   <Grid item xs={6}>
-                    <Typography variant="h5" fontWeight={700}>{totalVacancies.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary"><Trans>Открытых вакансий</Trans></Typography>
+                    <Typography variant="h5" fontWeight={700}>{totalInterviews.toLocaleString()}</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Интервью проведено</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="h5" fontWeight={700}>{totalCandidates.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary"><Trans>Кандидатов в процессе</Trans></Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Кандидатов оценено</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="h5" fontWeight={700}>{totalInterviews.toLocaleString()}</Typography>
-                    <Typography variant="body2" color="text.secondary"><Trans>Проведённых интервью</Trans></Typography>
+                    <Typography variant="h5" fontWeight={700}>24/7</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Работаем круглосуточно</Trans></Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography variant="h5" fontWeight={700}>{Math.round(totalInterviews/totalVacancies)}x</Typography>
-                    <Typography variant="body2" color="text.secondary"><Trans>Быстрее найм</Trans></Typography>
+                    <Typography variant="h5" fontWeight={700}>17x</Typography>
+                    <Typography variant="body2" color="text.secondary"><Trans>Быстрее отбор</Trans></Typography>
                   </Grid>
                 </Grid>
                 <Box mb={2}>
-                  <Typography variant="body2" color="text.secondary"><Trans>Среднее время закрытия вакансии: <b>7 дней</b></Trans></Typography>
-                  <Typography variant="body2" color="text.secondary"><Trans>Автоматизировано: <b>80%</b> интервью</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>⚡ Автоматическая генерация вопросов</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>🤖 ИИ проводит интервью за вас</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary"><Trans>📊 Объективная оценка каждого кандидата</Trans></Typography>
                 </Box>
                 <Box mb={3}>
                   <Typography variant="body2" color="text.secondary" mb={1}><Trans>Интеграции:</Trans></Typography>
