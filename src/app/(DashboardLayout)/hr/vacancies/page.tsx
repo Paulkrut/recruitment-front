@@ -33,6 +33,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   IconPlus,
@@ -46,6 +48,8 @@ import {
   IconCheck,
   IconCards,
   IconTable,
+  IconRestore,
+  IconArchive,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { formatDateToLocal, formatDateOnly } from "@/utils/dateUtils";
@@ -61,7 +65,10 @@ interface VacancyRow {
   title: string;
   description?: string;
   source?: string; // 'manual' | 'headhunter' | 'linkedin'
+  status?: string; // 'active' | 'deleted' | 'archived'
   createdAt: string;
+  deletedAt?: string;
+  archivedAt?: string;
   createdBy: string;
   candidatesTotal?: number;
   candidatesFinished?: number;
@@ -74,11 +81,13 @@ interface Template {
 }
 
 // Компонент таблицы вакансий
-function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
+function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArchive }: {
   vacancies: VacancyRow[];
   templates: Template[];
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onRestore: (id: number) => void;
+  onArchive: (id: number) => void;
 }) {
   const router = useRouter();
   const { _ } = useLingui();
@@ -225,14 +234,40 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                           />
                         </Tooltip>
                       )}
+                      {vacancy.status === 'deleted' && (
+                        <Chip
+                          label="🗑️"
+                          size="small"
+                          color="error"
+                          sx={{
+                            height: 20,
+                            width: 24,
+                            fontSize: '0.75rem',
+                            '& .MuiChip-label': { px: 0.5 }
+                          }}
+                        />
+                      )}
+                      {vacancy.status === 'archived' && (
+                        <Chip
+                          label="📦"
+                          size="small"
+                          color="default"
+                          sx={{
+                            height: 20,
+                            width: 24,
+                            fontSize: '0.75rem',
+                            '& .MuiChip-label': { px: 0.5 }
+                          }}
+                        />
+                      )}
                       <Typography
                         variant="subtitle2"
                         fontWeight={600}
-                        color="primary.main"
+                        color={vacancy.status === 'active' ? 'primary.main' : 'text.disabled'}
                         sx={{
                           cursor: 'pointer',
                           '&:hover': {
-                            color: 'primary.dark',
+                            color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary',
                             textDecoration: 'underline'
                           },
                           transition: 'all 0.2s ease'
@@ -299,34 +334,70 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
                         <IconEye size={14} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={_(msg`Редактировать`)}>
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={() => onEdit(vacancy.id)}
-                        sx={{
-                          width: 28,
-                          height: 28,
-                          '&:hover': { backgroundColor: 'primary.light' }
-                        }}
-                      >
-                        <IconEdit size={14} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={_(msg`Удалить`)}>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => onDelete(vacancy.id)}
-                        sx={{
-                          width: 28,
-                          height: 28,
-                          '&:hover': { backgroundColor: 'error.light' }
-                        }}
-                      >
-                        <IconTrash size={14} />
-                      </IconButton>
-                    </Tooltip>
+                    
+                    {vacancy.status === 'active' && (
+                      <>
+                        <Tooltip title={_(msg`Редактировать`)}>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => onEdit(vacancy.id)}
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              '&:hover': { backgroundColor: 'primary.light' }
+                            }}
+                          >
+                            <IconEdit size={14} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={_(msg`В архив`)}>
+                          <IconButton
+                            size="small"
+                            color="default"
+                            onClick={() => onArchive(vacancy.id)}
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              '&:hover': { backgroundColor: 'grey.300' }
+                            }}
+                          >
+                            <IconArchive size={14} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={_(msg`Удалить`)}>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => onDelete(vacancy.id)}
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              '&:hover': { backgroundColor: 'error.light' }
+                            }}
+                          >
+                            <IconTrash size={14} />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
+                    
+                    {(vacancy.status === 'deleted' || vacancy.status === 'archived') && (
+                      <Tooltip title={_(msg`Восстановить`)}>
+                        <IconButton
+                          size="small"
+                          color="success"
+                          onClick={() => onRestore(vacancy.id)}
+                          sx={{
+                            width: 28,
+                            height: 28,
+                            '&:hover': { backgroundColor: 'success.light' }
+                          }}
+                        >
+                          <IconRestore size={14} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>
@@ -339,11 +410,13 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete }: {
 }
 
 // Новый компонент карточки вакансии
-function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
+function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchive }: {
   vacancy: VacancyRow;
   templates: Template[];
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
+  onRestore: (id: number) => void;
+  onArchive: (id: number) => void;
 }) {
   const { _ } = useLingui();
   const router = useRouter();
@@ -399,6 +472,22 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
               />
             </Tooltip>
           )}
+          {vacancy.status === 'deleted' && (
+            <Chip
+              label="🗑️ Удалено"
+              size="small"
+              color="error"
+              sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
+            />
+          )}
+          {vacancy.status === 'archived' && (
+            <Chip
+              label="📦 Архив"
+              size="small"
+              color="default"
+              sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
+            />
+          )}
           <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
             <Typography
               variant="h6"
@@ -406,9 +495,9 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
               sx={{
                 flexGrow: 1,
                 cursor: 'pointer',
-                color: 'primary.main',
+                color: vacancy.status === 'active' ? 'primary.main' : 'text.disabled',
                 transition: 'color 0.2s',
-                '&:hover': { color: 'primary.dark', textDecoration: 'underline' },
+                '&:hover': { color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary', textDecoration: 'underline' },
               }}
             >
               {vacancy.title}
@@ -508,18 +597,36 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete }: {
             </IconButton>
           </Link>
         </Tooltip>
-        <Tooltip title={_(msg`Редактировать`)}>
-          <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
-            <IconButton size="small" color="warning" component="a">
-              <IconEdit size={18} />
+        
+        {vacancy.status === 'active' && (
+          <>
+            <Tooltip title={_(msg`Редактировать`)}>
+              <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
+                <IconButton size="small" color="warning" component="a">
+                  <IconEdit size={18} />
+                </IconButton>
+              </Link>
+            </Tooltip>
+            <Tooltip title={_(msg`В архив`)}>
+              <IconButton size="small" color="default" onClick={() => onArchive(vacancy.id)}>
+                <IconArchive size={18} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={_(msg`Удалить`)}>
+              <IconButton size="small" color="error" onClick={() => onDelete(vacancy.id)}>
+                <IconTrash size={18} />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
+        
+        {(vacancy.status === 'deleted' || vacancy.status === 'archived') && (
+          <Tooltip title={_(msg`Восстановить`)}>
+            <IconButton size="small" color="success" onClick={() => onRestore(vacancy.id)}>
+              <IconRestore size={18} />
             </IconButton>
-          </Link>
-        </Tooltip>
-        <Tooltip title={_(msg`Удалить`)}>
-          <IconButton size="small" color="error" onClick={() => onDelete(vacancy.id)}>
-            <IconTrash size={18} />
-          </IconButton>
-        </Tooltip>
+          </Tooltip>
+        )}
       </Box>
     </Card>
   );
@@ -533,6 +640,8 @@ export default function HRVacanciesPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<'card' | 'table'>('table');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'deleted' | 'archived' | 'all'>('active');
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -549,10 +658,10 @@ export default function HRVacanciesPage() {
     if (!token) return;
     fetchVacancies();
     fetchTemplates();
-  }, [token]);
+  }, [token, statusFilter]);
 
   async function fetchVacancies() {
-    const res = await apiFetch(`${API_BASE}/api/admin/vacancies`);
+    const res = await apiFetch(`${API_BASE}/api/admin/vacancies?status=${statusFilter}`);
     if (res.ok) {
       const data = await res.json();
       setRows(data);
@@ -564,6 +673,57 @@ export default function HRVacanciesPage() {
     if (res.ok) {
       const data = await res.json();
       setTemplates(Array.isArray(data) ? data : data.items || []);
+    }
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm(_(msg`Вы уверены, что хотите удалить эту вакансию? Она будет перемещена в "Удалённые".`))) {
+      return;
+    }
+
+    const res = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      setSnackbar({ open: true, message: _(msg`Вакансия перемещена в удалённые`), severity: "success" });
+      fetchVacancies();
+    } else {
+      setSnackbar({ open: true, message: _(msg`Ошибка при удалении`), severity: "error" });
+    }
+  }
+
+  async function handleRestore(id: number) {
+    if (!confirm(_(msg`Восстановить вакансию?`))) {
+      return;
+    }
+
+    const res = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/restore`, {
+      method: 'PATCH',
+    });
+
+    if (res.ok) {
+      setSnackbar({ open: true, message: _(msg`Вакансия восстановлена`), severity: "success" });
+      fetchVacancies();
+    } else {
+      setSnackbar({ open: true, message: _(msg`Ошибка при восстановлении`), severity: "error" });
+    }
+  }
+
+  async function handleArchive(id: number) {
+    if (!confirm(_(msg`Переместить вакансию в архив?`))) {
+      return;
+    }
+
+    const res = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/archive`, {
+      method: 'PATCH',
+    });
+
+    if (res.ok) {
+      setSnackbar({ open: true, message: _(msg`Вакансия перемещена в архив`), severity: "success" });
+      fetchVacancies();
+    } else {
+      setSnackbar({ open: true, message: _(msg`Ошибка при архивации`), severity: "error" });
     }
   }
 
@@ -633,8 +793,23 @@ export default function HRVacanciesPage() {
           </Box>
         </Box>
 
-        {/* Search */}
-        <Box mb={3}>
+        {/* Фильтры */}
+        <Box display="flex" gap={2} mb={3}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="status-filter-label"><Trans>Статус вакансии</Trans></InputLabel>
+            <Select
+              labelId="status-filter-label"
+              value={statusFilter}
+              label={_(msg`Статус вакансии`)}
+              onChange={(e) => setStatusFilter(e.target.value as any)}
+            >
+              <MenuItem value="active">✅ <Trans>Активные</Trans></MenuItem>
+              <MenuItem value="deleted">🗑️ <Trans>Удалённые</Trans></MenuItem>
+              <MenuItem value="archived">📦 <Trans>Архив</Trans></MenuItem>
+              <MenuItem value="all">📋 <Trans>Все</Trans></MenuItem>
+            </Select>
+          </FormControl>
+
           <TextField
             fullWidth
             placeholder={_(msg`Поиск вакансий...`)}
@@ -659,7 +834,9 @@ export default function HRVacanciesPage() {
                   vacancy={vacancy}
                   templates={templates}
                   onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
-                  onDelete={(id) => {/* TODO: реализовать удаление */}}
+                  onDelete={handleDelete}
+                  onRestore={handleRestore}
+                  onArchive={handleArchive}
                 />
               </Grid>
             ))}
@@ -669,7 +846,9 @@ export default function HRVacanciesPage() {
             vacancies={filtered}
             templates={templates}
             onEdit={(id) => router.push(`/hr/vacancy-edit/${id}`)}
-            onDelete={(id) => {/* TODO: реализовать удаление */}}
+            onDelete={handleDelete}
+            onRestore={handleRestore}
+            onArchive={handleArchive}
           />
         )}
 
@@ -683,6 +862,22 @@ export default function HRVacanciesPage() {
             </Typography>
           </Box>
         )}
+        
+        {/* Snackbar для уведомлений */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={4000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </Box>
     </PageContainer>
   );

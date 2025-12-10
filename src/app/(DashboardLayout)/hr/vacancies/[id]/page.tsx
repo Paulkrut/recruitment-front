@@ -5,7 +5,7 @@ import {
   Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -195,6 +195,198 @@ export default function HRVacancyDetailPage() {
     }
   };
 
+  // Функции управления статусом вакансии
+  const handleDeleteVacancy = async () => {
+    if (!confirm(_(msg`Вы уверены, что хотите удалить эту вакансию? Она будет перемещена в "Удалённые".`))) {
+      return;
+    }
+
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setSnackbar(_(msg`Вакансия перемещена в удалённые`));
+        // Обновляем данные
+        setTimeout(() => {
+          router.push('/hr/vacancies');
+        }, 1500);
+      } else {
+        setSnackbar(_(msg`Ошибка при удалении`));
+      }
+    } catch (error) {
+      setSnackbar(_(msg`Ошибка при удалении`));
+    }
+  };
+
+  const handleRestoreVacancy = async () => {
+    if (!confirm(_(msg`Восстановить вакансию?`))) {
+      return;
+    }
+
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/restore`, {
+        method: 'PATCH',
+      });
+
+      if (response.ok) {
+        setSnackbar(_(msg`Вакансия восстановлена`));
+        // Перезагружаем данные
+        const updatedData = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`);
+        const newData = await updatedData.json();
+        setData(newData);
+      } else {
+        setSnackbar(_(msg`Ошибка при восстановлении`));
+      }
+    } catch (error) {
+      setSnackbar(_(msg`Ошибка при восстановлении`));
+    }
+  };
+
+  const handleArchiveVacancy = async () => {
+    if (!confirm(_(msg`Переместить вакансию в архив?`))) {
+      return;
+    }
+
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/archive`, {
+        method: 'PATCH',
+      });
+
+      if (response.ok) {
+        setSnackbar(_(msg`Вакансия перемещена в архив`));
+        // Перезагружаем данные
+        const updatedData = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`);
+        const newData = await updatedData.json();
+        setData(newData);
+      } else {
+        setSnackbar(_(msg`Ошибка при архивации`));
+      }
+    } catch (error) {
+      setSnackbar(_(msg`Ошибка при архивации`));
+    }
+  };
+
+  // Состояние для прогресса массовой отправки приглашений
+  const [sendingInProgress, setSendingInProgress] = useState(false);
+  const [sendingJobId, setSendingJobId] = useState<number | null>(null);
+  const [sendingProgress, setSendingProgress] = useState({
+    total: 0,
+    processed: 0,
+    succeeded: 0,
+    failed: 0,
+    progress: 0,
+  });
+  const [sendingProgressDialogOpen, setSendingProgressDialogOpen] = useState(false);
+  const [sendingResults, setSendingResults] = useState<any[] | null>(null);
+
+  // Polling для отслеживания прогресса массовой отправки
+  const pollSendingProgress = async (jobId: number) => {
+    const maxAttempts = 300; // 5 минут (каждые 2 секунды)
+    let attempts = 0;
+
+    const poll = async (): Promise<void> => {
+      if (attempts >= maxAttempts) {
+        setSnackbar(_(msg`⏱️ Превышено время ожидания`));
+        setSendingInProgress(false);
+        return;
+      }
+
+      attempts++;
+
+      try {
+        const response = await apiFetch(`${API_BASE}/api/hh-integration/invitation-job/${jobId}/status`);
+        
+        if (response.ok) {
+          const result = await response.json();
+          const job = result.job;
+
+          setSendingProgress({
+            total: job.total,
+            processed: job.processed,
+            succeeded: job.succeeded,
+            failed: job.failed,
+            progress: job.progress,
+          });
+
+          if (job.isCompleted) {
+            // Джоба завершена
+            setSendingInProgress(false);
+            setSendingResults(job.results || []);
+            
+            if (job.status === 'completed') {
+              if (job.succeeded === job.total) {
+                setSnackbar(_(msg`✅ Все приглашения отправлены (${job.succeeded}/${job.total})`));
+              } else if (job.succeeded > 0) {
+                setSnackbar(_(msg`⚠️ Частично отправлено: ${job.succeeded}/${job.total}`));
+              } else {
+                setSnackbar(_(msg`❌ Не удалось отправить приглашения`));
+              }
+            } else {
+              setSnackbar(_(msg`❌ Ошибка отправки: ${job.errorMessage || 'Unknown error'}`));
+            }
+
+            // Обновляем список кандидатов
+            setRefreshKey(prev => prev + 1);
+
+            return;
+          }
+
+          // Продолжаем polling через 2 секунды
+          setTimeout(() => poll(), 2000);
+        } else {
+          setSnackbar(_(msg`Ошибка проверки статуса отправки`));
+          setSendingInProgress(false);
+        }
+      } catch (error) {
+        console.error('Error polling sending progress:', error);
+        setSnackbar(_(msg`Ошибка проверки статуса отправки`));
+        setSendingInProgress(false);
+      }
+    };
+
+    poll();
+  };
+
+  // Функция массовой отправки приглашений в HH.ru
+  const handleBulkSendInvitations = async (candidateIds: number[]) => {
+    if (!id) return;
+    
+    try {
+      setSendingInProgress(true);
+      setSendingProgressDialogOpen(true);
+      setSendingProgress({ total: candidateIds.length, processed: 0, succeeded: 0, failed: 0, progress: 0 });
+
+      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${id}/send-bulk-invitations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ candidateIds }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const jobId = result.jobId;
+        setSendingJobId(jobId);
+        
+        // Запускаем polling
+        pollSendingProgress(jobId);
+      } else {
+        const error = await response.json();
+        setSnackbar(error.message || _(msg`Ошибка создания задачи отправки`));
+        setSendingInProgress(false);
+        setSendingProgressDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error starting bulk invitations:', error);
+      setSnackbar(_(msg`Ошибка отправки приглашений`));
+      setSendingInProgress(false);
+      setSendingProgressDialogOpen(false);
+    }
+  };
+
   // Функция для выбора всех кандидатов (только завершенных)
   const handleSelectAll = () => {
     const finishedCandidates = filteredCandidates.filter(c => c.status === 'finished');
@@ -312,7 +504,15 @@ export default function HRVacancyDetailPage() {
       <Card sx={{ p: 0, background: '#fff', boxShadow: 3 }}>
         <Box p={4} display="flex" alignItems="center" justifyContent="space-between" flexWrap="wrap">
           <Box flex={1}>
-            <Typography variant="h3" fontWeight={800} sx={{ mb: 1, color: 'text.primary' }}>{title}</Typography>
+            <Box display="flex" alignItems="center" gap={2} mb={1}>
+              <Typography variant="h3" fontWeight={800} sx={{ color: 'text.primary' }}>{title}</Typography>
+              {data?.status === 'deleted' && (
+                <Chip label="🗑️ Удалено" color="error" size="medium" sx={{ fontWeight: 700, fontSize: '0.9rem' }} />
+              )}
+              {data?.status === 'archived' && (
+                <Chip label="📦 Архив" color="default" size="medium" sx={{ fontWeight: 700, fontSize: '0.9rem' }} />
+              )}
+            </Box>
             <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}><Trans>Создана: {createdAt}</Trans></Typography>
             <Box display="flex" gap={2} mt={2} flexWrap="wrap">
               <Chip icon={<IconFileText size={18}/>} label={template?.title || _(msg`Без шаблона`)} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
@@ -443,9 +643,61 @@ export default function HRVacancyDetailPage() {
               </Box>
             )}
           </Box>
-          <Button variant="contained" color="primary" size="large" startIcon={<IconEdit size={24}/>} sx={{ fontWeight: 700, minWidth: 180, mt: { xs: 2, md: 0 } }} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}>
-            <Trans>Редактировать</Trans>
-          </Button>
+          <Box display="flex" gap={2} alignItems="center" mt={{ xs: 2, md: 0 }}>
+            {/* Кнопки для активных вакансий */}
+            {data?.status === 'active' && (
+              <>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  size="large" 
+                  startIcon={<IconEdit size={20}/>} 
+                  sx={{ fontWeight: 700, minWidth: 140 }} 
+                  onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}
+                >
+                  <Trans>Редактировать</Trans>
+                </Button>
+                <Tooltip title={_(msg`В архив`)}>
+                  <Button 
+                    variant="outlined" 
+                    color="inherit" 
+                    size="large" 
+                    onClick={handleArchiveVacancy}
+                    sx={{ minWidth: 50 }}
+                  >
+                    <IconArchive size={20}/>
+                  </Button>
+                </Tooltip>
+                <Tooltip title={_(msg`Удалить`)}>
+                  <Button 
+                    variant="outlined" 
+                    color="error" 
+                    size="large" 
+                    onClick={handleDeleteVacancy}
+                    sx={{ minWidth: 50 }}
+                  >
+                    <IconTrash size={20}/>
+                  </Button>
+                </Tooltip>
+              </>
+            )}
+            
+            {/* Кнопки для удалённых/архивных вакансий */}
+            {(data?.status === 'deleted' || data?.status === 'archived') && (
+              <Tooltip title={_(msg`Восстановить`)}>
+                <Button 
+                  variant="contained" 
+                  color="success" 
+                  size="large" 
+                  startIcon={<IconRestore size={20}/>} 
+                  onClick={handleRestoreVacancy}
+                  sx={{ fontWeight: 700, minWidth: 160 }}
+                >
+                  <Trans>Восстановить</Trans>
+                </Button>
+              </Tooltip>
+            )}
+          </Box>
         </Box>
       </Card>
     </Box>
@@ -462,6 +714,29 @@ export default function HRVacancyDetailPage() {
         }
       `}</style>
       {header}
+      
+      {/* Предупреждение для удалённых/архивных вакансий */}
+      {data?.status === 'deleted' && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          <Typography variant="body2" fontWeight={600}>
+            <Trans>⚠️ Эта вакансия удалена. Кандидаты не могут проходить интервью.</Trans>
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 0.5 }}>
+            <Trans>Вы можете восстановить её, нажав кнопку "Восстановить" выше.</Trans>
+          </Typography>
+        </Alert>
+      )}
+      {data?.status === 'archived' && (
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          <Typography variant="body2" fontWeight={600}>
+            <Trans>📦 Эта вакансия находится в архиве. Кандидаты не могут проходить интервью.</Trans>
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 0.5 }}>
+            <Trans>Вы можете восстановить её, нажав кнопку "Восстановить" выше.</Trans>
+          </Typography>
+        </Alert>
+      )}
+      
       <TabContext value={tab}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <TabList onChange={(_, v) => setTab(v)} aria-label="vacancy tabs">
