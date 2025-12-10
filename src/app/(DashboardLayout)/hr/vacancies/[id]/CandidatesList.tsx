@@ -26,12 +26,14 @@ import {
   DialogContentText,
   DialogActions,
   Alert,
+  LinearProgress,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import QrCodeIcon from '@mui/icons-material/QrCode';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import Link from 'next/link';
 import { apiFetch } from '@/utils/api';
 import moment from 'moment';
@@ -48,6 +50,7 @@ interface CandidatesListProps {
   onShowQR: (url: string) => void;
   selectedCandidates?: number[];
   onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
+  vacancySource?: string; // Источник вакансии (headhunter, manual, etc.)
 }
 
 export default function CandidatesList({
@@ -56,12 +59,19 @@ export default function CandidatesList({
   onSnackbar,
   onShowQR,
   selectedCandidates: externalSelectedCandidates = [],
-  onSelectedCandidatesChange
+  onSelectedCandidatesChange,
+  vacancySource = '',
 }: CandidatesListProps) {
   const { _ } = useLingui();
 
   const [candidates, setCandidates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Helper для форматирования даты
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '';
+    return moment(dateString).format('DD.MM.YYYY HH:mm');
+  };
 
   // Используем внешнее состояние для выбранных кандидатов (для синхронизации с главной страницей)
   const selectedCandidates = externalSelectedCandidates;
@@ -83,6 +93,19 @@ export default function CandidatesList({
     candidateName?: string;
     message?: string;
   } | null>(null);
+
+  // Состояние для прогресса массовой отправки приглашений
+  const [sendingInProgress, setSendingInProgress] = useState(false);
+  const [sendingJobId, setSendingJobId] = useState<number | null>(null);
+  const [sendingProgress, setSendingProgress] = useState({
+    total: 0,
+    processed: 0,
+    succeeded: 0,
+    failed: 0,
+    progress: 0,
+  });
+  const [sendingProgressDialogOpen, setSendingProgressDialogOpen] = useState(false);
+  const [sendingResults, setSendingResults] = useState<any[] | null>(null);
 
   // Загрузка кандидатов с фильтрами, пагинацией и сортировкой
   useEffect(() => {
@@ -385,6 +408,134 @@ export default function CandidatesList({
     }
   };
 
+  // Polling для отслеживания прогресса массовой отправки
+  const pollSendingProgress = async (jobId: number) => {
+    const maxAttempts = 300; // 5 минут (каждые 2 секунды)
+    let attempts = 0;
+
+    const poll = async (): Promise<void> => {
+      if (attempts >= maxAttempts) {
+        onSnackbar(_(msg`⏱️ Превышено время ожидания`));
+        setSendingInProgress(false);
+        return;
+      }
+
+      attempts++;
+
+      try {
+        const response = await apiFetch(`${API_BASE}/api/hh-integration/invitation-job/${jobId}/status`);
+        
+        if (response.ok) {
+          const result = await response.json();
+          const job = result.job;
+
+          setSendingProgress({
+            total: job.total,
+            processed: job.processed,
+            succeeded: job.succeeded,
+            failed: job.failed,
+            progress: job.progress,
+          });
+
+          if (job.isCompleted) {
+            // Джоба завершена
+            setSendingInProgress(false);
+            setSendingResults(job.results || []);
+            
+            if (job.status === 'completed') {
+              if (job.succeeded === job.total) {
+                onSnackbar(_(msg`✅ Все приглашения отправлены (${job.succeeded}/${job.total})`));
+              } else if (job.succeeded > 0) {
+                onSnackbar(_(msg`⚠️ Частично отправлено: ${job.succeeded}/${job.total}`));
+              } else {
+                onSnackbar(_(msg`❌ Не удалось отправить приглашения`));
+              }
+            } else {
+              onSnackbar(_(msg`❌ Ошибка отправки: ${job.errorMessage || 'Unknown error'}`));
+            }
+
+            // Обновляем список кандидатов
+            const queryParams = new URLSearchParams();
+            queryParams.append('page', (page + 1).toString());
+            queryParams.append('perPage', rowsPerPage.toString());
+            queryParams.append('sortBy', sortBy);
+            queryParams.append('sortOrder', sortOrder);
+            if (filters.source) queryParams.append('source', filters.source);
+            if (filters.status) queryParams.append('status', filters.status);
+            if (filters.search) queryParams.append('search', filters.search);
+            if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+
+            const refreshResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
+            const refreshData = await refreshResponse.json();
+            setCandidates(refreshData.data || []);
+            setTotal(refreshData.total || 0);
+
+            return;
+          }
+
+          // Продолжаем polling через 2 секунды
+          setTimeout(() => poll(), 2000);
+        } else {
+          onSnackbar(_(msg`Ошибка проверки статуса отправки`));
+          setSendingInProgress(false);
+        }
+      } catch (error) {
+        console.error('Error polling sending progress:', error);
+        onSnackbar(_(msg`Ошибка проверки статуса отправки`));
+        setSendingInProgress(false);
+      }
+    };
+
+    poll();
+  };
+
+  // Обработчик массовой отправки приглашений
+  const handleBulkSendInvitations = async () => {
+    // Получаем ID HH кандидатов из выбранных
+    const selectedCandidatesData = candidates.filter(c => selectedCandidates.includes(c.id));
+    const hhCandidateIds = selectedCandidatesData
+      .filter(c => c.hhCandidateId)
+      .map(c => c.hhCandidateId);
+    
+    if (hhCandidateIds.length === 0) {
+      onSnackbar(_(msg`Среди выбранных нет кандидатов из HH.ru`));
+      return;
+    }
+
+    try {
+      setSendingInProgress(true);
+      setSendingProgressDialogOpen(true);
+      setSendingProgress({ total: hhCandidateIds.length, processed: 0, succeeded: 0, failed: 0, progress: 0 });
+
+      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/send-bulk-invitations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ candidateIds: hhCandidateIds }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        const jobId = result.jobId;
+        setSendingJobId(jobId);
+        
+        // Запускаем polling
+        pollSendingProgress(jobId);
+      } else {
+        const error = await response.json();
+        onSnackbar(error.message || _(msg`Ошибка создания задачи отправки`));
+        setSendingInProgress(false);
+        setSendingProgressDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error starting bulk invitations:', error);
+      onSnackbar(_(msg`Ошибка отправки приглашений`));
+      setSendingInProgress(false);
+      setSendingProgressDialogOpen(false);
+    }
+  };
+
   const getAiScoreColor = (score: number | null) => {
     if (score === null) return 'default';
     if (score >= 90) return 'success';
@@ -423,10 +574,12 @@ export default function CandidatesList({
     <Box>
       {/* Панель массовых действий */}
       {selectedCandidates.length > 0 && (
-        <Box display="flex" alignItems="center" gap={2} mb={2} p={2} bgcolor="primary.light" borderRadius={1}>
+        <Box display="flex" alignItems="center" gap={2} mb={2} p={2} bgcolor="primary.light" borderRadius={1} flexWrap="wrap">
           <Typography variant="body1" fontWeight={600}><Trans>
             Выбрано: {selectedCandidates.length}
           </Trans></Typography>
+          
+          {/* Массовое перемещение */}
           <FormControl size="small" sx={{ minWidth: 200 }}>
             <Select
               value={bulkStatus}
@@ -450,6 +603,22 @@ export default function CandidatesList({
             onClick={handleBulkStatusChange}
             disabled={!bulkStatus}
           ><Trans>Применить</Trans></Button>
+          
+          {/* Кнопка массовой отправки приглашений для HH вакансий */}
+          {vacancySource === 'headhunter' && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleBulkSendInvitations}
+              startIcon={<MailOutlineIcon />}
+              disabled={sendingInProgress}
+            >
+              <Trans>📤 Отправить приглашения ({
+                candidates.filter(c => selectedCandidates.includes(c.id) && c.hhCandidateId).length
+              })</Trans>
+            </Button>
+          )}
+          
           <Button
             variant="outlined"
             onClick={() => setSelectedCandidates([])}
@@ -562,11 +731,25 @@ export default function CandidatesList({
 
                   {/* Источник */}
                   <TableCell>
-                    <Chip
-                      label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
-                      size="small"
-                      variant="outlined"
-                    />
+                    <Box display="flex" gap={0.5} alignItems="center">
+                      <Chip
+                        label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
+                        size="small"
+                        variant="outlined"
+                      />
+                      {r.invitationSentAt && (
+                        <Tooltip title={`Приглашение отправлено ${formatDate(r.invitationSentAt)}${r.invitationSentBy ? ` (${r.invitationSentBy})` : ''}`} arrow>
+                          <Chip 
+                            icon={<MailOutlineIcon sx={{ fontSize: 12 }} />}
+                            label="✉️"
+                            size="small"
+                            color="success"
+                            variant="outlined"
+                            sx={{ height: 20, fontSize: 10 }}
+                          />
+                        </Tooltip>
+                      )}
+                    </Box>
                   </TableCell>
 
                   {/* AI Score */}
@@ -781,6 +964,102 @@ export default function CandidatesList({
           >
             <Trans>Подключить HH.ru</Trans>
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Диалог прогресса массовой отправки */}
+      <Dialog
+        open={sendingProgressDialogOpen}
+        onClose={() => {}}
+        maxWidth="sm"
+        fullWidth
+        disableEscapeKeyDown
+      >
+        <DialogTitle>
+          {sendingInProgress ? (
+            <Trans>📤 Отправка приглашений...</Trans>
+          ) : (
+            <Trans>✅ Отправка завершена</Trans>
+          )}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mb: 2 }}>
+            <Box display="flex" justifyContent="space-between" mb={1}>
+              <Typography variant="body2">
+                <Trans>Прогресс: {sendingProgress.processed} из {sendingProgress.total}</Trans>
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {sendingProgress.progress}%
+              </Typography>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={sendingProgress.progress}
+              sx={{ height: 8, borderRadius: 4 }}
+            />
+          </Box>
+
+          <Box display="flex" gap={2} mb={2}>
+            <Chip
+              label={`✅ Успешно: ${sendingProgress.succeeded}`}
+              color="success"
+              size="small"
+            />
+            <Chip
+              label={`❌ Ошибки: ${sendingProgress.failed}`}
+              color="error"
+              size="small"
+            />
+          </Box>
+
+          {!sendingInProgress && sendingResults && sendingResults.length > 0 && (
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                <Trans>Детали:</Trans>
+              </Typography>
+              <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                {sendingResults.map((result, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      py: 0.5,
+                      borderBottom: '1px solid #eee',
+                    }}
+                  >
+                    <Box sx={{ fontSize: 14 }}>
+                      {result.success ? '✅' : '❌'}
+                    </Box>
+                    <Typography variant="body2" sx={{ flex: 1 }}>
+                      {result.candidateName || `Кандидат #${result.candidateId}`}
+                    </Typography>
+                    {!result.success && result.error && (
+                      <Tooltip title={result.error} arrow>
+                        <Chip label="Ошибка" size="small" color="error" />
+                      </Tooltip>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          {!sendingInProgress && (
+            <Button
+              onClick={() => {
+                setSendingProgressDialogOpen(false);
+                setSendingResults(null);
+                setSelectedCandidates([]);
+              }}
+              variant="contained"
+              color="primary"
+            >
+              <Trans>Закрыть</Trans>
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>

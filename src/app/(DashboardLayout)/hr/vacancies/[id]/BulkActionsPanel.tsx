@@ -19,6 +19,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
@@ -30,7 +31,10 @@ interface BulkActionsPanelProps {
   selectedAllInColumns: { columnId: string; count: number }[]; // Колонки где выбраны ВСЕ кандидаты
   onCancel: () => void;
   onBulkMove: (newStatus: string) => Promise<void>;
+  onBulkSendInvitations?: (candidateIds: number[]) => Promise<void>; // Новый проп для массовой отправки
   statusTriggers: Record<string, string[]>;
+  vacancySource?: string; // Источник вакансии (headhunter, manual, etc.)
+  selectedCandidates?: any[]; // Список выбранных кандидатов для проверки
   hhLimits?: {
     left: { resumeView: number };
     limits: { resumeView: number };
@@ -45,7 +49,10 @@ export default function BulkActionsPanel({
   selectedAllInColumns,
   onCancel,
   onBulkMove,
+  onBulkSendInvitations,
   statusTriggers,
+  vacancySource,
+  selectedCandidates = [],
   hhLimits,
   resumeQueueCount,
 }: BulkActionsPanelProps) {
@@ -57,6 +64,13 @@ export default function BulkActionsPanel({
 
   // Подсчитываем общее количество кандидатов (индивидуально выбранные + все из колонок)
   const totalSelectedCount = selectedCount + selectedAllInColumns.reduce((sum, col) => sum + col.count, 0);
+
+  // Подсчитываем количество HH кандидатов
+  const hhCandidatesCount = selectedCandidates.filter(c => c.hhCandidateId).length;
+  const alreadyInvitedCount = selectedCandidates.filter(c => c.invitationSentAt).length;
+  
+  // Показываем кнопку отправки приглашений только для HH вакансий
+  const showInvitationButton = vacancySource === 'headhunter' && onBulkSendInvitations && hhCandidatesCount > 0;
 
   // Подсчёт дней для AI скрининга если выбран статус screening
   const isScreening = selectedStatus === 'screening';
@@ -159,6 +173,25 @@ export default function BulkActionsPanel({
             disabled={!selectedStatus}
             size="small"
           ><Trans>Переместить</Trans></Button>
+
+          {showInvitationButton && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => {
+                // Извлекаем ID HH кандидатов из выбранных
+                const hhCandidateIds = selectedCandidates
+                  .filter(c => c.hhCandidateId)
+                  .map(c => c.hhCandidateId);
+                onBulkSendInvitations!(hhCandidateIds);
+              }}
+              disabled={loading}
+              size="small"
+              startIcon={<MailOutlineIcon />}
+            >
+              <Trans>📤 Отправить приглашения ({hhCandidatesCount})</Trans>
+            </Button>
+          )}
         </Paper>
       </Box>
 

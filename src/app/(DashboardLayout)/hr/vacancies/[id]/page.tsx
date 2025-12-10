@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress
 } from "@mui/material";
 import {
   IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive
@@ -44,6 +44,7 @@ import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import KanbanView from './KanbanView';
 import CandidatesList from './CandidatesList';
 import CandidateFilters from './CandidateFilters';
+import BulkActionsPanel from './BulkActionsPanel';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
@@ -842,6 +843,30 @@ export default function HRVacancyDetailPage() {
                     vacancyId={parseInt(id)}
                     viewMode={viewMode}
                   />
+
+                  {/* Панель массовых действий */}
+                  {selectedCandidates.length > 0 && (
+                    <Box sx={{ mb: 2 }}>
+                      <BulkActionsPanel
+                        selectedCount={selectedCandidates.length}
+                        selectedAllInColumns={[]}
+                        onCancel={() => setSelectedCandidates([])}
+                        onBulkMove={async (targetStage) => {
+                          // Существующая логика массового перемещения
+                          // Оставляем пока пустой, так как она должна быть реализована отдельно
+                          setSnackbar(_(msg`Функция в разработке`));
+                        }}
+                        statusTriggers={{}}
+                        vacancySource={data?.source || ''}
+                        selectedCandidates={
+                          candidates.filter(c => selectedCandidates.includes(c.id))
+                        }
+                        onBulkSendInvitations={async (hhCandidateIds) => {
+                          await handleBulkSendInvitations(hhCandidateIds);
+                        }}
+                      />
+                    </Box>
+                  )}
                 </Box>
 
                 {/* Контент без padding */}
@@ -856,6 +881,7 @@ export default function HRVacancyDetailPage() {
                       onShowQR={(url) => setQrDialog({ open: true, url })}
                       selectedCandidates={selectedCandidates}
                       onSelectedCandidatesChange={setSelectedCandidates}
+                      vacancySource={data?.source || ''}
                     />
                   ) : (
                     <KanbanView
@@ -1252,6 +1278,102 @@ export default function HRVacancyDetailPage() {
           <IconArrowsDiff />
         </Fab>
       )}
+
+      {/* Диалог прогресса массовой отправки */}
+      <Dialog
+        open={sendingProgressDialogOpen}
+        onClose={() => {}}
+        maxWidth="sm"
+        fullWidth
+        disableEscapeKeyDown
+      >
+        <DialogTitle>
+          {sendingInProgress ? (
+            <Trans>📤 Отправка приглашений...</Trans>
+          ) : (
+            <Trans>✅ Отправка завершена</Trans>
+          )}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mb: 2 }}>
+            <Box display="flex" justifyContent="space-between" mb={1}>
+              <Typography variant="body2">
+                <Trans>Прогресс: {sendingProgress.processed} из {sendingProgress.total}</Trans>
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {sendingProgress.progress}%
+              </Typography>
+            </Box>
+            <LinearProgress
+              variant="determinate"
+              value={sendingProgress.progress}
+              sx={{ height: 8, borderRadius: 4 }}
+            />
+          </Box>
+
+          <Box display="flex" gap={2} mb={2}>
+            <Chip
+              label={`✅ Успешно: ${sendingProgress.succeeded}`}
+              color="success"
+              size="small"
+            />
+            <Chip
+              label={`❌ Ошибки: ${sendingProgress.failed}`}
+              color="error"
+              size="small"
+            />
+          </Box>
+
+          {!sendingInProgress && sendingResults && sendingResults.length > 0 && (
+            <Box>
+              <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                <Trans>Детали:</Trans>
+              </Typography>
+              <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
+                {sendingResults.map((result, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      py: 0.5,
+                      borderBottom: '1px solid #eee',
+                    }}
+                  >
+                    <Box sx={{ fontSize: 14 }}>
+                      {result.success ? '✅' : '❌'}
+                    </Box>
+                    <Typography variant="body2" sx={{ flex: 1 }}>
+                      {result.candidateName || `Кандидат #${result.candidateId}`}
+                    </Typography>
+                    {!result.success && result.error && (
+                      <Tooltip title={result.error} arrow>
+                        <Chip label="Ошибка" size="small" color="error" />
+                      </Tooltip>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          {!sendingInProgress && (
+            <Button
+              onClick={() => {
+                setSendingProgressDialogOpen(false);
+                setSendingResults(null);
+                setSelectedCandidates([]);
+              }}
+              variant="contained"
+              color="primary"
+            >
+              <Trans>Закрыть</Trans>
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </PageContainer>
   );
 }

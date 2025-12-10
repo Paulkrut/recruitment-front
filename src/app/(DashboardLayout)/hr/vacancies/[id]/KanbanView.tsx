@@ -11,6 +11,7 @@ import SelectAllIcon from '@mui/icons-material/SelectAll';
 import AddIcon from '@mui/icons-material/Add';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { apiFetch } from '@/utils/api';
 import moment from 'moment';
 import 'moment/locale/ru';
@@ -55,6 +56,9 @@ interface CandidateCard {
   finishedAt: string | null; // Когда завершил тест
   lastContactedAt: string | null;
   communicationStatus: string;
+  hhCandidateId?: number;
+  invitationSentAt?: string | null;
+  invitationSentBy?: string | null;
 }
 
 interface Column {
@@ -356,11 +360,27 @@ const DraggableCandidateCard = memo(({
           </Link>
 
           {/* Источник */}
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
             {getSourceIcon(candidate.source)} {candidate.source === 'headhunter' && 'HH.ru'}
             {candidate.source === 'manual' && <Trans>Ручной ввод</Trans>}
             {candidate.source === 'linkedin' && 'LinkedIn'}
           </Typography>
+
+          {/* Badge приглашения */}
+          {candidate.invitationSentAt && (
+            <Box sx={{ mb: 1 }}>
+              <Tooltip title={`Приглашение отправлено ${formatBitrixDate(candidate.invitationSentAt)}${candidate.invitationSentBy ? ` (${candidate.invitationSentBy})` : ''}`} arrow>
+                <Chip 
+                  icon={<MailOutlineIcon sx={{ fontSize: 12 }} />}
+                  label={_(msg`✉️ Приглашён`)}
+                  size="small"
+                  color="success"
+                  variant="outlined"
+                  sx={{ height: 20, fontSize: 10 }}
+                />
+              </Tooltip>
+            </Box>
+          )}
 
           {/* Блок тестирования (если есть сессия или оценка) */}
           {(candidate.sessionId || candidate.score !== null) && (

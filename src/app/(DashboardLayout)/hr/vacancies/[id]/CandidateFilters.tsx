@@ -26,6 +26,7 @@ interface CandidateFiltersProps {
     dateTo?: string;
     status?: string;
     testScore?: string; // Новый фильтр для оценки за тест
+    invitationSent?: string; // Новый фильтр для приглашений
   };
   onFilterChange: (filters: any) => void;
   vacancyId: number;
@@ -247,6 +248,22 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               <MenuItem value="7"><Trans>≥ 7 (хорошо)</Trans></MenuItem>
               <MenuItem value="5"><Trans>≥ 5 (средне)</Trans></MenuItem>
               <MenuItem value="3"><Trans>≥ 3 (слабо)</Trans></MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        {/* Приглашение на интервью (только для HH кандидатов) */}
+        <Grid item xs={12} md={2}>
+          <FormControl fullWidth size="small">
+            <InputLabel><Trans>Приглашение</Trans></InputLabel>
+            <Select
+              value={localFilters.invitationSent || ''}
+              label={_(msg`Приглашение`)}
+              onChange={(e) => handleLocalChange('invitationSent', e.target.value)}
+            >
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="sent"><Trans>✉️ Отправлено</Trans></MenuItem>
+              <MenuItem value="not_sent"><Trans>⚪ Не отправлено</Trans></MenuItem>
             </Select>
           </FormControl>
         </Grid>
