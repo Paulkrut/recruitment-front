@@ -329,16 +329,16 @@ export default function ComparePage() {
   // Экспорт в Excel
   const handleExportToExcel = async () => {
     if (!comparisonData?.result || !candidates.length) {
-      onSnackbar(_(msg`Нет данных для экспорта`));
+      alert(_(msg`Нет данных для экспорта`));
       return;
     }
 
     try {
       await exportComparisonToExcel(candidates, comparisonData.result);
-      onSnackbar(_(msg`Excel-файл успешно сохранён`), 'success');
+      alert(_(msg`Excel-файл успешно сохранён`));
     } catch (error) {
       console.error('Ошибка экспорта:', error);
-      onSnackbar(_(msg`Ошибка при экспорте данных`), 'error');
+      alert(_(msg`Ошибка при экспорте данных`));
     }
   };
 
