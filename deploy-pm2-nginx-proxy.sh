@@ -93,7 +93,7 @@ module.exports = {
     name: 'sofihr',
     script: 'node_modules/next/dist/bin/next',
     args: 'start',
-    instances: 'max', // Используем все доступные CPU ядра
+    instances: '2', // Используем все доступные CPU ядра
     exec_mode: 'cluster',
     watch: false,
     max_memory_restart: '1G',
