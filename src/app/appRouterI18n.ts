@@ -2,9 +2,14 @@ import { setupI18n, type I18n } from "@lingui/core";
 
 export type SupportedLocale = "ru" | "en";
 
+// Debug логи только в development
+const isDev = process.env.NODE_ENV === 'development';
+const log = isDev ? console.log : () => {};
+const error = console.error; // Ошибки всегда показываем
+
 // Определяем локаль по региону или переменной окружения
 export function getLocale(): SupportedLocale {
-  console.log('🌍 [getLocale] Environment variables:', {
+  log('🌍 [getLocale] Environment variables:', {
     NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
     NEXT_PUBLIC_REGION: process.env.NEXT_PUBLIC_REGION,
   });
@@ -12,21 +17,18 @@ export function getLocale(): SupportedLocale {
   // Проверяем NEXT_PUBLIC_DEFAULT_LOCALE сначала, потом NEXT_PUBLIC_REGION
   const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
   if (defaultLocale === 'en' || defaultLocale === 'ru') {
-    console.log(`✅ [getLocale] Using NEXT_PUBLIC_DEFAULT_LOCALE: ${defaultLocale}`);
+    log(`✅ [getLocale] Using NEXT_PUBLIC_DEFAULT_LOCALE: ${defaultLocale}`);
     return defaultLocale;
   }
 
   const region = process.env.NEXT_PUBLIC_REGION;
   return region === "US" ? "en" : "ru";
-  const locale = region === "US" ? "en" : "ru";
-  console.log(`✅ [getLocale] Using NEXT_PUBLIC_REGION ${region} -> locale: ${locale}`);
-  return locale;
 }
 
 // Статическая загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
   try {
-    console.log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
+    log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
 
     // Используем @lingui/loader для прямой загрузки .po файлов
     // Это работает как в dev, так и в production, без предварительной компиляции
@@ -34,7 +36,7 @@ async function loadCatalog(locale: SupportedLocale) {
       `@lingui/loader!../locales/${locale}/messages.po`
       );
 
-    console.log(`📦 [appRouterI18n] Catalog imported:`, {
+    log(`📦 [appRouterI18n] Catalog imported:`, {
       locale,
       hasCatalog: !!catalog,
       hasMessages: !!catalog?.messages,
@@ -44,7 +46,7 @@ async function loadCatalog(locale: SupportedLocale) {
     // @lingui/loader возвращает { messages: {...} }
     const messages = catalog.messages || {};
 
-    console.log(`✅ [appRouterI18n] Messages extracted:`, {
+    log(`✅ [appRouterI18n] Messages extracted:`, {
       locale,
       messagesType: typeof messages,
       messagesCount: Object.keys(messages).length,
@@ -52,8 +54,8 @@ async function loadCatalog(locale: SupportedLocale) {
     });
 
     return messages;
-  } catch (error) {
-    console.error(`❌ [appRouterI18n] Failed to load catalog for locale ${locale}:`, error);
+  } catch (err) {
+    error(`❌ [appRouterI18n] Failed to load catalog for locale ${locale}:`, err);
     // Возвращаем пустой объект как fallback
     return {};
   }
@@ -61,11 +63,11 @@ async function loadCatalog(locale: SupportedLocale) {
 
 // Создаём и настраиваем экземпляр i18n для сервера
 export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
-  console.log('🚀 [appRouterI18n] getI18nInstance called, locale:', locale);
+  log('🚀 [appRouterI18n] getI18nInstance called, locale:', locale);
 
   const messages = await loadCatalog(locale);
 
-  console.log('📊 [appRouterI18n] Creating i18n with:', {
+  log('📊 [appRouterI18n] Creating i18n with:', {
     locale,
     messagesKeys: Object.keys(messages).length,
     firstMessage: Object.values(messages).slice(0, 1),
@@ -76,7 +78,7 @@ export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
     messages: { [locale]: messages }
   });
 
-  console.log('✅ [appRouterI18n] i18n created:', {
+  log('✅ [appRouterI18n] i18n created:', {
     locale,
     hasMessages: !!(i18n as any)._messages,
     messagesCount: Object.keys((i18n as any)._messages?.[locale] || {}).length,
@@ -85,4 +87,3 @@ export async function getI18nInstance(locale: SupportedLocale): Promise<I18n> {
 
   return i18n;
 }
-

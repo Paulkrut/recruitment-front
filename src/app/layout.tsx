@@ -82,8 +82,6 @@ export default async function RootLayout({
 }) {
   const locale = getLocale();
   
-  console.log('🏠 [layout] Starting with locale:', locale);
-  
   // Инициализируем i18n для серверных компонентов
   const i18n = await getI18nInstance(locale);
   setI18n(i18n);
@@ -91,11 +89,15 @@ export default async function RootLayout({
   // Получаем сообщения из i18n._messages (внутреннее поле)
   const messagesToPass = (i18n as any)._messages?.[locale] || {};
   
-  console.log('📦 [layout] Messages to pass:', {
-    locale,
-    messagesCount: Object.keys(messagesToPass).length,
-    hasMessages: Object.keys(messagesToPass).length > 0,
-  });
+  // Debug логи только в development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🏠 [layout] Starting with locale:', locale);
+    console.log('📦 [layout] Messages to pass:', {
+      locale,
+      messagesCount: Object.keys(messagesToPass).length,
+      hasMessages: Object.keys(messagesToPass).length > 0,
+    });
+  }
   
   return (
     <html lang={locale} suppressHydrationWarning>
