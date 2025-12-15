@@ -94,10 +94,10 @@ module.exports = {
     // Next 15 с output: 'standalone' нужно запускать через standalone server
     script: '.next/standalone/server.js',
     /**
-     * ВАЖНО: один инстанс, чтобы не убивать 4C/8G сервер.
-     * Zero-downtime reload по-прежнему работает через `pm2 reload sofihr`.
+     * Для 2 vCPU логично держать 2 инстанса (по одному на ядро).
+     * При необходимости можно уменьшить до 1, просто поменяв это значение.
      */
-    instances: 1,
+    instances: 2,
     exec_mode: 'cluster',
     watch: false,
     /**
