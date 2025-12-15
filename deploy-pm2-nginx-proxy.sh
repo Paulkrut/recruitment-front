@@ -91,15 +91,25 @@ create_ecosystem_config() {
 module.exports = {
   apps: [{
     name: 'sofihr',
-    script: 'node_modules/next/dist/bin/next',
-    args: 'start',
-    instances: 2, // 2 инстанса для zero-downtime reload
+    // Next 15 с output: 'standalone' нужно запускать через standalone server
+    script: '.next/standalone/server.js',
+    /**
+     * ВАЖНО: один инстанс, чтобы не убивать 4C/8G сервер.
+     * Zero-downtime reload по-прежнему работает через `pm2 reload sofihr`.
+     */
+    instances: 1,
     exec_mode: 'cluster',
     watch: false,
-    max_memory_restart: '1G',
+    /**
+     * Ограничиваем память, чтобы раньше перезапустить процесс,
+     * чем добраться до системного OOM.
+     */
+    max_memory_restart: '700M',
     env: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 3000,
+      // Ограничиваем heap V8, чтобы Next не разрастался бесконтрольно
+      NODE_OPTIONS: '--max_old_space_size=700'
     },
     error_file: '/home/ubuntu/sofihr.ru/logs/err.log',
     out_file: '/home/ubuntu/sofihr.ru/logs/out.log',
