@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. js-lingui-explicit-id
-#: src/app/appRouterI18n.ts:83
+#: src/app/appRouterI18n.ts:85
 msgid "L7S2Qo"
 msgstr "L7S2Qo"
 
@@ -2049,7 +2049,7 @@ msgstr "HH.ru Requires Authorization"
 msgid "HH.ru успешно подключен!"
 msgstr "HH.ru Successfully Connected!"
 
-#: src/app/auth/register/page.tsx:230
+#: src/app/auth/register/page.tsx:249
 msgid "HR менеджер, Рекрутер, Директор по персоналу"
 msgstr "HR Manager, Recruiter, HR Director"
 
@@ -2429,6 +2429,10 @@ msgstr "Company Branding"
 msgid "Будет автоматически выполнено:"
 msgstr "Will Be Automatically Performed:"
 
+#: src/app/auth/register/page.tsx:206
+msgid "Быстрая регистрация через HeadHunter - данные заполнятся автоматически"
+msgstr ""
+
 #: src/app/page.tsx:703
 msgid "Быстрее найм"
 msgstr "Faster Hiring"
@@ -2608,7 +2612,7 @@ msgstr "Your Manager"
 msgid "Ваша экономия в месяц"
 msgstr "Your Monthly Savings"
 
-#: src/app/auth/register/page.tsx:208
+#: src/app/auth/register/page.tsx:227
 #: src/app/test/[token]/page.tsx:593
 msgid "Ваше имя"
 msgstr "Your Name"
@@ -2641,7 +2645,7 @@ msgstr "Your Personal Data Completely Deleted from Platform"
 
 #: src/app/auth/forgot-password/page.tsx:46
 #: src/app/auth/login/page.i18n-example.tsx:65
-#: src/app/auth/login/page.tsx:54
+#: src/app/auth/login/page.tsx:61
 #: src/app/auth/register/page.tsx:89
 msgid "Введите email адрес"
 msgstr "Enter email address"
@@ -2685,7 +2689,7 @@ msgstr "Enter a note or comment..."
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:295
 #: src/app/auth/forgot-password/page.tsx:51
 #: src/app/auth/login/page.i18n-example.tsx:67
-#: src/app/auth/login/page.tsx:56
+#: src/app/auth/login/page.tsx:63
 #: src/app/auth/register/page.tsx:91
 #: src/app/components/ui-components/dialog/FormDialog.tsx:46
 #: src/app/components/ui-components/dialog/FormDialog.tsx:56
@@ -2730,11 +2734,11 @@ msgid "Введите описание заметки..."
 msgstr "Enter Note Description..."
 
 #: src/app/auth/login/page.i18n-example.tsx:71
-#: src/app/auth/login/page.tsx:61
+#: src/app/auth/login/page.tsx:68
 msgid "Введите пароль"
 msgstr "Enter Password"
 
-#: src/app/auth/login/page.tsx:172
+#: src/app/auth/login/page.tsx:196
 msgid "Введите пароль из email"
 msgstr "Enter Password from Email"
 
@@ -2897,13 +2901,13 @@ msgstr ""
 "• Invitation has already been used\n"
 "• Invitation has expired"
 
-#: src/app/auth/login/page.tsx:132
+#: src/app/auth/login/page.tsx:139
 msgid "Войдите в свой аккаунт SofiHR"
 msgstr "Log Into Your SofiHR Account"
 
 #: src/app/auth/authForms/AuthLogin.tsx:138
 #: src/app/auth/login/page.i18n-example.tsx:248
-#: src/app/auth/login/page.tsx:202
+#: src/app/auth/login/page.tsx:226
 #: src/app/components/MobileMenu.tsx:105
 #: src/app/login/page.tsx:32
 #: src/app/page.tsx:406
@@ -2911,7 +2915,7 @@ msgid "Войти"
 msgstr "Log In"
 
 #: src/app/auth/forgot-password/page.tsx:188
-#: src/app/auth/register/page.tsx:342
+#: src/app/auth/register/page.tsx:359
 msgid "Войти в систему"
 msgstr "Log Into System"
 
@@ -3192,11 +3196,11 @@ msgid "Вход HR"
 msgstr "HR Login"
 
 #: src/app/auth/login/page.i18n-example.tsx:152
-#: src/app/auth/login/page.tsx:131
+#: src/app/auth/login/page.tsx:138
 msgid "Вход в систему"
 msgstr "System Login"
 
-#: src/app/auth/login/page.tsx:197
+#: src/app/auth/login/page.tsx:221
 msgid "Вход в систему..."
 msgstr "Logging in..."
 
@@ -3613,7 +3617,7 @@ msgstr "Dynamic Question Generation"
 msgid "Длительность"
 msgstr "Duration"
 
-#: src/app/auth/register/page.tsx:273
+#: src/app/auth/register/page.tsx:292
 msgid "Для дополнительной безопасности входа (необязательно)"
 msgstr "For Additional Login Security (Optional)"
 
@@ -3764,7 +3768,7 @@ msgstr "Documentation"
 
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:665
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:321
-#: src/app/auth/register/page.tsx:222
+#: src/app/auth/register/page.tsx:241
 msgid "Должность"
 msgstr "Position"
 
@@ -3850,9 +3854,13 @@ msgstr "All Time:"
 
 #: src/app/auth/authForms/AuthLogin.tsx:126
 #: src/app/auth/login/page.i18n-example.tsx:225
-#: src/app/auth/login/page.tsx:214
+#: src/app/auth/login/page.tsx:238
 msgid "Забыли пароль?"
 msgstr "Forgot Password?"
+
+#: src/app/hr/hh-redirect/page.tsx:114
+msgid "Завершаем авторизацию..."
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:150
 msgid "Завершён"
@@ -4056,8 +4064,8 @@ msgstr "In Advance (questions generated when creating test)"
 
 #: src/app/auth/forgot-password/page.tsx:196
 #: src/app/auth/login/page.i18n-example.tsx:272
-#: src/app/auth/login/page.tsx:229
-#: src/app/auth/register/page.tsx:326
+#: src/app/auth/login/page.tsx:253
+#: src/app/auth/register/page.tsx:345
 msgid "Зарегистрироваться"
 msgstr "Register"
 
@@ -4082,7 +4090,7 @@ msgstr "Here you can set test parameters for candidates"
 #~ msgid "Здесь появится история писем и уведомлений кандидату (в будущем)."
 #~ msgstr "The history of emails and notifications to the candidate will appear here (in the future)."
 
-#: src/app/auth/register/page.tsx:216
+#: src/app/auth/register/page.tsx:235
 msgid "Иван Иванов"
 msgstr "Ivan Ivanov"
 
@@ -4153,9 +4161,17 @@ msgstr "AI Creates Adaptive Questions"
 msgid "ИИ-интервью помогли нам обработать в 10 раз больше кандидатов при том же количестве HR-специалистов. ROI проекта составил 400%."
 msgstr "AI interviews helped us process 10 times more candidates with the same number of HR specialists. Project ROI was 400%."
 
+#: src/app/auth/login/page.tsx:154
+msgid "или"
+msgstr ""
+
 #: src/app/auth/login/page.i18n-example.tsx:255
 msgid "ИЛИ"
 msgstr "OR"
+
+#: src/app/auth/register/page.tsx:213
+msgid "или заполните форму"
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:252
 msgid "Именное"
@@ -4799,7 +4815,7 @@ msgid "Компаний"
 msgstr "Companies"
 
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:528
-#: src/app/auth/register/page.tsx:236
+#: src/app/auth/register/page.tsx:255
 #: src/app/page.tsx:197
 msgid "Компания"
 msgstr "Company"
@@ -5002,7 +5018,7 @@ msgstr "On HH:"
 msgid "на сумму {0}₽"
 msgstr "amounting to {0}₽"
 
-#: src/app/auth/register/page.tsx:258
+#: src/app/auth/register/page.tsx:277
 msgid "На этот email будет отправлен пароль"
 msgstr "The password will be sent to this email"
 
@@ -5473,7 +5489,7 @@ msgid "Нет аккаунта?"
 msgstr "No account?"
 
 #: src/app/auth/forgot-password/page.tsx:192
-#: src/app/auth/login/page.tsx:225
+#: src/app/auth/login/page.tsx:249
 msgid "Нет аккаунта? "
 msgstr "No Account? "
 
@@ -5706,7 +5722,7 @@ msgstr "Process High Volume of Vacancies and Candidates Efficiently in Short Tim
 msgid "Обработано кандидатов: 500+"
 msgstr "Candidates Processed: 500+"
 
-#: src/app/(DashboardLayout)/hr/hh-redirect/page.tsx:52
+#: src/app/hr/hh-redirect/page.tsx:116
 msgid "Обработка авторизации HH.ru..."
 msgstr "Processing HH.ru Authorization..."
 
@@ -5832,7 +5848,7 @@ msgstr "End"
 msgid "Онлайн"
 msgstr "Online"
 
-#: src/app/auth/register/page.tsx:244
+#: src/app/auth/register/page.tsx:263
 msgid "ООО «Ваша компания»"
 msgstr "LLC \"Your Company\""
 
@@ -6657,7 +6673,7 @@ msgstr "Connection Error"
 msgid "Ошибка соединения. Попробуйте еще раз."
 msgstr "Connection Error. Try Again."
 
-#: src/app/auth/login/page.tsx:117
+#: src/app/auth/login/page.tsx:124
 #: src/app/auth/register/page.tsx:163
 msgid "Ошибка соединения. Проверьте интернет и попробуйте еще раз."
 msgstr "Connection Error. Check internet and try again."
@@ -6721,7 +6737,7 @@ msgstr "Interview Parameters"
 
 #: src/app/auth/authForms/AuthLogin.tsx:93
 #: src/app/auth/login/page.i18n-example.tsx:194
-#: src/app/auth/login/page.tsx:163
+#: src/app/auth/login/page.tsx:187
 #: src/app/login/page.tsx:31
 msgid "Пароль"
 msgstr "Password"
@@ -7007,7 +7023,7 @@ msgstr "Please do not close this window. We are processing your video/audio resp
 msgid "Пожалуйста, подождите. Обычно это занимает несколько секунд."
 msgstr "Please wait. This usually takes a few seconds."
 
-#: src/app/(DashboardLayout)/hr/hh-redirect/page.tsx:53
+#: src/app/hr/hh-redirect/page.tsx:119
 msgid "Пожалуйста, подождите..."
 msgstr "Please wait..."
 
@@ -7208,7 +7224,7 @@ msgstr "Try Changing Search Query"
 msgid "Попробуйте изменить фильтры"
 msgstr "Try changing filters"
 
-#: src/app/auth/register/page.tsx:361
+#: src/app/auth/register/page.tsx:378
 msgid "После регистрации система автоматически сгенерирует безопасный пароль и отправит его на ваш email."
 msgstr "After registration, the system will automatically generate a secure password and send it to your email."
 
@@ -8189,7 +8205,7 @@ msgstr "Reduction in Hiring Costs"
 msgid "Снять выделение со ВСЕХ {totalCount} кандидатов"
 msgstr "Deselect ALL {totalCount} candidates"
 
-#: src/app/auth/register/page.tsx:290
+#: src/app/auth/register/page.tsx:309
 msgid "Согласен(на) получать новости и предложения на указанный email"
 msgstr "Agree to receive news and offers to the specified email"
 
@@ -8266,7 +8282,7 @@ msgstr "Created:"
 msgid "Создана: {createdAt}"
 msgstr "Created: {createdAt}"
 
-#: src/app/auth/register/page.tsx:321
+#: src/app/auth/register/page.tsx:340
 msgid "Создание аккаунта..."
 msgstr "Creating account..."
 
@@ -8761,7 +8777,7 @@ msgstr "Current Balance"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1232
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1481
 #: src/app/auth/authForms/AuthLogin.tsx:81
-#: src/app/auth/register/page.tsx:267
+#: src/app/auth/register/page.tsx:286
 #: src/app/contact/page.tsx:213
 #: src/app/forget-me/page.tsx:272
 #: src/app/login/page.tsx:30
@@ -9189,7 +9205,7 @@ msgstr "Satisfactory"
 msgid "Удовлетворительно (4-5)"
 msgstr "Satisfactory (4-5)"
 
-#: src/app/auth/register/page.tsx:338
+#: src/app/auth/register/page.tsx:355
 msgid "Уже есть аккаунт? "
 msgstr "Already Have an Account? "
 

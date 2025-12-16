@@ -61,6 +61,7 @@ export default function HhLoginButton({
         '&:hover': {
           borderColor: '#B00017',
           backgroundColor: 'rgba(214, 0, 28, 0.04)',
+          color: '#B00017', // Цвет текста при hover
         },
         ...sx,
       }}
