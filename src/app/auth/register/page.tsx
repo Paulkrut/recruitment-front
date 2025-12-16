@@ -25,7 +25,7 @@ import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { normalizePhoneForBackend, isValidInternationalPhone } from '@/utils/phoneUtils';
-
+import HhLoginButton from '@/components/auth/HhLoginButton';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -195,6 +195,25 @@ export default function RegisterPage() {
             <Typography variant="body1" color="text.secondary"><Trans>Создайте аккаунт для работы с SofiHR</Trans></Typography>
           </Box>
 
+          {/* Быстрая регистрация через HH */}
+          <Box sx={{ mb: 3 }}>
+            <HhLoginButton 
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+            />
+            <Typography variant="caption" color="text.secondary" textAlign="center" display="block">
+              <Trans>Быстрая регистрация через HeadHunter - данные заполнятся автоматически</Trans>
+            </Typography>
+          </Box>
+
+          {/* Разделитель */}
+          <Divider sx={{ my: 3 }}>
+            <Typography variant="body2" color="text.secondary">
+              <Trans>или заполните форму</Trans>
+            </Typography>
+          </Divider>
+
           {/* Форма */}
           <form onSubmit={handleSubmit}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
@@ -330,10 +349,8 @@ export default function RegisterPage() {
             </Box>
           </form>
 
-          {/* Разделитель */}
-          <Divider sx={{ my: 3 }} />
-
           {/* Ссылка на вход */}
+          <Divider sx={{ my: 3 }} />
           <Box textAlign="center">
             <Typography variant="body2" color="text.secondary"><Trans>
               Уже есть аккаунт?{" "}

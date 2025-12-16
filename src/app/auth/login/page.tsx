@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
   Card,
@@ -19,6 +19,8 @@ import { Icon } from "@iconify/react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import HhLoginButton from '@/components/auth/HhLoginButton';
+import HhOAuthErrorAlert from '@/components/auth/HhOAuthErrorAlert';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -38,12 +40,17 @@ export default function LoginPage() {
   const { _, i18n } = useLingui();
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
+
+  // Получаем параметры ошибок из URL (от HH OAuth)
+  const hhError = searchParams.get('error');
+  const hhEmail = searchParams.get('email');
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -130,6 +137,23 @@ export default function LoginPage() {
             <Icon icon="mdi:login" color="#2196F3" width={48} height={48} />
             <Typography variant="h3" fontWeight={700} color="primary.main" sx={{ mt: 2, mb: 1 }}><Trans>Вход в систему</Trans></Typography>
             <Typography variant="body1" color="text.secondary"><Trans>Войдите в свой аккаунт SofiHR</Trans></Typography>
+          </Box>
+
+          {/* HH OAuth Error Alert */}
+          <HhOAuthErrorAlert error={hhError} email={hhEmail} />
+
+          {/* Кнопка "Войти через HH" */}
+          <Box sx={{ mb: 3 }}>
+            <HhLoginButton />
+          </Box>
+
+          {/* Разделитель "или" */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, my: 3 }}>
+            <Divider sx={{ flex: 1 }} />
+            <Typography variant="body2" color="text.secondary" sx={{ px: 2 }}>
+              <Trans>или</Trans>
+            </Typography>
+            <Divider sx={{ flex: 1 }} />
           </Box>
 
           {/* Форма */}
