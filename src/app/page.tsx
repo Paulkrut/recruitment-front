@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import {
-  AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, Chip, Avatar, AvatarGroup, Paper, Select, LinearProgress, Grid, AccordionSummary, AccordionDetails, Stack, CardContent, Accordion, Card, useTheme, useMediaQuery, Link, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemIcon, ListItemText, Divider, Alert, Slider, Tabs, Tab, Table, TableBody, TableRow, TableCell, TableHead,
+  AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Button, MenuItem, Chip, Avatar, AvatarGroup, Paper, Select, LinearProgress, Grid, AccordionSummary, AccordionDetails, Stack, CardContent, Accordion, Card, useTheme, useMediaQuery, Link, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemIcon, ListItemText, Divider, Alert, Slider, Tabs, Tab, Table, TableBody, TableRow, TableCell, TableHead, Tooltip,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 
@@ -396,21 +396,62 @@ export default function LandingPage() {
                 {/* Desktop menu */}
                 <DesktopMenu pages={pages} onScrollToSection={scrollToSection} />
                 {/* Login and Registration buttons */}
-                <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
                   <Button
                     variant="outlined"
                     color="primary"
                     href="/auth/register"
                     sx={{ display: { xs: 'none', md: 'inline-flex' } }}
                   ><Trans>Регистрация</Trans></Button>
+                  
                   <Button variant="contained" color="primary" href="/auth/login"><Trans>Войти</Trans></Button>
+                  
+                  {/* Компактная кнопка HH OAuth */}
+                  <Tooltip title={_(msg`Войти через HeadHunter`)} arrow placement="bottom">
+                    <IconButton
+                      onClick={() => {
+                        window.location.href = `${process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test'}/api/auth/hh`;
+                      }}
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        border: '2px solid #D6001C',
+                        borderRadius: 1.5,
+                        bgcolor: '#FFF',
+                        transition: 'all 0.2s ease-in-out',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          bgcolor: '#D6001C',
+                          borderColor: '#D6001C',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 4px 12px rgba(214, 0, 28, 0.3)',
+                          '& .hh-text': {
+                            color: '#FFF',
+                          },
+                        },
+                      }}
+                    >
+                      <Typography 
+                        className="hh-text"
+                        sx={{ 
+                          color: '#D6001C', 
+                          fontSize: '1rem',
+                          fontWeight: 700,
+                          lineHeight: 1,
+                          transition: 'color 0.2s',
+                        }}
+                      >
+                        hh
+                      </Typography>
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Toolbar>
             </AppBar>
           </Container>
         </Box>
         {/* Контент Hero поверх */}
-        <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 8, sm: 6, md: 4 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
+        <Container maxWidth="lg" id="hero-section" sx={{ pt: { xs: 4, sm: 3, md: 2 }, position: 'relative', zIndex: 1, bgcolor: 'transparent', flex: 1, display: 'flex', alignItems: 'center' }}>
           <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, alignItems: "center", gap: 4 }}>
             <Box sx={{ flex: 1 }}>
               <Typography variant="h1" sx={{ fontSize: { xs: "2.2rem", md: "3rem" }, fontWeight: 700, mb: 1.5, lineHeight: 1.2 }}><Trans>HR-платформа для автоматизации найма и интервью</Trans></Typography>
@@ -459,13 +500,51 @@ export default function LandingPage() {
                   </Typography>
                 </Box>
               </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2, flexWrap: 'wrap' }}>
-                {technologies.map((tech) => (
-                  <Box key={tech.label} sx={{ width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", bgcolor: "background.paper", borderRadius: 1, boxShadow: 1 }}>
-                    <Icon icon={tech.icon} width="24" height="24" />
-                  </Box>
-                ))}
-              </Box>
+              {/* Блок интеграции с HH.ru */}
+              <Paper 
+                elevation={0}
+                sx={{ 
+                  display: "inline-flex", 
+                  alignItems: "center", 
+                  gap: 2, 
+                  p: 2,
+                  mb: 3,
+                  bgcolor: 'rgba(214, 0, 28, 0.04)',
+                  border: '2px solid rgba(214, 0, 28, 0.2)',
+                  borderRadius: 2,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    bgcolor: 'rgba(214, 0, 28, 0.08)',
+                    borderColor: 'rgba(214, 0, 28, 0.4)',
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 4px 20px rgba(214, 0, 28, 0.15)',
+                  }
+                }}
+              >
+                <Box sx={{ 
+                  width: 56, 
+                  height: 56, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  bgcolor: '#D6001C',
+                  borderRadius: 2,
+                  boxShadow: '0 2px 8px rgba(214, 0, 28, 0.3)',
+                }}>
+                  <Icon icon="mdi:briefcase-check" width={32} height={32} style={{ color: '#FFF' }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={700} sx={{ color: '#D6001C', mb: 0.5 }}>
+                    <Trans>Интеграция с HeadHunter</Trans>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <Trans>Автоматическая загрузка вакансий и кандидатов из HH.ru</Trans>
+                  </Typography>
+                </Box>
+                <Box sx={{ ml: 'auto', display: { xs: 'none', sm: 'block' } }}>
+                  <Icon icon="mdi:check-circle" width={28} height={28} style={{ color: '#4CAF50' }} />
+                </Box>
+              </Paper>
             </Box>
             {/* Dashboard Preview */}
             <Box sx={{ flex: 1, display: { xs: "none", lg: "block" } }}>

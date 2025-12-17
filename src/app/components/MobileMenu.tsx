@@ -104,6 +104,28 @@ const MobileMenu = memo(({ pages, onScrollToSection }: MobileMenuProps) => {
             fullWidth
           ><Trans>Войти</Trans></Button>
         </MenuItem>
+        <MenuItem sx={{ px: 2, py: 1 }}>
+          <Button 
+            variant="outlined"
+            size="small"
+            fullWidth
+            onClick={() => {
+              window.location.href = `${process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test'}/api/auth/hh`;
+            }}
+            sx={{
+              borderColor: '#D6001C',
+              color: '#D6001C',
+              fontWeight: 600,
+              '&:hover': {
+                borderColor: '#B00017',
+                backgroundColor: 'rgba(214, 0, 28, 0.08)',
+                color: '#B00017',
+              },
+            }}
+          >
+            Войти через hh
+          </Button>
+        </MenuItem>
       </Menu>
     </Box>
   );
