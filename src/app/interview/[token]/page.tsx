@@ -39,6 +39,7 @@ import { keyframes } from "@mui/system";
 import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
 import PauseIcon from "@mui/icons-material/PauseCircleOutline";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -101,6 +102,7 @@ export default function CandidateInterviewPage() {
   const testVideoRef = useRef<HTMLVideoElement|null>(null);
   const [micLevel,setMicLevel] = useState(0);
   const [micReady,setMicReady] = useState(false);
+  const [micTestedSuccessfully, setMicTestedSuccessfully] = useState(false);
   const analyserRef = useRef<AnalyserNode|null>(null);
   const rafRef = useRef<number|null>(null);
   const [skipDialogOpen, setSkipDialogOpen] = useState(false);
@@ -458,6 +460,13 @@ export default function CandidateInterviewPage() {
 
   useEffect(()=>{ if(testVideoRef.current){ testVideoRef.current.srcObject = testStream || null; } },[testStream]);
 
+  // Отслеживаем когда микрофон впервые поймал звук
+  useEffect(() => {
+    if (micReady && micLevel > 5 && !micTestedSuccessfully) {
+      setMicTestedSuccessfully(true);
+    }
+  }, [micLevel, micReady, micTestedSuccessfully]);
+
   // Специальная обработка для мобильных браузеров
   useEffect(() => {
     const isMobileBrowser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -496,6 +505,17 @@ export default function CandidateInterviewPage() {
   }, []);
 
   async function startInterview(){
+    // ПРОВЕРКА: Микрофон подключен, но не ловит звук?
+    if (micReady && micLevel < 1) {
+      const confirmed = confirm(
+        _(msg`⚠️ Микрофон подключен, но не обнаружен звук\n\nВозможные причины:\n• Микрофон отключен физической кнопкой\n• Неправильно выбран микрофон\n• Микрофон не работает\n\nРекомендуем скажите что-нибудь для проверки.\n\nВсё равно начать интервью?`)
+      );
+      
+      if (!confirmed) {
+        return; // Отменяем старт
+      }
+    }
+
     // Останавливаем тестовый поток перед началом интервью
     stopDeviceTest();
 
@@ -2459,6 +2479,58 @@ export default function CandidateInterviewPage() {
           onError={(error) => setDebugError(error)}
         />
 
+        {/* Индикатор уровня микрофона на странице подготовки */}
+        {micReady && (
+          <Box sx={{
+            mt: 3,
+            p: 2,
+            bgcolor: micLevel > 5 ? '#e8f5e9' : '#fff3e0',
+            borderRadius: 2,
+            border: '2px solid',
+            borderColor: micLevel > 5 ? '#4caf50' : '#ff9800',
+            maxWidth: '500px',
+            width: '100%'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+              <MicIcon sx={{ color: micLevel > 5 ? '#4caf50' : '#ff9800' }} />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {micLevel > 5 ? <Trans>🎤 Микрофон работает</Trans> : <Trans>⚠️ Говорите в микрофон для проверки</Trans>}
+              </Typography>
+            </Box>
+
+            {/* Визуальный индикатор уровня */}
+            <Box sx={{
+              height: '8px',
+              bgcolor: 'rgba(0,0,0,0.1)',
+              borderRadius: '4px',
+              overflow: 'hidden',
+              position: 'relative',
+              mb: 1
+            }}>
+              <Box
+                style={{ width: `${Math.max(micLevel * 2, 2)}%` }}
+                sx={{
+                  height: '100%',
+                  bgcolor: micLevel > 5 ? '#4caf50' : '#ff9800',
+                  borderRadius: '4px',
+                  transition: 'width 0.1s linear, background-color 0.3s'
+                }}
+              />
+            </Box>
+
+            <Typography variant="caption" sx={{ 
+              color: 'text.secondary',
+              fontSize: '11px',
+              display: 'block'
+            }}>
+              {micLevel > 5 
+                ? <Trans>✓ Звук обнаружен. Можете начинать интервью.</Trans>
+                : <Trans>Скажите что-нибудь, чтобы убедиться что микрофон работает</Trans>
+              }
+            </Typography>
+          </Box>
+        )}
+
         </Box>
 
         {/* Fixed Bottom Button */}
@@ -2527,16 +2599,70 @@ export default function CandidateInterviewPage() {
             disabled={!micReady || !pdnConsent}
             fullWidth={isMobile}
             size={isMobile ? 'large' : 'medium'}
-            // Добавляем стили для лучшей видимости на мобильных
+            startIcon={micReady && micLevel < 1 ? <MicOffIcon /> : undefined}
             sx={{
               ...(isMobile && {
                 minHeight: '48px',
                 fontSize: '16px',
                 fontWeight: 600,
                 boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }),
+              // Анимация предупреждения если микрофон молчит
+              ...(micReady && micLevel < 1 && {
+                border: '2px solid #ff9800',
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%': { 
+                    boxShadow: '0 0 0 0 rgba(255, 152, 0, 0.7)',
+                    borderColor: '#ff9800'
+                  },
+                  '50%': { 
+                    boxShadow: '0 0 0 8px rgba(255, 152, 0, 0)',
+                    borderColor: '#f57c00'
+                  },
+                  '100%': { 
+                    boxShadow: '0 0 0 0 rgba(255, 152, 0, 0)',
+                    borderColor: '#ff9800'
+                  }
+                }
               })
             }}
-          ><Trans>Начать</Trans></Button>
+          >
+            {micReady && micLevel < 1 
+              ? <Trans>⚠️ Начать (проверьте микрофон)</Trans>
+              : <Trans>Начать</Trans>
+            }
+          </Button>
+
+          {/* Предупреждение если микрофон молчит */}
+          {micReady && micLevel < 1 && (
+            <Alert 
+              severity="warning" 
+              sx={{ 
+                mt: 2,
+                animation: 'fadeIn 0.3s',
+                '@keyframes fadeIn': {
+                  from: { opacity: 0, transform: 'translateY(-10px)' },
+                  to: { opacity: 1, transform: 'translateY(0)' }
+                }
+              }}
+            >
+              <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                <Trans>🎤 Микрофон не ловит звук</Trans>
+              </Typography>
+              <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
+                <Trans>Возможные причины:</Trans>
+              </Typography>
+              <Typography variant="caption" component="div" sx={{ fontSize: '11px', lineHeight: 1.4 }}>
+                • <Trans>Отключен физической кнопкой на устройстве</Trans><br/>
+                • <Trans>Очень тихий голос (попробуйте говорить громче)</Trans><br/>
+                • <Trans>Неправильно выбран микрофон в настройках браузера</Trans>
+              </Typography>
+              <Typography variant="caption" sx={{ display: 'block', mt: 1, fontWeight: 600, color: '#e65100' }}>
+                <Trans>💡 Рекомендуем проверить перед началом</Trans>
+              </Typography>
+            </Alert>
+          )}
 
           {/* Компонент для удаления данных - прижат к низу */}
           <Box sx={{ mt: 2 }}>
