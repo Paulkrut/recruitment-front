@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import {
   Box, Card, CardContent, Typography, Button, TextField,
   CircularProgress, Alert, Container, Paper, Divider, Checkbox, FormControlLabel
@@ -25,12 +25,37 @@ export default function PublicApplyPage() {
   const { _, i18n } = useLingui();
 
   const { token } = useParams<{ token: string }>();
+  const searchParams = useSearchParams();
   const [vacancyInfo, setVacancyInfo] = useState<VacancyInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [interviewLink, setInterviewLink] = useState<string | null>(null);
+
+  // Проверяем ошибки HH OAuth из URL
+  useEffect(() => {
+    const hhError = searchParams?.get('error');
+    if (hhError) {
+      switch (hhError) {
+        case 'hh_access_denied':
+          setError(_(msg`Вы отменили авторизацию через HeadHunter`));
+          break;
+        case 'hh_no_code':
+          setError(_(msg`Ошибка авторизации HeadHunter: код не получен`));
+          break;
+        case 'hh_callback_failed':
+          setError(_(msg`Ошибка при обработке данных HeadHunter`));
+          break;
+        case 'vacancy_not_found':
+          setError(_(msg`Вакансия не найдена`));
+          break;
+        case 'hh_init_failed':
+          setError(_(msg`Не удалось инициировать авторизацию HeadHunter`));
+          break;
+      }
+    }
+  }, [searchParams, _]);
 
   // Форма
   const [formData, setFormData] = useState({
@@ -243,6 +268,12 @@ export default function PublicApplyPage() {
     setFieldErrors(prev => ({ ...prev, [field]: error }));
   };
 
+  // Обработка HH авторизации
+  const handleHhAuth = () => {
+    if (!token) return;
+    window.location.href = `${API_BASE}/api/public/apply/${token}/hh-auth`;
+  };
+
   if (loading) {
     return (
       <Container maxWidth="sm" sx={{ py: 8 }}>
@@ -367,6 +398,40 @@ export default function PublicApplyPage() {
         )}
 
         <Divider sx={{ my: 3 }} />
+
+        {/* Кнопка HH OAuth */}
+        <Box sx={{ mb: 4, textAlign: 'center' }}>
+          <Typography variant="h6" gutterBottom>
+            <Trans>Быстрая запись через HeadHunter</Trans>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            <Trans>Войдите через ваш аккаунт HeadHunter, чтобы автоматически заполнить данные и прикрепить резюме</Trans>
+          </Typography>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleHhAuth}
+            sx={{
+              bgcolor: '#D6001C',
+              color: 'white',
+              '&:hover': {
+                bgcolor: '#B00017',
+              },
+              fontSize: '1rem',
+              py: 1.5,
+              px: 4,
+            }}
+          >
+            <Box component="span" sx={{ fontWeight: 'bold', mr: 1 }}>hh</Box>
+            <Trans>Войти через HeadHunter</Trans>
+          </Button>
+        </Box>
+
+        <Divider sx={{ my: 3 }}>
+          <Typography variant="body2" color="text.secondary">
+            <Trans>или заполните форму вручную</Trans>
+          </Typography>
+        </Divider>
 
         {/* Форма самозаписи */}
         <Box component="form" onSubmit={handleSubmit}>

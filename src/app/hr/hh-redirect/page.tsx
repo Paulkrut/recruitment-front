@@ -21,12 +21,15 @@ export default function HhRedirectPage() {
     const code = searchParams.get("code");
     const state = searchParams.get("state");
     const error = searchParams.get("error");
-    const type = searchParams.get("type"); // 'oauth' для авторизации пользователя
+    const type = searchParams.get("type"); // 'oauth' | 'candidate' | null (API integration)
 
     if (error) {
-      // Если это OAuth авторизация пользователя
+      // Обработка ошибок в зависимости от типа
       if (type === "oauth") {
         router.push("/auth/login?error=" + encodeURIComponent(error));
+      } else if (type === "candidate") {
+        // Для кандидата - state содержит publicToken вакансии
+        router.push(`/interview/apply/${state}?error=${encodeURIComponent(error)}`);
       } else {
         // HH API Integration (вакансии)
         router.push("/hr/settings/hh-integration?error=" + encodeURIComponent(error));
@@ -37,6 +40,8 @@ export default function HhRedirectPage() {
     if (!code || !state) {
       if (type === "oauth") {
         router.push("/auth/login?error=hh_no_code");
+      } else if (type === "candidate") {
+        router.push(`/interview/apply/${state}?error=hh_no_code`);
       } else {
         router.push("/hr/settings/hh-integration?error=missing_params");
       }
@@ -49,6 +54,8 @@ export default function HhRedirectPage() {
     // Обработка в зависимости от типа
     if (type === "oauth") {
       handleUserOAuthCallback(code, state);
+    } else if (type === "candidate") {
+      handleCandidateOAuthCallback(code, state);
     } else {
       handleApiIntegrationCallback(code, state);
     }
@@ -86,6 +93,30 @@ export default function HhRedirectPage() {
     }
   };
 
+  // HH OAuth - самозапись кандидата
+  const handleCandidateOAuthCallback = async (code: string, state: string) => {
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/public/hh-candidate-callback?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`,
+        { method: "GET" }
+      );
+
+      const data = await response.json();
+
+      if (data.success && data.interviewHash) {
+        // Redirect на интервью
+        window.location.href = `/interview/${data.interviewHash}`;
+      } else {
+        // Ошибка - возвращаем на страницу самозаписи
+        const errorCode = data.error || "hh_callback_failed";
+        router.push(`/interview/apply/${state}?error=${errorCode}`);
+      }
+    } catch (err: any) {
+      console.error("HH Candidate callback error:", err);
+      router.push(`/interview/apply/${state}?error=hh_callback_failed`);
+    }
+  };
+
   // HH API Integration - вакансии компании (существующая логика)
   const handleApiIntegrationCallback = async (code: string, state: string) => {
     try {
@@ -106,12 +137,15 @@ export default function HhRedirectPage() {
 
   const type = searchParams.get("type");
   const isOAuth = type === "oauth";
+  const isCandidate = type === "candidate";
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
       <h2>
         {isOAuth ? (
           <Trans>Завершаем авторизацию...</Trans>
+        ) : isCandidate ? (
+          <Trans>Обрабатываем данные HeadHunter...</Trans>
         ) : (
           <Trans>Обработка авторизации HH.ru...</Trans>
         )}
