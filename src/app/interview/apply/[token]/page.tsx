@@ -407,15 +407,40 @@ export default function PublicApplyPage() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             <Trans>Войдите через ваш аккаунт HeadHunter, чтобы автоматически заполнить данные и прикрепить резюме</Trans>
           </Typography>
+          
+          {/* Чекбокс согласия для HH */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={pdnConsent}
+                  onChange={(e) => setPdnConsent(e.target.checked)}
+                  name="pdnConsentHh"
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2"><Trans>
+                  Даю согласие на обработку моих персональных данных для участия в отборе и прохождения интервью. С условиями ознакомлен(а): <a href="/privacy-policy" target="_blank">Политика обработки ПДн</a>.
+                </Trans></Typography>
+              }
+            />
+          </Box>
+          
           <Button
             variant="contained"
             size="large"
             onClick={handleHhAuth}
+            disabled={!pdnConsent}
             sx={{
               bgcolor: '#D6001C',
               color: 'white',
               '&:hover': {
                 bgcolor: '#B00017',
+              },
+              '&:disabled': {
+                bgcolor: 'rgba(214, 0, 28, 0.3)',
+                color: 'rgba(255, 255, 255, 0.5)',
               },
               fontSize: '1rem',
               py: 1.5,
