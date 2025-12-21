@@ -40,6 +40,7 @@ import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
+import CheckIcon from "@mui/icons-material/Check";
 import PauseIcon from "@mui/icons-material/PauseCircleOutline";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -586,7 +587,11 @@ export default function CandidateInterviewPage() {
     setQuestion(d.question);
     setPreviousQuestionId(d.question.id);
     setTotal(d.total);
-    setChat([{role:'bot',text:d.question.text, timestamp: Date.now()}]);
+    setChat([
+      {role:'bot', text: _(msg`Здравствуйте! Добро пожаловать на интервью. Желаем вам успешного прохождения и удачи! 🍀`), timestamp: Date.now()},
+      {role:'bot', text: _(msg`Прочитайте вопрос. Нажмите кнопку "Записать ответ" и отвечайте. Остановите запись, когда закончите отвечать и переходите к следующему вопросу.`), timestamp: Date.now() + 1},
+      {role:'bot', text: d.question.text, timestamp: Date.now() + 2}
+    ]);
   }
 
   /* ------------ блокировка выхода/обновления ------------- */
@@ -2449,8 +2454,15 @@ export default function CandidateInterviewPage() {
             />
             <FormControlLabel
               control={<Checkbox checked={cameraEnabled} onChange={handleToggleCamera} color="primary" />}
-              label={<Typography variant="body2"><Trans>Согласие на запись видео (снимите галочку — будет только аудио)</Trans></Typography>}
-              sx={{ alignItems: 'center', mb: 1 }}
+              label={
+                <Typography variant="body2">
+                  <Trans>Согласие на запись видео. Запись с камерой может повысить доверие работодателя и помочь ему лучше оценить ваши коммуникативные навыки.</Trans>
+                  <Typography component="span" sx={{ color: 'text.secondary', fontSize: '0.85em', display: 'block', mt: 0.5 }}>
+                    <Trans>(Снимите галочку — будет только аудио)</Trans>
+                  </Typography>
+                </Typography>
+              }
+              sx={{ alignItems: 'flex-start', mb: 1 }}
             />
           </Box>
         </Box>
@@ -2531,47 +2543,48 @@ export default function CandidateInterviewPage() {
           </Box>
         )}
 
+        {/* Юридическая информация и удаление данных - в основном контенте */}
+        <Box sx={{ mt: 4, maxWidth: '600px', width: '100%' }}>
+          <ForgetMeAuto candidateToken={token as string} />
         </Box>
 
-        {/* Fixed Bottom Button */}
+        </Box>
+
+        {/* Sticky Bottom Button - КОМПАКТНАЯ ВЕРСИЯ БЕЗ ForgetMeAuto */}
         <Box sx={{
-          p: isMobile ? 2 : 4,
-          pt: isMobile ? 1 : 4,
-          bgcolor: 'background.default',
-          borderTop: '1px solid',
+          position: 'sticky',
+          bottom: 0,
+          p: 2,
+          bgcolor: 'background.paper',
+          borderTop: '2px solid',
           borderColor: 'divider',
           flexShrink: 0,
-          // Добавляем z-index для мобильных устройств
-          zIndex: isMobile ? 1000 : 'auto',
-          // Убираем тень на мобильных для лучшей производительности
-          boxShadow: isMobile ? 'none' : '0 -1px 3px rgba(0,0,0,0.1)',
-          display: 'flex',
-          flexDirection: 'column'
+          zIndex: 100,
+          boxShadow: '0 -4px 12px rgba(0,0,0,0.1)',
         }}>
 
-          {/* Debug блок для Android */}
-          {debugError && (
+          {/* Debug блок для Android - только если есть ошибка ИЛИ нет согласия ПДн */}
+          {(debugError || !pdnConsent) && (
             <Box sx={{
-              mb: 2,
-              p: 2,
-              bgcolor: debugError.includes('❌') || debugError.includes('💀') ? '#ffebee' : '#e8f5e8',
-              borderRadius: 2,
-              border: '2px solid',
-              borderColor: debugError.includes('❌') || debugError.includes('💀') ? '#f44336' : '#4caf50'
+              mb: 1.5,
+              p: 1.5,
+              bgcolor: debugError ? (debugError.includes('❌') || debugError.includes('💀') ? '#ffebee' : '#e8f5e8') : '#fff3e0',
+              borderRadius: 1,
+              border: '1px solid',
+              borderColor: debugError ? (debugError.includes('❌') || debugError.includes('💀') ? '#f44336' : '#4caf50') : '#ff9800'
             }}>
-              <Typography variant="body2" sx={{
+              <Typography variant="caption" sx={{
                 fontFamily: 'monospace',
-                fontSize: '12px',
+                fontSize: '11px',
                 whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word'
+                wordBreak: 'break-word',
+                display: 'block'
               }}>
-                {debugError}
+                {!pdnConsent ? <Trans>⚠️ Примите соглашение на обработку ПДн</Trans> : debugError}
               </Typography>
 
-
-
               {/* Кнопка диагностики камер */}
-              {debugError.includes(_(msg`Видео: нет`)) && (
+              {debugError && debugError.includes(_(msg`Видео: нет`)) && (
                 <Button
                   size="small"
                   variant="outlined"
@@ -2585,7 +2598,7 @@ export default function CandidateInterviewPage() {
                       setDebugError(_(msg`❌ Ошибка поиска камер: ${e.message}`));
                     }
                   }}
-                  sx={{ mt: 1 }}
+                  sx={{ mt: 0.5, fontSize: '11px', py: 0.5 }}
                 >
                   🔍 <Trans>Найти камеры</Trans>
                 </Button>
@@ -2593,81 +2606,60 @@ export default function CandidateInterviewPage() {
             </Box>
           )}
 
+          {/* КОМПАКТНЫЙ статус - только для микрофона когда согласие УЖЕ дано */}
+          {pdnConsent && !micReady && !debugError && (
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                display: 'block',
+                mb: 1,
+                color: 'text.secondary',
+                fontSize: '12px',
+                textAlign: 'center'
+              }}
+            >
+              <Trans>⏳ Проверяем микрофон...</Trans>
+            </Typography>
+          )}
+
+          {/* Компактное предупреждение о молчащем микрофоне */}
+          {micReady && micLevel < 1 && pdnConsent && !debugError && (
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                display: 'block',
+                mb: 1,
+                color: 'warning.main',
+                fontSize: '12px',
+                textAlign: 'center',
+                fontWeight: 500
+              }}
+            >
+              <Trans>⚠️ Микрофон не ловит звук. Проверьте громкость или физическую кнопку отключения</Trans>
+            </Typography>
+          )}
+
           <Button
             variant="contained"
             onClick={startInterview}
             disabled={!micReady || !pdnConsent}
-            fullWidth={isMobile}
-            size={isMobile ? 'large' : 'medium'}
-            startIcon={micReady && micLevel < 1 ? <MicOffIcon /> : undefined}
+            fullWidth
+            size="large"
             sx={{
-              ...(isMobile && {
-                minHeight: '48px',
-                fontSize: '16px',
-                fontWeight: 600,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-              }),
-              // Анимация предупреждения если микрофон молчит
-              ...(micReady && micLevel < 1 && {
-                border: '2px solid #ff9800',
-                animation: 'pulse 2s infinite',
-                '@keyframes pulse': {
-                  '0%': { 
-                    boxShadow: '0 0 0 0 rgba(255, 152, 0, 0.7)',
-                    borderColor: '#ff9800'
-                  },
-                  '50%': { 
-                    boxShadow: '0 0 0 8px rgba(255, 152, 0, 0)',
-                    borderColor: '#f57c00'
-                  },
-                  '100%': { 
-                    boxShadow: '0 0 0 0 rgba(255, 152, 0, 0)',
-                    borderColor: '#ff9800'
-                  }
-                }
-              })
+              minHeight: '48px',
+              fontSize: '16px',
+              fontWeight: 600,
+              boxShadow: 2,
+              '&:not(:disabled):hover': {
+                boxShadow: 4,
+              },
             }}
           >
-            {micReady && micLevel < 1 
-              ? <Trans>⚠️ Начать (проверьте микрофон)</Trans>
-              : <Trans>Начать</Trans>
+            {micReady && pdnConsent
+              ? <Trans>Начать интервью</Trans>
+              : <Trans>Подготовка...</Trans>
             }
           </Button>
-
-          {/* Предупреждение если микрофон молчит */}
-          {micReady && micLevel < 1 && (
-            <Alert 
-              severity="warning" 
-              sx={{ 
-                mt: 2,
-                animation: 'fadeIn 0.3s',
-                '@keyframes fadeIn': {
-                  from: { opacity: 0, transform: 'translateY(-10px)' },
-                  to: { opacity: 1, transform: 'translateY(0)' }
-                }
-              }}
-            >
-              <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                <Trans>🎤 Микрофон не ловит звук</Trans>
-              </Typography>
-              <Typography variant="caption" sx={{ display: 'block', mb: 1 }}>
-                <Trans>Возможные причины:</Trans>
-              </Typography>
-              <Typography variant="caption" component="div" sx={{ fontSize: '11px', lineHeight: 1.4 }}>
-                • <Trans>Отключен физической кнопкой на устройстве</Trans><br/>
-                • <Trans>Очень тихий голос (попробуйте говорить громче)</Trans><br/>
-                • <Trans>Неправильно выбран микрофон в настройках браузера</Trans>
-              </Typography>
-              <Typography variant="caption" sx={{ display: 'block', mt: 1, fontWeight: 600, color: '#e65100' }}>
-                <Trans>💡 Рекомендуем проверить перед началом</Trans>
-              </Typography>
-            </Alert>
-          )}
-
-          {/* Компонент для удаления данных - прижат к низу */}
-          <Box sx={{ mt: 2 }}>
-            <ForgetMeAuto candidateToken={token as string} />
-          </Box>
         </Box>
       </Box>
     );
@@ -2866,7 +2858,13 @@ export default function CandidateInterviewPage() {
               flexDirection: 'column',
               gap: 1,
               minHeight: '100%',
-              justifyContent: 'flex-end'
+              // Если сообщений мало (<=5), выравниваем сверху, иначе снизу
+              justifyContent: chat.length <= 5 ? 'flex-start' : 'flex-end',
+              // Запрет выделения и копирования текста
+              userSelect: 'none',
+              WebkitUserSelect: 'none',
+              MozUserSelect: 'none',
+              msUserSelect: 'none'
             }}>
               {chat.map((m,i)=>(
                 m.text=== 'typing' ? (
@@ -3185,7 +3183,7 @@ export default function CandidateInterviewPage() {
           <Box sx={{
             display: "flex",
             gap: 2,
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: 'center'
           }}>
@@ -3263,29 +3261,6 @@ export default function CandidateInterviewPage() {
             ) : recordedBlob ? (
               <>
                 <Button
-                  variant="outlined"
-                  size={isMobile ? 'large' : 'medium'}
-                  onClick={handleRetake}
-                  disabled={loadingNextQuestion}
-                  fullWidth={isMobile}
-                  sx={{
-                    borderColor: '#666',
-                    color: '#666',
-                    '&:hover': {
-                      backgroundColor: '#f5f5f5',
-                      borderColor: '#333',
-                      color: '#333',
-                    },
-                    '&:disabled': {
-                      opacity: 0.6,
-                    },
-                    borderRadius: '24px',
-                    textTransform: 'none',
-                    fontSize: '14px',
-                    px: 3
-                  }}
-                ><Trans>🔄 Переписать</Trans></Button>
-                <Button
                   variant="contained"
                   color="success"
                   size={isMobile ? 'large' : 'medium'}
@@ -3310,6 +3285,29 @@ export default function CandidateInterviewPage() {
                 >
                   {loadingNextQuestion ? _(msg`Отправка...`) : _(msg`✓ Отправить ответ`)}
                 </Button>
+                <Button
+                  variant="outlined"
+                  size={isMobile ? 'large' : 'medium'}
+                  onClick={handleRetake}
+                  disabled={loadingNextQuestion}
+                  fullWidth={isMobile}
+                  sx={{
+                    borderColor: '#666',
+                    color: '#666',
+                    '&:hover': {
+                      backgroundColor: '#f5f5f5',
+                      borderColor: '#333',
+                      color: '#333',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    px: 3
+                  }}
+                ><Trans>🔄 Переписать</Trans></Button>
               </>
             ) : null}
           </Box>

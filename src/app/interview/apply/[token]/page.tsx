@@ -477,14 +477,19 @@ export default function PublicApplyPage() {
               size="medium"
             />
 
-            <InternationalPhoneInput
-              value={formData.phone}
-              onChange={(phone) => handleFieldChange('phone', phone)}
-              label={_(msg`Номер телефона`)}
-              error={fieldErrors.phone}
-              required
-              placeholder={_(msg`+7 (999) 123-45-67`)}
-            />
+            <Box>
+              <InternationalPhoneInput
+                value={formData.phone}
+                onChange={(phone) => handleFieldChange('phone', phone)}
+                label={_(msg`Номер телефона`)}
+                error={fieldErrors.phone}
+                required
+                placeholder={_(msg`+7 (999) 123-45-67`)}
+              />
+              <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block', pl: 1.5 }}>
+                <Trans>Телефон нужен, чтобы работодатель мог с вами связаться</Trans>
+              </Typography>
+            </Box>
 
             <TextField
               label={_(msg`Email (необязательно)`)}
