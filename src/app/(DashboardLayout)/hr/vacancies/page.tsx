@@ -52,6 +52,7 @@ import {
   IconArchive,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
+import SetupReminderBanner from "@/components/SetupReminderBanner";
 import { formatDateToLocal, formatDateOnly } from "@/utils/dateUtils";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
@@ -73,6 +74,7 @@ interface VacancyRow {
   candidatesTotal?: number;
   candidatesFinished?: number;
   candidatesInProgress?: number;
+  questionsCount?: number; // Количество вопросов в интервью
 }
 
 interface Template {
@@ -173,6 +175,18 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
               <Box display="flex" alignItems="center" gap={1}>
                 <IconUsers size={16} />
                 <Trans>Кто создал</Trans>
+              </Box>
+            </TableCell>
+            <TableCell sx={{
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              color: 'text.secondary',
+              width: '10%',
+              textAlign: 'center'
+            }}>
+              <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
+                <IconCheck size={16} />
+                <Trans>Вопросы</Trans>
               </Box>
             </TableCell>
             <TableCell sx={{
@@ -293,6 +307,51 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
                   <Typography variant="body2" color="textSecondary">
                     {getShortName(vacancy.createdBy)}
                   </Typography>
+                </TableCell>
+                <TableCell>
+                  <Box display="flex" justifyContent="center" alignItems="center">
+                    {(vacancy.questionsCount ?? 0) === 0 ? (
+                      <Tooltip title={_(msg`Вакансия не работает! Добавьте вопросы`)}>
+                        <Chip
+                          label="⚠️ Нет"
+                          size="small"
+                          sx={{
+                            height: 24,
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            backgroundColor: '#d32f2f',
+                            color: 'white',
+                            cursor: 'pointer',
+                            animation: 'pulse 2s ease-in-out infinite',
+                            '@keyframes pulse': {
+                              '0%, 100%': { opacity: 1 },
+                              '50%': { opacity: 0.7 },
+                            },
+                            '&:hover': {
+                              backgroundColor: '#b71c1c'
+                            },
+                            '& .MuiChip-label': { px: 1 }
+                          }}
+                          onClick={() => router.push(`/hr/vacancy-edit/${vacancy.id}`)}
+                        />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={_(msg`Вопросов в интервью: ${vacancy.questionsCount}`)}>
+                        <Chip
+                          label={`✅ ${vacancy.questionsCount}`}
+                          size="small"
+                          sx={{
+                            height: 24,
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            backgroundColor: '#2e7d32',
+                            color: 'white',
+                            '& .MuiChip-label': { px: 1 }
+                          }}
+                        />
+                      </Tooltip>
+                    )}
+                  </Box>
                 </TableCell>
                 <TableCell>
                   <Box display="flex" flexDirection="column" gap={0.5}>
@@ -424,7 +483,8 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
   const finished = vacancy.candidatesFinished || 0;
   const inProgress = vacancy.candidatesInProgress || 0;
   const percent = total > 0 ? Math.round((finished / total) * 100) : 0;
-                const createdDate = formatDateOnly(vacancy.createdAt);
+  const createdDate = formatDateOnly(vacancy.createdAt);
+  const hasNoQuestions = (vacancy.questionsCount ?? 0) === 0;
 
   const getProgressColor = (percent: number) => {
     if (percent === 0) return "info"; // Было 'default', теперь 'info' для совместимости с MUI
@@ -450,12 +510,13 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
         p: 2,
         transition: "all 0.2s",
         overflow: "hidden", // Предотвращаем появление скроллбара
+        border: hasNoQuestions ? '2px solid #d32f2f' : undefined, // Красная рамка если нет вопросов
         '&:hover': { transform: 'translateY(-2px)', boxShadow: 4 },
       }}
     >
       {/* Верхняя часть: название и статус */}
       <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
-        <Box display="flex" alignItems="center" gap={1} flexGrow={1}>
+        <Box display="flex" alignItems="center" gap={1} flexGrow={1} flexWrap="wrap">
           {vacancy.source === 'headhunter' && (
             <Tooltip title={_(msg`Вакансия из HH.ru`)}>
               <Chip
@@ -466,6 +527,43 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
                   fontSize: '0.65rem',
                   fontWeight: 700,
                   backgroundColor: '#D6001C',
+                  color: 'white',
+                  '& .MuiChip-label': { px: 0.75 }
+                }}
+              />
+            </Tooltip>
+          )}
+          {hasNoQuestions && (
+            <Tooltip title={_(msg`Вакансия не работает! Добавьте вопросы для интервью`)}>
+              <Chip
+                label="⚠️ Нет вопросов"
+                size="small"
+                sx={{
+                  height: 20,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  backgroundColor: '#d32f2f',
+                  color: 'white',
+                  animation: 'pulse 2s ease-in-out infinite',
+                  '@keyframes pulse': {
+                    '0%, 100%': { opacity: 1 },
+                    '50%': { opacity: 0.7 },
+                  },
+                  '& .MuiChip-label': { px: 0.75 }
+                }}
+              />
+            </Tooltip>
+          )}
+          {!hasNoQuestions && vacancy.questionsCount && (
+            <Tooltip title={_(msg`Вопросов в интервью: ${vacancy.questionsCount}`)}>
+              <Chip
+                label={`✅ ${vacancy.questionsCount} ${vacancy.questionsCount === 1 ? 'вопрос' : vacancy.questionsCount < 5 ? 'вопроса' : 'вопросов'}`}
+                size="small"
+                sx={{
+                  height: 20,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  backgroundColor: '#2e7d32',
                   color: 'white',
                   '& .MuiChip-label': { px: 0.75 }
                 }}
@@ -523,6 +621,46 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
           </Typography>
         </Box>
       </Box>
+
+      {/* КРИТИЧНЫЙ Alert если нет вопросов */}
+      {hasNoQuestions && vacancy.status === 'active' && (
+        <Alert
+          severity="error"
+          sx={{
+            mb: 2,
+            py: 1,
+            '& .MuiAlert-message': { width: '100%' }
+          }}
+          action={
+            <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
+              <Button
+                component="a"
+                color="inherit"
+                size="small"
+                variant="outlined"
+                sx={{
+                  fontWeight: 700,
+                  borderColor: 'white',
+                  color: 'white',
+                  '&:hover': {
+                    borderColor: 'white',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }}
+              >
+                <Trans>Настроить</Trans>
+              </Button>
+            </Link>
+          }
+        >
+          <Typography variant="body2" fontWeight={700}>
+            <Trans>⚠️ Вакансия не работает!</Trans>
+          </Typography>
+          <Typography variant="caption">
+            <Trans>Добавьте вопросы для интервью, иначе кандидаты не смогут пройти собеседование</Trans>
+          </Typography>
+        </Alert>
+      )}
 
       {/* Метрики */}
       <Box mb={1}>
@@ -642,6 +780,7 @@ export default function HRVacanciesPage() {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('table');
   const [statusFilter, setStatusFilter] = useState<'active' | 'deleted' | 'archived' | 'all'>('active');
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" as "success" | "error" });
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -652,6 +791,26 @@ export default function HRVacanciesPage() {
     if (savedViewMode) {
       setViewMode(savedViewMode);
     }
+
+    // Проверяем, был ли баннер закрыт и когда
+    const dismissedData = localStorage.getItem("setup_reminder_banner_dismissed");
+    if (dismissedData) {
+      try {
+        const { timestamp, count } = JSON.parse(dismissedData);
+        const dayInMs = 24 * 60 * 60 * 1000; // 1 день
+        const now = Date.now();
+        
+        // Показываем баннер снова, если прошло больше дня
+        if (now - timestamp < dayInMs) {
+          setBannerDismissed(true);
+        }
+        // Если count изменился (появились новые вакансии без вопросов), покажем баннер
+        // Это будет проверено позже при подсчёте вакансий
+      } catch (e) {
+        // Старый формат - игнорируем
+        localStorage.removeItem("setup_reminder_banner_dismissed");
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -659,6 +818,29 @@ export default function HRVacanciesPage() {
     fetchVacancies();
     fetchTemplates();
   }, [token, statusFilter]);
+
+  // Находим активные вакансии без вопросов
+  const vacanciesWithoutQuestions = statusFilter === 'active' 
+    ? rows.filter(v => v.status === 'active' && (v.questionsCount ?? 0) === 0).map(v => ({ id: v.id, title: v.title }))
+    : [];
+
+  // Проверяем, изменилось ли количество вакансий без вопросов
+  useEffect(() => {
+    if (vacanciesWithoutQuestions.length > 0) {
+      const dismissedData = localStorage.getItem("setup_reminder_banner_dismissed");
+      if (dismissedData) {
+        try {
+          const { count } = JSON.parse(dismissedData);
+          // Если количество увеличилось (появились новые вакансии без вопросов), показываем баннер
+          if (vacanciesWithoutQuestions.length > count) {
+            setBannerDismissed(false);
+          }
+        } catch (e) {
+          // Игнорируем ошибки парсинга
+        }
+      }
+    }
+  }, [vacanciesWithoutQuestions.length]);
 
   async function fetchVacancies() {
     const res = await apiFetch(`${API_BASE}/api/admin/vacancies?status=${statusFilter}`);
@@ -740,6 +922,15 @@ export default function HRVacanciesPage() {
   const filtered = rows.filter((r) =>
     r.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleBannerClose = () => {
+    setBannerDismissed(true);
+    // Сохраняем время закрытия и количество вакансий
+    localStorage.setItem("setup_reminder_banner_dismissed", JSON.stringify({
+      timestamp: Date.now(),
+      count: vacanciesWithoutQuestions.length
+    }));
+  };
 
   return (
     <PageContainer title={_(msg`Вакансии`)} description="Управление вакансиями">
@@ -824,6 +1015,14 @@ export default function HRVacanciesPage() {
             }}
           />
         </Box>
+
+        {/* Баннер напоминания о настройке вакансий */}
+        {!bannerDismissed && vacanciesWithoutQuestions.length > 0 && (
+          <SetupReminderBanner
+            vacanciesWithoutQuestions={vacanciesWithoutQuestions}
+            onClose={handleBannerClose}
+          />
+        )}
 
         {/* Vacancies Grid */}
         {viewMode === 'card' ? (
