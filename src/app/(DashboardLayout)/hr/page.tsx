@@ -107,6 +107,32 @@ export default function HRDashboard() {
   ];
   const activeStep = steps.findIndex(s => !s.done);
 
+  // Show Welcome Hero if no vacancies
+  const showWelcomeHero = !hasVacancy;
+  
+  // Find vacancies without questions
+  const vacanciesWithoutQuestions = data?.openVacancies?.filter((v: any) => 
+    !v.questionsCount || v.questionsCount === 0
+  ) || [];
+
+  // Проверяем, изменилось ли количество вакансий без вопросов
+  useEffect(() => {
+    if (vacanciesWithoutQuestions.length > 0) {
+      const dismissedData = localStorage.getItem('setup_banner_dismissed');
+      if (dismissedData) {
+        try {
+          const { count } = JSON.parse(dismissedData);
+          // Если количество увеличилось (появились новые вакансии без вопросов), показываем баннер
+          if (vacanciesWithoutQuestions.length > count) {
+            setShowSetupBanner(true);
+          }
+        } catch (e) {
+          // Игнорируем ошибки парсинга
+        }
+      }
+    }
+  }, [vacanciesWithoutQuestions.length]);
+
   if (isLoading) {
     return (
       <PageContainer title="HR Dashboard" description="HR Dashboard">
@@ -142,32 +168,6 @@ export default function HRDashboard() {
     (!data.testsPerDay || data.testsPerDay.length === 0) &&
     (!data.weakQuestions || data.weakQuestions.length === 0) &&
     (!data.overdueCandidates || data.overdueCandidates.length === 0);
-
-  // Show Welcome Hero if no vacancies
-  const showWelcomeHero = !hasVacancy;
-  
-  // Find vacancies without questions
-  const vacanciesWithoutQuestions = data?.openVacancies?.filter((v: any) => 
-    !v.questionsCount || v.questionsCount === 0
-  ) || [];
-
-  // Проверяем, изменилось ли количество вакансий без вопросов
-  useEffect(() => {
-    if (vacanciesWithoutQuestions.length > 0) {
-      const dismissedData = localStorage.getItem('setup_banner_dismissed');
-      if (dismissedData) {
-        try {
-          const { count } = JSON.parse(dismissedData);
-          // Если количество увеличилось (появились новые вакансии без вопросов), показываем баннер
-          if (vacanciesWithoutQuestions.length > count) {
-            setShowSetupBanner(true);
-          }
-        } catch (e) {
-          // Игнорируем ошибки парсинга
-        }
-      }
-    }
-  }, [vacanciesWithoutQuestions.length]);
 
   return (
     <PageContainer title="HR Dashboard" description="HR Dashboard">
