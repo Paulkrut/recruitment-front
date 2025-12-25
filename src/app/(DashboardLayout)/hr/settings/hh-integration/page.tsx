@@ -24,6 +24,12 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  InputAdornment,
 } from "@mui/material";
 import {
   IconBrandHipchat,
@@ -38,6 +44,9 @@ import {
   IconExternalLink,
   IconClock,
   IconShield,
+  IconSearch,
+  IconArrowUp,
+  IconArrowDown,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
@@ -106,13 +115,32 @@ export default function HhIntegrationPage() {
 
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<HhIntegrationStatus | null>(null);
-  const [vacancies, setVacancies] = useState<HhVacancy[]>([]);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
-  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [pollingVacancyId, setPollingVacancyId] = useState<number | null>(null);
+  
+  // Новые состояния для выборочного импорта вакансий
+  const [hhVacanciesFromApi, setHhVacanciesFromApi] = useState<any[]>([]); // Содержит поля: candidates_sync_status, candidates_total, candidates_synced
+  const [loadingHhVacancies, setLoadingHhVacancies] = useState(false);
+  const [hhVacanciesError, setHhVacanciesError] = useState<string | null>(null);
+  const [selectedVacancyIds, setSelectedVacancyIds] = useState<Set<string>>(new Set());
+  const [importing, setImporting] = useState(false);
+
+  // Состояния для настройки статусов синхронизации кандидатов
+  const [availableStatuses, setAvailableStatuses] = useState<{id: string, name: string, total_count?: number}[]>([]); // Все уникальные статусы
+  const [defaultStatuses, setDefaultStatuses] = useState<Set<string>>(new Set()); // Выбранные по умолчанию
+  const [vacancyStatuses, setVacancyStatuses] = useState<Map<string, Set<string>>>(new Map()); // Индивидуальные для каждой вакансии
+  const [expandedVacancies, setExpandedVacancies] = useState<Set<string>>(new Set());
+  
+  // Для polling после импорта
+  const [importedVacancies, setImportedVacancies] = useState<number[]>([]);
+
+  // Фильтры и сортировка
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState<string>("all"); // all, active, archived
+  const [filterImported, setFilterImported] = useState<string>("all"); // all, imported, not_imported
+  const [sortBy, setSortBy] = useState<string>("date_desc"); // date_desc, date_asc, name_asc, name_desc, responses_desc
 
   // Проверяем, вернулся ли пользователь после OAuth
   useEffect(() => {
@@ -139,27 +167,15 @@ export default function HhIntegrationPage() {
       const response = await apiFetch(`${API_BASE}/api/hh-integration/status`);
       const data = await response.json();
       setStatus(data);
-
-      // Если подключено, загружаем вакансии
-      if (data.isConnected) {
-        await fetchVacancies();
+      
+      // Автозагрузка вакансий если подключено
+      if (data.isConnected && data.hasValidToken) {
+        await loadHhVacanciesFromApi();
       }
     } catch (err: any) {
       setError(err.message || _(msg`Ошибка загрузки статуса интеграции`));
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchVacancies = async () => {
-    try {
-      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancies`);
-      const data = await response.json();
-      if (data.success && data.data) {
-        setVacancies(data.data);
-      }
-    } catch (err: any) {
-      console.error('Ошибка загрузки вакансий:', err);
     }
   };
 
@@ -221,23 +237,6 @@ export default function HhIntegrationPage() {
     }
   };
 
-  const syncVacancies = async () => {
-    try {
-      setSyncing(true);
-      const response = await apiFetch(`${API_BASE}/api/hh-integration/sync-vacancies`, {
-        method: 'POST',
-      });
-      const data = await response.json();
-
-      setSuccess(_(msg`Синхронизация завершена. Загружено вакансий: ${data.syncedCount || 0}`));
-      await fetchStatus();
-    } catch (err: any) {
-      setError(err.message || _(msg`Ошибка синхронизации`));
-    } finally {
-      setSyncing(false);
-    }
-  };
-
   const updateAutoSync = async (enabled: boolean) => {
     try {
       const response = await apiFetch(`${API_BASE}/api/hh-integration/auto-sync`, {
@@ -253,91 +252,300 @@ export default function HhIntegrationPage() {
     }
   };
 
-  // Синхронизация кандидатов для конкретной вакансии
-  const syncVacancyCandidates = async (vacancyId: number) => {
+  // === НОВЫЕ ФУНКЦИИ ДЛЯ ВЫБОРОЧНОГО ИМПОРТА ВАКАНСИЙ ===
+  
+  const loadHhVacanciesFromApi = async () => {
     try {
-      setPollingVacancyId(vacancyId);
-
-      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-candidates`, {
-        method: 'POST',
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        // Начинаем polling для отслеживания прогресса
-        pollVacancyStatus(vacancyId);
+      setLoadingHhVacancies(true);
+      setHhVacanciesError(null);
+      const response = await apiFetch(`${API_BASE}/api/hh/vacancies/list`);
+      if (response.ok) {
+        const data = await response.json();
+        setHhVacanciesFromApi(data.vacancies || []);
+        
+        // Устанавливаем доступные статусы
+        if (data.available_statuses && data.available_statuses.length > 0) {
+          setAvailableStatuses(data.available_statuses);
+          
+          // Автоматически выбираем типичные статусы по умолчанию
+          const defaultSelected = new Set<string>();
+          data.available_statuses.forEach((status: any) => {
+            // Выбираем "Отклики", "Приглашения" и "Интервью" по умолчанию
+            if (['response', 'invitation', 'interview'].includes(status.id)) {
+              defaultSelected.add(status.id);
+            }
+          });
+          setDefaultStatuses(defaultSelected);
+        }
       } else {
-        setError(data.message || _(msg`Ошибка запуска синхронизации`));
-        setPollingVacancyId(null);
+        const error = await response.json();
+        setHhVacanciesError(error.message || _(msg`Ошибка загрузки списка вакансий с HH`));
       }
-    } catch (err: any) {
-      setError(err.message || _(msg`Ошибка синхронизации кандидатов`));
-      setPollingVacancyId(null);
+    } catch (e: any) {
+      setHhVacanciesError(e.message || _(msg`Неизвестная ошибка`));
+    } finally {
+      setLoadingHhVacancies(false);
     }
   };
 
-  // Запуск AI-анализа для кандидатов вакансии
-  const analyzeVacancyCandidates = async (vacancyId: number) => {
-    try {
-      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/analyze-candidates`, {
-        method: 'POST',
-      });
-      const data = await response.json();
-
-      if (data.success) {
-        setSuccess(_(msg`AI-анализ запущен. Будет проанализировано ${data.candidatesCount || 0} кандидатов.`));
-        // Обновляем список вакансий через несколько секунд
-        setTimeout(() => fetchVacancies(), 3000);
-      } else {
-        setError(data.message || _(msg`Ошибка запуска AI-анализа`));
-      }
-    } catch (err: any) {
-      setError(err.message || _(msg`Ошибка запуска AI-анализа`));
+  const handleImportSelected = async () => {
+    if (selectedVacancyIds.size === 0) {
+      setError(_(msg`Выберите хотя бы одну вакансию`));
+      return;
     }
-  };
 
-  // Polling статуса синхронизации вакансии
-  const pollVacancyStatus = async (vacancyId: number) => {
     try {
-      const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-status`);
-      const data = await response.json();
+      setImporting(true);
+      setError(null);
+      setSuccess(null);
 
-      if (data.success) {
-        const vacancyStatus = data.data;
+      // Подготовить статусы для каждой вакансии
+      const selectedStatusesArray = Array.from(defaultStatuses);
+      
+      // Собрать индивидуальные настройки
+      const vacancyStatusesObj: {[key: string]: string[]} = {};
+      vacancyStatuses.forEach((statuses, vacancyId) => {
+        vacancyStatusesObj[vacancyId] = Array.from(statuses);
+      });
 
-        // Обновляем вакансию в списке
-        setVacancies(prev => prev.map(v =>
-          v.id === vacancyId
-            ? {
+      const response = await apiFetch(`${API_BASE}/api/hh/vacancies/import-selected`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vacancy_ids: Array.from(selectedVacancyIds),
+          default_statuses: selectedStatusesArray,
+          vacancy_statuses: vacancyStatusesObj,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Считаем количество новых импортов и пересинхронизаций
+        const newImports = data.details.filter((d: any) => d.status === 'success' && !d.is_resync).length;
+        const reSyncs = data.details.filter((d: any) => d.status === 'success' && d.is_resync).length;
+        
+        let successMessage = '';
+        if (newImports > 0 && reSyncs > 0) {
+          successMessage = _(msg`Импортировано новых: ${newImports}, пересинхронизировано: ${reSyncs}. Загрузка кандидатов начата...`);
+        } else if (newImports > 0) {
+          successMessage = _(msg`Успешно импортировано: ${newImports} вакансий. Загрузка кандидатов начата...`);
+        } else if (reSyncs > 0) {
+          successMessage = _(msg`Пересинхронизировано: ${reSyncs} вакансий. Загрузка кандидатов начата...`);
+        }
+        
+        if (data.failed > 0) {
+          successMessage += _(msg` Ошибок: ${data.failed}`);
+        }
+        
+        setSuccess(successMessage);
+        
+        // Собираем ID импортированных HhVacancy для polling
+        const importedHhVacancyIds = data.details
+          .filter((d: any) => d.status === 'success' && d.hh_vacancy_id)
+          .map((d: any) => d.hh_vacancy_id);
+        
+        // Обновляем hhVacanciesFromApi, добавляя hh_vacancy_id и local_vacancy_id
+        setHhVacanciesFromApi((prev) =>
+          prev.map((v) => {
+            const importedDetail = data.details.find((d: any) => d.hh_id === v.id);
+            if (importedDetail && importedDetail.status === 'success') {
+              return {
                 ...v,
-                candidates_sync_status: vacancyStatus.candidates_sync_status,
-                candidates_total: vacancyStatus.candidates_total,
-                candidates_synced: vacancyStatus.candidates_synced,
-                candidates_last_synced_at: vacancyStatus.candidates_last_synced_at,
-                candidates_sync_error: vacancyStatus.candidates_sync_error,
+                hh_vacancy_id: importedDetail.hh_vacancy_id,
+                local_vacancy_id: importedDetail.local_id,
+                imported: true,
+                candidates_sync_status: 'syncing', // Начинаем синхронизацию
+                candidates_total: 0,
+                candidates_synced: 0,
+              };
+            }
+            return v;
+          })
+        );
+        
+        setImportedVacancies(importedHhVacancyIds);
+        
+        setSelectedVacancyIds(new Set());
+        // Список уже обновлен выше через setHhVacanciesFromApi
+      } else {
+        const error = await response.json();
+        setError(error.message || _(msg`Ошибка импорта вакансий`));
+      }
+    } catch (e: any) {
+      setError(e.message || _(msg`Неизвестная ошибка`));
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const handleToggleVacancySelection = (id: string) => {
+    const newSelected = new Set(selectedVacancyIds);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedVacancyIds(newSelected);
+  };
+
+  const handleSelectAllVacancies = () => {
+    const availableVacancies = hhVacanciesFromApi; // Теперь включаем ВСЕ вакансии
+    if (selectedVacancyIds.size === availableVacancies.length) {
+      setSelectedVacancyIds(new Set());
+    } else {
+      setSelectedVacancyIds(new Set(availableVacancies.map((v) => v.id)));
+    }
+  };
+
+  // Polling для импортированных вакансий
+  useEffect(() => {
+    if (importedVacancies.length === 0) return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        // Проверяем статус для каждой импортированной вакансии
+        for (const vacancyId of importedVacancies) {
+          const response = await apiFetch(
+            `${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-status`
+          );
+          const data = await response.json();
+
+          if (data.success) {
+            const syncData = data.data;
+            
+            // Обновляем вакансию в списке для импорта
+            setHhVacanciesFromApi((prev) =>
+              prev.map((v) => {
+                // Найти вакансию по hh_vacancy_id
+                if (v.hh_vacancy_id === vacancyId || v.local_vacancy_id === syncData.vacancy_id) {
+                  return {
+                    ...v,
+                    candidates_sync_status: syncData.status,
+                    candidates_total: syncData.total,
+                    candidates_synced: syncData.synced,
+                    candidates_sync_error: syncData.error,
+                  };
+                }
+                return v;
+              })
+            );
+
+            // Если синхронизация завершена (успех или ошибка), убираем из polling
+            if (syncData.status !== 'syncing') {
+              setImportedVacancies((prev) => prev.filter((id) => id !== vacancyId));
+              
+              // Показываем уведомление о завершении
+              if (syncData.status === 'synced') {
+                console.log(`✅ Синхронизация завершена: ${syncData.synced}/${syncData.total} кандидатов`);
+              } else if (syncData.status === 'error') {
+                console.error(`❌ Ошибка синхронизации: ${syncData.error}`);
               }
-            : v
-        ));
-
-        // Если синхронизация еще идет, продолжаем polling
-        if (vacancyStatus.candidates_sync_status === 'syncing') {
-          setTimeout(() => pollVacancyStatus(vacancyId), 2000); // Проверяем каждые 2 секунды
-        } else {
-          setPollingVacancyId(null);
-
-          if (vacancyStatus.candidates_sync_status === 'synced') {
-            setSuccess(_(msg`Синхронизация завершена! Загружено ${vacancyStatus.candidates_synced} кандидатов.`));
-          } else if (vacancyStatus.candidates_sync_status === 'error') {
-            const syncError = vacancyStatus.candidates_sync_error || _(msg`Неизвестная ошибка`);
-            setError(_(msg`Ошибка синхронизации: ${syncError}`));
+            }
           }
         }
+      } catch (err) {
+        console.error('Polling error:', err);
       }
-    } catch (err: any) {
-      console.error('Ошибка polling:', err);
-      setPollingVacancyId(null);
+    }, 3000); // Проверяем каждые 3 секунды
+
+    return () => clearInterval(pollInterval);
+  }, [importedVacancies]);
+
+  // Helper функции для работы со статусами
+  const getStatusesForVacancy = (vacancyId: string): Set<string> => {
+    if (vacancyStatuses.has(vacancyId)) {
+      return vacancyStatuses.get(vacancyId)!;
     }
+    // Дефолтные статусы
+    return new Set(defaultStatuses);
   };
+
+  const setStatusesForVacancy = (vacancyId: string, statuses: Set<string>) => {
+    const newMap = new Map(vacancyStatuses);
+    newMap.set(vacancyId, statuses);
+    setVacancyStatuses(newMap);
+  };
+
+  const toggleVacancyExpanded = (vacancyId: string) => {
+    const newSet = new Set(expandedVacancies);
+    if (newSet.has(vacancyId)) {
+      newSet.delete(vacancyId);
+    } else {
+      newSet.add(vacancyId);
+    }
+    setExpandedVacancies(newSet);
+  };
+
+  const toggleStatusForVacancy = (vacancyId: string, statusId: string) => {
+    const currentStatuses = getStatusesForVacancy(vacancyId);
+    const newStatuses = new Set(currentStatuses);
+    if (newStatuses.has(statusId)) {
+      newStatuses.delete(statusId);
+    } else {
+      newStatuses.add(statusId);
+    }
+    setStatusesForVacancy(vacancyId, newStatuses);
+  };
+
+  // Проверяем, есть ли среди выбранных импортированные вакансии
+  const hasImportedInSelection = () => {
+    return Array.from(selectedVacancyIds).some(
+      (id) => hhVacanciesFromApi.find((v) => v.id === id)?.imported
+    );
+  };
+
+  // Фильтрация и сортировка вакансий
+  const getFilteredAndSortedVacancies = () => {
+    let filtered = [...hhVacanciesFromApi];
+
+    // Поиск по названию
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((v) =>
+        v.name.toLowerCase().includes(query)
+      );
+    }
+
+    // Фильтр по статусу HH (active/archived)
+    if (filterStatus !== "all") {
+      filtered = filtered.filter((v) => v.status === filterStatus);
+    }
+
+    // Фильтр по импортированным/не импортированным
+    if (filterImported === "imported") {
+      filtered = filtered.filter((v) => v.imported);
+    } else if (filterImported === "not_imported") {
+      filtered = filtered.filter((v) => !v.imported);
+    }
+
+    // Сортировка
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "date_desc":
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case "date_asc":
+          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "name_asc":
+          return a.name.localeCompare(b.name);
+        case "name_desc":
+          return b.name.localeCompare(a.name);
+        case "responses_desc":
+          return (b.responses || 0) - (a.responses || 0);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  };
+
+  const filteredVacancies = getFilteredAndSortedVacancies();
+
+  // === КОНЕЦ НОВЫХ ФУНКЦИЙ ===
+
 
   if (loading) {
     return (
@@ -711,177 +919,535 @@ export default function HhIntegrationPage() {
             </Grid>
           )}
 
-          {/* Список вакансий из HH.ru */}
-          {status?.isConnected && (
+          {/* === НОВАЯ СЕКЦИЯ: ИМПОРТ ВАКАНСИЙ === */}
+          {status?.isConnected && status.hasValidToken && (
             <Grid item xs={12}>
               <Card>
                 <CardContent>
                   <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <IconBriefcase size={24} />
-                      <Typography variant="h5"><Trans>
-                        Вакансии из HH.ru ({vacancies.length})
-                      </Trans></Typography>
+                      <IconDownload />
+                      <Typography variant="h5"><Trans>📥 Импорт вакансий из HH.ru</Trans></Typography>
                     </Box>
-                    <Button
-                      variant="contained"
-                      onClick={syncVacancies}
-                      disabled={syncing || !status.hasValidToken}
-                      startIcon={syncing ? <CircularProgress size={20} /> : <IconRefresh />}
-                      size="small"
-                    >
-                      {syncing ? _(msg`Обновление...`) : _(msg`Обновить список`)}
-                    </Button>
                   </Box>
 
-                  {vacancies.length === 0 ? (
-                    <Alert severity="info">
-                      <Typography variant="body2"><Trans>Нажмите "Обновить список" чтобы загрузить вакансии из HH.ru</Trans></Typography>
-                    </Alert>
-                  ) : (
+                  <Box>
                     <Alert severity="info" sx={{ mb: 3 }}>
-                      <Typography variant="body2">
-                        <Trans>💡 <strong>Как это работает:</strong></Trans>
+                      <Typography variant="body2" gutterBottom>
+                        <strong><Trans>Выберите вакансии для импорта:</Trans></strong>
                       </Typography>
-                      <Typography variant="body2" mt={1}><Trans>1. Вакансии автоматически синхронизируются с вашим профилем HH.ru</Trans></Typography>
-                      <Typography variant="body2"><Trans>
-                        2. Нажмите <strong>"Настроить"</strong> на любой вакансии чтобы:
-                      </Trans></Typography>
-                      <Typography variant="body2" ml={2}><Trans>• Выбрать какие статусы кандидатов синхронизировать (отклики, приглашения, интервью и т.д.)</Trans></Typography>
-                      <Typography variant="body2" ml={2}><Trans>• Загрузить кандидатов из выбранных статусов</Trans></Typography>
-                      <Typography variant="body2" ml={2}><Trans>• Запустить AI-анализ резюме для автоматической оценки кандидатов</Trans></Typography>
+                      <Typography variant="body2">
+                        <Trans>После импорта вакансии появятся в разделе "Вакансии", где вы сможете:</Trans>
+                      </Typography>
+                      <Typography variant="body2" ml={2}>
+                        <Trans>• Настроить вопросы для интервью</Trans>
+                      </Typography>
+                      <Typography variant="body2" ml={2}>
+                        <Trans>• Синхронизировать кандидатов из HH</Trans>
+                      </Typography>
+                      <Typography variant="body2" ml={2}>
+                        <Trans>• Запустить AI-анализ резюме</Trans>
+                      </Typography>
                     </Alert>
-                  )}
 
-                  {vacancies.length > 0 && (
-                    <Grid container spacing={2}>
-                      {vacancies.map((vacancy) => (
-                        <Grid item xs={12} key={vacancy.id}>
-                          <Card variant="outlined">
-                            <CardContent>
-                              <Box display="flex" justifyContent="space-between" alignItems="start" mb={2}>
-                                <Box flex={1}>
-                                  <Typography variant="h6" gutterBottom>
-                                    {vacancy.title}
-                                  </Typography>
-                                  <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
-                                    <Chip
-                                      label={vacancy.status === 'active' ? _(msg`Активна`) : _(msg`Архивная`)}
-                                      color={vacancy.status === 'active' ? 'success' : 'default'}
-                                      size="small"
-                                    />
-                                    {vacancy.salary_from && (
-                                      <Chip
-                                        label={`${vacancy.salary_from.toLocaleString()} - ${vacancy.salary_to?.toLocaleString() || '...'} ${vacancy.currency || 'RUR'}`}
-                                        size="small"
-                                        variant="outlined"
-                                      />
-                                    )}
-                                    {vacancy.experience && (
-                                      <Chip
-                                        label={vacancy.experience}
-                                        size="small"
-                                        variant="outlined"
-                                      />
-                                    )}
-                                  </Box>
-                                  <Typography variant="body2" color="text.secondary">
-                                    HH ID: {vacancy.hh_id}
-                                  </Typography>
-                                </Box>
-                              </Box>
+                    {loadingHhVacancies && (
+                      <Box display="flex" flexDirection="column" alignItems="center" py={4}>
+                        <CircularProgress sx={{ mb: 2 }} />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Загрузка вакансий из HH.ru...</Trans>
+                        </Typography>
+                      </Box>
+                    )}
 
-                              <Divider sx={{ my: 2 }} />
+                    {!loadingHhVacancies && hhVacanciesError && (
+                      <Alert severity="error" sx={{ mb: 2 }}>
+                        {hhVacanciesError}
+                      </Alert>
+                    )}
 
-                              {/* Статус синхронизации кандидатов */}
-                              <Box>
-                                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                                  <Typography variant="body2" color="text.secondary"><Trans>Синхронизация кандидатов:</Trans></Typography>
-                                  <Button
-                                    size="small"
-                                    variant="contained"
-                                    component={Link}
-                                    href={`/hr/hh-vacancies/${vacancy.id}`}
-                                    startIcon={<IconSettings />}
+                    {!loadingHhVacancies && hhVacanciesFromApi.length === 0 && !hhVacanciesError && (
+                      <Alert severity="info">
+                        <Trans>Вакансии не найдены. Создайте вакансии в HH.ru или обновите список.</Trans>
+                      </Alert>
+                    )}
+
+                    {hhVacanciesFromApi.length > 0 && (
+                      <Box>
+                        {/* === ДЕФОЛТНЫЕ СТАТУСЫ === */}
+                        <Card variant="outlined" sx={{ mb: 3, bgcolor: "primary.50" }}>
+                          <CardContent>
+                            <Typography variant="h6" gutterBottom>
+                              <Trans>📊 Статусы кандидатов для синхронизации</Trans>
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" mb={2}>
+                              <Trans>Выберите какие статусы кандидатов загружать из HH.ru. Эти настройки будут применены ко всем выбранным вакансиям (можно настроить индивидуально для каждой).</Trans>
+                            </Typography>
+                            {availableStatuses.length > 0 ? (
+                              <Box display="flex" gap={2} flexWrap="wrap">
+                                {availableStatuses.map((status) => (
+                                  <Box
+                                    key={status.id}
+                                    sx={{
+                                      border: 1,
+                                      borderColor: 'divider',
+                                      borderRadius: 1,
+                                      p: 1.5,
+                                      minWidth: 140,
+                                      bgcolor: defaultStatuses.has(status.id) ? 'primary.50' : 'background.paper'
+                                    }}
                                   >
-                                    <Trans>Настроить</Trans>
-                                  </Button>
-                                </Box>
-
-                                {(!vacancy.candidates_sync_status || vacancy.candidates_sync_status === 'not_synced') && (
-                                  <Box display="flex" alignItems="center" gap={1}>
-                                    <Chip
-                                      label={_(msg`Не синхронизированы`)}
-                                      size="small"
-                                      variant="outlined"
+                                    <FormControlLabel
+                                      control={
+                                        <Switch
+                                          checked={defaultStatuses.has(status.id)}
+                                          onChange={(e) => {
+                                            e.stopPropagation();
+                                            const newSet = new Set(defaultStatuses);
+                                            if (e.target.checked) {
+                                              newSet.add(status.id);
+                                            } else {
+                                              newSet.delete(status.id);
+                                            }
+                                            setDefaultStatuses(newSet);
+                                          }}
+                                          onClick={(e) => e.stopPropagation()}
+                                          size="small"
+                                        />
+                                      }
+                                      label={
+                                        <Box>
+                                          <Typography variant="body2" fontWeight={600}>
+                                            {status.name}
+                                          </Typography>
+                                          <Typography variant="caption" color="text.secondary">
+                                            <Trans>{status.total_count || 0} кандидатов</Trans>
+                                          </Typography>
+                                        </Box>
+                                      }
+                                      sx={{ m: 0 }}
                                     />
                                   </Box>
-                                )}
-
-                                {vacancy.candidates_sync_status === 'syncing' && (
-                                  <Box>
-                                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                                      <CircularProgress size={16} />
-                                      <Typography variant="body2">
-                                        <Trans>Синхронизация...</Trans>{' '} ({vacancy.candidates_synced}/{vacancy.candidates_total})
-                                      </Typography>
-                                    </Box>
-                                    <Box sx={{ width: '100%' }}>
-                                      <div style={{
-                                        width: '100%',
-                                        height: 4,
-                                        backgroundColor: '#e0e0e0',
-                                        borderRadius: 2,
-                                        overflow: 'hidden'
-                                      }}>
-                                        <div style={{
-                                          width: `${vacancy.candidates_total > 0 ? (vacancy.candidates_synced / vacancy.candidates_total) * 100 : 0}%`,
-                                          height: '100%',
-                                          backgroundColor: '#1976d2',
-                                          transition: 'width 0.3s'
-                                        }} />
-                                      </div>
-                                    </Box>
-                                  </Box>
-                                )}
-
-                                {vacancy.candidates_sync_status === 'synced' && (
-                                  <Box>
-                                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                                      <IconCheck size={16} color="green" />
-                                      <Typography variant="body2" color="success.main">
-                                        <Trans>Синхронизировано: {vacancy.candidates_synced} кандидатов
-                                      </Trans></Typography>
-                                    </Box>
-                                    {vacancy.candidates_last_synced_at && (
-                                      <Typography variant="caption" color="text.secondary">
-                                        <Trans>Последняя синхронизация: {new Date(vacancy.candidates_last_synced_at).toLocaleString('ru-RU')}</Trans>
-                                      </Typography>
-                                    )}
-                                  </Box>
-                                )}
-
-                                {vacancy.candidates_sync_status === 'error' && (
-                                  <Alert severity="error" sx={{ mt: 1 }}>
-                                    <Typography variant="body2">
-                                      {vacancy.candidates_sync_error || _(msg`Произошла ошибка при синхронизации`)}
-                                    </Typography>
-                                  </Alert>
-                                )}
+                                ))}
                               </Box>
-                            </CardContent>
-                          </Card>
+                            ) : (
+                              <Alert severity="info">
+                                <Trans>Статусы будут загружены после выбора вакансий</Trans>
+                              </Alert>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        {/* === ФИЛЬТРЫ И СОРТИРОВКА === */}
+                        <Card sx={{ mb: 2, p: 2 }}>
+                          <Grid container spacing={2} alignItems="center">
+                            {/* Поиск */}
+                            <Grid item xs={12} md={4}>
+                              <TextField
+                                fullWidth
+                                size="small"
+                                placeholder={_(msg`Поиск по названию...`)}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position="start">
+                                      <IconSearch size={18} />
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              />
+                            </Grid>
+
+                            {/* Фильтр по статусу HH */}
+                            <Grid item xs={12} sm={6} md={2}>
+                              <FormControl fullWidth size="small">
+                                <InputLabel><Trans>Статус на HH</Trans></InputLabel>
+                                <Select
+                                  value={filterStatus}
+                                  label={_(msg`Статус на HH`)}
+                                  onChange={(e) => setFilterStatus(e.target.value)}
+                                >
+                                  <MenuItem value="all"><Trans>Все</Trans></MenuItem>
+                                  <MenuItem value="active"><Trans>Активные</Trans></MenuItem>
+                                  <MenuItem value="archived"><Trans>Архивные</Trans></MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
+
+                            {/* Фильтр по импорту */}
+                            <Grid item xs={12} sm={6} md={2}>
+                              <FormControl fullWidth size="small">
+                                <InputLabel><Trans>Импорт</Trans></InputLabel>
+                                <Select
+                                  value={filterImported}
+                                  label={_(msg`Импорт`)}
+                                  onChange={(e) => setFilterImported(e.target.value)}
+                                >
+                                  <MenuItem value="all"><Trans>Все</Trans></MenuItem>
+                                  <MenuItem value="imported"><Trans>Импортированы</Trans></MenuItem>
+                                  <MenuItem value="not_imported"><Trans>Не импортированы</Trans></MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
+
+                            {/* Сортировка */}
+                            <Grid item xs={12} sm={12} md={4}>
+                              <FormControl fullWidth size="small">
+                                <InputLabel><Trans>Сортировка</Trans></InputLabel>
+                                <Select
+                                  value={sortBy}
+                                  label={_(msg`Сортировка`)}
+                                  onChange={(e) => setSortBy(e.target.value)}
+                                >
+                                  <MenuItem value="date_desc">
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                      <IconArrowDown size={16} />
+                                      <Trans>Дата создания (новые)</Trans>
+                                    </Box>
+                                  </MenuItem>
+                                  <MenuItem value="date_asc">
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                      <IconArrowUp size={16} />
+                                      <Trans>Дата создания (старые)</Trans>
+                                    </Box>
+                                  </MenuItem>
+                                  <MenuItem value="name_asc">
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                      <IconArrowUp size={16} />
+                                      <Trans>Название (А-Я)</Trans>
+                                    </Box>
+                                  </MenuItem>
+                                  <MenuItem value="name_desc">
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                      <IconArrowDown size={16} />
+                                      <Trans>Название (Я-А)</Trans>
+                                    </Box>
+                                  </MenuItem>
+                                  <MenuItem value="responses_desc">
+                                    <Box display="flex" alignItems="center" gap={1}>
+                                      <IconArrowDown size={16} />
+                                      <Trans>По откликам (больше)</Trans>
+                                    </Box>
+                                  </MenuItem>
+                                </Select>
+                              </FormControl>
+                            </Grid>
+
+                            {/* Счетчик */}
+                            <Grid item xs={12}>
+                              <Typography variant="caption" color="text.secondary">
+                                <Trans>Найдено вакансий: {filteredVacancies.length} из {hhVacanciesFromApi.length}</Trans>
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Card>
+
+                        {/* === ВЕРХНИЕ КНОПКИ === */}
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  selectedVacancyIds.size > 0 &&
+                                  selectedVacancyIds.size === hhVacanciesFromApi.length
+                                }
+                                indeterminate={
+                                  selectedVacancyIds.size > 0 &&
+                                  selectedVacancyIds.size < hhVacanciesFromApi.length
+                                }
+                                onChange={handleSelectAllVacancies}
+                              />
+                            }
+                            label={_(msg`Выбрать все`)}
+                          />
+                          <Box display="flex" gap={1}>
+                            <Button
+                              variant="outlined"
+                              onClick={loadHhVacanciesFromApi}
+                              startIcon={<IconRefresh />}
+                              size="small"
+                            >
+                              <Trans>Обновить</Trans>
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              disabled={selectedVacancyIds.size === 0 || importing}
+                              startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
+                              onClick={handleImportSelected}
+                            >
+                              {importing
+                                ? _(msg`Импортируем...`)
+                                : hasImportedInSelection()
+                                  ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
+                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
+                              }
+                            </Button>
+                          </Box>
+                        </Box>
+
+                        <Grid container spacing={2}>
+                          {filteredVacancies.map((vacancy) => {
+                            const isImported = vacancy.imported;
+                            const isSelected = selectedVacancyIds.has(vacancy.id);
+
+                            return (
+                              <Grid item xs={12} key={vacancy.id}>
+                                <Card
+                                  variant="outlined"
+                                  sx={{
+                                    bgcolor: isSelected ? "primary.50" : "inherit",
+                                    cursor: "pointer",
+                                    border: isSelected ? 2 : 1,
+                                    borderColor: isSelected ? "primary.main" : "divider",
+                                  }}
+                                  onClick={() => handleToggleVacancySelection(vacancy.id)}
+                                >
+                                  <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
+                                    <Box display="flex" alignItems="start" gap={2}>
+                                      <Switch
+                                        checked={isSelected}
+                                        onChange={() => handleToggleVacancySelection(vacancy.id)}
+                                        onClick={(e) => e.stopPropagation()}
+                                        size="small"
+                                      />
+                                      <Box flex={1}>
+                                        {/* Название с индикатором статуса HH */}
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <Box
+                                            sx={{
+                                              width: 6,
+                                              height: 6,
+                                              borderRadius: "50%",
+                                              bgcolor: vacancy.status === "active" ? "success.main" : "grey.400",
+                                              flexShrink: 0,
+                                            }}
+                                          />
+                                          <Typography
+                                            variant="caption"
+                                            sx={{
+                                              color: vacancy.status === "active" ? "success.main" : "grey.600",
+                                              fontWeight: 600,
+                                              textTransform: "uppercase",
+                                              fontSize: "0.65rem",
+                                            }}
+                                          >
+                                            {vacancy.status === "active" ? "HH" : "HH архив"}
+                                          </Typography>
+                                          <Typography variant="body2" component="span" fontWeight={600} sx={{ ml: 0.5 }}>
+                                            {vacancy.name}
+                                          </Typography>
+                                          
+                                          {/* Бейджи рядом с названием */}
+                                          {isImported && (
+                                            <Chip
+                                              label={_(msg`✅ Импортирована`)}
+                                              color="success"
+                                              size="small"
+                                              sx={{ height: 20, fontSize: '0.7rem' }}
+                                            />
+                                          )}
+                                        </Box>
+
+                                        {/* Компактная информация в одну строку */}
+                                        <Box display="flex" gap={1.5} alignItems="center" flexWrap="wrap" mb={0.5}>
+                                          <Typography variant="caption" color="text.secondary">
+                                            📍 {vacancy.area}
+                                          </Typography>
+                                          <Typography variant="caption" color="text.secondary">
+                                            💼 {vacancy.responses} откл.
+                                          </Typography>
+                                          <Typography variant="caption" color="text.secondary">
+                                            📅 {new Date(vacancy.created_at).toLocaleDateString("ru-RU")}
+                                          </Typography>
+                                          {vacancy.salary_from && (
+                                            <Typography variant="caption" color="text.secondary">
+                                              💰 {vacancy.salary_from.toLocaleString()} - {vacancy.salary_to?.toLocaleString() || '...'} {vacancy.currency || 'RUR'}
+                                            </Typography>
+                                          )}
+                                          <Typography variant="caption" color="text.secondary">
+                                            HH: {vacancy.id}
+                                          </Typography>
+                                        </Box>
+
+                                        {/* Прогресс синхронизации (компактно) */}
+                                        {vacancy.candidates_sync_status === 'syncing' && (
+                                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                            <CircularProgress size={12} />
+                                            <Typography variant="caption" color="primary">
+                                              <Trans>Синхронизация: {vacancy.candidates_synced || 0}/{vacancy.candidates_total || 0}</Trans>
+                                            </Typography>
+                                          </Box>
+                                        )}
+                                        
+                                        {vacancy.candidates_sync_status === 'synced' && vacancy.candidates_synced > 0 && (
+                                          <Typography variant="caption" color="success.main">
+                                            ✅ <Trans>Загружено {vacancy.candidates_synced} кандидатов</Trans>
+                                          </Typography>
+                                        )}
+                                        
+                                        {vacancy.candidates_sync_status === 'error' && (
+                                          <Typography variant="caption" color="error.main">
+                                            ❌ <Trans>Ошибка синхронизации</Trans>
+                                          </Typography>
+                                        )}
+
+                                        {/* Кнопки управления (компактно) */}
+                                        <Box display="flex" gap={0.5} flexWrap="wrap" mt={1}>
+                                          {/* Кнопка перехода к вакансии */}
+                                          {isImported && vacancy.local_vacancy_id && (
+                                            <Button
+                                              size="small"
+                                              variant="outlined"
+                                              component={Link}
+                                              href={`/hr/vacancies/${vacancy.local_vacancy_id}`}
+                                              onClick={(e) => e.stopPropagation()}
+                                              sx={{ minWidth: 'auto', px: 1 }}
+                                            >
+                                              <Trans>Открыть</Trans>
+                                            </Button>
+                                          )}
+                                          
+                                          {/* Кнопка настройки статусов */}
+                                          <Button
+                                            size="small"
+                                            variant="text"
+                                            startIcon={<IconSettings size={14} />}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              toggleVacancyExpanded(vacancy.id);
+                                            }}
+                                            sx={{ minWidth: 'auto', px: 1 }}
+                                          >
+                                            <Trans>
+                                              {expandedVacancies.has(vacancy.id) ? "Скрыть" : "Статусы"}
+                                            </Trans>
+                                          </Button>
+                                        </Box>
+
+                                        {/* Раскрывающийся блок настройки статусов */}
+                                        {expandedVacancies.has(vacancy.id) && (
+                                          <Box 
+                                            mt={2} 
+                                            p={2} 
+                                            bgcolor="grey.50" 
+                                            borderRadius={1}
+                                            onClick={(e) => e.stopPropagation()}
+                                          >
+                                                <Typography variant="body2" fontWeight="bold" mb={1}>
+                                                  <Trans>Статусы для этой вакансии:</Trans>
+                                                </Typography>
+                                                <Box display="flex" gap={1} flexWrap="wrap">
+                                                  {(vacancy.available_statuses || []).map((status: any) => {
+                                                    const currentStatuses = getStatusesForVacancy(vacancy.id);
+                                                    const isChecked = currentStatuses.has(status.id);
+
+                                                    return (
+                                                      <Box
+                                                        key={status.id}
+                                                        sx={{
+                                                          border: 1,
+                                                          borderColor: 'divider',
+                                                          borderRadius: 1,
+                                                          p: 1,
+                                                          minWidth: 120,
+                                                          bgcolor: isChecked ? 'primary.50' : 'background.paper'
+                                                        }}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                      >
+                                                        <FormControlLabel
+                                                          control={
+                                                            <Switch
+                                                              checked={isChecked}
+                                                              onChange={(e) => {
+                                                                e.stopPropagation();
+                                                                toggleStatusForVacancy(vacancy.id, status.id);
+                                                              }}
+                                                              onClick={(e) => e.stopPropagation()}
+                                                              size="small"
+                                                            />
+                                                          }
+                                                          label={
+                                                            <Box>
+                                                              <Typography variant="body2" fontWeight={600}>
+                                                                {status.name}
+                                                              </Typography>
+                                                              <Typography variant="caption" color="text.secondary">
+                                                                {status.count || 0}
+                                                              </Typography>
+                                                            </Box>
+                                                          }
+                                                          sx={{ m: 0 }}
+                                                        />
+                                                      </Box>
+                                                    );
+                                                  })}
+                                                </Box>
+                                              </Box>
+                                            )}
+                                      </Box>
+                                    </Box>
+                                  </CardContent>
+                                </Card>
+                              </Grid>
+                            );
+                          })}
                         </Grid>
-                      ))}
-                    </Grid>
-                  )}
+
+                        {/* === НИЖНИЕ КНОПКИ === */}
+                        <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  selectedVacancyIds.size > 0 &&
+                                  selectedVacancyIds.size === hhVacanciesFromApi.length
+                                }
+                                indeterminate={
+                                  selectedVacancyIds.size > 0 &&
+                                  selectedVacancyIds.size < hhVacanciesFromApi.length
+                                }
+                                onChange={handleSelectAllVacancies}
+                              />
+                            }
+                            label={_(msg`Выбрать все`)}
+                          />
+                          <Box display="flex" gap={1}>
+                            <Button
+                              variant="outlined"
+                              onClick={loadHhVacanciesFromApi}
+                              startIcon={<IconRefresh />}
+                              size="small"
+                            >
+                              <Trans>Обновить список</Trans>
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              disabled={selectedVacancyIds.size === 0 || importing}
+                              startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
+                              onClick={handleImportSelected}
+                            >
+                              {importing
+                                ? _(msg`Импортируем...`)
+                                : hasImportedInSelection()
+                                  ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
+                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
+                              }
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Box>
+                    )}
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
           )}
-          </Grid>
-        </Box>
-      </Box>
+          {/* === КОНЕЦ НОВОЙ СЕКЦИИ === */}
+        </Grid>
+      </Box> {/* Закрывает Box sx={{ position: 'relative' }} */}
+      </Box> {/* Закрывает основной Box на строке 495 */}
     </PageContainer>
   );
 }
