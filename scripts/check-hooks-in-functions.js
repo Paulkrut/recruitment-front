@@ -1,0 +1,140 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+
+// Директории для поиска
+const searchDirs = ['src'];
+
+// Расширения файлов для проверки
+const extensions = ['.ts', '.tsx', '.js', '.jsx'];
+
+let totalIssues = 0;
+const issuesByFile = {};
+
+function checkFile(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const lines = content.split('\n');
+  
+  const issues = [];
+  
+  // Ищем функции (не компоненты), которые используют useLingui
+  let inFunction = false;
+  let functionName = '';
+  let functionStartLine = 0;
+  let braceCount = 0;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    // Пропускаем комментарии
+    if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
+      continue;
+    }
+    
+    // Ищем объявление функции (не компонента)
+    // Функция начинается с маленькой буквы или содержит get/set/handle/fetch и т.д.
+    const functionMatch = trimmed.match(/^(?:export\s+)?(?:const|function)\s+([a-z][a-zA-Z0-9]*)\s*[=\(]/);
+    
+    if (functionMatch && !inFunction) {
+      const name = functionMatch[1];
+      // Проверяем, что это не React компонент (не начинается с заглавной буквы)
+      if (name[0] === name[0].toLowerCase()) {
+        inFunction = true;
+        functionName = name;
+        functionStartLine = i + 1;
+        braceCount = 0;
+      }
+    }
+    
+    if (inFunction) {
+      // Считаем скобки
+      for (const char of line) {
+        if (char === '{') braceCount++;
+        if (char === '}') braceCount--;
+      }
+      
+      // Проверяем использование useLingui внутри функции
+      if (trimmed.includes('useLingui()')) {
+        issues.push({
+          line: i + 1,
+          code: line.trim(),
+          type: 'hook_in_function',
+          functionName: functionName,
+          functionStartLine: functionStartLine
+        });
+      }
+      
+      // Конец функции
+      if (braceCount < 0 || (braceCount === 0 && line.includes('}'))) {
+        inFunction = false;
+        functionName = '';
+      }
+    }
+  }
+  
+  return issues;
+}
+
+function scanDirectory(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  entries.forEach(entry => {
+    const fullPath = path.join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      if (!['node_modules', '.next', 'build', 'dist', '.git'].includes(entry.name)) {
+        scanDirectory(fullPath);
+      }
+    } else if (entry.isFile()) {
+      const ext = path.extname(entry.name);
+      if (extensions.includes(ext)) {
+        const issues = checkFile(fullPath);
+        if (issues.length > 0) {
+          const relativePath = path.relative(process.cwd(), fullPath);
+          issuesByFile[relativePath] = issues;
+          totalIssues += issues.length;
+        }
+      }
+    }
+  });
+}
+
+console.log('🔍 Поиск использования React хуков внутри обычных функций...\n');
+
+searchDirs.forEach(dir => {
+  if (fs.existsSync(dir)) {
+    scanDirectory(dir);
+  }
+});
+
+if (totalIssues === 0) {
+  console.log('✅ Проблем не найдено! 🎉\n');
+  process.exit(0);
+} else {
+  console.log('❌ НАЙДЕНЫ ПРОБЛЕМЫ:\n');
+  console.log('============================================================\n');
+  
+  let fileIndex = 1;
+  Object.entries(issuesByFile).forEach(([filePath, issues]) => {
+    console.log(`${fileIndex}. ${filePath}`);
+    console.log(`   Проблем: ${issues.length}\n`);
+    
+    issues.forEach((issue, idx) => {
+      console.log(`   ${idx + 1}) Функция "${issue.functionName}" (строка ${issue.functionStartLine}):`);
+      console.log(`      Строка ${issue.line}: ${issue.code}`);
+      console.log('');
+    });
+    
+    fileIndex++;
+  });
+
+  console.log('============================================================');
+  console.log(`📊 ИТОГО: ${totalIssues} использований React хуков в обычных функциях в ${Object.keys(issuesByFile).length} файлах\n`);
+  console.log('💡 React хуки можно использовать только в компонентах (начинаются с заглавной буквы)\n');
+  console.log('   Решение: передавайте результат хука как параметр функции\n');
+  
+  process.exit(1);
+}
+
