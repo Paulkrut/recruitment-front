@@ -26,7 +26,7 @@ interface WelcomeHeroProps {
   hasHhIntegration?: boolean;
 }
 
-export default function WelcomeHero({ 
+export default function WelcomeHero({
   hasHhIntegration = false,
 }: WelcomeHeroProps) {
   const { _ } = useLingui();
@@ -49,10 +49,10 @@ export default function WelcomeHero({
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 2 }}>
             <Typography sx={{ fontSize: '3rem' }}>👋</Typography>
-            <Typography 
-              variant="h2" 
+            <Typography
+              variant="h2"
               fontWeight={800}
-              sx={{ 
+              sx={{
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
@@ -71,9 +71,9 @@ export default function WelcomeHero({
         <Grid container spacing={3}>
           {/* HH Import Card */}
           <Grid item xs={12} md={6}>
-            <Link 
-              href={hasHhIntegration ? '/hr/hh-integration' : '/hr/settings/hh-integration'} 
-              passHref 
+            <Link
+              href={'/hr/settings/hh-integration'}
+              passHref
               legacyBehavior
             >
               <Card
@@ -109,7 +109,7 @@ export default function WelcomeHero({
                       justifyContent: 'center',
                       mx: 'auto',
                       mb: 3,
-                      background: hasHhIntegration 
+                      background: hasHhIntegration
                         ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                         : 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
                     }}
@@ -137,9 +137,9 @@ export default function WelcomeHero({
                   </Typography>
 
                   {/* Description */}
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
                     sx={{ mb: 3, minHeight: 48 }}
                   >
                     {hasHhIntegration ? (
@@ -179,7 +179,7 @@ export default function WelcomeHero({
                     endIcon={<IconArrowRight size={20} />}
                     component="span"
                     sx={{
-                      background: hasHhIntegration 
+                      background: hasHhIntegration
                         ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
                         : 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
                       fontWeight: 600,
@@ -249,9 +249,9 @@ export default function WelcomeHero({
                   </Typography>
 
                   {/* Description */}
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
                     sx={{ mb: 3, minHeight: 48 }}
                   >
                     <Trans>Создайте новую вакансию с нуля и настройте вопросы для интервью</Trans>
