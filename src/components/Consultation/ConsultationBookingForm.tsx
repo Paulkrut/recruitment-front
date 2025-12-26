@@ -8,18 +8,15 @@ import {
   TextField,
   Typography,
   Box,
-  Stepper,
-  Step,
-  StepLabel,
   Alert,
   CircularProgress,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Chip,
+  Grid,
+  Divider,
 } from '@mui/material';
 import { apiFetch } from '@/utils/api';
+
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 interface TimeSlot {
   start: string;
@@ -41,7 +38,6 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
   onClose,
   onSuccess,
 }) => {
-  const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -55,21 +51,19 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
 
-  const steps = ['Ваши данные', 'Выберите время'];
-
-  // Загрузка слотов при открытии второго шага
+  // Загрузка слотов при открытии
   useEffect(() => {
-    if (activeStep === 1 && open && slots.length === 0) {
+    if (open && slots.length === 0) {
       loadSlots();
     }
-  }, [activeStep, open]);
+  }, [open]);
 
   const loadSlots = async () => {
     setLoadingSlots(true);
     setError(null);
     
     try {
-      const response = await apiFetch('/api/manager-consultation/slots');
+      const response = await apiFetch(`${API_BASE}/api/manager-consultation/slots`);
       const data = await response.json();
       
       if (data.success) {
@@ -85,44 +79,26 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
     }
   };
 
-  const handleNext = () => {
-    if (activeStep === 0) {
-      // Валидация первого шага
-      if (!clientName.trim()) {
-        setError('Введите ваше имя');
-        return;
-      }
-      if (!clientPhone.trim()) {
-        setError('Введите ваш телефон');
-        return;
-      }
-      
-      setError(null);
-      setActiveStep(1);
-    } else if (activeStep === 1) {
-      // Бронирование
-      if (!selectedSlot) {
-        setError('Выберите время встречи');
-        return;
-      }
-      
-      handleBooking();
-    }
-  };
-
-  const handleBack = () => {
-    setError(null);
-    setActiveStep((prev) => prev - 1);
-  };
-
   const handleBooking = async () => {
-    if (!selectedSlot) return;
+    // Валидация
+    if (!clientName.trim()) {
+      setError('Введите ваше имя');
+      return;
+    }
+    if (!clientPhone.trim()) {
+      setError('Введите ваш телефон');
+      return;
+    }
+    if (!selectedSlot) {
+      setError('Выберите время встречи');
+      return;
+    }
     
     setLoading(true);
     setError(null);
     
     try {
-      const response = await apiFetch('/api/manager-consultation/book', {
+      const response = await apiFetch(`${API_BASE}/api/manager-consultation/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -155,7 +131,6 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
 
   const handleClose = () => {
     if (!loading) {
-      setActiveStep(0);
       setClientName('');
       setClientPhone('');
       setSelectedSlot(null);
@@ -176,7 +151,7 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
   }, {} as Record<string, TimeSlot[]>);
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
         Запись на консультацию
         <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
@@ -185,14 +160,6 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
       </DialogTitle>
 
       <DialogContent>
-        <Stepper activeStep={activeStep} sx={{ pt: 2, pb: 3 }}>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-
         {error && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
@@ -205,9 +172,13 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
           </Alert>
         )}
 
-        {/* ШАГ 1: Данные клиента */}
-        {activeStep === 0 && (
-          <Box sx={{ pt: 2 }}>
+        <Grid container spacing={3}>
+          {/* Левая колонка - форма */}
+          <Grid item xs={12} md={5}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Ваши контактные данные
+            </Typography>
+            
             <TextField
               fullWidth
               label="Ваше имя"
@@ -217,6 +188,7 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
               required
               autoFocus
             />
+            
             <TextField
               fullWidth
               label="Телефон"
@@ -226,12 +198,33 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
               required
               placeholder="+7 (999) 123-45-67"
             />
-          </Box>
-        )}
 
-        {/* ШАГ 2: Выбор слота */}
-        {activeStep === 1 && (
-          <Box sx={{ pt: 2 }}>
+            {selectedSlot && (
+              <Alert severity="info" sx={{ mt: 3 }}>
+                <Typography variant="body2" fontWeight="bold">
+                  Выбрано время:
+                </Typography>
+                <Typography variant="body1">
+                  {selectedSlot.day_name}, {new Date(selectedSlot.date).toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                  })} в {selectedSlot.time}
+                </Typography>
+              </Alert>
+            )}
+          </Grid>
+
+          {/* Разделитель */}
+          <Grid item xs={12} md={0.5} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+            <Divider orientation="vertical" flexItem />
+          </Grid>
+
+          {/* Правая колонка - календарь */}
+          <Grid item xs={12} md={6.5}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Выберите удобное время
+            </Typography>
+
             {loadingSlots ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
                 <CircularProgress />
@@ -241,10 +234,10 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
                 К сожалению, нет доступных слотов. Свяжитесь с нами напрямую.
               </Alert>
             ) : (
-              <Box>
+              <Box sx={{ maxHeight: 400, overflowY: 'auto', pr: 1 }}>
                 {Object.entries(groupedSlots).map(([date, dateSlots]) => (
-                  <Box key={date} sx={{ mb: 3 }}>
-                    <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+                  <Box key={date} sx={{ mb: 2.5 }}>
+                    <Typography variant="subtitle2" fontWeight="bold" color="primary" sx={{ mb: 1 }}>
                       {dateSlots[0].day_name}, {new Date(date).toLocaleDateString('ru-RU', {
                         day: 'numeric',
                         month: 'long',
@@ -260,7 +253,12 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
                           variant={selectedSlot?.start === slot.start ? 'filled' : 'outlined'}
                           sx={{ 
                             cursor: 'pointer',
-                            '&:hover': { backgroundColor: 'action.hover' },
+                            minWidth: 70,
+                            '&:hover': { 
+                              backgroundColor: selectedSlot?.start === slot.start 
+                                ? 'primary.dark' 
+                                : 'action.hover' 
+                            },
                           }}
                         />
                       ))}
@@ -269,30 +267,23 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
                 ))}
               </Box>
             )}
-          </Box>
-        )}
+          </Grid>
+        </Grid>
       </DialogContent>
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button onClick={handleClose} disabled={loading}>
           Отмена
         </Button>
-        {activeStep > 0 && (
-          <Button onClick={handleBack} disabled={loading}>
-            Назад
-          </Button>
-        )}
         <Button
-          onClick={handleNext}
+          onClick={handleBooking}
           variant="contained"
-          disabled={loading || success || (activeStep === 1 && !selectedSlot)}
+          disabled={loading || success || !selectedSlot || !clientName || !clientPhone}
         >
           {loading ? (
             <CircularProgress size={24} />
-          ) : activeStep === steps.length - 1 ? (
-            'Забронировать'
           ) : (
-            'Далее'
+            'Забронировать'
           )}
         </Button>
       </DialogActions>
@@ -301,4 +292,3 @@ const ConsultationBookingForm: React.FC<ConsultationBookingFormProps> = ({
 };
 
 export default ConsultationBookingForm;
-

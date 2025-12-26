@@ -183,7 +183,7 @@ export default function HRDashboard() {
       <Box>
         {/* Welcome Consultation Banner - показываем новым пользователям */}
         {showWelcomeBanner && !hasVacancy && (
-          <WelcomeConsultationBanner managerPhone="+7 (962) 940-74-73"/>
+          <WelcomeConsultationBanner managerPhone="+79629407473" />
         )}
 
         {/* Welcome Hero - показываем если нет вакансий */}

@@ -6,13 +6,14 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { apiFetch } from '@/utils/api';
 import ConsultationBookingForm from './ConsultationBookingForm';
 
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
+
 interface ManagerConsultationSliderProps {
   managerPhone?: string;
 }
-const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
 const ManagerConsultationSlider: React.FC<ManagerConsultationSliderProps> = ({
-  managerPhone = '+7 962 940-74-73',
+  managerPhone = '+79629407473',
 }) => {
   const [show, setShow] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -88,18 +89,14 @@ const ManagerConsultationSlider: React.FC<ManagerConsultationSliderProps> = ({
 
   const handleClose = async () => {
     setShow(false);
-
+    
     try {
-      await apiFetch('/api/manager-consultation/dismiss', {
+      await apiFetch(`${API_BASE}/api/manager-consultation/dismiss`, {
         method: 'POST',
       });
     } catch (error) {
       console.error('Failed to dismiss slider:', error);
     }
-  };
-
-  const handleCallNow = () => {
-    window.open(`tel:${managerPhone}`);
   };
 
   const handleBookOnline = () => {
@@ -146,7 +143,7 @@ const ManagerConsultationSlider: React.FC<ManagerConsultationSliderProps> = ({
 
           <Box sx={{ pr: 3 }}>
             <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
-              🎁 Получите 5 бесплатных интервью!
+              🎁 Получите ещё 5 бесплатных интервью!
             </Typography>
             <Typography variant="body2" sx={{ mb: 2, opacity: 0.95 }}>
               Запишитесь на короткую консультацию с персональным менеджером. Мы расскажем о возможностях платформы и ответим на ваши вопросы.
@@ -172,12 +169,14 @@ const ManagerConsultationSlider: React.FC<ManagerConsultationSliderProps> = ({
               <Button
                 variant="outlined"
                 startIcon={<PhoneIcon />}
-                onClick={handleCallNow}
+                component="a"
+                href={`tel:${managerPhone}`}
                 sx={{
                   borderColor: 'rgba(255, 255, 255, 0.5)',
                   color: 'white',
                   flex: 1,
                   minWidth: 120,
+                  textDecoration: 'none',
                   '&:hover': {
                     borderColor: 'white',
                     backgroundColor: 'rgba(255, 255, 255, 0.1)',

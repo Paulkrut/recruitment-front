@@ -108,7 +108,7 @@ export default function RootLayout({
       <Customizer />
 
       {/* Выезжающая панель с предложением консультации */}
-      <ManagerConsultationSlider managerPhone="+7 962 940-74-73" />
+      <ManagerConsultationSlider managerPhone="+79629407473" />
     </MainWrapper>
   );
 }
