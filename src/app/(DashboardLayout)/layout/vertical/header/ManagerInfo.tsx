@@ -53,6 +53,7 @@ const ManagerInfo = () => {
       <>
         <Tooltip title={<Trans>Ваш менеджер</Trans>} arrow>
           <IconButton
+            id="manager-info-button"
             onClick={handleClick}
             size="small"
             sx={{
@@ -195,6 +196,7 @@ const ManagerInfo = () => {
   if (!mdUp) {
     return (
       <Box
+        id="manager-info-button"
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -302,6 +304,7 @@ const ManagerInfo = () => {
   // На больших экранах (md+) - полная версия
   return (
     <Box
+      id="manager-info-button"
       sx={{
         display: 'flex',
         alignItems: 'center',

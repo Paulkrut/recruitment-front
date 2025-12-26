@@ -12,6 +12,7 @@ import HorizontalHeader from "./layout/horizontal/header/Header";
 import { useSelector } from "@/store/hooks";
 import { AppState } from "@/store/store";
 import CompanyGuard from "@/components/CompanyGuard";
+import { ManagerConsultationSlider } from "@/components/Consultation";
 
 const PageWrapper = styled("div")(() => ({
   display: "flex",
@@ -105,6 +106,9 @@ export default function RootLayout({
         </PageWrapper>
       </Box>
       <Customizer />
+
+      {/* Выезжающая панель с предложением консультации */}
+      <ManagerConsultationSlider managerPhone="+7 962 940-74-73" />
     </MainWrapper>
   );
 }

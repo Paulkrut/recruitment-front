@@ -24,6 +24,7 @@ import { msg, Trans } from '@lingui/macro';
 
 import WelcomeHero from "@/components/WelcomeHero";
 import SetupReminderBanner from "@/components/SetupReminderBanner";
+import { WelcomeConsultationBanner } from "@/components/Consultation";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -35,6 +36,7 @@ export default function HRDashboard() {
   const [isLoading, setLoading] = useState(true);
   const [hasHhIntegration, setHasHhIntegration] = useState(false);
   const [showSetupBanner, setShowSetupBanner] = useState(true);
+  const [showWelcomeBanner, setShowWelcomeBanner] = useState(false);
 
   const fetchDashboardData = async () => {
     if (!currentCompany) {
@@ -47,7 +49,7 @@ export default function HRDashboard() {
       const response = await apiFetch(`${API_BASE}/api/dashboard`);
       const dashboardData = await response.json();
       setData(dashboardData);
-      
+
       // Check if HH integration exists
       const hhResponse = await apiFetch(`${API_BASE}/api/hh/status`);
       if (hhResponse.ok) {
@@ -64,7 +66,7 @@ export default function HRDashboard() {
 
   useEffect(() => {
     fetchDashboardData();
-    
+
     // Проверяем, был ли баннер закрыт и когда
     const dismissedData = localStorage.getItem('setup_banner_dismissed');
     if (dismissedData) {
@@ -72,7 +74,7 @@ export default function HRDashboard() {
         const { timestamp, count } = JSON.parse(dismissedData);
         const dayInMs = 24 * 60 * 60 * 1000; // 1 день
         const now = Date.now();
-        
+
         // Показываем баннер снова, если прошло больше дня
         if (now - timestamp >= dayInMs) {
           setShowSetupBanner(true);
@@ -90,6 +92,13 @@ export default function HRDashboard() {
           }
         }
       }
+    }
+
+    // Проверяем, показывать ли приветственный баннер консультации
+    // Показываем только новым пользователям (нет вакансий, баннер не был закрыт)
+    const welcomeBannerDismissed = localStorage.getItem('welcome_consultation_dismissed');
+    if (!welcomeBannerDismissed) {
+      setShowWelcomeBanner(true);
     }
   }, [currentCompany]);
 
@@ -109,9 +118,9 @@ export default function HRDashboard() {
 
   // Show Welcome Hero if no vacancies
   const showWelcomeHero = !hasVacancy;
-  
+
   // Find vacancies without questions
-  const vacanciesWithoutQuestions = data?.openVacancies?.filter((v: any) => 
+  const vacanciesWithoutQuestions = data?.openVacancies?.filter((v: any) =>
     !v.questionsCount || v.questionsCount === 0
   ) || [];
 
@@ -172,6 +181,11 @@ export default function HRDashboard() {
   return (
     <PageContainer title="HR Dashboard" description="HR Dashboard">
       <Box>
+        {/* Welcome Consultation Banner - показываем новым пользователям */}
+        {showWelcomeBanner && !hasVacancy && (
+          <WelcomeConsultationBanner managerPhone="+7 (962) 940-74-73"/>
+        )}
+
         {/* Welcome Hero - показываем если нет вакансий */}
         {showWelcomeHero ? (
           <WelcomeHero hasHhIntegration={hasHhIntegration} />
@@ -179,7 +193,7 @@ export default function HRDashboard() {
           <>
             {/* Setup Reminder Banner - показываем если есть вакансии без вопросов */}
             {showSetupBanner && vacanciesWithoutQuestions.length > 0 && (
-              <SetupReminderBanner 
+              <SetupReminderBanner
                 vacanciesWithoutQuestions={vacanciesWithoutQuestions}
                 onClose={() => {
                   setShowSetupBanner(false);
@@ -219,10 +233,10 @@ export default function HRDashboard() {
             {hasSelectedCompany && (
               <Box sx={{ mb: 6, textAlign: 'center' }}>
                 <Link href="/hr/vacancy-create" style={{ textDecoration: 'none' }}>
-                  <Button 
-                    variant="contained" 
+                  <Button
+                    variant="contained"
                     size="large"
-                    sx={{ 
+                    sx={{
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                       color: 'white',
                       fontWeight: 600,
