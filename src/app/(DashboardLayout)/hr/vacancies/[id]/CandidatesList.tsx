@@ -51,6 +51,7 @@ interface CandidatesListProps {
   selectedCandidates?: number[];
   onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
   vacancySource?: string; // Источник вакансии (headhunter, manual, etc.)
+  refreshTrigger?: number; // Триггер для принудительного обновления
 }
 
 export default function CandidatesList({
@@ -61,6 +62,7 @@ export default function CandidatesList({
   selectedCandidates: externalSelectedCandidates = [],
   onSelectedCandidatesChange,
   vacancySource = '',
+  refreshTrigger,
 }: CandidatesListProps) {
   const { _ } = useLingui();
 
@@ -151,7 +153,7 @@ export default function CandidatesList({
     };
 
     loadCandidates();
-  }, [vacancyId, filters, page, rowsPerPage, sortBy, sortOrder]);
+  }, [vacancyId, filters, page, rowsPerPage, sortBy, sortOrder, refreshTrigger]);
 
   // Сброс страницы при изменении фильтров
   useEffect(() => {
@@ -393,10 +395,21 @@ export default function CandidatesList({
         const result = await response.json();
         onSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
 
-        // Обновляем список
-        const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates`);
+        // Обновляем список с правильными параметрами пагинации и фильтрации
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', (page + 1).toString());
+        queryParams.append('perPage', rowsPerPage.toString());
+        queryParams.append('sortBy', sortBy);
+        queryParams.append('sortOrder', sortOrder);
+        if (filters.source) queryParams.append('source', filters.source);
+        if (filters.status) queryParams.append('status', filters.status);
+        if (filters.search) queryParams.append('search', filters.search);
+        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+
+        const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const updatedData = await updatedResponse.json();
-        setCandidates(updatedData);
+        setCandidates(updatedData.data || []);
+        setTotal(updatedData.total || 0);
 
         setSelectedCandidates([]);
         setBulkStatus('');

@@ -852,9 +852,32 @@ export default function HRVacancyDetailPage() {
                         selectedAllInColumns={[]}
                         onCancel={() => setSelectedCandidates([])}
                         onBulkMove={async (targetStage) => {
-                          // Существующая логика массового перемещения
-                          // Оставляем пока пустой, так как она должна быть реализована отдельно
-                          setSnackbar(_(msg`Функция в разработке`));
+                          // Реализация массового перемещения через API
+                          try {
+                            const response = await apiFetch(
+                              `${API_BASE}/api/admin/vacancies/${id}/candidates/bulk-status`,
+                              {
+                                method: 'PATCH',
+                                body: JSON.stringify({
+                                  candidateIds: selectedCandidates,
+                                  status: targetStage,
+                                }),
+                              }
+                            );
+
+                            if (response.ok) {
+                              const result = await response.json();
+                              setSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
+                              setSelectedCandidates([]);
+                              // Мягкое обновление - увеличиваем refreshKey для обновления списка
+                              setRefreshKey(prev => prev + 1);
+                            } else {
+                              setSnackbar(_(msg`❌ Ошибка при перемещении`));
+                            }
+                          } catch (error) {
+                            console.error('Error in bulk move:', error);
+                            setSnackbar(_(msg`❌ Ошибка при перемещении`));
+                          }
                         }}
                         statusTriggers={{}}
                         vacancySource={data?.source || ''}
@@ -882,6 +905,7 @@ export default function HRVacancyDetailPage() {
                       selectedCandidates={selectedCandidates}
                       onSelectedCandidatesChange={setSelectedCandidates}
                       vacancySource={data?.source || ''}
+                      refreshTrigger={refreshKey}
                     />
                   ) : (
                     <KanbanView
