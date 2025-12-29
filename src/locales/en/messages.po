@@ -190,7 +190,7 @@ msgstr ". In accordance with applicable US privacy laws (including CCPA and VCDP
 msgid "(нет ответа)"
 msgstr "(no answer)"
 
-#: src/app/interview/[token]/page.tsx:2461
+#: src/app/interview/[token]/page.tsx:2463
 msgid "(Снимите галочку — будет только аудио)"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgid "{0} из {1} кандидатов"
 msgstr "{0} of {1} candidates"
 
 #. placeholder {0}: getQuestionNumber(question.position)
-#: src/app/interview/[token]/page.tsx:2718
+#: src/app/interview/[token]/page.tsx:2720
 msgid "{0} из {total}"
 msgstr "{0} of {total}"
 
@@ -336,7 +336,7 @@ msgstr "{testsCurrent} of {testsTotal}"
 msgid "{time} сек"
 msgstr "{time} sec"
 
-#: src/app/interview/[token]/page.tsx:2780
+#: src/app/interview/[token]/page.tsx:2782
 msgid "{timeLeft} сек"
 msgstr "{timeLeft} sec"
 
@@ -352,17 +352,17 @@ msgstr "* - required fields"
 msgid "• <0>ИИ-анализ</0> — снижение ошибок при найме на 60%"
 msgstr "• <0>AI Analysis</0> — 60% reduction in hiring errors"
 
-#: src/app/interview/[token]/page.tsx:3428
+#: src/app/interview/[token]/page.tsx:3430
 msgid "• Ваши персональные данные (имя, email, телефон)"
 msgstr "• Your Personal Data (name, email, phone)"
 
 #: src/app/forget-me/page.tsx:233
-#: src/app/interview/[token]/page.tsx:3429
+#: src/app/interview/[token]/page.tsx:3431
 msgid "• Видео и аудио записи интервью"
 msgstr "• Video and Audio Interview Recordings"
 
 #: src/app/forget-me/page.tsx:235
-#: src/app/interview/[token]/page.tsx:3431
+#: src/app/interview/[token]/page.tsx:3433
 msgid "• Все согласия на обработку данных"
 msgstr "• All data processing consents"
 
@@ -407,7 +407,7 @@ msgid "• Подтверждение выполнения требований"
 msgstr "• Confirmation of Requirement Fulfillment"
 
 #: src/app/forget-me/page.tsx:234
-#: src/app/interview/[token]/page.tsx:3430
+#: src/app/interview/[token]/page.tsx:3432
 msgid "• Результаты анализа и оценки"
 msgstr "• Analysis and Assessment Results"
 
@@ -467,7 +467,7 @@ msgstr "<0>Important:</0> If you have an active interview link, use the \"Delete
 msgid "<0>Важно:</0> Запросы без ссылки на интервью обрабатываются вручную администраторами для проверки вашей личности. Это занимает больше времени, но обеспечивает безопасность."
 msgstr "<0>Important:</0> Requests without an interview link are processed manually by administrators to verify your identity. This takes more time but ensures security."
 
-#: src/app/interview/[token]/page.tsx:3420
+#: src/app/interview/[token]/page.tsx:3422
 msgid "<0>Внимание!</0> Вы собираетесь удалить все свои данные с платформы SofiHR."
 msgstr "<0>Attention!</0> You Are About to Delete All Your Data from the SofiHR Platform."
 
@@ -522,7 +522,7 @@ msgstr "<0>Notifications:</0> HR Clients will be notified of the request"
 msgid "<0>Что дальше:</0>"
 msgstr "<0>What's Next:</0>"
 
-#: src/app/interview/[token]/page.tsx:3434
+#: src/app/interview/[token]/page.tsx:3436
 msgid "<0>Это действие нельзя отменить!</0> После удаления данные будут потеряны навсегда."
 msgstr "<0>This Action Cannot Be Undone!</0> After deletion, data will be lost forever."
 
@@ -563,7 +563,7 @@ msgstr "≥ 9 (Excellent)"
 msgid "≥ 90% (отличные)"
 msgstr "≥ 90% (Excellent)"
 
-#: src/app/interview/[token]/page.tsx:3240
+#: src/app/interview/[token]/page.tsx:3242
 msgid "⏭️ Пропустить"
 msgstr "⏭️ Skip"
 
@@ -610,7 +610,7 @@ msgstr "⏳ Loading Resume"
 msgid "⏳ Загрузка резюме..."
 msgstr "⏳ Loading Resume..."
 
-#: src/app/interview/[token]/page.tsx:2621
+#: src/app/interview/[token]/page.tsx:2623
 msgid "⏳ Проверяем микрофон..."
 msgstr ""
 
@@ -622,7 +622,7 @@ msgstr "⏸️ Paused"
 msgid "⏹ Остановить запись"
 msgstr "⏹ Stop Recording"
 
-#: src/app/interview/[token]/page.tsx:3260
+#: src/app/interview/[token]/page.tsx:3262
 msgid "⏹️ Остановить запись"
 msgstr "⏹️ Stop Recording"
 
@@ -651,11 +651,11 @@ msgstr ""
 msgid "⚠️ Внимание! Будут удалены ВСЕ ваши данные:"
 msgstr "⚠️ Attention! ALL your data will be deleted:"
 
-#: src/app/interview/[token]/page.tsx:2509
+#: src/app/interview/[token]/page.tsx:2511
 msgid "⚠️ Говорите в микрофон для проверки"
 msgstr ""
 
-#: src/app/interview/[token]/page.tsx:2638
+#: src/app/interview/[token]/page.tsx:2640
 msgid "⚠️ Микрофон не ловит звук. Проверьте громкость или физическую кнопку отключения"
 msgstr ""
 
@@ -703,7 +703,7 @@ msgstr "⚠️ Failed to update token"
 msgid "⚠️ Оценка не доступна"
 msgstr "⚠️ Assessment Not Available"
 
-#: src/app/interview/[token]/page.tsx:2583
+#: src/app/interview/[token]/page.tsx:2585
 msgid "⚠️ Примите соглашение на обработку ПДн"
 msgstr ""
 
@@ -898,11 +898,11 @@ msgstr "✍️ Manual"
 msgid "✓ Выбраны все {total} кандидатов, соответствующих фильтрам"
 msgstr ""
 
-#: src/app/interview/[token]/page.tsx:2539
+#: src/app/interview/[token]/page.tsx:2541
 msgid "✓ Звук обнаружен. Можете начинать интервью."
 msgstr "✓ Sound detected. You can start the interview."
 
-#: src/app/interview/[token]/page.tsx:3286
+#: src/app/interview/[token]/page.tsx:3288
 #: src/app/test/[token]/page.tsx:933
 msgid "✓ Отправить ответ"
 msgstr "✓ Send Answer"
@@ -1018,7 +1018,7 @@ msgid "❌ Ошибка отправки: {0}"
 msgstr "❌ Sending Error: {0}"
 
 #. placeholder {0}: e.message
-#: src/app/interview/[token]/page.tsx:2598
+#: src/app/interview/[token]/page.tsx:2600
 msgid "❌ Ошибка поиска камер: {0}"
 msgstr "❌ Camera Search Error: {0}"
 
@@ -1309,7 +1309,7 @@ msgstr "🎉 Camera Connected! {label}"
 msgid "🎤 Аудио ответ отправлен"
 msgstr "🎤 Audio Answer Sent"
 
-#: src/app/interview/[token]/page.tsx:3214
+#: src/app/interview/[token]/page.tsx:3216
 msgid "🎤 Записать ответ"
 msgstr "🎤 Record Answer"
 
@@ -1317,7 +1317,7 @@ msgstr "🎤 Record Answer"
 msgid "🎤 Запись"
 msgstr "🎤 Recording"
 
-#: src/app/interview/[token]/page.tsx:3035
+#: src/app/interview/[token]/page.tsx:3037
 msgid "🎤 Запись аудио"
 msgstr "🎤 Audio Recording"
 
@@ -1333,7 +1333,7 @@ msgstr "🎤 Recording Ready. Choose an action below"
 #~ msgid "🎤 Микрофон не ловит звук"
 #~ msgstr "🎤 Microphone not picking up sound"
 
-#: src/app/interview/[token]/page.tsx:2509
+#: src/app/interview/[token]/page.tsx:2511
 msgid "🎤 Микрофон работает"
 msgstr ""
 
@@ -1707,7 +1707,7 @@ msgstr "📷 Cameras Found: {0}"
 msgid "🔄 Загрузить из HH"
 msgstr "🔄 Load from HH"
 
-#: src/app/interview/[token]/page.tsx:3310
+#: src/app/interview/[token]/page.tsx:3312
 #: src/app/test/[token]/page.tsx:916
 msgid "🔄 Переписать"
 msgstr "🔄 Rerecord"
@@ -1725,7 +1725,7 @@ msgstr "🔍 Analyzing Your Responses..."
 msgid "🔍 Диагностика камер..."
 msgstr "🔍 Camera Diagnostics..."
 
-#: src/app/interview/[token]/page.tsx:2592
+#: src/app/interview/[token]/page.tsx:2594
 msgid "🔍 Ищем доступные камеры..."
 msgstr "🔍 Searching for available cameras..."
 
@@ -1776,7 +1776,7 @@ msgstr "🕐 In {countdown} seconds you will be redirected to the main page..."
 msgid "🗑️ После подтверждения все данные будут удалены"
 msgstr "🗑️ After confirmation, all data will be deleted"
 
-#: src/app/interview/[token]/page.tsx:3417
+#: src/app/interview/[token]/page.tsx:3419
 msgid "🗑️ Удаление данных"
 msgstr "🗑️ Data Deletion"
 
@@ -2036,7 +2036,7 @@ msgstr "AI Analysis Not Yet Started"
 msgid "AI-анализ может быть неточным"
 msgstr "AI analysis may be inaccurate"
 
-#: src/app/interview/[token]/page.tsx:2711
+#: src/app/interview/[token]/page.tsx:2713
 msgid "AI-ассистент"
 msgstr "AI Assistant"
 
@@ -2898,7 +2898,7 @@ msgstr "Enter resume text"
 msgid "Введите УДАЛИТЬ"
 msgstr "Enter DELETE"
 
-#: src/app/interview/[token]/page.tsx:3446
+#: src/app/interview/[token]/page.tsx:3448
 msgid "Введите УДАЛИТЬ для подтверждения"
 msgstr "Enter DELETE to Confirm"
 
@@ -2945,7 +2945,7 @@ msgstr "Video and Audio Recording"
 msgid "Видео-ответы"
 msgstr "Video Responses"
 
-#: src/app/interview/[token]/page.tsx:2587
+#: src/app/interview/[token]/page.tsx:2589
 msgid "Видео: нет"
 msgstr "Video: no"
 
@@ -2969,7 +2969,7 @@ msgstr "Down"
 msgid "Внимание"
 msgstr "Attention"
 
-#: src/app/interview/[token]/page.tsx:3366
+#: src/app/interview/[token]/page.tsx:3368
 msgid "Внимание:"
 msgstr "Attention:"
 
@@ -2982,8 +2982,8 @@ msgid "Внутренняя ошибка сервера"
 msgstr "Internal Server Error"
 
 #: src/app/interview/[token]/page.tsx:2444
-msgid "Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов."
-msgstr "You cannot pause the interview, repeat, or skip questions during the process. Answer sequentially and do not overload the page — additional time will be allocated automatically for clarifying questions."
+#~ msgid "Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов."
+#~ msgstr "You cannot pause the interview, repeat, or skip questions during the process. Answer sequentially and do not overload the page — additional time will be allocated automatically for clarifying questions."
 
 #: src/app/test/[token]/page.tsx:701
 msgid "Во время прохождения нельзя ставить тестирование на паузу или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу."
@@ -3413,7 +3413,7 @@ msgstr "You are invited for testing as: <0>{employeeEmail}</0>"
 msgid "Вы собираетесь приобрести тариф <0>{0}</0>"
 msgstr "You are about to purchase the plan <0>{0}</0>"
 
-#: src/app/interview/[token]/page.tsx:3359
+#: src/app/interview/[token]/page.tsx:3361
 msgid "Вы уверены, что хотите пропустить этот вопрос?"
 msgstr "Are You Sure You Want to Skip This Question?"
 
@@ -3625,7 +3625,7 @@ msgstr "Flexible Plans"
 msgid "Главная"
 msgstr "Home"
 
-#: src/app/interview/[token]/page.tsx:3087
+#: src/app/interview/[token]/page.tsx:3089
 msgid "Говорите в микрофон"
 msgstr "Speak into the Microphone"
 
@@ -3645,6 +3645,10 @@ msgstr "Preparing to Generate Feedback..."
 #: src/app/page.tsx:1364
 msgid "Готовы автоматизировать найм?"
 msgstr "Ready to Automate Hiring?"
+
+#: src/app/interview/[token]/page.tsx:2446
+msgid "Готовы? Начинайте, когда будете в комфортной обстановке."
+msgstr "Ready? Start when you feel comfortable."
 
 #: src/app/components/landing/PricingFAQ.tsx:128
 msgid "Да, <0>безопасность данных — наш приоритет</0>:"
@@ -3861,7 +3865,7 @@ msgstr "For small companies and startups up to 10 hires/month. Basic functionali
 msgid "Для подачи заявки необходимо согласие на обработку персональных данных"
 msgstr "Application requires consent to personal data processing"
 
-#: src/app/interview/[token]/page.tsx:3439
+#: src/app/interview/[token]/page.tsx:3441
 msgid "Для подтверждения введите \"УДАЛИТЬ\":"
 msgstr "To Confirm, Enter \"DELETE\":"
 
@@ -4154,7 +4158,7 @@ msgstr "Load Resume from HH.ru"
 msgid "Загрузка вакансий из HH.ru..."
 msgstr ""
 
-#: src/app/interview/[token]/page.tsx:2990
+#: src/app/interview/[token]/page.tsx:2992
 msgid "Загрузка видео..."
 msgstr "Loading video..."
 
@@ -4206,7 +4210,7 @@ msgstr "Note stored only locally in browser (MVP)."
 msgid "Заметки HR"
 msgstr "HR Notes"
 
-#: src/app/interview/[token]/page.tsx:3054
+#: src/app/interview/[token]/page.tsx:3056
 msgid "Запись аудио"
 msgstr "Audio Recording"
 
@@ -4333,11 +4337,11 @@ msgstr ""
 msgid "Иван Иванов"
 msgstr "Ivan Ivanov"
 
-#: src/app/interview/[token]/page.tsx:3157
+#: src/app/interview/[token]/page.tsx:3159
 msgid "Идёт запись... Говорите в камеру"
 msgstr "Recording... Speak to the camera"
 
-#: src/app/interview/[token]/page.tsx:3158
+#: src/app/interview/[token]/page.tsx:3160
 msgid "Идёт запись... Говорите в микрофон"
 msgstr "Recording... Speak into the microphone"
 
@@ -4583,7 +4587,7 @@ msgstr "interviews"
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:419
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:141
 #: src/app/(DashboardLayout)/layout/vertical/header/BalanceInfo.tsx:250
-#: src/app/interview/[token]/page.tsx:2710
+#: src/app/interview/[token]/page.tsx:2712
 #: src/app/page.tsx:195
 #: src/app/page.tsx:1380
 msgid "Интервью"
@@ -4623,6 +4627,11 @@ msgstr "Interview Blocked Due to Insufficient Balance"
 msgid "Интервью завершено"
 msgstr "Interview Completed"
 
+#. placeholder {0}: prepared.total
+#: src/app/interview/[token]/page.tsx:2443
+msgid "Интервью займёт примерно {min} минут — {0} основных вопросов, плюс могут появиться уточняющие (для них время выделится автоматически)."
+msgstr "The interview will take approximately {min} minutes — {0} main questions, plus clarifying ones may appear (time will be allocated automatically for them)."
+
 #: src/app/(DashboardLayout)/hr/billing/payment-success/page.tsx:93
 msgid "Интервью зачислены на ваш баланс. Теперь вы можете создавать кандидатов и проводить интервью."
 msgstr "Interviews have been credited to your balance. You can now create candidates and conduct interviews."
@@ -4638,7 +4647,7 @@ msgstr "Interviews Conducted"
 #. placeholder {0}: interviewProgress.current
 #. placeholder {1}: interviewProgress.total
 #. placeholder {2}: interviewProgress.percentage
-#: src/app/interview/[token]/page.tsx:2811
+#: src/app/interview/[token]/page.tsx:2813
 msgid "Интервью продолжается с вопроса {0} из {1} ({2}% завершено)"
 msgstr "Interview continues with question {0} of {1} ({2}% complete)"
 
@@ -5183,7 +5192,7 @@ msgstr "Maria Petrova"
 msgid "Масштабируемость"
 msgstr "Scalability"
 
-#: src/app/interview/[token]/page.tsx:2450
+#: src/app/interview/[token]/page.tsx:2452
 msgid "Медиа хранятся до 60 дней"
 msgstr "Media stored for up to 60 days"
 
@@ -5406,7 +5415,7 @@ msgstr "Found: {0} Candidates"
 msgid "наймах"
 msgstr "hires"
 
-#: src/app/interview/[token]/page.tsx:2603
+#: src/app/interview/[token]/page.tsx:2605
 msgid "Найти камеры"
 msgstr "Find Cameras"
 
@@ -5509,7 +5518,7 @@ msgstr "Started: {0}"
 #~ msgid "Начать"
 #~ msgstr "Start"
 
-#: src/app/interview/[token]/page.tsx:2659
+#: src/app/interview/[token]/page.tsx:2661
 #: src/app/interview/apply/[token]/page.tsx:349
 #: src/app/interview/apply/[token]/page.tsx:539
 msgid "Начать интервью"
@@ -5730,7 +5739,7 @@ msgstr "Insufficient Data for Analysis"
 #~ msgid "Недостаточно лимита"
 #~ msgstr "Insufficient Limit"
 
-#: src/app/interview/[token]/page.tsx:2596
+#: src/app/interview/[token]/page.tsx:2598
 msgid "Неизвестная камера"
 msgstr "Unknown Camera"
 
@@ -6040,7 +6049,7 @@ msgstr "Candidates Processed: 500+"
 msgid "Обработка авторизации HH.ru..."
 msgstr "Processing HH.ru Authorization..."
 
-#: src/app/interview/[token]/page.tsx:3214
+#: src/app/interview/[token]/page.tsx:3216
 msgid "Обработка ответа..."
 msgstr "Processing response..."
 
@@ -6413,8 +6422,8 @@ msgstr "Excellent (8-10)"
 #: src/app/components/ForgetMeAuto.tsx:130
 #: src/app/interview/[token]/page.tsx:1862
 #: src/app/interview/[token]/page.tsx:2250
-#: src/app/interview/[token]/page.tsx:3390
-#: src/app/interview/[token]/page.tsx:3456
+#: src/app/interview/[token]/page.tsx:3392
+#: src/app/interview/[token]/page.tsx:3458
 #: src/components/GenerateQuestionsDialog.tsx:180
 msgid "Отмена"
 msgstr "Cancel"
@@ -6475,7 +6484,7 @@ msgstr "Send Message"
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:410
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:927
 #: src/app/auth/forgot-password/page.tsx:167
-#: src/app/interview/[token]/page.tsx:3286
+#: src/app/interview/[token]/page.tsx:3288
 #: src/app/test/[token]/page.tsx:933
 msgid "Отправка..."
 msgstr "Sending..."
@@ -7086,8 +7095,8 @@ msgid "Переавторизуйтесь для продолжения рабо
 msgstr "Re-authenticate to continue working."
 
 #: src/app/interview/[token]/page.tsx:2442
-msgid "Перед началом"
-msgstr "Before Starting"
+#~ msgid "Перед началом"
+#~ msgstr "Before Starting"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1203
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1682
@@ -7237,7 +7246,11 @@ msgstr "Preparing Data for Assessment..."
 msgid "Подготовка"
 msgstr "Preparation"
 
-#: src/app/interview/[token]/page.tsx:2660
+#: src/app/interview/[token]/page.tsx:2442
+msgid "Подготовка к интервью"
+msgstr "Interview Preparation"
+
+#: src/app/interview/[token]/page.tsx:2662
 msgid "Подготовка..."
 msgstr ""
 
@@ -7268,7 +7281,7 @@ msgstr "Email Support (response within 48 hours). Access to knowledge base and d
 msgid "Поделитесь любой информацией, которая может быть важна для рекрутера..."
 msgstr "Share Any Information That May Be Important for the Recruiter..."
 
-#: src/app/interview/[token]/page.tsx:2972
+#: src/app/interview/[token]/page.tsx:2974
 msgid "Подключение к камере..."
 msgstr "Connecting to Camera..."
 
@@ -7478,7 +7491,7 @@ msgid "Политика конфиденциальности"
 msgstr "Privacy Policy"
 
 #: src/app/components/CookieBanner.tsx:24
-#: src/app/interview/[token]/page.tsx:2450
+#: src/app/interview/[token]/page.tsx:2452
 #: src/app/test/[token]/page.tsx:766
 msgid "Политика ПДн"
 msgstr "Personal Data Policy"
@@ -7864,7 +7877,7 @@ msgstr "Advanced Analytics and Dashboards"
 
 #. placeholder {0}: interviewProgress.current
 #. placeholder {1}: interviewProgress.total
-#: src/app/interview/[token]/page.tsx:2726
+#: src/app/interview/[token]/page.tsx:2728
 msgid "Продолжение: {0} из {1}"
 msgstr "Continuation: {0} of {1}"
 
@@ -7925,15 +7938,15 @@ msgstr "An error occurred while deleting data. Please contact us through the fee
 msgid "Произошла ошибка при удалении стадии"
 msgstr "An Error Occurred While Deleting Stage"
 
-#: src/app/interview/[token]/page.tsx:3404
+#: src/app/interview/[token]/page.tsx:3406
 msgid "Пропустить"
 msgstr "Skip"
 
-#: src/app/interview/[token]/page.tsx:3351
+#: src/app/interview/[token]/page.tsx:3353
 msgid "Пропустить вопрос?"
 msgstr "Skip Question?"
 
-#: src/app/interview/[token]/page.tsx:3366
+#: src/app/interview/[token]/page.tsx:3368
 msgid "Пропущенный вопрос будет засчитан как отсутствие ответа."
 msgstr "A skipped question will be counted as no answer."
 
@@ -8511,7 +8524,7 @@ msgstr "The System will create {0} questions based on selected regulations using
 msgid "Система соответствует требованиям 152-ФЗ \"О персональных данных\""
 msgstr "Compliant with US Privacy Regulations (CCPA, VCDPA)"
 
-#: src/app/interview/[token]/page.tsx:2540
+#: src/app/interview/[token]/page.tsx:2542
 msgid "Скажите что-нибудь, чтобы убедиться что микрофон работает"
 msgstr "Say something to make sure the microphone is working"
 
@@ -8583,6 +8596,10 @@ msgstr "Reduction in Hiring Costs"
 msgid "Снять выделение со ВСЕХ {totalCount} кандидатов"
 msgstr "Deselect ALL {totalCount} candidates"
 
+#: src/app/interview/[token]/page.tsx:2445
+msgid "Совет: не перегружайте страницу во время прохождения. Если что-то пошло не так — просто напишите нам, и мы всё решим."
+msgstr "Tip: don't reload the page during the interview. If something goes wrong — just contact us, and we'll sort it out."
+
 #: src/app/auth/register/page.tsx:309
 msgid "Согласен(на) получать новости и предложения на указанный email"
 msgstr "Agree to receive news and offers to the specified email"
@@ -8591,7 +8608,7 @@ msgstr "Agree to receive news and offers to the specified email"
 msgid "Согласие на запись видео (снимите галочку — будет только аудио)"
 msgstr "Consent for Video Recording (uncheck — audio only)"
 
-#: src/app/interview/[token]/page.tsx:2459
+#: src/app/interview/[token]/page.tsx:2461
 msgid "Согласие на запись видео. Запись с камерой может повысить доверие работодателя и помочь ему лучше оценить ваши коммуникативные навыки."
 msgstr ""
 
@@ -8599,7 +8616,7 @@ msgstr ""
 msgid "Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время."
 msgstr "Consent is required to use the system. You can withdraw consent at any time."
 
-#: src/app/interview/[token]/page.tsx:2450
+#: src/app/interview/[token]/page.tsx:2452
 msgid "Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии"
 msgstr "I agree to the processing of my personal data for the purpose of conducting the interview and assessing my suitability for the vacancy"
 
@@ -9266,10 +9283,9 @@ msgstr "Test Interrupted"
 msgid "Тест пройден"
 msgstr "Test Completed"
 
-#. placeholder {0}: prepared.total
 #: src/app/interview/[token]/page.tsx:2443
-msgid "Тест состоит из {0} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин."
-msgstr "The test consists of {0} questions (clarifying ones may appear during the process) and will take approximately {min} min."
+#~ msgid "Тест состоит из {0} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин."
+#~ msgstr "The test consists of {0} questions (clarifying ones may appear during the process) and will take approximately {min} min."
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:747
 msgid "Тест успешно создан!"
@@ -9565,7 +9581,7 @@ msgstr "Delete"
 #: src/app/components/ForgetMeAuto.tsx:118
 #: src/app/components/ForgetMeAuto.tsx:133
 #: src/app/interview/[token]/page.tsx:1432
-#: src/app/interview/[token]/page.tsx:3462
+#: src/app/interview/[token]/page.tsx:3464
 msgid "УДАЛИТЬ"
 msgstr "DELETE"
 
@@ -9593,7 +9609,7 @@ msgstr "Delete Candidate"
 msgid "Удалить мои данные"
 msgstr "Delete My Data"
 
-#: src/app/interview/[token]/page.tsx:3465
+#: src/app/interview/[token]/page.tsx:3467
 msgid "Удалить навсегда"
 msgstr "Delete Permanently"
 
@@ -9622,7 +9638,7 @@ msgstr "Delete stage \"{stageName}\"?"
 msgid "Удалить тест? Все связанные данные (приглашения, результаты) будут удалены."
 msgstr "Delete Test? All related data (invitations, results) will be deleted."
 
-#: src/app/interview/[token]/page.tsx:3465
+#: src/app/interview/[token]/page.tsx:3467
 msgid "Удаляю..."
 msgstr "Deleting..."
 
@@ -9755,6 +9771,10 @@ msgstr "Finish"
 msgid "Форма обратной связи"
 msgstr "Feedback Form"
 
+#: src/app/interview/[token]/page.tsx:2444
+msgid "Формат простой: отвечайте последовательно, один вопрос за другим. Поставить на паузу, вернуться назад или пропустить вопрос не получится — так устроена система, чтобы сохранить естественный ход беседы."
+msgstr "The format is simple: answer sequentially, one question at a time. You cannot pause, go back, or skip questions — the system is designed this way to maintain the natural flow of conversation."
+
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:24
 msgid "Функционал в разработке: добавление HR-пользователей, назначение ролей."
 msgstr "Functionality in development: adding HR users, assigning roles."
@@ -9782,7 +9802,7 @@ msgstr "Fill Color:"
 msgid "Что будет сгенерировано:"
 msgstr "What Will Be Generated:"
 
-#: src/app/interview/[token]/page.tsx:3425
+#: src/app/interview/[token]/page.tsx:3427
 msgid "Что будет удалено:"
 msgstr "What will be deleted:"
 

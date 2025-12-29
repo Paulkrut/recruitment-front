@@ -2439,9 +2439,11 @@ export default function CandidateInterviewPage() {
           flexShrink: 0
         }}>
         {stepperComp}
-        <Typography variant="h4" gutterBottom><Trans>Перед началом</Trans></Typography>
-        <Typography sx={{mb:2}}><Trans>Тест состоит из {prepared.total} вопросов (в процессе могут появляться уточняющие) и займет примерно {min} мин.</Trans></Typography>
-          <Typography sx={{mb:2}}><Trans>Во время прохождения нельзя ставить собеседование на паузу, повторять или пропускать вопросы. Отвечайте последовательно и не перегружайте страницу — дополнительное время будет выделено автоматически для уточняющих вопросов.</Trans></Typography>
+        <Typography variant="h4" gutterBottom><Trans>Подготовка к интервью</Trans></Typography>
+        <Typography sx={{mb:2}}><Trans>Интервью займёт примерно {min} минут — {prepared.total} основных вопросов, плюс могут появиться уточняющие (для них время выделится автоматически).</Trans></Typography>
+          <Typography sx={{mb:2}}><Trans>Формат простой: отвечайте последовательно, один вопрос за другим. Поставить на паузу, вернуться назад или пропустить вопрос не получится — так устроена система, чтобы сохранить естественный ход беседы.</Trans></Typography>
+          <Typography sx={{mb:2}}><Trans>Совет: не перегружайте страницу во время прохождения. Если что-то пошло не так — просто напишите нам, и мы всё решим.</Trans></Typography>
+          <Typography sx={{mb:2}}><strong><Trans>Готовы? Начинайте, когда будете в комфортной обстановке.</Trans></strong></Typography>
           <Box sx={{mt:2}}>
             <FormControlLabel
               control={<Checkbox checked={pdnConsent} onChange={e=>setPdnConsent(e.target.checked)} color="primary" />}
