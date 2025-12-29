@@ -68,7 +68,14 @@ build_new_version() {
 
     # Копируем новые артефакты в production (rsync для атомарности)
     rsync -a --delete $TMP_DIR/.next ./
-    rsync -a --delete $TMP_DIR/public ./
+    
+    # ВАЖНО: Next.js standalone НЕ копирует public автоматически!
+    # Копируем public в .next/standalone/public (там их ожидает standalone server)
+    rsync -a --delete $TMP_DIR/public ./.next/standalone/
+    
+    # Также копируем static файлы
+    rsync -a --delete $TMP_DIR/.next/static ./.next/standalone/.next/
+    
     cp $TMP_DIR/package.json ./
     cp $TMP_DIR/yarn.lock ./
     # Можно добавить другие нужные файлы
