@@ -23,6 +23,7 @@ interface BulkActionsPanelProps {
   } | null;
   resumeQueueCount?: number;
   sendingInProgress?: boolean;
+  hhCandidatesInfo?: { isAll: boolean; count?: number };
 }
 
 export default function BulkActionsPanel({
@@ -34,6 +35,7 @@ export default function BulkActionsPanel({
   vacancySource,
   selectedCandidates = [],
   sendingInProgress = false,
+  hhCandidatesInfo,
 }: BulkActionsPanelProps) {
   return (
     <BulkActionsToolbar
@@ -46,6 +48,7 @@ export default function BulkActionsPanel({
       sendingInProgress={sendingInProgress}
       variant="floating"
       selectedAllInColumns={selectedAllInColumns}
+      hhCandidatesInfo={hhCandidatesInfo}
     />
   );
 }

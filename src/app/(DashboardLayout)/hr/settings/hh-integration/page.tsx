@@ -167,7 +167,7 @@ export default function HhIntegrationPage() {
       const response = await apiFetch(`${API_BASE}/api/hh-integration/status`);
       const data = await response.json();
       setStatus(data);
-      
+
       // Автозагрузка вакансий если подключено
       if (data.isConnected && data.hasValidToken) {
         await loadHhVacanciesFromApi();
@@ -260,7 +260,7 @@ export default function HhIntegrationPage() {
       setHhVacanciesError(null);
       const response = await apiFetch(`${API_BASE}/api/hh/vacancies/list`);
       if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
         setHhVacanciesFromApi(data.vacancies || []);
         
         // Устанавливаем доступные статусы
@@ -321,8 +321,8 @@ export default function HhIntegrationPage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        
+      const data = await response.json();
+
         // Считаем количество новых импортов и пересинхронизаций
         const newImports = data.details.filter((d: any) => d.status === 'success' && !d.is_resync).length;
         const reSyncs = data.details.filter((d: any) => d.status === 'success' && d.is_resync).length;
@@ -411,9 +411,9 @@ export default function HhIntegrationPage() {
           const response = await apiFetch(
             `${API_BASE}/api/hh-integration/vacancy/${vacancyId}/sync-status`
           );
-          const data = await response.json();
+      const data = await response.json();
 
-          if (data.success) {
+      if (data.success) {
             const syncData = data.data;
             
             // Обновляем вакансию в списке для импорта
@@ -422,7 +422,7 @@ export default function HhIntegrationPage() {
                 // Найти вакансию по hh_vacancy_id
                 if (v.hh_vacancy_id === vacancyId || v.local_vacancy_id === syncData.vacancy_id) {
                   return {
-                    ...v,
+                ...v,
                     candidates_sync_status: syncData.status,
                     candidates_total: syncData.total,
                     candidates_synced: syncData.synced,
@@ -473,7 +473,7 @@ export default function HhIntegrationPage() {
     const newSet = new Set(expandedVacancies);
     if (newSet.has(vacancyId)) {
       newSet.delete(vacancyId);
-    } else {
+        } else {
       newSet.add(vacancyId);
     }
     setExpandedVacancies(newSet);
@@ -975,10 +975,10 @@ export default function HhIntegrationPage() {
                       <Box>
                         {/* === ДЕФОЛТНЫЕ СТАТУСЫ === */}
                         <Card variant="outlined" sx={{ mb: 3, bgcolor: "primary.50" }}>
-                          <CardContent>
-                            <Typography variant="h6" gutterBottom>
+                            <CardContent>
+                                  <Typography variant="h6" gutterBottom>
                               <Trans>📊 Статусы кандидатов для синхронизации</Trans>
-                            </Typography>
+                                  </Typography>
                             <Typography variant="body2" color="text.secondary" mb={2}>
                               <Trans>Выберите какие статусы кандидатов загружать из HH.ru. Эти настройки будут применены ко всем выбранным вакансиям (можно настроить индивидуально для каждой).</Trans>
                             </Typography>
@@ -1011,8 +1011,8 @@ export default function HhIntegrationPage() {
                                             setDefaultStatuses(newSet);
                                           }}
                                           onClick={(e) => e.stopPropagation()}
-                                          size="small"
-                                        />
+                                      size="small"
+                                    />
                                       }
                                       label={
                                         <Box>
@@ -1044,7 +1044,7 @@ export default function HhIntegrationPage() {
                             <Grid item xs={12} md={4}>
                               <TextField
                                 fullWidth
-                                size="small"
+                                        size="small"
                                 placeholder={_(msg`Поиск по названию...`)}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -1103,19 +1103,19 @@ export default function HhIntegrationPage() {
                                     <Box display="flex" alignItems="center" gap={1}>
                                       <IconArrowDown size={16} />
                                       <Trans>Дата создания (новые)</Trans>
-                                    </Box>
+                                  </Box>
                                   </MenuItem>
                                   <MenuItem value="date_asc">
                                     <Box display="flex" alignItems="center" gap={1}>
                                       <IconArrowUp size={16} />
                                       <Trans>Дата создания (старые)</Trans>
-                                    </Box>
+                                </Box>
                                   </MenuItem>
                                   <MenuItem value="name_asc">
                                     <Box display="flex" alignItems="center" gap={1}>
                                       <IconArrowUp size={16} />
                                       <Trans>Название (А-Я)</Trans>
-                                    </Box>
+                              </Box>
                                   </MenuItem>
                                   <MenuItem value="name_desc">
                                     <Box display="flex" alignItems="center" gap={1}>
@@ -1143,7 +1143,7 @@ export default function HhIntegrationPage() {
                         </Card>
 
                         {/* === ВЕРХНИЕ КНОПКИ === */}
-                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                           <FormControlLabel
                             control={
                               <Checkbox
@@ -1161,16 +1161,16 @@ export default function HhIntegrationPage() {
                             label={_(msg`Выбрать все`)}
                           />
                           <Box display="flex" gap={1}>
-                            <Button
+                                  <Button
                               variant="outlined"
                               onClick={loadHhVacanciesFromApi}
                               startIcon={<IconRefresh />}
-                              size="small"
+                                    size="small"
                             >
                               <Trans>Обновить</Trans>
                             </Button>
                             <Button
-                              variant="contained"
+                                    variant="contained"
                               color="primary"
                               disabled={selectedVacancyIds.size === 0 || importing}
                               startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
@@ -1182,9 +1182,9 @@ export default function HhIntegrationPage() {
                                   ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
                                   : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
                               }
-                            </Button>
+                                  </Button>
                           </Box>
-                        </Box>
+                                </Box>
 
                         <Grid container spacing={2}>
                           {filteredVacancies.map((vacancy) => {
@@ -1240,14 +1240,14 @@ export default function HhIntegrationPage() {
                                           
                                           {/* Бейджи рядом с названием */}
                                           {isImported && (
-                                            <Chip
+                                    <Chip
                                               label={_(msg`✅ Импортирована`)}
                                               color="success"
-                                              size="small"
+                                      size="small"
                                               sx={{ height: 20, fontSize: '0.7rem' }}
-                                            />
+                                    />
                                           )}
-                                        </Box>
+                                  </Box>
 
                                         {/* Компактная информация в одну строку */}
                                         <Box display="flex" gap={1.5} alignItems="center" flexWrap="wrap" mb={0.5}>
@@ -1271,25 +1271,25 @@ export default function HhIntegrationPage() {
                                         </Box>
 
                                         {/* Прогресс синхронизации (компактно) */}
-                                        {vacancy.candidates_sync_status === 'syncing' && (
+                                {vacancy.candidates_sync_status === 'syncing' && (
                                           <Box display="flex" alignItems="center" gap={1} mb={0.5}>
                                             <CircularProgress size={12} />
                                             <Typography variant="caption" color="primary">
                                               <Trans>Синхронизация: {vacancy.candidates_synced || 0}/{vacancy.candidates_total || 0}</Trans>
-                                            </Typography>
-                                          </Box>
-                                        )}
-                                        
+                                      </Typography>
+                                  </Box>
+                                )}
+
                                         {vacancy.candidates_sync_status === 'synced' && vacancy.candidates_synced > 0 && (
                                           <Typography variant="caption" color="success.main">
                                             ✅ <Trans>Загружено {vacancy.candidates_synced} кандидатов</Trans>
-                                          </Typography>
-                                        )}
-                                        
-                                        {vacancy.candidates_sync_status === 'error' && (
+                                      </Typography>
+                                )}
+
+                                {vacancy.candidates_sync_status === 'error' && (
                                           <Typography variant="caption" color="error.main">
                                             ❌ <Trans>Ошибка синхронизации</Trans>
-                                          </Typography>
+                                    </Typography>
                                         )}
 
                                         {/* Кнопки управления (компактно) */}
@@ -1386,13 +1386,13 @@ export default function HhIntegrationPage() {
                                               </Box>
                                             )}
                                       </Box>
-                                    </Box>
-                                  </CardContent>
-                                </Card>
-                              </Grid>
+                              </Box>
+                            </CardContent>
+                          </Card>
+                        </Grid>
                             );
                           })}
-                        </Grid>
+                    </Grid>
 
                         {/* === НИЖНИЕ КНОПКИ === */}
                         <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
@@ -1445,7 +1445,7 @@ export default function HhIntegrationPage() {
             </Grid>
           )}
           {/* === КОНЕЦ НОВОЙ СЕКЦИИ === */}
-        </Grid>
+          </Grid>
       </Box> {/* Закрывает Box sx={{ position: 'relative' }} */}
       </Box> {/* Закрывает основной Box на строке 495 */}
     </PageContainer>

@@ -135,6 +135,9 @@ export default function HRVacancyDetailPage() {
   });
   // Общие фильтры для обоих режимов
   const [filters, setFilters] = useState<any>({});
+  
+  // Данные для floating панели от CandidatesList
+  const [floatingPanelData, setFloatingPanelData] = useState<any>(null);
 
   // Обработчик переключения режима просмотра
   const handleViewModeChange = (event: React.MouseEvent<HTMLElement>, newMode: 'list' | 'kanban' | null) => {
@@ -620,7 +623,7 @@ export default function HRVacancyDetailPage() {
                             <Typography variant="body2" sx={{ fontStyle: 'italic', opacity: 0.9 }}>
                               <Trans>💡 Используйте для временной приостановки набора или после закрытия вакансии.</Trans>
                             </Typography>
-                          </Box>
+          </Box>
                         }
                         arrow
                         placement="top"
@@ -656,8 +659,8 @@ export default function HRVacancyDetailPage() {
                   sx={{ fontWeight: 700, minWidth: 140 }} 
                   onClick={()=>router.push(`/hr/vacancy-edit/${id}`)}
                 >
-                  <Trans>Редактировать</Trans>
-                </Button>
+            <Trans>Редактировать</Trans>
+          </Button>
                 <Tooltip title={_(msg`В архив`)}>
                   <Button 
                     variant="outlined" 
@@ -844,35 +847,55 @@ export default function HRVacancyDetailPage() {
                     viewMode={viewMode}
                   />
 
-                  {/* Панель массовых действий */}
-                  {selectedCandidates.length > 0 && (
-                    <Box sx={{ mb: 2 }}>
-                      <BulkActionsPanel
-                        selectedCount={selectedCandidates.length}
-                        selectedAllInColumns={[]}
-                        onCancel={() => setSelectedCandidates([])}
-                        onBulkMove={async (targetStage) => {
-                          // Используем унифицированный метод из CandidatesList
-                          if ((window as any).__candidatesListBulkChange) {
-                            try {
-                              await (window as any).__candidatesListBulkChange(selectedCandidates, targetStage);
-                              setSelectedCandidates([]);
-                            } catch (error) {
-                              // Ошибка уже обработана в performBulkStatusChange
-                            }
-                          }
-                        }}
-                        statusTriggers={{}}
-                        vacancySource={data?.source || ''}
-                        selectedCandidates={
-                          candidates.filter(c => selectedCandidates.includes(c.id))
+                  {/* Floating панель массовых действий - для обоих режимов */}
+                  {(selectedCandidates.length > 0 || floatingPanelData) && (
+                    <BulkActionsPanel
+                      selectedCount={
+                        viewMode === 'list' && floatingPanelData
+                          ? (floatingPanelData.selectAllByFilter ? floatingPanelData.total : selectedCandidates.length)
+                          : selectedCandidates.length
+                      }
+                      selectedAllInColumns={[]}
+                      onCancel={() => {
+                        if (viewMode === 'list' && floatingPanelData?.onCancel) {
+                          floatingPanelData.onCancel();
+                        } else {
+                          setSelectedCandidates([]);
                         }
-                        onBulkSendInvitations={async (hhCandidateIds) => {
+                      }}
+                      onBulkMove={async (targetStage) => {
+                        if (viewMode === 'list' && floatingPanelData?.onStatusChange) {
+                          await floatingPanelData.onStatusChange(targetStage);
+                        } else if ((window as any).__candidatesListBulkChange) {
+                          try {
+                            await (window as any).__candidatesListBulkChange(selectedCandidates, targetStage);
+                            setSelectedCandidates([]);
+                          } catch (error) {
+                            // Ошибка уже обработана
+                          }
+                        }
+                      }}
+                      statusTriggers={{}}
+                      vacancySource={data?.source || ''}
+                      selectedCandidates={
+                        viewMode === 'list' && floatingPanelData
+                          ? floatingPanelData.selectedCandidates
+                          : candidates.filter(c => selectedCandidates.includes(c.id))
+                      }
+                      onBulkSendInvitations={async (hhCandidateIds) => {
+                        if (viewMode === 'list' && floatingPanelData?.onSendInvitations) {
+                          await floatingPanelData.onSendInvitations();
+                        } else {
                           await handleBulkSendInvitations(hhCandidateIds);
-                        }}
-                        sendingInProgress={sendingInProgress}
-                      />
-                    </Box>
+                        }
+                      }}
+                      sendingInProgress={sendingInProgress}
+                      hhCandidatesInfo={
+                        viewMode === 'list' && floatingPanelData?.hhCandidatesInfo
+                          ? floatingPanelData.hhCandidatesInfo
+                          : undefined
+                      }
+                    />
                   )}
                 </Box>
 
@@ -897,6 +920,7 @@ export default function HRVacancyDetailPage() {
                           setSelectedCandidates([]);
                         }
                       }}
+                      onFloatingPanelData={setFloatingPanelData}
                     />
                   ) : (
                     <KanbanView

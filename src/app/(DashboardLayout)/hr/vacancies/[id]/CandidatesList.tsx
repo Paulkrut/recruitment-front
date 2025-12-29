@@ -55,6 +55,16 @@ interface CandidatesListProps {
   vacancySource?: string; // Источник вакансии (headhunter, manual, etc.)
   refreshTrigger?: number; // Триггер для принудительного обновления
   onBulkStatusChangeRequest?: (candidateIds: number[], targetStatus: string) => Promise<void>; // Callback для массового изменения из parent
+  // Новые пропсы для floating панели
+  onFloatingPanelData?: (data: {
+    selectedCandidates: any[];
+    selectAllByFilter: boolean;
+    total: number;
+    hhCandidatesInfo: { isAll: boolean; count?: number };
+    onStatusChange: (newStatus: string) => Promise<void>;
+    onSendInvitations: () => Promise<void>;
+    onCancel: () => void;
+  }) => void;
 }
 
 export default function CandidatesList({
@@ -67,6 +77,7 @@ export default function CandidatesList({
   vacancySource = '',
   refreshTrigger,
   onBulkStatusChangeRequest,
+  onFloatingPanelData,
 }: CandidatesListProps) {
   const { _ } = useLingui();
 
@@ -92,6 +103,9 @@ export default function CandidatesList({
   const [total, setTotal] = useState(0);
   const [sortBy, setSortBy] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
+  
+  // Состояние "Выбрать все по фильтру"
+  const [selectAllByFilter, setSelectAllByFilter] = useState(false);
 
   // Состояние для HH Token Required Dialog
   const [hhTokenDialogOpen, setHhTokenDialogOpen] = useState(false);
@@ -236,11 +250,26 @@ export default function CandidatesList({
 
   // Выбрать всех (на текущей странице)
   const handleSelectAll = () => {
-    if (selectedCandidates.length === candidates.length) {
+    if (selectedCandidates.length === candidates.length && !selectAllByFilter) {
       setSelectedCandidates([]);
+      setSelectAllByFilter(false);
     } else {
       setSelectedCandidates(candidates.map(c => c.id));
+      setSelectAllByFilter(false);
     }
+  };
+  
+  // Выбрать все по фильтру (все кандидаты, соответствующие текущему фильтру)
+  const handleSelectAllByFilter = () => {
+    setSelectAllByFilter(true);
+    // Выбираем всех на текущей странице как индикатор
+    setSelectedCandidates(candidates.map(c => c.id));
+  };
+  
+  // Отменить выбор всех
+  const handleClearSelection = () => {
+    setSelectedCandidates([]);
+    setSelectAllByFilter(false);
   };
 
   // Массовый перенос статуса
@@ -441,14 +470,26 @@ export default function CandidatesList({
   // Универсальный метод для массового изменения статуса (вызывается из обоих блоков)
   const performBulkStatusChange = async (candidateIds: number[], targetStatus: string) => {
     try {
+      // Если выбраны ВСЕ по фильтру - отправляем фильтры вместо ID
+      const requestBody = selectAllByFilter ? {
+        status: targetStatus,
+        applyToAll: true,
+        filters: {
+          source: filters.source || null,
+          status: filters.status || null,
+          search: filters.search || null,
+          minScore: filters.minScore || null,
+        }
+      } : {
+        candidateIds,
+        status: targetStatus,
+      };
+      
       const response = await apiFetch(
         `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates/bulk-status`,
         {
           method: 'PATCH',
-          body: JSON.stringify({
-            candidateIds,
-            status: targetStatus,
-          }),
+          body: JSON.stringify(requestBody),
         }
       );
 
@@ -483,6 +524,9 @@ export default function CandidatesList({
         const updatedData = await updatedResponse.json();
         setCandidates(updatedData.data || []);
         setTotal(updatedData.total || 0);
+        
+        // Сбрасываем выбор
+        setSelectAllByFilter(false);
 
         return result;
       } else {
@@ -516,6 +560,36 @@ export default function CandidatesList({
     setSelectedCandidates([]);
     setBulkStatus('');
   };
+  
+  // Передаем данные для floating панели в родительский компонент
+  useEffect(() => {
+    if (onFloatingPanelData && selectedCandidates.length > 0) {
+      onFloatingPanelData({
+        selectedCandidates: candidates.filter(c => selectedCandidates.includes(c.id)),
+        selectAllByFilter,
+        total,
+        // Для кнопки "Отправить приглашения"
+        hhCandidatesInfo: selectAllByFilter 
+          ? { isAll: true }  // Выбраны ВСЕ - не показываем число (мы его не знаем)
+          : { 
+              isAll: false, 
+              count: candidates.filter(c => selectedCandidates.includes(c.id) && c.hhCandidateId).length 
+            },
+        onStatusChange: async (newStatus: string) => {
+          await performBulkStatusChange(selectedCandidates, newStatus);
+          handleClearSelection();
+          setBulkStatus('');
+        },
+        onSendInvitations: async () => {
+          await handleBulkSendInvitations();
+        },
+        onCancel: handleClearSelection,
+      });
+    } else if (onFloatingPanelData) {
+      // Сбрасываем данные когда ничего не выбрано
+      onFloatingPanelData(null as any);
+    }
+  }, [selectedCandidates, selectAllByFilter, candidates, total, sendingInProgress]);
 
   // Экспортируем метод для использования из parent component (для floating panel)
   useEffect(() => {
@@ -611,11 +685,70 @@ export default function CandidatesList({
 
   // Обработчик массовой отправки приглашений
   const handleBulkSendInvitations = async () => {
-    // Получаем ID HH кандидатов из выбранных
+    // Debug logging
+    console.log('🔍 handleBulkSendInvitations called', {
+      selectAllByFilter,
+      selectedCandidatesCount: selectedCandidates.length,
+      total,
+      candidatesOnPage: candidates.length,
+    });
+
+    // Если выбраны ВСЕ по фильтру - отправляем applyToAll
+    if (selectAllByFilter) {
+      console.log('✅ Sending with applyToAll=true');
+      try {
+        setSendingInProgress(true);
+        setSendingProgressDialogOpen(true);
+        
+        // Не знаем точное количество HH кандидатов, ставим примерное
+        setSendingProgress({ total: total, processed: 0, succeeded: 0, failed: 0, progress: 0 });
+
+        const response = await apiFetch(`${API_BASE}/api/hh-integration/vacancy/${vacancyId}/send-bulk-invitations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            applyToAll: true,
+            filters: {
+              source: filters.source,
+              status: filters.status,
+              search: filters.search,
+              minScore: filters.minScore,
+            }
+          }),
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          const jobId = result.jobId;
+          setSendingJobId(jobId);
+          
+          // Запускаем polling
+          pollSendingProgress(jobId);
+        } else {
+          const error = await response.json();
+          onSnackbar(error.message || _(msg`Ошибка создания задачи отправки`));
+          setSendingInProgress(false);
+          setSendingProgressDialogOpen(false);
+        }
+      } catch (error) {
+        console.error('Error starting bulk invitations (all by filter):', error);
+        onSnackbar(_(msg`Ошибка отправки приглашений`));
+        setSendingInProgress(false);
+        setSendingProgressDialogOpen(false);
+      }
+      return;
+    }
+
+    // Обычный режим - только выбранные на странице
+    console.log('📋 Sending with candidateIds (page mode)');
     const selectedCandidatesData = candidates.filter(c => selectedCandidates.includes(c.id));
     const hhCandidateIds = selectedCandidatesData
       .filter(c => c.hhCandidateId)
       .map(c => c.hhCandidateId);
+    
+    console.log('📋 HH Candidate IDs:', hhCandidateIds);
     
     if (hhCandidateIds.length === 0) {
       onSnackbar(_(msg`Среди выбранных нет кандидатов из HH.ru`));
@@ -692,24 +825,59 @@ export default function CandidatesList({
 
   return (
     <Box>
-      {/* Панель массовых действий */}
-      {selectedCandidates.length > 0 && (
-        <BulkActionsToolbar
-          selectedCount={selectedCandidates.length}
-          selectedCandidates={candidates.filter(c => selectedCandidates.includes(c.id))}
-          onCancel={() => setSelectedCandidates([])}
-          onStatusChange={async (newStatus) => {
-            await performBulkStatusChange(selectedCandidates, newStatus);
-            setSelectedCandidates([]);
-            setBulkStatus('');
+      {/* Баннер "Выбрать все по фильтру" */}
+      {selectedCandidates.length === candidates.length && 
+       !selectAllByFilter && 
+       total > candidates.length && (
+        <Box 
+          sx={{ 
+            mb: 2, 
+            p: 1.5, 
+            bgcolor: 'info.light', 
+            borderRadius: 1,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1
           }}
-          onSendInvitations={async (hhCandidateIds) => {
-            await handleBulkSendInvitations();
+        >
+          <Typography variant="body2">
+            <Trans>Выбрано {candidates.length} кандидатов на этой странице.</Trans>
+          </Typography>
+          <Button
+            size="small" 
+            variant="text" 
+            onClick={handleSelectAllByFilter}
+            sx={{ textTransform: 'none', fontWeight: 600 }}
+          >
+            <Trans>Выбрать все {total} кандидатов?</Trans>
+          </Button>
+        </Box>
+      )}
+      
+      {/* Индикатор "Выбраны ВСЕ по фильтру" */}
+      {selectAllByFilter && (
+        <Box 
+          sx={{ 
+            mb: 2, 
+            p: 1.5, 
+            bgcolor: 'success.light', 
+            borderRadius: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
           }}
-          vacancySource={vacancySource}
-          sendingInProgress={sendingInProgress}
-          variant="inline"
-        />
+        >
+          <Typography variant="body2" fontWeight={600}>
+            <Trans>✓ Выбраны все {total} кандидатов, соответствующих фильтрам</Trans>
+          </Typography>
+          <Button
+            size="small" 
+            variant="outlined"
+            onClick={handleClearSelection}
+          >
+            <Trans>Отменить</Trans>
+          </Button>
+        </Box>
       )}
 
       {candidates.length === 0 && !loading ? (
@@ -816,11 +984,11 @@ export default function CandidatesList({
                   {/* Источник */}
                   <TableCell>
                     <Box display="flex" gap={0.5} alignItems="center">
-                      <Chip
-                        label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
-                        size="small"
-                        variant="outlined"
-                      />
+                    <Chip
+                      label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
+                      size="small"
+                      variant="outlined"
+                    />
                       {r.invitationSentAt && (
                         <Tooltip title={`Приглашение отправлено ${formatDate(r.invitationSentAt)}${r.invitationSentBy ? ` (${r.invitationSentBy})` : ''}`} arrow>
                           <Chip 
