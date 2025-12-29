@@ -52,6 +52,7 @@ interface CandidatesListProps {
   onSelectedCandidatesChange?: (ids: number[] | ((prev: number[]) => number[])) => void;
   vacancySource?: string; // Источник вакансии (headhunter, manual, etc.)
   refreshTrigger?: number; // Триггер для принудительного обновления
+  onBulkStatusChangeRequest?: (candidateIds: number[], targetStatus: string) => Promise<void>; // Callback для массового изменения из parent
 }
 
 export default function CandidatesList({
@@ -63,6 +64,7 @@ export default function CandidatesList({
   onSelectedCandidatesChange,
   vacancySource = '',
   refreshTrigger,
+  onBulkStatusChangeRequest,
 }: CandidatesListProps) {
   const { _ } = useLingui();
 
@@ -154,6 +156,64 @@ export default function CandidatesList({
 
     loadCandidates();
   }, [vacancyId, filters, page, rowsPerPage, sortBy, sortOrder, refreshTrigger]);
+
+  // Полинг для обновления статусов AI скрининга (loading_resume, analyzing)
+  useEffect(() => {
+    // Проверяем есть ли кандидаты в процессе AI скрининга
+    const hasProcessingCandidates = candidates.some(c => 
+      c.aiAnalysisStatus === 'loading_resume' || c.aiAnalysisStatus === 'analyzing'
+    );
+
+    if (!hasProcessingCandidates) {
+      return; // Нет кандидатов в процессе - полинг не нужен
+    }
+
+    // Запускаем полинг каждые 5 секунд
+    const pollInterval = setInterval(async () => {
+      try {
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', (page + 1).toString());
+        queryParams.append('perPage', rowsPerPage.toString());
+        queryParams.append('sortBy', sortBy);
+        queryParams.append('sortOrder', sortOrder);
+        if (filters.source) queryParams.append('source', filters.source);
+        if (filters.status) queryParams.append('status', filters.status);
+        if (filters.search) queryParams.append('search', filters.search);
+        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        if (filters.testScore) queryParams.append('testScore', filters.testScore);
+        if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent);
+        if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
+        if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
+        if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
+        if (filters.datePreset && filters.datePreset !== 'custom') queryParams.append('datePreset', filters.datePreset);
+        if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
+        if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
+
+        const response = await apiFetch(
+          `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`
+        );
+        const result = await response.json();
+
+        // Обновляем только если есть изменения в статусах AI
+        const hasChanges = result.data.some((newCandidate: any, index: number) => {
+          const oldCandidate = candidates[index];
+          return oldCandidate && (
+            oldCandidate.aiAnalysisStatus !== newCandidate.aiAnalysisStatus ||
+            oldCandidate.aiScore !== newCandidate.aiScore
+          );
+        });
+
+        if (hasChanges) {
+          setCandidates(result.data || []);
+          setTotal(result.total || 0);
+        }
+      } catch (error) {
+        console.error('Error polling candidates:', error);
+      }
+    }, 5000); // Полинг каждые 5 секунд
+
+    return () => clearInterval(pollInterval);
+  }, [candidates, vacancyId, page, rowsPerPage, sortBy, sortOrder, filters]);
 
   // Сброс страницы при изменении фильтров
   useEffect(() => {
@@ -376,23 +436,34 @@ export default function CandidatesList({
     }
   };
 
-  const handleBulkStatusChange = async () => {
-    if (!bulkStatus || selectedCandidates.length === 0) return;
-
+  // Универсальный метод для массового изменения статуса (вызывается из обоих блоков)
+  const performBulkStatusChange = async (candidateIds: number[], targetStatus: string) => {
     try {
       const response = await apiFetch(
         `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates/bulk-status`,
         {
           method: 'PATCH',
           body: JSON.stringify({
-            candidateIds: selectedCandidates,
-            status: bulkStatus,
+            candidateIds,
+            status: targetStatus,
           }),
         }
       );
 
       if (response.ok) {
         const result = await response.json();
+        
+        // Проверяем есть ли ошибки HH token
+        const hhTokenErrors = result.errors?.filter((e: any) => e.type === 'hh_token_invalid') || [];
+        
+        if (hhTokenErrors.length > 0) {
+          setHhTokenError({
+            candidateName: hhTokenErrors[0].candidateName,
+            message: hhTokenErrors[0].message || _(msg`Требуется авторизация HH.ru для загрузки резюме`),
+          });
+          setHhTokenDialogOpen(true);
+        }
+        
         onSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
 
         // Обновляем список с правильными параметрами пагинации и фильтрации
@@ -411,16 +482,49 @@ export default function CandidatesList({
         setCandidates(updatedData.data || []);
         setTotal(updatedData.total || 0);
 
-        setSelectedCandidates([]);
-        setBulkStatus('');
+        return result;
       } else {
+        // Проверяем специфичную ошибку HH token (403)
+        if (response.status === 403) {
+          const errorData = await response.json();
+          if (errorData.error === 'hh.token_invalid') {
+            setHhTokenError({
+              candidateName: '',
+              message: _(msg`Требуется авторизация HH.ru для загрузки резюме`),
+            });
+            setHhTokenDialogOpen(true);
+            return;
+          }
+        }
+        
         onSnackbar(_(msg`❌ Ошибка при перемещении`));
+        throw new Error('Failed to update status');
       }
     } catch (error) {
       console.error('Error in bulk status change:', error);
       onSnackbar(_(msg`❌ Ошибка при перемещении`));
+      throw error;
     }
   };
+
+  const handleBulkStatusChange = async () => {
+    if (!bulkStatus || selectedCandidates.length === 0) return;
+
+    await performBulkStatusChange(selectedCandidates, bulkStatus);
+    setSelectedCandidates([]);
+    setBulkStatus('');
+  };
+
+  // Экспортируем метод для использования из parent component (для floating panel)
+  useEffect(() => {
+    if (onBulkStatusChangeRequest) {
+      // Сохраняем ссылку на метод для вызова извне
+      (window as any).__candidatesListBulkChange = performBulkStatusChange;
+    }
+    return () => {
+      delete (window as any).__candidatesListBulkChange;
+    };
+  }, [vacancyId, page, rowsPerPage, sortBy, sortOrder, filters]);
 
   // Polling для отслеживания прогресса массовой отправки
   const pollSendingProgress = async (jobId: number) => {

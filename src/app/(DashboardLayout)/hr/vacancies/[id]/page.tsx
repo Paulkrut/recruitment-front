@@ -852,31 +852,14 @@ export default function HRVacancyDetailPage() {
                         selectedAllInColumns={[]}
                         onCancel={() => setSelectedCandidates([])}
                         onBulkMove={async (targetStage) => {
-                          // Реализация массового перемещения через API
-                          try {
-                            const response = await apiFetch(
-                              `${API_BASE}/api/admin/vacancies/${id}/candidates/bulk-status`,
-                              {
-                                method: 'PATCH',
-                                body: JSON.stringify({
-                                  candidateIds: selectedCandidates,
-                                  status: targetStage,
-                                }),
-                              }
-                            );
-
-                            if (response.ok) {
-                              const result = await response.json();
-                              setSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
+                          // Используем унифицированный метод из CandidatesList
+                          if ((window as any).__candidatesListBulkChange) {
+                            try {
+                              await (window as any).__candidatesListBulkChange(selectedCandidates, targetStage);
                               setSelectedCandidates([]);
-                              // Мягкое обновление - увеличиваем refreshKey для обновления списка
-                              setRefreshKey(prev => prev + 1);
-                            } else {
-                              setSnackbar(_(msg`❌ Ошибка при перемещении`));
+                            } catch (error) {
+                              // Ошибка уже обработана в performBulkStatusChange
                             }
-                          } catch (error) {
-                            console.error('Error in bulk move:', error);
-                            setSnackbar(_(msg`❌ Ошибка при перемещении`));
                           }
                         }}
                         statusTriggers={{}}
@@ -906,6 +889,13 @@ export default function HRVacancyDetailPage() {
                       onSelectedCandidatesChange={setSelectedCandidates}
                       vacancySource={data?.source || ''}
                       refreshTrigger={refreshKey}
+                      onBulkStatusChangeRequest={async (candidateIds, targetStatus) => {
+                        // Вызов из floating panel - используем унифицированный метод
+                        if ((window as any).__candidatesListBulkChange) {
+                          await (window as any).__candidatesListBulkChange(candidateIds, targetStatus);
+                          setSelectedCandidates([]);
+                        }
+                      }}
                     />
                   ) : (
                     <KanbanView
