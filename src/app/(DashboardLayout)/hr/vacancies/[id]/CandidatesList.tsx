@@ -39,6 +39,8 @@ import { apiFetch } from '@/utils/api';
 import moment from 'moment';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import BulkActionsToolbar from './BulkActionsToolbar';
+import { extractHhCandidateIds } from './candidateUtils';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -88,7 +90,7 @@ export default function CandidatesList({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [total, setTotal] = useState(0);
-  const [sortBy, setSortBy] = useState<string>('aiScore');
+  const [sortBy, setSortBy] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<'ASC' | 'DESC'>('DESC');
 
   // Состояние для HH Token Required Dialog
@@ -692,58 +694,22 @@ export default function CandidatesList({
     <Box>
       {/* Панель массовых действий */}
       {selectedCandidates.length > 0 && (
-        <Box display="flex" alignItems="center" gap={2} mb={2} p={2} bgcolor="primary.light" borderRadius={1} flexWrap="wrap">
-          <Typography variant="body1" fontWeight={600}><Trans>
-            Выбрано: {selectedCandidates.length}
-          </Trans></Typography>
-          
-          {/* Массовое перемещение */}
-          <FormControl size="small" sx={{ minWidth: 200 }}>
-            <Select
-              value={bulkStatus}
-              onChange={(e) => setBulkStatus(e.target.value)}
-              displayEmpty
-            >
-              <MenuItem value="" disabled><Trans>Переместить в...</Trans></MenuItem>
-              <MenuItem value="new"><Trans>Новый</Trans></MenuItem>
-              <MenuItem value="screening"><Trans>AI Скрининг</Trans></MenuItem>
-              <MenuItem value="contacted"><Trans>Связались</Trans></MenuItem>
-              <MenuItem value="testing"><Trans>Тестирование</Trans></MenuItem>
-              <MenuItem value="finalist"><Trans>Финалист</Trans></MenuItem>
-              <MenuItem value="offer"><Trans>Оффер</Trans></MenuItem>
-              <MenuItem value="hired"><Trans>Принят</Trans></MenuItem>
-              <MenuItem value="rejected"><Trans>Отклонён</Trans></MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleBulkStatusChange}
-            disabled={!bulkStatus}
-          ><Trans>Применить</Trans></Button>
-          
-          {/* Кнопка массовой отправки приглашений для HH вакансий */}
-          {vacancySource === 'headhunter' && (
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleBulkSendInvitations}
-              startIcon={<MailOutlineIcon />}
-              disabled={sendingInProgress}
-            >
-              <Trans>📤 Отправить приглашения ({
-                candidates.filter(c => selectedCandidates.includes(c.id) && c.hhCandidateId).length
-              })</Trans>
-            </Button>
-          )}
-          
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedCandidates([])}
-          >
-            <Trans>Отменить</Trans>
-          </Button>
-        </Box>
+        <BulkActionsToolbar
+          selectedCount={selectedCandidates.length}
+          selectedCandidates={candidates.filter(c => selectedCandidates.includes(c.id))}
+          onCancel={() => setSelectedCandidates([])}
+          onStatusChange={async (newStatus) => {
+            await performBulkStatusChange(selectedCandidates, newStatus);
+            setSelectedCandidates([]);
+            setBulkStatus('');
+          }}
+          onSendInvitations={async (hhCandidateIds) => {
+            await handleBulkSendInvitations();
+          }}
+          vacancySource={vacancySource}
+          sendingInProgress={sendingInProgress}
+          variant="inline"
+        />
       )}
 
       {candidates.length === 0 && !loading ? (

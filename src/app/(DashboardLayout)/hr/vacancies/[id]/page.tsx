@@ -351,7 +351,7 @@ export default function HRVacancyDetailPage() {
   };
 
   // Функция массовой отправки приглашений в HH.ru
-  const handleBulkSendInvitations = async (candidateIds: number[]) => {
+  const handleBulkSendInvitations = async (candidateIds: (number | string)[]) => {
     if (!id) return;
     
     try {
@@ -870,6 +870,7 @@ export default function HRVacancyDetailPage() {
                         onBulkSendInvitations={async (hhCandidateIds) => {
                           await handleBulkSendInvitations(hhCandidateIds);
                         }}
+                        sendingInProgress={sendingInProgress}
                       />
                     </Box>
                   )}
