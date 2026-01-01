@@ -521,7 +521,7 @@ export default function HRVacancyDetailPage() {
             <Box display="flex" gap={2} mt={2} flexWrap="wrap">
               <Chip icon={<IconFileText size={18}/>} label={template?.title || _(msg`Без шаблона`)} color={template ? 'secondary' : 'default'} sx={{ fontWeight: 600 }} />
               <Chip icon={<IconFileText size={18}/>} label={_(msg`Вопросов: ${(questions||[]).length}`)} color="primary" sx={{ fontWeight: 600 }} />
-              <Chip icon={<IconUsers size={18}/>} label={_(msg`Кандидатов: ${candidates.length}`)} color="success" sx={{ fontWeight: 600 }} />
+              <Chip icon={<IconUsers size={18}/>} label={_(msg`Кандидатов: ${totalCandidates}`)} color="success" sx={{ fontWeight: 600 }} />
             </Box>
 
             {/* Публичная ссылка для самозаписи */}

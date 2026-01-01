@@ -815,6 +815,34 @@ export default function CandidatesList({
     }
   };
 
+  const getCandidateStageLabel = (status: string) => {
+    switch (status) {
+      case 'new': return _(msg`Новый`);
+      case 'screening': return _(msg`AI Скрининг`);
+      case 'contacted': return _(msg`Связались`);
+      case 'testing': return _(msg`Тестирование`);
+      case 'finalist': return _(msg`Финалист`);
+      case 'offer': return _(msg`Оффер`);
+      case 'hired': return _(msg`Принят`);
+      case 'rejected': return _(msg`Отклонён`);
+      default: return status;
+    }
+  };
+
+  const getCandidateStageColor = (status: string): "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" => {
+    switch (status) {
+      case 'new': return 'info';
+      case 'screening': return 'primary';
+      case 'contacted': return 'secondary';
+      case 'testing': return 'warning';
+      case 'finalist': return 'success';
+      case 'offer': return 'success';
+      case 'hired': return 'success';
+      case 'rejected': return 'error';
+      default: return 'default';
+    }
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" p={4}>
@@ -933,7 +961,7 @@ export default function CandidatesList({
                     direction={sortBy === 'status' ? sortOrder.toLowerCase() as 'asc' | 'desc' : 'asc'}
                     onClick={() => handleSort('status')}
                   >
-                    <Trans>Статус</Trans>
+                    <Trans>Стадия</Trans>
                   </TableSortLabel>
                 </TableCell>
                 <TableCell><Trans>Контакты</Trans></TableCell>
@@ -1039,25 +1067,36 @@ export default function CandidatesList({
 
                   {/* Оценка за тест */}
                   <TableCell>
-                    {r.score !== null && r.score !== undefined ? (
-                      <Tooltip title={_(msg`Оценка за прохождение теста: ${r.score}/10`)} arrow>
-                        <Chip
-                          label={`${r.score}/10`}
-                          size="small"
-                          color={getTestScoreColor(r.score)}
-                        />
-                      </Tooltip>
-                    ) : (
-                      <Chip label="—" size="small" variant="outlined" />
-                    )}
+                    <Box display="flex" flexDirection="column" gap={0.5} alignItems="center">
+                      {/* Оценка - основная */}
+                      {r.score !== null && r.score !== undefined ? (
+                        <Tooltip title={_(msg`Оценка за прохождение теста: ${r.score}/10`)} arrow>
+                          <Chip
+                            label={`${r.score}/10`}
+                            size="small"
+                            color={getTestScoreColor(r.score)}
+                          />
+                        </Tooltip>
+                      ) : (
+                        <Chip label="—" size="small" variant="outlined" />
+                      )}
+                      
+                      {/* Статус интервью - вторичный, мелким шрифтом */}
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
+                        {r.interviewStatus === 'ready' && _(msg`⏳ Не начато`)}
+                        {r.interviewStatus === 'in_progress' && _(msg`▶️ В процессе`)}
+                        {r.interviewStatus === 'finished' && _(msg`✅ Завершено`)}
+                        {!r.interviewStatus && _(msg`Не проходили`)}
+                      </Typography>
+                    </Box>
                   </TableCell>
 
-                  {/* Статус */}
+                  {/* Стадия */}
                   <TableCell>
                     <Chip
-                      label={r.status}
+                      label={getCandidateStageLabel(r.candidateStatus)}
                       size="small"
-                      color="default"
+                      color={getCandidateStageColor(r.candidateStatus)}
                     />
                   </TableCell>
 

@@ -24,7 +24,8 @@ interface CandidateFiltersProps {
     datePreset?: string;
     dateFrom?: string;
     dateTo?: string;
-    status?: string;
+    status?: string; // Стадия воронки (stage)
+    interviewStatus?: string; // Статус интервью
     testScore?: string; // Новый фильтр для оценки за тест
     invitationSent?: string; // Новый фильтр для приглашений
   };
@@ -167,14 +168,32 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           </FormControl>
         </Grid>
 
-        {/* Статус - только для режима списка */}
+        {/* Статус интервью */}
+        <Grid item xs={12} md={2}>
+          <FormControl fullWidth size="small">
+            <InputLabel><Trans>Статус интервью</Trans></InputLabel>
+            <Select
+              value={localFilters.interviewStatus || ''}
+              label={_(msg`Статус интервью`)}
+              onChange={(e) => handleLocalChange('interviewStatus', e.target.value)}
+            >
+              <MenuItem value=""><Trans>Все</Trans></MenuItem>
+              <MenuItem value="not_started"><Trans>⏳ Не начато</Trans></MenuItem>
+              <MenuItem value="in_progress"><Trans>▶️ В процессе</Trans></MenuItem>
+              <MenuItem value="finished"><Trans>✅ Завершено</Trans></MenuItem>
+              <MenuItem value="no_interview"><Trans>❌ Не проходили</Trans></MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+
+        {/* Стадия - только для режима списка */}
         {viewMode === 'list' && (
           <Grid item xs={12} md={2}>
             <FormControl fullWidth size="small">
-              <InputLabel><Trans>Статус</Trans></InputLabel>
+              <InputLabel><Trans>Стадия</Trans></InputLabel>
               <Select
                 value={localFilters.status || ''}
-                label={_(msg`Статус`)}
+                label={_(msg`Стадия`)}
                 onChange={(e) => handleLocalChange('status', e.target.value)}
               >
                 <MenuItem value=""><Trans>Все</Trans></MenuItem>
@@ -409,9 +428,22 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               onDelete={() => handleRemoveFilter('source')}
             />
           )}
+          {filters.interviewStatus && (
+            <Chip
+              label={_(msg`Интервью: ${
+                filters.interviewStatus === 'not_started' ? _(msg`Не начато`) :
+                filters.interviewStatus === 'in_progress' ? _(msg`В процессе`) :
+                filters.interviewStatus === 'finished' ? _(msg`Завершено`) :
+                filters.interviewStatus === 'no_interview' ? _(msg`Не проходили`) :
+                filters.interviewStatus
+              }`)}
+              size="small"
+              onDelete={() => handleRemoveFilter('interviewStatus')}
+            />
+          )}
           {filters.status && viewMode === 'list' && (
             <Chip
-              label={_(msg`Статус: ${
+              label={_(msg`Стадия: ${
                 filters.status === 'new' ? _(msg`Новый`) :
                 filters.status === 'screening' ? _(msg`AI Скрининг`) :
                 filters.status === 'contacted' ? _(msg`Связались`) :
@@ -456,6 +488,17 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
               }
               size="small"
               onDelete={() => handleRemoveFilter('testScore')}
+            />
+          )}
+          {filters.invitationSent && (
+            <Chip
+              label={
+                filters.invitationSent === 'sent'
+                  ? _(msg`Приглашение: Отправлено`)
+                  : _(msg`Приглашение: Не отправлено`)
+              }
+              size="small"
+              onDelete={() => handleRemoveFilter('invitationSent')}
             />
           )}
           {filters.hasResume && (
