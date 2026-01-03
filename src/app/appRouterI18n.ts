@@ -1,6 +1,4 @@
 import { setupI18n, type I18n } from "@lingui/core";
-import { messages as ruMessages } from "../locales/ru/messages.js";
-import { messages as enMessages } from "../locales/en/messages.js";
 
 export type SupportedLocale = "ru" | "en";
 
@@ -27,20 +25,28 @@ export function getLocale(): SupportedLocale {
   return region === "US" ? "en" : "ru";
 }
 
-// Каталоги сообщений
-const catalogs = {
-  ru: ruMessages,
-  en: enMessages,
-};
-
 // Статическая загрузка сообщений для серверного рендеринга
 async function loadCatalog(locale: SupportedLocale) {
   try {
     log(`📥 [appRouterI18n] Loading catalog for locale: ${locale}`);
 
-    const messages = catalogs[locale] || {};
+    // Используем @lingui/loader для прямой загрузки .po файлов
+    // Это работает как в dev, так и в production, без предварительной компиляции
+    const catalog = await import(
+      `@lingui/loader!../locales/${locale}/messages.po`
+      );
 
-    log(`✅ [appRouterI18n] Messages loaded:`, {
+    log(`📦 [appRouterI18n] Catalog imported:`, {
+      locale,
+      hasCatalog: !!catalog,
+      hasMessages: !!catalog?.messages,
+      messagesCount: catalog?.messages ? Object.keys(catalog.messages).length : 0,
+    });
+
+    // @lingui/loader возвращает { messages: {...} }
+    const messages = catalog.messages || {};
+
+    log(`✅ [appRouterI18n] Messages extracted:`, {
       locale,
       messagesType: typeof messages,
       messagesCount: Object.keys(messages).length,
