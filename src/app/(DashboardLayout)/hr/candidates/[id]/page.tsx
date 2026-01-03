@@ -15,8 +15,12 @@ import {
   Tooltip,
   IconButton,
   Snackbar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
-import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription } from "@tabler/icons-react";
+import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription, IconRobot, IconChevronDown } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 
@@ -55,6 +59,7 @@ import Rating from '@mui/material/Rating';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEventsTimeline';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -86,6 +91,19 @@ function getStatusLabel(status: string, _: any) {
   }
 }
 
+// Доступные статусы кандидата для изменения
+const CANDIDATE_STATUSES = [
+  { value: 'new', label: (l: any) => l(msg`Новый`), icon: '🆕' },
+  { value: 'screening', label: (l: any) => l(msg`Скрининг`), icon: '🔍' },
+  { value: 'contacted', label: (l: any) => l(msg`Связались`), icon: '📞' },
+  { value: 'testing', label: (l: any) => l(msg`Тестирование`), icon: '📝' },
+  { value: 'interview', label: (l: any) => l(msg`Интервью`), icon: '💼' },
+  { value: 'offer', label: (l: any) => l(msg`Оффер`), icon: '📋' },
+  { value: 'hired', label: (l: any) => l(msg`Нанят`), icon: '✅' },
+  { value: 'rejected', label: (l: any) => l(msg`Отклонён`), icon: '❌' },
+  { value: 'withdrawn', label: (l: any) => l(msg`Отказался`), icon: '🚫' },
+];
+
 export default function CandidateDetailPage() {
   const { _, i18n } = useLingui();
   const { id } = useParams<{ id: string }>();
@@ -101,6 +119,8 @@ export default function CandidateDetailPage() {
   const [tab, setTab] = useState('results');
   const [sendingHhInvitation, setSendingHhInvitation] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
+  const [statusMenuAnchor, setStatusMenuAnchor] = useState<null | HTMLElement>(null);
+  const [changingStatus, setChangingStatus] = useState(false);
   const [allCandidates, setAllCandidates] = useState<any[]>([]);
   const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
   const [resumeText, setResumeText] = useState<string | null>(null);
@@ -346,6 +366,51 @@ export default function CandidateDetailPage() {
     }
   };
 
+  // Изменение статуса кандидата
+  const handleChangeStatus = async (newStatus: string) => {
+    setStatusMenuAnchor(null);
+    
+    if (!statusData?.id || !statusData?.vacancyId) {
+      setCopyMsg(_(msg`❌ Ошибка: нет данных кандидата`));
+      return;
+    }
+
+    if (newStatus === candidateStatus) {
+      return; // Уже такой статус
+    }
+
+    setChangingStatus(true);
+
+    try {
+      const res = await apiFetch(
+        `${API_BASE}/api/admin/vacancies/${statusData.vacancyId}/candidates/${statusData.id}/status`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        setCopyMsg(_(msg`✅ Статус изменен`));
+        
+        // Обновляем локальные данные
+        setStatusData((prev: any) => ({ ...prev, status: newStatus }));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        const errorCode = data.error || 'common.internal_error';
+        const errorMessage = i18n._(getErrorMessage(errorCode));
+        setCopyMsg(`❌ ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('Ошибка при изменении статуса:', error);
+      setCopyMsg(_(msg`❌ Ошибка при изменении статуса`));
+    } finally {
+      setChangingStatus(false);
+    }
+  };
+
   return (
     <PageContainer title={_(msg`Кандидат`) + ': ' + candidate}>
       <Stack spacing={3}>
@@ -371,7 +436,50 @@ export default function CandidateDetailPage() {
               <Box flexGrow={1}>
                 <Stack direction="row" alignItems="center" spacing={2}>
                   <Typography variant="h4" fontWeight="700">{candidate}</Typography>
-                  {candidateStatus && <Chip label={getStatusLabel(candidateStatus, _)} color={candidateStatus==='active'?'success':candidateStatus==='rejected'?'error':'default'} size="medium" icon={<CheckCircleIcon color={candidateStatus==='active'?'success':'disabled'} />} />}
+                  {candidateStatus && (
+                    <Tooltip title={_(msg`Кликните для изменения статуса`)}>
+                      <Chip 
+                        label={getStatusLabel(candidateStatus, _)} 
+                        color={candidateStatus==='hired'?'success':candidateStatus==='rejected'?'error':'default'} 
+                        size="medium" 
+                        icon={<CheckCircleIcon color={candidateStatus==='hired'?'success':'disabled'} />}
+                        deleteIcon={<IconChevronDown size={18} />}
+                        onDelete={(e) => setStatusMenuAnchor(e.currentTarget)}
+                        onClick={(e) => setStatusMenuAnchor(e.currentTarget)}
+                        sx={{ 
+                          cursor: 'pointer', 
+                          '&:hover': { opacity: 0.8 },
+                          '& .MuiChip-deleteIcon': {
+                            color: 'inherit',
+                            fontSize: '1.2rem',
+                            marginRight: '4px',
+                            '&:hover': {
+                              color: 'inherit',
+                            }
+                          }
+                        }}
+                      />
+                    </Tooltip>
+                  )}
+                  <Menu
+                    anchorEl={statusMenuAnchor}
+                    open={Boolean(statusMenuAnchor)}
+                    onClose={() => setStatusMenuAnchor(null)}
+                  >
+                    {CANDIDATE_STATUSES.map((status) => (
+                      <MenuItem 
+                        key={status.value} 
+                        onClick={() => handleChangeStatus(status.value)}
+                        selected={status.value === candidateStatus}
+                        disabled={changingStatus}
+                      >
+                        <ListItemIcon sx={{ minWidth: 32 }}>
+                          <Typography fontSize="1.2rem">{status.icon}</Typography>
+                        </ListItemIcon>
+                        <ListItemText>{status.label(_)}</ListItemText>
+                      </MenuItem>
+                    ))}
+                  </Menu>
                   {sessionDetail?.status && <Chip label={getStatusLabel(sessionDetail.status, _)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" icon={sessionDetail.status==='completed'?<CheckCircleIcon color="success" />:<HourglassEmptyIcon color="warning" />} />}
                   {statusData?.candidateOpinion && (
                     <Tooltip title={_(msg`Кандидат оставил мнение о результатах`)}>
@@ -447,6 +555,7 @@ export default function CandidateDetailPage() {
             </Stack>
           </CardContent>
         </Card>
+
         {/* Табы с иконками */}
         <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -455,6 +564,7 @@ export default function CandidateDetailPage() {
               <Tab icon={<IconFileDescription />} iconPosition="start" label={_(msg`Резюме`)} value="resume" />
               <Tab icon={<CommentIcon />} iconPosition="start" label={_(msg`Комментарии`)} value="comments" />
               <Tab icon={<MailOutlineIcon />} iconPosition="start" label={_(msg`Коммуникации`)} value="communications" />
+              <Tab icon={<IconRobot />} iconPosition="start" label={_(msg`История действий`)} value="automation" />
               <Tab icon={<FeedbackIcon />} iconPosition="start" label={_(msg`Отзыв`)} value="feedback" />
               <Tab icon={<IconMoodHappy />} iconPosition="start" label={_(msg`Мнение кандидата`)} value="opinion" />
             </Tabs>
@@ -1013,6 +1123,25 @@ export default function CandidateDetailPage() {
               </CardContent>
             </Card>
           </TabPanel>
+          
+          {/* Tab: История действий (только для HH кандидатов) */}
+          <TabPanel value="automation" sx={{p:0}}>
+            <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
+              <CardContent sx={{ p: 4 }}>
+                <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+                  <IconRobot size={32} color="#1976d2" />
+                  <Typography variant="h6" fontWeight="700"><Trans>История действий с кандидатом</Trans></Typography>
+                </Stack>
+                
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                  <Trans>Все автоматические и ручные действия, совершённые с этим кандидатом</Trans>
+                </Typography>
+                
+                {statusData?.id && <CandidateEventsTimeline candidateId={statusData.id} />}
+              </CardContent>
+            </Card>
+          </TabPanel>
+
           {/* Tab: Отзыв кандидата */}
           <TabPanel value="feedback" sx={{p:0}}>
             <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>

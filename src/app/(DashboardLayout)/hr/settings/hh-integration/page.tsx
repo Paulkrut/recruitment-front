@@ -53,6 +53,7 @@ import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import HhAutomationSettings from '@/components/hr/hh-integration/HhAutomationSettings';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -1445,6 +1446,18 @@ export default function HhIntegrationPage() {
             </Grid>
           )}
           {/* === КОНЕЦ НОВОЙ СЕКЦИИ === */}
+
+          {/* 🤖 АВТОМАТИЗАЦИЯ РАБОТЫ С КАНДИДАТАМИ */}
+          {status?.isConnected && status.hasValidToken && (
+            <Grid item xs={12}>
+              <HhAutomationSettings
+                isConnected={status.isConnected}
+                hasValidToken={status.hasValidToken}
+                hhStages={availableStatuses}
+              />
+            </Grid>
+          )}
+
           </Grid>
       </Box> {/* Закрывает Box sx={{ position: 'relative' }} */}
       </Box> {/* Закрывает основной Box на строке 495 */}
