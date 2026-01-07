@@ -1,0 +1,12 @@
+{
+  "name": "testimonials-optimizer",
+  "version": "1.0.0",
+  "description": "Optimize testimonial screenshots",
+  "scripts": {
+    "optimize": "node optimize-testimonials.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.1"
+  }
+}
+
