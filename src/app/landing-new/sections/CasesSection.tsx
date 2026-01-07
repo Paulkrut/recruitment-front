@@ -398,7 +398,7 @@ export default function CasesSection() {
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <Icon icon={selectedCase.icon} width={{ xs: 24, md: 32 }} height={{ xs: 24, md: 32 }} color={selectedCase.color} />
+                  <Icon icon={selectedCase.icon} width={32} height={32} color={selectedCase.color} />
                 </Box>
                 <Box sx={{ flex: 1 }}>
                   <Typography sx={{ fontSize: { xs: '0.65rem', md: '0.75rem' }, color: '#999', textTransform: 'uppercase', letterSpacing: 1 }}>
@@ -448,7 +448,7 @@ export default function CasesSection() {
                   transition: 'all 0.2s ease',
                 }}
               >
-                <Icon icon="mdi:close" width={{ xs: 20, md: 24 }} height={{ xs: 20, md: 24 }} />
+                <Icon icon="mdi:close" width={24} height={24} />
               </IconButton>
             </Box>
 
