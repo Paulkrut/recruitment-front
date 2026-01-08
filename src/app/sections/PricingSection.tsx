@@ -96,7 +96,7 @@ export default function PricingSection() {
   ];
 
   return (
-    <Box sx={{ bgcolor: '#fafafa', py: { xs: 6, md: 10 } }}>
+    <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 10 } }}>
       <Container maxWidth="lg">
 
         {/* Hero */}

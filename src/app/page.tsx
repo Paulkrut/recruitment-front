@@ -13,6 +13,7 @@ import FullFeaturesSection from "./sections/FullFeaturesSection";
 import ScreenshotsSection from "./sections/ScreenshotsSection";
 import CasesSection from "./sections/CasesSection";
 import TestimonialsSection from "./sections/TestimonialsSection";
+import ComparisonSection from "./sections/ComparisonSection";
 import PricingSection from "./sections/PricingSection";
 import RegulationsSection from "./sections/RegulationsSection";
 import PartnersSection from "./sections/PartnersSection";
@@ -245,20 +246,23 @@ export default function HomePage() {
         <TestimonialsSection />
       </Box>
 
-      {/* Pricing Section - серый */}
+      {/* Comparison Section - серый */}
+      <ComparisonSection />
+
+      {/* Pricing Section - белый */}
       <Box id="pricing">
         <PricingSection />
       </Box>
 
-      {/* Regulations Section - белый */}
+      {/* Regulations Section - серый */}
       <RegulationsSection />
 
-      {/* Partners Section - серый */}
+      {/* Partners Section - белый */}
       <Box id="partners">
         <PartnersSection onOpenContact={() => setContactModalOpen(true)} />
       </Box>
 
-      {/* CTA Section - белый */}
+      {/* CTA Section - серый */}
       <CtaSection />
 
       {/* Footer Section */}

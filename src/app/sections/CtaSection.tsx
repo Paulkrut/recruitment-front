@@ -5,7 +5,7 @@ import { Icon } from "@iconify/react";
 
 export default function CtaSection() {
   return (
-    <Box sx={{ bgcolor: '#fff', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
+    <Box sx={{ bgcolor: '#fafafa', py: { xs: 8, md: 12 }, position: 'relative', overflow: 'hidden' }}>
       {/* Декоративные элементы */}
       <Box
         sx={{
