@@ -13,50 +13,50 @@ export default function ScreenshotsSection() {
       id: 'dashboard',
       title: 'Дашборд вакансий',
       description: 'Управляйте всеми вакансиями в одном месте. Статистика, фильтры, быстрые действия.',
-      image: '/images/screenshots/Вакансии широкие.webp',
+      image: '/images/screenshots/vacancies-wide.webp',
       type: 'image'
     },
     {
       id: 'kanban',
       title: 'Канбан-доска кандидатов',
       description: 'Визуальное управление кандидатами. Drag & drop между стадиями, AI-оценки на карточках.',
-      image: '/images/screenshots/кандидаиы канбан.webp',
-      video: '/images/screenshots/Вакансия-Операционный-директор-COO-.webm',
+      image: '/images/screenshots/candidates-kanban.webp',
+      video: '/images/screenshots/kanban-drag-drop.webm',
       type: 'both' // есть и картинка и видео
     },
     {
       id: 'hh-automation',
       title: 'Автоматизация HeadHunter',
       description: 'Настройте автоприглашения, напоминания и синхронизацию статусов в пару кликов.',
-      image: '/images/screenshots/ХХ импорт.webp',
+      image: '/images/screenshots/hh-import.webp',
       type: 'image'
     },
     {
       id: 'candidate-detail',
       title: 'Детальная карточка кандидата',
       description: 'Вся информация о кандидате: резюме, AI-анализ, видео-ответы, оценки, история.',
-      image: '/images/screenshots/кандидат.webp',
+      image: '/images/screenshots/candidate.webp',
       type: 'image'
     },
     {
       id: 'comparison',
       title: 'Сравнение кандидатов',
       description: 'Сравнивайте до 10 кандидатов side-by-side. Экспортируйте в Excel одним кликом.',
-      image: '/images/screenshots/Сравнение.webp',
+      image: '/images/screenshots/comparison.webp',
       type: 'image'
     },
     {
       id: 'ai-generation',
       title: 'AI-генерация вопросов',
       description: 'ИИ создаёт релевантные вопросы на основе описания вакансии за 30 секунд.',
-      image: '/images/screenshots/Генерация вопросов.webp',
+      image: '/images/screenshots/generate-questions.webp',
       type: 'image'
     },
     {
       id: 'candidate-summary',
       title: 'Аналитика и отчёты',
       description: 'Детальная статистика по каждому кандидату с рекомендациями AI.',
-      image: '/images/screenshots/кандидат итог.webp',
+      image: '/images/screenshots/candidate-summary.webp',
       type: 'image'
     },
   ];
