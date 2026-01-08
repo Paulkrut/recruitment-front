@@ -68,7 +68,7 @@ export default function AiInterviewSection() {
   ];
 
   return (
-    <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 8 } }}>
+    <Box sx={{ bgcolor: '#fafafa', py: { xs: 6, md: 8 } }}>
       <Container maxWidth="lg">
 
         {/* Hero */}

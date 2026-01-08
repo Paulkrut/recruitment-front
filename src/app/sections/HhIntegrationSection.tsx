@@ -56,7 +56,7 @@ export default function HhIntegrationSection({
           <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 2, bgcolor: '#fff', border: '1px solid #e5e5e5', borderRadius: 1.5, px: 2, py: 1 }}>
             <Icon icon="mdi:account-group" width={16} height={16} color="#4CAF50" />
             <Typography sx={{ fontSize: '0.8rem', color: '#666' }}>
-              <Box component="span" sx={{ fontWeight: 700, color: '#1a1a1a' }}>570+</Box> компаний автоматизировали HH
+              <Box component="span" sx={{ fontWeight: 700, color: '#1a1a1a' }}>50,000+</Box> интервью через HH
             </Typography>
           </Box>
         </Box>

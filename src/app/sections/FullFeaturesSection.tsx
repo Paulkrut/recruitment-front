@@ -98,7 +98,7 @@ export default function FullFeaturesSection() {
   ];
 
   return (
-    <Box sx={{ bgcolor: '#fafafa', py: { xs: 6, md: 8 } }}>
+    <Box sx={{ bgcolor: '#fff', py: { xs: 6, md: 8 } }}>
       <Container maxWidth="lg">
 
         {/* Hero */}

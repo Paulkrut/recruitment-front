@@ -7,9 +7,10 @@ interface HeroSectionProps {
   activeInterviews: number;
   rotatingWord: number;
   rotatingWords: string[];
+  onContactClick?: () => void;
 }
 
-export default function HeroSection({ activeInterviews, rotatingWord, rotatingWords }: HeroSectionProps) {
+export default function HeroSection({ activeInterviews, rotatingWord, rotatingWords, onContactClick }: HeroSectionProps) {
   return (
     <Box sx={{ position: 'relative', overflow: 'hidden', borderRadius: 0 }}>
       {/* Combined Background: Mesh + Dots + Grid */}
@@ -252,9 +253,9 @@ export default function HeroSection({ activeInterviews, rotatingWord, rotatingWo
 
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 3, mb: 4 }}>
                 {[
-                  { value: '8,500+', label: 'Интервью проведено', color: '#2196F3' },
-                  { value: '12,000+', label: 'Кандидатов оценено', color: '#4CAF50' },
-                  { value: '570+', label: 'Компаний с нами', color: '#9C27B0' },
+                  { value: '50,000+', label: 'Интервью проведено', color: '#2196F3' },
+                  { value: '75,000+', label: 'Кандидатов оценено', color: '#4CAF50' },
+                  { value: '17x', label: 'Быстрее найм', color: '#9C27B0' },
                   { value: '24/7', label: 'Работаем всегда', color: '#FF9800' },
                 ].map((stat, i) => (
                   <Box key={i}>
@@ -329,9 +330,34 @@ export default function HeroSection({ activeInterviews, rotatingWord, rotatingWo
                     transform: 'translateY(-2px)',
                   },
                   transition: 'all 0.2s ease',
+                  mb: 2
                 }}
               >
                 Попробовать платформу
+              </Button>
+
+              <Button
+                onClick={onContactClick}
+                variant="outlined"
+                fullWidth
+                sx={{
+                  borderColor: '#e5e5e5',
+                  color: '#666',
+                  py: 1.8,
+                  fontSize: '0.95rem',
+                  fontWeight: 600,
+                  borderRadius: 1.5,
+                  textTransform: 'none',
+                  '&:hover': {
+                    borderColor: '#2196F3',
+                    color: '#2196F3',
+                    bgcolor: 'rgba(33, 150, 243, 0.04)',
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+                startIcon={<Icon icon="mdi:headset" width={20} height={20} />}
+              >
+                Связаться с нами
               </Button>
             </Box>
           </Box>

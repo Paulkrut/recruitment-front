@@ -40,7 +40,7 @@ export default function CtaSection() {
           </Typography>
 
           <Typography sx={{ fontSize: { xs: '1.05rem', md: '1.2rem' }, color: '#666', mb: 4, maxWidth: 600, mx: 'auto' }}>
-            Присоединяйтесь к сотням HR-специалистов, которые уже используют SofiHR для эффективного найма
+            Присоединяйтесь к HR-специалистам, которые используют AI для эффективного найма
           </Typography>
 
           {/* Статистика */}
@@ -48,20 +48,20 @@ export default function CtaSection() {
             <Grid item xs={12} sm={4}>
               <Box>
                 <Typography sx={{ fontSize: '2.5rem', fontWeight: 800, color: '#E91E63', lineHeight: 1 }}>
-                  570+
+                  50,000+
                 </Typography>
                 <Typography sx={{ fontSize: '0.9rem', color: '#666', mt: 0.5 }}>
-                  HR и компаний
+                  Интервью проведено
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Box>
                 <Typography sx={{ fontSize: '2.5rem', fontWeight: 800, color: '#2196F3', lineHeight: 1 }}>
-                  10,000+
+                  75,000+
                 </Typography>
                 <Typography sx={{ fontSize: '0.9rem', color: '#666', mt: 0.5 }}>
-                  Интервью проведено
+                  Кандидатов оценено
                 </Typography>
               </Box>
             </Grid>

@@ -4,39 +4,54 @@ import { Box, Container, Typography, Grid, Link as MuiLink } from "@mui/material
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 
-export default function FooterSection() {
+interface FooterSectionProps {
+  onContactClick?: () => void;
+}
+
+export default function FooterSection({ onContactClick }: FooterSectionProps) {
+  // Плавный скроллинг к якорям
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        const offsetTop = targetElement.offsetTop - 80;
+        window.scrollTo({
+          top: offsetTop,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   const footerLinks = [
     {
       title: 'Возможности',
       links: [
-        { label: 'AI-интервью', href: '#' },
-        { label: 'Интеграция с HH', href: '#' },
-        { label: 'Аналитика', href: '#' },
-        { label: 'Канбан', href: '#' },
+        { label: 'AI-интервью', href: '#ai-interview' },
+        { label: 'Интеграция с HH', href: '#hh-integration' },
+        { label: 'Функционал', href: '#features' },
+        { label: 'Скриншоты', href: '#screenshots' },
       ],
     },
     {
-      title: 'Компания',
+      title: 'О платформе',
       links: [
-        { label: 'О нас', href: '#' },
-        { label: 'Контакты', href: '#' },
-        { label: 'Блог', href: '#' },
+        { label: 'Кейсы клиентов', href: '#cases' },
+        { label: 'Отзывы', href: '#testimonials' },
+        { label: 'Тарифы', href: '#pricing' },
+        { label: 'Сотрудничество', href: '#partners' },
       ],
     },
     {
-      title: 'Поддержка',
+      title: 'Для клиентов',
       links: [
-        { label: 'Документация', href: '#' },
-        { label: 'API', href: '#' },
-        { label: 'Помощь', href: '#' },
+        { label: 'Регистрация', href: '/auth/register' },
+        { label: 'Войти', href: '/auth/login' },
+        { label: 'Восстановить пароль', href: '/auth/forgot-password' },
       ],
     },
-  ];
-
-  const socialLinks = [
-    { icon: 'mdi:telegram', href: '#', label: 'Telegram' },
-    { icon: 'mdi:youtube', href: '#', label: 'YouTube' },
-    { icon: 'mdi:github', href: '#', label: 'GitHub' },
   ];
 
   return (
@@ -52,34 +67,6 @@ export default function FooterSection() {
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3, lineHeight: 1.7 }}>
               AI-платформа для автоматизации найма и интервью. Экономьте время, находите лучших кандидатов.
             </Typography>
-            {/* Social Links */}
-            <Box sx={{ display: 'flex', gap: 1.5 }}>
-              {socialLinks.map((social) => (
-                <Box
-                  key={social.label}
-                  component="a"
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 1,
-                    bgcolor: 'rgba(255,255,255,0.1)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      bgcolor: '#E91E63',
-                      transform: 'translateY(-2px)',
-                    },
-                  }}
-                >
-                  <Icon icon={social.icon} width={20} height={20} />
-                </Box>
-              ))}
-            </Box>
           </Grid>
 
           {/* Links Columns */}
@@ -94,6 +81,7 @@ export default function FooterSection() {
                     key={link.label}
                     component={Link}
                     href={link.href}
+                    onClick={(e) => handleSmoothScroll(e, link.href)}
                     sx={{
                       color: 'rgba(255,255,255,0.7)',
                       textDecoration: 'none',
