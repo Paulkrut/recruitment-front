@@ -178,6 +178,8 @@ export default function QuestionGeneratorPage() {
   const [jobDescription, setJobDescription] = React.useState("");
   const [count, setCount] = React.useState(10);
   const [selectedTemplate, setSelectedTemplate] = React.useState<string | null>(null);
+  const [resumeText, setResumeText] = React.useState("");
+  const [showResumeField, setShowResumeField] = React.useState(false);
 
   const { data, loading, error, execute, reset } = useQuestionGenerator();
 
@@ -188,12 +190,20 @@ export default function QuestionGeneratorPage() {
 
   const handleSubmit = async () => {
     if (!jobDescription.trim()) return;
-    await execute({ jobDescription, count });
+    await execute({ 
+      jobDescription, 
+      count,
+      resumeText: resumeText.trim() || undefined
+    });
   };
 
   const handleRegenerate = async () => {
     if (!jobDescription.trim()) return;
-    await execute({ jobDescription, count });
+    await execute({ 
+      jobDescription, 
+      count,
+      resumeText: resumeText.trim() || undefined
+    });
   };
 
   const formatQuestionsAsText = (questions: Question[]): string => {
@@ -341,12 +351,93 @@ export default function QuestionGeneratorPage() {
           />
         </Box>
 
+        {/* Optional resume section */}
+        <Box sx={{ mb: 3 }}>
+          <Button
+            onClick={() => setShowResumeField(!showResumeField)}
+            startIcon={
+              <Icon 
+                icon={showResumeField ? "mdi:chevron-up" : "mdi:chevron-down"} 
+                width={20} 
+                height={20} 
+              />
+            }
+            sx={{
+              textTransform: "none",
+              fontWeight: 600,
+              color: "#2196F3",
+              fontSize: "0.9rem",
+              mb: showResumeField ? 2 : 0,
+              "&:hover": {
+                bgcolor: "rgba(33, 150, 243, 0.08)",
+              },
+            }}
+          >
+            {showResumeField ? "Скрыть" : "Добавить"} резюме кандидата (опционально)
+          </Button>
+
+          <Collapse in={showResumeField}>
+            <Box>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  fontSize: "0.9rem",
+                  color: "#1a1a2e",
+                  mb: 1,
+                }}
+              >
+                Резюме кандидата
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={6}
+                value={resumeText}
+                onChange={(e) => setResumeText(e.target.value)}
+                placeholder="Вставьте резюме кандидата для генерации персонализированных вопросов..."
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                    bgcolor: "#fafafa",
+                  },
+                }}
+              />
+              <Typography
+                sx={{
+                  mt: 0.5,
+                  fontSize: "0.8rem",
+                  color: resumeText.length > 10000 ? "#f44336" : "#999",
+                }}
+              >
+                {resumeText.length} / 10000 символов
+              </Typography>
+              <Alert 
+                severity="info" 
+                icon={<Icon icon="mdi:information-outline" width={20} height={20} />}
+                sx={{ 
+                  mt: 1.5,
+                  borderRadius: 2,
+                  bgcolor: "rgba(33, 150, 243, 0.08)",
+                  border: "1px solid rgba(33, 150, 243, 0.2)",
+                  "& .MuiAlert-icon": {
+                    color: "#2196F3",
+                  },
+                }}
+              >
+                <Typography sx={{ fontSize: "0.85rem", color: "#555" }}>
+                  AI сгенерирует вопросы, которые проверят конкретный опыт и навыки кандидата из его резюме
+                </Typography>
+              </Alert>
+            </Box>
+          </Collapse>
+        </Box>
+
         {/* Submit button */}
         <Button
           variant="contained"
           size="large"
           onClick={handleSubmit}
-          disabled={loading || !jobDescription.trim() || jobDescription.length > 5000}
+          disabled={loading || !jobDescription.trim() || jobDescription.length > 5000 || resumeText.length > 10000}
           startIcon={
             loading ? (
               <CircularProgress size={20} color="inherit" />

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback } from "react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://recruitment.test";
+const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
 interface UseHrToolOptions<TRequest, TResponse> {
   endpoint: string;
@@ -69,6 +69,7 @@ export function useHrTool<TRequest, TResponse>({
 export interface QuestionGeneratorRequest {
   jobDescription: string;
   count: number;
+  resumeText?: string;
 }
 
 export interface Question {
