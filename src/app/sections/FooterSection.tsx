@@ -3,6 +3,7 @@ import * as React from "react";
 import { Box, Container, Typography, Grid, Link as MuiLink } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import SofiHRLogo from "@/components/shared/SofiHRLogo";
 
 interface FooterSectionProps {
   onContactClick?: () => void;
@@ -71,9 +72,9 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
         <Grid container spacing={4} sx={{ mb: 6 }}>
           {/* Logo & Description */}
           <Grid item xs={12} md={4}>
-            <Typography variant="h4" fontWeight={900} sx={{ mb: 2, letterSpacing: 1 }}>
-              SofiHR
-            </Typography>
+            <Box sx={{ mb: 2 }}>
+              <SofiHRLogo width={140} height={40} href="/" />
+            </Box>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 3, lineHeight: 1.7 }}>
               AI-платформа для автоматизации найма и интервью. Экономьте время, находите лучших кандидатов.
             </Typography>

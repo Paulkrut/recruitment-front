@@ -2,7 +2,8 @@ import { useSelector } from "@/store/hooks";
 import Link from "next/link";
 import { styled } from '@mui/material/styles';
 import { AppState } from "@/store/store";
-import { Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import Image from "next/image";
 
 export default function Logo() {
   const customizer = useSelector((state: AppState) => state.customizer);
@@ -17,25 +18,29 @@ export default function Logo() {
 
   return (
     <LinkStyled href="/hr">
-      <Typography
-        variant="h5"
-        fontWeight={900}
+      <Box
         sx={{
-          color: customizer.activeMode === "dark" ? "white" : "primary.main",
-          letterSpacing: 2,
-          fontFamily: 'Montserrat, Roboto, Arial',
-          textShadow: customizer.activeMode === "dark" 
-            ? '0 2px 12px rgba(255, 255, 255, 0.1)' 
-            : '0 2px 12px rgba(76, 175, 80, 0.08)',
-          userSelect: 'none',
-          fontSize: customizer.isCollapse && !customizer.isSidebarHover ? '1rem' : '1.25rem',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
         }}
       >
-        SofiHR Panel
-      </Typography>
+        <Image
+          src="/sofihr-logo.svg"
+          alt="SofiHR"
+          width={customizer.isCollapse && !customizer.isSidebarHover ? 40 : 120}
+          height={35}
+          priority
+          style={{
+            width: "auto",
+            height: "auto",
+            maxWidth: customizer.isCollapse && !customizer.isSidebarHover ? "40px" : "120px",
+            maxHeight: "35px",
+            filter: customizer.activeMode === "dark" ? "brightness(1.2)" : "none",
+          }}
+        />
+      </Box>
     </LinkStyled>
   );
 }

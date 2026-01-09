@@ -3,6 +3,7 @@ import * as React from "react";
 import { Box, AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Typography, Tooltip, Fab } from "@mui/material";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import SofiHRLogo from "@/components/shared/SofiHRLogo";
 
 // Секции лендинга
 import HeroSection from "./sections/HeroSection";
@@ -90,9 +91,9 @@ export default function HomePage() {
       <AppBar position="sticky" elevation={0} sx={{ bgcolor: '#fafafa', borderBottom: '1px solid #e5e5e5' }}>
         <Box sx={{ maxWidth: 'lg', width: '100%', mx: 'auto', px: 3 }}>
           <Toolbar disableGutters sx={{ py: 1 }}>
-            <Typography variant="h5" component={Link} href="/" sx={{ fontWeight: 900, color: '#1a1a1a', textDecoration: 'none', letterSpacing: -0.5, mr: 'auto' }}>
-              SofiHR
-            </Typography>
+            <Box sx={{ mr: 'auto' }}>
+              <SofiHRLogo width={120} height={35} href="/" priority />
+            </Box>
 
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4, mr: 4 }}>
               {menuItems.map((item) => (

@@ -10,6 +10,7 @@ import {
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolCard from "./components/ToolCard";
+import SofiHRLogo from "@/components/shared/SofiHRLogo";
 
 // Конфигурация инструментов
 const tools = [
@@ -74,32 +75,7 @@ export default function HrToolsPage() {
             }}
           >
             {/* Logo */}
-            <Link href="/" style={{ textDecoration: "none" }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 1.5,
-                    bgcolor: "#E91E63",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon icon="mdi:robot-happy" width={22} height={22} color="#fff" />
-                </Box>
-                <Typography
-                  sx={{
-                    fontWeight: 800,
-                    fontSize: "1.3rem",
-                    color: "#1a1a2e",
-                  }}
-                >
-                  SofiHR
-                </Typography>
-              </Box>
-            </Link>
+            <SofiHRLogo width={120} height={35} href="/" priority />
 
             {/* Right side */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
