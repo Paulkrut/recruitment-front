@@ -45,6 +45,16 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
       ],
     },
     {
+      title: 'Бесплатные инструменты',
+      links: [
+        { label: '🤖 Генератор вопросов', href: '/hr-tools/question-generator' },
+        { label: '📝 Генератор вакансии', href: '/hr-tools/job-description' },
+        { label: '📊 Анализатор резюме', href: '/hr-tools/resume-analyzer' },
+        { label: '✉️ Ответ кандидату', href: '/hr-tools/reply-generator' },
+        { label: '💰 Зарплатный гид', href: '/hr-tools/salary-guide' },
+      ],
+    },
+    {
       title: 'Для клиентов',
       links: [
         { label: 'Регистрация', href: '/auth/register' },
@@ -71,7 +81,7 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
 
           {/* Links Columns */}
           {footerLinks.map((column) => (
-            <Grid item xs={6} sm={4} md={2.66} key={column.title}>
+            <Grid item xs={6} sm={4} md={2} key={column.title}>
               <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
                 {column.title}
               </Typography>

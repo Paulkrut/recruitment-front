@@ -7,6 +7,8 @@ import Link from "next/link";
 // Секции лендинга
 import HeroSection from "./sections/HeroSection";
 import SocialProofBar from "./sections/SocialProofBar";
+import HrToolsBanner from "./sections/HrToolsBanner";
+import HrToolsGiftSection from "./sections/HrToolsGiftSection";
 import HhIntegrationSection from "./sections/HhIntegrationSection";
 import AiInterviewSection from "./sections/AiInterviewSection";
 import FullFeaturesSection from "./sections/FullFeaturesSection";
@@ -19,6 +21,7 @@ import RegulationsSection from "./sections/RegulationsSection";
 import PartnersSection from "./sections/PartnersSection";
 import CtaSection from "./sections/CtaSection";
 import FooterSection from "./sections/FooterSection";
+import HrToolsFloatingButton from "./sections/HrToolsFloatingButton";
 import ContactModal from "./components/ContactModal";
 
 export default function HomePage() {
@@ -34,6 +37,7 @@ export default function HomePage() {
     { label: 'AI-интервью', href: '#ai-interview' },
     { label: 'Функционал', href: '#features' },
     { label: 'Интеграция HH', href: '#hh-integration' },
+    { label: 'Бесплатные инструменты', href: '#free-tools' },
     { label: 'Отзывы', href: '#testimonials' },
     { label: 'Тарифы', href: '#pricing' },
   ];
@@ -210,6 +214,9 @@ export default function HomePage() {
       {/* Social Proof Bar - белый */}
       <SocialProofBar />
 
+      {/* HR Tools Banner - тонкая полоска с информацией */}
+      <HrToolsBanner />
+
       {/* AI Interview Section - серый */}
       <Box id="ai-interview">
         <AiInterviewSection />
@@ -254,6 +261,26 @@ export default function HomePage() {
         <PricingSection />
       </Box>
 
+      {/* Divider перед бесплатными инструментами */}
+      <Box sx={{ bgcolor: '#fafafa', py: 3, textAlign: 'center' }}>
+        <Typography 
+          sx={{ 
+            fontSize: '0.75rem', 
+            color: '#ccc', 
+            textTransform: 'uppercase', 
+            letterSpacing: 3,
+            fontWeight: 500 
+          }}
+        >
+          • • •
+        </Typography>
+      </Box>
+
+      {/* HR Tools Gift Section - полная секция после pricing */}
+      <Box id="free-tools">
+        <HrToolsGiftSection />
+      </Box>
+
       {/* Regulations Section - серый */}
       <RegulationsSection />
 
@@ -294,6 +321,9 @@ export default function HomePage() {
       >
         <Icon icon="mdi:headset" width={28} height={28} color="#fff" />
       </Fab>
+
+      {/* Floating HR Tools Button */}
+      <HrToolsFloatingButton />
 
     </Box>
   );
