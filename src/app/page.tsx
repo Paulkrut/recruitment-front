@@ -37,7 +37,6 @@ export default function HomePage() {
     { label: 'AI-интервью', href: '#ai-interview' },
     { label: 'Функционал', href: '#features' },
     { label: 'Интеграция HH', href: '#hh-integration' },
-    { label: 'Бесплатные инструменты', href: '#free-tools' },
     { label: 'Отзывы', href: '#testimonials' },
     { label: 'Тарифы', href: '#pricing' },
   ];
