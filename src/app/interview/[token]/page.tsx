@@ -381,51 +381,18 @@ export default function CandidateInterviewPage() {
           console.log('✅ Vacancy data found:', data.vacancy);
           setVacancyData(data.vacancy);
         } else {
-          console.log('⚠️ No vacancy data in response - using mock data for testing');
-          // ВРЕМЕННО: Мок-данные для тестирования UI
-          // TODO: Удалить когда бэкенд будет отдавать vacancy
-          const mockVacancy = {
-            title: 'Frontend-разработчик (React)',
-            company: 'SofiHR',
-            location: 'Москва, удалённо',
-            salary: '150 000 - 200 000 ₽',
-            description: `Мы ищем опытного Frontend-разработчика для работы над платформой автоматизации рекрутинга.
-            
-Вы будете работать с современным стеком технологий (React, TypeScript, Next.js) и влиять на архитектуру продукта.
-
-Наша команда создаёт инновационное решение для HR-специалистов, которое помогает экономить время и находить лучших кандидатов.`,
-            responsibilities: [
-              'Разработка пользовательских интерфейсов на React',
-              'Написание чистого, типизированного кода (TypeScript)',
-              'Взаимодействие с API, оптимизация производительности',
-              'Code review и участие в архитектурных решениях'
-            ],
-            requirements: [
-              'Опыт работы с React от 2 лет',
-              'Знание TypeScript, Redux/MobX или Zustand',
-              'Понимание принципов REST API',
-              'Опыт работы с Git',
-              'Умение писать чистый, поддерживаемый код'
-            ]
-          };
-          console.log('📦 Setting mock vacancy:', mockVacancy);
-          setVacancyData(mockVacancy);
+          console.log('⚠️ No vacancy data in response');
+          // TODO BACKEND: Бэкенд должен отдавать vacancy в /api/public/interview/{token}/prepare
+          // См. BACKEND_TODO.md для деталей
         }
         
         if (data.candidate) {
           console.log('✅ Candidate data found:', data.candidate);
           setCandidateData(data.candidate);
         } else {
-          console.log('⚠️ No candidate data in response - using mock data for testing');
-          // ВРЕМЕННО: Мок-данные для тестирования UI
-          // TODO: Удалить когда бэкенд будет отдавать candidate
-          const mockCandidate = {
-            firstName: 'Иван',
-            lastName: 'Петров',
-            email: 'ivan.petrov@example.com'
-          };
-          console.log('📦 Setting mock candidate:', mockCandidate);
-          setCandidateData(mockCandidate);
+          console.log('⚠️ No candidate data in response');
+          // TODO BACKEND: Бэкенд должен отдавать candidate в /api/public/interview/{token}/prepare
+          // См. BACKEND_TODO.md для деталей
         }
         
         console.log('🏁 Prepare useEffect completed');
@@ -1708,30 +1675,8 @@ export default function CandidateInterviewPage() {
       console.log('✅ Rendering VacancyInfoStep inside if(!question) block');
       return (
         <VacancyInfoStep
-          vacancy={vacancyData || {
-            title: 'Frontend-разработчик (React)',
-            company: 'SofiHR',
-            location: 'Москва, удалённо',
-            salary: '150 000 - 200 000 ₽',
-            description: 'Мы ищем опытного Frontend-разработчика для работы над инновационной платформой для автоматизации HR-процессов. Вы будете участвовать в разработке современных веб-приложений с использованием React и TypeScript.',
-            responsibilities: [
-              'Разработка новых функций и поддержка существующих',
-              'Оптимизация производительности приложений',
-              'Код-ревью и менторство младших разработчиков',
-              'Участие в проектировании архитектуры'
-            ],
-            requirements: [
-              'Опыт работы с React от 3 лет',
-              'Знание TypeScript',
-              'Опыт работы с REST API',
-              'Понимание принципов UX/UI'
-            ],
-            companyDescription: 'SofiHR - это современная платформа для автоматизации процесса найма. Мы помогаем HR-специалистам проводить интервью с кандидатами в формате видео-чата с ИИ-ассистентом, который помогает экономить время и находить лучших кандидатов.'
-          }}
-          candidate={candidateData || {
-            firstName: '',
-            lastName: 'Кандидат'
-          }}
+          vacancy={vacancyData}
+          candidate={candidateData}
           onContinue={() => {
             console.log('🚀 Continue to interview clicked, adding skipVacancyInfo=true');
             router.replace(`/interview/${token}?skipVacancyInfo=true`);

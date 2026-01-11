@@ -7,19 +7,14 @@ import { useLingui } from "@lingui/react";
 
 interface VacancyInfoStepProps {
   vacancy: {
-    title: string;
-    description?: string;
+    title?: string;
     company?: string;
-    location?: string;
-    salary?: string;
-    requirements?: string[];
-    responsibilities?: string[];
-  };
+    description?: string;
+  } | null;
   candidate: {
-    firstName: string;
-    lastName: string;
-    email?: string;
-  };
+    firstName?: string;
+    lastName?: string;
+  } | null;
   onContinue: () => void;
 }
 
@@ -84,9 +79,9 @@ export default function VacancyInfoStep({
               mb: 1,
             }}
           >
-            {vacancy.title}
+            {vacancy?.title || <Trans>Вакансия</Trans>}
           </Typography>
-          {vacancy.company && (
+          {vacancy?.company && (
             <Typography
               variant="subtitle1"
               sx={{
@@ -130,17 +125,6 @@ export default function VacancyInfoStep({
             >
               {candidate.firstName} {candidate.lastName}
             </Typography>
-            {candidate.email && (
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#666",
-                  mt: 0.5,
-                }}
-              >
-                {candidate.email}
-              </Typography>
-            )}
           </Box>
         ) : (
           <Box
@@ -168,124 +152,35 @@ export default function VacancyInfoStep({
           </Box>
         )}
 
-        {/* Vacancy Details */}
-        <Stack spacing={3} sx={{ mb: 4 }}>
-          {/* Location & Salary */}
-          {(vacancy.location || vacancy.salary) && (
-            <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-              {vacancy.location && (
-                <Chip
-                  icon={<Icon icon="mdi:map-marker" width={16} height={16} />}
-                  label={vacancy.location}
-                  variant="outlined"
-                  size="small"
-                />
-              )}
-              {vacancy.salary && (
-                <Chip
-                  icon={<Icon icon="mdi:cash" width={16} height={16} />}
-                  label={vacancy.salary}
-                  variant="outlined"
-                  size="small"
-                />
-              )}
-            </Box>
-          )}
-
-          {/* Description */}
-          {vacancy.description && (
-            <Box>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 700,
-                  color: "#1a1a1a",
-                  mb: 1,
-                }}
-              >
-                <Trans>Описание</Trans>
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#555",
-                  lineHeight: 1.7,
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {vacancy.description}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Responsibilities */}
-          {vacancy.responsibilities && vacancy.responsibilities.length > 0 && (
-            <Box>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 700,
-                  color: "#1a1a1a",
-                  mb: 1,
-                }}
-              >
-                <Trans>Обязанности</Trans>
-              </Typography>
-              <Stack spacing={0.5}>
-                {vacancy.responsibilities.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}
-                  >
-                    <Icon
-                      icon="mdi:check-circle"
-                      width={18}
-                      height={18}
-                      style={{ color: "#4caf50", marginTop: 2, flexShrink: 0 }}
-                    />
-                    <Typography variant="body2" sx={{ color: "#555" }}>
-                      {item}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          )}
-
-          {/* Requirements */}
-          {vacancy.requirements && vacancy.requirements.length > 0 && (
-            <Box>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  fontWeight: 700,
-                  color: "#1a1a1a",
-                  mb: 1,
-                }}
-              >
-                <Trans>Требования</Trans>
-              </Typography>
-              <Stack spacing={0.5}>
-                {vacancy.requirements.map((item, index) => (
-                  <Box
-                    key={index}
-                    sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}
-                  >
-                    <Icon
-                      icon="mdi:star"
-                      width={18}
-                      height={18}
-                      style={{ color: "#ff9800", marginTop: 2, flexShrink: 0 }}
-                    />
-                    <Typography variant="body2" sx={{ color: "#555" }}>
-                      {item}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          )}
-        </Stack>
+        {/* Vacancy Description */}
+        {vacancy?.description && (
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 700,
+                color: "#1a1a1a",
+                mb: 1.5,
+              }}
+            >
+              <Trans>Описание вакансии</Trans>
+            </Typography>
+            <Box
+              sx={{
+                color: "#555",
+                lineHeight: 1.7,
+                fontSize: "0.875rem",
+                '& p': { margin: '0 0 1em 0' },
+                '& ul, & ol': { margin: '0 0 1em 0', paddingLeft: '1.5em' },
+                '& li': { marginBottom: '0.5em' },
+                '& strong': { fontWeight: 600 },
+                '& a': { color: '#1976d2', textDecoration: 'none' },
+                '& a:hover': { textDecoration: 'underline' },
+              }}
+              dangerouslySetInnerHTML={{ __html: vacancy.description }}
+            />
+          </Box>
+        )}
 
         {/* Info Alert */}
         <Box
