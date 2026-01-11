@@ -104,7 +104,7 @@ export default function CandidateInterviewPage() {
   const [answered, setAnswered] = useState(false);
   const [lastAnswerTime, setLastAnswerTime] = useState<number | null>(null);
   const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
-  // const [loadingNextQuestion, setLoadingNextQuestion] = useState(false); // ❌ Не используется
+  const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const chatVideoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
@@ -611,6 +611,29 @@ export default function CandidateInterviewPage() {
   async function startRecording() {
     console.log('startRecording called');
 
+    // Если есть записанный blob, значит это переписывание - удаляем последнее сообщение пользователя
+    if (recordedBlob) {
+      console.log('Retake: removing last user message');
+      setRecordedBlob(null);
+      setMediaRecorder(null);
+
+      // Находим и удаляем последнюю реплику пользователя с видео или аудио
+      setChat((p) => {
+        const newChat = [...p];
+        for (let i = newChat.length - 1; i >= 0; i--) {
+          if (newChat[i].role === 'user' && (newChat[i].video || newChat[i].text.includes('🎤'))) {
+            // Освобождаем URL если это видео
+            if (newChat[i].video && newChat[i].video !== "live") {
+              URL.revokeObjectURL(newChat[i].video);
+            }
+            newChat.splice(i, 1);
+            break;
+          }
+        }
+        return newChat;
+      });
+    }
+
     // Проверяем поддержку getUserMedia
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       alert(_(msg`Ваш браузер не поддерживает доступ к камере и микрофону. Пожалуйста, используйте современный браузер.`));
@@ -1012,7 +1035,7 @@ export default function CandidateInterviewPage() {
     const isAudio = (blob.type || '').startsWith('audio');
 
     clearCountdown();
-    // setLoadingNextQuestion(true); // ❌ Убрано - не используется
+    setLoadingNextQuestion(true);
     setAnswered(true);
     setLastAnswerTime(Date.now());
 
@@ -1084,7 +1107,7 @@ export default function CandidateInterviewPage() {
       const errorMessage = i18n._(getErrorMessage(errorCode));
       setChat((p) => p.filter((_, i) => i !== typingIdx));
       alert(_(msg`Ошибка при отправке ответа`) + '\n\n' + errorMessage);
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -1098,7 +1121,7 @@ export default function CandidateInterviewPage() {
         `${API_BASE}/api/public/interview/${token}/result`
       );
       setResult(await res.json());
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -1111,7 +1134,7 @@ export default function CandidateInterviewPage() {
         `${API_BASE}/api/public/interview/${token}/result`
       );
       setResult(await res.json());
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -1123,7 +1146,7 @@ export default function CandidateInterviewPage() {
       cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
       return cp;
     });
-    // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+    setLoadingNextQuestion(false);
     setAnswered(false);
     setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
   }
@@ -1168,7 +1191,7 @@ export default function CandidateInterviewPage() {
     }
 
     clearCountdown();
-    // setLoadingNextQuestion(true); // ❌ Убрано - не используется
+    setLoadingNextQuestion(true);
     setAnswered(true);
     setLastAnswerTime(Date.now()); // Запоминаем время отправки пустого ответа
 
@@ -1197,7 +1220,7 @@ export default function CandidateInterviewPage() {
       console.error('Failed to send empty answer:', errorMessage);
       alert(errorMessage);
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       setAnswered(false);
       return;
     }
@@ -1210,7 +1233,7 @@ export default function CandidateInterviewPage() {
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -1222,7 +1245,7 @@ export default function CandidateInterviewPage() {
       setChat((p)=>p.filter((_,i)=>i!==typingIdx));
       const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
       setResult(await res.json());
-      // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+      setLoadingNextQuestion(false);
       return;
     }
 
@@ -1235,7 +1258,7 @@ export default function CandidateInterviewPage() {
       cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now()};
       return cp;
     });
-    // setLoadingNextQuestion(false); // ❌ Убрано - не используется
+    setLoadingNextQuestion(false);
     setAnswered(false);
     setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
   }
@@ -1852,6 +1875,7 @@ export default function CandidateInterviewPage() {
           mediaStream={previewStream}
           interviewProgress={interviewProgress}
           canContinue={canContinue}
+          loadingNextQuestion={loadingNextQuestion}
           stepperComp={stepperComp}
           chatRef={chatRef}
           chatScrollRef={chatScrollRef}
