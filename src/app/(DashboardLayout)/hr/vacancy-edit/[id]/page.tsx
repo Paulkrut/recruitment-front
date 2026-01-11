@@ -36,6 +36,37 @@ import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyH
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+// Функция для получения embed URL из различных видеохостингов
+function getVideoEmbedUrl(url: string): string | null {
+  if (!url) return null;
+
+  // YouTube
+  const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+
+  // Rutube
+  const rutubeMatch = url.match(/rutube\.ru\/video\/([a-zA-Z0-9]+)/);
+  if (rutubeMatch) {
+    return `https://rutube.ru/play/embed/${rutubeMatch[1]}`;
+  }
+
+  // VK Video
+  const vkMatch = url.match(/vk\.com\/video(-?\d+_\d+)/);
+  if (vkMatch) {
+    return `https://vk.com/video_ext.php?oid=${vkMatch[1].split('_')[0]}&id=${vkMatch[1].split('_')[1]}&hd=2`;
+  }
+
+  return null;
+}
+
 interface QuestionDraft {
   id?: number;
   text: string;
@@ -50,6 +81,7 @@ interface VacancyData {
   id: number;
   title: string;
   description: string;
+  companyVideoUrl?: string;
   template?: {
     id: number;
     title: string;
@@ -84,6 +116,7 @@ export default function HRVacancyEditPage() {
     id: 0,
     title: "",
     description: "",
+    companyVideoUrl: "",
     template: undefined,
     questions: [],
   });
@@ -258,6 +291,7 @@ export default function HRVacancyEditPage() {
         body: JSON.stringify({
           title: vacancyData.title,
           description: vacancyData.description,
+          companyVideoUrl: vacancyData.companyVideoUrl || null,
           templateTitle: vacancyData.template?.title || _(msg`Тест для вакансии: ${vacancyData.title}`),
           templateDescription: vacancyData.template?.description || _(msg`Тест для вакансии "${vacancyData.title}"`),
           questions: questions,
@@ -510,6 +544,116 @@ export default function HRVacancyEditPage() {
                       }
                     }}
                   />
+                </Box>
+
+                {/* Company Video URL */}
+                <Box>
+                  <CustomFormLabel
+                    htmlFor="company-video-url"
+                    sx={{ color: 'text.primary', fontSize: '1.1rem', fontWeight: 600, mb: 1 }}
+                  >
+                    <Trans>Видео о компании</Trans>
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="company-video-url"
+                    variant="outlined"
+                    fullWidth
+                    value={vacancyData.companyVideoUrl || ""}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+                      setVacancyData({ ...vacancyData, companyVideoUrl: e.target.value })
+                    }
+                    placeholder={_(msg`https://www.youtube.com/watch?v=... или https://vimeo.com/...`)}
+                    helperText={_(msg`Добавьте ссылку на видео о компании. Поддерживаются: YouTube, Vimeo, Rutube, VK Video`)}
+                    FormHelperTextProps={{ sx: { color: 'text.secondary', opacity: 0.9 } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        backgroundColor: '#f7f7f7',
+                        borderRadius: 2,
+                      },
+                      '& .MuiInputBase-input': {
+                        fontSize: '1rem',
+                        padding: '14px 20px'
+                      }
+                    }}
+                  />
+                  
+                  {/* Video Preview */}
+                  {vacancyData.companyVideoUrl && (() => {
+                    const embedUrl = getVideoEmbedUrl(vacancyData.companyVideoUrl);
+                    if (embedUrl) {
+                      return (
+                        <Box sx={{ mt: 3 }}>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: 1, 
+                            mb: 1.5,
+                            p: 1.5,
+                            bgcolor: '#e8f5e9',
+                            borderRadius: 1,
+                            border: '1px solid #c8e6c9'
+                          }}>
+                            <Box sx={{ 
+                              width: 8, 
+                              height: 8, 
+                              borderRadius: '50%', 
+                              bgcolor: '#4caf50',
+                              boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.2)'
+                            }} />
+                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#2e7d32' }}>
+                              <Trans>Превью видео (как увидят кандидаты):</Trans>
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              position: "relative",
+                              paddingBottom: "56.25%", // 16:9 aspect ratio
+                              height: 0,
+                              overflow: "hidden",
+                              borderRadius: 2,
+                              bgcolor: "#000",
+                              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                            }}
+                          >
+                            <iframe
+                              src={embedUrl}
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                border: "none",
+                              }}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title={_(msg`Превью видео о компании`)}
+                            />
+                          </Box>
+                        </Box>
+                      );
+                    } else {
+                      return (
+                        <Box sx={{ 
+                          mt: 2, 
+                          p: 1.5, 
+                          bgcolor: '#fff3e0', 
+                          borderRadius: 1,
+                          border: '1px solid #ffe0b2',
+                          display: 'flex',
+                          gap: 1,
+                          alignItems: 'flex-start'
+                        }}>
+                          <Typography variant="body2" sx={{ color: '#e65100' }}>
+                            ⚠️
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: '#e65100', flex: 1 }}>
+                            <Trans>Не удалось распознать ссылку на видео. Проверьте формат URL.</Trans>
+                          </Typography>
+                        </Box>
+                      );
+                    }
+                  })()}
                 </Box>
               </Stack>
             </CardContent>

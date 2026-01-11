@@ -5,11 +5,43 @@ import { Icon } from "@iconify/react";
 import { Trans, msg } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
 
+// Функция для получения embed URL из различных видеохостингов
+function getVideoEmbedUrl(url: string): string | null {
+  if (!url) return null;
+
+  // YouTube
+  const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+  if (youtubeMatch) {
+    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  }
+
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+  }
+
+  // Rutube
+  const rutubeMatch = url.match(/rutube\.ru\/video\/([a-zA-Z0-9]+)/);
+  if (rutubeMatch) {
+    return `https://rutube.ru/play/embed/${rutubeMatch[1]}`;
+  }
+
+  // VK Video
+  const vkMatch = url.match(/vk\.com\/video(-?\d+_\d+)/);
+  if (vkMatch) {
+    return `https://vk.com/video_ext.php?oid=${vkMatch[1].split('_')[0]}&id=${vkMatch[1].split('_')[1]}&hd=2`;
+  }
+
+  return null;
+}
+
 interface VacancyInfoStepProps {
   vacancy: {
     title?: string;
     company?: string;
     description?: string;
+    companyVideoUrl?: string;
   } | null;
   candidate: {
     firstName?: string;
@@ -34,6 +66,9 @@ export default function VacancyInfoStep({
       hasFirstName: !!candidate?.firstName
     });
   }, [vacancy, candidate]);
+
+  // Получаем embed URL для видео
+  const videoEmbedUrl = vacancy?.companyVideoUrl ? getVideoEmbedUrl(vacancy.companyVideoUrl) : null;
 
   // Убрали автоматический skip - всегда показываем экран
 
@@ -179,6 +214,48 @@ export default function VacancyInfoStep({
               }}
               dangerouslySetInnerHTML={{ __html: vacancy.description }}
             />
+          </Box>
+        )}
+
+        {/* Company Video */}
+        {videoEmbedUrl && (
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 700,
+                color: "#1a1a1a",
+                mb: 1.5,
+              }}
+            >
+              <Trans>Видео о компании</Trans>
+            </Typography>
+            <Box
+              sx={{
+                position: "relative",
+                paddingBottom: "56.25%", // 16:9 aspect ratio
+                height: 0,
+                overflow: "hidden",
+                borderRadius: 2,
+                bgcolor: "#000",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+              }}
+            >
+              <iframe
+                src={videoEmbedUrl}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title={_(msg`Видео о компании`)}
+              />
+            </Box>
           </Box>
         )}
 
