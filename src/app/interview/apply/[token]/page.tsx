@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import {
   Box, Card, CardContent, Typography, Button, TextField,
   CircularProgress, Alert, Container, Paper, Divider, Checkbox, FormControlLabel
@@ -23,6 +23,7 @@ interface VacancyInfo {
 
 export default function PublicApplyPage() {
   const { _, i18n } = useLingui();
+  const router = useRouter();
 
   const { token } = useParams<{ token: string }>();
   const searchParams = useSearchParams();
@@ -30,8 +31,7 @@ export default function PublicApplyPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [interviewLink, setInterviewLink] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
 
   // Проверяем ошибки HH OAuth из URL
   useEffect(() => {
@@ -140,10 +140,13 @@ export default function PublicApplyPage() {
         const errorMessage = i18n._(getErrorMessage(data.error));
         setError(errorMessage);
       } else {
-        setSuccess(true);
-        // Формируем ссылку на стандартную страницу интервью
-        const interviewUrl = `${window.location.origin}/interview/${data.interviewHash}`;
-        setInterviewLink(interviewUrl);
+        // Успешная запись - показываем лоадер и делаем редирект
+        setRedirecting(true);
+        
+        // Небольшая задержка для UX (показать лоадер)
+        setTimeout(() => {
+          router.push(`/interview/${data.interviewHash}?skipVacancyInfo=true`);
+        }, 800);
       }
     } catch (err) {
       setError(_(msg`Ошибка при отправке заявки`));
@@ -331,23 +334,20 @@ export default function PublicApplyPage() {
     );
   }
 
-  if (success && interviewLink) {
+  // Показываем лоадер при редиректе
+  if (redirecting) {
     return (
       <Container maxWidth="sm" sx={{ py: 8 }}>
-        <Card sx={{ textAlign: 'center', p: 4 }}>
-          <Box sx={{ color: 'success.main', mb: 3 }}>
-            <IconUser size={80} />
+        <Card sx={{ textAlign: 'center', p: 6 }}>
+          <Box sx={{ mb: 3 }}>
+            <CircularProgress size={60} sx={{ color: 'success.main' }} />
           </Box>
-          <Typography variant="h4" gutterBottom color="success.main"><Trans>Заявка принята! 🎉</Trans></Typography>
-          <Typography variant="body1" sx={{ mb: 3 }}><Trans>Спасибо за интерес к вакансии! Теперь вы можете пройти интервью.</Trans></Typography>
-          <Button
-            variant="contained"
-            size="large"
-            href={interviewLink}
-            target="_blank"
-            sx={{ fontSize: '1.1rem', py: 1.5, px: 4 }}
-          ><Trans>Начать интервью</Trans></Button>
-          <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary' }}><Trans>Ссылка откроется в новом окне</Trans></Typography>
+          <Typography variant="h5" gutterBottom fontWeight={600} color="success.main">
+            <Trans>Запись успешна! ✓</Trans>
+          </Typography>
+          <Typography variant="body1" sx={{ color: 'text.secondary', mt: 2 }}>
+            <Trans>Переходим к интервью...</Trans>
+          </Typography>
         </Card>
       </Container>
     );
