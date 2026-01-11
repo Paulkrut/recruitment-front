@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import EditIcon from '@mui/icons-material/Edit';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import MailIcon from '@mui/icons-material/Mail';
+import QuizIcon from '@mui/icons-material/Quiz';
 import { useLingui } from '@lingui/react';
 import { msg } from '@lingui/macro';
 
@@ -23,6 +24,7 @@ export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) 
   // Определяем текущий активный таб на основе pathname
   const getCurrentTab = () => {
     if (pathname.includes('/edit')) return 'edit';
+    if (pathname.includes('/questions')) return 'questions';
     if (pathname.includes('/results')) return 'results';
     if (pathname.includes('/invitations')) return 'invitations';
     return 'edit';
@@ -42,6 +44,12 @@ export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) 
           iconPosition="start"
           label={_(msg`Редактировать`)}
           value="edit"
+        />
+        <Tab
+          icon={<QuizIcon />}
+          iconPosition="start"
+          label={_(msg`Вопросы`)}
+          value="questions"
         />
         <Tab
           icon={<AssessmentIcon />}
