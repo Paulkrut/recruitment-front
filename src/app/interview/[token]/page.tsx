@@ -118,6 +118,7 @@ export default function CandidateInterviewPage() {
   const [forgetMeDialogOpen, setForgetMeDialogOpen] = useState(false);
   const [forgetMeLoading, setForgetMeLoading] = useState(false);
   const [forgetMeConfirmed, setForgetMeConfirmed] = useState('');
+  const [skipDialogOpen, setSkipDialogOpen] = useState(false);
   // Дубликаты хелперов удалены - используем только первый блок
 
   // Состояние для записанного blob (перед отправкой)
@@ -1264,7 +1265,7 @@ export default function CandidateInterviewPage() {
   }
 
   async function skipQuestion() {
-    // setSkipDialogOpen(false); // ❌ Диалог убран
+    setSkipDialogOpen(false);
     await sendEmptyAnswer();
   }
 
@@ -1882,7 +1883,7 @@ export default function CandidateInterviewPage() {
           onStartRecording={startRecording}
           onStopRecording={stopRecording}
           onSubmitAnswer={submitAnswer}
-          onSkipQuestion={skipQuestion}
+          onSkipQuestion={() => setSkipDialogOpen(true)}
           onPauseInterview={() => {}} // ❌ Pause dialog removed
           onUserInputChange={() => {}}
           onCameraToggle={setCameraEnabled}
@@ -1891,6 +1892,105 @@ export default function CandidateInterviewPage() {
           getQuestionNumber={getQuestionNumber}
           formatMessageTime={formatMessageTime}
       />;
+
+      {/* Диалог подтверждения пропуска вопроса */}
+      <Dialog
+        open={skipDialogOpen}
+        onClose={() => setSkipDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            bgcolor: '#ffffff',
+            borderRadius: '12px',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            maxWidth: '400px',
+            width: '90%'
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          pb: 1,
+          textAlign: 'center',
+          borderBottom: '1px solid #e0e0e0'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+            <Box sx={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              bgcolor: '#ff9800',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mb: 1
+            }}>
+              <Typography sx={{ color: 'white', fontWeight: 'bold', fontSize: '20px' }}>
+                ⚠️
+              </Typography>
+            </Box>
+          </Box>
+          <Typography variant="h6" sx={{ color: '#000', fontWeight: 600 }}>
+            <Trans>Пропустить вопрос?</Trans>
+          </Typography>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2, pb: 1 }}>
+          <Typography sx={{
+            color: '#666',
+            lineHeight: 1.5,
+            textAlign: 'center',
+            fontSize: '14px'
+          }}>
+            <Trans>Вы уверены, что хотите пропустить этот вопрос?</Trans>
+            <br />
+            <Box component="span" sx={{
+              color: '#ff9800',
+              fontWeight: 600,
+              fontSize: '13px'
+            }}>
+              <Trans>Внимание:</Trans>
+            </Box>{' '}
+            <Trans>Пропущенный вопрос будет засчитан как отсутствие ответа.</Trans>
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{
+          p: 2,
+          pt: 1,
+          gap: 1,
+          justifyContent: 'center'
+        }}>
+          <Button
+            onClick={() => setSkipDialogOpen(false)}
+            sx={{
+              color: '#666',
+              borderColor: '#ddd',
+              '&:hover': {
+                bgcolor: '#f5f5f5',
+                borderColor: '#ccc'
+              },
+              borderRadius: '20px',
+              textTransform: 'none',
+              px: 3
+            }}
+            variant="outlined"
+          >
+            <Trans>Отмена</Trans>
+          </Button>
+          <Button
+            onClick={skipQuestion}
+            sx={{
+              bgcolor: '#ff9800',
+              '&:hover': {
+                bgcolor: '#f57c00',
+              },
+              borderRadius: '20px',
+              textTransform: 'none',
+              px: 3
+            }}
+            variant="contained"
+          >
+            <Trans>Пропустить</Trans>
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Диалог подтверждения удаления данных */}
       <Dialog
