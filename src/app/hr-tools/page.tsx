@@ -1,16 +1,55 @@
-"use client";
 import * as React from "react";
 import {
   Box,
   Container,
   Typography,
   Grid,
-  Button,
 } from "@mui/material";
-import { Icon } from "@iconify/react";
+import type { Metadata } from 'next';
 import Link from "next/link";
 import ToolCard from "./components/ToolCard";
 import SofiHRLogo from "@/components/shared/SofiHRLogo";
+import { BackButton, RegisterButton, CTAButton } from "./components/ClientButtons";
+import { HeroBadge, StepCard } from "./components/HeroComponents";
+
+// SEO Metadata
+export const metadata: Metadata = {
+  title: "Бесплатные HR инструменты с AI | SofiHR",
+  description: "Генератор вопросов для собеседования, анализатор резюме, генератор вакансий и другие бесплатные AI-инструменты для HR-специалистов. Работает без регистрации.",
+  keywords: [
+    "генератор вопросов для собеседования",
+    "анализатор резюме",
+    "генератор вакансий",
+    "HR инструменты",
+    "AI для HR",
+    "бесплатные HR инструменты",
+    "зарплатный гид",
+    "ответ кандидату"
+  ],
+  openGraph: {
+    title: "Бесплатные HR инструменты с AI | SofiHR",
+    description: "Генератор вопросов для собеседования, анализатор резюме, генератор вакансий и другие бесплатные AI-инструменты для HR-специалистов.",
+    type: "website",
+    url: "https://sofihr.ru/hr-tools",
+    siteName: "SofiHR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Бесплатные HR инструменты с AI | SofiHR",
+    description: "Генератор вопросов, анализатор резюме, генератор вакансий и другие AI-инструменты для HR.",
+  },
+  alternates: {
+    canonical: "https://sofihr.ru/hr-tools",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+};
 
 // Конфигурация инструментов
 const tools = [
@@ -79,33 +118,8 @@ export default function HrToolsPage() {
 
             {/* Right side */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Button
-                component={Link}
-                href="/"
-                startIcon={<Icon icon="mdi:arrow-left" />}
-                sx={{
-                  color: "#666",
-                  textTransform: "none",
-                  fontWeight: 500,
-                }}
-              >
-                На главную
-              </Button>
-              <Button
-                component={Link}
-                href="/auth/register"
-                variant="contained"
-                sx={{
-                  bgcolor: "#E91E63",
-                  color: "#fff",
-                  textTransform: "none",
-                  fontWeight: 600,
-                  px: 3,
-                  "&:hover": { bgcolor: "#C2185B" },
-                }}
-              >
-                Попробовать платформу
-              </Button>
+              <BackButton />
+              <RegisterButton />
             </Box>
           </Box>
         </Container>
@@ -116,24 +130,7 @@ export default function HrToolsPage() {
         <Container maxWidth="lg">
           <Box sx={{ textAlign: "center", maxWidth: 800, mx: "auto" }}>
             {/* Badge */}
-            <Box
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 1,
-                px: 2,
-                py: 0.75,
-                bgcolor: "#e8f5e9",
-                borderRadius: 2,
-                color: "#2e7d32",
-                fontSize: "0.85rem",
-                fontWeight: 600,
-                mb: 3,
-              }}
-            >
-              <Icon icon="mdi:gift-outline" width={18} height={18} />
-              Бесплатно. Без регистрации. Без ограничений.
-            </Box>
+            <HeroBadge />
 
             {/* Title */}
             <Typography
@@ -225,42 +222,11 @@ export default function HrToolsPage() {
               },
             ].map((step, index) => (
               <Grid item xs={12} md={4} key={index}>
-                <Box sx={{ textAlign: "center" }}>
-                  <Box
-                    sx={{
-                      width: 72,
-                      height: 72,
-                      borderRadius: "50%",
-                      bgcolor: "#f5f5f5",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      mx: "auto",
-                      mb: 2,
-                    }}
-                  >
-                    <Icon icon={step.icon} width={32} height={32} color="#E91E63" />
-                  </Box>
-                  <Typography
-                    sx={{
-                      fontWeight: 700,
-                      fontSize: "1.1rem",
-                      color: "#1a1a2e",
-                      mb: 1,
-                    }}
-                  >
-                    {step.title}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: "0.95rem",
-                      color: "#666",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {step.description}
-                  </Typography>
-                </Box>
+                <StepCard
+                  icon={step.icon}
+                  title={step.title}
+                  description={step.description}
+                />
               </Grid>
             ))}
           </Grid>
@@ -293,25 +259,7 @@ export default function HrToolsPage() {
               Попробуйте полную платформу SofiHR: AI-интервью, автоматизация HeadHunter,
               аналитика кандидатов и многое другое.
             </Typography>
-            <Button
-              component={Link}
-              href="/auth/register"
-              variant="contained"
-              size="large"
-              sx={{
-                bgcolor: "#E91E63",
-                color: "#fff",
-                textTransform: "none",
-                fontWeight: 600,
-                px: 4,
-                py: 1.5,
-                fontSize: "1rem",
-                borderRadius: 2,
-                "&:hover": { bgcolor: "#C2185B" },
-              }}
-            >
-              Начать бесплатно — 10 интервью в подарок
-            </Button>
+            <CTAButton />
           </Box>
         </Container>
       </Box>
@@ -348,6 +296,75 @@ export default function HrToolsPage() {
           </Box>
         </Container>
       </Box>
+
+      {/* Structured Data (JSON-LD) для SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Бесплатные HR инструменты с AI",
+            "description": "Генератор вопросов для собеседования, анализатор резюме, генератор вакансий и другие бесплатные AI-инструменты для HR-специалистов",
+            "url": "https://sofihr.ru/hr-tools",
+            "publisher": {
+              "@type": "Organization",
+              "name": "SofiHR",
+              "url": "https://sofihr.ru"
+            },
+            "mainEntity": {
+              "@type": "ItemList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "Генератор вопросов для собеседования",
+                    "description": "AI-инструмент для создания профессиональных вопросов для интервью за 30 секунд",
+                    "applicationCategory": "BusinessApplication",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "0",
+                      "priceCurrency": "RUB"
+                    }
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "Генератор описания вакансии",
+                    "description": "AI-инструмент для создания полного описания вакансии за минуту",
+                    "applicationCategory": "BusinessApplication",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "0",
+                      "priceCurrency": "RUB"
+                    }
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "Анализатор резюме",
+                    "description": "AI-анализ резюме кандидата с оценкой соответствия вакансии",
+                    "applicationCategory": "BusinessApplication",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "0",
+                      "priceCurrency": "RUB"
+                    }
+                  }
+                }
+              ]
+            }
+          })
+        }}
+      />
     </Box>
   );
 }
