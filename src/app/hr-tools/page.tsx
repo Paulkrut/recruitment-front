@@ -101,67 +101,123 @@ const tools = [
 ];
 
 export default function HrToolsPage() {
+  // JSON-LD для главной страницы HR инструментов
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Бесплатные HR инструменты с AI",
+    "description": "Генератор вопросов для собеседования, анализатор резюме, генератор вакансий и другие бесплатные AI-инструменты для HR-специалистов. Работает без регистрации.",
+    "url": "https://sofihr.ru/hr-tools",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "SofiHR",
+      "url": "https://sofihr.ru"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": tools.map((tool, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": tool.title,
+          "description": tool.description,
+          "url": `https://sofihr.ru${tool.href}`,
+          "applicationCategory": "BusinessApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "RUB"
+          }
+        }
+      }))
+    }
+  };
+
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "#fafafa" }}>
-      {/* Header */}
-      <Box sx={{ bgcolor: "#fff", borderBottom: "1px solid #e0e0e0", py: 2 }}>
-        <Container maxWidth="lg">
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {/* Logo */}
-            <SofiHRLogo width={120} height={35} href="/" priority />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      <Box sx={{ minHeight: "100vh", bgcolor: "#fafafa" }}>
+        {/* Header */}
+        <Box sx={{ bgcolor: "#fff", borderBottom: "1px solid #e0e0e0", py: 2 }}>
+          <Container maxWidth="lg">
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              {/* Logo */}
+              <SofiHRLogo width={120} height={35} href="/" priority />
 
-            {/* Right side */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <BackButton />
-              <RegisterButton />
+              {/* Right side */}
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <BackButton />
+                <RegisterButton />
+              </Box>
             </Box>
-          </Box>
-        </Container>
-      </Box>
+          </Container>
+        </Box>
 
-      {/* Hero */}
-      <Box sx={{ bgcolor: "#fff", py: { xs: 6, md: 10 }, borderBottom: "1px solid #e0e0e0" }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", maxWidth: 800, mx: "auto" }}>
-            {/* Badge */}
-            <HeroBadge />
+        {/* Hero - Pure HTML для SEO */}
+        <div style={{ 
+          backgroundColor: '#fff', 
+          paddingTop: '48px', 
+          paddingBottom: '48px', 
+          borderBottom: '1px solid #e0e0e0' 
+        }}>
+          <div style={{ 
+            maxWidth: '1200px', 
+            marginLeft: 'auto', 
+            marginRight: 'auto', 
+            paddingLeft: '24px', 
+            paddingRight: '24px' 
+          }}>
+            <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                backgroundColor: '#e3f2fd',
+                color: '#1976d2',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontSize: '0.875rem',
+                fontWeight: 600,
+                marginBottom: '24px'
+              }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4CAF50' }} />
+                Бесплатно навсегда
+              </div>
 
-            {/* Title */}
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: { xs: "2rem", md: "3rem" },
+              <h1 style={{
+                fontSize: '2.5rem',
                 fontWeight: 800,
-                color: "#1a1a2e",
-                mb: 2,
+                color: '#1a1a2e',
+                marginBottom: '16px',
                 lineHeight: 1.2,
-              }}
-            >
-              AI-инструменты для HR
-            </Typography>
+              }}>
+                AI-инструменты для HR
+              </h1>
 
-            {/* Subtitle */}
-            <Typography
-              sx={{
-                fontSize: { xs: "1rem", md: "1.2rem" },
-                color: "#666",
-                maxWidth: 600,
-                mx: "auto",
+              <p style={{
+                fontSize: '1.1rem',
+                color: '#666',
                 lineHeight: 1.6,
-              }}
-            >
-              Полноценные инструменты на базе искусственного интеллекта.
-              Автоматизируйте рутинные задачи найма — вопросы, вакансии, анализ резюме.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
+                marginBottom: '0',
+              }}>
+                Полноценные инструменты на базе искусственного интеллекта.
+                Автоматизируйте рутинные задачи найма — вопросы для собеседований, описания вакансий, анализ резюме.
+                Все инструменты работают без регистрации и абсолютно бесплатны.
+              </p>
+            </div>
+          </div>
+        </div>
 
       {/* Tools Grid */}
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
@@ -264,6 +320,117 @@ export default function HrToolsPage() {
         </Container>
       </Box>
 
+      {/* FAQ Section - Pure HTML для SEO */}
+      <div style={{ 
+        backgroundColor: '#f8f9fa', 
+        paddingTop: '48px', 
+        paddingBottom: '48px', 
+        borderTop: '1px solid #e0e0e0' 
+      }}>
+        <div style={{ 
+          maxWidth: '1200px', 
+          marginLeft: 'auto', 
+          marginRight: 'auto', 
+          paddingLeft: '24px', 
+          paddingRight: '24px' 
+        }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '1.75rem',
+            fontWeight: 700,
+            color: '#1a1a2e',
+            marginBottom: '32px',
+          }}>
+            Часто задаваемые вопросы
+          </h2>
+
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ 
+              backgroundColor: '#fff', 
+              padding: '24px', 
+              borderRadius: '8px', 
+              marginBottom: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ 
+                fontSize: '1.1rem', 
+                fontWeight: 600, 
+                color: '#1a1a2e', 
+                marginBottom: '8px' 
+              }}>
+                Нужна ли регистрация для использования инструментов?
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, margin: 0 }}>
+                Нет, все инструменты работают без регистрации. Просто откройте нужный инструмент 
+                и начните использовать. Без email, без SMS, без подписки.
+              </p>
+            </div>
+
+            <div style={{ 
+              backgroundColor: '#fff', 
+              padding: '24px', 
+              borderRadius: '8px', 
+              marginBottom: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ 
+                fontSize: '1.1rem', 
+                fontWeight: 600, 
+                color: '#1a1a2e', 
+                marginBottom: '8px' 
+              }}>
+                Это действительно бесплатно?
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, margin: 0 }}>
+                Да, все HR-инструменты полностью бесплатны и останутся такими навсегда. 
+                Никаких скрытых платежей, триалов или ограничений.
+              </p>
+            </div>
+
+            <div style={{ 
+              backgroundColor: '#fff', 
+              padding: '24px', 
+              borderRadius: '8px', 
+              marginBottom: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ 
+                fontSize: '1.1rem', 
+                fontWeight: 600, 
+                color: '#1a1a2e', 
+                marginBottom: '8px' 
+              }}>
+                Какие данные используются для генерации?
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, margin: 0 }}>
+                AI анализирует только те данные, которые вы вводите в форму (описание вакансии, 
+                резюме, должность). Мы не храним ваши данные и не используем их для обучения моделей.
+              </p>
+            </div>
+
+            <div style={{ 
+              backgroundColor: '#fff', 
+              padding: '24px', 
+              borderRadius: '8px', 
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <h3 style={{ 
+                fontSize: '1.1rem', 
+                fontWeight: 600, 
+                color: '#1a1a2e', 
+                marginBottom: '8px' 
+              }}>
+                Можно ли использовать результаты для коммерческих целей?
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: '#666', lineHeight: 1.6, margin: 0 }}>
+                Да, вы можете свободно использовать сгенерированный контент для любых целей: 
+                публиковать вакансии, проводить собеседования, отправлять ответы кандидатам.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Footer */}
       <Box sx={{ bgcolor: "#fff", py: 4, borderTop: "1px solid #e0e0e0" }}>
         <Container maxWidth="lg">
@@ -296,76 +463,8 @@ export default function HrToolsPage() {
           </Box>
         </Container>
       </Box>
-
-      {/* Structured Data (JSON-LD) для SEO */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Бесплатные HR инструменты с AI",
-            "description": "Генератор вопросов для собеседования, анализатор резюме, генератор вакансий и другие бесплатные AI-инструменты для HR-специалистов",
-            "url": "https://sofihr.ru/hr-tools",
-            "publisher": {
-              "@type": "Organization",
-              "name": "SofiHR",
-              "url": "https://sofihr.ru"
-            },
-            "mainEntity": {
-              "@type": "ItemList",
-              "itemListElement": [
-                {
-                  "@type": "ListItem",
-                  "position": 1,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "Генератор вопросов для собеседования",
-                    "description": "AI-инструмент для создания профессиональных вопросов для интервью за 30 секунд",
-                    "applicationCategory": "BusinessApplication",
-                    "offers": {
-                      "@type": "Offer",
-                      "price": "0",
-                      "priceCurrency": "RUB"
-                    }
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 2,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "Генератор описания вакансии",
-                    "description": "AI-инструмент для создания полного описания вакансии за минуту",
-                    "applicationCategory": "BusinessApplication",
-                    "offers": {
-                      "@type": "Offer",
-                      "price": "0",
-                      "priceCurrency": "RUB"
-                    }
-                  }
-                },
-                {
-                  "@type": "ListItem",
-                  "position": 3,
-                  "item": {
-                    "@type": "SoftwareApplication",
-                    "name": "Анализатор резюме",
-                    "description": "AI-анализ резюме кандидата с оценкой соответствия вакансии",
-                    "applicationCategory": "BusinessApplication",
-                    "offers": {
-                      "@type": "Offer",
-                      "price": "0",
-                      "priceCurrency": "RUB"
-                    }
-                  }
-                }
-              ]
-            }
-          })
-        }}
-      />
     </Box>
+    </>
   );
 }
 
