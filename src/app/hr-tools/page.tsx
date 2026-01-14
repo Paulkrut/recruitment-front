@@ -98,6 +98,15 @@ const tools = [
       "Узнайте актуальный уровень зарплат для любой позиции. Данные по рынку труда России 2025-2026.",
     href: "/hr-tools/salary-guide",
   },
+  {
+    id: "ai-detector",
+    icon: "mdi:robot-confused",
+    iconColor: "#673AB7",
+    title: "Детектор AI в резюме",
+    description:
+      "Проверьте, было ли резюме создано с помощью ChatGPT. Получите вероятность и подозрительные фрагменты за 30 секунд.",
+    href: "/hr-tools/ai-detector",
+  },
 ];
 
 export default function HrToolsPage() {

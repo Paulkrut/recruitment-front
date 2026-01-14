@@ -209,3 +209,28 @@ export function useSalaryGuide() {
   });
 }
 
+export interface AiDetectorRequest {
+  resumeText: string;
+}
+
+export interface AiDetectorResponse {
+  probability: number;
+  verdict: string;
+  confidence: string;
+  suspiciousFragments: Array<{
+    text: string;
+    reason: string;
+  }> | string[]; // AI иногда возвращает просто массив строк
+  humanSignals: string[];
+  aiSignals: string[];
+  recommendation: string;
+  summary: string;
+  disclaimer?: string;
+}
+
+export function useAiDetector() {
+  return useHrTool<AiDetectorRequest, AiDetectorResponse>({
+    endpoint: "/detect-ai-resume",
+  });
+}
+
