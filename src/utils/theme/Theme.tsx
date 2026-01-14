@@ -1,3 +1,4 @@
+'use client';
 import _ from 'lodash';
 import { createTheme } from '@mui/material/styles';
 import { useSelector } from '@/store/hooks';
@@ -10,6 +11,26 @@ import { DarkThemeColors } from './DarkThemeColors';
 import { LightThemeColors } from './LightThemeColors';
 import { baseDarkTheme, baselightTheme } from './DefaultColors';
 import * as locales from '@mui/material/locale';
+
+// Создаём дефолтную тему на уровне модуля для SSR
+const themeOptions = LightThemeColors.find((theme) => theme.name === 'BLUE_THEME');
+const baseMode = {
+  palette: {
+    mode: 'light' as const,
+  },
+  shape: {
+    borderRadius: 7,
+  },
+  shadows: shadows,
+  typography: typography,
+};
+
+const defaultThemeInstance = createTheme(
+  _.merge({}, baseMode, baselightTheme, locales, themeOptions, {
+    direction: 'ltr',
+  }),
+);
+defaultThemeInstance.components = components(defaultThemeInstance);
 
 export const BuildTheme = (config: any = {}) => {
   const themeOptions = LightThemeColors.find((theme) => theme.name === config.theme);
@@ -54,3 +75,4 @@ const ThemeSettings = () => {
 
 
 export { ThemeSettings };
+export default defaultThemeInstance;
