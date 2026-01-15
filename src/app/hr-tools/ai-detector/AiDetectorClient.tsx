@@ -9,7 +9,6 @@ import {
   CircularProgress,
   Alert,
   Chip,
-  LinearProgress,
   List,
   ListItem,
   ListItemIcon,
@@ -224,9 +223,11 @@ export default function AiDetectorClient() {
       {/* Results */}
       {data && (
         <ResultDisplay
-          result={formatResultAsText()}
+          copyText={formatResultAsText()}
+          downloadText={formatResultAsText()}
+          downloadFilename="ai-detector-result.txt"
           onRegenerate={handleRegenerate}
-          loading={loading}
+          regenerating={loading}
         >
           {/* Probability Badge */}
           <Box
