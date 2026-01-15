@@ -35,7 +35,7 @@ export default function AiDetectorClient() {
       const firstFragment = normalized.suspiciousFragments[0];
       if (typeof firstFragment === 'string') {
         // AI вернул массив строк - преобразуем в объекты
-        normalized.suspiciousFragments = (normalized.suspiciousFragments as string[]).map((text) => ({
+        normalized.suspiciousFragments = (normalized.suspiciousFragments as string[]).map((text: string) => ({
           text: text,
           reason: 'Требует дополнительной проверки'
         }));
@@ -219,9 +219,13 @@ export default function AiDetectorClient() {
         </Button>
 
         {/* Warning */}
-        <Alert severity="info" sx={{ mt: 2 }}>
-          <Typography sx={{ fontSize: "0.85rem" }}>
+        <Alert severity="info" sx={{ mt: 2, mb: 1 }}>
+          <Typography sx={{ fontSize: "0.85rem", mb: 1 }}>
             ⚠️ Это вероятностная оценка, не абсолютная истина. Используйте результат как дополнительный индикатор.
+          </Typography>
+          <Typography sx={{ fontSize: "0.85rem" }}>
+            💡 <strong>Важно:</strong> Резюме может быть написано реальным человеком, но потом улучшено через ChatGPT. 
+            В таком случае детектор покажет высокую вероятность AI.
           </Typography>
         </Alert>
       </Paper>
