@@ -51,23 +51,7 @@ export default function AiDetectorClient() {
     if (!resumeText.trim() || resumeText.length < 100) {
       return;
     }
-    const result = await execute({ resumeText });
-    if (result) {
-      console.log('AI Detector Response:', result);
-      console.log('Suspicious Fragments:', result.suspiciousFragments);
-      
-      // Fallback: если AI вернул массив строк вместо объектов - преобразуем
-      if (result.suspiciousFragments && result.suspiciousFragments.length > 0) {
-        const firstFragment = result.suspiciousFragments[0];
-        if (typeof firstFragment === 'string') {
-          console.warn('AI returned strings instead of objects, converting...');
-          result.suspiciousFragments = result.suspiciousFragments.map((text: string) => ({
-            text: text,
-            reason: 'Подозрительный фрагмент (AI не указал причину)'
-          }));
-        }
-      }
-    }
+    await execute({ resumeText });
   };
 
   const handleRegenerate = async () => {
