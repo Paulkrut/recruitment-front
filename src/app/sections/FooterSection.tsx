@@ -53,6 +53,7 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
         { label: '📊 Анализатор резюме', href: '/hr-tools/resume-analyzer' },
         { label: '✉️ Ответ кандидату', href: '/hr-tools/reply-generator' },
         { label: '💰 Зарплатный гид', href: '/hr-tools/salary-guide' },
+        { label: '🔍 Детектор AI в резюме', href: '/hr-tools/ai-detector' },
       ],
     },
     {
