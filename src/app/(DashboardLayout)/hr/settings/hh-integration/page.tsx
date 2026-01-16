@@ -162,6 +162,16 @@ export default function HhIntegrationPage() {
     setActiveStep(0);
   };
 
+  // Загружаем вакансии при переходе на шаги 1 (Статусы) или 2 (Вакансии)
+  useEffect(() => {
+    if (status?.isConnected && status.hasValidToken && (activeStep === 1 || activeStep === 2)) {
+      if (hhVacanciesFromApi.length === 0 && !loadingHhVacancies && !hhVacanciesError) {
+        loadHhVacanciesFromApi();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep, status?.isConnected, status?.hasValidToken]);
+
   // Фильтры и сортировка
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all"); // all, active, archived
@@ -194,10 +204,7 @@ export default function HhIntegrationPage() {
       const data = await response.json();
       setStatus(data);
 
-      // Автозагрузка вакансий если подключено
-      if (data.isConnected && data.hasValidToken) {
-        await loadHhVacanciesFromApi();
-      }
+      // Вакансии будут загружены при переходе на соответствующий шаг Stepper'а
     } catch (err: any) {
       setError(err.message || _(msg`Ошибка загрузки статуса интеграции`));
     } finally {
