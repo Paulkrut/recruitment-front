@@ -170,7 +170,7 @@ msgstr " and "
 #~ msgstr " of {0}"
 
 #. placeholder {0}: data.failed
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:366
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:387
 msgid " Ошибок: {0}"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr "(cost {0}₽)"
 #. placeholder {0}: expandedVacancies.has(vacancy.id) ? "Скрыть" : "Статусы"
 #. placeholder {0}: variant === 'floating' ? 'Отменить выделение' : 'Отменить'
 #. placeholder {0}: variant === 'floating' ? 'Переместить' : 'Применить'
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1362
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1399
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/BulkActionsToolbar.tsx:182
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/BulkActionsToolbar.tsx:209
 msgid "{0}"
@@ -251,7 +251,7 @@ msgstr "{0} of {total}"
 
 #. placeholder {0}: data.length
 #. placeholder {0}: status.total_count || 0
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1029
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1066
 #: src/app/components/hr/OverdueCandidatesCard.tsx:113
 msgid "{0} кандидатов"
 msgstr "{0} candidates"
@@ -581,7 +581,7 @@ msgstr "≥ 90% (Excellent)"
 msgid "⏭️ Пропустить"
 msgstr "⏭️ Skip"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:866
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:903
 msgid "⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00"
 msgstr "⏰ HeadHunter.ru Manager Limit for all vacancies, resets at 00:00"
 
@@ -722,7 +722,7 @@ msgstr "⚠️ Skills Not Assessed"
 #~ msgid "⚠️ Начать (проверьте микрофон)"
 #~ msgstr "⚠️ Start (check microphone)"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:737
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:774
 msgid "⚠️ Не удалось обновить токен"
 msgstr "⚠️ Failed to update token"
 
@@ -738,11 +738,11 @@ msgstr "⚠️ Assessment Not Available"
 msgid "⚠️ Примите соглашение на обработку ПДн"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:738
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:775
 msgid "⚠️ Проблема с токеном доступа"
 msgstr "⚠️ Access Token Problem"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:735
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:772
 msgid "⚠️ Токен доступа был отозван"
 msgstr "⚠️ Access Token Revoked"
 
@@ -834,7 +834,7 @@ msgstr "✅ Messages loaded: {0}"
 msgid "✅ Запрос успешно отправлен!"
 msgstr "✅ Request Successfully Sent!"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1284
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1321
 msgid "✅ Импортирована"
 msgstr ""
 
@@ -1503,6 +1503,10 @@ msgstr ""
 msgid "💡 Приглашения отправляются через HH.ru только кандидатам с этих стадий"
 msgstr ""
 
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:689
+msgid "💡 Проверить режим можно в правом верхнем углу на сайте hh.ru"
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1176
 #: src/app/interview/[token]/InterviewResultsScreen.tsx:115
 msgid "💡 Развивающая обратная связь"
@@ -1612,7 +1616,7 @@ msgstr "📊 Calculating Personal Score..."
 msgid "📊 Детальное сравнение по критериям"
 msgstr "📊 Detailed Comparison by Criteria"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:733
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:770
 msgid "📊 Интеграция отключена"
 msgstr "📊 Integration Disabled"
 
@@ -2260,7 +2264,7 @@ msgstr "HH Stage: {0}"
 msgid "HH.ru интеграция"
 msgstr "HH.ru Integration"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:258
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:271
 msgid "HH.ru отключен"
 msgstr "HH.ru Disabled"
 
@@ -2272,7 +2276,7 @@ msgstr "HH.ru Token Expiring"
 msgid "HH.ru требует авторизации"
 msgstr "HH.ru Requires Authorization"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:218
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:225
 msgid "HH.ru успешно подключен!"
 msgstr "HH.ru Successfully Connected!"
 
@@ -2317,7 +2321,7 @@ msgstr ""
 msgid "ID вопроса обязателен"
 msgstr "Question ID Is Required"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:768
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:805
 msgid "ID работодателя"
 msgstr "Employer ID"
 
@@ -2403,25 +2407,25 @@ msgstr ""
 #~ msgid "Автоматическая загрузка вакансий и кандидатов из HH.ru"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:674
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:711
 msgid "Автоматическая загрузка ваших вакансий"
 msgstr "Automatic Loading of Your Vacancies"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:692
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:926
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:729
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:963
 msgid "Автоматическая синхронизация"
 msgstr "Automatic Synchronization"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:275
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:288
 msgid "Автоматическая синхронизация включена"
 msgstr "Automatic Synchronization Enabled"
 
 #. placeholder {0}: new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleString('ru-RU')
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:935
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:972
 msgid "Автоматическая синхронизация выполняется в фоновом режиме. Следующая синхронизация запланирована на {0}"
 msgstr "Automatic Synchronization Runs in Background. Next Synchronization Scheduled for {0}"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:275
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:288
 msgid "Автоматическая синхронизация отключена"
 msgstr "Automatic Synchronization Disabled"
 
@@ -2543,7 +2547,7 @@ msgstr "Active"
 msgid "Активность"
 msgstr "Activity"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1111
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1148
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:997
 msgid "Активные"
 msgstr "Active"
@@ -2607,7 +2611,7 @@ msgstr "Archive"
 #~ msgid "Архивная"
 #~ msgstr "Archived"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1112
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1149
 msgid "Архивные"
 msgstr ""
 
@@ -2835,6 +2839,10 @@ msgstr "This stage contains <0>{candidatesCount}</0> {0} (across all company vac
 msgid "Важная информация"
 msgstr "Important Information"
 
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:680
+msgid "Важно: Убедитесь, что вы в режиме работодателя"
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:419
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:149
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:536
@@ -2859,11 +2867,11 @@ msgstr "Vacancies"
 msgid "Вакансии не найдены"
 msgstr "No Vacancies Found"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1074
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1111
 msgid "Вакансии не найдены. Создайте вакансии в HH.ru или обновите список."
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1549
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1586
 msgid "Вакансии успешно импортированы. Загрузка кандидатов начата в фоновом режиме."
 msgstr ""
 
@@ -2871,7 +2879,7 @@ msgstr ""
 #~ msgid "Вакансии, кандидаты, интервью — всё в одном месте"
 #~ msgstr "Vacancies, candidates, interviews — all in one place"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:803
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:840
 msgid "Вакансий"
 msgstr "Vacancies"
 
@@ -2980,7 +2988,7 @@ msgstr "Your Name"
 
 #. placeholder {0}: status.stats?.totalVacancies || 0
 #. placeholder {1}: status.stats?.totalCandidates || 0
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:753
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:790
 msgid "Ваши данные ({0} вакансий, {1} кандидатов) сохранены."
 msgstr "Your data ({0} vacancies, {1} candidates) saved."
 
@@ -3127,7 +3135,7 @@ msgstr "Enter DELETE to Confirm"
 msgid "Вверх"
 msgstr "Up"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1498
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1535
 msgid "Вернитесь на предыдущий шаг и выберите хотя бы одну вакансию для импорта"
 msgstr ""
 
@@ -3501,8 +3509,8 @@ msgstr "Time Allotted for Answering Each Question"
 msgid "Время, сек"
 msgstr "Time, sec"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1110
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1126
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1147
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1163
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:164
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:180
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:199
@@ -3547,11 +3555,11 @@ msgstr "All candidates loaded"
 msgid "Все обязательные поля должны быть заполнены"
 msgstr "All Required Fields Must Be Filled"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:675
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:712
 msgid "Все опубликованные на HH.ru вакансии будут синхронизированы"
 msgstr "All vacancies published on HH.ru will be synchronized"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:684
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:721
 msgid "Все отклики на вакансии будут автоматически импортированы"
 msgstr "All responses to vacancies will be automatically imported"
 
@@ -3666,6 +3674,10 @@ msgstr "yesterday"
 msgid "вчера, {0}"
 msgstr "yesterday, {0}"
 
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:230
+msgid "Вы авторизовались в режиме соискателя. Пожалуйста, на сайте hh.ru переключитесь в режим работодателя (работодатель/рекрутер) и повторите подключение."
+msgstr ""
+
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:473
 msgid "Вы можете включить камеру для более полного ответа, но это не обязательно."
 msgstr "You can enable the camera for a more complete answer, but it's not required."
@@ -3675,7 +3687,7 @@ msgstr "You can enable the camera for a more complete answer, but it's not requi
 msgid "Вы можете восстановить её, нажав кнопку \"Восстановить\" выше."
 msgstr "You can restore it by clicking the \"Restore\" button above."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1495
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1532
 msgid "Вы не выбрали ни одной вакансии"
 msgstr ""
 
@@ -3710,7 +3722,7 @@ msgstr "Are You Sure You Want to Delete This Candidate?"
 msgid "Вы уверены, что хотите удалить эту вакансию? Она будет перемещена в \"Удалённые\"."
 msgstr "Are you sure you want to delete this vacancy? It will be moved to \"Deleted\"."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1054
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1091
 msgid "Выберите вакансии для импорта"
 msgstr ""
 
@@ -3718,7 +3730,7 @@ msgstr ""
 #~ msgid "Выберите вакансии для импорта:"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:990
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1027
 msgid "Выберите какие статусы кандидатов загружать из HH.ru. Эти настройки будут применены ко всем выбранным вакансиям (можно настроить индивидуально для каждой)."
 msgstr ""
 
@@ -3756,7 +3768,7 @@ msgstr "Select the stage to which all candidates will be moved:"
 #~ msgid "Выберите статусы HH.ru для синхронизации:"
 #~ msgstr "Select HH.ru Statuses for Synchronization:"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:987
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1024
 msgid "Выберите статусы кандидатов для синхронизации"
 msgstr ""
 
@@ -3764,7 +3776,7 @@ msgstr ""
 #~ msgid "Выберите хотя бы один статус для синхронизации"
 #~ msgstr "Select at least one status for synchronization"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:319
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:340
 msgid "Выберите хотя бы одну вакансию"
 msgstr ""
 
@@ -3788,7 +3800,7 @@ msgid "Выбрано {0} кандидатов на этой странице."
 msgstr ""
 
 #. placeholder {0}: selectedVacancyIds.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1508
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1545
 msgid "Выбрано вакансий: <0>{0}</0>"
 msgstr ""
 
@@ -3808,7 +3820,7 @@ msgid "Выбрано регламентов: <0>{0}</0><1/>Всего вопр�
 msgstr "Regulations Selected: <0>{0}</0><1/>Total Questions: <2>{1}</2>"
 
 #. placeholder {0}: defaultStatuses.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1511
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1548
 msgid "Выбрано статусов: <0>{0}</0>"
 msgstr ""
 
@@ -3827,8 +3839,8 @@ msgstr "Selected: {0}"
 #~ msgid "Выбраны ВСЕ кандидаты из колонок:"
 #~ msgstr "ALL Candidates Selected from Columns:"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1201
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1453
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1238
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1490
 msgid "Выбрать все"
 msgstr ""
 
@@ -3952,7 +3964,7 @@ msgstr "Ready for Interview"
 msgid "Готовимся к генерации обратной связи..."
 msgstr "Preparing to Generate Feedback..."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1489
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1526
 msgid "Готово к импорту!"
 msgstr ""
 
@@ -3973,14 +3985,14 @@ msgid "Да, вы можете в любой момент докупить лю�
 msgstr "Yes, you can purchase any interview package at any time. Unused interviews remain in your balance. When switching to a higher plan, you immediately get access to all its features (custom templates, detailed reports, multi-company, etc.)."
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:737
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1584
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1621
 #: src/app/test/[token]/page.tsx:688
 msgid "Далее"
 msgstr "Next"
 
 #. placeholder {0}: status.stats?.totalVacancies || 0
 #. placeholder {1}: status.stats?.totalCandidates || 0
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:746
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:783
 msgid "Данные от HH.ru ({0} вакансий, {1} кандидатов) сохранены и доступны для просмотра. Для получения новых обновлений подключитесь заново."
 msgstr "Data from HH.ru ({0} vacancies, {1} candidates) saved and available for viewing. For new updates, reconnect."
 
@@ -4027,11 +4039,11 @@ msgstr "Payment Date"
 msgid "Дата создания"
 msgstr "Creation Date"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1145
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1182
 msgid "Дата создания (новые)"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1151
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1188
 msgid "Дата создания (старые)"
 msgstr ""
 
@@ -4221,7 +4233,7 @@ msgid "Для тестирования платформы без финансо�
 msgstr "For testing the platform without financial investment. 10 free interviews to get acquainted with the functionality."
 
 #. placeholder {0}: status.hhLimits.source
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:837
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:874
 msgid "Дневной лимит просмотра резюме на {0}:"
 msgstr "Daily Resume View Limit on {0}:"
 
@@ -4398,7 +4410,7 @@ msgstr "Has Opinion"
 #~ msgid "Есть что-то важное, что хотели бы добавить? Любая дополнительная информация поможет рекрутеру лучше оценить вашу кандидатуру."
 #~ msgstr "Is there anything important you would like to add? Any additional information will help the recruiter better assess your candidacy."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:778
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:815
 msgid "Еще не выполнялась"
 msgstr "Not Yet Performed"
 
@@ -4479,7 +4491,7 @@ msgid "Загружать из HH стадии"
 msgstr ""
 
 #. placeholder {0}: vacancy.candidates_synced
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1325
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1362
 msgid "Загружено {0} кандидатов"
 msgstr ""
 
@@ -4499,7 +4511,7 @@ msgstr "Load from HeadHunter.ru"
 msgid "Загрузить резюме из HH.ru"
 msgstr "Load Resume from HH.ru"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1061
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1098
 msgid "Загрузка вакансий из HH.ru..."
 msgstr ""
 
@@ -4523,7 +4535,7 @@ msgstr "Loading Resume from HH.ru"
 msgid "Загрузка резюме..."
 msgstr "Loading Resume..."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1044
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1081
 msgid "Загрузка статусов... Нажмите \"Далее\" чтобы продолжить"
 msgstr ""
 
@@ -4708,7 +4720,7 @@ msgid "Идёт распознавание речи..."
 msgstr "Speech Recognition in Progress..."
 
 #. placeholder {0}: status.hhLimits.limits.resumeView
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:853
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:890
 msgid "из {0} на сегодня"
 msgstr "of {0} for today"
 
@@ -4816,8 +4828,8 @@ msgid "Именное приглашение будет отправлено н�
 msgstr "Named Invitation Will Be Sent to the Specified Email."
 
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:150
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1120
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1123
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1157
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1160
 msgid "Импорт"
 msgstr ""
 
@@ -4825,7 +4837,7 @@ msgstr ""
 msgid "Импорт вакансий"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1546
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1583
 msgid "Импорт завершен!"
 msgstr ""
 
@@ -4833,11 +4845,11 @@ msgstr ""
 msgid "Импорт кандидатов"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:358
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:379
 msgid "Импортировано новых: {newImports}, пересинхронизировано: {reSyncs}. Загрузка кандидатов начата..."
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1127
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1164
 msgid "Импортированы"
 msgstr ""
 
@@ -4846,7 +4858,7 @@ msgid "Импортировать"
 msgstr ""
 
 #. placeholder {0}: selectedVacancyIds.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1533
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1570
 msgid "Импортировать {0} вакансий"
 msgstr ""
 
@@ -4855,18 +4867,18 @@ msgid "Импортировать вакансии"
 msgstr ""
 
 #. placeholder {0}: selectedVacancyIds.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1223
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1475
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1260
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1512
 msgid "Импортировать выбранные ({0})"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1556
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1593
 msgid "Импортировать еще"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1220
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1472
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1530
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1257
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1509
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1567
 msgid "Импортируем..."
 msgstr ""
 
@@ -4972,12 +4984,12 @@ msgstr "Integrations"
 msgid "Интеграция была отключена. Данные сохранены, но новые обновления не поступают."
 msgstr "Integration was disabled. Data is saved, but new updates will not arrive."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:641
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:662
 msgid "Интеграция с HeadHunter"
 msgstr "Integration with HeadHunter"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:578
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:587
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:599
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:608
 msgid "Интеграция с HH.ru"
 msgstr "Integration with HH.ru"
 
@@ -5300,7 +5312,7 @@ msgstr "Camera connected"
 msgid "Канбан"
 msgstr "Kanban"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:878
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:915
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/DeleteStageDialog.tsx:75
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1224
 msgid "кандидат"
@@ -5391,18 +5403,18 @@ msgstr ""
 msgid "Кандидат: {0}"
 msgstr "Candidate: {0}"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:878
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:915
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/DeleteStageDialog.tsx:76
 msgid "кандидата"
 msgstr "candidate"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:878
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:915
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/DeleteStageDialog.tsx:76
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1224
 msgid "кандидатов"
 msgstr "candidates"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:811
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:848
 msgid "Кандидатов"
 msgstr "Candidates"
 
@@ -5453,7 +5465,7 @@ msgstr "Candidates ({0})"
 #~ msgid "Кандидаты будут обрабатываться по мере обновления лимита"
 #~ msgstr "Candidates will be processed as the limit refreshes"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:880
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:917
 msgid "Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга"
 msgstr "Candidates from HeadHunter.ru are waiting for resume download from HH for AI screening"
 
@@ -5583,7 +5595,7 @@ msgstr "Companies"
 #~ msgid "Компаний"
 #~ msgstr "Companies"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:762
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:799
 #: src/app/auth/register/page.tsx:255
 msgid "Компания"
 msgstr "Company"
@@ -5783,6 +5795,10 @@ msgstr "We are performing scheduled maintenance to improve service quality. We a
 msgid "Мы скоро вернёмся!"
 msgstr "We'll Be Back Soon!"
 
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:683
+msgid "На HeadHunter один аккаунт может иметь два режима: соискатель и работодатель."
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/hh-vacancies/[id]/page.tsx:93
 #~ msgid "На HH:"
 #~ msgstr "On HH:"
@@ -5809,7 +5825,7 @@ msgstr "The password will be sent to this email"
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:426
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:206
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:727
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1579
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1616
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:354
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:1013
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:475
@@ -5843,11 +5859,11 @@ msgstr "Back to Tests"
 msgid "Название"
 msgstr "Name"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1157
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1194
 msgid "Название (А-Я)"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1163
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1200
 msgid "Название (Я-А)"
 msgstr ""
 
@@ -5886,7 +5902,7 @@ msgstr "Test Name"
 
 #. placeholder {0}: filteredVacancies.length
 #. placeholder {1}: hhVacanciesFromApi.length
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1179
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1216
 msgid "Найдено вакансий: {0} из {1}"
 msgstr ""
 
@@ -5974,7 +5990,7 @@ msgstr "For example: Technical Interview"
 msgid "Настроить"
 msgstr "Configure"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1505
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1542
 msgid "Настройка завершена!"
 msgstr ""
 
@@ -6013,7 +6029,7 @@ msgstr ""
 msgid "Настройки камеры не поддерживаются."
 msgstr "Camera Settings Not Supported."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:914
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:951
 msgid "Настройки синхронизации"
 msgstr "Synchronization Settings"
 
@@ -6030,7 +6046,7 @@ msgstr "Synchronization Settings Updated"
 msgid "Настройки теста"
 msgstr "Test Settings"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:973
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1010
 msgid "Настройте автоматизацию работы с кандидатами"
 msgstr ""
 
@@ -6086,7 +6102,7 @@ msgstr "Not Authorized"
 msgid "Не выбрана компания"
 msgstr "Company Not Selected"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1128
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1165
 msgid "Не импортированы"
 msgstr ""
 
@@ -6189,7 +6205,7 @@ msgstr "Failed to Send Answer"
 msgid "Не удалось переместить кандидатов"
 msgstr "Failed to Move Candidates"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:242
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:255
 msgid "Не удалось получить URL авторизации"
 msgstr "Failed to Get Authorization URL"
 
@@ -6258,9 +6274,9 @@ msgstr "Payment ID not specified"
 msgid "Не указана"
 msgstr "Not Specified"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:764
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:770
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:787
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:801
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:807
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:824
 #: src/utils/pdfExportWithFont.ts:208
 #: src/utils/pdfExportWithFont.ts:209
 #: src/utils/pdfExportWithFont.ts:229
@@ -6310,8 +6326,8 @@ msgstr "Unknown Camera"
 msgid "неизвестная ошибка"
 msgstr "unknown error"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:311
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:404
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:332
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:425
 #: src/app/components/ForgetMeAuto.tsx:61
 msgid "Неизвестная ошибка"
 msgstr "Unknown Error"
@@ -6498,7 +6514,7 @@ msgstr "Low"
 msgid "Новая кастомная стадия"
 msgstr "New Custom Stage"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:693
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:730
 msgid "Новые данные будут обновляться каждые 2 часа"
 msgstr "New data will be updated every 2 hours"
 
@@ -6526,7 +6542,7 @@ msgstr "New Password Sent to Your Email"
 msgid "Новый пароль отправлен!"
 msgstr "New Password Sent!"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:819
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:856
 msgid "Новых сегодня"
 msgstr "New Today"
 
@@ -6552,7 +6568,7 @@ msgstr "Normal"
 #~ msgid "О нас"
 #~ msgstr "About Us"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1210
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1247
 msgid "Обновить"
 msgstr ""
 
@@ -6568,7 +6584,7 @@ msgstr "Update Data"
 msgid "Обновить историю"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1462
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1499
 msgid "Обновить список"
 msgstr "Update List"
 
@@ -6823,7 +6839,7 @@ msgstr "Basic Information"
 msgid "Основные настройки"
 msgstr "Main Settings"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:851
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:888
 msgid "Осталось просмотров резюме"
 msgstr "Resume Views Remaining"
 
@@ -6945,7 +6961,7 @@ msgstr "Reject"
 #~ msgid "Отключение камеры не влияет на возможность прохождения интервью и оценку по обязательным критериям. Видео помогает HR лучше увидеть коммуникативные навыки. Видео и аудио не используются для установления личности; биометрические шаблоны не формируются."
 #~ msgstr "Disabling the camera does not affect the ability to take the interview or assessment by mandatory criteria. Video helps HR better see communication skills. Video and audio are not used for identification; biometric templates are not created."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:898
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:935
 msgid "Отключить"
 msgstr "Disable"
 
@@ -6963,7 +6979,7 @@ msgstr "Open Vacancies"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:590
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:594
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1347
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1384
 msgid "Открыть"
 msgstr "Open"
 
@@ -7192,7 +7208,7 @@ msgstr "Authorization Error"
 msgid "Ошибка авторизации HeadHunter: код не получен"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:178
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:188
 msgid "Ошибка авторизации: {error}"
 msgstr "Authorization Error: {error}"
 
@@ -7279,11 +7295,11 @@ msgstr "Error Loading Messages from HH.ru"
 msgid "Ошибка загрузки сотрудников"
 msgstr "Error Loading Employees"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:308
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:328
 msgid "Ошибка загрузки списка вакансий с HH"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:202
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:209
 msgid "Ошибка загрузки статуса интеграции"
 msgstr "Error Loading Integration Status"
 
@@ -7291,7 +7307,7 @@ msgstr "Error Loading Integration Status"
 msgid "Ошибка запуска AI-анализа"
 msgstr "Error Starting AI Analysis"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:245
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:258
 msgid "Ошибка запуска авторизации"
 msgstr "Error Starting Authorization"
 
@@ -7308,7 +7324,7 @@ msgstr "Error Starting Question Generation"
 #~ msgid "Ошибка запуска синхронизации"
 #~ msgstr "Error Starting Synchronization"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:401
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:422
 msgid "Ошибка импорта вакансий"
 msgstr ""
 
@@ -7328,7 +7344,7 @@ msgstr "Error Updating Vacancy with Test"
 msgid "Ошибка обновления истории событий"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:277
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:290
 msgid "Ошибка обновления настроек"
 msgstr "Error Updating Settings"
 
@@ -7336,7 +7352,7 @@ msgstr "Error Updating Settings"
 msgid "Ошибка обработки webhook платежа"
 msgstr "Error Processing Payment Webhook"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:227
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:240
 msgid "Ошибка обработки авторизации"
 msgstr "Authorization Processing Error"
 
@@ -7344,7 +7360,7 @@ msgstr "Authorization Processing Error"
 msgid "Ошибка отклонения приглашения"
 msgstr "Error Rejecting Invitation"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:261
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:274
 msgid "Ошибка отключения"
 msgstr "Disable Error"
 
@@ -7608,7 +7624,7 @@ msgstr "Error Checking Token Status"
 msgid "Ошибка сети. Проверьте подключение к интернету"
 msgstr "Network Error. Check your internet connection"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1331
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1368
 #: src/utils/errorTranslator.tsx:99
 msgid "Ошибка синхронизации"
 msgstr "Synchronization Error"
@@ -7708,11 +7724,11 @@ msgstr "Password"
 #~ msgid "Первые 10 интервью бесплатно • Настройка за 5 минут • Без кредитной карты"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:726
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:763
 msgid "Переавторизоваться"
 msgstr "Reauthorize"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:754
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:791
 msgid "Переавторизуйтесь для продолжения работы."
 msgstr "Re-authenticate to continue working."
 
@@ -7730,6 +7746,10 @@ msgstr ""
 #~ msgid "Перед началом"
 #~ msgstr "Before Starting"
 
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:686
+msgid "Перед подключением убедитесь, что на сайте hh.ru вы находитесь в режиме <0>работодателя/рекрутера</0>, а не соискателя."
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1242
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1682
 msgid "Перейдите в настройки интеграции HH.ru и авторизуйтесь заново"
@@ -7739,7 +7759,7 @@ msgstr "Go to HH.ru Integration Settings and Reauthorize"
 #~ msgid "Перейти в HR панель"
 #~ msgstr "Go to HR Panel"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1563
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1600
 msgid "Перейти к вакансиям"
 msgstr ""
 
@@ -7805,18 +7825,18 @@ msgstr "Move candidates to"
 msgid "Переопределить настройки только для этой вакансии"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:362
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:383
 msgid "Пересинхронизировано: {reSyncs} вакансий. Загрузка кандидатов начата..."
 msgstr ""
 
 #. placeholder {0}: selectedVacancyIds.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1532
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1569
 msgid "Пересинхронизировать {0} вакансий"
 msgstr ""
 
 #. placeholder {0}: selectedVacancyIds.size
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1222
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1474
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1259
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1511
 msgid "Пересинхронизировать выбранные ({0})"
 msgstr ""
 
@@ -7885,7 +7905,7 @@ msgstr "Contact the administrator for questions"
 msgid "По дату"
 msgstr "To Date"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1169
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1206
 msgid "По откликам (больше)"
 msgstr ""
 
@@ -7957,11 +7977,11 @@ msgstr "Connecting Camera..."
 msgid "Подключение микрофона..."
 msgstr "Connecting Microphone..."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:663
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:700
 msgid "Подключение..."
 msgstr "Connecting..."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:645
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:666
 msgid "Подключено"
 msgstr "Connected"
 
@@ -7969,7 +7989,7 @@ msgstr "Connected"
 msgid "Подключите HeadHunter и импортируйте вакансии с кандидатами автоматически"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:654
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:675
 msgid "Подключите ваш аккаунт работодателя HH.ru для автоматической синхронизации вакансий и получения откликов кандидатов."
 msgstr "Connect your HH.ru employer account for automatic vacancy synchronization and receiving candidate responses."
 
@@ -7985,14 +8005,14 @@ msgstr ""
 msgid "Подключить HH"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:663
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:700
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1256
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1696
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1722
 msgid "Подключить HH.ru"
 msgstr "Connect HH.ru"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:725
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:762
 msgid "Подключить заново"
 msgstr "Reconnect"
 
@@ -8083,7 +8103,7 @@ msgstr "Search Vacancies"
 msgid "Поиск по имени, email, телефону или вакансии..."
 msgstr "Search by name, email, phone, or vacancy..."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1088
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1125
 msgid "Поиск по названию..."
 msgstr ""
 
@@ -8219,7 +8239,7 @@ msgstr "Full Compliance with the Law \"On Personal Data\""
 #~ msgid "Получать объективную оценку и сравнение кандидатов"
 #~ msgstr "Get Objective Assessment and Comparison of Candidates"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:683
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:720
 msgid "Получение откликов кандидатов"
 msgstr "Receiving Candidate Responses"
 
@@ -8308,7 +8328,7 @@ msgstr "Last Month"
 msgid "Последняя неделя"
 msgstr "Last Week"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:774
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:811
 msgid "Последняя синхронизация"
 msgstr "Last Synchronization"
 
@@ -8316,7 +8336,7 @@ msgstr "Last Synchronization"
 #~ msgid "Последняя синхронизация: {0}"
 #~ msgstr "Last Synchronization: {0}"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:862
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:899
 msgid "Потрачено сегодня"
 msgstr "Spent Today"
 
@@ -8377,7 +8397,7 @@ msgstr "Premium"
 msgid "При {hiresPerMonth} {0}"
 msgstr "With {hiresPerMonth} {0}"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:929
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:966
 msgid "При включении данные будут автоматически обновляться каждые 2 часа"
 msgstr "When enabled, data will be automatically updated every 2 hours"
 
@@ -9234,7 +9254,7 @@ msgstr ""
 
 #. placeholder {0}: vacancy.candidates_synced || 0
 #. placeholder {1}: vacancy.candidates_total || 0
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1318
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1355
 msgid "Синхронизация: {0}/{1}"
 msgstr ""
 
@@ -9586,8 +9606,8 @@ msgstr "Message Sent Successfully! We will contact you shortly."
 msgid "Соответствие 152-ФЗ"
 msgstr "US Privacy Compliance"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1136
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1139
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1173
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1176
 msgid "Сортировка"
 msgstr ""
 
@@ -9825,7 +9845,7 @@ msgstr "Standard Settings"
 msgid "Старт"
 msgstr "Start"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:796
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:833
 msgid "Статистика"
 msgstr "Statistics"
 
@@ -9872,8 +9892,8 @@ msgstr "HH.ru Integration Status"
 msgid "Статус интервью"
 msgstr "Interview Status"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1104
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1107
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1141
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1144
 msgid "Статус на HH"
 msgstr ""
 
@@ -9907,7 +9927,7 @@ msgstr ""
 #~ msgid "Статусы будут загружены после выбора вакансий"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1378
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1415
 msgid "Статусы для этой вакансии:"
 msgstr ""
 
@@ -10249,7 +10269,7 @@ msgstr "Data Types for Deletion"
 msgid "Токен HH.ru не найден"
 msgstr "HH.ru Token Not Found"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:783
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:820
 msgid "Токен действует до"
 msgstr "Token Valid Until"
 
@@ -10336,7 +10356,7 @@ msgstr ""
 msgid "Требуется настройка интервью"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:645
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:666
 msgid "Требуется переавторизация"
 msgstr "Reauthorization Required"
 
@@ -10587,7 +10607,7 @@ msgstr "terms of personal data processing"
 msgid "Успешно"
 msgstr "Success"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:360
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:381
 msgid "Успешно импортировано: {newImports} вакансий. Загрузка кандидатов начата..."
 msgstr ""
 
@@ -10686,7 +10706,7 @@ msgstr "What do you want to do next?"
 #~ msgid "Что говорят наши клиенты"
 #~ msgstr "What Our Clients Say"
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:667
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:704
 msgid "Что даст интеграция:"
 msgstr "What Integration Will Provide:"
 
@@ -10802,7 +10822,7 @@ msgstr "This action cannot be undone."
 msgid "Это демонстрационный компонент, показывающий как правильно использовать LinguiJS для интернационализации вашего приложения."
 msgstr "This is a demonstration component showing how to properly use LinguiJS for internationalizing your application."
 
-#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:752
+#: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:789
 msgid "Это может произойти если вы отозвали доступ к приложению в настройках HH.ru."
 msgstr "This can happen if you revoked app access in HH.ru settings."
 
