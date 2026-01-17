@@ -36,7 +36,13 @@ export function useHhConnection() {
       const data = await response.json();
 
       if (!data.success) {
-        throw new Error(data.error || 'Ошибка авторизации');
+        // Специальная обработка ошибки режима соискателя
+        if (data.error === 'applicant_mode') {
+          const errorMessage = 'Вы авторизовались в режиме соискателя. Пожалуйста, на сайте hh.ru переключитесь в режим работодателя (работодатель/рекрутер) и повторите подключение.';
+          throw new Error(errorMessage);
+        }
+        
+        throw new Error(data.message || data.error || 'Ошибка авторизации');
       }
 
       return data;
