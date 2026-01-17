@@ -128,10 +128,12 @@ export default function HhRedirectPage() {
       if (data.success) {
         router.push("/hr/settings/hh-integration?success=true");
       } else {
-        router.push("/hr/settings/hh-integration?error=" + encodeURIComponent(data.message || "Unknown error"));
+        // Передаем код ошибки, а не сообщение
+        const errorCode = data.error || "unknown_error";
+        router.push("/hr/settings/hh-integration?error=" + encodeURIComponent(errorCode));
       }
     } catch (err: any) {
-      router.push("/hr/settings/hh-integration?error=" + encodeURIComponent(err.message || "Network error"));
+      router.push("/hr/settings/hh-integration?error=network_error");
     }
   };
 

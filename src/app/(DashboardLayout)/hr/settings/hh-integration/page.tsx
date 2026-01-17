@@ -183,10 +183,16 @@ export default function HhIntegrationPage() {
   useEffect(() => {
     const code = searchParams.get('code');
     const state = searchParams.get('state');
-    const error = searchParams.get('error');
+    const errorParam = searchParams.get('error');
 
-    if (error) {
-      setError(_(msg`Ошибка авторизации: ${error}`));
+    if (errorParam) {
+      // Специальная обработка режима соискателя
+      if (errorParam === 'applicant_mode') {
+        setWarning(_(msg`Вы находитесь в режиме соискателя на HeadHunter. Для подключения интеграции переключитесь в режим работодателя/рекрутера на сайте hh.ru и повторите попытку.`));
+      } else {
+        // Обычная ошибка
+        setError(_(msg`Ошибка авторизации: ${errorParam}`));
+      }
       setLoading(false);
       return;
     }
