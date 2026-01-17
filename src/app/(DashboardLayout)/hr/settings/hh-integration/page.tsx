@@ -122,6 +122,7 @@ export default function HhIntegrationPage() {
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null); // Для предупреждений (не ошибок)
   const [success, setSuccess] = useState<string | null>(null);
   
   // Новые состояния для выборочного импорта вакансий
@@ -225,10 +226,10 @@ export default function HhIntegrationPage() {
         setSuccess(_(msg`HH.ru успешно подключен!`));
         await fetchStatus();
       } else {
-        // Специальная обработка ошибки режима соискателя
+        // Специальная обработка ошибки режима соискателя - это ПРЕДУПРЕЖДЕНИЕ, не ошибка
         if (data.error === 'applicant_mode') {
-          const errorMessage = _(msg`Вы авторизовались в режиме соискателя. Пожалуйста, на сайте hh.ru переключитесь в режим работодателя (работодатель/рекрутер) и повторите подключение.`);
-          throw new Error(errorMessage);
+          setWarning(_(msg`Вы находитесь в режиме соискателя на HeadHunter. Для подключения интеграции переключитесь в режим работодателя/рекрутера на сайте hh.ru и повторите попытку.`));
+          return;
         }
         
         // Backend: {success: false, error: 'hh.oauth_callback_failed'}
@@ -614,6 +615,26 @@ export default function HhIntegrationPage() {
           </Alert>
         )}
 
+        {warning && (
+          <Alert severity="warning" sx={{ mb: 3 }} onClose={() => setWarning(null)}>
+            <Typography variant="body2" fontWeight="bold" gutterBottom>
+              ⚠️ <Trans>Вы в режиме соискателя</Trans>
+            </Typography>
+            <Typography variant="body2" mb={2}>
+              {warning}
+            </Typography>
+            <Typography variant="body2" fontWeight={600} mb={1}>
+              <Trans>Как переключиться в режим работодателя:</Trans>
+            </Typography>
+            <ol style={{ margin: '8px 0', paddingLeft: '20px' }}>
+              <li><Trans>Откройте сайт</Trans> <strong>hh.ru</strong></li>
+              <li><Trans>В правом верхнем углу найдите переключатель режимов</Trans></li>
+              <li><Trans>Выберите</Trans> <strong>"<Trans>Работодатель</Trans>"</strong> <Trans>или</Trans> <strong>"<Trans>Рекрутер</Trans>"</strong></li>
+              <li><Trans>Вернитесь сюда и нажмите</Trans> <strong>"<Trans>Подключить HH.ru</Trans>"</strong> <Trans>снова</Trans></li>
+            </ol>
+          </Alert>
+        )}
+
         {success && (
           <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess(null)}>
             {success}
@@ -674,21 +695,20 @@ export default function HhIntegrationPage() {
                   <Box>
                     <Typography variant="body1" color="text.secondary" mb={3}><Trans>Подключите ваш аккаунт работодателя HH.ru для автоматической синхронизации вакансий и получения откликов кандидатов.</Trans></Typography>
 
-                    {/* Важное предупреждение о режиме работодателя */}
-                    <Alert severity="warning" sx={{ mb: 3 }}>
-                      <Typography variant="body2" fontWeight="bold" gutterBottom>
-                        ⚠️ <Trans>Важно: Убедитесь, что вы в режиме работодателя</Trans>
-                      </Typography>
-                      <Typography variant="body2" mb={1}>
-                        <Trans>На HeadHunter один аккаунт может иметь два режима: соискатель и работодатель.</Trans>
-                      </Typography>
-                      <Typography variant="body2" mb={1}>
-                        <Trans>Перед подключением убедитесь, что на сайте hh.ru вы находитесь в режиме <strong>работодателя/рекрутера</strong>, а не соискателя.</Trans>
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>💡 Проверить режим можно в правом верхнем углу на сайте hh.ru</Trans>
-                      </Typography>
-                    </Alert>
+                    {/* Важное предупреждение о режиме работодателя - показываем только если НЕТ warning вверху */}
+                    {!warning && (
+                      <Alert severity="info" sx={{ mb: 3 }}>
+                        <Typography variant="body2" fontWeight="bold" gutterBottom>
+                          💡 <Trans>Важно: Убедитесь, что вы в режиме работодателя</Trans>
+                        </Typography>
+                        <Typography variant="body2" mb={1}>
+                          <Trans>На HeadHunter один аккаунт может иметь два режима: соискатель и работодатель.</Trans>
+                        </Typography>
+                        <Typography variant="body2">
+                          <Trans>Перед подключением убедитесь, что на сайте hh.ru вы находитесь в режиме <strong>работодателя/рекрутера</strong>, а не соискателя.</Trans>
+                        </Typography>
+                      </Alert>
+                    )}
 
                     <Button
                       variant="contained"

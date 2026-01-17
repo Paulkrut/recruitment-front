@@ -6,11 +6,13 @@ const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.
 export function useHhConnection() {
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null); // Для предупреждений
 
   const startOAuth = async () => {
     try {
       setConnecting(true);
       setError(null);
+      setWarning(null);
       const response = await apiFetch(`${API_BASE}/api/hh-integration/start-oauth`);
       const data = await response.json();
       
@@ -29,6 +31,7 @@ export function useHhConnection() {
     try {
       setConnecting(true);
       setError(null);
+      setWarning(null);
       const response = await apiFetch(`${API_BASE}/api/hh-integration/oauth-callback`, {
         method: 'POST',
         body: JSON.stringify({ code, state }),
@@ -36,10 +39,10 @@ export function useHhConnection() {
       const data = await response.json();
 
       if (!data.success) {
-        // Специальная обработка ошибки режима соискателя
+        // Специальная обработка ошибки режима соискателя - это ПРЕДУПРЕЖДЕНИЕ
         if (data.error === 'applicant_mode') {
-          const errorMessage = 'Вы авторизовались в режиме соискателя. Пожалуйста, на сайте hh.ru переключитесь в режим работодателя (работодатель/рекрутер) и повторите подключение.';
-          throw new Error(errorMessage);
+          setWarning('Вы находитесь в режиме соискателя на HeadHunter. Для подключения интеграции переключитесь в режим работодателя/рекрутера на сайте hh.ru и повторите попытку.');
+          throw new Error('APPLICANT_MODE'); // Чтобы прервать выполнение, но не как обычная ошибка
         }
         
         throw new Error(data.message || data.error || 'Ошибка авторизации');
@@ -47,7 +50,9 @@ export function useHhConnection() {
 
       return data;
     } catch (err: any) {
-      setError(err.message || 'Ошибка обработки авторизации');
+      if (err.message !== 'APPLICANT_MODE') {
+        setError(err.message || 'Ошибка обработки авторизации');
+      }
       throw err;
     } finally {
       setConnecting(false);
@@ -58,6 +63,7 @@ export function useHhConnection() {
     try {
       setConnecting(true);
       setError(null);
+      setWarning(null);
       const response = await apiFetch(`${API_BASE}/api/hh-integration/disconnect`, {
         method: 'POST',
       });
@@ -74,6 +80,7 @@ export function useHhConnection() {
   return {
     connecting,
     error,
+    warning,
     startOAuth,
     handleCallback,
     disconnect,
