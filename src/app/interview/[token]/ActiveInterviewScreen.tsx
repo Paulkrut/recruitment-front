@@ -133,7 +133,7 @@ export default function ActiveInterviewScreen({
   `;
 
   // Обработчики для текстовых ответов
-  const handleTextKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleTextKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     tracker.current.onKeyPress(e.key, textAnswer.length);
   };
   
@@ -141,7 +141,7 @@ export default function ActiveInterviewScreen({
     setTextAnswer(e.target.value);
   };
   
-  const handleTextPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+  const handleTextPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault(); // Запрещаем вставку из буфера обмена
   };
   
