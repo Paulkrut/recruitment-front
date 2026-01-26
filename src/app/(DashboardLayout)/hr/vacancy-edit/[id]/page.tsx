@@ -20,9 +20,14 @@ import {
   Switch,
   Alert,
   MenuItem,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import Link from "next/link";
-import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconArrowUp, IconArrowDown, IconTrash, IconFileText } from "@tabler/icons-react";
+import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconArrowUp, IconArrowDown, IconTrash, IconFileText, IconKeyboard, IconVideo } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
@@ -892,6 +897,56 @@ export default function HRVacancyEditPage() {
                               }
                             }}
                           />
+                        </Box>
+                        
+                        {/* Тип вопроса */}
+                        <Box mt={3}>
+                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 2 }}>
+                            <Trans>Тип ответа</Trans>
+                          </CustomFormLabel>
+                          <FormControl component="fieldset">
+                            <RadioGroup
+                              row
+                              value={question.type || 'text'}
+                              onChange={(e) => updateQuestion(qIndex, "type", e.target.value)}
+                            >
+                              <FormControlLabel
+                                value="text"
+                                control={<Radio />}
+                                label={
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <IconVideo size={20} />
+                                    <Box>
+                                      <Typography variant="body1" fontWeight={600}>
+                                        <Trans>Видео/Аудио</Trans>
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary">
+                                        <Trans>Кандидат записывает себя</Trans>
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                }
+                                sx={{ mr: 4 }}
+                              />
+                              <FormControlLabel
+                                value="typing"
+                                control={<Radio />}
+                                label={
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <IconKeyboard size={20} />
+                                    <Box>
+                                      <Typography variant="body1" fontWeight={600}>
+                                        <Trans>Письменный</Trans>
+                                      </Typography>
+                                      <Typography variant="caption" color="text.secondary">
+                                        <Trans>Кандидат печатает текст</Trans>
+                                      </Typography>
+                                    </Box>
+                                  </Box>
+                                }
+                              />
+                            </RadioGroup>
+                          </FormControl>
                         </Box>
                       </Paper>
                     ))}

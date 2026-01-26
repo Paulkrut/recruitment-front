@@ -31,6 +31,7 @@ export default function EvaluationResult({ summary,strengths,weaknesses,metrics 
     if (metricLower.includes('technical') || metricLower.includes(_(msg`технический`))) return '⚙️';
     if (metricLower.includes('teamwork') || metricLower.includes(_(msg`команда`))) return '🤝';
     if (metricLower.includes('motivation') || metricLower.includes(_(msg`мотивация`))) return '🚀';
+    if (metricLower.includes('writing') || metricLower.includes(_(msg`письм`))) return '✍️';
     if (metricLower.includes(_(msg`стресс`)) || metricLower.includes('stress')) return '🛡️';
     return '📊';
   };
@@ -43,6 +44,7 @@ export default function EvaluationResult({ summary,strengths,weaknesses,metrics 
       'TECHNICAL': _(msg`Технические навыки`),
       'TEAMWORK': _(msg`Работа в команде`),
       'MOTIVATION': _(msg`Мотивация`),
+      'WRITING_QUALITY': _(msg`Качество письменной речи`),
       'Стрессоустойчивость': _(msg`Стрессоустойчивость`)
     };
     return labels[metric] || metric;

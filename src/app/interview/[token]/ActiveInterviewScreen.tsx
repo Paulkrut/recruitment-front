@@ -5,9 +5,10 @@
  * 
  * Это основной экран где кандидат отвечает на вопросы в режиме реального времени.
  * Включает чат, вебкамеру, управление записью, таймеры.
+ * Поддерживает как видео/аудио ответы, так и текстовые (typing).
  */
 
-import { RefObject, useRef, useEffect } from "react";
+import { RefObject, useRef, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -24,6 +25,8 @@ import GraphicEqIcon from "@mui/icons-material/GraphicEq";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import SendIcon from "@mui/icons-material/Send";
+import { TypingTracker } from "./utils/TypingTracker";
 
 interface ActiveInterviewScreenProps {
   question: any;
@@ -48,6 +51,12 @@ interface ActiveInterviewScreenProps {
   onStartRecording: () => void;
   onStopRecording: () => void;
   onSubmitAnswer: () => void;
+  onSubmitTextAnswer?: (data: {
+    text_answer: string;
+    typing_start_time: string;
+    typing_end_time: string;
+    typing_metadata: string;
+  }) => void;
   onSkipQuestion: () => void;
   onPauseInterview: () => void;
   onUserInputChange: (value: string) => void;
@@ -81,6 +90,7 @@ export default function ActiveInterviewScreen({
   onStartRecording,
   onStopRecording,
   onSubmitAnswer,
+  onSubmitTextAnswer,
   onSkipQuestion,
   onPauseInterview,
   onUserInputChange,
@@ -92,6 +102,10 @@ export default function ActiveInterviewScreen({
 }: ActiveInterviewScreenProps) {
   const { _ } = useLingui();
   const chatVideoRef = useRef<HTMLVideoElement|null>(null);
+  
+  // Состояния для текстовых ответов
+  const [textAnswer, setTextAnswer] = useState('');
+  const tracker = useRef(new TypingTracker());
 
   // Подключаем stream к video элементу в чате
   useEffect(() => {
@@ -117,6 +131,57 @@ export default function ActiveInterviewScreen({
       transform: translateX(30px) scale(0.8);
     }
   `;
+
+  // Обработчики для текстовых ответов
+  const handleTextKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    tracker.current.onKeyPress(e.key, textAnswer.length);
+  };
+  
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTextAnswer(e.target.value);
+  };
+  
+  const handleTextPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    e.preventDefault(); // Запрещаем вставку из буфера обмена
+  };
+  
+  const handleTextSubmit = () => {
+    if (textAnswer.trim().length < 10) {
+      alert('Ответ слишком короткий. Минимум 10 символов.');
+      return;
+    }
+    
+    const metrics = tracker.current.finish();
+    
+    if (!metrics.startTime || !onSubmitTextAnswer) {
+      alert('Пожалуйста, введите ответ');
+      return;
+    }
+    
+    onSubmitTextAnswer({
+      text_answer: textAnswer.trim(),
+      typing_start_time: metrics.startTime.toISOString(),
+      typing_end_time: metrics.endTime!.toISOString(),
+      typing_metadata: JSON.stringify({
+        pauses: metrics.pauses,
+        corrections: metrics.corrections,
+        timeline: metrics.timeline
+      })
+    });
+    
+    // Сбрасываем состояния
+    setTextAnswer('');
+    tracker.current.reset();
+  };
+  
+  // Сброс при смене вопроса
+  useEffect(() => {
+    setTextAnswer('');
+    tracker.current.reset();
+  }, [question?.id]);
+  
+  // Определяем является ли вопрос текстовым
+  const isTypingQuestion = question?.type === 'typing';
 
   return (
     <Box sx={{
@@ -514,7 +579,7 @@ export default function ActiveInterviewScreen({
           </Box>
         )}
 
-        {/* answer input – только аудио */}
+        {/* answer input */}
         <Box sx={{
           display: "flex",
           gap: 2,
@@ -522,7 +587,67 @@ export default function ActiveInterviewScreen({
           flexDirection: isMobile ? 'column' : 'row',
           alignItems: 'center'
         }}>
-          {!recording && !recordedBlob ? (
+          {isTypingQuestion ? (
+            /* Текстовое поле для письменного ответа */
+            <>
+              <TextField
+                multiline
+                rows={3}
+                fullWidth
+                value={textAnswer}
+                onChange={handleTextChange}
+                onKeyDown={handleTextKeyDown}
+                onPaste={handleTextPaste}
+                placeholder="Введите ваш ответ..."
+                disabled={loadingNextQuestion}
+                sx={{ 
+                  bgcolor: '#fff',
+                  borderRadius: '12px',
+                  '& .MuiInputBase-root': {
+                    fontSize: '14px',
+                    lineHeight: 1.5,
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '&:hover fieldset': {
+                      borderColor: '#25d366',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#25d366',
+                    }
+                  }
+                }}
+              />
+              <Button
+                variant="contained"
+                onClick={handleTextSubmit}
+                disabled={loadingNextQuestion || textAnswer.trim().length < 10}
+                fullWidth={isMobile}
+                size={isMobile ? 'large' : 'medium'}
+                endIcon={<SendIcon />}
+                sx={{
+                  fontWeight: 600,
+                  bgcolor: '#25d366',
+                  '&:hover': {
+                    bgcolor: '#128c7e',
+                  },
+                  '&:disabled': {
+                    opacity: 0.6,
+                    bgcolor: '#ccc',
+                  },
+                  borderRadius: '24px',
+                  textTransform: 'none',
+                  fontSize: '14px',
+                  px: 3,
+                  minWidth: isMobile ? 'auto' : '140px'
+                }}
+              >
+                {loadingNextQuestion ? <Trans>Отправка...</Trans> : <Trans>Отправить</Trans>}
+              </Button>
+            </>
+          ) : (
+            /* Кнопки записи видео/аудио */
+            <>
+            {!recording && !recordedBlob ? (
             <>
               <Button
                 variant="contained"
@@ -649,6 +774,8 @@ export default function ActiveInterviewScreen({
               </Button>
             </>
           ) : null}
+          </>
+          )}
         </Box>
       </Box>
     </Box>

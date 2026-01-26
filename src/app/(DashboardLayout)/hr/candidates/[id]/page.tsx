@@ -60,6 +60,7 @@ import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
 import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEventsTimeline';
+import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -636,7 +637,20 @@ export default function CandidateDetailPage() {
                         <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
                         <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
                         {a.aiComment && (
-                          <Typography variant="body2" sx={{mb:1, color:'#ffeb3b'}}><Trans><b>AI-характеристика:</b> {a.aiComment}</Trans></Typography>
+                          <Typography variant="body2" sx={{mb:1}}><Trans><b>AI-характеристика:</b> {a.aiComment}</Trans></Typography>
+                        )}
+                        {/* Метрики печати для текстовых ответов */}
+                        {a.typingMetrics && (
+                          <Accordion sx={{mt:2, boxShadow:'none', border:'1px solid #e0e0e0'}}>
+                            <AccordionSummary expandIcon={<IconChevronDown />}>
+                              <Typography variant="subtitle2" sx={{fontWeight:600}}>
+                                📊 <Trans>Метрики печати</Trans>
+                              </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <TypingMetricsDisplay metrics={a.typingMetrics} finalText={a.text || ''} />
+                            </AccordionDetails>
+                          </Accordion>
                         )}
                         {a.audio && (
                           <Box mb={1} display="flex" alignItems="center" gap={1}>
@@ -697,7 +711,7 @@ export default function CandidateDetailPage() {
                       <Box mb={1}>
                         <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}><Trans>Метрики оценки:</Trans></Typography>
                         <Grid container spacing={2}>
-                          {Object.entries(aiMetrics).map(([metric, value]) => {
+                          {Object.entries(aiMetrics).filter(([key]) => key !== 'writing_analysis').map(([metric, value]) => {
                             const score = typeof value === 'number' ? value : 0;
                             const getColor = (score: number) => {
                               if (score >= 80) return 'success';
@@ -712,6 +726,7 @@ export default function CandidateDetailPage() {
                               if (metricLower.includes('technical') || metricLower.includes(_(msg`технический`))) return '⚙️';
                               if (metricLower.includes('teamwork') || metricLower.includes(_(msg`команда`))) return '🤝';
                               if (metricLower.includes('motivation') || metricLower.includes(_(msg`мотивация`))) return '🚀';
+                              if (metricLower.includes('writing') || metricLower.includes(_(msg`письм`))) return '✍️';
                               if (metricLower.includes(_(msg`стресс`)) || metricLower.includes('stress')) return '🛡️';
                               return '📊';
                             };
@@ -723,6 +738,7 @@ export default function CandidateDetailPage() {
                                 'TECHNICAL': _(msg`Технические навыки`),
                                 'TEAMWORK': _(msg`Работа в команде`),
                                 'MOTIVATION': _(msg`Мотивация`),
+                                'WRITING_QUALITY': _(msg`Качество письменной речи`),
                                 'Стрессоустойчивость': _(msg`Стрессоустойчивость`)
                               };
                               return labels[metric] || metric;
@@ -778,6 +794,65 @@ export default function CandidateDetailPage() {
                             );
                           })}
                         </Grid>
+                      </Box>
+                    )}
+                    {/* Анализ письменной речи (writing_analysis) */}
+                    {aiMetrics?.writing_analysis && (
+                      <Box mb={1} sx={{ mt: 3 }}>
+                        <Card sx={{ p: 3, backgroundColor: '#f8f9fa', border: '1px solid #e0e0e0' }}>
+                          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <span>✍️</span>
+                            <Trans>Анализ письменной речи</Trans>
+                          </Typography>
+                          {typeof aiMetrics.writing_analysis === 'object' && (
+                            <Stack spacing={2}>
+                              {aiMetrics.writing_analysis.grammar_quality && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Грамматика и орфография:</Trans></Typography>
+                                  <Typography variant="body2">{aiMetrics.writing_analysis.grammar_quality}</Typography>
+                                </Box>
+                              )}
+                              {aiMetrics.writing_analysis.style_quality && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Стиль и ясность:</Trans></Typography>
+                                  <Typography variant="body2">{aiMetrics.writing_analysis.style_quality}</Typography>
+                                </Box>
+                              )}
+                              {aiMetrics.writing_analysis.structure_quality && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Структура:</Trans></Typography>
+                                  <Typography variant="body2">{aiMetrics.writing_analysis.structure_quality}</Typography>
+                                </Box>
+                              )}
+                              {aiMetrics.writing_analysis.strengths && aiMetrics.writing_analysis.strengths.length > 0 && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Сильные стороны:</Trans></Typography>
+                                  <ul style={{margin: 0, paddingLeft: '20px'}}>
+                                    {aiMetrics.writing_analysis.strengths.map((s: string, i: number) => (
+                                      <li key={i}><Typography variant="body2">{s}</Typography></li>
+                                    ))}
+                                  </ul>
+                                </Box>
+                              )}
+                              {aiMetrics.writing_analysis.weaknesses && aiMetrics.writing_analysis.weaknesses.length > 0 && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Области для улучшения:</Trans></Typography>
+                                  <ul style={{margin: 0, paddingLeft: '20px'}}>
+                                    {aiMetrics.writing_analysis.weaknesses.map((w: string, i: number) => (
+                                      <li key={i}><Typography variant="body2">{w}</Typography></li>
+                                    ))}
+                                  </ul>
+                                </Box>
+                              )}
+                              {aiMetrics.writing_analysis.recommendation && (
+                                <Box>
+                                  <Typography variant="caption" fontWeight={600} color="text.secondary"><Trans>Рекомендации:</Trans></Typography>
+                                  <Typography variant="body2">{aiMetrics.writing_analysis.recommendation}</Typography>
+                                </Box>
+                              )}
+                            </Stack>
+                          )}
+                        </Card>
                       </Box>
                     )}
                   </Stack>
