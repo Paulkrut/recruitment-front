@@ -36,7 +36,7 @@ import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
-import QuestionItem, { QuestionDraft } from "./QuestionItem";
+import QuestionFormItem, { QuestionDraft } from "@/components/QuestionFormItem";
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -741,7 +741,7 @@ export default function HRVacancyCreatePage() {
               </Box>
 
               {questions.map((question, qIndex) => (
-                <QuestionItem
+                <QuestionFormItem
                   key={qIndex}
                   question={question}
                   index={qIndex}
@@ -750,6 +750,8 @@ export default function HRVacancyCreatePage() {
                   onRemove={removeQuestion}
                   onMoveUp={moveQuestionUp}
                   onMoveDown={moveQuestionDown}
+                  showTypeSelector={true}
+                  variant="create"
                 />
               ))}
 

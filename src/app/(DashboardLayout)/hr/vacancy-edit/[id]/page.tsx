@@ -31,7 +31,7 @@ import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import RichTextEditor from "@/components/RichTextEditor";
 import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
-import QuestionEditItem, { QuestionDraft } from "./QuestionEditItem";
+import QuestionFormItem, { QuestionDraft } from "@/components/QuestionFormItem";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -857,7 +857,7 @@ export default function HRVacancyEditPage() {
                 ) : (
                   <Stack spacing={3}>
                     {questions.map((question, qIndex) => (
-                      <QuestionEditItem
+                      <QuestionFormItem
                         key={question.id || qIndex}
                         question={question}
                         index={qIndex}
@@ -866,6 +866,8 @@ export default function HRVacancyEditPage() {
                         onRemove={removeQuestion}
                         onMoveUp={moveQuestionUp}
                         onMoveDown={moveQuestionDown}
+                        showTypeSelector={true}
+                        variant="edit"
                       />
                     ))}
                   </Stack>
