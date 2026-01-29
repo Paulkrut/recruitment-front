@@ -2,10 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress, Menu, MenuItem
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -45,6 +45,7 @@ import KanbanView from './KanbanView';
 import CandidatesList from './CandidatesList';
 import CandidateFilters from './CandidateFilters';
 import BulkActionsPanel from './BulkActionsPanel';
+import { VacancyReportGenerator } from '@/services/export/reports/vacancy/VacancyReportGenerator';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
@@ -149,6 +150,7 @@ export default function HRVacancyDetailPage() {
   const [compareOpen, setCompareOpen] = useState(false);
   const [selectedCandidates, setSelectedCandidates] = useState<number[]>([]);
   const [snackbar, setSnackbar] = useState('');
+  const [reportsMenuAnchor, setReportsMenuAnchor] = useState<null | HTMLElement>(null);
   const [tab, setTab] = useState('1');
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0); // Для обновления списка
@@ -277,6 +279,26 @@ export default function HRVacancyDetailPage() {
     } catch (error) {
       setSnackbar(_(msg`Ошибка при восстановлении`));
     }
+  };
+
+  const handleExportReport = async () => {
+    try {
+      setReportsMenuAnchor(null); // Закрываем меню
+      setSnackbar(_(msg`Генерация отчёта...`));
+      await VacancyReportGenerator.generate(parseInt(id as string));
+      setSnackbar(_(msg`Отчёт успешно сформирован!`));
+    } catch (error) {
+      console.error('Error exporting report:', error);
+      setSnackbar(_(msg`Ошибка при формировании отчёта`));
+    }
+  };
+
+  const handleOpenReportsMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setReportsMenuAnchor(event.currentTarget);
+  };
+
+  const handleCloseReportsMenu = () => {
+    setReportsMenuAnchor(null);
   };
 
   const handleArchiveVacancy = async () => {
@@ -692,6 +714,32 @@ export default function HRVacancyDetailPage() {
                 >
             <Trans>Редактировать</Trans>
           </Button>
+                <Tooltip title={_(msg`Отчёты`)}>
+                  <Button 
+                    variant="outlined" 
+                    color="primary" 
+                    size="large" 
+                    onClick={handleOpenReportsMenu}
+                    startIcon={<IconDownload size={20}/>}
+                    sx={{ minWidth: 140 }}
+                  >
+                    <Trans>Отчёты</Trans>
+                  </Button>
+                </Tooltip>
+                <Menu
+                  anchorEl={reportsMenuAnchor}
+                  open={Boolean(reportsMenuAnchor)}
+                  onClose={handleCloseReportsMenu}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                >
+                  <MenuItem onClick={handleExportReport}>
+                    <IconDownload size={18} style={{ marginRight: 8 }} />
+                    <Trans>Отчёт по кандидатам</Trans>
+                  </MenuItem>
+                </Menu>
                 <Tooltip title={_(msg`В архив`)}>
                   <Button 
                     variant="outlined" 
@@ -963,179 +1011,7 @@ export default function HRVacancyDetailPage() {
                     />
                   )}
 
-                  {/* OLD TABLE CODE - УДАЛИТЬ
-                    <DataTable columns={[
-                    {field:'select',header:(
-                      <Checkbox
-                        checked={selectedCandidates.length === finishedCandidates.length && finishedCandidates.length > 0}
-                        indeterminate={selectedCandidates.length > 0 && selectedCandidates.length < finishedCandidates.length}
-                        onChange={handleSelectAll}
-                        size="small"
-                        color="primary"
-                      />
-                    ),render:(r:any)=>(
-                      <Box>
-                        <Checkbox
-                          checked={selectedCandidates.includes(r.id)}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              setSelectedCandidates([...selectedCandidates, r.id]);
-                            } else {
-                              setSelectedCandidates(selectedCandidates.filter(id => id !== r.id));
-                            }
-                          }}
-                          disabled={r.status !== 'finished'}
-                          size="small"
-                          color="primary"
-                        />
-                        {r.status !== 'finished' && (
-                          <Tooltip title={_(msg`Кандидат еще не завершил тест`)} arrow>
-                            <Box component="span" sx={{ ml: 0.5, color: 'text.disabled', fontSize: '0.75rem' }}>
-                              ⏳
-                            </Box>
-                          </Tooltip>
-                        )}
-                      </Box>
-                    )},
-                    {field:'name',header: _(msg`Имя`),render:(r:any)=>(
-                      <Box display="flex" alignItems="center" gap={1}>
-                      <Link href={`/hr/candidates/${r.id}`} style={{ textDecoration: 'none' }}>
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Avatar sx={{ width: 28, height: 28, bgcolor: '#1976d2', fontWeight: 700, fontSize: '0.75rem' }}>{r.name ? r.name.split(' ').map((n:string)=>n[0]).join('').toUpperCase() : '?'}</Avatar>
-                          <Typography sx={{color:'#1976d2',fontWeight:700, fontSize: '0.875rem'}}>{r.name}</Typography>
-                        </Box>
-                      </Link>
-                        {r.candidateOpinion && (
-                          <Tooltip title={_(msg`У кандидата есть дополнительная информация`)} arrow>
-                            <CommentIcon sx={{ fontSize: 16, color: 'primary.main', ml: 0.5 }} />
-                          </Tooltip>
-                        )}
-                      </Box>
-                    )},
-                    {field:'contact',header: _(msg`Контакты`),render:(r:any)=>(
-                      <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {r.phone || '-'}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: '0.875rem' }}>
-                          {r.email || '-'}
-                        </Typography>
-                      </Box>
-                    )},
-                    {field:'status',header: _(msg`Статус`), render:(r:any)=>(<Chip size="small" label={getStatusLabel(r.status, _)} />)} ,
-                    {field:'score',header: _(msg`Оценка`),render:(r:any)=>{
-                      if (r.score !== undefined && r.score !== null) {
-                        return (
-                          <Chip
-                            label={r.score}
-                            color={r.score >= 8 ? 'success' : r.score >= 5 ? 'warning' : 'error'}
-                            size="small"
-                          />
-                        );
-                      } else if (r.status === 'finished') {
-                        return (
-                          <Chip
-                            label="..."
-                            color="info"
-                            size="small"
-                          />
-                        );
-                      } else {
-                        return (
-                          <Chip
-                            label="—"
-                            color="default"
-                            size="small"
-                          />
-                        );
-                      }
-                    }},
-                    {field:'createdAt',header: _(msg`Дата`),render:(r:any)=>r.createdAt ? (
-                        <Typography variant="body2" sx={{ fontWeight: 500, color: 'text.primary' }}>
-                        {formatDateToLocal(r.createdAt)}
-                        </Typography>
-                    ) : '-'},
-                    {field:'trustLevel',header: _(msg`Доверие`),render:(r:any)=>{
-                      // Если нет fingerprint'а - показываем пустой кружок
-                      if (!r.deviceFingerprint) {
-                        return (
-                          <Tooltip title={_(msg`❓ Нет данных об устройстве`)} arrow>
-                            <Box sx={{
-                              width: 14,
-                              height: 14,
-                              borderRadius: '50%',
-                              border: '2px solid #ccc',
-                              display: 'inline-block'
-                            }} />
-                          </Tooltip>
-                        );
-                      }
 
-                      // Проверяем есть ли другие кандидаты с таким же device fingerprint
-                      const hasDuplicateDevice = candidates.some(c =>
-                        c.id !== r.id &&
-                        c.deviceFingerprint &&
-                        r.deviceFingerprint &&
-                        c.deviceFingerprint === r.deviceFingerprint
-                      );
-
-                      return (
-                        <Tooltip title={hasDuplicateDevice ? _(msg`⚠️ Устройство использовалось другими кандидатами`) : _(msg`✅ Уникальное устройство`)
-                        } arrow>
-                          <Box sx={{
-                            width: 14,
-                            height: 14,
-                            borderRadius: '50%',
-                            bgcolor: hasDuplicateDevice ? 'error.main' : 'success.main',
-                            display: 'inline-block'
-                          }} />
-                        </Tooltip>
-                      );
-                    }},
-                    {field:'actions',header:'',render:(r:any)=>(
-                      <Box display="flex" gap={1} alignItems="center">
-                        <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
-                          <IconButton size="small" color="primary" onClick={() => {
-                            navigator.clipboard.writeText(typeof window !== 'undefined' ? `${window.location.origin}/interview/${r.token}` : '');
-                            setSnackbar(_(msg`Ссылка скопирована!`));
-                          }}>
-                            <ContentCopyIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={_(msg`Показать QR-код для интервью`)}>
-                          <IconButton size="small" color="secondary" onClick={() => setQrDialog({open:true,url:typeof window !== 'undefined' ? `${window.location.origin}/interview/${r.token}` : ''})}>
-                            <QrCodeIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={_(msg`Удалить кандидата`)}>
-                          <IconButton size="small" color="error" onClick={() => {
-                            if (window.confirm(_(msg`Вы уверены, что хотите удалить этого кандидата?`))) {
-                              apiFetch(`${API_BASE}/api/admin/candidates/${r.id}`, { method: 'DELETE' })
-                                .then(response => {
-                                  if (response.ok) {
-                                    setSnackbar(_(msg`Кандидат удален!`));
-                                    // Обновляем список кандидатов
-                                    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/candidates`)
-                                      .then(r => r.json())
-                                      .then(setCandidates);
-                                  } else {
-                                    return response.json().then(data => {
-                                      throw new Error(data.error || _(msg`Ошибка удаления`));
-                                    });
-                                  }
-                                })
-                                .catch(e => {
-                                  setSnackbar(_(msg`Ошибка удаления: ${e.message}`));
-                                });
-                            }
-                          }}>
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    )},
-                  ]} rows={filteredCandidates} defaultRowsPerPage={7} />
-                  END OLD TABLE CODE */}
                   <Snackbar
                     open={!!snackbar}
                     autoHideDuration={2000}

@@ -148,11 +148,11 @@ msgstr " — role: {0}"
 msgid " ({elapsedTime}с)"
 msgstr " ({elapsedTime}s)"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:858
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:906
 msgid " (минимум 2 для сравнения)"
 msgstr " (minimum 2 for comparison)"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:859
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:907
 msgid " (но нет завершенных кандидатов для сравнения)"
 msgstr " (but no completed candidates for comparison)"
 
@@ -613,7 +613,7 @@ msgid "⏱️ Обработка ответов может занимать до
 msgstr "⏱️ Response Processing Can Take Up to 20 Minutes"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:612
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:326
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:348
 msgid "⏱️ Превышено время ожидания"
 msgstr "⏱️ Timeout Exceeded"
 
@@ -758,7 +758,7 @@ msgstr "⚠️ Access Token Revoked"
 #. placeholder {0}: job.succeeded
 #. placeholder {1}: job.total
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:643
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:357
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:379
 msgid "⚠️ Частично отправлено: {0}/{1}"
 msgstr "⚠️ Partially Sent: {0}/{1}"
 
@@ -771,7 +771,7 @@ msgstr "⚠️ Partially Sent: {0}/{1}"
 msgid "⚠️ Что именно нужно удалить у HR-клиентов!"
 msgstr "⚠️ What Exactly Needs to Be Deleted from HR Clients!"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:757
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:805
 msgid "⚠️ Эта вакансия удалена. Кандидаты не могут проходить интервью."
 msgstr "⚠️ This vacancy has been deleted. Candidates cannot take interviews."
 
@@ -802,7 +802,7 @@ msgstr "✅ Your Strengths"
 #. placeholder {0}: job.succeeded
 #. placeholder {1}: job.total
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:641
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:355
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:377
 msgid "✅ Все приглашения отправлены ({0}/{1})"
 msgstr "✅ All Invitations Sent ({0}/{1})"
 
@@ -817,7 +817,7 @@ msgstr "✅ Data Successfully Deleted!"
 
 #. placeholder {0}: finishedCandidates.length
 #. placeholder {1}: candidates.length > finishedCandidates.length && ( <span> (еще {candidates.length - finishedCandidates.length} не завершили тест)</span> )
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:865
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:913
 msgid "✅ Доступно для сравнения: <0>{0}</0> кандидатов{1}"
 msgstr "✅ Available for Comparison: <0>{0}</0> candidates{1}"
 
@@ -874,7 +874,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1273
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1477
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1353
 msgid "✅ Отправка завершена"
 msgstr "✅ Sending Completed"
 
@@ -1029,7 +1029,7 @@ msgstr ""
 "📧 If the problem persists, contact your HR manager."
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:645
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:359
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:381
 msgid "❌ Не удалось отправить приглашения"
 msgstr "❌ Failed to Send Invitations"
 
@@ -1070,7 +1070,7 @@ msgstr "❌ Send Error"
 
 #. placeholder {0}: job.errorMessage || 'Unknown error'
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:648
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:362
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:384
 msgid "❌ Ошибка отправки: {0}"
 msgstr "❌ Sending Error: {0}"
 
@@ -1338,7 +1338,7 @@ msgstr "⭐ Popular"
 msgid "⭐ Финалист"
 msgstr "⭐ Finalist"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:561
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:583
 msgid "🌐 Ссылка для самозаписи на интервью"
 msgstr "🌐 Self-Booking Link for Interview"
 
@@ -1484,7 +1484,7 @@ msgstr "💡 <0>Why does this take time?</0><1/>• AI analyzes every response f
 msgid "💡 <0>Рекомендация:</0> Дождитесь завершения интервью кандидатами для получения более точного анализа"
 msgstr "💡 <0>Recommendation:</0> Wait for candidates to complete interviews for more accurate analysis"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:569
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:591
 msgid "💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке \"Кандидаты\" → \"Добавить кандидата\" — так исключите повторные прохождения под разными именами."
 msgstr "💡 For specific candidates, create personal links in the \"Candidates\" tab → \"Add Candidate\" — this prevents repeated attempts under different names."
 
@@ -1496,7 +1496,7 @@ msgstr "💡 If You Have Questions About Testing, Contact Your HR Manager"
 msgid "💡 Если у вас есть вопросы, пожалуйста, свяжитесь с представителем компании."
 msgstr "💡 If you have any questions, please contact a company representative."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:655
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:677
 msgid "💡 Используйте для временной приостановки набора или после закрытия вакансии."
 msgstr "💡 Use for temporary hiring pause or after closing the vacancy."
 
@@ -1681,7 +1681,7 @@ msgstr "📋 Regulation Knowledge Tests"
 msgid "📋 Что это за страница и зачем она нужна?"
 msgstr "📋 What Is This Page and Why Is It Needed?"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:567
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:589
 msgid "📌 Используйте для размещения на сайтах вакансий, в соцсетях, массовых рассылках."
 msgstr "📌 Use for posting on job sites, social networks, mass mailings."
 
@@ -1738,7 +1738,7 @@ msgid "📤 Отправить приглашения ({hhCandidatesCount})"
 msgstr "📤 Send Invitations ({hhCandidatesCount})"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1271
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1475
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1351
 msgid "📤 Отправка приглашений..."
 msgstr "📤 Sending Invitations..."
 
@@ -1754,7 +1754,7 @@ msgstr "📥 Loading Resume from HH.ru (for HH Candidates)"
 msgid "📥 Новые"
 msgstr "📥 New"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:767
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:815
 msgid "📦 Эта вакансия находится в архиве. Кандидаты не могут проходить интервью."
 msgstr "📦 This vacancy is archived. Candidates cannot take interviews."
 
@@ -2188,7 +2188,7 @@ msgid "AI-оценка кандидата"
 msgstr "AI Candidate Assessment"
 
 #. placeholder {0}: selectedCandidates.length
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1440
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1316
 msgid "AI-сравнение ({0})"
 msgstr "AI Comparison ({0})"
 
@@ -2346,7 +2346,7 @@ msgstr ""
 #~ msgid "P.S. Первые 10 интервью бесплатно — попробуйте, как это работает."
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1367
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1243
 msgid "QR-код для прохождения теста"
 msgstr "QR Code for Taking Test"
 
@@ -2686,8 +2686,8 @@ msgstr "No Rating"
 msgid "Без папки"
 msgstr "No Folder"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:553
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1317
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:575
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1193
 msgid "Без шаблона"
 msgstr "No Template"
 
@@ -2809,7 +2809,7 @@ msgstr "Quick Choice:"
 msgid "В HH стадию"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:695
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:743
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:413
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:748
 msgid "В архив"
@@ -2833,7 +2833,7 @@ msgstr "in progress"
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:778
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:152
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:435
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:94
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:95
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:684
 msgid "В процессе"
 msgstr "In Progress"
@@ -2866,8 +2866,8 @@ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:420
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:150
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:536
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:789
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:558
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:837
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:914
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:936
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:949
@@ -2909,15 +2909,15 @@ msgstr "Vacancies"
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:225
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:804
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:807
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:520
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:521
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1160
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:542
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:543
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1036
 #: src/app/components/hr/OpenVacanciesCard.tsx:81
 #: src/app/interview/[token]/VacancyInfoStep.tsx:117
 msgid "Вакансия"
 msgstr "Vacancy"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:269
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:271
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:888
 msgid "Вакансия восстановлена"
 msgstr "Vacancy Restored"
@@ -2945,17 +2945,17 @@ msgstr ""
 msgid "Вакансия обновлена"
 msgstr "Vacancy Updated"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:293
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:315
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:905
 msgid "Вакансия перемещена в архив"
 msgstr "Vacancy Moved to Archive"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:245
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:247
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:871
 msgid "Вакансия перемещена в удалённые"
 msgstr "Vacancy Moved to Deleted"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:742
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:790
 msgid "Вакансия: {title}"
 msgstr "Vacancy: {title}"
 
@@ -3073,8 +3073,8 @@ msgstr "Enter the Question the Candidate Must Answer"
 msgid "Введите заметку или комментарий..."
 msgstr "Enter a note or comment..."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1588
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1610
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1464
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1486
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:272
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:295
 #: src/app/auth/forgot-password/page.tsx:51
@@ -3093,8 +3093,8 @@ msgstr "Enter Valid Email Address"
 msgid "Введите корректный международный номер"
 msgstr "Enter a Valid International Number"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1600
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1611
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1476
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1487
 msgid "Введите корректный номер телефона"
 msgstr "Enter Valid Phone Number"
 
@@ -3199,8 +3199,8 @@ msgstr "Video"
 #~ msgid "Видео и аудио запись"
 #~ msgstr "Video and Audio Recording"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1192
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1269
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1068
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1145
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:429
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:560
 #: src/app/interview/[token]/VacancyInfoStep.tsx:231
@@ -3225,7 +3225,7 @@ msgstr "Video: no"
 msgid "Видео/Аудио"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:646
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:668
 msgid "Включение интервью"
 msgstr "Enabling Interview"
 
@@ -3428,7 +3428,7 @@ msgstr "Questions per Regulation: {questionsPerRegulation}"
 #. placeholder {0}: (questions||[]).length
 #. placeholder {0}: sessionDetail?.answers?.length || 0
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:501
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:554
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:576
 msgid "Вопросов: {0}"
 msgstr "Questions: {0}"
 
@@ -3439,7 +3439,7 @@ msgid "Вопросы"
 msgstr ""
 
 #. placeholder {0}: (questions||[]).length
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:780
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:828
 msgid "Вопросы ({0})"
 msgstr "Questions ({0})"
 
@@ -3455,7 +3455,7 @@ msgstr ""
 msgid "Вопросы ещё не сгенерированы для этого теста."
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1336
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1212
 msgid "Вопросы не добавлены"
 msgstr "Questions Not Added"
 
@@ -3466,7 +3466,7 @@ msgstr "Multiple Choice Questions"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:132
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:141
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:154
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1315
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1191
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:711
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:821
 msgid "Вопросы теста"
@@ -3480,7 +3480,7 @@ msgstr "Questions Successfully Generated"
 msgid "Вопросы успешно сгенерированы!"
 msgstr "Questions Successfully Generated!"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1333
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1209
 msgid "Вопросы:"
 msgstr "Questions:"
 
@@ -3496,14 +3496,14 @@ msgstr ""
 msgid "Воспроизвести"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:722
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:731
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:770
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:779
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:445
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:762
 msgid "Восстановить"
 msgstr "Restore"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:259
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:261
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:879
 msgid "Восстановить вакансию?"
 msgstr "Restore Vacancy?"
@@ -3669,7 +3669,7 @@ msgstr "Total Sessions"
 msgid "Всего тестов"
 msgstr "Total Tests"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:803
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:851
 msgid "Всего: {totalCandidates}"
 msgstr "Total: {totalCandidates}"
 
@@ -3731,8 +3731,8 @@ msgstr ""
 msgid "Вы можете включить камеру для более полного ответа, но это не обязательно."
 msgstr "You can enable the camera for a more complete answer, but it's not required."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:760
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:770
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:808
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:818
 msgid "Вы можете восстановить её, нажав кнопку \"Восстановить\" выше."
 msgstr "You can restore it by clicking the \"Restore\" button above."
 
@@ -3771,7 +3771,7 @@ msgstr "Are You Sure You Want to Skip This Question?"
 msgid "Вы уверены, что хотите удалить этого кандидата?"
 msgstr "Are You Sure You Want to Delete This Candidate?"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:235
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:237
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:862
 msgid "Вы уверены, что хотите удалить эту вакансию? Она будет перемещена в \"Удалённые\"."
 msgstr "Are you sure you want to delete this vacancy? It will be moved to \"Deleted\"."
@@ -3805,7 +3805,7 @@ msgstr "Select Number of Questions from 1 to 20"
 msgid "Выберите компанию"
 msgstr "Select Company"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1427
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1303
 msgid "Выберите минимум 2 кандидатов для сравнения."
 msgstr "Select at least 2 candidates for comparison."
 
@@ -3862,12 +3862,12 @@ msgstr ""
 msgid "Выбрано вакансий: <0>{0}</0>"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1401
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1277
 msgid "Выбрано кандидатов"
 msgstr "Candidates Selected"
 
 #. placeholder {0}: selectedCandidates.length
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:857
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:905
 msgid "Выбрано кандидатов: {0}"
 msgstr "Candidates Selected: {0}"
 
@@ -3922,7 +3922,7 @@ msgstr "Select Plan"
 msgid "Выйти"
 msgstr "Log Out"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:646
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:668
 msgid "Выключение интервью"
 msgstr "Disabling Interview"
 
@@ -3963,6 +3963,10 @@ msgstr "Generating questions{timeStr}..."
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:426
 msgid "Генерация завершена!"
 msgstr "Generation Complete!"
+
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:287
+msgid "Генерация отчёта..."
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:657
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:1154
@@ -4018,7 +4022,7 @@ msgstr "Home"
 #~ msgstr "City"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:79
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:98
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:99
 msgid "Готов к интервью"
 msgstr "Ready for Interview"
 
@@ -4071,7 +4075,7 @@ msgstr "Date"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:309
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:312
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:974
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1418
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1294
 msgid "Дата добавления"
 msgstr "Date Added"
 
@@ -4147,7 +4151,7 @@ msgstr "I consent to the processing of personal data in accordance with the <0>P
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:231
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:437
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:977
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:119
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:120
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:211
 #: src/app/components/hr/OpenVacanciesCard.tsx:83
 msgid "Действия"
@@ -4178,7 +4182,7 @@ msgid "Детали результата"
 msgstr "Result Details"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1309
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1513
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1389
 msgid "Детали:"
 msgstr "Details:"
 
@@ -4312,7 +4316,7 @@ msgstr "Daily Resume View Limit on {0}:"
 msgid "до {minutes} минут"
 msgstr "up to {minutes} minutes"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1670
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1546
 msgid "Добавить"
 msgstr "Add"
 
@@ -4329,8 +4333,8 @@ msgid "Добавить вопрос"
 msgstr "Add Question"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1550
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:825
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1639
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:873
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1515
 msgid "Добавить кандидата"
 msgstr "Add Candidate"
 
@@ -4347,7 +4351,7 @@ msgstr "Added"
 msgid "Добавлен: {0}"
 msgstr "Added: {0}"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1670
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1546
 msgid "Добавление…"
 msgstr "Adding…"
 
@@ -4455,11 +4459,11 @@ msgstr ""
 msgid "Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата"
 msgstr "If enabled, AI will be able to ask additional questions based on candidate responses"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:651
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:673
 msgid "Если включить, кандидаты снова смогут проходить интервью по этой вакансии."
 msgstr "If enabled, candidates will be able to take interviews for this vacancy again."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:650
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:672
 msgid "Если выключить, кандидаты не смогут начать новое интервью. Уже начатые интервью продолжат работать."
 msgstr "If disabled, candidates will not be able to start a new interview. Already started interviews will continue to work."
 
@@ -4530,8 +4534,8 @@ msgstr "Completed: {0}"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:211
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:436
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:467
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:90
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:92
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:91
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:93
 #: src/app/test/[token]/page.tsx:57
 msgid "Завершено"
 msgstr "Completed"
@@ -4626,9 +4630,9 @@ msgstr "Loading…"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:420
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1351
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1391
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1267
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1307
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1431
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1555
 #: src/app/forget-me/page.tsx:175
 #: src/components/hr/TypingMetricsDisplay.tsx:293
 msgid "Закрыть"
@@ -4960,7 +4964,7 @@ msgstr ""
 msgid "Имя"
 msgstr "Name"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1642
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1518
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:304
 #: src/app/contact/page.tsx:185
 #: src/app/forget-me/page.tsx:250
@@ -4989,7 +4993,7 @@ msgstr "Candidate Name"
 msgid "Имя может содержать только буквы, пробелы и дефисы"
 msgstr "Name can only contain letters, spaces, and hyphens"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1609
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1485
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:271
 #: src/utils/errorTranslator.tsx:27
 msgid "Имя обязательно"
@@ -5088,8 +5092,8 @@ msgstr "Interviews"
 #~ msgid "Интервью автоматизировано"
 #~ msgstr "Interview Automated"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:222
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:640
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:224
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:662
 msgid "Интервью включено"
 msgstr "Interview Enabled"
 
@@ -5101,8 +5105,8 @@ msgstr "Interview Temporarily Unavailable"
 msgid "Интервью временно недоступно. Пожалуйста, свяжитесь с компанией для уточнения деталей."
 msgstr "Interview temporarily unavailable. Please contact the company for details."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:222
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:640
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:224
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:662
 msgid "Интервью выключено"
 msgstr "Interview Disabled"
 
@@ -5396,7 +5400,7 @@ msgstr "Camera Disabled"
 msgid "Камера подключена"
 msgstr "Camera connected"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:820
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:868
 msgid "Канбан"
 msgstr "Kanban"
 
@@ -5415,7 +5419,7 @@ msgstr "candidate"
 msgid "Кандидат"
 msgstr "Candidate"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1364
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1240
 msgid "Кандидат добавлен успешно!"
 msgstr "Candidate Added Successfully!"
 
@@ -5538,22 +5542,22 @@ msgstr "candidates require"
 #~ msgid "Кандидатов: {0}"
 #~ msgstr "Candidates: {0}"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:555
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:577
 msgid "Кандидатов: {totalCandidates}"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:702
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:712
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:722
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:791
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:802
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:839
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:850
 #: src/app/(DashboardLayout)/layout/vertical/sidebar/MenuItems.ts:38
 msgid "Кандидаты"
 msgstr "Candidates"
 
 #. placeholder {0}: candidates.length
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:725
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:778
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:826
 msgid "Кандидаты ({0})"
 msgstr "Candidates ({0})"
 
@@ -5780,7 +5784,7 @@ msgstr "Logo"
 msgid "Любая камера"
 msgstr "Any Camera"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:566
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:588
 msgid "Любой человек может записаться на интервью, указав свои данные."
 msgstr "Any Person Can Book an Interview by Providing Their Data."
 
@@ -6070,7 +6074,7 @@ msgstr ""
 #~ msgid "Например: +7 (999) 123-45-67"
 #~ msgstr "For example: +7 (999) 123-45-67"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1658
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1534
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:317
 #: src/app/components/ui-components/dialog/FormDialog.tsx:86
 msgid "Например: example@mail.ru"
@@ -6250,7 +6254,7 @@ msgstr "Not Taken"
 #~ msgid "Не синхронизированы"
 #~ msgstr "Not Synchronized"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:589
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:611
 msgid "Не создана"
 msgstr "Not Created"
 
@@ -6347,7 +6351,7 @@ msgstr "Failed to get payment information"
 msgid "Не удалось провести анализ кандидатов с помощью искусственного интеллекта."
 msgstr "Failed to Analyze Candidates Using Artificial Intelligence."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1289
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1165
 msgid "Не удалось распознать ссылку на видео. Проверьте формат URL в редактировании вакансии."
 msgstr ""
 
@@ -6528,7 +6532,7 @@ msgid "Нет данных для экспорта"
 msgstr "No Data to Export"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:268
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:520
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:542
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:916
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:332
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:443
@@ -6647,7 +6651,7 @@ msgstr "New data will be updated every 2 hours"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:200
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:447
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:820
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:104
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:105
 msgid "Новый"
 msgstr "New"
 
@@ -6865,7 +6869,7 @@ msgstr "Expected Response (for AI Verification)"
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:439
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:779
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:282
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:96
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:97
 msgid "Ожидает"
 msgstr "Pending"
 
@@ -6901,7 +6905,7 @@ msgstr "Operation"
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:412
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:562
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:594
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:779
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:827
 msgid "Описание"
 msgstr "Description"
 
@@ -6920,7 +6924,7 @@ msgstr "Vacancy Description:"
 msgid "Описание должно содержать минимум 3 символа"
 msgstr "Description Must Contain at Least 3 Characters"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1182
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1058
 msgid "Описание не заполнено"
 msgstr "Description not filled"
 
@@ -7068,7 +7072,7 @@ msgstr "Response to Vacancy"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:207
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:454
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:827
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:106
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:107
 msgid "Отклонён"
 msgstr "Rejected"
 
@@ -7151,7 +7155,7 @@ msgstr "Excellent (8-10)"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CustomStageModal.tsx:121
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/DeleteStageDialog.tsx:105
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/KanbanView.tsx:1686
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1669
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1545
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:1135
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:330
 #: src/app/components/ForgetMeAuto.tsx:130
@@ -7167,7 +7171,7 @@ msgid "Отменён"
 msgstr "Canceled"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:83
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:102
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:103
 msgid "Отменено"
 msgstr "Canceled"
 
@@ -7261,9 +7265,22 @@ msgstr ""
 msgid "Отсутствует"
 msgstr "Absent"
 
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:740
+msgid "Отчёт по кандидатам"
+msgstr ""
+
 #: src/utils/pdfExportWithFont.ts:194
 msgid "Отчет по кандидату"
 msgstr "Candidate Report"
+
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:289
+msgid "Отчёт успешно сформирован!"
+msgstr ""
+
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:717
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:726
+msgid "Отчёты"
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:102
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:205
@@ -7277,7 +7294,7 @@ msgstr "Offer"
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:785
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:788
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:102
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1417
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1293
 #: src/app/interview/[token]/InterviewResultsScreen.tsx:133
 msgid "Оценка"
 msgstr "Rating"
@@ -7326,7 +7343,7 @@ msgstr "Score: {0}/10"
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:158
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:99
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:468
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:100
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:101
 #: src/app/(DashboardLayout)/layout/vertical/header/BalanceInfo.tsx:155
 #: src/components/hr/hh-integration/CandidateEventsTimeline.tsx:168
 msgid "Ошибка"
@@ -7519,7 +7536,7 @@ msgstr "Error Sending for Screening"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:737
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:786
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:419
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:441
 msgid "Ошибка отправки приглашений"
 msgstr "Error sending invitations"
 
@@ -7553,14 +7570,14 @@ msgstr "Error Getting Integration Status"
 msgid "Ошибка при анализе резюме. Попробуйте позже."
 msgstr "Error analyzing resume. Please try again later."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:299
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:302
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:321
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:324
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:908
 msgid "Ошибка при архивации"
 msgstr "Error Archiving"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:275
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:278
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:277
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:280
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:891
 msgid "Ошибка при восстановлении"
 msgstr "Error Restoring"
@@ -7623,8 +7640,8 @@ msgstr "Error loading test"
 msgid "Ошибка при запуске теста"
 msgstr "Error Starting Test"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:224
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:227
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:226
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:229
 msgid "Ошибка при изменении статуса"
 msgstr "Error Changing Status"
 
@@ -7690,8 +7707,8 @@ msgstr "Error Creating Public Link"
 msgid "Ошибка при создании платежа"
 msgstr "Error creating payment"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:202
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:205
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:204
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:207
 msgid "Ошибка при создании ссылки"
 msgstr "Error creating link"
 
@@ -7716,8 +7733,8 @@ msgstr "Error saving resume"
 msgid "Ошибка при сохранении теста"
 msgstr "Error Saving Test"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:251
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:254
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:253
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:256
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:874
 msgid "Ошибка при удалении"
 msgstr "Error Deleting"
@@ -7738,6 +7755,10 @@ msgstr "Error Deleting Folder"
 msgid "Ошибка при удалении регламента"
 msgstr "Error Deleting Regulation"
 
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:292
+msgid "Ошибка при формировании отчёта"
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:341
 msgid "Ошибка при экспорте данных"
 msgstr ""
@@ -7752,8 +7773,8 @@ msgstr "Status Check Error"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:673
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:678
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:374
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:379
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:396
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:401
 msgid "Ошибка проверки статуса отправки"
 msgstr "Error Checking Sending Status"
 
@@ -7803,7 +7824,7 @@ msgstr "Error Creating Vacancy with Test"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:731
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:780
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:413
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:435
 msgid "Ошибка создания задачи отправки"
 msgstr "Error Creating Sending Task"
 
@@ -7948,7 +7969,7 @@ msgstr ""
 msgid "Переместить в..."
 msgstr "Move to..."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:283
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:305
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:896
 msgid "Переместить вакансию в архив?"
 msgstr "Move Vacancy to Archive?"
@@ -8175,7 +8196,7 @@ msgstr "Connect HH.ru"
 msgid "Подключить заново"
 msgstr "Reconnect"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1419
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1295
 msgid "Подробнее"
 msgstr "More Details"
 
@@ -8304,7 +8325,7 @@ msgid "Показаны тесты, использующие регламент:
 msgstr "Tests Shown Using Regulation: <0>{0}</0>"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1162
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:130
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:131
 msgid "Показать QR-код"
 msgstr "Show QR Code"
 
@@ -8525,7 +8546,7 @@ msgstr "Generation Timeout Exceeded"
 msgid "Превышено время ожидания подключения камеры."
 msgstr "Camera connection timeout exceeded."
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1243
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1119
 msgid "Превью (как увидят кандидаты):"
 msgstr ""
 
@@ -8771,7 +8792,7 @@ msgstr "Progress: {0} / {1} ({2}%)"
 #. placeholder {0}: sendingProgress.processed
 #. placeholder {1}: sendingProgress.total
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1280
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1484
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1360
 msgid "Прогресс: {0} из {1}"
 msgstr "Progress: {0} of {1}"
 
@@ -8924,11 +8945,11 @@ msgstr "Time Elapsed: {0} seconds"
 msgid "Публичная ссылка для кандидатов"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:565
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:587
 msgid "Публичная ссылка для массовой рассылки"
 msgstr "Public Link for Mass Mailing"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:200
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:202
 msgid "Публичная ссылка создана!"
 msgstr "Public Link Created!"
 
@@ -9069,8 +9090,8 @@ msgstr "Editing Resume"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:159
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:361
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:529
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:693
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1300
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:715
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1176
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/StageMenu.tsx:78
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:399
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:741
@@ -9507,7 +9528,7 @@ msgstr "The System will create {0} questions based on selected regulations using
 msgid "Скажите что-нибудь, чтобы убедиться что микрофон работает"
 msgstr "Say something to make sure the microphone is working"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1386
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1262
 msgid "Скачать QR-код (SVG)"
 msgstr "Download QR Code (SVG)"
 
@@ -9516,8 +9537,8 @@ msgid "Сколько сотрудников вы планируете наня�
 msgstr "How many employees do you plan to hire per month?"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:273
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:126
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:603
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:127
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:625
 msgid "Скопировать ссылку"
 msgstr "Copy Link"
 
@@ -9676,11 +9697,11 @@ msgstr "create regulations"
 msgid "Создан: {0}"
 msgstr "Created: {0}"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1163
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1039
 msgid "Создана:"
 msgstr "Created:"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:551
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:573
 msgid "Создана: {createdAt}"
 msgstr "Created: {createdAt}"
 
@@ -9729,7 +9750,7 @@ msgstr "Created: {createdDate}"
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:577
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:643
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CustomStageModal.tsx:123
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:621
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:643
 msgid "Создать"
 msgstr "Create"
 
@@ -9905,7 +9926,7 @@ msgstr "Thank You for Completing the Interview!"
 msgid "Спасибо за прохождение теста!"
 msgstr "Thank you for taking the test!"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:816
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:864
 msgid "Список"
 msgstr "List"
 
@@ -9925,7 +9946,7 @@ msgstr ""
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:404
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:419
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:429
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1396
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1272
 msgid "Сравнение кандидатов"
 msgstr "Candidate Comparison"
 
@@ -9935,11 +9956,11 @@ msgid "Сравнить"
 msgstr "Compare"
 
 #. placeholder {0}: selectedCandidates.length
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:852
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:900
 msgid "Сравнить ({0})"
 msgstr "Compare ({0})"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:834
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:882
 msgid "Сравнить выбранных"
 msgstr "Compare Selected"
 
@@ -9998,7 +10019,7 @@ msgstr "Urgent"
 #~ msgid "Ссылка на HH"
 #~ msgstr "HH Link"
 
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1205
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1081
 msgid "Ссылка на видео:"
 msgstr ""
 
@@ -10016,7 +10037,7 @@ msgstr "Link Copied to Clipboard"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:302
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1156
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:607
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:629
 msgid "Ссылка скопирована!"
 msgstr "Link copied!"
 
@@ -10079,7 +10100,7 @@ msgstr "Candidate Statistics:"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:225
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:232
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:230
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1416
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1292
 msgid "Статус"
 msgstr "Status"
 
@@ -10261,8 +10282,8 @@ msgstr "Current Balance"
 #: src/app/(DashboardLayout)/hr/employees/page.tsx:194
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:442
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:81
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1415
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1664
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1291
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1540
 #: src/app/auth/authForms/AuthLogin.tsx:81
 #: src/app/auth/register/page.tsx:286
 #: src/app/contact/page.tsx:213
@@ -10659,7 +10680,7 @@ msgstr "Deleted"
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:278
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:371
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:534
-#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:706
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:754
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:427
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:753
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:876
