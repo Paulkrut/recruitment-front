@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback, memo, useRef, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   CardContent,
   Stack,
   Divider,
-  Paper,
   IconButton,
   Tooltip,
   Breadcrumbs,
@@ -19,15 +18,10 @@ import {
   Slider,
   Switch,
   Alert,
-  MenuItem,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
+  MenuItem
 } from "@mui/material";
 import Link from "next/link";
-import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconArrowUp, IconArrowDown, IconTrash, IconFileText, IconKeyboard, IconVideo } from "@tabler/icons-react";
+import { IconBriefcase, IconArrowLeft, IconDeviceFloppy, IconWand, IconPlus, IconFileText } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
@@ -35,9 +29,9 @@ import { apiFetch } from "@/utils/api";
 import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
-
 import RichTextEditor from "@/components/RichTextEditor";
 import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
+import QuestionEditItem, { QuestionDraft } from "./QuestionEditItem";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -70,16 +64,6 @@ function getVideoEmbedUrl(url: string): string | null {
   }
 
   return null;
-}
-
-interface QuestionDraft {
-  id?: number;
-  text: string;
-  type: string;
-  maxTime: number;
-  allowFollowups: boolean;
-  followupsMax: number;
-  position?: number;
 }
 
 interface VacancyData {
@@ -252,16 +236,39 @@ export default function HRVacancyEditPage() {
     setQuestions([...questions, newQuestion]);
   };
 
-  const removeQuestion = (index: number) => {
-    const newQuestions = questions.filter((_, i) => i !== index);
-    setQuestions(newQuestions.map((q, i) => ({ ...q, position: i })));
-  };
+  // 🎯 Мемоизация функций для предотвращения ре-рендера всех вопросов
+  const updateQuestion = useCallback((index: number, field: keyof QuestionDraft, value: any) => {
+    setQuestions(prev => {
+      const newQuestions = [...prev];
+      newQuestions[index] = { ...newQuestions[index], [field]: value };
+      return newQuestions;
+    });
+  }, []);
 
-  const updateQuestion = (index: number, field: keyof QuestionDraft, value: any) => {
-    const newQuestions = [...questions];
-    newQuestions[index] = { ...newQuestions[index], [field]: value };
-    setQuestions(newQuestions);
-  };
+  const removeQuestion = useCallback((index: number) => {
+    setQuestions(prev => {
+      const newQuestions = prev.filter((_, i) => i !== index);
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
+
+  const moveQuestionUp = useCallback((index: number) => {
+    if (index === 0) return;
+    setQuestions(prev => {
+      const newQuestions = [...prev];
+      [newQuestions[index], newQuestions[index - 1]] = [newQuestions[index - 1], newQuestions[index]];
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
+
+  const moveQuestionDown = useCallback((index: number) => {
+    setQuestions(prev => {
+      if (index === prev.length - 1) return prev;
+      const newQuestions = [...prev];
+      [newQuestions[index], newQuestions[index + 1]] = [newQuestions[index + 1], newQuestions[index]];
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
 
   const moveQuestion = (index: number, direction: "up" | "down") => {
     if (
@@ -850,105 +857,16 @@ export default function HRVacancyEditPage() {
                 ) : (
                   <Stack spacing={3}>
                     {questions.map((question, qIndex) => (
-                      <Paper
-                        key={qIndex}
-                        sx={{
-                          p: 3,
-                          mb: 0,
-                          background: '#f7f7f7',
-                          borderRadius: 3,
-                          border: '1px solid #eee',
-                          '&.highlight-question': {
-                            backgroundColor: '#e3f2fd',
-                            borderColor: '#1976d2',
-                            boxShadow: '0 0 10px rgba(25, 118, 210, 0.5)',
-                          }
-                        }}
-                        data-question-id={question.id || qIndex}
-                      >
-                        <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-                          <Box sx={{ width: 36, height: 36, borderRadius: '50%', background: '#1976d2', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem' }}>{qIndex + 1}</Box>
-                          <Typography variant="subtitle1" fontWeight={700} color="text.primary"><Trans>Вопрос {qIndex + 1}</Trans></Typography>
-                          <Box flexGrow={1} />
-                          <Stack direction="row" spacing={1}>
-                            <Tooltip title={_(msg`Вверх`)}><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "up")} disabled={qIndex === 0}><IconArrowUp size={18} /></IconButton></span></Tooltip>
-                            <Tooltip title={_(msg`Вниз`)}><span><IconButton size="small" onClick={() => moveQuestion(qIndex, "down")} disabled={qIndex === questions.length - 1}><IconArrowDown size={18} /></IconButton></span></Tooltip>
-                            <Tooltip title={_(msg`Удалить`)}><span><IconButton size="small" onClick={() => removeQuestion(qIndex)}><IconTrash size={18} color="#e53935" /></IconButton></span></Tooltip>
-                          </Stack>
-                        </Stack>
-                        <Box>
-                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 1 }}><Trans>Текст вопроса</Trans></CustomFormLabel>
-                          <CustomTextField
-                            variant="outlined"
-                            fullWidth
-                            multiline
-                            rows={3}
-                            value={question.text}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateQuestion(qIndex, "text", e.target.value)}
-                            placeholder={_(msg`Введите текст вопроса`)}
-                            sx={{
-                              '& .MuiOutlinedInput-root': {
-                                backgroundColor: '#fff',
-                                borderRadius: 2,
-                              },
-                              '& .MuiInputBase-input': {
-                                fontSize: '1rem',
-                                padding: '16px 20px'
-                              }
-                            }}
-                          />
-                        </Box>
-                        
-                        {/* Тип вопроса */}
-                        <Box mt={3}>
-                          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 2 }}>
-                            <Trans>Тип ответа</Trans>
-                          </CustomFormLabel>
-                          <FormControl component="fieldset">
-                            <RadioGroup
-                              row
-                              value={question.type || 'text'}
-                              onChange={(e) => updateQuestion(qIndex, "type", e.target.value)}
-                            >
-                              <FormControlLabel
-                                value="text"
-                                control={<Radio />}
-                                label={
-                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <IconVideo size={20} />
-                                    <Box>
-                                      <Typography variant="body1" fontWeight={600}>
-                                        <Trans>Видео/Аудио</Trans>
-                                      </Typography>
-                                      <Typography variant="caption" color="text.secondary">
-                                        <Trans>Кандидат записывает себя</Trans>
-                                      </Typography>
-                                    </Box>
-                                  </Box>
-                                }
-                                sx={{ mr: 4 }}
-                              />
-                              <FormControlLabel
-                                value="typing"
-                                control={<Radio />}
-                                label={
-                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <IconKeyboard size={20} />
-                                    <Box>
-                                      <Typography variant="body1" fontWeight={600}>
-                                        <Trans>Письменный</Trans>
-                                      </Typography>
-                                      <Typography variant="caption" color="text.secondary">
-                                        <Trans>Кандидат печатает текст</Trans>
-                                      </Typography>
-                                    </Box>
-                                  </Box>
-                                }
-                              />
-                            </RadioGroup>
-                          </FormControl>
-                        </Box>
-                      </Paper>
+                      <QuestionEditItem
+                        key={question.id || qIndex}
+                        question={question}
+                        index={qIndex}
+                        totalCount={questions.length}
+                        onUpdate={updateQuestion}
+                        onRemove={removeQuestion}
+                        onMoveUp={moveQuestionUp}
+                        onMoveDown={moveQuestionDown}
+                      />
                     ))}
                   </Stack>
                 )}

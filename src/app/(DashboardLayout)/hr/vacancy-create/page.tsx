@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -7,44 +7,36 @@ import {
   CardContent,
   Typography,
   Button,
-  Paper,
   Alert,
   IconButton,
   Tooltip,
   Chip,
-  Grid,
   Divider,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Switch,
   Slider,
   Stack,
   CircularProgress,
-  TextField,
-  MenuItem,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import RichTextEditor from "@/components/RichTextEditor";
 import {
   IconPlus,
-  IconTrash,
-  IconArrowUp,
-  IconArrowDown,
   IconBriefcase,
   IconFileText,
   IconWand,
   IconSettings,
   IconEye,
-  IconArrowsShuffle,
   IconArrowLeft,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import QuestionItem, { QuestionDraft } from "./QuestionItem";
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -78,15 +70,6 @@ function getVideoEmbedUrl(url: string): string | null {
   }
 
   return null;
-}
-
-interface QuestionDraft {
-  text: string;
-  type: string;
-  maxTime: number;
-  allowFollowups: boolean;
-  followupsMax: number;
-  position?: number;
 }
 
 export default function HRVacancyCreatePage() {
@@ -127,6 +110,40 @@ export default function HRVacancyCreatePage() {
     if (t) setToken(t);
   }, []);
 
+  // 🎯 Мемоизация функций для предотвращения ре-рендера всех вопросов
+  const updateQuestion = useCallback((index: number, field: keyof QuestionDraft, value: any) => {
+    setQuestions(prev => {
+      const newQuestions = [...prev];
+      newQuestions[index] = { ...newQuestions[index], [field]: value };
+      return newQuestions;
+    });
+  }, []);
+
+  const removeQuestion = useCallback((index: number) => {
+    setQuestions(prev => {
+      const newQuestions = prev.filter((_, i) => i !== index);
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
+
+  const moveQuestionUp = useCallback((index: number) => {
+    if (index === 0) return;
+    setQuestions(prev => {
+      const newQuestions = [...prev];
+      [newQuestions[index], newQuestions[index - 1]] = [newQuestions[index - 1], newQuestions[index]];
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
+
+  const moveQuestionDown = useCallback((index: number) => {
+    setQuestions(prev => {
+      if (index === prev.length - 1) return prev;
+      const newQuestions = [...prev];
+      [newQuestions[index], newQuestions[index + 1]] = [newQuestions[index + 1], newQuestions[index]];
+      return newQuestions.map((q, i) => ({ ...q, position: i }));
+    });
+  }, []);
+
   const addQuestion = () => {
     const newQuestion: QuestionDraft = {
       text: "",
@@ -137,36 +154,6 @@ export default function HRVacancyCreatePage() {
       position: questions.length,
     };
     setQuestions([...questions, newQuestion]);
-  };
-
-  const removeQuestion = (index: number) => {
-    const newQuestions = questions.filter((_, i) => i !== index);
-    setQuestions(newQuestions.map((q, i) => ({ ...q, position: i })));
-  };
-
-  const updateQuestion = (index: number, field: keyof QuestionDraft, value: any) => {
-    const newQuestions = [...questions];
-    newQuestions[index] = { ...newQuestions[index], [field]: value };
-    setQuestions(newQuestions);
-  };
-
-  const moveQuestion = (index: number, direction: "up" | "down") => {
-    if (
-      (direction === "up" && index === 0) ||
-      (direction === "down" && index === questions.length - 1)
-    ) {
-      return;
-    }
-
-    const newQuestions = [...questions];
-    const targetIndex = direction === "up" ? index - 1 : index + 1;
-
-    [newQuestions[index], newQuestions[targetIndex]] = [
-      newQuestions[targetIndex],
-      newQuestions[index],
-    ];
-
-    setQuestions(newQuestions.map((q, i) => ({ ...q, position: i })));
   };
 
   const createVacancyWithTemplate = async () => {
@@ -753,131 +740,20 @@ export default function HRVacancyCreatePage() {
                 </Box>
               </Box>
 
-                              {questions.map((question, qIndex) => (
-                  <Paper key={qIndex} sx={{
-                    p: 3,
-                    background: '#fafafa',
-                    borderRadius: 2,
-                    border: '1px solid #e0e0e0'
-                  }}>
-                    <Box display="flex" alignItems="center" gap={2} mb={3}>
-                      <Chip
-                        label={_(msg`Вопрос ${qIndex + 1}`)}
-                        sx={{
-                          backgroundColor: '#e3f2fd',
-                          color: '#1976d2',
-                          fontSize: '1rem',
-                          fontWeight: 600,
-                          height: 28
-                        }}
-                      />
-                      <Box flexGrow={1} />
-                      <Tooltip title={_(msg`Переместить вверх`)}>
-                        <IconButton
-                          size="large"
-                          onClick={() => moveQuestion(qIndex, "up")}
-                          disabled={qIndex === 0}
-                          sx={{
-                            color: '#1976d2',
-                            backgroundColor: '#fff',
-                            border: '1px solid #1976d2',
-                            '&:hover': {
-                              backgroundColor: '#1976d2',
-                              color: '#fff',
-                            },
-                            mr: 1
-                          }}
-                        >
-                          <IconArrowUp size={20} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={_(msg`Переместить вниз`)}>
-                        <IconButton
-                          size="large"
-                          onClick={() => moveQuestion(qIndex, "down")}
-                          disabled={qIndex === questions.length - 1}
-                          sx={{
-                            color: '#1976d2',
-                            backgroundColor: '#fff',
-                            border: '1px solid #1976d2',
-                            '&:hover': {
-                              backgroundColor: '#1976d2',
-                              color: '#fff',
-                            },
-                            mr: 1
-                          }}
-                        >
-                          <IconArrowDown size={20} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title={_(msg`Удалить вопрос`)}>
-                        <IconButton
-                          size="large"
-                          onClick={() => removeQuestion(qIndex)}
-                          sx={{
-                            color: '#e53935',
-                            backgroundColor: '#fff',
-                            border: '1px solid #e53935',
-                            '&:hover': {
-                              backgroundColor: '#e53935',
-                              color: '#fff',
-                            }
-                          }}
-                        >
-                          <IconTrash size={20} />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
+              {questions.map((question, qIndex) => (
+                <QuestionItem
+                  key={qIndex}
+                  question={question}
+                  index={qIndex}
+                  totalCount={questions.length}
+                  onUpdate={updateQuestion}
+                  onRemove={removeQuestion}
+                  onMoveUp={moveQuestionUp}
+                  onMoveDown={moveQuestionDown}
+                />
+              ))}
 
-                    <Box sx={{ mb: 3 }}>
-                      <CustomFormLabel
-                        htmlFor={`question-${qIndex}-text`}
-                        sx={{
-                          color: '#333',
-                          fontSize: '1.1rem',
-                          fontWeight: 600,
-                          mb: 2
-                        }}
-                      >
-                        <Trans>Текст вопроса</Trans>
-                      </CustomFormLabel>
-                      <CustomTextField
-                        id={`question-${qIndex}-text`}
-                        variant="outlined"
-                        fullWidth
-                        multiline
-                        rows={3}
-                        value={question.text}
-                        onChange={(e: any) =>
-                          updateQuestion(qIndex, "text", e.target.value)
-                        }
-                        placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
-                        helperText={_(msg`Введите вопрос, на который должен ответить кандидат`)}
-                        FormHelperTextProps={{
-                          sx: { color: '#333', opacity: 0.9 }
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            backgroundColor: '#fff',
-                            borderRadius: 2,
-                            '&:hover': {
-                              backgroundColor: '#fafafa',
-                            },
-                            '&.Mui-focused': {
-                              backgroundColor: '#fff',
-                            }
-                          },
-                          '& .MuiInputBase-input': {
-                            fontSize: '1.1rem',
-                            padding: '16px 20px'
-                          }
-                        }}
-                      />
-                    </Box>
-                  </Paper>
-                ))}
-
-                              {questions.length === 0 && (
+              {questions.length === 0 && (
                   <Box
                     display="flex"
                     flexDirection="column"
