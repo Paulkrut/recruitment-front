@@ -56,7 +56,6 @@ import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
-import HhAutomationSettings from '@/components/hr/hh-integration/HhAutomationSettings';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -145,10 +144,8 @@ export default function HhIntegrationPage() {
   const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
-    { label: _(msg`Автоматизация`), icon: '🤖' },
     { label: _(msg`Статусы`), icon: '📊' },
-    { label: _(msg`Вакансии`), icon: '📋' },
-    { label: _(msg`Импорт`), icon: '🚀' },
+    { label: _(msg`Вакансии и импорт`), icon: '📋' },
   ];
 
   const handleNext = () => {
@@ -165,7 +162,7 @@ export default function HhIntegrationPage() {
 
   // Загружаем вакансии при переходе на шаги 1 (Статусы) или 2 (Вакансии)
   useEffect(() => {
-    if (status?.isConnected && status.hasValidToken && (activeStep === 1 || activeStep === 2)) {
+    if (status?.isConnected && status.hasValidToken && (activeStep === 0 || activeStep === 1)) {
       if (hhVacanciesFromApi.length === 0 && !loadingHhVacancies && !hhVacanciesError) {
         loadHhVacanciesFromApi();
       }
@@ -1029,22 +1026,8 @@ export default function HhIntegrationPage() {
 
                   {/* Step Content */}
                   <Box sx={{ minHeight: '400px' }}>
-                    {/* ШАГ 0: АВТОМАТИЗАЦИЯ */}
+                    {/* ШАГ 0: СТАТУСЫ */}
                     {activeStep === 0 && (
-                      <Box>
-                        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                          🤖 <Trans>Настройте автоматизацию работы с кандидатами</Trans>
-                        </Typography>
-                        <HhAutomationSettings
-                          isConnected={status.isConnected}
-                          hasValidToken={status.hasValidToken}
-                          hhStages={availableStatuses}
-                        />
-                      </Box>
-                    )}
-
-                    {/* ШАГ 1: СТАТУСЫ */}
-                    {activeStep === 1 && (
                       <Box>
                         <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
                           📊 <Trans>Выберите статусы кандидатов для синхронизации</Trans>
@@ -1111,7 +1094,8 @@ export default function HhIntegrationPage() {
                     )}
 
                     {/* ШАГ 2: ВАКАНСИИ */}
-                    {activeStep === 2 && (
+                    {/* ШАГ 1: ВАКАНСИИ */}
+                    {activeStep === 1 && (
                       <Box>
                         <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
                           📋 <Trans>Выберите вакансии для импорта</Trans>
@@ -1542,90 +1526,6 @@ export default function HhIntegrationPage() {
                         </Box>
                       </Box>
                     )}
-                      </Box>
-                    )}
-
-                    {/* ШАГ 3: ИМПОРТ */}
-                    {activeStep === 3 && (
-                      <Box>
-                        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                          🚀 <Trans>Готово к импорту!</Trans>
-                        </Typography>
-
-                        {selectedVacancyIds.size === 0 ? (
-                          <Alert severity="warning">
-                            <Typography variant="body1" gutterBottom>
-                              <Trans>Вы не выбрали ни одной вакансии</Trans>
-                            </Typography>
-                            <Typography variant="body2">
-                              <Trans>Вернитесь на предыдущий шаг и выберите хотя бы одну вакансию для импорта</Trans>
-                            </Typography>
-                          </Alert>
-                        ) : (
-                          <Box>
-                            <Alert severity="success" sx={{ mb: 3 }}>
-                              <Typography variant="h6" gutterBottom>
-                                ✅ <Trans>Настройка завершена!</Trans>
-                              </Typography>
-                              <Typography variant="body2" gutterBottom>
-                                <Trans>Выбрано вакансий: <strong>{selectedVacancyIds.size}</strong></Trans>
-                              </Typography>
-                              <Typography variant="body2">
-                                <Trans>Выбрано статусов: <strong>{defaultStatuses.size}</strong></Trans>
-                              </Typography>
-                            </Alert>
-
-                            <Box display="flex" justifyContent="center" gap={2}>
-                              <Button
-                                variant="contained"
-                                size="large"
-                                color="primary"
-                                disabled={importing}
-                                startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
-                                onClick={async () => {
-                                  await handleImportSelected();
-                                  if (!importing) {
-                                    handleNext(); // Переход на финальный экран после импорта
-                                  }
-                                }}
-                              >
-                                {importing
-                                  ? _(msg`Импортируем...`)
-                                  : hasImportedInSelection()
-                                    ? _(msg`Пересинхронизировать ${selectedVacancyIds.size} вакансий`)
-                                    : _(msg`Импортировать ${selectedVacancyIds.size} вакансий`)
-                                }
-                              </Button>
-                            </Box>
-                          </Box>
-                        )}
-                      </Box>
-                    )}
-
-                    {/* ФИНАЛЬНЫЙ ЭКРАН */}
-                    {activeStep === steps.length && (
-                      <Box textAlign="center" py={4}>
-                        <Typography variant="h4" gutterBottom>
-                          🎉 <Trans>Импорт завершен!</Trans>
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary" mb={4}>
-                          <Trans>Вакансии успешно импортированы. Загрузка кандидатов начата в фоновом режиме.</Trans>
-                        </Typography>
-                        <Box display="flex" gap={2} justifyContent="center">
-                          <Button
-                            variant="outlined"
-                            onClick={handleReset}
-                          >
-                            <Trans>Импортировать еще</Trans>
-                          </Button>
-                          <Button
-                            variant="contained"
-                            component={Link}
-                            href="/hr/vacancies"
-                          >
-                            <Trans>Перейти к вакансиям</Trans>
-                          </Button>
-                        </Box>
                       </Box>
                     )}
                   </Box>

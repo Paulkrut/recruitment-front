@@ -45,6 +45,19 @@ const HH_STAGES = [
   { id: 'discard', name: 'Отказ' },
 ];
 
+// Внутренние статусы кандидатов
+const INTERNAL_STATUSES = [
+  { id: 'new', name: '📥 Новые' },
+  { id: 'screening', name: '🤖 AI Скрининг' },
+  { id: 'contacted', name: '📞 На связи' },
+  { id: 'testing', name: '📝 Тестирование' },
+  { id: 'finalist', name: '⭐ Финалист' },
+  { id: 'offer', name: '💼 Оффер' },
+  { id: 'hired', name: '✅ Нанят' },
+  { id: 'deferred', name: '⏸️ Отложен' },
+  { id: 'rejected', name: '❌ Отказ' },
+];
+
 const TEMPLATE_VARIABLES = [
   { var: '{firstName}', desc: 'Имя кандидата' },
   { var: '{vacancyTitle}', desc: 'Название вакансии' },
@@ -65,8 +78,7 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
   const [success, setSuccess] = useState(false);
   
   const [settings, setSettings] = useState<VacancyHhSettings | null>(null);
-  const [effectiveSettings, setEffectiveSettings] = useState<any>(null);
-  const [companyDefaults, setCompanyDefaults] = useState<any>(null);
+  const [isFromHh, setIsFromHh] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
@@ -77,17 +89,39 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
     try {
       setLoading(true);
       setError(null);
-      const response = await apiFetch(`${API_BASE}/api/vacancies/${vacancyId}/hh-settings`);
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/hh-settings`);
       const data = await response.json();
 
       if (data.success) {
-        setSettings(data.settings);
-        setEffectiveSettings(data.effectiveSettings);
-        setCompanyDefaults(data.companyDefaults);
+        // Инициализируем дефолтные настройки если пришел null
+        const defaultSettings = {
+          autoInvite: {
+            enabled: false,
+            fromInternalStages: ['new'],
+            toInternalStage: 'contacted',
+            toHhStageId: 'assessment',
+            invitationType: 'ai',
+            messageTemplate: "Здравствуйте, {firstName}!\n\nСпасибо за отклик на вакансию \"{vacancyTitle}\".\nПриглашаем вас пройти видео-интервью: {interviewLink}\n\nС уважением, {companyName}",
+          },
+          reminders: {
+            enabled: false,
+            daysAfter: 7,
+            messageTemplate: "Здравствуйте, {firstName}!\n\nНапоминаем, что вы были приглашены на интервью по вакансии \"{vacancyTitle}\".\nЕсли ещё не прошли интервью, сделайте это по ссылке:\n{interviewLink}\n\nС уважением, {companyName}",
+          },
+          autoReject: {
+            enabled: false,
+            daysAfter: 14,
+            hhStageId: 'discard',
+            messageTemplate: "Здравствуйте, {firstName}!\n\nК сожалению, мы не получили от вас результаты интервью в установленные сроки.\nСпасибо за интерес к нашей вакансии!\n\nС уважением, {companyName}",
+          },
+        };
+        setSettings(data.settings || defaultSettings);
+        setIsFromHh(data.isFromHh || false);
       } else {
         throw new Error(data.message || 'Ошибка загрузки настроек');
       }
     } catch (err: any) {
+      console.error('Failed to load HH settings:', err);
       setError(err.message || 'Ошибка загрузки настроек');
     } finally {
       setLoading(false);
@@ -100,7 +134,7 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
       setError(null);
       setSuccess(false);
 
-      const response = await apiFetch(`${API_BASE}/api/vacancies/${vacancyId}/hh-settings`, {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/hh-settings`, {
         method: 'PUT',
         body: JSON.stringify(settings),
       });
@@ -108,7 +142,6 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
 
       if (data.success) {
         setSettings(data.settings);
-        setEffectiveSettings(data.effectiveSettings);
         setSuccess(true);
         setHasChanges(false);
         setTimeout(() => setSuccess(false), 3000);
@@ -120,18 +153,6 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
     } finally {
       setSaving(false);
     }
-  };
-
-  const handleUseDefaultsToggle = (useDefaults: boolean) => {
-    const newSettings = { ...settings, useDefaults } as VacancyHhSettings;
-    
-    // Если переключаемся на индивидуальные - копируем глобальные как отправную точку
-    if (!useDefaults && companyDefaults) {
-      newSettings.autoInvite = { ...companyDefaults.autoInvite };
-    }
-    
-    setSettings(newSettings);
-    setHasChanges(true);
   };
 
   const handleChange = (field: string, value: any) => {
@@ -164,6 +185,11 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
   }
 
   if (!settings) return null;
+
+  // Если вакансия не из HH - не показываем блок
+  if (!isFromHh) {
+    return null;
+  }
 
   return (
     <Card>
@@ -219,168 +245,137 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
           </Alert>
         )}
 
-        {/* Переключатель глобальные/индивидуальные */}
-        <Box mb={3}>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={!settings.useDefaults}
-                onChange={(e) => handleUseDefaultsToggle(!e.target.checked)}
+        {/* Настройки автоприглашения */}
+        <Box>
+          <Divider sx={{ mb: 3 }}>
+            <Chip label={<Trans>Настройки автоприглашения</Trans>} />
+          </Divider>
+
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.autoInvite?.enabled || false}
+                    onChange={(e) => handleChange('autoInvite.enabled', e.target.checked)}
+                  />
+                }
+                label={_(msg`Включить автоприглашение для этой вакансии`)}
               />
-            }
-            label={
-              <Box>
-                <Typography variant="body2" fontWeight="bold">
-                  {settings.useDefaults 
-                    ? <Trans>Использовать глобальные настройки</Trans>
-                    : <Trans>Индивидуальные настройки для этой вакансии</Trans>
-                  }
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {settings.useDefaults
-                    ? <Trans>Настройки из "Настройки → Интеграция с HH → Автоматизация"</Trans>
-                    : <Trans>Переопределить настройки только для этой вакансии</Trans>
-                  }
-                </Typography>
-              </Box>
-            }
-          />
-        </Box>
+            </Grid>
 
-        {/* Показываем текущие эффективные настройки */}
-        {settings.useDefaults && effectiveSettings && (
-          <Alert severity="info" sx={{ mb: 3 }}>
-            <Typography variant="body2" gutterBottom>
-              <strong><Trans>Используются глобальные настройки:</Trans></strong>
-            </Typography>
-            <Box component="ul" sx={{ pl: 2, mb: 0 }}>
-              <li>
-                <Typography variant="caption">
-                  <Trans>
-                    Автоприглашение: {effectiveSettings.autoInvite?.enabled ? '✅ Включено' : '❌ Выключено'}
-                  </Trans>
-                </Typography>
-              </li>
-              {effectiveSettings.autoInvite?.enabled && (
-                <>
-                  <li>
-                    <Typography variant="caption">
-                      <Trans>
-                        Из стадии: {HH_STAGES.find(s => s.id === effectiveSettings.autoInvite.fromHhStageId)?.name}
-                      </Trans>
-                    </Typography>
-                  </li>
-                  <li>
-                    <Typography variant="caption">
-                      <Trans>
-                        В стадию: {HH_STAGES.find(s => s.id === effectiveSettings.autoInvite.toHhStageId)?.name}
-                      </Trans>
-                    </Typography>
-                  </li>
-                  <li>
-                    <Typography variant="caption">
-                      <Trans>
-                        Тип: {effectiveSettings.autoInvite.invitationType === 'ai' ? '🤖 AI' : '📝 Шаблон'}
-                      </Trans>
-                    </Typography>
-                  </li>
-                </>
-              )}
-            </Box>
-            <Button
-              size="small"
-              variant="text"
-              sx={{ mt: 1 }}
-              href="/hr/settings/hh-integration"
-            >
-              <Trans>Изменить глобальные настройки</Trans>
-            </Button>
-          </Alert>
-        )}
-
-        {/* Индивидуальные настройки */}
-        {!settings.useDefaults && settings.autoInvite && (
-          <Box>
-            <Divider sx={{ mb: 3 }}>
-              <Chip label={<Trans>Настройки автоприглашения</Trans>} />
-            </Divider>
-
-            <Grid container spacing={3}>
+            {settings.autoInvite?.enabled && (
+              <>
+              {/* Внутренние статусы */}
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={settings.autoInvite.enabled}
-                      onChange={(e) => handleChange('autoInvite.enabled', e.target.checked)}
-                    />
-                  }
-                  label={_(msg`Включить автоприглашение для этой вакансии`)}
-                />
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="subtitle2" gutterBottom color="primary">
+                  <Trans>Настройки внутренних статусов</Trans>
+                </Typography>
               </Grid>
 
-              {settings.autoInvite.enabled && (
-                <>
-                  <Grid item xs={12} md={6}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel><Trans>Загружать из HH стадии</Trans></InputLabel>
-                      <Select
-                        value={settings.autoInvite.fromHhStageId}
-                        label={_(msg`Загружать из HH стадии`)}
-                        onChange={(e) => handleChange('autoInvite.fromHhStageId', e.target.value)}
-                      >
-                        {HH_STAGES.map((stage) => (
-                          <MenuItem key={stage.id} value={stage.id}>
-                            {stage.name}
-                          </MenuItem>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel><Trans>Приглашать из внутренних статусов</Trans></InputLabel>
+                  <Select
+                    multiple
+                    value={settings.autoInvite?.fromInternalStages || ['new']}
+                    label={_(msg`Приглашать из внутренних статусов`)}
+                    onChange={(e) => handleChange('autoInvite.fromInternalStages', e.target.value)}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {(selected as string[]).map((value) => (
+                          <Chip 
+                            key={value} 
+                            label={INTERNAL_STATUSES.find(s => s.id === value)?.name || value}
+                            size="small"
+                          />
                         ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+                      </Box>
+                    )}
+                  >
+                    {INTERNAL_STATUSES.map((status) => (
+                      <MenuItem key={status.id} value={status.id}>
+                        {status.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                  <Grid item xs={12} md={6}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel><Trans>Переводить в стадию</Trans></InputLabel>
-                      <Select
-                        value={settings.autoInvite.toHhStageId}
-                        label={_(msg`Переводить в стадию`)}
-                        onChange={(e) => handleChange('autoInvite.toHhStageId', e.target.value)}
-                      >
-                        {HH_STAGES.map((stage) => (
-                          <MenuItem key={stage.id} value={stage.id}>
-                            {stage.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel><Trans>Переводить во внутренний статус</Trans></InputLabel>
+                  <Select
+                    value={settings.autoInvite?.toInternalStage || 'contacted'}
+                    label={_(msg`Переводить во внутренний статус`)}
+                    onChange={(e) => handleChange('autoInvite.toInternalStage', e.target.value)}
+                  >
+                    {INTERNAL_STATUSES.map((status) => (
+                      <MenuItem key={status.id} value={status.id}>
+                        {status.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle2" gutterBottom>
-                      <Trans>Тип приглашения</Trans>
-                    </Typography>
-                    <ToggleButtonGroup
-                      value={settings.autoInvite.invitationType}
-                      exclusive
-                      onChange={(e, value) => {
-                        if (value) handleChange('autoInvite.invitationType', value);
-                      }}
-                      size="small"
-                      fullWidth
-                    >
-                      <ToggleButton value="template">
-                        <Box textAlign="left">
-                          <Typography variant="body2"><Trans>📝 Обычное</Trans></Typography>
-                        </Box>
-                      </ToggleButton>
-                      <ToggleButton value="ai">
-                        <Box textAlign="left">
-                          <Typography variant="body2"><Trans>🤖 AI</Trans></Typography>
-                        </Box>
-                      </ToggleButton>
-                    </ToggleButtonGroup>
-                  </Grid>
+              {/* Настройки HH стадии */}
+              <Grid item xs={12}>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="subtitle2" gutterBottom color="primary">
+                  <Trans>Синхронизация с HeadHunter</Trans>
+                </Typography>
+              </Grid>
 
-                  {settings.autoInvite.invitationType === 'template' && (
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel><Trans>Переводить в стадию HH</Trans></InputLabel>
+                  <Select
+                    value={settings.autoInvite?.toHhStageId || 'assessment'}
+                    label={_(msg`Переводить в стадию HH`)}
+                    onChange={(e) => handleChange('autoInvite.toHhStageId', e.target.value)}
+                  >
+                    {HH_STAGES.map((stage) => (
+                      <MenuItem key={stage.id} value={stage.id}>
+                        {stage.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                {/* Пустая ячейка для симметрии */}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" gutterBottom>
+                  <Trans>Тип приглашения</Trans>
+                </Typography>
+                <ToggleButtonGroup
+                  value={settings.autoInvite?.invitationType || 'ai'}
+                  exclusive
+                  onChange={(e, value) => {
+                    if (value) handleChange('autoInvite.invitationType', value);
+                  }}
+                  size="small"
+                  fullWidth
+                >
+                  <ToggleButton value="template">
+                    <Box textAlign="left">
+                      <Typography variant="body2"><Trans>📝 Обычное</Trans></Typography>
+                    </Box>
+                  </ToggleButton>
+                  <ToggleButton value="ai">
+                    <Box textAlign="left">
+                      <Typography variant="body2"><Trans>🤖 AI</Trans></Typography>
+                    </Box>
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Grid>
+
+              {settings.autoInvite?.invitationType === 'template' && (
                     <Grid item xs={12}>
                       <Typography variant="subtitle2" gutterBottom>
                         <Trans>Текст приглашения</Trans>
@@ -390,8 +385,8 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
                         multiline
                         rows={5}
                         size="small"
-                        value={settings.autoInvite.messageTemplate || ''}
-                        onChange={(e) => handleChange('autoInvite.messageTemplate', e.target.value)}
+                    value={settings.autoInvite?.messageTemplate || ''}
+                    onChange={(e) => handleChange('autoInvite.messageTemplate', e.target.value)}
                         placeholder={_(msg`Здравствуйте, {firstName}!...`)}
                       />
                       <Box display="flex" flexWrap="wrap" gap={0.5} mt={1}>
@@ -407,6 +402,138 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
                 </>
               )}
             </Grid>
+
+            {/* Дополнительные разделы: Напоминания и Автоотказы */}
+            <Divider sx={{ my: 4 }} />
+
+            {/* Напоминания (Reminders) */}
+            <Box mb={4}>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconMessageCircle size={24} />
+                <Trans>Повторные приглашения</Trans>
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                <Trans>Автоматическая отправка напоминаний кандидатам, которые еще не прошли интервью</Trans>
+              </Typography>
+
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.reminders?.enabled || false}
+                        onChange={(e) => handleChange('reminders.enabled', e.target.checked)}
+                      />
+                    }
+                    label={_(msg`Включить повторные приглашения`)}
+                  />
+                </Grid>
+
+                {settings.reminders?.enabled && (
+                  <>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label={_(msg`Отправить через (дней)`)}
+                        value={settings.reminders?.daysAfter || 7}
+                        onChange={(e) => handleChange('reminders.daysAfter', parseInt(e.target.value))}
+                        InputProps={{ inputProps: { min: 1, max: 30 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        <Trans>Текст напоминания</Trans>
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        size="small"
+                        value={settings.reminders?.messageTemplate || ''}
+                        onChange={(e) => handleChange('reminders.messageTemplate', e.target.value)}
+                        placeholder={_(msg`Здравствуйте, {firstName}!...`)}
+                      />
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            </Box>
+
+            {/* Автоотказы (Auto Reject) */}
+            <Box>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main' }}>
+                ⛔
+                <Trans>Автоматические отказы</Trans>
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ mb: 2, display: 'block' }}>
+                <Trans>Автоматический отказ кандидатам, которые не прошли интервью в установленные сроки</Trans>
+              </Typography>
+
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={settings.autoReject?.enabled || false}
+                        onChange={(e) => handleChange('autoReject.enabled', e.target.checked)}
+                      />
+                    }
+                    label={_(msg`Включить автоматические отказы`)}
+                  />
+                </Grid>
+
+                {settings.autoReject?.enabled && (
+                  <>
+                    <Grid item xs={12} md={6}>
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label={_(msg`Отказать через (дней)`)}
+                        value={settings.autoReject?.daysAfter || 14}
+                        onChange={(e) => handleChange('autoReject.daysAfter', parseInt(e.target.value))}
+                        InputProps={{ inputProps: { min: 1, max: 60 } }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth size="small">
+                        <InputLabel><Trans>Переводить в стадию HH</Trans></InputLabel>
+                        <Select
+                          value={settings.autoReject?.hhStageId || 'discard'}
+                          label={_(msg`Переводить в стадию HH`)}
+                          onChange={(e) => handleChange('autoReject.hhStageId', e.target.value)}
+                        >
+                          {HH_STAGES.map((stage) => (
+                            <MenuItem key={stage.id} value={stage.id}>
+                              {stage.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography variant="subtitle2" gutterBottom>
+                        <Trans>Текст отказа</Trans>
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        size="small"
+                        value={settings.autoReject?.messageTemplate || ''}
+                        onChange={(e) => handleChange('autoReject.messageTemplate', e.target.value)}
+                        placeholder={_(msg`Здравствуйте, {firstName}!...`)}
+                      />
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            </Box>
 
             {hasChanges && (
               <Box display="flex" justifyContent="flex-end" gap={1} mt={3}>
@@ -432,8 +559,7 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
                 </Button>
               </Box>
             )}
-          </Box>
-        )}
+        </Box>
       </CardContent>
     </Card>
   );

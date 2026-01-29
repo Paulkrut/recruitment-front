@@ -112,6 +112,19 @@ export interface VacancyHhSettings {
     toHhStageId: string;
     invitationType: 'template' | 'ai';
     messageTemplate?: string;
-  };
+    fromInternalStages: string
+    toInternalStage: string
+  },
+  reminders: {
+    enabled: boolean,
+    daysAfter: number,
+    messageTemplate: string,
+  },
+  autoReject: {
+    enabled: boolean,
+    daysAfter: number,
+    hhStageId: string,
+    messageTemplate: string,
+  },
 }
 

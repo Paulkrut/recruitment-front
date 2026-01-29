@@ -30,7 +30,6 @@ import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import RichTextEditor from "@/components/RichTextEditor";
-import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
 import QuestionFormItem, { QuestionDraft } from "@/components/QuestionFormItem";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -888,11 +887,6 @@ export default function HRVacancyEditPage() {
           generationProgress={generationProgress}
           error={error}
         />
-
-        {/* 🤖 АВТОМАТИЗАЦИЯ HH ДЛЯ ЭТОЙ ВАКАНСИИ */}
-        <Box mt={4}>
-          <VacancyHhAutomationSettings vacancyId={Number(vacancyId)} />
-        </Box>
 
         {/* Save/Cancel Buttons */}
         <Card sx={{
