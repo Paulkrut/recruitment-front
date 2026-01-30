@@ -35,14 +35,15 @@ import type { VacancyHhSettings } from '@/components/hr/hh-integration/types';
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
-// Доступные HH стадии
+// Доступные HH стадии (соответствуют реальному HH API)
 const HH_STAGES = [
   { id: 'response', name: 'Отклик' },
-  { id: 'invitation', name: 'Приглашение' },
-  { id: 'interview', name: 'Интервью' },
+  { id: 'phone_interview', name: 'Первичный контакт' },
+  { id: 'assessment', name: 'Тестовое задание' },
+  { id: 'interview', name: 'Собеседование' },
   { id: 'offer', name: 'Предложение о работе' },
-  { id: 'hired', name: 'Принят на работу' },
-  { id: 'discard', name: 'Отказ' },
+  { id: 'hired', name: 'Выход на работу' },
+  { id: 'consider', name: 'Подумать' },
 ];
 
 // Внутренние статусы кандидатов
