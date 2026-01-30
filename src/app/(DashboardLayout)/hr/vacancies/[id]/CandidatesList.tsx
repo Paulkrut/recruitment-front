@@ -1013,7 +1013,7 @@ export default function CandidatesList({
                   <TableCell>
                     <Box display="flex" gap={0.5} alignItems="center">
                     <Chip
-                      label={`${getSourceIcon(r.source)} ${r.source === 'headhunter' ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
+                      label={`${getSourceIcon(r.source)} ${ r.hhCandidateId ? 'HH.ru' : r.source === 'manual' ? _(msg`Ручной`) : r.source}`}
                       size="small"
                       variant="outlined"
                     />
