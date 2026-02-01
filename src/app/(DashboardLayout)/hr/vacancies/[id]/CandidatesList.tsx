@@ -1084,7 +1084,28 @@ export default function CandidatesList({
                           <Chip label="—" size="small" variant="outlined" />
                         )}
                         {r.redFlagCount > 0 && (
-                          <Tooltip title={_(msg`Критических вопросов с красным флагом: ${r.redFlagCount}`)} arrow>
+                          <Tooltip 
+                            title={
+                              <Box>
+                                <Typography variant="caption" fontWeight={600} display="block" mb={0.5}>
+                                  <Trans>Критических вопросов: {r.redFlagCount}</Trans>
+                                </Typography>
+                                {r.redFlagQuestions && r.redFlagQuestions.length > 0 && (
+                                  <Box component="ul" sx={{ m: 0, pl: 2, fontSize: '0.75rem' }}>
+                                    {r.redFlagQuestions.slice(0, 5).map((q: any, idx: number) => (
+                                      <li key={idx}>
+                                        <Trans>Вопрос {q.position}: {q.text}</Trans>
+                                      </li>
+                                    ))}
+                                    {r.redFlagQuestions.length > 5 && (
+                                      <li><Trans>...и еще {r.redFlagQuestions.length - 5}</Trans></li>
+                                    )}
+                                  </Box>
+                                )}
+                              </Box>
+                            } 
+                            arrow
+                          >
                             <Chip
                               icon={<span style={{fontSize: 14}}>🚩</span>}
                               label={r.redFlagCount}
