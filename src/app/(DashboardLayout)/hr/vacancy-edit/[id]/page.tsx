@@ -98,6 +98,7 @@ export default function HRVacancyEditPage() {
     elapsed_time?: number;
     message?: string;
   } | null>(null);
+  const [expertMode, setExpertMode] = useState(false);
 
   // Vacancy data
   const [vacancyData, setVacancyData] = useState<VacancyData>({
@@ -214,6 +215,14 @@ export default function HRVacancyEditPage() {
           allowFollowups: data.questions[0].allowFollowups || false,
           followupsMax: data.questions[0].followupsMax || 1,
         });
+
+        // Автоматически включаем экспертный режим, если хотя бы один вопрос использует экспертные параметры
+        const hasExpertFeatures = data.questions.some((q: QuestionDraft) => 
+          q.referenceAnswer || q.isRedFlag
+        );
+        if (hasExpertFeatures) {
+          setExpertMode(true);
+        }
       }
 
     } catch (err: any) {
@@ -830,7 +839,7 @@ export default function HRVacancyEditPage() {
                     sx={{ backgroundColor: '#f5f5f5', color: '#1976d2', fontSize: '1.1rem', fontWeight: 600, height: 32 }}
                   />
                 </Box>
-                <Stack direction="row" spacing={2} mb={2}>
+                <Stack direction="row" spacing={2} mb={2} alignItems="center">
                   <Button
                     variant="contained"
                     startIcon={<IconPlus size={24} />}
@@ -847,6 +856,17 @@ export default function HRVacancyEditPage() {
                   >
                     <Trans>Сгенерировать AI</Trans>
                   </Button>
+                  <Box sx={{ flexGrow: 1 }} />
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Typography variant="body2" fontWeight={600} color="text.secondary">
+                      <Trans>Экспертный режим</Trans>
+                    </Typography>
+                    <Switch
+                      checked={expertMode}
+                      onChange={(e) => setExpertMode(e.target.checked)}
+                      color="primary"
+                    />
+                  </Stack>
                 </Stack>
                 {questions.length === 0 ? (
                   <Box textAlign="center" py={6}>
@@ -867,6 +887,7 @@ export default function HRVacancyEditPage() {
                         onMoveDown={moveQuestionDown}
                         showTypeSelector={true}
                         variant="edit"
+                        expertMode={expertMode}
                       />
                     ))}
                   </Stack>

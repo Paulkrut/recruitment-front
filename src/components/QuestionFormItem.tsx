@@ -32,6 +32,8 @@ export interface QuestionDraft {
   allowFollowups: boolean;
   followupsMax: number;
   position?: number;
+  referenceAnswer?: string | null;
+  isRedFlag?: boolean;
 }
 
 interface QuestionFormItemProps {
@@ -44,6 +46,7 @@ interface QuestionFormItemProps {
   onMoveDown: (index: number) => void;
   showTypeSelector?: boolean; // Показывать ли выбор типа вопроса
   variant?: 'create' | 'edit'; // Визуальный стиль
+  expertMode?: boolean; // Экспертный режим (доп. параметры)
 }
 
 /**
@@ -59,7 +62,8 @@ const QuestionFormItem = React.memo(({
   onMoveUp, 
   onMoveDown,
   showTypeSelector = false,
-  variant = 'create'
+  variant = 'create',
+  expertMode = false
 }: QuestionFormItemProps) => {
   const { _ } = useLingui();
   
@@ -291,56 +295,125 @@ const QuestionFormItem = React.memo(({
           }}
         />
       </Box>
+
       
-      {/* Тип вопроса (только если showTypeSelector = true) */}
-      {showTypeSelector && (
-        <Box mt={3}>
-          <CustomFormLabel sx={{ fontSize: '1.1rem', fontWeight: 600, mb: 2 }}>
-            <Trans>Тип ответа</Trans>
-          </CustomFormLabel>
-          <FormControl component="fieldset">
-            <RadioGroup
-              row
-              value={question.type || 'text'}
-              onChange={(e) => onUpdate(index, "type", e.target.value)}
-            >
-              <FormControlLabel
-                value="text"
-                control={<Radio />}
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <IconVideo size={20} />
-                    <Box>
-                      <Typography variant="body1" fontWeight={600}>
-                        <Trans>Видео/Аудио</Trans>
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        <Trans>Кандидат записывает себя</Trans>
-                      </Typography>
+      {/* Экспертный режим: дополнительные параметры */}
+      {expertMode && showTypeSelector && (
+        <Box mt={3} sx={{ 
+          p: 3, 
+          borderRadius: 2, 
+          background: '#f0f7ff', 
+          border: '1px solid #90caf9' 
+        }}>
+          <Typography variant="subtitle2" fontWeight={700} color="primary" mb={3}>
+            <Trans>⚙️ Экспертные настройки</Trans>
+          </Typography>
+          
+          {/* Тип вопроса */}
+          <Box mb={3}>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 2 }}>
+              <Trans>Тип ответа</Trans>
+            </CustomFormLabel>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                value={question.type || 'text'}
+                onChange={(e) => onUpdate(index, "type", e.target.value)}
+              >
+                <FormControlLabel
+                  value="text"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <IconVideo size={20} />
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>Видео/Аудио</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>Кандидат записывает себя</Trans>
+                        </Typography>
+                      </Box>
                     </Box>
+                  }
+                  sx={{ mr: 4 }}
+                />
+                <FormControlLabel
+                  value="typing"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <IconKeyboard size={20} />
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>Письменный</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>Кандидат печатает текст</Trans>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </Box>
+
+          {/* Эталонный ответ */}
+          <Box mb={3}>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+              <Trans>Эталонный ответ</Trans>
+              {question.isRedFlag && (
+                <Typography component="span" color="error" sx={{ ml: 0.5 }}>*</Typography>
+              )}
+            </CustomFormLabel>
+            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+              {question.isRedFlag ? (
+                <Trans>⚠️ Обязательно для критических вопросов. AI будет проверять соответствие ответа эталону.</Trans>
+              ) : (
+                <Trans>AI будет сравнивать ответ кандидата с этим эталоном при оценке</Trans>
+              )}
+            </Typography>
+            <CustomTextField
+              fullWidth
+              multiline
+              rows={3}
+              placeholder={_(msg`Опишите идеальный ответ на этот вопрос...`)}
+              value={question.referenceAnswer || ''}
+              onChange={(e) => onUpdate(index, "referenceAnswer", e.target.value)}
+              required={question.isRedFlag}
+              error={question.isRedFlag && !question.referenceAnswer}
+              helperText={
+                question.isRedFlag && !question.referenceAnswer
+                  ? _(msg`Эталонный ответ обязателен для критических вопросов`)
+                  : undefined
+              }
+            />
+          </Box>
+
+          {/* Red Flag (критический вопрос) */}
+          <Box>
+            <Stack direction="row" alignItems="center" spacing={2}>
+              <FormControlLabel
+                control={
+                  <Radio
+                    checked={question.isRedFlag || false}
+                    onChange={(e) => onUpdate(index, "isRedFlag", e.target.checked)}
+                  />
+                }
+                label={
+                  <Box>
+                    <Typography variant="body2" fontWeight={600} color="error">
+                      <Trans>🚩 Критический вопрос (Red Flag)</Trans>
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      <Trans>Неправильный ответ пометит кандидата специальным флагом</Trans>
+                    </Typography>
                   </Box>
                 }
-                sx={{ mr: 4 }}
               />
-              <FormControlLabel
-                value="typing"
-                control={<Radio />}
-                label={
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <IconKeyboard size={20} />
-                    <Box>
-                      <Typography variant="body1" fontWeight={600}>
-                        <Trans>Письменный</Trans>
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        <Trans>Кандидат печатает текст</Trans>
-                      </Typography>
-                    </Box>
-                  </Box>
-                }
-              />
-            </RadioGroup>
-          </FormControl>
+            </Stack>
+          </Box>
         </Box>
       )}
     </Paper>
