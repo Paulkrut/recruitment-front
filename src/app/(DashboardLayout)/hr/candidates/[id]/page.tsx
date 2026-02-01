@@ -61,6 +61,8 @@ import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
 import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEventsTimeline';
 import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
+import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
+import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -695,6 +697,15 @@ export default function CandidateDetailPage() {
                       <Chip label={aiStatus || _(msg`нет данных`)} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
                       {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
                     </Stack>
+                    
+                    {/* Новая таблица компетенций */}
+                    {aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
+                      <Box sx={{ mt: 3 }}>
+                        <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+                      </Box>
+                    )}
+                    
+                    {/* Старый формат - общее резюме и сильные/слабые стороны */}
                     {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><Trans><b>Резюме:</b> {aiSummary}</Trans></Typography>}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
                       <Box mb={1}>
@@ -712,7 +723,8 @@ export default function CandidateDetailPage() {
                         </Stack>
                       </Box>
                     )}
-                    {aiMetrics && (
+                    {/* Старый формат метрик - показываем только если это старая структура */}
+                    {aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics) && (
                       <Box mb={1}>
                         <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}><Trans>Метрики оценки:</Trans></Typography>
                         <Grid container spacing={2}>
@@ -801,8 +813,8 @@ export default function CandidateDetailPage() {
                         </Grid>
                       </Box>
                     )}
-                    {/* Анализ письменной речи (writing_analysis) */}
-                    {aiMetrics?.writing_analysis && (
+                    {/* Анализ письменной речи (writing_analysis) - только для старого формата */}
+                    {aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics) && 'writing_analysis' in aiMetrics && aiMetrics.writing_analysis && (
                       <Box mb={1} sx={{ mt: 3 }}>
                         <Card sx={{ p: 3, backgroundColor: '#f8f9fa', border: '1px solid #e0e0e0' }}>
                           <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
