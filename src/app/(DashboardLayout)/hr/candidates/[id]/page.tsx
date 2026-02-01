@@ -62,6 +62,7 @@ import { getErrorMessage } from '@/utils/errorTranslator';
 import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEventsTimeline';
 import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
+import CandidateScoresCard from '@/components/hr/CandidateScoresCard';
 import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 
 
@@ -288,6 +289,11 @@ export default function CandidateDetailPage() {
   const aiWeaknesses = evalData?.weaknesses;
   const aiMetrics = evalData?.metrics;
   const aiUpdatedAt = evalData?.updatedAt;
+  
+  // Вычисляем оценку по компетенциям (средняя из новой структуры)
+  const competencyScore = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics 
+    ? (aiMetrics as NewMetrics).summary_table?.average_score 
+    : undefined;
 
   const interviewLink = candidateToken ? `${window.location.origin}/interview/${candidateToken}` : null;
 
@@ -501,7 +507,17 @@ export default function CandidateDetailPage() {
                   <Typography variant="body2" color="text.secondary">Email: {candidateEmail || '-'}</Typography>
                   <Typography variant="body2" color="text.secondary"><Trans>Телефон: {candidatePhone || '-'}</Trans></Typography>
                   <Typography variant="body2" color="text.secondary"><Trans>Вопросов: {sessionDetail?.answers?.length || 0}</Trans></Typography>
-                  <Typography variant="body2" color="text.secondary"><Trans>Оценка: {sessionDetail?.result?.totalScore !== undefined ? sessionDetail.result.totalScore : '-'}</Trans></Typography>
+                  {/* Компактные оценки в шапке */}
+                  {sessionDetail?.result?.totalScore !== undefined && (
+                    <Typography variant="body2" color="text.secondary">
+                      <Trans>🎓 Hard Skills: <strong style={{ color: sessionDetail.result.totalScore >= 8 ? '#4caf50' : sessionDetail.result.totalScore >= 6 ? '#ff9800' : '#f44336' }}>{sessionDetail.result.totalScore.toFixed(1)}/10</strong></Trans>
+                    </Typography>
+                  )}
+                  {competencyScore !== undefined && (
+                    <Typography variant="body2" color="text.secondary">
+                      <Trans>💡 Soft Skills: <strong style={{ color: competencyScore >= 8 ? '#4caf50' : competencyScore >= 6 ? '#ff9800' : '#f44336' }}>{competencyScore.toFixed(1)}/10</strong></Trans>
+                    </Typography>
+                  )}
                   <Typography variant="body2" color="text.secondary"><Trans>Создано: {createdAt || '-'}</Trans></Typography>
                   <Typography variant="body2" color="text.secondary"><Trans>Завершено: {sessionDetail?.finishedAt || '-'}</Trans></Typography>
                 </Stack>
@@ -573,6 +589,15 @@ export default function CandidateDetailPage() {
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
+            {/* Детальная карточка с оценками */}
+            <Box sx={{ mb: 3 }}>
+              <CandidateScoresCard
+                interviewScore={sessionDetail?.result?.totalScore}
+                competencyScore={competencyScore}
+                questionsCount={sessionDetail?.answers?.length}
+              />
+            </Box>
+            
             {/* Детальная информация по сессии интервью */}
             {sessionDetail && (
               <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
