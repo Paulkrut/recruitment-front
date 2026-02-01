@@ -1069,17 +1069,30 @@ export default function CandidatesList({
                   <TableCell>
                     <Box display="flex" flexDirection="column" gap={0.5} alignItems="center">
                       {/* Оценка - основная */}
-                      {r.score !== null && r.score !== undefined ? (
-                        <Tooltip title={_(msg`Оценка за прохождение теста: ${r.score}/10`)} arrow>
-                          <Chip
-                            label={`${r.score}/10`}
-                            size="small"
-                            color={getTestScoreColor(r.score)}
-                          />
-                        </Tooltip>
-                      ) : (
-                        <Chip label="—" size="small" variant="outlined" />
-                      )}
+                      <Box display="flex" alignItems="center" gap={0.5}>
+                        {r.score !== null && r.score !== undefined ? (
+                          <Tooltip title={_(msg`Оценка за прохождение теста: ${r.score}/10`)} arrow>
+                            <Chip
+                              label={`${r.score}/10`}
+                              size="small"
+                              color={getTestScoreColor(r.score)}
+                            />
+                          </Tooltip>
+                        ) : (
+                          <Chip label="—" size="small" variant="outlined" />
+                        )}
+                        {r.redFlagCount > 0 && (
+                          <Tooltip title={_(msg`Критических вопросов с красным флагом: ${r.redFlagCount}`)} arrow>
+                            <Chip
+                              icon={<span style={{fontSize: 14}}>🚩</span>}
+                              label={r.redFlagCount}
+                              size="small"
+                              color="error"
+                              sx={{ height: 20, fontSize: 11, fontWeight: 700 }}
+                            />
+                          </Tooltip>
+                        )}
+                      </Box>
                       
                       {/* Статус интервью - вторичный, мелким шрифтом */}
                       <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>

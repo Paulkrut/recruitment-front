@@ -631,6 +631,11 @@ export default function CandidateDetailPage() {
                               size="small"
                             />
                           )}
+                          {a.hasRedFlag && (
+                            <Tooltip title={_(msg`Критический вопрос - ответ не соответствует требованиям`)} arrow>
+                              <span style={{fontSize: 20}}>🚩</span>
+                            </Tooltip>
+                          )}
                         </Stack>
                       </AccordionSummary>
                       <AccordionDetails>

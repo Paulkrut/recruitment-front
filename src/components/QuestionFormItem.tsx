@@ -11,6 +11,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Checkbox,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
@@ -363,15 +364,19 @@ const QuestionFormItem = React.memo(({
           <Box mb={3}>
             <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
               <Trans>Эталонный ответ</Trans>
-              {question.isRedFlag && (
-                <Typography component="span" color="error" sx={{ ml: 0.5 }}>*</Typography>
-              )}
+              <Typography component="span" color="text.secondary" sx={{ ml: 0.5, fontSize: '0.9rem', fontWeight: 400 }}>
+                (<Trans>необязательно</Trans>)
+              </Typography>
             </CustomFormLabel>
             <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-              {question.isRedFlag ? (
-                <Trans>⚠️ Обязательно для критических вопросов. AI будет проверять соответствие ответа эталону.</Trans>
+              {question.isRedFlag && question.referenceAnswer ? (
+                <Trans>⚠️ Для критических вопросов: система проверит соответствие ответа этому эталону.</Trans>
+              ) : question.isRedFlag ? (
+                <Trans>⚠️ Для критических вопросов: система проверит адекватность и полноту ответа.</Trans>
+              ) : question.referenceAnswer ? (
+                <Trans>Система будет сравнивать ответ кандидата с эталоном при оценке.</Trans>
               ) : (
-                <Trans>AI будет сравнивать ответ кандидата с этим эталоном при оценке</Trans>
+                <Trans>Если указан, система будет сравнивать ответ с эталоном при оценке.</Trans>
               )}
             </Typography>
             <CustomTextField
@@ -381,38 +386,30 @@ const QuestionFormItem = React.memo(({
               placeholder={_(msg`Опишите идеальный ответ на этот вопрос...`)}
               value={question.referenceAnswer || ''}
               onChange={(e) => onUpdate(index, "referenceAnswer", e.target.value)}
-              required={question.isRedFlag}
-              error={question.isRedFlag && !question.referenceAnswer}
-              helperText={
-                question.isRedFlag && !question.referenceAnswer
-                  ? _(msg`Эталонный ответ обязателен для критических вопросов`)
-                  : undefined
-              }
             />
           </Box>
 
           {/* Red Flag (критический вопрос) */}
           <Box>
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <FormControlLabel
-                control={
-                  <Radio
-                    checked={question.isRedFlag || false}
-                    onChange={(e) => onUpdate(index, "isRedFlag", e.target.checked)}
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="body2" fontWeight={600} color="error">
-                      <Trans>🚩 Критический вопрос (Red Flag)</Trans>
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      <Trans>Неправильный ответ пометит кандидата специальным флагом</Trans>
-                    </Typography>
-                  </Box>
-                }
-              />
-            </Stack>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={question.isRedFlag || false}
+                  onChange={(e) => onUpdate(index, "isRedFlag", e.target.checked)}
+                  color="error"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" fontWeight={600} color="error">
+                    <Trans>🚩 Критический вопрос (Red Flag)</Trans>
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    <Trans>Неправильный ответ пометит кандидата специальным флагом</Trans>
+                  </Typography>
+                </Box>
+              }
+            />
           </Box>
         </Box>
       )}
