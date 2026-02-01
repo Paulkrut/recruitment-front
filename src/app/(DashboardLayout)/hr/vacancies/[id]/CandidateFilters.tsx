@@ -28,13 +28,15 @@ interface CandidateFiltersProps {
     interviewStatus?: string; // Статус интервью
     testScore?: string; // Новый фильтр для оценки за тест
     invitationSent?: string; // Новый фильтр для приглашений
+    redFlag?: string; // Фильтр по red flags
   };
   onFilterChange: (filters: any) => void;
   vacancyId: number;
   viewMode?: 'list' | 'kanban';
+  hasRedFlagQuestions?: boolean; // Есть ли у вакансии критические вопросы
 }
 
-export default function CandidateFilters({ filters, onFilterChange, vacancyId, viewMode = 'list' }: CandidateFiltersProps) {
+export default function CandidateFilters({ filters, onFilterChange, vacancyId, viewMode = 'list', hasRedFlagQuestions = false }: CandidateFiltersProps) {
   const { _ } = useLingui();
 
   const [hhStages, setHhStages] = useState<string[]>([]);
@@ -286,6 +288,27 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
             </Select>
           </FormControl>
         </Grid>
+
+        {/* Red Flags (только если у вакансии есть критические вопросы) */}
+        {hasRedFlagQuestions && (
+          <Grid item xs={12} md={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel><Trans>🚩 Red Flags</Trans></InputLabel>
+              <Select
+                value={localFilters.redFlag || ''}
+                label={_(msg`🚩 Red Flags`)}
+                onChange={(e) => handleLocalChange('redFlag', e.target.value)}
+              >
+                <MenuItem value=""><Trans>Все</Trans></MenuItem>
+                <MenuItem value="has"><Trans>🚩 Есть флаги</Trans></MenuItem>
+                <MenuItem value="none"><Trans>✅ Без флагов</Trans></MenuItem>
+                <MenuItem value="1"><Trans>= 1 флаг</Trans></MenuItem>
+                <MenuItem value="2"><Trans>= 2 флага</Trans></MenuItem>
+                <MenuItem value="3"><Trans>= 3 флага</Trans></MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        )}
 
         {/* Наличие резюме */}
         <Grid item xs={12} md={2}>

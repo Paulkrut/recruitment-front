@@ -149,6 +149,7 @@ export default function CandidatesList({
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
         if (filters.testScore) queryParams.append('testScore', filters.testScore); // Новый фильтр
         if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent); // Фильтр по приглашениям
+        if (filters.redFlag) queryParams.append('redFlag', filters.redFlag); // Фильтр по red flags
         if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
         if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
         if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
@@ -198,6 +199,7 @@ export default function CandidatesList({
         if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
         if (filters.testScore) queryParams.append('testScore', filters.testScore);
         if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent);
+        if (filters.redFlag) queryParams.append('redFlag', filters.redFlag);
         if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
         if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
         if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);

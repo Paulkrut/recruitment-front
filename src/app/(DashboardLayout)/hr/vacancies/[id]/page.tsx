@@ -926,6 +926,7 @@ export default function HRVacancyDetailPage() {
                     onFilterChange={setFilters}
                     vacancyId={parseInt(id)}
                     viewMode={viewMode}
+                    hasRedFlagQuestions={data?.hasRedFlagQuestions || false}
                   />
 
                   {/* Floating панель массовых действий - для обоих режимов */}
