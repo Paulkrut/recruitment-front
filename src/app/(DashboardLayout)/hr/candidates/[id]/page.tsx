@@ -515,7 +515,7 @@ export default function CandidateDetailPage() {
                   )}
                   {competencyScore !== undefined && (
                     <Typography variant="body2" color="text.secondary">
-                      <Trans>💡 Soft Skills: <strong style={{ color: competencyScore >= 8 ? '#4caf50' : competencyScore >= 6 ? '#ff9800' : '#f44336' }}>{competencyScore.toFixed(1)}/10</strong></Trans>
+                      <Trans>💡 Fit: <strong style={{ color: competencyScore >= 8 ? '#4caf50' : competencyScore >= 6 ? '#ff9800' : '#f44336' }}>{competencyScore.toFixed(1)}/10</strong></Trans>
                     </Typography>
                   )}
                   <Typography variant="body2" color="text.secondary"><Trans>Создано: {createdAt || '-'}</Trans></Typography>

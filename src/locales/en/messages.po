@@ -1556,8 +1556,12 @@ msgstr "💡 <0>Recommendation:</0> Wait for candidates to complete interviews f
 
 #. placeholder {0}: competencyScore.toFixed(1)
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:518
-msgid "💡 Soft Skills: <0>{0}/10</0>"
+msgid "💡 Fit: <0>{0}/10</0>"
 msgstr ""
+
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:518
+#~ msgid "💡 Soft Skills: <0>{0}/10</0>"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:592
 msgid "💡 Для конкретных кандидатов создавайте персональные ссылки во вкладке \"Кандидаты\" → \"Добавить кандидата\" — так исключите повторные прохождения под разными именами."
@@ -2207,8 +2211,8 @@ msgid "5м"
 msgstr "5m"
 
 #: src/components/hr/CandidateScoresCard.tsx:145
-msgid "6 компетенций: мотивация, речь, клиентоориентированность..."
-msgstr ""
+#~ msgid "6 компетенций: мотивация, речь, клиентоориентированность..."
+#~ msgstr ""
 
 #: src/app/page.tsx:907
 #~ msgid "AI Magic"
@@ -2381,6 +2385,10 @@ msgstr ""
 #~ msgid "FAQ"
 #~ msgstr "FAQ"
 
+#: src/components/hr/CandidateScoresCard.tsx:113
+msgid "Fit-компетенции"
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CustomStageModal.tsx:85
 msgid "HEX код"
 msgstr "HEX Code"
@@ -2488,8 +2496,8 @@ msgstr "ROI (Return on Investment)"
 #~ msgstr "SofiHR Completely Changed Our Hiring Process. We Now Spend 5 Times Less Time on Initial Interviews and Get Higher Quality Candidates."
 
 #: src/components/hr/CandidateScoresCard.tsx:116
-msgid "Soft skills и личностные качества"
-msgstr ""
+#~ msgid "Soft skills и личностные качества"
+#~ msgstr ""
 
 #: src/utils/errorTranslator.tsx:106
 msgid "vacancy_id и company_id обязательны"
@@ -6099,6 +6107,10 @@ msgstr "Motivation"
 msgid "Мотивация к вакансии"
 msgstr ""
 
+#: src/components/hr/CandidateScoresCard.tsx:145
+msgid "Мотивация, речь, клиентоориентированность, стрессоустойчивость..."
+msgstr ""
+
 #: src/app/page.tsx:248
 #: src/app/page.tsx:278
 #: src/app/page.tsx:296
@@ -7619,8 +7631,8 @@ msgid "Оценка ответов на вопросы (знания, навык
 msgstr ""
 
 #: src/components/hr/CandidateScoresCard.tsx:113
-msgid "Оценка по компетенциям"
-msgstr ""
+#~ msgid "Оценка по компетенциям"
+#~ msgstr ""
 
 #. placeholder {0}: answer.score
 #: src/utils/pdfExportWithFont.ts:277
@@ -10183,6 +10195,10 @@ msgstr "Message Sent Successfully! We will contact you shortly."
 #: src/app/components/landing/PricingFAQ.tsx:135
 msgid "Соответствие 152-ФЗ"
 msgstr "US Privacy Compliance"
+
+#: src/components/hr/CandidateScoresCard.tsx:116
+msgid "Соответствие вакансии и личностные качества"
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1183
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1186

@@ -110,10 +110,10 @@ export default function CandidateScoresCard({
               <PsychologyIcon sx={{ fontSize: 24, color: 'primary.main' }} />
               <Box>
                 <Typography variant="subtitle2" fontWeight={600}>
-                  <Trans>Оценка по компетенциям</Trans>
+                  <Trans>Fit-компетенции</Trans>
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  <Trans>Soft skills и личностные качества</Trans>
+                  <Trans>Соответствие вакансии и личностные качества</Trans>
                 </Typography>
               </Box>
             </Stack>
@@ -142,7 +142,7 @@ export default function CandidateScoresCard({
                 </Box>
                 
                 <Typography variant="caption" color="text.secondary">
-                  <Trans>6 компетенций: мотивация, речь, клиентоориентированность...</Trans>
+                  <Trans>Мотивация, речь, клиентоориентированность, стрессоустойчивость...</Trans>
                 </Typography>
               </>
             ) : (
