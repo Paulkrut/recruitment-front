@@ -1431,10 +1431,18 @@ msgstr "🎁 Пробный"
 #~ msgid "🎉 Камера подключена! {label}"
 #~ msgstr "🎉 Камера подключена! {label}"
 
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:513
+#~ msgid "🎓 Hard Skills: <0>{0}/10</0>"
+#~ msgstr "🎓 Hard Skills: <0>{0}/10</0>"
+
 #. placeholder {0}: sessionDetail.result.totalScore.toFixed(1)
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:513
-msgid "🎓 Hard Skills: <0>{0}/10</0>"
-msgstr "🎓 Hard Skills: <0>{0}/10</0>"
+msgid "🎓 Total Skills: <0>{0}/10</0>"
+msgstr "🎓 Total Skills: <0>{0}/10</0>"
+
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:513
+#~ msgid "🎓 Знания: <0>{0}/10</0>"
+#~ msgstr "🎓 Знания: <0>{0}/10</0>"
 
 #: src/app/interview/[token]/page.tsx:1041
 msgid "🎤 Аудио ответ отправлен"

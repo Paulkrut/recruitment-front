@@ -510,7 +510,7 @@ export default function CandidateDetailPage() {
                   {/* Компактные оценки в шапке */}
                   {sessionDetail?.result?.totalScore !== undefined && (
                     <Typography variant="body2" color="text.secondary">
-                      <Trans>🎓 Hard Skills: <strong style={{ color: sessionDetail.result.totalScore >= 8 ? '#4caf50' : sessionDetail.result.totalScore >= 6 ? '#ff9800' : '#f44336' }}>{sessionDetail.result.totalScore.toFixed(1)}/10</strong></Trans>
+                      <Trans>🎓 Total Skills: <strong style={{ color: sessionDetail.result.totalScore >= 8 ? '#4caf50' : sessionDetail.result.totalScore >= 6 ? '#ff9800' : '#f44336' }}>{sessionDetail.result.totalScore.toFixed(1)}/10</strong></Trans>
                     </Typography>
                   )}
                   {competencyScore !== undefined && (
