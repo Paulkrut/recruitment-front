@@ -51,6 +51,28 @@ export interface SummaryTable {
   key_risks: string[];
 }
 
+export interface RetentionRiskFactor {
+  factor: string;
+  evidence: string;
+  impact: string;
+}
+
+export interface RetentionTimelineItem {
+  month: string;
+  events: string;
+  probability: number;
+  trigger: string;
+}
+
+export interface RetentionForecast {
+  insufficient_data: boolean;
+  message?: string;
+  critical_risk_factors: RetentionRiskFactor[];
+  retention_timeline: RetentionTimelineItem[];
+  predicted_tenure: string;
+  reasoning: string;
+}
+
 export interface NewMetrics {
   insufficient_data: boolean;
   competencies: {
@@ -70,6 +92,7 @@ export interface NewMetrics {
   critical_risks?: CriticalRisks;
   recommendation?: Recommendation;
   summary_table?: SummaryTable;
+  retention_forecast?: RetentionForecast;
 }
 
 export interface AiEvaluation {

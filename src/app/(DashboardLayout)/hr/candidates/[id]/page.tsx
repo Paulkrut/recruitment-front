@@ -63,6 +63,7 @@ import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEve
 import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
 import CandidateScoresCard from '@/components/hr/CandidateScoresCard';
+import RetentionForecastTable from '@/components/hr/RetentionForecastTable';
 import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 
 
@@ -727,6 +728,13 @@ export default function CandidateDetailPage() {
                     {aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
                       <Box sx={{ mt: 3 }}>
                         <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+                      </Box>
+                    )}
+                    
+                    {/* Прогноз удержания (retention forecast) */}
+                    {aiMetrics && typeof aiMetrics === 'object' && 'retention_forecast' in aiMetrics && (
+                      <Box sx={{ mt: 3 }}>
+                        <RetentionForecastTable forecast={(aiMetrics as NewMetrics).retention_forecast!} />
                       </Box>
                     )}
                     
