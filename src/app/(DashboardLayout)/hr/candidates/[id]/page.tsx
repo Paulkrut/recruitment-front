@@ -137,6 +137,12 @@ export default function CandidateDetailPage() {
   const [communications, setCommunications] = useState<any[]>([]);
   const [communicationsLoading, setCommunicationsLoading] = useState(false);
   const [syncingMessages, setSyncingMessages] = useState(false);
+
+  const getKnowledgeColor = (score: number): 'success' | 'warning' | 'error' => {
+    if (score >= 8) return 'success';
+    if (score >= 6) return 'warning';
+    return 'error';
+  };
   const [hasHhNegotiation, setHasHhNegotiation] = useState(false);
   const [hhCandidateId, setHhCandidateId] = useState<number | null>(null);
 
@@ -590,175 +596,86 @@ export default function CandidateDetailPage() {
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
-            {/* Детальная карточка с оценками */}
-            <Box sx={{ mb: 3 }}>
+            {/* ═══════════════════════════════════════════ */}
+            {/* 📊 ИТОГОВЫЕ ПОКАЗАТЕЛИ */}
+            {/* ═══════════════════════════════════════════ */}
+            <Box sx={{ mb: 4 }}>
+              <Box sx={{ 
+                mb: 2, 
+                pb: 1.5, 
+                borderBottom: '3px solid',
+                borderColor: 'primary.main',
+              }}>
+                <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <span style={{ fontSize: '1.5rem' }}>📊</span>
+                  <Trans>Итоговые показатели</Trans>
+                </Typography>
+              </Box>
               <CandidateScoresCard
                 interviewScore={sessionDetail?.result?.totalScore}
                 competencyScore={competencyScore}
                 questionsCount={sessionDetail?.answers?.length}
               />
             </Box>
-            
-            {/* Детальная информация по сессии интервью */}
-            {sessionDetail && (
-              <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', mb:3 }}>
-                <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-                  <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-                    <IconFileText size={32} color="#1976d2" />
-                    <Typography variant="h4" fontWeight="700"><Trans>Детали интервью-сессии</Trans></Typography>
-                    <Chip label={getStatusLabel(sessionDetail.status, _)} color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} size="medium" />
-                  </Stack>
-                  <Grid container spacing={2} mb={2}>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><Trans><b>Начата:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.startedAt || '-'}</Trans></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><Trans><b>Завершена:</b> <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {sessionDetail.finishedAt || '-'}</Trans></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <Typography variant="body2"><b>Шаблон:</b> {sessionDetail.template?.title || '-'}{sessionDetail.template?.id && (<Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary" sx={{ml:1}}><Trans>Открыть</Trans></Button>)}</Typography>
-                    </Grid>
-                    {sessionDetail.vacancy && (
-                      <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b>Вакансия:</b> {sessionDetail.vacancy.title}{sessionDetail.vacancy.id && (<Button component={Link} href={`/hr/vacancies/${sessionDetail.vacancy.id}`} size="small" color="primary" sx={{ml:1}}><Trans>Открыть</Trans></Button>)}</Typography>
-                      </Grid>
-                    )}
-                    {/* Длительность интервью */}
-                    {sessionDetail.startedAt && (sessionDetail.finishedAt || (sessionDetail.answers && sessionDetail.answers.length > 0)) && (
-                      <Grid item xs={12} sm={6} md={4}>
-                        <Typography variant="body2"><b><Trans>Длительность</Trans>:</b> <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} /> {(() => {
-                          const start = sessionDetail.startedAt ? new Date(sessionDetail.startedAt) : null;
-                          let end = sessionDetail.finishedAt ? new Date(sessionDetail.finishedAt) : null;
-                          if (!end && sessionDetail.answers && sessionDetail.answers.length > 0) {
-                            const last = sessionDetail.answers[sessionDetail.answers.length-1];
-                            end = last.createdAt ? new Date(last.createdAt) : null;
-                          }
-                          if (start && end) {
-                            const ms = end.getTime() - start.getTime();
-                            const min = Math.floor(ms/60000);
-                            const sec = Math.floor((ms%60000)/1000);
-                            return _(msg`${min} мин ${sec} сек`);
-                          }
-                          return '-';
-                        })()}</Typography>
-                      </Grid>
-                    )}
-                  </Grid>
-                  <Divider sx={{ my: 2, borderColor: '#eee' }} />
-                  <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Ответы на вопросы</Trans></Typography>
-                  {/* Accordion для длинных списков */}
-                  {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
-                    <Accordion key={a.id} defaultExpanded={idx<3} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <Typography variant="subtitle1"><b><Trans>Вопрос {idx+1}:</Trans></b> {a.question}</Typography>
-                          {a.score !== undefined && a.score !== null && (
-                            <Chip
-                              label={_(msg`Оценка`) + ': ' + a.score}
-                              color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
-                              size="small"
-                            />
-                          )}
-                          {a.hasRedFlag && (
-                            <Tooltip title={_(msg`Критический вопрос - ответ не соответствует требованиям`)} arrow>
-                              <span style={{fontSize: 20}}>🚩</span>
-                            </Tooltip>
-                          )}
-                        </Stack>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Typography variant="body2" sx={{mb:1}}><b>Ответ:</b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
-                        <Typography variant="body2" sx={{mb:1}}><b>Оценка:</b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
-                        {a.aiComment && (
-                          <Typography variant="body2" sx={{mb:1}}><Trans><b>AI-характеристика:</b> {a.aiComment}</Trans></Typography>
-                        )}
-                        {/* Метрики печати для текстовых ответов */}
-                        {a.typingMetrics && (
-                          <Accordion sx={{mt:2, boxShadow:'none', border:'1px solid #e0e0e0'}}>
-                            <AccordionSummary expandIcon={<IconChevronDown />}>
-                              <Typography variant="subtitle2" sx={{fontWeight:600}}>
-                                📊 <Trans>Метрики печати</Trans>
-                              </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <TypingMetricsDisplay metrics={a.typingMetrics} finalText={a.text || ''} />
-                            </AccordionDetails>
-                          </Accordion>
-                        )}
-                        {a.audio && (
-                          <Box mb={1} display="flex" alignItems="center" gap={1}>
-                            <IconMicrophone size={18} style={{verticalAlign:'middle'}} />
-                            <Button component={Link} href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconMicrophone />}><Trans>Аудио</Trans></Button>
-                          </Box>
-                        )}
-                        {a.video && (
-                          <Box mb={1} display="flex" alignItems="center" gap={1}>
-                            <IconVideo size={18} style={{verticalAlign:'middle'}} />
-                            <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}><Trans>Видео</Trans></Button>
-                          </Box>
-                        )}
-                        <Typography variant="caption" sx={{opacity:0.7}}><Trans>Время ответа: {a.createdAt || '-'}</Trans></Typography>
-                      </AccordionDetails>
-                    </Accordion>
-                  )) : (
-                    <Typography color="text.secondary"><Trans>Нет ответов</Trans></Typography>
-                  )}
-                  {sessionDetail.result && (
-                    <Box mt={3}>
-                      <Typography variant="h5" fontWeight="700" sx={{ mb: 2 }}><Trans>Итог интервью</Trans></Typography>
-                      <Typography variant="body1" sx={{mb:1}}><b>Суммарная оценка:</b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
-                      <Typography variant="body2" sx={{mb:1}}><b>Summary:</b> {sessionDetail.result.summary || <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-            {/* AI-оценка */}
-            {evalData && (
-              <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
-                <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-                  <Stack spacing={2}>
-                    <Typography variant="h5" fontWeight="700"><Trans>AI-оценка кандидата</Trans></Typography>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Chip label={aiStatus || _(msg`нет данных`)} color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} size="small" />
-                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.8 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
-                    </Stack>
-                    
-                    {/* Новая таблица компетенций */}
-                    {aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
-                      <Box sx={{ mt: 3 }}>
-                        <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+
+            {/* ═══════════════════════════════════════════ */}
+            {/* 🧠 ОЦЕНКА ЗНАНИЙ */}
+            {/* ═══════════════════════════════════════════ */}
+            {(sessionDetail?.result?.summary || sessionDetail?.result?.totalScore !== undefined || (evalData && (aiSummary || aiStrengths || aiWeaknesses || (aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics))))) && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  mb: 2, 
+                  pb: 1.5, 
+                  borderBottom: '3px solid',
+                  borderColor: 'warning.main',
+                }}>
+                  <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <span style={{ fontSize: '1.5rem' }}>🧠</span>
+                    <Trans>Оценка знаний</Trans>
+                  </Typography>
+                </Box>
+                <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
+                  <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+                    {sessionDetail?.result?.totalScore !== undefined && sessionDetail?.result?.totalScore !== null && (
+                      <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+                        <Typography variant="h3" fontWeight={700} color={getKnowledgeColor(sessionDetail.result.totalScore) + '.main'}>
+                          {sessionDetail.result.totalScore.toFixed(1)}/10
+                        </Typography>
+                        <Chip
+                          label={sessionDetail.result.totalScore >= 8 ? _(msg`Сильный уровень`) : sessionDetail.result.totalScore >= 6 ? _(msg`Средний уровень`) : _(msg`Требует усиления`)}
+                          color={getKnowledgeColor(sessionDetail.result.totalScore)}
+                          size="small"
+                          sx={{ fontWeight: 600 }}
+                        />
                       </Box>
                     )}
-                    
-                    {/* Прогноз удержания (retention forecast) */}
-                    {aiMetrics && typeof aiMetrics === 'object' && 'retention_forecast' in aiMetrics && (
-                      <Box sx={{ mt: 3 }}>
-                        <RetentionForecastTable forecast={(aiMetrics as NewMetrics).retention_forecast!} />
-                      </Box>
+                    {sessionDetail?.result?.summary && (
+                      <Typography variant="body1" sx={{ mb: 2 }}>
+                        <Trans><b>Общая оценка по интервью:</b> {sessionDetail.result.summary}</Trans>
+                      </Typography>
                     )}
-                    
                     {/* Старый формат - общее резюме и сильные/слабые стороны */}
-                    {aiSummary && <Typography variant="body1" sx={{ mb: 1 }}><Trans><b>Резюме:</b> {aiSummary}</Trans></Typography>}
+                    {aiSummary && <Typography variant="body1" sx={{ mb: 2 }}><Trans><b>Общее резюме:</b> {aiSummary}</Trans></Typography>}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
-                      <Box mb={1}>
-                        <Typography variant="subtitle2"><Trans>Сильные стороны:</Trans></Typography>
-                        <Stack component="ul" spacing={0.5} sx={{pl:2}}>
+                      <Box mb={2}>
+                        <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}><Trans>Сильные стороны:</Trans></Typography>
+                        <Stack component="ul" spacing={0.5} sx={{pl:2, m:0}}>
                           {aiStrengths.map((s:string,i:number)=>(<li key={i}><CheckCircleIcon color="success" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
                         </Stack>
                       </Box>
                     )}
                     {aiWeaknesses && Array.isArray(aiWeaknesses) && aiWeaknesses.length > 0 && (
-                      <Box mb={1}>
-                        <Typography variant="subtitle2"><Trans>Слабые стороны:</Trans></Typography>
-                        <Stack component="ul" spacing={0.5} sx={{pl:2}}>
+                      <Box mb={2}>
+                        <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}><Trans>Области для развития:</Trans></Typography>
+                        <Stack component="ul" spacing={0.5} sx={{pl:2, m:0}}>
                           {aiWeaknesses.map((s:string,i:number)=>(<li key={i}><HourglassEmptyIcon color="warning" fontSize="small" sx={{mr:0.5,verticalAlign:'middle'}} />{s}</li>))}
                         </Stack>
                       </Box>
                     )}
+                    
                     {/* Старый формат метрик - показываем только если это старая структура */}
                     {aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics) && (
-                      <Box mb={1}>
+                      <Box>
                         <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary' }}><Trans>Метрики оценки:</Trans></Typography>
                         <Grid container spacing={2}>
                           {Object.entries(aiMetrics).filter(([key]) => key !== 'writing_analysis').map(([metric, value]) => {
@@ -846,9 +763,10 @@ export default function CandidateDetailPage() {
                         </Grid>
                       </Box>
                     )}
+                    
                     {/* Анализ письменной речи (writing_analysis) - только для старого формата */}
                     {aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics) && 'writing_analysis' in aiMetrics && aiMetrics.writing_analysis && (
-                      <Box mb={1} sx={{ mt: 3 }}>
+                      <Box sx={{ mt: 3 }}>
                         <Card sx={{ p: 3, backgroundColor: '#f8f9fa', border: '1px solid #e0e0e0' }}>
                           <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600, color: 'text.primary', display: 'flex', alignItems: 'center', gap: 1 }}>
                             <span>✍️</span>
@@ -905,9 +823,220 @@ export default function CandidateDetailPage() {
                         </Card>
                       </Box>
                     )}
+                  </CardContent>
+                </Card>
+              </Box>
+            )}
+
+            {/* ═══════════════════════════════════════════ */}
+            {/* 🎯 FIT-ОЦЕНКА */}
+            {/* ═══════════════════════════════════════════ */}
+            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  mb: 2, 
+                  pb: 1.5, 
+                  borderBottom: '3px solid',
+                  borderColor: 'success.main',
+                }}>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
+                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
+                      <Trans>Fit-оценка</Trans>
+                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip 
+                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)} 
+                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} 
+                        size="small" 
+                      />
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
+                    </Stack>
                   </Stack>
-                </CardContent>
-              </Card>
+                </Box>
+                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+              </Box>
+            )}
+
+            {/* ═══════════════════════════════════════════ */}
+            {/* 📈 ПРОГНОЗ УДЕРЖАНИЯ */}
+            {/* ═══════════════════════════════════════════ */}
+            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'retention_forecast' in aiMetrics && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ 
+                  mb: 2, 
+                  pb: 1.5, 
+                  borderBottom: '3px solid',
+                  borderColor: 'info.main',
+                }}>
+                  <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <span style={{ fontSize: '1.5rem' }}>📈</span>
+                    <Trans>Прогноз удержания в компании</Trans>
+                  </Typography>
+                </Box>
+                <RetentionForecastTable forecast={(aiMetrics as NewMetrics).retention_forecast!} />
+              </Box>
+            )}
+
+            {/* ═══════════════════════════════════════════ */}
+            {/* 📝 ДЕТАЛИ ИНТЕРВЬЮ */}
+            {/* ═══════════════════════════════════════════ */}
+            {sessionDetail && (
+              <Box sx={{ mb: 3 }}>
+                <Box sx={{ 
+                  mb: 2, 
+                  pb: 1.5, 
+                  borderBottom: '3px solid',
+                  borderColor: 'divider',
+                }}>
+                  <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <span style={{ fontSize: '1.5rem' }}>📝</span>
+                    <Trans>Детали интервью</Trans>
+                  </Typography>
+                </Box>
+                <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
+                  <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
+                    <Stack direction="row" alignItems="center" spacing={2} mb={3} flexWrap="wrap">
+                      <Chip 
+                        label={getStatusLabel(sessionDetail.status, _)} 
+                        color={sessionDetail.status==='completed'?'success':sessionDetail.status==='in_progress'?'warning':'default'} 
+                        size="medium" 
+                      />
+                      {sessionDetail.template?.title && (
+                        <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <b><Trans>Шаблон:</Trans></b> {sessionDetail.template.title}
+                          {sessionDetail.template.id && (
+                            <Button component={Link} href={`/hr-tests/${sessionDetail.template.id}`} size="small" color="primary">
+                              <Trans>Открыть</Trans>
+                            </Button>
+                          )}
+                        </Typography>
+                      )}
+                      {sessionDetail.vacancy && (
+                        <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <b><Trans>Вакансия:</Trans></b> {sessionDetail.vacancy.title}
+                          {sessionDetail.vacancy.id && (
+                            <Button component={Link} href={`/hr/vacancies/${sessionDetail.vacancy.id}`} size="small" color="primary">
+                              <Trans>Открыть</Trans>
+                            </Button>
+                          )}
+                        </Typography>
+                      )}
+                    </Stack>
+
+                    <Grid container spacing={2} mb={3}>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <Typography variant="body2" color="text.secondary">
+                          <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} />
+                          <b><Trans>Начата:</Trans></b> {sessionDetail.startedAt ? new Date(sessionDetail.startedAt).toLocaleString() : '-'}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <Typography variant="body2" color="text.secondary">
+                          <CheckCircleIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} />
+                          <b><Trans>Завершена:</Trans></b> {sessionDetail.finishedAt ? new Date(sessionDetail.finishedAt).toLocaleString() : '-'}
+                        </Typography>
+                      </Grid>
+                      {sessionDetail.startedAt && (sessionDetail.finishedAt || (sessionDetail.answers && sessionDetail.answers.length > 0)) && (
+                        <Grid item xs={12} sm={6} md={3}>
+                          <Typography variant="body2" color="text.secondary">
+                            <HourglassEmptyIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} />
+                            <b><Trans>Длительность:</Trans></b> {(() => {
+                              const start = sessionDetail.startedAt ? new Date(sessionDetail.startedAt) : null;
+                              let end = sessionDetail.finishedAt ? new Date(sessionDetail.finishedAt) : null;
+                              if (!end && sessionDetail.answers && sessionDetail.answers.length > 0) {
+                                const last = sessionDetail.answers[sessionDetail.answers.length-1];
+                                end = last.createdAt ? new Date(last.createdAt) : null;
+                              }
+                              if (start && end) {
+                                const ms = end.getTime() - start.getTime();
+                                const min = Math.floor(ms/60000);
+                                const sec = Math.floor((ms%60000)/1000);
+                                return _(msg`${min} мин ${sec} сек`);
+                              }
+                              return '-';
+                            })()}
+                          </Typography>
+                        </Grid>
+                      )}
+                    </Grid>
+
+                    <Divider sx={{ my: 3, borderColor: '#eee' }} />
+                    
+                    <Typography variant="h6" fontWeight="600" sx={{ mb: 2 }}>
+                      <Trans>Ответы на вопросы</Trans> ({sessionDetail.answers?.length || 0})
+                    </Typography>
+                    
+                    {/* Accordion для длинных списков */}
+                    {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
+                      <Accordion key={a.id} defaultExpanded={false} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
+                          <Stack direction="row" alignItems="center" spacing={2} flexWrap="wrap">
+                            <Typography variant="subtitle1"><b><Trans>Вопрос {idx+1}:</Trans></b> {a.question}</Typography>
+                            {a.score !== undefined && a.score !== null && (
+                              <Chip
+                                label={_(msg`Оценка`) + ': ' + a.score}
+                                color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
+                                size="small"
+                              />
+                            )}
+                            {a.hasRedFlag && (
+                              <Tooltip title={_(msg`Критический вопрос - ответ не соответствует требованиям`)} arrow>
+                                <span style={{fontSize: 20}}>🚩</span>
+                              </Tooltip>
+                            )}
+                          </Stack>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Typography variant="body2" sx={{mb:1}}><b><Trans>Ответ:</Trans></b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
+                          <Typography variant="body2" sx={{mb:1}}><b><Trans>Оценка:</Trans></b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
+                          {a.aiComment && (
+                            <Typography variant="body2" sx={{mb:1}}><Trans><b>Характеристика:</b> {a.aiComment}</Trans></Typography>
+                          )}
+                          {/* Метрики печати для текстовых ответов */}
+                          {a.typingMetrics && (
+                            <Accordion sx={{mt:2, boxShadow:'none', border:'1px solid #e0e0e0'}}>
+                              <AccordionSummary expandIcon={<IconChevronDown />}>
+                                <Typography variant="subtitle2" sx={{fontWeight:600}}>
+                                  📊 <Trans>Метрики печати</Trans>
+                                </Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <TypingMetricsDisplay metrics={a.typingMetrics} finalText={a.text || ''} />
+                              </AccordionDetails>
+                            </Accordion>
+                          )}
+                          {a.audio && (
+                            <Box mb={1} display="flex" alignItems="center" gap={1}>
+                              <IconMicrophone size={18} style={{verticalAlign:'middle'}} />
+                              <Button component={Link} href={`${API_BASE}/uploads/${a.audio}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconMicrophone />}><Trans>Аудио</Trans></Button>
+                            </Box>
+                          )}
+                          {a.video && (
+                            <Box mb={1} display="flex" alignItems="center" gap={1}>
+                              <IconVideo size={18} style={{verticalAlign:'middle'}} />
+                              <Button component={Link} href={`${API_BASE}/uploads/${a.video}`} target="_blank" rel="noopener" size="small" color="primary" startIcon={<IconVideo />}><Trans>Видео</Trans></Button>
+                            </Box>
+                          )}
+                          <Typography variant="caption" sx={{opacity:0.7}}><Trans>Время ответа: {a.createdAt || '-'}</Trans></Typography>
+                        </AccordionDetails>
+                      </Accordion>
+                    )) : (
+                      <Typography color="text.secondary"><Trans>Нет ответов</Trans></Typography>
+                    )}
+                    
+                    {sessionDetail.result && (
+                      <>
+                        <Divider sx={{ my: 3, borderColor: '#eee' }} />
+                        <Box>
+                          <Typography variant="h6" fontWeight="600" sx={{ mb: 2 }}><Trans>Итоговая оценка интервью</Trans></Typography>
+                          <Typography variant="body1" sx={{mb:1}}><b><Trans>Суммарная оценка:</Trans></b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
+                        </Box>
+                      </>
+                    )}
+                  </CardContent>
+                </Card>
+              </Box>
             )}
           </TabPanel>
           {/* Tab: Резюме */}

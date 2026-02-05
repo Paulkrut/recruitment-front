@@ -215,16 +215,16 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
         </Alert>
       )}
 
-      {/* Сводная таблица */}
+      {/* Fit-оценка */}
       {summaryTable && (
         <Card sx={{ p: 3, bgcolor: 'grey.50' }}>
           <Typography variant="h6" gutterBottom fontWeight={700}>
-            <Trans>📊 Сводная информация</Trans>
+            <Trans>📊 Fit-оценка</Trans>
           </Typography>
           <Stack spacing={2}>
             <Box>
               <Typography variant="body2" color="text.secondary">
-                <Trans>Средняя оценка:</Trans>
+                <Trans>Средняя Fit-оценка:</Trans>
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
                 <Typography variant="h4" fontWeight={700} color={getScoreColor(summaryTable.average_score) + '.main'}>
