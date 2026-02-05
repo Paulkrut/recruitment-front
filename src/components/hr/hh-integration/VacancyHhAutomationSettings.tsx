@@ -363,16 +363,17 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
                   size="small"
                   fullWidth
                 >
-                  <ToggleButton value="template">
-                    <Box textAlign="left">
-                      <Typography variant="body2"><Trans>📝 Обычное</Trans></Typography>
-                    </Box>
-                  </ToggleButton>
+
                   <ToggleButton value="ai">
                     <Box textAlign="left">
-                      <Typography variant="body2"><Trans>🤖 AI</Trans></Typography>
+                      <Typography variant="body2"><Trans>🤖 Умное</Trans></Typography>
                     </Box>
                   </ToggleButton>
+                  <ToggleButton value="template">
+                  <Box textAlign="left">
+                    <Typography variant="body2"><Trans>📝 Обычное</Trans></Typography>
+                  </Box>
+                </ToggleButton>
                 </ToggleButtonGroup>
               </Grid>
 
