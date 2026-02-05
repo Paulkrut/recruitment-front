@@ -157,6 +157,7 @@ export default function HRVacancyDetailPage() {
   const [refreshKey, setRefreshKey] = useState(0); // Для обновления списка
   const [templateActive, setTemplateActive] = useState<boolean>(true);
   const [toggleLoading, setToggleLoading] = useState(false);
+  const [updatingFromHh, setUpdatingFromHh] = useState(false);
 
   // Состояния для канбана (сохраняем в localStorage)
   const [viewMode, setViewMode] = useState<'list' | 'kanban'>(() => {
@@ -323,6 +324,37 @@ export default function HRVacancyDetailPage() {
       }
     } catch (error) {
       setSnackbar(_(msg`Ошибка при архивации`));
+    }
+  };
+
+  const handleUpdateFromHh = async () => {
+    if (!confirm(_(msg`Обновить описание вакансии из HeadHunter?`))) {
+      return;
+    }
+
+    setUpdatingFromHh(true);
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/update-from-hh`, {
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setSnackbar(_(msg`Описание вакансии успешно обновлено из HH`));
+        
+        // Перезагружаем данные вакансии
+        const updatedData = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`);
+        const newData = await updatedData.json();
+        setData(newData);
+      } else {
+        const errorData = await response.json();
+        setSnackbar(`${_(msg`Ошибка`)}: ${errorData.error || _(msg`Не удалось обновить вакансию`)}`);
+      }
+    } catch (error) {
+      console.error('Error updating from HH:', error);
+      setSnackbar(_(msg`Ошибка при обновлении из HH`));
+    } finally {
+      setUpdatingFromHh(false);
     }
   };
 
@@ -1175,9 +1207,22 @@ export default function HRVacancyDetailPage() {
                   )}
                   
                   <Divider sx={{ my: 2, borderColor: '#eee' }} />
-                  <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
-                    <Trans>Редактировать</Trans>
-                  </Button>
+                  <Box display="flex" gap={2} flexWrap="wrap">
+                    <Button variant="outlined" color="primary" startIcon={<IconEdit size={20}/>} onClick={()=>router.push(`/hr/vacancy-edit/${id}`)} sx={{fontWeight:600}}>
+                      <Trans>Редактировать</Trans>
+                    </Button>
+                    {data?.hhVacancy && (
+                      <Button 
+                        variant="outlined" 
+                        color="secondary"
+                        onClick={handleUpdateFromHh}
+                        disabled={updatingFromHh}
+                        sx={{fontWeight:600}}
+                      >
+                        {updatingFromHh ? <Trans>Обновление...</Trans> : <Trans>Обновить из HH</Trans>}
+                      </Button>
+                    )}
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
