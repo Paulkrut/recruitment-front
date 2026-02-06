@@ -75,6 +75,7 @@ interface VacancyRow {
   candidatesFinished?: number;
   candidatesInProgress?: number;
   questionsCount?: number; // Количество вопросов в интервью
+  hhCity?: string; // Город из HH для вакансий из HeadHunter
 }
 
 interface Template {
@@ -288,7 +289,12 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
                         }}
                         onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
                       >
-                        {truncateText(vacancy.title, 50)}
+                        {truncateText(vacancy.title, 50)} 
+                        {vacancy.source === 'headhunter' && vacancy.hhCity && (
+                          <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.75rem' }}>
+                            {' '}({vacancy.hhCity})
+                          </span>
+                        )}
                       </Typography>
                     </Box>
                     {vacancy.description && (
@@ -599,6 +605,11 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
               }}
             >
               {vacancy.title}
+              {vacancy.source === 'headhunter' && vacancy.hhCity && (
+                <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.875rem' }}>
+                  {' '}({vacancy.hhCity})
+                </span>
+              )}
             </Typography>
           </Link>
         </Box>
