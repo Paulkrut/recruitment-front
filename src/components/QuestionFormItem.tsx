@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Radio,
   Checkbox,
+  Button,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
@@ -24,18 +25,12 @@ import {
 } from "@tabler/icons-react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import type { QuestionDraft } from "@/types/question";
+import { QuestionOptionsEditor } from "@/components/question/QuestionOptionsEditor";
+import { QuestionSummary } from "@/components/question/QuestionSummary";
 
-export interface QuestionDraft {
-  id?: number;
-  text: string;
-  type: string;
-  maxTime: number;
-  allowFollowups: boolean;
-  followupsMax: number;
-  position?: number;
-  referenceAnswer?: string | null;
-  isRedFlag?: boolean;
-}
+// Re-export для обратной совместимости
+export type { QuestionDraft };
 
 interface QuestionFormItemProps {
   question: QuestionDraft;
@@ -67,6 +62,9 @@ const QuestionFormItem = React.memo(({
   expertMode = false
 }: QuestionFormItemProps) => {
   const { _ } = useLingui();
+  const questionType = question.questionType || 'open';
+  const inputMode = question.inputMode || question.type || 'text';
+  const options = question.options || [];
   
   // 🔥 Локальный state для мгновенного отклика без задержек
   const [localText, setLocalText] = React.useState(question.text);
@@ -101,6 +99,19 @@ const QuestionFormItem = React.memo(({
       }
     };
   }, []);
+
+  const handleInputModeChange = (value: string) => {
+    onUpdate(index, "inputMode", value);
+    onUpdate(index, "type", value);
+  };
+
+  const handleQuestionTypeChange = (value: string) => {
+    onUpdate(index, "questionType", value);
+  };
+
+  const handleOptionsChange = (newOptions: { value: string; label: string }[]) => {
+    onUpdate(index, "options", newOptions);
+  };
 
   // Стили в зависимости от варианта
   const paperStyles = variant === 'edit' ? {
@@ -312,14 +323,76 @@ const QuestionFormItem = React.memo(({
           
           {/* Тип вопроса */}
           <Box mb={3}>
-            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 2 }}>
-              <Trans>Тип ответа</Trans>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+              <Trans>Тип вопроса</Trans>
             </CustomFormLabel>
+            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+              <Trans>
+                Определяет формат ответа кандидата. <b>Открытый</b> — свободный текст/речь (AI оценивает содержание).
+                <b> С вариантами</b> — выбор из предложенных опций (может быть информационным или проверочным).
+              </Trans>
+            </Typography>
             <FormControl component="fieldset">
               <RadioGroup
                 row
-                value={question.type || 'text'}
-                onChange={(e) => onUpdate(index, "type", e.target.value)}
+                value={questionType}
+                onChange={(e) => handleQuestionTypeChange(e.target.value)}
+              >
+                <FormControlLabel
+                  value="open"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <IconKeyboard size={20} />
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>Открытый</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>Свободный ответ кандидата</Trans>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                  sx={{ mr: 4 }}
+                />
+                <FormControlLabel
+                  value="choice"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <IconVideo size={20} />
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>С вариантами</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>Выбор из фиксированных ответов</Trans>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                />
+              </RadioGroup>
+            </FormControl>
+          </Box>
+
+          {/* Способ ответа */}
+          <Box mb={3}>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+              <Trans>Способ ответа</Trans>
+            </CustomFormLabel>
+            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+              <Trans>
+                Как кандидат даёт ответ. <b>Видео/Аудио</b> — запись с камеры/микрофона (транскрибация через Whisper).
+                <b> Письменный</b> — печать текста (измеряется скорость печати, экономия на транскрибации).
+              </Trans>
+            </Typography>
+            <FormControl component="fieldset">
+              <RadioGroup
+                row
+                value={inputMode}
+                onChange={(e) => handleInputModeChange(e.target.value)}
               >
                 <FormControlLabel
                   value="text"
@@ -360,37 +433,133 @@ const QuestionFormItem = React.memo(({
             </FormControl>
           </Box>
 
-          {/* Эталонный ответ */}
-          <Box mb={3}>
-            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-              <Trans>Эталонный ответ</Trans>
-              <Typography component="span" color="text.secondary" sx={{ ml: 0.5, fontSize: '0.9rem', fontWeight: 400 }}>
-                (<Trans>необязательно</Trans>)
-              </Typography>
-            </CustomFormLabel>
-            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-              {question.isRedFlag && question.referenceAnswer ? (
-                <Trans>⚠️ Для критических вопросов: система проверит соответствие ответа этому эталону.</Trans>
-              ) : question.isRedFlag ? (
-                <Trans>⚠️ Для критических вопросов: система проверит адекватность и полноту ответа.</Trans>
-              ) : question.referenceAnswer ? (
-                <Trans>Система будет сравнивать ответ кандидата с эталоном при оценке.</Trans>
-              ) : (
-                <Trans>Если указан, система будет сравнивать ответ с эталоном при оценке.</Trans>
-              )}
-            </Typography>
-            <CustomTextField
-              fullWidth
-              multiline
-              rows={3}
-              placeholder={_(msg`Опишите идеальный ответ на этот вопрос...`)}
-              value={question.referenceAnswer || ''}
-              onChange={(e) => onUpdate(index, "referenceAnswer", e.target.value)}
+          {/* Участвует в оценке знаний */}
+          <Box 
+            mb={3}
+            sx={{ 
+              p: 2.5, 
+              borderRadius: 2, 
+              border: '2px solid',
+              borderColor: 'primary.main',
+              background: 'linear-gradient(to right, #e3f2fd 0%, #f5f5f5 100%)'
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={question.affectsKnowledge !== false}
+                  onChange={(e) => onUpdate(index, "affectsKnowledge", e.target.checked)}
+                  color="primary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" fontWeight={600}>
+                    <Trans>📚 Участвует в оценке знаний (totalScore)</Trans>
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    <Trans>
+                      <b>Включено</b> — ответ оценивается и влияет на totalScore (оценка знаний).
+                      {questionType === 'choice' ? (
+                        <> Для вариантов: правильный выбор = 10 баллов, неправильный = 0.</>
+                      ) : (
+                        <> Для открытых: AI оценка 0-10 баллов (500-600 токенов).</>
+                      )}
+                      <br />
+                      <b>Выключено</b> — НЕ влияет на totalScore.
+                      {questionType === 'choice' ? (
+                        <> Для вариантов: только пометка правильности или Red Flag (если включен).</>
+                      ) : (
+                        <> Для открытых: только сохранение для FIT/retention. Экономия 500 токенов.</>
+                      )}
+                    </Trans>
+                  </Typography>
+                </Box>
+              }
             />
           </Box>
 
+          {/* Разделитель секции */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 3 }}>
+            <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
+            <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 600 }}>
+              <Trans>ПРОВЕРКА ОТВЕТА</Trans>
+            </Typography>
+            <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
+          </Box>
+
+          {/* Варианты ответа */}
+          {questionType === 'choice' && (() => {
+            // Валидация для подсветки чекбоксов
+            const affectsKnowledge = question.affectsKnowledge !== false;
+            const isRedFlag = question.isRedFlag || false;
+            const hasCorrectAnswers = options.some(opt => opt.isCorrect);
+            const needsCorrectAnswers = affectsKnowledge || isRedFlag;
+            const hasValidationError = needsCorrectAnswers && !hasCorrectAnswers;
+
+            return (
+              <QuestionOptionsEditor
+                question={question}
+                options={options}
+                onOptionsChange={handleOptionsChange}
+                hasValidationError={hasValidationError}
+              />
+            );
+          })()}
+
+          {/* Эталонный ответ (только для open вопросов) */}
+          {questionType === 'open' && (
+            <Box mb={3}>
+              <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+                <Trans>Эталонный ответ</Trans>
+                <Typography component="span" color="text.secondary" sx={{ ml: 0.5, fontSize: '0.9rem', fontWeight: 400 }}>
+                  (<Trans>необязательно</Trans>)
+                </Typography>
+              </CustomFormLabel>
+            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+              <Trans>
+                <b>Без эталона:</b> AI оценивает качество рассуждений и полноту ответа (500 токенов).
+                <br />
+                <b>С эталоном:</b> AI <u>строго сравнивает</u> ответ с эталоном, проверяет соответствие (600 токенов).
+                {question.isRedFlag && (
+                  <>
+                    <br />
+                    <span style={{color: '#d32f2f'}}>⚠️ Критический вопрос: несоответствие эталону → красный флаг.</span>
+                  </>
+                )}
+              </Trans>
+            </Typography>
+              <CustomTextField
+                fullWidth
+                multiline
+                rows={3}
+                placeholder={_(msg`Опишите идеальный ответ на этот вопрос...`)}
+                value={question.referenceAnswer || ''}
+                onChange={(e) => onUpdate(index, "referenceAnswer", e.target.value)}
+              />
+            </Box>
+          )}
+
+          {/* Разделитель секции */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 4 }}>
+            <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
+            <Typography variant="caption" sx={{ px: 2, color: 'text.secondary', fontWeight: 600 }}>
+              <Trans>ДОПОЛНИТЕЛЬНО</Trans>
+            </Typography>
+            <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
+          </Box>
+
           {/* Red Flag (критический вопрос) */}
-          <Box>
+          <Box 
+            mb={3}
+            sx={{ 
+              p: 2.5, 
+              borderRadius: 2, 
+              border: '2px solid',
+              borderColor: 'error.main',
+              background: 'linear-gradient(to right, #ffebee 0%, #f5f5f5 100%)'
+            }}
+          >
             <FormControlLabel
               control={
                 <Checkbox
@@ -405,12 +574,42 @@ const QuestionFormItem = React.memo(({
                     <Trans>🚩 Критический вопрос (Red Flag)</Trans>
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    <Trans>Неправильный ответ пометит кандидата специальным флагом</Trans>
+                    {questionType === 'choice' ? (
+                      <Trans>
+                        Активирует проверку ответа. <b>Обязательно отметьте правильные ответы галочками!</b>
+                        <br />
+                        {question.affectsKnowledge !== false ? (
+                          <>• Если включена оценка знаний: неправильный выбор = 0 баллов + Red Flag</>
+                        ) : (
+                          <>• Если выключена оценка знаний: неправильный выбор = Red Flag (проверка соответствия требованиям вакансии, без балла)</>
+                        )}
+                      </Trans>
+                    ) : (
+                      <Trans>
+                        Активирует строгую проверку ответа.
+                        {question.affectsKnowledge !== false ? (
+                          <>
+                            <br />
+                            • <b>С эталоном:</b> несоответствие → Red Flag
+                            <br />
+                            • <b>Без эталона:</b> низкая оценка ({"<"}5) → Red Flag
+                          </>
+                        ) : (
+                          <>
+                            <br />
+                            • <b>Компетенционный вопрос с Red Flag:</b> обязательно укажите эталонный ответ! AI проверит соответствие эталону без выставления балла.
+                          </>
+                        )}
+                      </Trans>
+                    )}
                   </Typography>
                 </Box>
               }
             />
           </Box>
+
+          {/* 📋 САММОРИ: Поведение вопроса */}
+          <QuestionSummary question={question} />
         </Box>
       )}
     </Paper>

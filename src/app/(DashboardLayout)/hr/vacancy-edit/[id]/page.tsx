@@ -30,7 +30,9 @@ import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import RichTextEditor from "@/components/RichTextEditor";
-import QuestionFormItem, { QuestionDraft } from "@/components/QuestionFormItem";
+import QuestionFormItem from "@/components/QuestionFormItem";
+import type { QuestionDraft } from "@/types/question";
+import { validateQuestions } from "@/types/question";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -206,7 +208,14 @@ export default function HRVacancyEditPage() {
       const data = await response.json();
 
       setVacancyData(data);
-      setQuestions(data.questions || []);
+      setQuestions((data.questions || []).map((q: QuestionDraft) => ({
+        ...q,
+        questionType: q.questionType || 'open',
+        inputMode: q.inputMode || q.type || 'text',
+        type: q.inputMode || q.type || 'text',
+        options: q.options || [],
+        affectsKnowledge: q.affectsKnowledge !== undefined ? q.affectsKnowledge : true,
+      })));
 
       // Устанавливаем время на вопрос на основе первого вопроса или по умолчанию
       if (data.questions && data.questions.length > 0) {
@@ -218,7 +227,7 @@ export default function HRVacancyEditPage() {
 
         // Автоматически включаем экспертный режим, если хотя бы один вопрос использует экспертные параметры
         const hasExpertFeatures = data.questions.some((q: QuestionDraft) => 
-          q.referenceAnswer || q.isRedFlag
+          q.referenceAnswer || q.isRedFlag || q.questionType === 'choice'
         );
         if (hasExpertFeatures) {
           setExpertMode(true);
@@ -236,10 +245,14 @@ export default function HRVacancyEditPage() {
     const newQuestion: QuestionDraft = {
       text: "",
       type: "text",
+      inputMode: "text",
+      questionType: "open",
+      options: [],
       maxTime: templateData.questionTime,
       allowFollowups: templateData.allowFollowups,
       followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
       position: questions.length,
+      affectsKnowledge: true,
     };
     setQuestions([...questions, newQuestion]);
   };
@@ -299,6 +312,14 @@ export default function HRVacancyEditPage() {
 
   const updateVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
+
+    // ✅ Валидация вопросов перед сохранением
+    const validation = validateQuestions(questions);
+
+    if (!validation.isValid) {
+      setError(validation.errorMessage);
+      return;
+    }
 
     setIsSaving(true);
     setError(null);
@@ -389,10 +410,14 @@ export default function HRVacancyEditPage() {
             const newQuestions = (statusData.questions || []).map((text: string, i: number) => ({
               text: text,
               type: "text",
+              inputMode: "text",
+              questionType: "open",
+              options: [],
               maxTime: templateData.questionTime,
               allowFollowups: templateData.allowFollowups,
               followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
               position: questions.length + i,
+              affectsKnowledge: true,
             }));
 
             setQuestions([...questions, ...newQuestions]);

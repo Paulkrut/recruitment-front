@@ -36,7 +36,9 @@ import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
-import QuestionFormItem, { QuestionDraft } from "@/components/QuestionFormItem";
+import QuestionFormItem from "@/components/QuestionFormItem";
+import type { QuestionDraft } from "@/types/question";
+import { validateQuestions } from "@/types/question";
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -158,6 +160,14 @@ export default function HRVacancyCreatePage() {
 
   const createVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
+
+    // ✅ Валидация вопросов перед сохранением
+    const validation = validateQuestions(questions);
+
+    if (!validation.isValid) {
+      setError(validation.errorMessage);
+      return;
+    }
 
     setIsLoading(true);
     setError(null);

@@ -17,6 +17,7 @@ import {
   CircularProgress,
   Paper,
   TextField,
+  Stack,
 } from "@mui/material";
 import { Trans } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
@@ -57,6 +58,10 @@ interface ActiveInterviewScreenProps {
     typing_end_time: string;
     typing_metadata: string;
   }) => void;
+  onSubmitChoiceAnswer?: (data: {
+    choice_value: string;
+    choice_label?: string;
+  }) => void;
   onSkipQuestion: () => void;
   onPauseInterview: () => void;
   onUserInputChange: (value: string) => void;
@@ -91,6 +96,7 @@ export default function ActiveInterviewScreen({
   onStopRecording,
   onSubmitAnswer,
   onSubmitTextAnswer,
+  onSubmitChoiceAnswer,
   onSkipQuestion,
   onPauseInterview,
   onUserInputChange,
@@ -180,8 +186,19 @@ export default function ActiveInterviewScreen({
     tracker.current.reset();
   }, [question?.id]);
   
-  // Определяем является ли вопрос текстовым
-  const isTypingQuestion = question?.type === 'typing';
+  const inputMode = question?.inputMode || question?.type;
+  const questionType = question?.questionType || 'open';
+  const isChoiceQuestion = questionType === 'choice';
+  const isTypingQuestion = inputMode === 'typing';
+  const choiceOptions = Array.isArray(question?.options) ? question?.options : [];
+
+  const handleChoiceSelect = (value: string, label?: string) => {
+    if (!onSubmitChoiceAnswer) return;
+    onSubmitChoiceAnswer({
+      choice_value: value,
+      choice_label: label,
+    });
+  };
 
   return (
     <Box sx={{
@@ -590,59 +607,93 @@ export default function ActiveInterviewScreen({
           {isTypingQuestion ? (
             /* Текстовое поле для письменного ответа */
             <>
-              <TextField
-                multiline
-                rows={3}
-                fullWidth
-                value={textAnswer}
-                onChange={handleTextChange}
-                onKeyDown={handleTextKeyDown}
-                onPaste={handleTextPaste}
-                placeholder="Введите ваш ответ..."
-                disabled={loadingNextQuestion}
-                sx={{ 
-                  bgcolor: '#fff',
-                  borderRadius: '12px',
-                  '& .MuiInputBase-root': {
-                    fontSize: '14px',
-                    lineHeight: 1.5,
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    '&:hover fieldset': {
-                      borderColor: '#25d366',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#25d366',
-                    }
-                  }
-                }}
-              />
-              <Button
-                variant="contained"
-                onClick={handleTextSubmit}
-                disabled={loadingNextQuestion || textAnswer.trim().length < 10}
-                fullWidth={isMobile}
-                size={isMobile ? 'large' : 'medium'}
-                endIcon={<SendIcon />}
-                sx={{
-                  fontWeight: 600,
-                  bgcolor: '#25d366',
-                  '&:hover': {
-                    bgcolor: '#128c7e',
-                  },
-                  '&:disabled': {
-                    opacity: 0.6,
-                    bgcolor: '#ccc',
-                  },
-                  borderRadius: '24px',
-                  textTransform: 'none',
-                  fontSize: '14px',
-                  px: 3,
-                  minWidth: isMobile ? 'auto' : '140px'
-                }}
-              >
-                {loadingNextQuestion ? <Trans>Отправка...</Trans> : <Trans>Отправить</Trans>}
-              </Button>
+              {isChoiceQuestion ? (
+                <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ width: '100%' }}>
+                  {choiceOptions.map((opt: any, idx: number) => (
+                    <Button
+                      key={`${opt.label}-${idx}`}
+                      variant="contained"
+                      onClick={() => handleChoiceSelect(opt.label, opt.label)}
+                      disabled={loadingNextQuestion}
+                      fullWidth={isMobile}
+                      size={isMobile ? 'large' : 'medium'}
+                      sx={{
+                        fontWeight: 600,
+                        bgcolor: '#25d366',
+                        '&:hover': {
+                          bgcolor: '#128c7e',
+                        },
+                        '&:disabled': {
+                          opacity: 0.6,
+                          bgcolor: '#ccc',
+                        },
+                        borderRadius: '24px',
+                        textTransform: 'none',
+                        fontSize: '14px',
+                        px: 3,
+                      }}
+                    >
+                      {opt.label}
+                    </Button>
+                  ))}
+                </Stack>
+              ) : (
+                <>
+                  <TextField
+                    multiline
+                    rows={3}
+                    fullWidth
+                    value={textAnswer}
+                    onChange={handleTextChange}
+                    onKeyDown={handleTextKeyDown}
+                    onPaste={handleTextPaste}
+                    placeholder="Введите ваш ответ..."
+                    disabled={loadingNextQuestion}
+                    sx={{ 
+                      bgcolor: '#fff',
+                      borderRadius: '12px',
+                      '& .MuiInputBase-root': {
+                        fontSize: '14px',
+                        lineHeight: 1.5,
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '&:hover fieldset': {
+                          borderColor: '#25d366',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#25d366',
+                        }
+                      }
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleTextSubmit}
+                    disabled={loadingNextQuestion || textAnswer.trim().length < 10}
+                    fullWidth={isMobile}
+                    size={isMobile ? 'large' : 'medium'}
+                    endIcon={<SendIcon />}
+                    sx={{
+                      fontWeight: 600,
+                      bgcolor: '#25d366',
+                      '&:hover': {
+                        bgcolor: '#128c7e',
+                      },
+                      '&:disabled': {
+                        opacity: 0.6,
+                        bgcolor: '#ccc',
+                      },
+                      borderRadius: '24px',
+                      textTransform: 'none',
+                      fontSize: '14px',
+                      px: 3,
+                      minWidth: isMobile ? 'auto' : '140px'
+                    }}
+                  >
+                    {loadingNextQuestion ? <Trans>Отправка...</Trans> : <Trans>Отправить</Trans>}
+                  </Button>
+                </>
+              )}
             </>
           ) : (
             /* Кнопки записи видео/аудио */

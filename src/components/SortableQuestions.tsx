@@ -1,5 +1,6 @@
 "use client";
-import { Trans } from '@lingui/macro';
+
+import { Trans } from '@lingui/macro';
 
 import React from "react";
 import {
@@ -28,18 +29,7 @@ import {
 } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import DeleteIcon from "@mui/icons-material/Delete";
-
-
-
-export interface QuestionDraft {
-  id?: number;
-  position?: number;
-  text: string;
-  type: string;
-  maxTime?: number;
-  allowFollowups?: boolean;
-  followupsMax?: number;
-}
+import type { QuestionDraft } from "@/types/question";
 
 interface Props {
   questions: QuestionDraft[];

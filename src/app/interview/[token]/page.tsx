@@ -1624,6 +1624,72 @@ export default function CandidateInterviewPage() {
     setAnswered(false);
   }
 
+  async function submitChoiceAnswer(data: { choice_value: string; choice_label?: string }) {
+    if (!question || answered) return;
+
+    setTimeLeft(null);
+    clearCountdown();
+    setLoadingNextQuestion(true);
+    setAnswered(true);
+    setLastAnswerTime(Date.now());
+
+    const label = data.choice_label || data.choice_value;
+    setChat((p) => [
+      ...p,
+      { role: "user", text: label, timestamp: Date.now() },
+      { role: "bot", text: "typing", timestamp: Date.now() }
+    ]);
+    const typingIdx = chat.length + 1;
+
+    const fd = new FormData();
+    fd.append("questionId", String(question.id));
+    fd.append("choice_value", data.choice_value);
+    if (data.choice_label) {
+      fd.append("choice_label", data.choice_label);
+    }
+
+    const answerResponse = await fetch(`${API_BASE}/api/public/interview/${token}/answer`, {
+      method: "POST",
+      body: fd,
+    });
+
+    if (!answerResponse.ok) {
+      const errorData = await answerResponse.json().catch(() => ({}));
+      const errorCode = errorData.error || 'common.internal_error';
+      const errorMessage = i18n._(getErrorMessage(errorCode));
+      setChat((p) => p.filter((_, i) => i !== typingIdx));
+      alert(_(msg`Ошибка при отправке ответа`) + '\n\n' + errorMessage);
+      setLoadingNextQuestion(false);
+      setAnswered(false);
+      return;
+    }
+
+    const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+    if (!r.ok) {
+      const errorData = await r.json().catch(() => ({}));
+      const errorCode = errorData.error || 'common.internal_error';
+      const errorMessage = i18n._(getErrorMessage(errorCode));
+      alert(_(msg`Ошибка при получении следующего вопроса`) + '\n\n' + errorMessage);
+      setLoadingNextQuestion(false);
+      return;
+    }
+
+    const d = await r.json();
+    const nextQ = d.nextQuestion || d.question;
+    if (nextQ) {
+      setQuestion(nextQ);
+      setAnswered(false);
+      setLoadingNextQuestion(false);
+      setChat((p) => p.filter((_, i) => i !== typingIdx));
+    } else {
+      setChat((p) => p.filter((_, i) => i !== typingIdx));
+      setQuestion(null);
+      setLoadingNextQuestion(false);
+      setFeedbackLoading(true);
+      startProcessingPolling(0);
+    }
+  }
+
   /* ---------------- render ---------------- */
   if (result) {
     if (showFeedback && feedbackData) {
@@ -1905,6 +1971,7 @@ export default function CandidateInterviewPage() {
           onStopRecording={stopRecording}
           onSubmitAnswer={submitAnswer}
           onSubmitTextAnswer={submitTextAnswer}
+          onSubmitChoiceAnswer={submitChoiceAnswer}
           onSkipQuestion={() => setSkipDialogOpen(true)}
           onPauseInterview={() => {}} // ❌ Pause dialog removed
           onUserInputChange={() => {}}
