@@ -92,11 +92,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
           </Typography>
           <Typography variant="body2" sx={{ pl: 2.5 }}>
             {isChoice ? (
-              isTyping ? (
-                <Trans>✅ Нажимает кнопку выбора из {options.length} вариантов</Trans>
-              ) : (
-                <Trans>🎤 Произносит ответ голосом, AI сопоставит с одним из {options.length} вариантов</Trans>
-              )
+              <Trans>✅ Кликает мышкой на один из {options.length} вариантов ответа</Trans>
             ) : (
               isTyping ? (
                 <Trans>⌨️ Печатает текстовый ответ (измеряется скорость печати)</Trans>

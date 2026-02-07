@@ -100,6 +100,43 @@ const QuestionFormItem = React.memo(({
     };
   }, []);
 
+  // Helper функции для работы с единым режимом ответа
+  const getAnswerMode = (): 'video' | 'typing' | 'choice' => {
+    if (questionType === 'choice') {
+      return 'choice';
+    }
+    return inputMode === 'typing' ? 'typing' : 'video';
+  };
+
+  const handleAnswerModeChange = (value: 'video' | 'typing' | 'choice') => {
+    if (value === 'choice') {
+      // Выбор из вариантов
+      onUpdate(index, "questionType", 'choice');
+      onUpdate(index, "inputMode", 'typing'); // Choice всегда typing (клик мышкой)
+      onUpdate(index, "type", 'typing');
+      
+      // Если нет вариантов — добавляем 2 пустых
+      if (!options || options.length === 0) {
+        onUpdate(index, "options", [
+          { label: '', isCorrect: false },
+          { label: '', isCorrect: false }
+        ]);
+      }
+    } else if (value === 'video') {
+      // Видео/Аудио ответ
+      onUpdate(index, "questionType", 'open');
+      onUpdate(index, "inputMode", 'text');
+      onUpdate(index, "type", 'text');
+      onUpdate(index, "options", null); // Убираем варианты
+    } else if (value === 'typing') {
+      // Текстовый ответ
+      onUpdate(index, "questionType", 'open');
+      onUpdate(index, "inputMode", 'typing');
+      onUpdate(index, "type", 'typing');
+      onUpdate(index, "options", null); // Убираем варианты
+    }
+  };
+
   const handleInputModeChange = (value: string) => {
     onUpdate(index, "inputMode", value);
     onUpdate(index, "type", value);
@@ -321,96 +358,41 @@ const QuestionFormItem = React.memo(({
             <Trans>⚙️ Экспертные настройки</Trans>
           </Typography>
           
-          {/* Тип вопроса */}
+          {/* Способ ответа кандидата (объединенный выбор) */}
           <Box mb={3}>
             <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-              <Trans>Тип вопроса</Trans>
+              <Trans>Способ ответа кандидата</Trans>
             </CustomFormLabel>
             <Typography variant="caption" color="text.secondary" display="block" mb={2}>
               <Trans>
-                Определяет формат ответа кандидата. <b>Открытый</b> — свободный текст/речь (AI оценивает содержание).
-                <b> С вариантами</b> — выбор из предложенных опций (может быть информационным или проверочным).
+                Выберите как кандидат будет отвечать на вопрос. <b>Видео/Аудио</b> — запись с камеры (AI оценит содержание).
+                <b> Текстовый</b> — печать на клавиатуре (экономия токенов на транскрибации).
+                <b> Выбор из вариантов</b> — клик мышкой (автопроверка правильности).
               </Trans>
             </Typography>
             <FormControl component="fieldset">
               <RadioGroup
                 row
-                value={questionType}
-                onChange={(e) => handleQuestionTypeChange(e.target.value)}
+                value={getAnswerMode()}
+                onChange={(e) => handleAnswerModeChange(e.target.value as 'video' | 'typing' | 'choice')}
               >
                 <FormControlLabel
-                  value="open"
-                  control={<Radio />}
-                  label={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconKeyboard size={20} />
-                      <Box>
-                        <Typography variant="body2" fontWeight={600}>
-                          <Trans>Открытый</Trans>
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          <Trans>Свободный ответ кандидата</Trans>
-                        </Typography>
-                      </Box>
-                    </Box>
-                  }
-                  sx={{ mr: 4 }}
-                />
-                <FormControlLabel
-                  value="choice"
+                  value="video"
                   control={<Radio />}
                   label={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                       <IconVideo size={20} />
                       <Box>
                         <Typography variant="body2" fontWeight={600}>
-                          <Trans>С вариантами</Trans>
+                          <Trans>🎥 Видео/Аудио</Trans>
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          <Trans>Выбор из фиксированных ответов</Trans>
+                          <Trans>Запись с камеры/микрофона</Trans>
                         </Typography>
                       </Box>
                     </Box>
                   }
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
-
-          {/* Способ ответа */}
-          <Box mb={3}>
-            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-              <Trans>Способ ответа</Trans>
-            </CustomFormLabel>
-            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-              <Trans>
-                Как кандидат даёт ответ. <b>Видео/Аудио</b> — запись с камеры/микрофона (транскрибация через Whisper).
-                <b> Письменный</b> — печать текста (измеряется скорость печати, экономия на транскрибации).
-              </Trans>
-            </Typography>
-            <FormControl component="fieldset">
-              <RadioGroup
-                row
-                value={inputMode}
-                onChange={(e) => handleInputModeChange(e.target.value)}
-              >
-                <FormControlLabel
-                  value="text"
-                  control={<Radio />}
-                  label={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconVideo size={20} />
-                      <Box>
-                        <Typography variant="body2" fontWeight={600}>
-                          <Trans>Видео/Аудио</Trans>
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          <Trans>Кандидат записывает себя</Trans>
-                        </Typography>
-                      </Box>
-                    </Box>
-                  }
-                  sx={{ mr: 4 }}
+                  sx={{ mr: 3 }}
                 />
                 <FormControlLabel
                   value="typing"
@@ -420,10 +402,27 @@ const QuestionFormItem = React.memo(({
                       <IconKeyboard size={20} />
                       <Box>
                         <Typography variant="body2" fontWeight={600}>
-                          <Trans>Письменный</Trans>
+                          <Trans>⌨️ Текстовый</Trans>
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          <Trans>Кандидат печатает текст</Trans>
+                          <Trans>Печать на клавиатуре</Trans>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                  sx={{ mr: 3 }}
+                />
+                <FormControlLabel
+                  value="choice"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>✅ Выбор из вариантов</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>Клик мышкой по варианту</Trans>
                         </Typography>
                       </Box>
                     </Box>

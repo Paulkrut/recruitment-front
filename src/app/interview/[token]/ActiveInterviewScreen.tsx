@@ -604,44 +604,44 @@ export default function ActiveInterviewScreen({
           flexDirection: isMobile ? 'column' : 'row',
           alignItems: 'center'
         }}>
-          {isTypingQuestion ? (
-            /* Текстовое поле для письменного ответа */
+          {isChoiceQuestion ? (
+            /* Choice вопросы - всегда показываем кнопки выбора (независимо от inputMode) */
+            <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ width: '100%' }}>
+              {choiceOptions.map((opt: any, idx: number) => (
+                <Button
+                  key={`${opt.label}-${idx}`}
+                  variant="contained"
+                  onClick={() => handleChoiceSelect(opt.label, opt.label)}
+                  disabled={loadingNextQuestion}
+                  fullWidth={isMobile}
+                  size={isMobile ? 'large' : 'medium'}
+                  sx={{
+                    fontWeight: 600,
+                    bgcolor: '#25d366',
+                    '&:hover': {
+                      bgcolor: '#128c7e',
+                    },
+                    '&:disabled': {
+                      opacity: 0.6,
+                      bgcolor: '#ccc',
+                    },
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    fontSize: '14px',
+                    px: 3,
+                  }}
+                >
+                  {loadingNextQuestion ? <CircularProgress size={20} sx={{ color: '#fff' }} /> : opt.label}
+                </Button>
+              ))}
+            </Stack>
+          ) : isTypingQuestion ? (
+            /* Текстовое поле для письменного ответа (OPEN + typing) */
             <>
-              {isChoiceQuestion ? (
-                <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ width: '100%' }}>
-                  {choiceOptions.map((opt: any, idx: number) => (
-                    <Button
-                      key={`${opt.label}-${idx}`}
-                      variant="contained"
-                      onClick={() => handleChoiceSelect(opt.label, opt.label)}
-                      disabled={loadingNextQuestion}
-                      fullWidth={isMobile}
-                      size={isMobile ? 'large' : 'medium'}
-                      sx={{
-                        fontWeight: 600,
-                        bgcolor: '#25d366',
-                        '&:hover': {
-                          bgcolor: '#128c7e',
-                        },
-                        '&:disabled': {
-                          opacity: 0.6,
-                          bgcolor: '#ccc',
-                        },
-                        borderRadius: '24px',
-                        textTransform: 'none',
-                        fontSize: '14px',
-                        px: 3,
-                      }}
-                    >
-                      {opt.label}
-                    </Button>
-                  ))}
-                </Stack>
-              ) : (
-                <>
                   <TextField
                     multiline
-                    rows={3}
+                    minRows={2}
+                    maxRows={10}
                     fullWidth
                     value={textAnswer}
                     onChange={handleTextChange}
@@ -655,6 +655,7 @@ export default function ActiveInterviewScreen({
                       '& .MuiInputBase-root': {
                         fontSize: '14px',
                         lineHeight: 1.5,
+                        padding: 0,
                       },
                       '& .MuiOutlinedInput-root': {
                         '&:hover fieldset': {
@@ -669,7 +670,7 @@ export default function ActiveInterviewScreen({
                   <Button
                     variant="contained"
                     onClick={handleTextSubmit}
-                    disabled={loadingNextQuestion || textAnswer.trim().length < 10}
+                    disabled={loadingNextQuestion || textAnswer.trim().length === 0}
                     fullWidth={isMobile}
                     size={isMobile ? 'large' : 'medium'}
                     endIcon={<SendIcon />}
@@ -692,11 +693,10 @@ export default function ActiveInterviewScreen({
                   >
                     {loadingNextQuestion ? <Trans>Отправка...</Trans> : <Trans>Отправить</Trans>}
                   </Button>
-                </>
-              )}
             </>
           ) : (
-            /* Кнопки записи видео/аудио */
+            /* Кнопки записи видео/аудио (только для НЕ choice вопросов) */
+            !isChoiceQuestion && (
             <>
             {!recording && !recordedBlob ? (
             <>
@@ -826,6 +826,7 @@ export default function ActiveInterviewScreen({
             </>
           ) : null}
           </>
+          )
           )}
         </Box>
       </Box>

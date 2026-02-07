@@ -1665,29 +1665,38 @@ export default function CandidateInterviewPage() {
     }
 
     const r = await fetch(`${API_BASE}/api/public/interview/${token}/next`);
+    
+    // 404 или другая ошибка = интервью закончено
     if (!r.ok) {
-      const errorData = await r.json().catch(() => ({}));
-      const errorCode = errorData.error || 'common.internal_error';
-      const errorMessage = i18n._(getErrorMessage(errorCode));
-      alert(_(msg`Ошибка при получении следующего вопроса`) + '\n\n' + errorMessage);
+      setChat((p) => p.filter((_, i) => i !== typingIdx));
+      const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+      setResult(await res.json());
       setLoadingNextQuestion(false);
       return;
     }
 
     const d = await r.json();
     const nextQ = d.nextQuestion || d.question;
-    if (nextQ) {
-      setQuestion(nextQ);
-      setAnswered(false);
-      setLoadingNextQuestion(false);
+    
+    // Нет следующего вопроса - интервью завершено
+    if (!nextQ) {
       setChat((p) => p.filter((_, i) => i !== typingIdx));
-    } else {
-      setChat((p) => p.filter((_, i) => i !== typingIdx));
-      setQuestion(null);
+      const res = await fetch(`${API_BASE}/api/public/interview/${token}/result`);
+      setResult(await res.json());
       setLoadingNextQuestion(false);
-      setFeedbackLoading(true);
-      startProcessingPolling(0);
+      return;
     }
+    
+    // Есть следующий вопрос
+    setQuestion(nextQ);
+    setAnswered(false);
+    setLoadingNextQuestion(false);
+    // Заменяем "typing" индикатор на текст нового вопроса
+    setChat((p) => {
+      const cp = [...p];
+      cp[typingIdx] = { role: "bot", text: nextQ.text, timestamp: Date.now() };
+      return cp;
+    });
   }
 
   /* ---------------- render ---------------- */
@@ -1980,7 +1989,7 @@ export default function CandidateInterviewPage() {
           onRecordingComplete={(blob) => setRecordedBlob(blob)}
           getQuestionNumber={getQuestionNumber}
           formatMessageTime={formatMessageTime}
-      />;
+      />
 
       {/* Диалог подтверждения пропуска вопроса */}
       <Dialog
@@ -2142,6 +2151,6 @@ export default function CandidateInterviewPage() {
         </DialogActions>
       </Dialog>
     </>
-  );
+  )
 
 }

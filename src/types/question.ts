@@ -128,11 +128,8 @@ export function calculateQuestionTokens(question: QuestionDraft): {
   const isRedFlag = question.isRedFlag || false;
   
   if (questionType === 'choice') {
-    if (inputMode === 'typing') {
-      return { tokens: 0, description: '0 токенов' };
-    } else {
-      return { tokens: 50, description: '50 токенов (маппинг речи)' };
-    }
+    // Choice всегда typing (клик мышкой), никогда audio
+    return { tokens: 0, description: '0 токенов' };
   }
   
   // OPEN вопросы
