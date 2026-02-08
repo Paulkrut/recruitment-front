@@ -106,6 +106,9 @@ export default function HRVacancyCreatePage() {
 
   // Questions
   const [questions, setQuestions] = useState<QuestionDraft[]>([]);
+  
+  // Expert mode toggle
+  const [expertMode, setExpertMode] = useState(false);
 
   useEffect(() => {
     const t = localStorage.getItem("recruitment_token");
@@ -717,7 +720,25 @@ export default function HRVacancyCreatePage() {
                     }}
                   />
                 </Box>
-                <Box display="flex" gap={2}>
+                <Box display="flex" gap={2} alignItems="center">
+                  <Tooltip title={expertMode ? _(msg`Выключить экспертный режим`) : _(msg`Включить экспертный режим (дополнительные настройки вопросов)`)}>
+                    <Button
+                      variant={expertMode ? "contained" : "outlined"}
+                      startIcon={<IconSettings size={20} />}
+                      onClick={() => setExpertMode(!expertMode)}
+                      sx={{
+                        color: expertMode ? '#fff' : '#1976d2',
+                        backgroundColor: expertMode ? '#1976d2' : 'transparent',
+                        borderColor: '#1976d2',
+                        fontWeight: 600,
+                        '&:hover': {
+                          backgroundColor: expertMode ? '#1565c0' : '#e3f2fd',
+                        }
+                      }}
+                    >
+                      {expertMode ? <Trans>Экспертный режим</Trans> : <Trans>Экспертный режим</Trans>}
+                    </Button>
+                  </Tooltip>
                   <Button
                     variant="contained"
                       startIcon={<IconPlus size={20} />}
@@ -745,7 +766,7 @@ export default function HRVacancyCreatePage() {
                       }
                     }}
                   >
-                    <Trans>Сгенерировать AI</Trans>
+                    <Trans>Сгенерировать</Trans>
                   </Button>
                 </Box>
               </Box>
@@ -760,8 +781,9 @@ export default function HRVacancyCreatePage() {
                   onRemove={removeQuestion}
                   onMoveUp={moveQuestionUp}
                   onMoveDown={moveQuestionDown}
-                  showTypeSelector={true}
+                  showTypeSelector={expertMode}
                   variant="create"
+                  expertMode={expertMode}
                 />
               ))}
 
@@ -824,7 +846,7 @@ export default function HRVacancyCreatePage() {
                           }
                         }}
                       >
-                        <Trans>Сгенерировать AI</Trans>
+                        <Trans>Сгенерировать</Trans>
                       </Button>
                     </Box>
                   </Box>
@@ -840,6 +862,24 @@ export default function HRVacancyCreatePage() {
                     justifyContent: 'center',
                     gap: 2
                   }}>
+                    <Tooltip title={expertMode ? _(msg`Выключить экспертный режим`) : _(msg`Включить экспертный режим (дополнительные настройки вопросов)`)}>
+                      <Button
+                        variant={expertMode ? "contained" : "outlined"}
+                        startIcon={<IconSettings size={20} />}
+                        onClick={() => setExpertMode(!expertMode)}
+                        sx={{
+                          color: expertMode ? '#fff' : '#1976d2',
+                          backgroundColor: expertMode ? '#1976d2' : 'transparent',
+                          borderColor: '#1976d2',
+                          fontWeight: 600,
+                          '&:hover': {
+                            backgroundColor: expertMode ? '#1565c0' : '#e3f2fd',
+                          }
+                        }}
+                      >
+                        {expertMode ? <Trans>Экспертный режим</Trans> : <Trans>Экспертный режим</Trans>}
+                      </Button>
+                    </Tooltip>
                     <Button
                       variant="contained"
                       startIcon={<IconPlus size={20} />}
@@ -867,7 +907,7 @@ export default function HRVacancyCreatePage() {
                         }
                       }}
                     >
-                      <Trans>Сгенерировать AI</Trans>
+                      <Trans>Сгенерировать</Trans>
                     </Button>
                   </Box>
                 )}
