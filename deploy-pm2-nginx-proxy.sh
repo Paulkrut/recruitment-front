@@ -31,6 +31,32 @@ create_logs_dir() {
     print_status "Logs directory created"
 }
 
+# Ensure swap exists (critical for builds on low-memory servers)
+ensure_swap() {
+    if [ $(swapon --show | wc -l) -eq 0 ]; then
+        print_warning "No swap detected, creating 2GB swap file..."
+        
+        if [ ! -f /swapfile ]; then
+            sudo fallocate -l 2G /swapfile
+            sudo chmod 600 /swapfile
+            sudo mkswap /swapfile
+            sudo swapon /swapfile
+            
+            # Make it permanent
+            if ! grep -q '/swapfile' /etc/fstab; then
+                echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+            fi
+            
+            print_status "Swap created successfully"
+        else
+            sudo swapon /swapfile
+            print_status "Swap file activated"
+        fi
+    else
+        print_status "Swap already exists"
+    fi
+}
+
 # Build new version
 build_new_version() {
     print_status "Building new version in temp dir (truly zero-downtime)..."
@@ -55,7 +81,10 @@ build_new_version() {
     export TERM=dumb
     export YARN_ENABLE_PROGRESS_BARS=0
     yarn install
-    yarn build
+    
+    # Сборка с ограничением памяти (критично для серверов с 4GB RAM)
+    print_status "Building with memory limit..."
+    NODE_OPTIONS='--max-old-space-size=2048' yarn build
 
     # Проверка успешности сборки
     if [ ! -d ".next" ]; then
@@ -253,6 +282,9 @@ main() {
     print_status "Starting PM2 deployment with nginx proxy..."
 
     create_logs_dir
+    
+    # Ensure swap exists (critical for builds)
+    ensure_swap
 
     # Check nginx
     check_nginx
