@@ -65,19 +65,19 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               {affectsKnowledge && isRedFlag ? (
                 <Trans>
                   Этот вопрос <b>участвует в оценке знаний</b> И имеет <b>Red Flag</b>. 
-                  Необходимо отметить хотя бы один правильный ответ галочкой "✓" в списке вариантов выше, 
+                  Необходимо отметить хотя бы один правильный ответ в списке вариантов выше, 
                   иначе система не сможет оценить ответ и проверить критичность.
                 </Trans>
               ) : affectsKnowledge ? (
                 <Trans>
-                  Этот вопрос <b>участвует в оценке знаний</b> (влияет на totalScore). 
-                  Необходимо отметить хотя бы один правильный ответ галочкой "✓" в списке вариантов выше, 
+                  Этот вопрос <b>участвует в оценке знаний</b>. 
+                  Необходимо отметить хотя бы один правильный ответ в списке вариантов выше, 
                   иначе система не сможет выставить балл.
                 </Trans>
               ) : (
                 <Trans>
                   Этот вопрос имеет <b>Red Flag</b> (критическая проверка). 
-                  Необходимо отметить хотя бы один правильный ответ галочкой "✓" в списке вариантов выше, 
+                  Необходимо отметить хотя бы один правильный ответ в списке вариантов выше, 
                   иначе система не сможет определить неправильный ответ для срабатывания флага.
                 </Trans>
               )}
@@ -97,7 +97,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               isTyping ? (
                 <Trans>⌨️ Печатает текстовый ответ (измеряется скорость печати)</Trans>
               ) : (
-                <Trans>🎥 Записывает видео/аудио ответ (Whisper транскрибирует в текст)</Trans>
+                <Trans>🎥 Записывает видео/аудио ответ (транскрибация в текст)</Trans>
               )
             )}
           </Typography>
@@ -130,23 +130,23 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
             ) : affectsKnowledge ? (
               hasReference ? (
                 <>
-                  <Trans>🤖 AI оценивает ответ <b>строго по эталону</b> → 0-10 баллов</Trans>
+                  <Trans>🤖 Система оценивает ответ <b>строго по эталону</b> → 0-10 баллов</Trans>
                   <br />
                   <Typography variant="caption" component="span" sx={{ pl: 0, opacity: 0.8 }}>
-                    <Trans>В промпт добавляется: "Эталонный ответ: {question.referenceAnswer?.substring(0, 50)}{question.referenceAnswer && question.referenceAnswer.length > 50 ? '...' : ''}" — AI будет сравнивать с ним</Trans>
+                    <Trans>Эталонный ответ добавляется в анализ: "{question.referenceAnswer?.substring(0, 50)}{question.referenceAnswer && question.referenceAnswer.length > 50 ? '...' : ''}" — система будет сравнивать с ним</Trans>
                   </Typography>
                 </>
               ) : (
-                <Trans>🤖 AI оценивает качество и полноту ответа (без сравнения с эталоном) → 0-10 баллов</Trans>
+                <Trans>🤖 Система оценивает качество и полноту ответа (без сравнения с эталоном) → 0-10 баллов</Trans>
               )
             ) : isRedFlag && hasReference ? (
               <>
                 <Trans>💾 Сохранение текста (без оценки)</Trans>
                 <br />
-                <Trans>🚩 AI проверяет соответствие эталону для Red Flag (без выставления балла)</Trans>
+                <Trans>🚩 Система проверяет соответствие эталону для Red Flag (без выставления балла)</Trans>
               </>
             ) : (
-              <Trans>💾 Только транскрибация/сохранение текста (без AI оценки)</Trans>
+              <Trans>💾 Только транскрибация/сохранение текста (без оценки)</Trans>
             )}
           </Typography>
         </Box>
@@ -161,7 +161,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               <Trans>❌ <b>НЕТ ВЛИЯНИЯ</b> — вопрос не будет работать без правильных ответов!</Trans>
             ) : affectsKnowledge ? (
               <>
-                <Trans>✅ Влияет на <b>totalScore</b> (оценка знаний)</Trans>
+                <Trans>✅ Влияет на <b>оценку знаний</b></Trans>
                 <br />
                 <Trans>✅ Участвует в <b>FIT</b> оценке (все вопросы)</Trans>
                 <br />
@@ -169,7 +169,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               </>
             ) : isChoice && hasCorrectAnswers && isRedFlag ? (
               <>
-                <Trans>❌ НЕ влияет на <b>totalScore</b> (проверка требований, не знаний)</Trans>
+                <Trans>❌ НЕ влияет на <b>оценку знаний</b> (проверка требований, не знаний)</Trans>
                 <br />
                 <Trans>🚩 Проверяет <b>соответствие вакансии</b> (Red Flag если неправильно)</Trans>
                 <br />
@@ -177,7 +177,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               </>
             ) : isChoice && hasCorrectAnswers ? (
               <>
-                <Trans>❌ НЕ влияет на <b>totalScore</b></Trans>
+                <Trans>❌ НЕ влияет на <b>оценку знаний</b></Trans>
                 <br />
                 <Trans>ℹ️ Визуальная пометка правильности в списке ответов</Trans>
                 <br />
@@ -185,7 +185,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               </>
             ) : !isChoice && isRedFlag && hasReference ? (
               <>
-                <Trans>❌ НЕ влияет на <b>totalScore</b> (не оценивает знания)</Trans>
+                <Trans>❌ НЕ влияет на <b>оценку знаний</b></Trans>
                 <br />
                 <Trans>🚩 Проверяет <b>соответствие требованиям</b> через эталон (Red Flag если несоответствие)</Trans>
                 <br />
@@ -193,7 +193,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
               </>
             ) : (
               <>
-                <Trans>❌ НЕ влияет на <b>totalScore</b> (не оценивает знания)</Trans>
+                <Trans>❌ НЕ влияет на <b>оценку знаний</b></Trans>
                 <br />
                 <Trans>✅ Участвует в <b>FIT</b> оценке (все вопросы)</Trans>
                 <br />
@@ -235,26 +235,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
           </Box>
         )}
 
-        {/* 5. Расход токенов */}
-        <Box 
-          sx={{ 
-            mt: 2, 
-            pt: 2, 
-            borderTop: '1px solid #dee2e6' 
-          }}
-        >
-          <Typography variant="body2" fontWeight={600} mb={0.5} color="success.main">
-            💰 <Trans>Расход AI токенов:</Trans>
-          </Typography>
-          <Typography variant="h6" fontWeight={700} sx={{ pl: 2.5, color: tokens === 0 ? 'success.main' : 'text.primary' }}>
-            {tokenText}
-          </Typography>
-          {tokens === 0 && !affectsKnowledge && (
-            <Typography variant="caption" sx={{ pl: 2.5, display: 'block', mt: 0.5, color: 'success.main' }}>
-              <Trans>🎉 Экономия до 500 токенов! Отлично для компетенционных вопросов.</Trans>
-            </Typography>
-          )}
-        </Box>
+        {/* 5. Расход токенов - УБРАН */}
       </Stack>
     </Box>
   );

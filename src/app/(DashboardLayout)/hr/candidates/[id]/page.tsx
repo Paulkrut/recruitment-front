@@ -655,7 +655,18 @@ export default function CandidateDetailPage() {
                       </Typography>
                     )}
                     {/* Старый формат - общее резюме и сильные/слабые стороны */}
-                    {aiSummary && <Typography variant="body1" sx={{ mb: 2 }}><Trans><b>Общее резюме:</b> {aiSummary}</Trans></Typography>}
+                    {aiSummary === null ? (
+                      <Box sx={{ mb: 2, p: 2, bgcolor: '#f5f5f5', borderRadius: 1, borderLeft: '4px solid #ff9800' }}>
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>ℹ️ <b>Оценка знаний не проводилась</b> — в интервью использовались только компетенционные вопросы (не влияющие на оценку знаний).</Trans>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                          <Trans>Анализ компетенций (FIT), грамотности и прогноз удержания доступны ниже.</Trans>
+                        </Typography>
+                      </Box>
+                    ) : aiSummary ? (
+                      <Typography variant="body1" sx={{ mb: 2 }}><Trans><b>Общее резюме:</b> {aiSummary}</Trans></Typography>
+                    ) : null}
                     {aiStrengths && Array.isArray(aiStrengths) && aiStrengths.length > 0 && (
                       <Box mb={2}>
                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}><Trans>Сильные стороны:</Trans></Typography>
