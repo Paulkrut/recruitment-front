@@ -116,11 +116,13 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
     return text.substring(0, maxLength) + '...';
   };
 
-  // Функция для обрезки HTML текста (удаляет теги и обрезает)
+  // Функция для обрезки HTML текста (удаляет теги, nbsp и обрезает)
   const truncateHtml = (html: string, maxLength: number) => {
     if (!html) return '';
     // Удаляем HTML теги
-    const text = html.replace(/<[^>]*>/g, '');
+    let text = html.replace(/<[^>]*>/g, '');
+    // Заменяем неразрывные пробелы (nbsp) на обычные
+    text = text.replace(/\u00A0/g, ' ').replace(/&nbsp;/gi, ' ');
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
