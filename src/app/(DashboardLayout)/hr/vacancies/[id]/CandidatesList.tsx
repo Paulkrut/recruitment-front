@@ -1217,7 +1217,8 @@ export default function CandidatesList({
                                   // Обновляем список
                                   const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates`);
                                   const updatedData = await updatedResponse.json();
-                                  setCandidates(updatedData);
+                                  setCandidates(updatedData.data || []);
+                                  setTotal(updatedData.total || 0);
                                 } else {
                                   onSnackbar(_(msg`Ошибка удаления`));
                                 }
