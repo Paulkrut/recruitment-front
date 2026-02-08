@@ -66,6 +66,28 @@ const QuestionFormItem = React.memo(({
   const inputMode = question.inputMode || question.type || 'text';
   const options = question.options || [];
   
+  // Проверка наличия экспертных настроек (отличие от дефолта)
+  const hasExpertSettings = () => {
+    return (
+      question.affectsKnowledge === false ||     // Выключена оценка знаний
+      question.isRedFlag === true ||              // Включен Red Flag
+      questionType === 'choice' ||                // Вопрос с вариантами
+      !!question.referenceAnswer ||               // Есть эталонный ответ
+      inputMode === 'typing'                      // Текстовый ответ (не видео)
+    );
+  };
+  
+  // Сброс в дефолтные настройки
+  const resetToDefault = () => {
+    onUpdate(index, "affectsKnowledge", true);
+    onUpdate(index, "isRedFlag", false);
+    onUpdate(index, "questionType", 'open');
+    onUpdate(index, "inputMode", 'text');
+    onUpdate(index, "type", 'text');
+    onUpdate(index, "options", null);
+    onUpdate(index, "referenceAnswer", undefined);
+  };
+  
   // 🔥 Локальный state для мгновенного отклика без задержек
   const [localText, setLocalText] = React.useState(question.text);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -194,6 +216,41 @@ const QuestionFormItem = React.memo(({
           <Typography variant="subtitle1" fontWeight={700} color="text.primary">
             <Trans>Вопрос {index + 1}</Trans>
           </Typography>
+          {hasExpertSettings() && (
+            <Tooltip title={_(msg`Этот вопрос имеет экспертные настройки. Нажмите ✕ чтобы сбросить в обычный режим`)}>
+              <Chip
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Trans>🔧 Экспертные</Trans>
+                    <Box
+                      component="span"
+                      sx={{
+                        ml: 0.5,
+                        cursor: 'pointer',
+                        opacity: 0.7,
+                        '&:hover': { opacity: 1, color: '#d32f2f' }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(_(msg`Сбросить все экспертные настройки этого вопроса в обычные?`))) {
+                          resetToDefault();
+                        }
+                      }}
+                    >
+                      ✕
+                    </Box>
+                  </Box>
+                }
+                size="small"
+                sx={{
+                  backgroundColor: '#fff3e0',
+                  color: '#e65100',
+                  fontWeight: 600,
+                  border: '1px solid #ffb74d'
+                }}
+              />
+            </Tooltip>
+          )}
           <Box flexGrow={1} />
           <Stack direction="row" spacing={1}>
             <Tooltip title={_(msg`Вверх`)}>
@@ -242,6 +299,42 @@ const QuestionFormItem = React.memo(({
               height: 28
             }}
           />
+          {hasExpertSettings() && (
+            <Tooltip title={_(msg`Этот вопрос имеет экспертные настройки. Нажмите ✕ чтобы сбросить в обычный режим`)}>
+              <Chip
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <Trans>🔧 Экспертные</Trans>
+                    <Box
+                      component="span"
+                      sx={{
+                        ml: 0.5,
+                        cursor: 'pointer',
+                        opacity: 0.7,
+                        '&:hover': { opacity: 1, color: '#d32f2f' }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(_(msg`Сбросить все экспертные настройки этого вопроса в обычные?`))) {
+                          resetToDefault();
+                        }
+                      }}
+                    >
+                      ✕
+                    </Box>
+                  </Box>
+                }
+                size="small"
+                sx={{
+                  backgroundColor: '#fff3e0',
+                  color: '#e65100',
+                  fontWeight: 600,
+                  border: '1px solid #ffb74d',
+                  height: 28
+                }}
+              />
+            </Tooltip>
+          )}
           <Box flexGrow={1} />
           <Tooltip title={_(msg`Переместить вверх`)}>
             <IconButton

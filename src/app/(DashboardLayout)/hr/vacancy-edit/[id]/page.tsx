@@ -167,8 +167,6 @@ export default function HRVacancyEditPage() {
   // Template data
   const [templateData, setTemplateData] = useState({
     questionTime: 180, // время на один вопрос в секундах
-    allowFollowups: false, // разрешить дополнительные вопросы
-    followupsMax: 1, // количество дополнительных вопросов
   });
 
   // Questions
@@ -221,8 +219,6 @@ export default function HRVacancyEditPage() {
       if (data.questions && data.questions.length > 0) {
         setTemplateData({
           questionTime: data.questions[0].maxTime || 180,
-          allowFollowups: data.questions[0].allowFollowups || false,
-          followupsMax: data.questions[0].followupsMax || 1,
         });
 
         // Автоматически включаем экспертный режим, если хотя бы один вопрос использует экспертные параметры
@@ -249,8 +245,6 @@ export default function HRVacancyEditPage() {
       questionType: "open",
       options: [],
       maxTime: templateData.questionTime,
-      allowFollowups: templateData.allowFollowups,
-      followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
       position: questions.length,
       affectsKnowledge: true,
     };
@@ -414,8 +408,6 @@ export default function HRVacancyEditPage() {
               questionType: "open",
               options: [],
               maxTime: templateData.questionTime,
-              allowFollowups: templateData.allowFollowups,
-              followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
               position: questions.length + i,
               affectsKnowledge: true,
             }));
@@ -452,7 +444,7 @@ export default function HRVacancyEditPage() {
       setIsGenerating(false);
       setGenerationProgress(null);
     }
-  }, [token, vacancyData.title, vacancyData.description, genCount, templateData.questionTime, templateData.allowFollowups, questions.length]);
+  }, [token, vacancyData.title, vacancyData.description, genCount, templateData.questionTime, questions.length]);
 
   const getProgressMessage = (status: string, elapsedTime?: number) => {
     const timeStr = elapsedTime ? _(msg` (${elapsedTime}с)`) : '';
@@ -785,68 +777,6 @@ export default function HRVacancyEditPage() {
                   </Box>
 
                   <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
-                </Box>
-
-                <Divider sx={{ my: 0, borderColor: '#eee' }} />
-
-                <Box>
-                  <CustomFormLabel
-                    sx={{
-                      color: 'text.primary',
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      mb: 2
-                    }}
-                  >
-                    <Trans>Дополнительные вопросы</Trans>
-                  </CustomFormLabel>
-
-                  <Box sx={{ mb: 3 }}>
-                    <Box display="flex" alignItems="center" gap={2} mb={2}>
-                      <Switch
-                        checked={templateData.allowFollowups}
-                        onChange={(e) => {
-                          setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
-                          // Обновляем настройки для всех вопросов
-                          setQuestions(questions.map(q => ({
-                            ...q,
-                            allowFollowups: e.target.checked,
-                            followupsMax: e.target.checked ? 1 : 0
-                          })));
-                        }}
-                        sx={{
-                          '& .MuiSwitch-switchBase.Mui-checked': { color: '#1976d2' },
-                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': { backgroundColor: '#1976d2' }
-                        }}
-                      />
-                      <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}><Trans>Разрешить дополнительные вопросы</Trans></Typography>
-                      {templateData.allowFollowups && (
-                        <Box display="flex" alignItems="center" gap={1}>
-                          <Typography variant="body2" color="textSecondary"><Trans>Количество:</Trans></Typography>
-                          <TextField
-                            select
-                            value={templateData.followupsMax || 1}
-                            onChange={(e) => {
-                              const value = Number(e.target.value);
-                              setTemplateData(prev => ({ ...prev, followupsMax: value }));
-                              // Обновляем настройки для всех вопросов
-                              setQuestions(questions.map(q => ({
-                                ...q,
-                                followupsMax: value
-                              })));
-                            }}
-                            sx={{ width: 80 }}
-                            size="small"
-                          >
-                            <MenuItem value={1}>1</MenuItem>
-                            <MenuItem value={2}>2</MenuItem>
-                            <MenuItem value={3}>3</MenuItem>
-                          </TextField>
-                        </Box>
-                      )}
-                    </Box>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>Если включено, ИИ сможет задавать дополнительные вопросы на основе ответов кандидата</Trans></Typography>
-                  </Box>
                 </Box>
               </Stack>
             </CardContent>

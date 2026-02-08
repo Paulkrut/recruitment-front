@@ -100,8 +100,6 @@ export default function HRVacancyCreatePage() {
   // Template data
   const [templateData, setTemplateData] = useState({
     questionTime: 180, // время на один вопрос в секундах
-    allowFollowups: false, // разрешить дополнительные вопросы
-    followupsMax: 1, // количество дополнительных вопросов
   });
 
   // Questions
@@ -154,8 +152,6 @@ export default function HRVacancyCreatePage() {
       text: "",
       type: "text",
       maxTime: templateData.questionTime,
-      allowFollowups: templateData.allowFollowups,
-      followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
       position: questions.length,
     };
     setQuestions([...questions, newQuestion]);
@@ -269,8 +265,6 @@ export default function HRVacancyCreatePage() {
               text: text,
               type: "text",
               maxTime: templateData.questionTime,
-              allowFollowups: templateData.allowFollowups,
-              followupsMax: templateData.allowFollowups ? templateData.followupsMax : 0,
               position: questions.length + i,
             }));
 
@@ -621,82 +615,6 @@ export default function HRVacancyCreatePage() {
 
                   <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
               </Box>
-
-                <Divider sx={{ my: 2 }} />
-
-              {/* ВРЕМЕННО СКРЫТО: Дополнительные вопросы (функционал отключён)
-              <Box>
-                <CustomFormLabel
-                  sx={{
-                      color: 'text.primary',
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  <Trans>Дополнительные вопросы</Trans>
-                </CustomFormLabel>
-
-                <Box sx={{ mb: 3 }}>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <Switch
-                      checked={templateData.allowFollowups}
-                      onChange={(e) => {
-                        setTemplateData(prev => ({ ...prev, allowFollowups: e.target.checked }));
-                        // Обновляем настройки для всех вопросов
-                        setQuestions(questions.map(q => ({
-                          ...q,
-                          allowFollowups: e.target.checked,
-                          followupsMax: e.target.checked ? 1 : 0
-                        })));
-                      }}
-                      color="primary"
-                    />
-                    <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}><Trans>Разрешить дополнительные вопросы</Trans></Typography>
-                    {templateData.allowFollowups && (
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <Typography variant="body2" color="textSecondary"><Trans>Количество:</Trans></Typography>
-                        <TextField
-                          select
-                          value={templateData.followupsMax || 1}
-                          onChange={(e) => {
-                            const value = Number(e.target.value);
-                            setTemplateData(prev => ({ ...prev, followupsMax: value }));
-                            // Обновляем настройки для всех вопросов
-                            setQuestions(questions.map(q => ({
-                              ...q,
-                              followupsMax: value
-                            })));
-                          }}
-                          sx={{ width: 80 }}
-                          size="small"
-                        >
-                          <MenuItem value={1}>1</MenuItem>
-                          <MenuItem value={2}>2</MenuItem>
-                          <MenuItem value={3}>3</MenuItem>
-                        </TextField>
-                      </Box>
-                    )}
-                  </Box>
-
-                  {templateData.allowFollowups && (
-                    <Box sx={{
-                      p: 3,
-                        backgroundColor: '#f5f5f5',
-                      borderRadius: 2,
-                        border: '1px solid #e0e0e0'
-                    }}>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-                        <Trans><strong>Как это работает:</strong></Trans>
-                      </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Максимум 3 дополнительных вопроса на каждый основной вопрос</Trans></Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}><Trans>• Дополнительные вопросы задаются автоматически, если кандидат ответил неполно</Trans></Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}><Trans>• Вопросы генерируются AI на основе ответа кандидата</Trans></Typography>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-              */}
               </Stack>
             </CardContent>
           </Card>
