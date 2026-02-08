@@ -515,7 +515,7 @@ export default function CandidateDetailPage() {
                   <Typography variant="body2" color="text.secondary"><Trans>Телефон: {candidatePhone || '-'}</Trans></Typography>
                   <Typography variant="body2" color="text.secondary"><Trans>Вопросов: {sessionDetail?.answers?.length || 0}</Trans></Typography>
                   {/* Компактные оценки в шапке */}
-                  {sessionDetail?.result?.totalScore !== undefined && (
+                  {sessionDetail?.result?.totalScore !== undefined && sessionDetail?.result?.totalScore !== null && (
                     <Typography variant="body2" color="text.secondary">
                       <Trans>🎓 Total Skills: <strong style={{ color: sessionDetail.result.totalScore >= 8 ? '#4caf50' : sessionDetail.result.totalScore >= 6 ? '#ff9800' : '#f44336' }}>{sessionDetail.result.totalScore.toFixed(1)}/10</strong></Trans>
                     </Typography>
