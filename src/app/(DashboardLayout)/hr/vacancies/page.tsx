@@ -119,10 +119,23 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
   // Функция для обрезки HTML текста (удаляет теги, nbsp и обрезает)
   const truncateHtml = (html: string, maxLength: number) => {
     if (!html) return '';
-    // Удаляем HTML теги
-    let text = html.replace(/<[^>]*>/g, '');
+    // Заменяем переносы строк и блочные элементы на пробелы (чтобы текст не склеивался)
+    let text = html
+      .replace(/<br\s*\/?>/gi, ' ') // <br>, <br/>, <br /> → пробел
+      .replace(/<\/?p[^>]*>/gi, ' ') // <p>, </p> → пробел
+      .replace(/<\/?div[^>]*>/gi, ' ') // <div>, </div> → пробел
+      .replace(/<\/?li[^>]*>/gi, ' ') // <li>, </li> → пробел
+      .replace(/<\/?h[1-6][^>]*>/gi, ' ') // <h1>, </h1>, ... → пробел
+      .replace(/<\/?ul[^>]*>/gi, ' ') // <ul>, </ul> → пробел
+      .replace(/<\/?ol[^>]*>/gi, ' ') // <ol>, </ol> → пробел
+      .replace(/<[^>]*>/g, ''); // Удаляем все остальные теги
+    
     // Заменяем неразрывные пробелы (nbsp) на обычные
     text = text.replace(/\u00A0/g, ' ').replace(/&nbsp;/gi, ' ');
+    
+    // Убираем множественные пробелы
+    text = text.replace(/\s+/g, ' ').trim();
+    
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   };
