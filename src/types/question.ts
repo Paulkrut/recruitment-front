@@ -38,8 +38,6 @@ export interface QuestionDraft {
   inputMode?: InputMode;
   options?: QuestionOption[];
   maxTime: number;
-  allowFollowups: boolean;
-  followupsMax: number;
   position?: number;
   referenceAnswer?: string | null;
   isRedFlag?: boolean;
