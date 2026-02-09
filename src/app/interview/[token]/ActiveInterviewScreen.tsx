@@ -47,6 +47,7 @@ interface ActiveInterviewScreenProps {
   stepperComp?: React.ReactNode;
   chatRef: RefObject<HTMLDivElement>;
   chatScrollRef: RefObject<HTMLDivElement>;
+  textAnswer: string; // Текстовый ответ (управляется из page.tsx)
   
   // Handlers
   onStartRecording: () => void;
@@ -65,9 +66,13 @@ interface ActiveInterviewScreenProps {
   onSkipQuestion: () => void;
   onPauseInterview: () => void;
   onUserInputChange: (value: string) => void;
+  onTextAnswerChange?: (value: string) => void; // Изменение текстового ответа
   onCameraToggle: (enabled: boolean) => void;
   onStreamReady?: (stream: MediaStream) => void;
   onRecordingComplete?: (blob: Blob) => void;
+  textAnswerActionsRef?: RefObject<{
+    autoSubmit: () => void; // Автоматическая отправка при истечении таймера
+  }>;
   
   // Utils
   getQuestionNumber: (pos: number) => number;
@@ -92,6 +97,7 @@ export default function ActiveInterviewScreen({
   stepperComp,
   chatRef,
   chatScrollRef,
+  textAnswer,
   onStartRecording,
   onStopRecording,
   onSubmitAnswer,
@@ -100,17 +106,18 @@ export default function ActiveInterviewScreen({
   onSkipQuestion,
   onPauseInterview,
   onUserInputChange,
+  onTextAnswerChange,
   onCameraToggle,
   onStreamReady,
   onRecordingComplete,
+  textAnswerActionsRef,
   getQuestionNumber,
   formatMessageTime,
 }: ActiveInterviewScreenProps) {
   const { _ } = useLingui();
   const chatVideoRef = useRef<HTMLVideoElement|null>(null);
   
-  // Состояния для текстовых ответов
-  const [textAnswer, setTextAnswer] = useState('');
+  // Трекер для замера скорости печати
   const tracker = useRef(new TypingTracker());
 
   // Подключаем stream к video элементу в чате
@@ -144,7 +151,9 @@ export default function ActiveInterviewScreen({
   };
   
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextAnswer(e.target.value);
+    if (onTextAnswerChange) {
+      onTextAnswerChange(e.target.value);
+    }
   };
   
   const handleTextPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
@@ -176,15 +185,65 @@ export default function ActiveInterviewScreen({
     });
     
     // Сбрасываем состояния
-    setTextAnswer('');
+    if (onTextAnswerChange) {
+      onTextAnswerChange('');
+    }
     tracker.current.reset();
   };
   
+  // Автоматическая отправка при истечении таймера
+  const handleAutoSubmit = () => {
+    console.log('Auto-submit text answer triggered', {
+      textLength: textAnswer.trim().length,
+      hasTracker: !!tracker.current
+    });
+    
+    if (textAnswer.trim().length < 10) {
+      console.warn('Auto-submit skipped: text too short');
+      return;
+    }
+    
+    const metrics = tracker.current.finish();
+    
+    if (!metrics.startTime || !onSubmitTextAnswer) {
+      console.warn('Auto-submit skipped: no metrics or callback');
+      return;
+    }
+    
+    onSubmitTextAnswer({
+      text_answer: textAnswer.trim(),
+      typing_start_time: metrics.startTime.toISOString(),
+      typing_end_time: metrics.endTime!.toISOString(),
+      typing_metadata: JSON.stringify({
+        pauses: metrics.pauses,
+        corrections: metrics.corrections,
+        timeline: metrics.timeline
+      })
+    });
+    
+    // Сбрасываем состояния
+    if (onTextAnswerChange) {
+      onTextAnswerChange('');
+    }
+    tracker.current.reset();
+  };
+  
+  // Присваиваем функцию autoSubmit в ref
+  useEffect(() => {
+    if (textAnswerActionsRef) {
+      textAnswerActionsRef.current = {
+        autoSubmit: handleAutoSubmit
+      };
+    }
+  }, [textAnswer, onSubmitTextAnswer, textAnswerActionsRef]);
+  
   // Сброс при смене вопроса
   useEffect(() => {
-    setTextAnswer('');
+    if (onTextAnswerChange) {
+      onTextAnswerChange('');
+    }
     tracker.current.reset();
-  }, [question?.id]);
+  }, [question?.id, onTextAnswerChange]);
   
   const inputMode = question?.inputMode || question?.type;
   const questionType = question?.questionType || 'open';

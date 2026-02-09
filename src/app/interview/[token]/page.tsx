@@ -105,6 +105,8 @@ export default function CandidateInterviewPage() {
   const [lastAnswerTime, setLastAnswerTime] = useState<number | null>(null);
   const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
+  const [textAnswer, setTextAnswer] = useState(''); // Текстовый ответ для typing вопросов
+  const textAnswerActionsRef = useRef<{ autoSubmit: () => void } | null>(null); // Ref для авто-отправки текста
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const chatVideoRef = useRef<HTMLVideoElement|null>(null);
   const [previewStream, setPreviewStream] = useState<MediaStream|null>(null);
@@ -310,7 +312,8 @@ export default function CandidateInterviewPage() {
         currentQuestionTimerStarted,
         lastAnswerTime,
         previousQuestionId,
-        paused
+        paused,
+        hasTextAnswer: textAnswer.trim().length > 0
       });
 
       // Проверка - не отправляем пустой ответ если недавно был отправлен ответ
@@ -348,12 +351,13 @@ export default function CandidateInterviewPage() {
         currentQuestionTimerStarted,
         lastAnswerTime,
         previousQuestionId,
-        paused
+        paused,
+        hasTextAnswer: textAnswer.trim().length > 0
       });
       sendEmptyAnswer();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[timeLeft,recording,answered,question?.id,currentQuestionTimerStarted,lastAnswerTime,previousQuestionId,paused]);
+  },[timeLeft,recording,answered,question?.id,currentQuestionTimerStarted,lastAnswerTime,previousQuestionId,paused,textAnswer]);
 
   // auto-stop по таймеру
   useEffect(() => {
@@ -547,6 +551,7 @@ export default function CandidateInterviewPage() {
     setQuestion(d.question);
     setPreviousQuestionId(d.question.id);
     setTotal(d.total);
+    setTextAnswer(''); // Очищаем текстовый ответ при старте
     setChat([
       {role:'bot', text: _(msg`Здравствуйте! Добро пожаловать на интервью. Желаем вам успешного прохождения и удачи! 🍀`), timestamp: Date.now()},
       {role:'bot', text: _(msg`Прочитайте вопрос. Нажмите кнопку "Записать ответ" и отвечайте. Остановите запись, когда закончите отвечать и переходите к следующему вопросу.`), timestamp: Date.now() + 1},
@@ -1117,6 +1122,7 @@ export default function CandidateInterviewPage() {
     setLoadingNextQuestion(false);
     setAnswered(false);
     setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
+    setTextAnswer(''); // Очищаем текстовый ответ
   }
 
   async function sendEmptyAnswer(){
@@ -1126,7 +1132,8 @@ export default function CandidateInterviewPage() {
       recording,
       timeLeft,
       timerStarted,
-      hasRecordedBlob: !!recordedBlob
+      hasRecordedBlob: !!recordedBlob,
+      hasTextAnswer: textAnswer.trim().length > 0
     });
 
     if (!question || answered) {
@@ -1144,6 +1151,21 @@ export default function CandidateInterviewPage() {
         blobType: recordedBlob.type
       });
       sendBlobAnswer(recordedBlob);
+      return;
+    }
+
+    // ВАЖНО: Если есть введенный текст для typing вопроса, отправляем его
+    const inputMode = (question as any)?.inputMode || question?.type;
+    const isTypingQuestion = inputMode === 'typing';
+    if (isTypingQuestion && textAnswer.trim().length >= 10) {
+      console.log('Text answer found for typing question, submitting it automatically', {
+        textLength: textAnswer.trim().length,
+        hasActionsRef: !!textAnswerActionsRef.current
+      });
+      // Вызываем автоотправку через ref
+      if (textAnswerActionsRef.current) {
+        textAnswerActionsRef.current.autoSubmit();
+      }
       return;
     }
 
@@ -1229,6 +1251,7 @@ export default function CandidateInterviewPage() {
     setLoadingNextQuestion(false);
     setAnswered(false);
     setRecordedBlob(null); // Очищаем записанный blob при переходе к новому вопросу
+    setTextAnswer(''); // Очищаем текстовый ответ
   }
 
   async function skipQuestion() {
@@ -1622,6 +1645,7 @@ export default function CandidateInterviewPage() {
     });
     setLoadingNextQuestion(false);
     setAnswered(false);
+    setTextAnswer(''); // Очищаем текстовый ответ
   }
 
   async function submitChoiceAnswer(data: { choice_value: string; choice_label?: string }) {
@@ -1976,6 +2000,7 @@ export default function CandidateInterviewPage() {
           stepperComp={stepperComp}
           chatRef={chatRef}
           chatScrollRef={chatScrollRef}
+          textAnswer={textAnswer}
           onStartRecording={startRecording}
           onStopRecording={stopRecording}
           onSubmitAnswer={submitAnswer}
@@ -1984,9 +2009,11 @@ export default function CandidateInterviewPage() {
           onSkipQuestion={() => setSkipDialogOpen(true)}
           onPauseInterview={() => {}} // ❌ Pause dialog removed
           onUserInputChange={() => {}}
+          onTextAnswerChange={setTextAnswer}
           onCameraToggle={setCameraEnabled}
           onStreamReady={setPreviewStream}
           onRecordingComplete={(blob) => setRecordedBlob(blob)}
+          textAnswerActionsRef={textAnswerActionsRef}
           getQuestionNumber={getQuestionNumber}
           formatMessageTime={formatMessageTime}
       />
