@@ -337,7 +337,7 @@ export default function ComparePage() {
       // Получаем матрицу ответов на вопросы
       let answersMatrix = undefined;
       try {
-        const response = await apiFetch('/api/admin/candidates/compare/answers-matrix', {
+        const response = await apiFetch(`${API_BASE}/api/admin/candidates/compare/answers-matrix`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
