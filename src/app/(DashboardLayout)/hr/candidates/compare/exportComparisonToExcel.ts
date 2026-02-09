@@ -36,15 +36,40 @@ interface ComparisonResult {
   reasoning?: string;
 }
 
+interface Question {
+  id: number;
+  position: number;
+  text: string;
+  type: string; // text, audio, typing
+  questionType: string; // open, choice
+}
+
+interface AnswerData {
+  answerId: number;
+  answerText?: string;
+  score?: number;
+  hasRedFlag?: boolean;
+  videoUrl?: string;
+  selectedOption?: string;
+}
+
+interface AnswersMatrixData {
+  candidates: Array<{ id: number; name: string }>;
+  questions: Question[];
+  answers: Record<number, Record<number, AnswerData>>; // [candidateId][questionPosition]
+}
+
 /**
  * Экспорт результатов сравнения кандидатов в Excel
  * 
  * @param candidates - массив кандидатов с базовой информацией
  * @param comparisonResult - результаты AI-сравнения
+ * @param answersMatrix - матрица ответов на вопросы (опционально)
  */
 export async function exportComparisonToExcel(
   candidates: Candidate[],
-  comparisonResult: ComparisonResult
+  comparisonResult: ComparisonResult,
+  answersMatrix?: AnswersMatrixData
 ): Promise<void> {
   if (!comparisonResult || !candidates.length) {
     throw new Error('Нет данных для экспорта');
@@ -221,6 +246,128 @@ export async function exportComparisonToExcel(
     { width: 15 },  // Средняя оценка
     { width: 40 },  // Рекомендация
   ];
+
+  // === ВТОРОЙ ЛИСТ: МАТРИЦА ОТВЕТОВ НА ВОПРОСЫ ===
+  if (answersMatrix && answersMatrix.questions.length > 0) {
+    const answersSheet = workbook.addWorksheet('Ответы на вопросы');
+    
+    let row = 1;
+
+    // Заголовок
+    const titleRow = answersSheet.getRow(row++);
+    titleRow.getCell(1).value = '📝 ОТВЕТЫ КАНДИДАТОВ НА ВОПРОСЫ';
+    titleRow.getCell(1).font = { size: 16, bold: true };
+    titleRow.height = 25;
+    row++; // Пустая строка
+
+    // Шапка таблицы: первая колонка "Вопрос", затем имена кандидатов
+    const headerRow = answersSheet.getRow(row++);
+    headerRow.getCell(1).value = 'Вопрос';
+    headerRow.getCell(1).font = { bold: true };
+    headerRow.getCell(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFE0E0E0' }
+    };
+    headerRow.getCell(1).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+
+    answersMatrix.candidates.forEach((candidate, index) => {
+      const cell = headerRow.getCell(index + 2);
+      cell.value = candidate.name;
+      cell.font = { bold: true };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE0E0E0' }
+      };
+      cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+    });
+
+    headerRow.height = 30;
+
+    // Данные: каждая строка = вопрос, каждая колонка = ответ кандидата
+    answersMatrix.questions.forEach((question) => {
+      const dataRow = answersSheet.getRow(row++);
+      
+      // Первая колонка: текст вопроса
+      const questionCell = dataRow.getCell(1);
+      const questionText = `${question.position + 1}. ${question.text}`;
+      questionCell.value = questionText;
+      questionCell.alignment = { vertical: 'top', wrapText: true };
+      questionCell.font = { bold: true };
+
+      // Остальные колонки: ответы кандидатов
+      answersMatrix.candidates.forEach((candidate, index) => {
+        const answerCell = dataRow.getCell(index + 2);
+        const answerData = answersMatrix.answers[candidate.id]?.[question.position];
+
+        if (!answerData) {
+          answerCell.value = '—';
+          answerCell.alignment = { vertical: 'top', horizontal: 'center' };
+        } else {
+          // Формируем содержимое ячейки
+          let cellValue = '';
+
+          // Если есть видео/аудио - добавляем ссылку
+          if (answerData.videoUrl) {
+            cellValue = '🎥 Видео/аудио ответ';
+            // Формируем полный URL к видео (если это относительный путь)
+            const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
+            const fullVideoUrl = answerData.videoUrl.startsWith('http') 
+              ? answerData.videoUrl 
+              : `${API_BASE}${answerData.videoUrl}`;
+            
+            answerCell.value = {
+              text: cellValue,
+              hyperlink: fullVideoUrl,
+            };
+            answerCell.font = { color: { argb: 'FF0000FF' }, underline: true };
+          } else if (answerData.answerText) {
+            // Текстовый ответ
+            cellValue = answerData.answerText;
+            answerCell.value = cellValue;
+          } else if (answerData.selectedOption !== undefined) {
+            // Choice вопрос - показываем выбранный вариант
+            cellValue = answerData.selectedOption;
+            answerCell.value = cellValue;
+          } else {
+            cellValue = '—';
+            answerCell.value = cellValue;
+          }
+
+          answerCell.alignment = { vertical: 'top', wrapText: true };
+
+          // Добавляем заливку для red flag
+          if (answerData.hasRedFlag) {
+            answerCell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFFFCCCC' } // Светло-красный
+            };
+          }
+
+          // Добавляем оценку если есть
+          if (answerData.score !== null && answerData.score !== undefined) {
+            const scoreInfo = `\n[Оценка: ${answerData.score}/10]`;
+            if (typeof answerCell.value === 'string') {
+              answerCell.value += scoreInfo;
+            } else if (answerCell.value && typeof answerCell.value === 'object' && 'text' in answerCell.value) {
+              answerCell.value.text += scoreInfo;
+            }
+          }
+        }
+      });
+
+      dataRow.height = 60; // Увеличенная высота для читабельности
+    });
+
+    // Настройка ширины колонок
+    const columns: Array<{ width: number }> = [{ width: 50 }]; // Первая колонка (вопрос)
+    answersMatrix.candidates.forEach(() => {
+      columns.push({ width: 40 }); // Колонки для ответов кандидатов
+    });
+    answersSheet.columns = columns;
+  }
 
   // Генерируем файл
   const buffer = await workbook.xlsx.writeBuffer();

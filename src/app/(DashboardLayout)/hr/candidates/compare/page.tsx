@@ -334,7 +334,27 @@ export default function ComparePage() {
     }
 
     try {
-      await exportComparisonToExcel(candidates, comparisonData.result);
+      // Получаем матрицу ответов на вопросы
+      let answersMatrix = undefined;
+      try {
+        const response = await apiFetch('/api/admin/candidates/compare/answers-matrix', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ids: stableIds }),
+        });
+        
+        if (response.ok) {
+          answersMatrix = await response.json();
+        } else {
+          console.warn('Не удалось получить матрицу ответов, экспорт продолжается без неё');
+        }
+      } catch (err) {
+        console.warn('Ошибка при получении матрицы ответов:', err);
+      }
+
+      await exportComparisonToExcel(candidates, comparisonData.result, answersMatrix);
       alert(_(msg`Excel-файл успешно сохранён`));
     } catch (error) {
       console.error('Ошибка экспорта:', error);
