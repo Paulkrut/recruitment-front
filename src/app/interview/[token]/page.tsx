@@ -39,6 +39,7 @@ import InterviewResultsScreen from "./InterviewResultsScreen";
 import EquipmentCheckScreen from "./EquipmentCheckScreen";
 import ActiveInterviewScreen from "./ActiveInterviewScreen";
 import FeedbackProgressBar from "./FeedbackProgressBar";
+import InterviewBlockedScreen from "../components/InterviewBlockedScreen";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
@@ -139,6 +140,9 @@ export default function CandidateInterviewPage() {
 
   // Настройки финального экрана из вакансии
   const [finalScreenSettings, setFinalScreenSettings] = useState<any>(null);
+
+  // Состояние для блокировки интервью (410 ошибка)
+  const [interviewBlocked, setInterviewBlocked] = useState(false);
 
   // Переключатель камеры на экране подготовки (в стиле Google Meet)
   const [cameraEnabled, setCameraEnabled] = useState(true);
@@ -377,8 +381,14 @@ export default function CandidateInterviewPage() {
     if(!token) return;
     //setPrepared({total:20,durationSec:60,status:'ready'})
     fetch(`${API_BASE}/api/public/interview/${token}/prepare`)
-      .then(r=>r.json())
-      .then(data => {
+      .then(async r => {
+        // Проверяем ошибки блокировки интервью
+        if (r.status === 410 || r.status === 402) {
+          setInterviewBlocked(true);
+          return;
+        }
+        
+        const data = await r.json();
         console.log('✅ Prepare API response:', data);
         console.log('🔄 Setting prepared state...');
         setPrepared(data);
@@ -532,22 +542,13 @@ export default function CandidateInterviewPage() {
       
       // Специальная обработка для 402 - недостаточно баланса компании
       if (r.status === 402) {
-        alert(
-          '⛔ Интервью временно недоступно\n\n' +
-          'К сожалению, компания временно приостановила прием интервью.\n\n' +
-          'Пожалуйста, свяжитесь с представителем компании для уточнения деталей.\n\n' +
-          'Приносим извинения за неудобства.'
-        );
+        setInterviewBlocked(true);
         return;
       }
       
       // Специальная обработка для 410 - интервью закрыто компанией
       if (r.status === 410) {
-        alert(
-          '🚫 Прохождение интервью закрыто\n\n' +
-          'Компания завершила набор по данной вакансии и закрыла возможность прохождения интервью.\n\n' +
-          'Благодарим за интерес к вакансии!'
-        );
+        setInterviewBlocked(true);
         return;
       }
       
@@ -1753,6 +1754,12 @@ export default function CandidateInterviewPage() {
   }
 
   /* ---------------- render ---------------- */
+  
+  // Экран блокировки интервью (410/402 ошибка)
+  if (interviewBlocked) {
+    return <InterviewBlockedScreen isMobile={isMobile} />;
+  }
+  
   if (result) {
     if (showFeedback && feedbackData) {
       return <InterviewResultsScreen

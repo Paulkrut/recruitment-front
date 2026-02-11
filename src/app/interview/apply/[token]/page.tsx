@@ -14,6 +14,7 @@ import { msg, Trans } from '@lingui/macro';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { normalizePhoneForBackend, isValidInternationalPhone } from '@/utils/phoneUtils';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import InterviewBlockedScreen from '../../components/InterviewBlockedScreen';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -333,45 +334,15 @@ export default function PublicApplyPage() {
     // Специальное оформление для закрытого интервью
     const isInterviewClosed = error.includes('закрыто') || error.includes('closed');
     
+    if (isInterviewClosed) {
+      return <InterviewBlockedScreen />;
+    }
+    
     return (
       <Container maxWidth="sm" sx={{ py: 8 }}>
-        {isInterviewClosed ? (
-          <Card sx={{ textAlign: 'center', p: 4 }}>
-            <Box sx={{ color: 'error.main', mb: 3 }}>
-              <Typography variant="h1" component="div" sx={{ fontSize: '4rem' }}>
-                🚫
-              </Typography>
-            </Box>
-            <Typography variant="h4" gutterBottom fontWeight="bold" color="error.main">
-              <Trans>Прохождение интервью закрыто</Trans>
-            </Typography>
-            <Divider sx={{ my: 3 }} />
-            <Typography variant="body1" sx={{ mb: 2, lineHeight: 1.8 }}>
-              <Trans>Компания завершила набор по данной вакансии и закрыла возможность прохождения интервью.</Trans>
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 3, lineHeight: 1.8 }}>
-              <Trans>Благодарим за интерес к вакансии!</Trans>
-            </Typography>
-            <Box
-              sx={{
-                mt: 3,
-                p: 2,
-                bgcolor: 'info.lighter',
-                borderRadius: 2,
-                border: '1px solid',
-                borderColor: 'info.main',
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                <Trans>💡 Если у вас есть вопросы, пожалуйста, свяжитесь с представителем компании.</Trans>
-              </Typography>
-            </Box>
-          </Card>
-        ) : (
-          <Alert severity="error" sx={{ fontSize: '1.1rem' }}>
-            {error}
-          </Alert>
-        )}
+        <Alert severity="error" sx={{ fontSize: '1.1rem' }}>
+          {error}
+        </Alert>
       </Container>
     );
   }
