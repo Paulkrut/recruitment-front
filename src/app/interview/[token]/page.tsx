@@ -137,6 +137,9 @@ export default function CandidateInterviewPage() {
   const [opinionSubmitted, setOpinionSubmitted] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
 
+  // Настройки финального экрана из вакансии
+  const [finalScreenSettings, setFinalScreenSettings] = useState<any>(null);
+
   // Переключатель камеры на экране подготовки (в стиле Google Meet)
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const [pdnConsent, setPdnConsent] = useState(false);
@@ -179,7 +182,8 @@ export default function CandidateInterviewPage() {
     });
   };
 
-  const activeStep = result ? 3 : question ? 2 : prepared ? 1 : 0;
+  // Определяем активный шаг: если есть результат ИЛИ интервью завершено (prepared.status === 'finished'), то шаг 3 (Финиш)
+  const activeStep = (result || prepared?.status === 'finished') ? 3 : question ? 2 : prepared ? 1 : 0;
 
   // Функция для форматирования времени сообщения
   const formatMessageTime = (timestamp?: number) => {
@@ -399,6 +403,12 @@ export default function CandidateInterviewPage() {
           // См. BACKEND_TODO.md для деталей
         }
         
+        // Загружаем настройки финального экрана
+        if (data.finalScreenSettings) {
+          console.log('✅ Final screen settings found:', data.finalScreenSettings);
+          setFinalScreenSettings(data.finalScreenSettings);
+        }
+        
         console.log('🏁 Prepare useEffect completed');
       })
       .catch(err => {
@@ -555,6 +565,11 @@ export default function CandidateInterviewPage() {
     
     // Формируем начальные сообщения из API (бэкенд всегда возвращает либо кастомные, либо дефолтные)
     const initialMessages = d.initialMessages || [];
+    
+    // Сохраняем настройки финального экрана
+    if (d.finalScreenSettings) {
+      setFinalScreenSettings(d.finalScreenSettings);
+    }
     
     // Создаем чат с начальными сообщениями + вопрос
     const chatMessages = [
@@ -1765,11 +1780,15 @@ export default function CandidateInterviewPage() {
       }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           {stepperComp}
-          <Typography variant="h4" gutterBottom><Trans>Спасибо за прохождение интервью!</Trans></Typography>
-          <Typography sx={{mb:3}}><Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans></Typography>
+          <Typography variant="h4" gutterBottom>
+            {finalScreenSettings?.title || <Trans>Спасибо за прохождение интервью!</Trans>}
+          </Typography>
+          <Typography sx={{mb:3}}>
+            {finalScreenSettings?.description || <Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans>}
+          </Typography>
 
           {/* Hero кнопка для получения обратной связи */}
-          <Button
+          {finalScreenSettings?.allowRequestResults !== false && <Button
             variant="contained"
             size="large"
             onClick={startFeedbackGeneration}
@@ -1796,7 +1815,7 @@ export default function CandidateInterviewPage() {
             ) : (
               <Trans>🎯 Получить персональную обратную связь</Trans>
             )}
-          </Button>
+          </Button>}
 
           {feedbackLoading && (
             <FeedbackProgressBar elapsedTime={elapsedTime} estimatedTime={estimatedTime} />
@@ -1826,6 +1845,44 @@ export default function CandidateInterviewPage() {
               <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}><Trans>⏱️ Обработка ответов может занимать до 20 минут</Trans></Typography>
               <Typography variant="body2"><Trans>Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.</Trans></Typography>
             </Alert>
+          )}
+
+          {/* Форма обратной связи от кандидата */}
+          {finalScreenSettings?.allowFeedback !== false && !feedbackLoading && (
+            <Card sx={{ mt: 4, maxWidth: 600, width: '100%' }}>
+              <CardContent>
+                {!opinionSubmitted ? (
+                  <>
+                    <Typography variant="h6" gutterBottom>
+                      <Trans>💬 Оставьте комментарий о прохождении интервью</Trans>
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      <Trans>Ваш отзыв поможет нам улучшить процесс интервью</Trans>
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      value={candidateOpinion}
+                      onChange={(e) => setCandidateOpinion(e.target.value)}
+                      placeholder={_(msg`Поделитесь своими впечатлениями...`)}
+                      sx={{ mb: 2 }}
+                    />
+                    <Button
+                      variant="outlined"
+                      onClick={submitCandidateOpinion}
+                      disabled={candidateOpinion.length < 10}
+                    >
+                      <Trans>Отправить отзыв</Trans>
+                    </Button>
+                  </>
+                ) : (
+                  <Alert severity="success">
+                    <Trans>Спасибо за ваш отзыв!</Trans>
+                  </Alert>
+                )}
+              </CardContent>
+            </Card>
           )}
         </Box>
 
@@ -1905,11 +1962,15 @@ export default function CandidateInterviewPage() {
         }}>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {stepperComp}
-            <Typography variant="h4" gutterBottom><Trans>Спасибо за прохождение интервью!</Trans></Typography>
-            <Typography sx={{mb:3}}><Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans></Typography>
+            <Typography variant="h4" gutterBottom>
+              {finalScreenSettings?.title || <Trans>Спасибо за прохождение интервью!</Trans>}
+            </Typography>
+            <Typography sx={{mb:3}}>
+              {finalScreenSettings?.description || <Trans>Наш менеджер свяжется с вами после проверки ответов.</Trans>}
+            </Typography>
 
             {/* Hero кнопка для получения обратной связи */}
-            <Button
+            {finalScreenSettings?.allowRequestResults !== false && <Button
               variant="contained"
               size="large"
               onClick={startFeedbackGeneration}
@@ -1936,7 +1997,7 @@ export default function CandidateInterviewPage() {
               ) : (
                 _(msg`🎯 Получить персональную обратную связь`)
               )}
-            </Button>
+            </Button>}
 
             {feedbackLoading && (
               <FeedbackProgressBar elapsedTime={elapsedTime} estimatedTime={estimatedTime} />
@@ -1966,6 +2027,44 @@ export default function CandidateInterviewPage() {
                 <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}><Trans>⏱️ Обработка ответов может занимать до 20 минут</Trans></Typography>
                 <Typography variant="body2"><Trans>Пожалуйста, не закрывайте это окно. Мы обрабатываем ваши видео/аудио ответы и генерируем персональную обратную связь с помощью искусственного интеллекта.</Trans></Typography>
               </Alert>
+            )}
+
+            {/* Форма обратной связи от кандидата */}
+            {finalScreenSettings?.allowFeedback !== false && !feedbackLoading && (
+              <Card sx={{ mt: 4, maxWidth: 600, width: '100%' }}>
+                <CardContent>
+                  {!opinionSubmitted ? (
+                    <>
+                      <Typography variant="h6" gutterBottom>
+                        <Trans>💬 Оставьте комментарий о прохождении интервью</Trans>
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        <Trans>Ваш отзыв поможет нам улучшить процесс интервью</Trans>
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        multiline
+                        rows={4}
+                        value={candidateOpinion}
+                        onChange={(e) => setCandidateOpinion(e.target.value)}
+                        placeholder={_(msg`Поделитесь своими впечатлениями...`)}
+                        sx={{ mb: 2 }}
+                      />
+                      <Button
+                        variant="outlined"
+                        onClick={submitCandidateOpinion}
+                        disabled={candidateOpinion.length < 10}
+                      >
+                        <Trans>Отправить отзыв</Trans>
+                      </Button>
+                    </>
+                  ) : (
+                    <Alert severity="success">
+                      <Trans>Спасибо за ваш отзыв!</Trans>
+                    </Alert>
+                  )}
+                </CardContent>
+              </Card>
             )}
           </Box>
 

@@ -40,10 +40,23 @@ interface Props {
   vacancyId: number;
 }
 
+interface FinalScreenSettings {
+  title: string;
+  description: string;
+  allowRequestResults: boolean;
+  allowFeedback: boolean;
+}
+
 export default function VacancyInterviewSettings({ vacancyId }: Props) {
   const { _ } = useLingui();
   const [messages, setMessages] = useState<Message[]>([]);
   const [descriptionExpandedByDefault, setDescriptionExpandedByDefault] = useState(true);
+  const [finalScreenSettings, setFinalScreenSettings] = useState<FinalScreenSettings>({
+    title: 'Спасибо за прохождение интервью!',
+    description: 'Ваши ответы успешно отправлены. Мы свяжемся с вами в ближайшее время.',
+    allowRequestResults: true,
+    allowFeedback: true,
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,8 +86,11 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
       const data = await response.json();
       setMessages(data.messages || []);
       setDescriptionExpandedByDefault(data.descriptionExpandedByDefault ?? true);
+      if (data.finalScreenSettings) {
+        setFinalScreenSettings(data.finalScreenSettings);
+      }
     } catch (err) {
-      setError(_(msg`Ошибка загрузки сообщений`));
+      setError(_(msg`Ошибка загрузки настроек`));
       console.error('Error loading initial messages:', err);
     } finally {
       setLoading(false);
@@ -93,16 +109,17 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
           method: 'PUT',
           body: JSON.stringify({ 
             messages,
-            descriptionExpandedByDefault 
+            descriptionExpandedByDefault,
+            finalScreenSettings
           }),
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to save messages');
+        throw new Error('Failed to save settings');
       }
 
-      setSuccess(_(msg`Сообщения успешно сохранены!`));
+      setSuccess(_(msg`Настройки успешно сохранены!`));
       setTimeout(() => setSuccess(null), 3000);
     } catch (err) {
       setError(_(msg`Ошибка сохранения сообщений`));
@@ -225,6 +242,62 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
               </Box>
             }
           />
+        </CardContent>
+      </Card>
+
+      {/* Настройка финального экрана */}
+      <Card>
+        <CardContent>
+          <Typography variant="h5" fontWeight="600" gutterBottom>
+            <Trans>Финальный экран кандидата</Trans>
+          </Typography>
+
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Trans>
+              Настройте текст, который увидит кандидат после завершения интервью.
+            </Trans>
+          </Alert>
+
+          <Stack spacing={3}>
+            <TextField
+              label={_(msg`Заголовок финального экрана`)}
+              value={finalScreenSettings.title}
+              onChange={(e) => setFinalScreenSettings({ ...finalScreenSettings, title: e.target.value })}
+              fullWidth
+              multiline
+              rows={2}
+            />
+
+            <TextField
+              label={_(msg`Описание`)}
+              value={finalScreenSettings.description}
+              onChange={(e) => setFinalScreenSettings({ ...finalScreenSettings, description: e.target.value })}
+              fullWidth
+              multiline
+              rows={3}
+              helperText={_(msg`Текст, который увидит кандидат под заголовком`)}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={finalScreenSettings.allowRequestResults}
+                  onChange={(e) => setFinalScreenSettings({ ...finalScreenSettings, allowRequestResults: e.target.checked })}
+                />
+              }
+              label={_(msg`Разрешить кандидату запрашивать результаты интервью`)}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={finalScreenSettings.allowFeedback}
+                  onChange={(e) => setFinalScreenSettings({ ...finalScreenSettings, allowFeedback: e.target.checked })}
+                />
+              }
+              label={_(msg`Разрешить кандидату оставлять обратную связь о прохождении интервью`)}
+            />
+          </Stack>
         </CardContent>
       </Card>
 
