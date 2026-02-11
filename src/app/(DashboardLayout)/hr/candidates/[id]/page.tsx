@@ -1035,16 +1035,6 @@ export default function CandidateDetailPage() {
                     )) : (
                       <Typography color="text.secondary"><Trans>Нет ответов</Trans></Typography>
                     )}
-                    
-                    {sessionDetail.result && (
-                      <>
-                        <Divider sx={{ my: 3, borderColor: '#eee' }} />
-                        <Box>
-                          <Typography variant="h6" fontWeight="600" sx={{ mb: 2 }}><Trans>Итоговая оценка интервью</Trans></Typography>
-                          <Typography variant="body1" sx={{mb:1}}><b><Trans>Суммарная оценка:</Trans></b> {sessionDetail.result.totalScore !== undefined && sessionDetail.result.totalScore !== null ? sessionDetail.result.totalScore : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
-                        </Box>
-                      </>
-                    )}
                   </CardContent>
                 </Card>
               </Box>
