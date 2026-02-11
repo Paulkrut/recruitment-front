@@ -12,6 +12,9 @@ import {
   CircularProgress,
   Stack,
   Paper,
+  Checkbox,
+  FormControlLabel,
+  Divider,
 } from '@mui/material';
 import { Trans, msg } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
@@ -40,11 +43,13 @@ interface Props {
 export default function VacancyInterviewSettings({ vacancyId }: Props) {
   const { _ } = useLingui();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [descriptionExpandedByDefault, setDescriptionExpandedByDefault] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showExample, setShowExample] = useState(false);
+  const [showDescriptionExample, setShowDescriptionExample] = useState(false);
 
   const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 
@@ -67,6 +72,7 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
 
       const data = await response.json();
       setMessages(data.messages || []);
+      setDescriptionExpandedByDefault(data.descriptionExpandedByDefault ?? true);
     } catch (err) {
       setError(_(msg`Ошибка загрузки сообщений`));
       console.error('Error loading initial messages:', err);
@@ -85,7 +91,10 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
         `${API_BASE}/api/admin/vacancies/${vacancyId}/initial-messages`,
         {
           method: 'PUT',
-          body: JSON.stringify({ messages }),
+          body: JSON.stringify({ 
+            messages,
+            descriptionExpandedByDefault 
+          }),
         }
       );
 
@@ -170,43 +179,81 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
   }
 
   return (
-    <Card>
-      <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <Typography variant="h5" fontWeight="600">
-            <Trans>Начальные сообщения интервью</Trans>
-          </Typography>
-          <IconButton
-            size="small"
-            color="primary"
-            onClick={() => setShowExample(true)}
-            title={_(msg`Показать пример`)}
-          >
-            <HelpOutlineIcon fontSize="small" />
-          </IconButton>
-        </Box>
+    <Stack spacing={3}>
+      {/* Настройка отображения описания вакансии */}
+      <Card>
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <Typography variant="h5" fontWeight="600">
+              <Trans>Отображение описания вакансии</Trans>
+            </Typography>
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => setShowDescriptionExample(true)}
+              title={_(msg`Показать пример`)}
+            >
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Box>
 
-        <Alert severity="info" sx={{ mb: 3 }}>
-          <Trans>
-            Эти сообщения появляются в начале интервью перед первым вопросом. Вы можете
-            изменить стандартные приветствия или добавить дополнительные инструкции для
-            кандидатов. При первом открытии показываются сообщения по умолчанию.
-          </Trans>
-        </Alert>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-            {error}
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Trans>
+              На странице самозаписи на интервью описание вакансии можно сворачивать/разворачивать.
+              Эта настройка управляет начальным состоянием.
+            </Trans>
           </Alert>
-        )}
 
-        {success && (
-          <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSuccess(null)}>
-            {success}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={descriptionExpandedByDefault}
+                onChange={(e) => setDescriptionExpandedByDefault(e.target.checked)}
+              />
+            }
+            label={
+              <Box>
+                <Typography variant="body1">
+                  <Trans>Показывать описание вакансии развернутым по умолчанию</Trans>
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  <Trans>
+                    Если галочка снята, кандидаты увидят только краткое описание (первые 200 символов),
+                    и смогут развернуть полный текст при необходимости.
+                  </Trans>
+                </Typography>
+              </Box>
+            }
+          />
+        </CardContent>
+      </Card>
+
+      {/* Начальные сообщения интервью */}
+      <Card>
+        <CardContent>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+            <Typography variant="h5" fontWeight="600">
+              <Trans>Начальные сообщения интервью</Trans>
+            </Typography>
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => setShowExample(true)}
+              title={_(msg`Показать пример`)}
+            >
+              <HelpOutlineIcon fontSize="small" />
+            </IconButton>
+          </Box>
+
+          <Alert severity="info" sx={{ mb: 3 }}>
+            <Trans>
+              Эти сообщения появляются в начале интервью перед первым вопросом. Вы можете
+              изменить стандартные приветствия или добавить дополнительные инструкции для
+              кандидатов. При первом открытии показываются сообщения по умолчанию.
+            </Trans>
           </Alert>
-        )}
 
-        <Stack spacing={2} sx={{ mb: 3 }}>
+          <Stack spacing={2} sx={{ mb: 3 }}>
           {messages.map((message, index) => (
             <Paper
               key={index}
@@ -264,28 +311,16 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
         </Stack>
 
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={addMessage}
-          >
-            <Trans>Добавить сообщение</Trans>
-          </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AddIcon />}
+          onClick={addMessage}
+          fullWidth
+        >
+          <Trans>Добавить сообщение</Trans>
+        </Button>
 
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            onClick={saveMessages}
-            disabled={saving}
-            sx={{ ml: 'auto' }}
-          >
-            {saving ? <Trans>Сохранение...</Trans> : <Trans>Сохранить</Trans>}
-          </Button>
-        </Box>
-
-        <Box sx={{ mt: 4, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+        <Box sx={{ mt: 3, p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
           <Typography variant="subtitle2" fontWeight="600" sx={{ mb: 1 }}>
             <Trans>💡 Подсказка</Trans>
           </Typography>
@@ -296,9 +331,79 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
             </Trans>
           </Typography>
         </Box>
-      </CardContent>
+        </CardContent>
+      </Card>
 
-      {/* Диалог с примером */}
+      {/* Алерты и кнопка сохранения */}
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" onClose={() => setSuccess(null)}>
+          {success}
+        </Alert>
+      )}
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          startIcon={<SaveIcon />}
+          onClick={saveMessages}
+          disabled={saving}
+        >
+          {saving ? <Trans>Сохранение...</Trans> : <Trans>Сохранить все настройки</Trans>}
+        </Button>
+      </Box>
+
+      {/* Диалог с примером описания вакансии */}
+      <Dialog
+        open={showDescriptionExample}
+        onClose={() => setShowDescriptionExample(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h6">
+              <Trans>Пример сворачивания описания вакансии</Trans>
+            </Typography>
+            <IconButton onClick={() => setShowDescriptionExample(false)} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            <Trans>
+              На странице самозаписи кандидаты могут свернуть/развернуть описание вакансии (выделено красной стрелкой).
+              Настройка позволяет выбрать начальное состояние: развернуто или свернуто.
+            </Trans>
+          </Alert>
+          <Box
+            component="img"
+            src="/images/vacancy-description-collapse-example.png"
+            alt="Пример сворачивания описания"
+            sx={{
+              width: '100%',
+              height: 'auto',
+              border: '1px solid #e0e0e0',
+              borderRadius: 1,
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowDescriptionExample(false)} variant="contained">
+            <Trans>Закрыть</Trans>
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Диалог с примером начальных сообщений */}
       <Dialog
         open={showExample}
         onClose={() => setShowExample(false)}
@@ -340,6 +445,6 @@ export default function VacancyInterviewSettings({ vacancyId }: Props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Card>
+    </Stack>
   );
 }
