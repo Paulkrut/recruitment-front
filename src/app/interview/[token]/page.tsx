@@ -552,11 +552,25 @@ export default function CandidateInterviewPage() {
     setPreviousQuestionId(d.question.id);
     setTotal(d.total);
     setTextAnswer(''); // Очищаем текстовый ответ при старте
-    setChat([
-      {role:'bot', text: _(msg`Здравствуйте! Добро пожаловать на интервью. Желаем вам успешного прохождения и удачи! 🍀`), timestamp: Date.now()},
-      {role:'bot', text: _(msg`Прочитайте вопрос. Нажмите кнопку "Записать ответ" и отвечайте. Остановите запись, когда закончите отвечать и переходите к следующему вопросу.`), timestamp: Date.now() + 1},
-      {role:'bot', text: d.question.text, timestamp: Date.now() + 2}
-    ]);
+    
+    // Формируем начальные сообщения из API (бэкенд всегда возвращает либо кастомные, либо дефолтные)
+    const initialMessages = d.initialMessages || [];
+    
+    // Создаем чат с начальными сообщениями + вопрос
+    const chatMessages = [
+      ...initialMessages.map((msg, idx) => ({
+        role: 'bot' as const,
+        text: msg.text,
+        timestamp: Date.now() + idx,
+      })),
+      {
+        role: 'bot' as const,
+        text: d.question.text,
+        timestamp: Date.now() + initialMessages.length,
+      },
+    ];
+    
+    setChat(chatMessages);
   }
 
   /* ------------ блокировка выхода/обновления ------------- */

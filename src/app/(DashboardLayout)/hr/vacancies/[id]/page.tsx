@@ -5,7 +5,7 @@ import {
   Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress, Menu, MenuItem
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot, IconSettings
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -51,6 +51,7 @@ import { msg, Trans } from '@lingui/macro';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { isValidInternationalPhone, normalizePhoneForBackend } from '@/utils/phoneUtils';
 import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
+import VacancyInterviewSettings from './VacancyInterviewSettings';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -860,6 +861,7 @@ export default function HRVacancyDetailPage() {
             <Tab icon={<IconBriefcase size={20}/>} iconPosition="start" label={_(msg`Описание`)} value="2" />
             <Tab icon={<IconFileText size={20}/>} iconPosition="start" label={_(msg`Вопросы (${(questions||[]).length})`)} value="3" />
             <Tab icon={<IconRobot size={20}/>} iconPosition="start" label={_(msg`Автоматизация HH`)} value="4" />
+            <Tab icon={<IconSettings size={20}/>} iconPosition="start" label={_(msg`Настройки`)} value="5" />
           </TabList>
         </Box>
         <TabPanel value="1" sx={{p:0}}>
@@ -1290,6 +1292,19 @@ export default function HRVacancyDetailPage() {
                 <Typography color="text.primary"><Trans>Автоматизация HH</Trans></Typography>
               </Breadcrumbs>
               <VacancyHhAutomationSettings vacancyId={Number(id)} />
+            </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value="5" sx={{p:0}}>
+          {/* Настройки интервью */}
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+                <Link href="/hr/vacancies" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 500 }}><Trans>Вакансии</Trans></Link>
+                <Typography color="text.primary">{title}</Typography>
+                <Typography color="text.primary"><Trans>Настройки</Trans></Typography>
+              </Breadcrumbs>
+              <VacancyInterviewSettings vacancyId={Number(id)} />
             </Grid>
           </Grid>
         </TabPanel>
