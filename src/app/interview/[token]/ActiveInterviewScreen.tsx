@@ -585,7 +585,10 @@ export default function ActiveInterviewScreen({
 
                     {/* Вложения к вопросу */}
                     {m.attachments && m.attachments.length > 0 && (
-                      <QuestionAttachmentsDisplay attachments={m.attachments} />
+                      <QuestionAttachmentsDisplay 
+                        attachments={m.attachments} 
+                        showDescription={false} 
+                      />
                     )}
 
                     {/* Время сообщения */}

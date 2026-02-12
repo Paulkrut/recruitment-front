@@ -93,6 +93,7 @@ const QuestionAttachmentUploader: React.FC<QuestionAttachmentUploaderProps> = ({
   const [savingDescription, setSavingDescription] = useState<{ [key: string]: boolean }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
   const attachmentsRef = useRef<Attachment[]>(existingAttachments);
+  const updateLockRef = useRef<boolean>(false); // Защита от одновременных обновлений
 
   // Синхронизируем ref с props
   useEffect(() => {
@@ -191,16 +192,33 @@ const QuestionAttachmentUploader: React.FC<QuestionAttachmentUploaderProps> = ({
         const { attachment } = await response.json();
         newAttachments.push(attachment);
 
-        // Шаг 3: Polling статуса для аудио/видео/документов
-        if (['audio', 'video', 'document'].includes(attachment.type)) {
-          pollAttachmentStatus(questionId, attachment.id, () => attachmentsRef.current);
-        }
+        console.log('📤 File uploaded:', {
+          index: i,
+          filename: attachment.filename,
+          id: attachment.id,
+          type: attachment.type,
+          status: attachment.status
+        });
       }
 
-      // Обновляем список вложений
+      // Обновляем список вложений ОДИН РАЗ после загрузки всех файлов
       const updatedAttachments = [...existingAttachments, ...newAttachments];
       attachmentsRef.current = updatedAttachments;
       onAttachmentsChange(updatedAttachments);
+
+      // Шаг 3: Запускаем polling для аудио/видео/документов
+      // С задержкой между файлами для избежания race condition
+      newAttachments.forEach((attachment, index) => {
+        if (['audio', 'video', 'document'].includes(attachment.type)) {
+          // Задержка: 0ms, 1000ms, 2000ms и т.д. для каждого файла
+          const delay = index * 1000;
+          console.log(`⏱️ Scheduling polling for ${attachment.filename} in ${delay}ms`);
+          
+          setTimeout(() => {
+            pollAttachmentStatus(questionId, attachment.id, () => attachmentsRef.current);
+          }, delay);
+        }
+      });
 
       setProgress({ current: files.length, total: files.length, file: 'Готово!' });
       
@@ -240,16 +258,57 @@ const QuestionAttachmentUploader: React.FC<QuestionAttachmentUploaderProps> = ({
 
         const { attachment } = await response.json();
 
-        // Обновляем статус в списке, используя АКТУАЛЬНЫЙ список
-        const currentAttachments = getCurrentAttachments();
-        const updatedAttachments = currentAttachments.map(att =>
-          att.id === attachmentId ? attachment : att
-        );
-        attachmentsRef.current = updatedAttachments;
-        onAttachmentsChange(updatedAttachments);
+        console.log('📥 Polling update received:', {
+          attachmentId: attachment.id,
+          filename: attachment.filename,
+          status: attachment.status,
+          hasDescription: !!attachment.description,
+          descriptionPreview: attachment.description?.substring(0, 50)
+        });
+
+        // 🔒 Ждем освобождения lock (защита от race condition)
+        let waitAttempts = 0;
+        while (updateLockRef.current && waitAttempts < 50) {
+          await new Promise(resolve => setTimeout(resolve, 50)); // Ждем 50ms
+          waitAttempts++;
+        }
+
+        if (waitAttempts >= 50) {
+          console.warn('Update lock timeout for:', attachmentId);
+        }
+
+        // Устанавливаем lock
+        updateLockRef.current = true;
+
+        try {
+          // 🔒 КРИТИЧНО: Используем функцию для получения актуального состояния
+          // Это защищает от race condition при параллельном polling нескольких файлов
+          const currentAttachments = getCurrentAttachments();
+          
+          // Проверяем что attachment еще существует в списке
+          const existingIndex = currentAttachments.findIndex(att => att.id === attachmentId);
+          if (existingIndex === -1) {
+            console.warn('Attachment not found in current list, stopping polling:', attachmentId);
+            return;
+          }
+
+          const updatedAttachments = currentAttachments.map(att =>
+            att.id === attachmentId ? { ...att, ...attachment } : att
+          );
+          
+          // Обновляем ref и вызываем callback
+          attachmentsRef.current = updatedAttachments;
+          onAttachmentsChange(updatedAttachments);
+
+          console.log('✅ State updated for:', attachment.filename, 'status:', attachment.status);
+        } finally {
+          // Освобождаем lock
+          updateLockRef.current = false;
+        }
 
         // Если обработка завершена или ошибка - останавливаем polling
         if (attachment.status === 'processed' || attachment.status === 'error') {
+          console.log('🏁 Polling completed for:', attachment.filename);
           return;
         }
 
@@ -257,9 +316,11 @@ const QuestionAttachmentUploader: React.FC<QuestionAttachmentUploaderProps> = ({
         attempts++;
         if (attempts < maxAttempts) {
           setTimeout(poll, 5000); // Каждые 5 секунд
+        } else {
+          console.warn('⏰ Polling timeout for:', attachment.filename);
         }
       } catch (error) {
-        console.error('Polling error:', error);
+        console.error('Polling error for', attachmentId, ':', error);
       }
     };
 

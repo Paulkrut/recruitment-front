@@ -27,10 +27,12 @@ interface Attachment {
 
 interface QuestionAttachmentsDisplayProps {
   attachments: Attachment[];
+  showDescription?: boolean; // Показывать ли транскрибацию/описание (true для HR, false для кандидата)
 }
 
 const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
-  attachments
+  attachments,
+  showDescription = true // По умолчанию показываем (для HR панели)
 }) => {
   const [selectedImage, setSelectedImage] = useState<Attachment | null>(null);
   const apiUrl = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -76,7 +78,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
                 display: 'block'
               }}
             />
-            {attachment.description && (
+            {showDescription && attachment.description && (
               <Typography
                 variant="caption"
                 sx={{
@@ -104,7 +106,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
               }}
               src={fullUrl}
             />
-            {attachment.description && (
+            {showDescription && attachment.description && (
               <Typography
                 variant="caption"
                 sx={{
@@ -133,7 +135,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
               }}
               src={fullUrl}
             />
-            {attachment.description && (
+            {showDescription && attachment.description && (
               <Typography
                 variant="caption"
                 sx={{
@@ -172,7 +174,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
               <Typography variant="body2" noWrap>
                 {attachment.filename}
               </Typography>
-              {attachment.description && (
+              {showDescription && attachment.description && (
                 <Typography
                   variant="caption"
                   color="text.secondary"
@@ -249,7 +251,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
                   objectFit: 'contain'
                 }}
               />
-              {selectedImage.description && (
+              {showDescription && selectedImage.description && (
                 <Typography
                   variant="body2"
                   sx={{
