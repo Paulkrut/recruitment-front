@@ -53,6 +53,14 @@ interface Question {
   position: number;
 }
 
+interface ChatMessage {
+  role: "bot" | "user";
+  text: string;
+  video?: string;
+  timestamp?: number;
+  attachments?: any[]; // Вложения к вопросу (для bot сообщений)
+}
+
 const API_BASE =
   process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -93,12 +101,7 @@ export default function CandidateInterviewPage() {
   const [timerStarted, setTimerStarted] = useState(false);
   const [currentQuestionTimerStarted, setCurrentQuestionTimerStarted] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout|null>(null);
-  const [chat, setChat] = useState<{
-    role: "bot" | "user";
-    text: string;
-    video?: string;
-    timestamp?: number;
-  }[]>([]);
+  const [chat, setChat] = useState<ChatMessage[]>([]);
   const [result, setResult] = useState<any>(null);
   const [recording, setRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
@@ -529,7 +532,7 @@ export default function CandidateInterviewPage() {
         // Показываем сообщение о прогрессе
         setChat([
           {role:'bot',text: _(msg`Добро пожаловать обратно! Продолжаем интервью с вопроса ${progressData.progress.current} из ${progressData.progress.total}.`), timestamp: Date.now()},
-          {role:'bot',text:progressData.nextQuestion.text, timestamp: Date.now()}
+          {role:'bot',text:progressData.nextQuestion.text, timestamp: Date.now(), attachments: progressData.nextQuestion.attachments || []}
         ]);
         return;
       }
@@ -583,6 +586,7 @@ export default function CandidateInterviewPage() {
         role: 'bot' as const,
         text: d.question.text,
         timestamp: Date.now() + initialMessages.length,
+        attachments: d.question.attachments || [],
       },
     ];
     
@@ -1275,7 +1279,7 @@ export default function CandidateInterviewPage() {
     setChat((p)=>{
       const cp=[...p];
       // Заменяем typing индикатор на новый вопрос
-      cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now()};
+      cp[typingIdx]={role:'bot',text:d.question.text, timestamp: Date.now(), attachments: d.question.attachments || []};
       return cp;
     });
     setLoadingNextQuestion(false);
@@ -1670,7 +1674,7 @@ export default function CandidateInterviewPage() {
     setPreviousQuestionId(d.question.id);
     setChat((p) => {
       const cp = [...p];
-      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
+      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now(), attachments: d.question.attachments || [] };
       return cp;
     });
     setLoadingNextQuestion(false);
@@ -1748,7 +1752,7 @@ export default function CandidateInterviewPage() {
     // Заменяем "typing" индикатор на текст нового вопроса
     setChat((p) => {
       const cp = [...p];
-      cp[typingIdx] = { role: "bot", text: nextQ.text, timestamp: Date.now() };
+      cp[typingIdx] = { role: "bot", text: nextQ.text, timestamp: Date.now(), attachments: nextQ.attachments || [] };
       return cp;
     });
   }

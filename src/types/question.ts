@@ -28,6 +28,20 @@ export interface QuestionOption {
 }
 
 /**
+ * Вложение к вопросу
+ */
+export interface QuestionAttachment {
+  id: string;
+  type: 'image' | 'video' | 'audio' | 'document';
+  filename: string;
+  url: string;
+  status: 'uploaded' | 'processing' | 'processed' | 'error';
+  description?: string;
+  error?: string;
+  size: number;
+}
+
+/**
  * Черновик вопроса (используется в формах создания/редактирования)
  */
 export interface QuestionDraft {
@@ -42,6 +56,7 @@ export interface QuestionDraft {
   referenceAnswer?: string | null;
   isRedFlag?: boolean;
   affectsKnowledge?: boolean;
+  attachments?: QuestionAttachment[];
 }
 
 /**

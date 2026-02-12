@@ -64,6 +64,7 @@ import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
 import CandidateScoresCard from '@/components/hr/CandidateScoresCard';
 import RetentionForecastTable from '@/components/hr/RetentionForecastTable';
+import QuestionAttachmentsDisplay from '@/components/QuestionAttachmentsDisplay';
 import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 
 
@@ -999,6 +1000,15 @@ export default function CandidateDetailPage() {
                           </Stack>
                         </AccordionSummary>
                         <AccordionDetails>
+                          {/* Прикреплённые к вопросу файлы */}
+                          {a.questionAttachments && a.questionAttachments.length > 0 && (
+                            <Box sx={{ mb: 2, p: 2, bgcolor: '#f0f7ff', borderRadius: 1, border: '1px solid #90caf9' }}>
+                              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#1976d2' }}>
+                                📎 <Trans>Материалы к вопросу</Trans>
+                              </Typography>
+                              <QuestionAttachmentsDisplay attachments={a.questionAttachments} />
+                            </Box>
+                          )}
                           <Typography variant="body2" sx={{mb:1}}><b><Trans>Ответ:</Trans></b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
                           <Typography variant="body2" sx={{mb:1}}><b><Trans>Оценка:</Trans></b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
                           {a.aiComment && (

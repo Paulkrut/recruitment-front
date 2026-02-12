@@ -28,6 +28,15 @@ import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SendIcon from "@mui/icons-material/Send";
 import { TypingTracker } from "./utils/TypingTracker";
+import QuestionAttachmentsDisplay from "@/components/QuestionAttachmentsDisplay";
+
+interface Attachment {
+  id: string;
+  type: 'image' | 'video' | 'audio' | 'document';
+  filename: string;
+  url: string;
+  description?: string;
+}
 
 interface ActiveInterviewScreenProps {
   question: any;
@@ -36,7 +45,7 @@ interface ActiveInterviewScreenProps {
   paused: boolean;
   recording: boolean;
   recordedBlob: Blob | null;
-  messages: { role: "bot" | "user"; text: string; video?: string; timestamp?: number }[];
+  messages: { role: "bot" | "user"; text: string; video?: string; timestamp?: number; attachments?: Attachment[] }[];
   userInputText: string;
   isMobile: boolean;
   cameraEnabled: boolean;
@@ -573,6 +582,12 @@ export default function ActiveInterviewScreen({
                     }}>
                       {m.text}
                     </Typography>
+
+                    {/* Вложения к вопросу */}
+                    {m.attachments && m.attachments.length > 0 && (
+                      <QuestionAttachmentsDisplay attachments={m.attachments} />
+                    )}
+
                     {/* Время сообщения */}
                     <Typography sx={{
                       fontSize: '11px',

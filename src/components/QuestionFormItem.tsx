@@ -28,6 +28,7 @@ import { msg, Trans } from '@lingui/macro';
 import type { QuestionDraft } from "@/types/question";
 import { QuestionOptionsEditor } from "@/components/question/QuestionOptionsEditor";
 import { QuestionSummary } from "@/components/question/QuestionSummary";
+import QuestionAttachmentUploader from "@/components/QuestionAttachmentUploader";
 
 // Re-export для обратной совместимости
 export type { QuestionDraft };
@@ -628,6 +629,24 @@ const QuestionFormItem = React.memo(({
                 placeholder={_(msg`Опишите идеальный ответ на этот вопрос...`)}
                 value={question.referenceAnswer || ''}
                 onChange={(e) => onUpdate(index, "referenceAnswer", e.target.value)}
+              />
+            </Box>
+          )}
+
+          {/* Вложения к вопросу */}
+          {question.id && (
+            <Box mb={3}>
+              <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+                <Trans>📎 Вложения</Trans>
+              </CustomFormLabel>
+              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+                <Trans>Прикрепите файлы к вопросу: изображения, видео, аудио или документы. Медиа и документы будут автоматически транскрибированы.</Trans>
+              </Typography>
+              <QuestionAttachmentUploader
+                questionId={question.id}
+                existingAttachments={question.attachments || []}
+                onAttachmentsChange={(attachments) => onUpdate(index, "attachments", attachments)}
+                maxFiles={5}
               />
             </Box>
           )}
