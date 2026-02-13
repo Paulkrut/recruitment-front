@@ -1832,14 +1832,16 @@ export default function CandidateInterviewPage() {
             <FeedbackProgressBar elapsedTime={elapsedTime} estimatedTime={estimatedTime} />
           )}
 
-          <Typography variant="body2" color="text.secondary">
-            {feedbackLoading
-              ? (elapsedTime < 30
-                  ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
-                  : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
-              : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
-            }
-          </Typography>
+          {finalScreenSettings?.allowRequestResults !== false && (
+            <Typography variant="body2" color="text.secondary">
+              {feedbackLoading
+                ? (elapsedTime < 30
+                    ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
+                    : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
+                : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
+              }
+            </Typography>
+          )}
 
           {/* Предупреждение о времени обработки */}
           {feedbackLoading && (
@@ -2014,14 +2016,16 @@ export default function CandidateInterviewPage() {
               <FeedbackProgressBar elapsedTime={elapsedTime} estimatedTime={estimatedTime} />
             )}
 
-            <Typography variant="body2" color="text.secondary">
-              {feedbackLoading
-                ? (elapsedTime < 30
-                    ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
-                    : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
-                : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
-              }
-            </Typography>
+            {finalScreenSettings?.allowRequestResults !== false && (
+              <Typography variant="body2" color="text.secondary">
+                {feedbackLoading
+                  ? (elapsedTime < 30
+                      ? _(msg`Система обрабатывает ваши аудио и видео ответы для подготовки к анализу`)
+                      : _(msg`Система AI анализирует ваши ответы для создания персональных рекомендаций`))
+                  : _(msg`Узнайте свои сильные стороны, области для развития и персональные рекомендации`)
+                }
+              </Typography>
+            )}
 
             {/* Предупреждение о времени обработки */}
             {feedbackLoading && (
