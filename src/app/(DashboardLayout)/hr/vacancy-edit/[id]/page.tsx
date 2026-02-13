@@ -222,9 +222,16 @@ export default function HRVacancyEditPage() {
         });
 
         // Автоматически включаем экспертный режим, если хотя бы один вопрос использует экспертные параметры
-        const hasExpertFeatures = data.questions.some((q: QuestionDraft) => 
-          q.referenceAnswer || q.isRedFlag || q.questionType === 'choice'
-        );
+        const hasExpertFeatures = data.questions.some((q: QuestionDraft) => {
+          const hasRef = !!q.referenceAnswer;
+          const hasFlag = !!q.isRedFlag;
+          const isChoice = q.questionType === 'choice';
+          // Проверяем что affectsKnowledge явно установлен в false
+          const notAffects = q.affectsKnowledge === false;
+          
+          return hasRef || hasFlag || isChoice || notAffects;
+        });
+        
         if (hasExpertFeatures) {
           setExpertMode(true);
         }
