@@ -56,7 +56,6 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
       case 'image':
         return (
           <Box
-            key={attachment.id}
             sx={{
               position: 'relative',
               cursor: 'pointer',
@@ -96,7 +95,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
 
       case 'video':
         return (
-          <Box key={attachment.id} sx={{ mb: 1 }}>
+          <Box sx={{ mb: 1 }}>
             <video
               controls
               width="100%"
@@ -125,7 +124,7 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
 
       case 'audio':
         return (
-          <Box key={attachment.id} sx={{ mb: 1 }}>
+          <Box sx={{ mb: 1 }}>
             <audio
               controls
               style={{
@@ -155,7 +154,6 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
       case 'document':
         return (
           <Box
-            key={attachment.id}
             sx={{
               p: 1.5,
               border: '1px solid',
@@ -208,7 +206,11 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
   return (
     <>
       <Box sx={{ mt: 1, mb: 1 }}>
-        {attachments.map((attachment) => renderAttachment(attachment))}
+        {attachments.map((attachment, index) => (
+          <div key={`${attachment.id}-${index}`}>
+            {renderAttachment(attachment)}
+          </div>
+        ))}
       </Box>
 
       {/* Modal для просмотра изображений */}
