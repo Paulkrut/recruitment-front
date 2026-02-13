@@ -13,6 +13,8 @@ import {
   Radio,
   Checkbox,
   Button,
+  Slider,
+  TextField,
 } from "@mui/material";
 import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
@@ -22,6 +24,8 @@ import {
   IconArrowDown,
   IconVideo,
   IconKeyboard,
+  IconRefresh,
+  IconClock,
 } from "@tabler/icons-react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
@@ -44,6 +48,7 @@ interface QuestionFormItemProps {
   showTypeSelector?: boolean; // Показывать ли выбор типа вопроса
   variant?: 'create' | 'edit'; // Визуальный стиль
   expertMode?: boolean; // Экспертный режим (доп. параметры)
+  globalMaxTime?: number; // Глобальное время для всех вопросов (для индикации отличий)
 }
 
 /**
@@ -60,7 +65,8 @@ const QuestionFormItem = React.memo(({
   onMoveDown,
   showTypeSelector = false,
   variant = 'create',
-  expertMode = false
+  expertMode = false,
+  globalMaxTime
 }: QuestionFormItemProps) => {
   const { _ } = useLingui();
   const questionType = question.questionType || 'open';
@@ -91,12 +97,18 @@ const QuestionFormItem = React.memo(({
   
   // 🔥 Локальный state для мгновенного отклика без задержек
   const [localText, setLocalText] = React.useState(question.text);
-  const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const [localMaxTime, setLocalMaxTime] = React.useState(question.maxTime);
+  const textTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+  const maxTimeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Синхронизируем локальный state с props
   React.useEffect(() => {
     setLocalText(question.text);
   }, [question.text]);
+
+  React.useEffect(() => {
+    setLocalMaxTime(question.maxTime);
+  }, [question.maxTime]);
 
   // Debounced update - обновляем родительский state через 300ms после остановки печати
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,21 +116,39 @@ const QuestionFormItem = React.memo(({
     setLocalText(newValue); // Мгновенно обновляем локальный state
     
     // Отменяем предыдущий таймер
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+    if (textTimeoutRef.current) {
+      clearTimeout(textTimeoutRef.current);
     }
     
     // Устанавливаем новый таймер
-    timeoutRef.current = setTimeout(() => {
+    textTimeoutRef.current = setTimeout(() => {
       onUpdate(index, "text", newValue);
     }, 300);
   };
 
-  // Очищаем таймер при размонтировании
+  // Debounced update для времени - обновляем через 500ms после остановки движения слайдера
+  const handleMaxTimeChange = (newValue: number) => {
+    setLocalMaxTime(newValue); // Мгновенно обновляем локальный state
+    
+    // Отменяем предыдущий таймер
+    if (maxTimeTimeoutRef.current) {
+      clearTimeout(maxTimeTimeoutRef.current);
+    }
+    
+    // Устанавливаем новый таймер (500ms - чуть больше чем для текста)
+    maxTimeTimeoutRef.current = setTimeout(() => {
+      onUpdate(index, "maxTime", newValue);
+    }, 500);
+  };
+
+  // Очищаем таймеры при размонтировании
   React.useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (textTimeoutRef.current) {
+        clearTimeout(textTimeoutRef.current);
+      }
+      if (maxTimeTimeoutRef.current) {
+        clearTimeout(maxTimeTimeoutRef.current);
       }
     };
   }, []);
@@ -717,6 +747,116 @@ const QuestionFormItem = React.memo(({
                 </Box>
               }
             />
+          </Box>
+
+          {/* Индивидуальное время ответа */}
+          <Box 
+            mb={3}
+            sx={{ 
+              p: 2.5, 
+              borderRadius: 2, 
+              border: '2px solid',
+              borderColor: globalMaxTime && question.maxTime !== globalMaxTime ? '#1976d2' : '#e0e0e0',
+              background: globalMaxTime && question.maxTime !== globalMaxTime 
+                ? 'linear-gradient(to right, #e3f2fd 0%, #f5f5f5 100%)' 
+                : '#fafafa'
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconClock size={20} color={globalMaxTime && question.maxTime !== globalMaxTime ? '#1976d2' : '#666'} />
+                <Typography variant="body2" fontWeight={600} color={globalMaxTime && question.maxTime !== globalMaxTime ? 'primary' : 'text.secondary'}>
+                  <Trans>⏱️ Время на ответ</Trans>
+                </Typography>
+                {globalMaxTime && question.maxTime !== globalMaxTime && (
+                  <Chip 
+                    label={<Trans>Индивидуальное</Trans>} 
+                    size="small" 
+                    color="primary" 
+                    sx={{ height: 20, fontSize: '0.7rem' }}
+                  />
+                )}
+              </Box>
+              {globalMaxTime && question.maxTime !== globalMaxTime && (
+                <Tooltip title={_(msg`Сбросить на глобальное время (${globalMaxTime} сек)`)}>
+                  <IconButton 
+                    size="small" 
+                    onClick={() => {
+                      // Мгновенно сбрасываем и сразу сохраняем (без debounce)
+                      setLocalMaxTime(globalMaxTime);
+                      onUpdate(index, "maxTime", globalMaxTime);
+                    }}
+                    sx={{ 
+                      color: '#1976d2',
+                      '&:hover': { background: '#e3f2fd' }
+                    }}
+                  >
+                    <IconRefresh size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <TextField
+                type="number"
+                size="small"
+                value={localMaxTime}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (!isNaN(value) && value >= 30 && value <= 600) {
+                    handleMaxTimeChange(value);
+                  }
+                }}
+                inputProps={{ min: 30, max: 600, step: 30 }}
+                sx={{ 
+                  width: 100,
+                  '& input': { textAlign: 'center', fontWeight: 600 }
+                }}
+                label={<Trans>сек</Trans>}
+              />
+              
+              <Box sx={{ flex: 1 }}>
+                <Slider
+                  value={localMaxTime}
+                  onChange={(_, value) => handleMaxTimeChange(value as number)}
+                  min={30}
+                  max={600}
+                  step={30}
+                  marks={[
+                    { value: 60, label: '1 мин' },
+                    { value: 180, label: '3 мин' },
+                    { value: 300, label: '5 мин' },
+                    { value: 600, label: '10 мин' },
+                  ]}
+                  valueLabelDisplay="auto"
+                  valueLabelFormat={(value) => `${Math.floor(value / 60)}:${(value % 60).toString().padStart(2, '0')}`}
+                  sx={{
+                    '& .MuiSlider-track': { 
+                      backgroundColor: globalMaxTime && question.maxTime !== globalMaxTime ? '#1976d2' : '#999' 
+                    },
+                    '& .MuiSlider-thumb': { 
+                      backgroundColor: globalMaxTime && question.maxTime !== globalMaxTime ? '#1976d2' : '#999' 
+                    },
+                    '& .MuiSlider-rail': { backgroundColor: '#e0e0e0' }
+                  }}
+                />
+              </Box>
+              
+              <Typography variant="h6" sx={{ minWidth: 70, textAlign: 'center', fontWeight: 700, color: globalMaxTime && question.maxTime !== globalMaxTime ? '#1976d2' : 'text.primary' }}>
+                {Math.floor(localMaxTime / 60)}:{(localMaxTime % 60).toString().padStart(2, '0')}
+              </Typography>
+            </Box>
+
+            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+              {globalMaxTime && question.maxTime !== globalMaxTime ? (
+                <Trans>Это время отличается от глобального ({globalMaxTime} сек). При изменении глобального времени этот вопрос не будет затронут.</Trans>
+              ) : globalMaxTime ? (
+                <Trans>Используется глобальное время. Будет автоматически обновляться при изменении общих настроек.</Trans>
+              ) : (
+                <Trans>Время ответа на этот вопрос.</Trans>
+              )}
+            </Typography>
           </Box>
 
           {/* 📋 САММОРИ: Поведение вопроса */}

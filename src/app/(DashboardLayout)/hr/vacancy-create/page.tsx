@@ -16,7 +16,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Slider,
   Stack,
   CircularProgress,
 } from "@mui/material";
@@ -39,6 +38,7 @@ import { msg, Trans } from '@lingui/macro';
 import QuestionFormItem from "@/components/QuestionFormItem";
 import type { QuestionDraft } from "@/types/question";
 import { validateQuestions } from "@/types/question";
+import QuestionTimeSettings from "@/components/vacancy/QuestionTimeSettings";
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -527,97 +527,24 @@ export default function HRVacancyCreatePage() {
             </CardContent>
           </Card>
           <Divider sx={{ my: 0 }} />
-          {/* Test Settings */ }
-          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
-            <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-              <Stack spacing={3}>
-                <Box display="flex" alignItems="center" gap={2}>
-                  <IconSettings size={32} color="#1976d2" />
-                  <Typography variant="h4" fontWeight={700} sx={{ color: 'text.primary' }}><Trans>Настройки теста</Trans></Typography>
-                  <Tooltip title={_(msg`Здесь вы можете задать параметры теста для кандидатов`)} placement="right">
-                    <IconButton size="small"><IconEye size={20} color="#1976d2" /></IconButton>
-                  </Tooltip>
-              </Box>
-
-              <Box>
-                <CustomFormLabel
-                  sx={{
-                      color: 'text.primary',
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    mb: 2
-                  }}
-                >
-                  <Trans>Время на один вопрос</Trans>
-                </CustomFormLabel>
-
-                {/* Preset buttons */}
-                <Box sx={{ mb: 3 }}>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mb: 2 }}><Trans>Быстрый выбор:</Trans></Typography>
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                    {[60, 90, 120, 150, 180, 210, 240, 270, 300].map((time) => (
-                      <Button
-                        key={time}
-                        variant={templateData.questionTime === time ? "contained" : "outlined"}
-                        onClick={() => setTemplateData({ ...templateData, questionTime: time })}
-                        sx={{
-                            backgroundColor: templateData.questionTime === time ? "#e3f2fd" : "#fff",
-                            color: "#1976d2",
-                            borderColor: "#1976d2",
-                            fontWeight: 600,
-                          minWidth: 'auto',
-                          px: 2,
-                          py: 1,
-                          fontSize: '0.9rem',
-                            '&:hover': { backgroundColor: "#bbdefb" }
-                        }}
-                      >
-                        <Trans>{time} сек</Trans>
-                      </Button>
-                    ))}
-                  </Box>
-                </Box>
-
-                {/* Slider */}
-                <Box sx={{ px: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>1 мин</Trans></Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8 }}><Trans>5 мин</Trans></Typography>
-                  </Box>
-                  <Slider
-                    value={templateData.questionTime}
-                    onChange={(_, value) => setTemplateData({ ...templateData, questionTime: value as number })}
-                    min={60}
-                    max={300}
-                    step={30}
-                      color="primary"
-                    sx={{
-                        '& .MuiSlider-track': { backgroundColor: '#1976d2' },
-                        '& .MuiSlider-thumb': { backgroundColor: '#1976d2' },
-                        '& .MuiSlider-rail': { backgroundColor: '#eee' }
-                    }}
-                  />
-                  <Box sx={{ textAlign: 'center', mt: 2 }}>
-                    <Typography
-                      variant="h5"
-                      sx={{
-                          color: 'text.primary',
-                        fontWeight: 700,
-                      }}
-                    >
-                      {Math.floor(templateData.questionTime / 60)}:{(templateData.questionTime % 60).toString().padStart(2, '0')}
-                    </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.8, mt: 0.5 }}>
-                      <Trans>{templateData.questionTime} секунд</Trans>
-                    </Typography>
-                  </Box>
-                </Box>
-
-                  <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.9, mt: 2, textAlign: 'center' }}><Trans>Время, отведенное на ответ на каждый вопрос</Trans></Typography>
-              </Box>
-              </Stack>
-            </CardContent>
-          </Card>
+          
+          {/* Test Settings */}
+          <QuestionTimeSettings
+            value={templateData.questionTime}
+            onChange={(newTime) => {
+              const oldGlobalTime = templateData.questionTime;
+              setTemplateData({ ...templateData, questionTime: newTime });
+              
+              // 🧠 Умная логика: обновляем только вопросы, которые "следуют" за глобальным временем
+              setQuestions(questions.map(q => 
+                q.maxTime === oldGlobalTime 
+                  ? { ...q, maxTime: newTime }  // ✅ Обновляем "дефолтные"
+                  : q                            // ⏸️ Оставляем "кастомные" как есть
+              ));
+            }}
+            showFormattedTime={true}
+          />
+          
           <Divider sx={{ my: 0 }} />
           {/* Questions */}
           <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
@@ -702,6 +629,7 @@ export default function HRVacancyCreatePage() {
                   showTypeSelector={expertMode}
                   variant="create"
                   expertMode={expertMode}
+                  globalMaxTime={templateData.questionTime}
                 />
               ))}
 
