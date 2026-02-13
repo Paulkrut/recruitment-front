@@ -65,6 +65,7 @@ import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable
 import CandidateScoresCard from '@/components/hr/CandidateScoresCard';
 import RetentionForecastTable from '@/components/hr/RetentionForecastTable';
 import QuestionAttachmentsDisplay from '@/components/QuestionAttachmentsDisplay';
+import QuestionText from '@/components/QuestionText';
 import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 
 
@@ -983,20 +984,27 @@ export default function CandidateDetailPage() {
                     {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
                       <Accordion key={a.id} defaultExpanded={false} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
-                          <Stack direction="row" alignItems="center" spacing={2} flexWrap="wrap">
-                            <Typography variant="subtitle1"><b><Trans>Вопрос {idx+1}:</Trans></b> {a.question}</Typography>
-                            {a.score !== undefined && a.score !== null && (
-                              <Chip
-                                label={_(msg`Оценка`) + ': ' + a.score}
-                                color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
-                                size="small"
-                              />
-                            )}
-                            {a.hasRedFlag && (
-                              <Tooltip title={_(msg`Критический вопрос - ответ не соответствует требованиям`)} arrow>
-                                <span style={{fontSize: 20}}>🚩</span>
-                              </Tooltip>
-                            )}
+                          <Stack direction="row" alignItems="center" spacing={2} flexWrap="wrap" sx={{ width: '100%' }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography variant="subtitle2" component="span" sx={{ fontWeight: 600 }}>
+                                <Trans>Вопрос {idx+1}:</Trans>
+                              </Typography>{' '}
+                              <QuestionText text={a.question} variant="body2" sx={{ display: 'inline' }} />
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                              {a.score !== undefined && a.score !== null && (
+                                <Chip
+                                  label={_(msg`Оценка`) + ': ' + a.score}
+                                  color={a.score >= 8 ? 'success' : a.score >= 5 ? 'warning' : 'error'}
+                                  size="small"
+                                />
+                              )}
+                              {a.hasRedFlag && (
+                                <Tooltip title={_(msg`Критический вопрос - ответ не соответствует требованиям`)} arrow>
+                                  <span style={{fontSize: 20}}>🚩</span>
+                                </Tooltip>
+                              )}
+                            </Box>
                           </Stack>
                         </AccordionSummary>
                         <AccordionDetails>

@@ -29,6 +29,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SendIcon from "@mui/icons-material/Send";
 import { TypingTracker } from "./utils/TypingTracker";
 import QuestionAttachmentsDisplay from "@/components/QuestionAttachmentsDisplay";
+import QuestionText from "@/components/QuestionText";
 
 interface Attachment {
   id: string;
@@ -574,14 +575,13 @@ export default function ActiveInterviewScreen({
                       </Box>
                     )}
 
-                    <Typography sx={{
-                      wordBreak: 'break-word',
-                      whiteSpace: 'pre-wrap',
-                      lineHeight: 1.5,
-                      color: m.role === 'user' ? '#2e7d32' : '#333'
-                    }}>
-                      {m.text}
-                    </Typography>
+                    <QuestionText 
+                      text={m.text}
+                      sx={{
+                        wordBreak: 'break-word',
+                        color: m.role === 'user' ? '#2e7d32' : '#333'
+                      }}
+                    />
 
                     {/* Вложения к вопросу */}
                     {m.attachments && m.attachments.length > 0 && (

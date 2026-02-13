@@ -33,9 +33,28 @@ import type { QuestionDraft } from "@/types/question";
 import { QuestionOptionsEditor } from "@/components/question/QuestionOptionsEditor";
 import { QuestionSummary } from "@/components/question/QuestionSummary";
 import QuestionAttachmentUploader from "@/components/QuestionAttachmentUploader";
+import RichTextEditor from "@/components/RichTextEditor";
 
 // Re-export для обратной совместимости
 export type { QuestionDraft };
+
+/**
+ * Проверяет, содержит ли текст HTML теги
+ */
+function hasHtmlContent(text: string): boolean {
+  return /<(strong|b|em|i|a|br|ul|ol|li|p)\b[^>]*>/i.test(text);
+}
+
+/**
+ * Конвертирует plain text с переносами строк в HTML для редактора
+ */
+function convertPlainTextToHtml(text: string): string {
+  if (hasHtmlContent(text)) {
+    return text; // Уже HTML
+  }
+  // Конвертируем переносы строк в <br>
+  return text.replace(/\n/g, '<br>');
+}
 
 interface QuestionFormItemProps {
   question: QuestionDraft;
@@ -96,14 +115,14 @@ const QuestionFormItem = React.memo(({
   };
   
   // 🔥 Локальный state для мгновенного отклика без задержек
-  const [localText, setLocalText] = React.useState(question.text);
+  const [localText, setLocalText] = React.useState(() => convertPlainTextToHtml(question.text));
   const [localMaxTime, setLocalMaxTime] = React.useState(question.maxTime);
   const textTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const maxTimeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Синхронизируем локальный state с props
   React.useEffect(() => {
-    setLocalText(question.text);
+    setLocalText(convertPlainTextToHtml(question.text));
   }, [question.text]);
 
   React.useEffect(() => {
@@ -111,8 +130,7 @@ const QuestionFormItem = React.memo(({
   }, [question.maxTime]);
 
   // Debounced update - обновляем родительский state через 300ms после остановки печати
-  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
+  const handleTextChange = (newValue: string) => {
     setLocalText(newValue); // Мгновенно обновляем локальный state
     
     // Отменяем предыдущий таймер
@@ -437,36 +455,22 @@ const QuestionFormItem = React.memo(({
         >
           <Trans>Текст вопроса</Trans>
         </CustomFormLabel>
-        <CustomTextField
-          id={`question-${index}-text`}
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={3}
-          value={localText}
-          onChange={handleTextChange}
-          placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
-          helperText={variant === 'create' ? _(msg`Введите вопрос, на который должен ответить кандидат`) : undefined}
-          FormHelperTextProps={{
-            sx: { color: '#333', opacity: 0.9 }
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#fff',
-              borderRadius: 2,
-              '&:hover': {
-                backgroundColor: '#fafafa',
-              },
-              '&.Mui-focused': {
-                backgroundColor: '#fff',
-              }
-            },
-            '& .MuiInputBase-input': {
-              fontSize: variant === 'edit' ? '1rem' : '1.1rem',
-              padding: '16px 20px'
-            }
-          }}
-        />
+        <Box sx={{ 
+          backgroundColor: '#fff', 
+          borderRadius: 2,
+          overflow: 'hidden'
+        }}>
+          <RichTextEditor
+            value={localText}
+            onChange={handleTextChange}
+            placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
+          />
+        </Box>
+        {variant === 'create' && (
+          <Typography variant="caption" sx={{ color: '#666', mt: 1, display: 'block' }}>
+            <Trans>Вы можете использовать форматирование: жирный, курсив, списки и ссылки</Trans>
+          </Typography>
+        )}
       </Box>
 
       
