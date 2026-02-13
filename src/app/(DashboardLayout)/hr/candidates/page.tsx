@@ -556,6 +556,8 @@ export default function HRCandidatesPage() {
   const router = useRouter();
   const { _ } = useLingui();
   const [candidates, setCandidates] = useState<CandidateRow[]>([]);
+  const [totalCandidates, setTotalCandidates] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [vacancies, setVacancies] = useState<VacancyOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -569,9 +571,12 @@ export default function HRCandidatesPage() {
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
 
   useEffect(() => {
-    fetchCandidates();
     fetchVacancies();
   }, []);
+
+  useEffect(() => {
+    fetchCandidates();
+  }, [currentPage, itemsPerPage, sortConfig, statusFilter, scoreFilter, searchTerm, vacancyFilter]);
 
   async function fetchVacancies() {
     try {
@@ -597,8 +602,8 @@ export default function HRCandidatesPage() {
       const params = new URLSearchParams({
         sort: `${sortConfig.field}:${sortConfig.order}`,
         status: statusFilter,
-        score: scoreFilter,
         search: searchTerm,
+        vacancy: vacancyFilter,
         page: currentPage.toString(),
         limit: itemsPerPage.toString(),
       });
@@ -609,8 +614,18 @@ export default function HRCandidatesPage() {
         },
       });
       if (response.ok) {
-        const data = await response.json();
-        setCandidates(data);
+        const result = await response.json();
+        // Новый формат ответа с пагинацией
+        if (result.data) {
+          setCandidates(result.data);
+          setTotalCandidates(result.total || 0);
+          setTotalPages(result.totalPages || 0);
+        } else {
+          // Fallback на старый формат (если вдруг)
+          setCandidates(result);
+          setTotalCandidates(result.length);
+          setTotalPages(1);
+        }
       } else {
         setError(_(msg`Ошибка загрузки кандидатов`));
       }
@@ -621,81 +636,55 @@ export default function HRCandidatesPage() {
     }
   }
 
+  // Все фильтры обрабатываются на бэкенде, кроме score
+  // Score вычисляется динамически, поэтому фильтруется на клиенте
   const filteredCandidates = candidates.filter((candidate) => {
-    // Поиск по тексту
-    const searchMatch =
-      candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (candidate.email && candidate.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (candidate.phone && candidate.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (candidate.vacancy && candidate.vacancy.title.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    // Фильтр по статусу
-    const statusMatch = !statusFilter || candidate.status === statusFilter;
-
-    // Фильтр по оценке
-    let scoreMatch = true;
     if (scoreFilter) {
       if (scoreFilter === 'no-score') {
-        scoreMatch = candidate.score === null || candidate.score === undefined;
+        return candidate.score === null || candidate.score === undefined;
       } else {
         const [min, max] = scoreFilter.split('-').map(Number);
         if (candidate.score !== null && candidate.score !== undefined) {
-          scoreMatch = candidate.score >= min && candidate.score <= max;
+          return candidate.score >= min && candidate.score <= max;
         } else {
-          scoreMatch = false;
+          return false;
         }
       }
     }
-
-    // Фильтр по вакансии
-    const vacancyMatch = !vacancyFilter ||
-      (candidate.vacancy && candidate.vacancy.id.toString() === vacancyFilter);
-
-    return searchMatch && statusMatch && scoreMatch && vacancyMatch;
-  }).sort((a, b) => {
-    let aValue: any, bValue: any;
-
-    switch (sortConfig.field) {
-      case 'name':
-        aValue = a.name.toLowerCase();
-        bValue = b.name.toLowerCase();
-        break;
-      case 'createdAt':
-        aValue = new Date(a.createdAt).getTime();
-        bValue = new Date(b.createdAt).getTime();
-        break;
-      case 'finishedAt':
-        aValue = a.finishedAt ? new Date(a.finishedAt).getTime() : 0;
-        bValue = b.finishedAt ? new Date(b.finishedAt).getTime() : 0;
-        break;
-      case 'score':
-        aValue = a.score ?? 0;
-        bValue = b.score ?? 0;
-        break;
-      case 'status':
-        aValue = a.status;
-        bValue = b.status;
-        break;
-      case 'vacancy':
-        aValue = a.vacancy?.title ?? '';
-        bValue = b.vacancy?.title ?? '';
-        break;
-      default:
-        return 0;
-    }
-
-    if (sortConfig.order === 'asc') {
-      return aValue > bValue ? 1 : -1;
-    } else {
-      return aValue < bValue ? 1 : -1;
-    }
+    return true;
   });
 
-  // Пагинация
-  const paginatedCandidates = filteredCandidates.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // Данные уже пагинированы на бэкенде
+  const paginatedCandidates = filteredCandidates;
+
+  // Обработчики изменения фильтров с сбросом на первую страницу
+  const handleStatusFilterChange = (status: string) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+  };
+
+  const handleScoreFilterChange = (score: string) => {
+    setScoreFilter(score);
+    setCurrentPage(1);
+  };
+
+  const handleVacancyFilterChange = (vacancy: string) => {
+    setVacancyFilter(vacancy);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (search: string) => {
+    setSearchTerm(search);
+    setCurrentPage(1);
+  };
+
+  const handleSort = (field: SortField) => {
+    setSortConfig({
+      field,
+      order: sortConfig.field === field && sortConfig.order === 'asc' ? 'desc' : 'asc',
+    });
+    setCurrentPage(1);
+  };
 
   if (loading) {
     return (
@@ -723,7 +712,7 @@ export default function HRCandidatesPage() {
       <Box sx={{ mb: 3 }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h4" fontWeight="bold"><Trans>
-            Кандидаты ({candidates.length})
+            Кандидаты ({totalCandidates})
           </Trans></Typography>
           <Box display="flex" gap={1}>
             <Tooltip title={_(msg`Таблица`)}>
@@ -863,29 +852,13 @@ export default function HRCandidatesPage() {
             <EnhancedCandidateTable
               candidates={paginatedCandidates}
               sortConfig={sortConfig}
-              onSort={(field) => {
-                setSortConfig(prev => {
-                  if (prev.field === field) {
-                    return { ...prev, order: prev.order === 'asc' ? 'desc' : 'asc' };
-                  }
-                  return { field, order: 'asc' };
-                });
-              }}
+              onSort={handleSort}
               statusFilter={statusFilter}
-              onStatusFilterChange={(status) => {
-                setStatusFilter(status);
-                setCurrentPage(1);
-              }}
+              onStatusFilterChange={handleStatusFilterChange}
               scoreFilter={scoreFilter}
-              onScoreFilterChange={(score) => {
-                setScoreFilter(score);
-                setCurrentPage(1);
-              }}
+              onScoreFilterChange={handleScoreFilterChange}
               vacancyFilter={vacancyFilter}
-              onVacancyFilterChange={(vacancy) => {
-                setVacancyFilter(vacancy);
-                setCurrentPage(1);
-              }}
+              onVacancyFilterChange={handleVacancyFilterChange}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               itemsPerPage={itemsPerPage}
@@ -893,10 +866,10 @@ export default function HRCandidatesPage() {
             />
 
             {/* Пагинация */}
-            {filteredCandidates.length > itemsPerPage && (
+            {totalPages > 1 && (
               <Box display="flex" justifyContent="center" mt={3}>
                 <Pagination
-                  count={Math.ceil(filteredCandidates.length / itemsPerPage)}
+                  count={totalPages}
                   page={currentPage}
                   onChange={(_, page) => setCurrentPage(page)}
                   color="primary"
