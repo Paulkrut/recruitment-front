@@ -29,11 +29,12 @@ import {
 } from "@tabler/icons-react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
-import type { QuestionDraft } from "@/types/question";
+import type { QuestionDraft, QuestionVariantDraft } from "@/types/question";
 import { QuestionOptionsEditor } from "@/components/question/QuestionOptionsEditor";
 import { QuestionSummary } from "@/components/question/QuestionSummary";
 import QuestionAttachmentUploader from "@/components/QuestionAttachmentUploader";
 import RichTextEditor from "@/components/RichTextEditor";
+import { QuestionVariantsEditor } from "@/components/question/QuestionVariantsEditor";
 
 // Re-export для обратной совместимости
 export type { QuestionDraft };
@@ -99,7 +100,8 @@ const QuestionFormItem = React.memo(({
       question.isRedFlag === true ||              // Включен Red Flag
       questionType === 'choice' ||                // Вопрос с вариантами
       !!question.referenceAnswer ||               // Есть эталонный ответ
-      inputMode === 'typing'                      // Текстовый ответ (не видео)
+      inputMode === 'typing' ||                   // Текстовый ответ (не видео)
+      question.useVariants === true               // Использование вариантов вопросов
     );
   };
   
@@ -112,6 +114,8 @@ const QuestionFormItem = React.memo(({
     onUpdate(index, "type", 'text');
     onUpdate(index, "options", null);
     onUpdate(index, "referenceAnswer", undefined);
+    onUpdate(index, "useVariants", false);
+    onUpdate(index, "variants", undefined);
   };
   
   // 🔥 Локальный state для мгновенного отклика без задержек
@@ -443,35 +447,37 @@ const QuestionFormItem = React.memo(({
         </Box>
       )}
 
-      {/* Текст вопроса */}
-      <Box>
-        <CustomFormLabel 
-          sx={{ 
-            fontSize: '1.1rem', 
-            fontWeight: 600, 
-            mb: variant === 'edit' ? 1 : 2,
-            color: variant === 'edit' ? 'text.primary' : '#333'
-          }}
-        >
-          <Trans>Текст вопроса</Trans>
-        </CustomFormLabel>
-        <Box sx={{ 
-          backgroundColor: '#fff', 
-          borderRadius: 2,
-          overflow: 'hidden'
-        }}>
-          <RichTextEditor
-            value={localText}
-            onChange={handleTextChange}
-            placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
-          />
+      {/* Текст вопроса (скрыт если используются варианты) */}
+      {!question.useVariants && (
+        <Box>
+          <CustomFormLabel 
+            sx={{ 
+              fontSize: '1.1rem', 
+              fontWeight: 600, 
+              mb: variant === 'edit' ? 1 : 2,
+              color: variant === 'edit' ? 'text.primary' : '#333'
+            }}
+          >
+            <Trans>Текст вопроса</Trans>
+          </CustomFormLabel>
+          <Box sx={{ 
+            backgroundColor: '#fff', 
+            borderRadius: 2,
+            overflow: 'hidden'
+          }}>
+            <RichTextEditor
+              value={localText}
+              onChange={handleTextChange}
+              placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
+            />
+          </Box>
+          {variant === 'create' && (
+            <Typography variant="caption" sx={{ color: '#666', mt: 1, display: 'block' }}>
+              <Trans>Вы можете использовать форматирование: жирный, курсив, списки и ссылки</Trans>
+            </Typography>
+          )}
         </Box>
-        {variant === 'create' && (
-          <Typography variant="caption" sx={{ color: '#666', mt: 1, display: 'block' }}>
-            <Trans>Вы можете использовать форматирование: жирный, курсив, списки и ссылки</Trans>
-          </Typography>
-        )}
-      </Box>
+      )}
 
       
       {/* Экспертный режим: дополнительные параметры */}
@@ -560,6 +566,84 @@ const QuestionFormItem = React.memo(({
             </FormControl>
           </Box>
 
+          {/* Использовать варианты вопросов */}
+          <Box 
+            mb={3}
+            sx={{ 
+              p: 2.5, 
+              borderRadius: 2, 
+              border: '2px solid',
+              borderColor: 'secondary.main',
+              background: 'linear-gradient(to right, #fff3e0 0%, #f5f5f5 100%)'
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={question.useVariants || false}
+                  onChange={(e) => {
+                    const useVariants = e.target.checked;
+                    onUpdate(index, "useVariants", useVariants);
+                    
+                    // При включении создаем 2 пустых варианта если их нет
+                    if (useVariants && (!question.variants || question.variants.length === 0)) {
+                      const defaultVariant: QuestionVariantDraft = {
+                        text: question.text || "",
+                        referenceAnswer: question.referenceAnswer,
+                        attachments: question.attachments || [],
+                        options: question.options || [],
+                        position: 1,
+                      };
+                      const emptyVariant: QuestionVariantDraft = {
+                        text: "",
+                        referenceAnswer: null,
+                        attachments: [],
+                        options: questionType === 'choice' ? [
+                          { label: "", isCorrect: false },
+                          { label: "", isCorrect: false }
+                        ] : [],
+                        position: 2,
+                      };
+                      onUpdate(index, "variants", [defaultVariant, emptyVariant]);
+                    }
+                  }}
+                  color="secondary"
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body1" fontWeight={600}>
+                    <Trans>🔀 Использовать варианты вопросов (рандомные)</Trans>
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
+                    <Trans>
+                      Включите, если хотите создать несколько вариантов этого вопроса. 
+                      Каждому кандидату будет показан случайный вариант.
+                      Это усложняет возможность списывания.
+                    </Trans>
+                  </Typography>
+                </Box>
+              }
+              sx={{ alignItems: 'flex-start', m: 0 }}
+            />
+            
+            {/* Редактор вариантов */}
+            {question.useVariants && (
+              <Box mt={3} sx={{ 
+                p: 2, 
+                borderRadius: 2, 
+                background: 'white',
+                border: '1px solid #e0e0e0'
+              }}>
+                <QuestionVariantsEditor
+                  question={question}
+                  questionIndex={index}
+                  onUpdateQuestion={onUpdate}
+                />
+              </Box>
+            )}
+          </Box>
+
           {/* Участвует в оценке знаний */}
           <Box 
             mb={3}
@@ -615,8 +699,8 @@ const QuestionFormItem = React.memo(({
             <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
           </Box>
 
-          {/* Варианты ответа */}
-          {questionType === 'choice' && (() => {
+          {/* Варианты ответа (скрыты если используются варианты вопросов) */}
+          {!question.useVariants && questionType === 'choice' && (() => {
             // Валидация для подсветки чекбоксов
             const affectsKnowledge = question.affectsKnowledge !== false;
             const isRedFlag = question.isRedFlag || false;
@@ -634,8 +718,8 @@ const QuestionFormItem = React.memo(({
             );
           })()}
 
-          {/* Эталонный ответ (только для open вопросов) */}
-          {questionType === 'open' && (
+          {/* Эталонный ответ (только для open вопросов, скрыт если используются варианты) */}
+          {!question.useVariants && questionType === 'open' && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>Эталонный ответ</Trans>
@@ -667,8 +751,8 @@ const QuestionFormItem = React.memo(({
             </Box>
           )}
 
-          {/* Вложения к вопросу */}
-          {question.id && (
+          {/* Вложения к вопросу (скрыты если используются варианты) */}
+          {!question.useVariants && question.id && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>📎 Вложения</Trans>

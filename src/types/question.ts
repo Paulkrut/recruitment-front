@@ -42,6 +42,18 @@ export interface QuestionAttachment {
 }
 
 /**
+ * Вариант вопроса (для рандомных вопросов)
+ */
+export interface QuestionVariantDraft {
+  id?: number;
+  text: string;
+  referenceAnswer?: string | null;
+  attachments?: QuestionAttachment[];
+  options?: QuestionOption[];
+  position?: number;
+}
+
+/**
  * Черновик вопроса (используется в формах создания/редактирования)
  */
 export interface QuestionDraft {
@@ -57,6 +69,10 @@ export interface QuestionDraft {
   isRedFlag?: boolean;
   affectsKnowledge?: boolean;
   attachments?: QuestionAttachment[];
+  
+  // ✅ НОВОЕ: Поддержка вариантов вопросов
+  useVariants?: boolean;
+  variants?: QuestionVariantDraft[];
 }
 
 /**
@@ -76,12 +92,40 @@ export function validateChoiceQuestion(question: QuestionDraft): QuestionValidat
   const isChoice = (question.questionType || 'open') === 'choice';
   const affectsKnowledge = question.affectsKnowledge !== false;
   const isRedFlag = question.isRedFlag || false;
-  const hasCorrectAnswers = (question.options || []).some(opt => opt.isCorrect);
+  const errors: string[] = [];
   
+  // ✅ НОВОЕ: Если есть варианты - проверяем каждый
+  if (question.useVariants && question.variants && question.variants.length > 0) {
+    let allVariantsValid = true;
+    
+    question.variants.forEach((variant, index) => {
+      const hasCorrectAnswers = (variant.options || []).some(opt => opt.isCorrect);
+      const needsCorrectAnswers = isChoice && (affectsKnowledge || isRedFlag);
+      
+      if (needsCorrectAnswers && !hasCorrectAnswers) {
+        allVariantsValid = false;
+        if (affectsKnowledge && isRedFlag) {
+          errors.push(`Вариант ${index + 1}: Вопрос участвует в оценке знаний И имеет Red Flag. Необходимо отметить правильные ответы.`);
+        } else if (affectsKnowledge) {
+          errors.push(`Вариант ${index + 1}: Вопрос участвует в оценке знаний. Необходимо отметить правильные ответы.`);
+        } else if (isRedFlag) {
+          errors.push(`Вариант ${index + 1}: Вопрос имеет Red Flag. Необходимо отметить правильные ответы.`);
+        }
+      }
+    });
+    
+    return {
+      isValid: allVariantsValid,
+      needsCorrectAnswers: isChoice && (affectsKnowledge || isRedFlag),
+      hasCorrectAnswers: allVariantsValid,
+      errors,
+    };
+  }
+  
+  // СТАРЫЙ формат: проверяем options на уровне вопроса
+  const hasCorrectAnswers = (question.options || []).some(opt => opt.isCorrect);
   const needsCorrectAnswers = isChoice && (affectsKnowledge || isRedFlag);
   const hasValidationError = needsCorrectAnswers && !hasCorrectAnswers;
-  
-  const errors: string[] = [];
   
   if (hasValidationError) {
     if (affectsKnowledge && isRedFlag) {
@@ -102,6 +146,63 @@ export function validateChoiceQuestion(question: QuestionDraft): QuestionValidat
 }
 
 /**
+ * Валидация вариантов вопроса
+ */
+export function validateQuestionVariants(question: QuestionDraft): {
+  isValid: boolean;
+  errors: string[];
+} {
+  const errors: string[] = [];
+  
+  if (!question.useVariants || !question.variants) {
+    return { isValid: true, errors: [] };
+  }
+  
+  const variantsCount = question.variants.length;
+  
+  // Минимум 2 варианта если включен режим вариантов
+  if (variantsCount < 2) {
+    errors.push('Для режима вариантов нужно минимум 2 варианта');
+  }
+  
+  // Максимум 10 вариантов
+  if (variantsCount > 10) {
+    errors.push('Максимум 10 вариантов на вопрос');
+  }
+  
+  // Проверка текста каждого варианта
+  question.variants.forEach((variant, index) => {
+    if (!variant.text || variant.text.trim() === '') {
+      errors.push(`Вариант ${index + 1}: текст не может быть пустым`);
+    }
+  });
+  
+  // Проверка для choice вопросов
+  if (question.questionType === 'choice') {
+    question.variants.forEach((variant, index) => {
+      const options = variant.options || [];
+      if (options.length < 2) {
+        errors.push(`Вариант ${index + 1}: необходимо минимум 2 варианта ответа`);
+      }
+    });
+  }
+  
+  // Проверка для open вопросов с Red Flag
+  if (question.questionType === 'open' && question.isRedFlag && !question.affectsKnowledge) {
+    question.variants.forEach((variant, index) => {
+      if (!variant.referenceAnswer || variant.referenceAnswer.trim() === '') {
+        errors.push(`Вариант ${index + 1}: Red Flag для компетенционного вопроса требует эталонный ответ`);
+      }
+    });
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+}
+
+/**
  * Проверка всех вопросов на валидность
  */
 export function validateQuestions(questions: QuestionDraft[]): {
@@ -110,15 +211,22 @@ export function validateQuestions(questions: QuestionDraft[]): {
   errorMessage: string;
 } {
   const invalidQuestions = questions
-    .map((q, index) => ({ index, question: q, validation: validateChoiceQuestion(q) }))
-    .filter(({ validation }) => !validation.isValid)
-    .map(({ index, question, validation }) => ({ index, question, errors: validation.errors }));
+    .map((q, index) => {
+      const choiceValidation = validateChoiceQuestion(q);
+      const variantsValidation = validateQuestionVariants(q);
+      
+      const allErrors = [...choiceValidation.errors, ...variantsValidation.errors];
+      const isValid = choiceValidation.isValid && variantsValidation.isValid;
+      
+      return { index, question: q, isValid, errors: allErrors };
+    })
+    .filter(({ isValid }) => !isValid);
   
   const isValid = invalidQuestions.length === 0;
   
   const errorMessage = isValid
     ? ''
-    : `Ошибка валидации: ${invalidQuestions.length} вопрос(ов) с вариантами ответов требуют отметки правильных ответов (галочками "✓"). Проверьте вопросы с оценкой знаний или Red Flag.`;
+    : `Ошибка валидации: ${invalidQuestions.length} вопрос(ов) требуют исправлений. Проверьте вопросы с вариантами ответов, оценкой знаний или Red Flag.`;
   
   return {
     isValid,
