@@ -206,14 +206,31 @@ export default function HRVacancyEditPage() {
       const data = await response.json();
 
       setVacancyData(data);
-      setQuestions((data.questions || []).map((q: QuestionDraft) => ({
-        ...q,
-        questionType: q.questionType || 'open',
-        inputMode: q.inputMode || q.type || 'text',
-        type: q.inputMode || q.type || 'text',
-        options: q.options || [],
-        affectsKnowledge: q.affectsKnowledge !== undefined ? q.affectsKnowledge : true,
-      })));
+      setQuestions((data.questions || []).map((q: QuestionDraft) => {
+        const questionType = q.questionType || 'open';
+        
+        // Если у вопроса нет вариантов - создаём один из существующих данных
+        let variants = q.variants;
+        if (!variants || variants.length === 0) {
+          variants = [{
+            text: q.text || "",
+            referenceAnswer: q.referenceAnswer || null,
+            attachments: q.attachments || [],
+            options: q.options || [],
+            position: 1,
+          }];
+        }
+        
+        return {
+          ...q,
+          questionType,
+          inputMode: q.inputMode || q.type || 'text',
+          type: q.inputMode || q.type || 'text',
+          options: q.options || [],
+          affectsKnowledge: q.affectsKnowledge !== undefined ? q.affectsKnowledge : true,
+          variants,
+        };
+      }));
 
       // Устанавливаем время на вопрос на основе первого вопроса или по умолчанию
       if (data.questions && data.questions.length > 0) {
@@ -254,6 +271,14 @@ export default function HRVacancyEditPage() {
       maxTime: templateData.questionTime,
       position: questions.length,
       affectsKnowledge: true,
+      // Всегда создаём один пустой вариант
+      variants: [{
+        text: "",
+        referenceAnswer: null,
+        attachments: [],
+        options: [],
+        position: 1,
+      }],
     };
     setQuestions([...questions, newQuestion]);
   };
@@ -314,8 +339,26 @@ export default function HRVacancyEditPage() {
   const updateVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
 
+    // ✅ Нормализация вопросов - убедиться что у каждого есть variants
+    const normalizedQuestions = questions.map(q => {
+      // Если вариантов нет - создаём один из существующих данных
+      if (!q.variants || q.variants.length === 0) {
+        return {
+          ...q,
+          variants: [{
+            text: q.text || "",
+            referenceAnswer: q.referenceAnswer || null,
+            attachments: q.attachments || [],
+            options: q.options || [],
+            position: 1,
+          }]
+        };
+      }
+      return q;
+    });
+
     // ✅ Валидация вопросов перед сохранением
-    const validation = validateQuestions(questions);
+    const validation = validateQuestions(normalizedQuestions);
 
     if (!validation.isValid) {
       setError(validation.errorMessage);
@@ -336,7 +379,7 @@ export default function HRVacancyEditPage() {
           companyVideoUrl: vacancyData.companyVideoUrl || null,
           templateTitle: vacancyData.template?.title || _(msg`Тест для вакансии: ${vacancyData.title}`),
           templateDescription: vacancyData.template?.description || _(msg`Тест для вакансии "${vacancyData.title}"`),
-          questions: questions,
+          questions: normalizedQuestions,
         }),
       });
 

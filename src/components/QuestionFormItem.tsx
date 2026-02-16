@@ -43,14 +43,16 @@ export type { QuestionDraft };
 /**
  * Проверяет, содержит ли текст HTML теги
  */
-function hasHtmlContent(text: string): boolean {
+function hasHtmlContent(text: string | null | undefined): boolean {
+  if (!text) return false;
   return /<(strong|b|em|i|a|br|ul|ol|li|p)\b[^>]*>/i.test(text);
 }
 
 /**
  * Конвертирует plain text с переносами строк в HTML для редактора
  */
-function convertPlainTextToHtml(text: string): string {
+function convertPlainTextToHtml(text: string | null | undefined): string {
+  if (!text) return ''; // Пустой текст возвращаем как пустую строку
   if (hasHtmlContent(text)) {
     return text; // Уже HTML
   }
@@ -447,38 +449,6 @@ const QuestionFormItem = React.memo(({
         </Box>
       )}
 
-      {/* Текст вопроса (скрыт если есть варианты) */}
-      {(!question.variants || question.variants.length === 0) && (
-        <Box>
-          <CustomFormLabel 
-            sx={{ 
-              fontSize: '1.1rem', 
-              fontWeight: 600, 
-              mb: variant === 'edit' ? 1 : 2,
-              color: variant === 'edit' ? 'text.primary' : '#333'
-            }}
-          >
-            <Trans>Текст вопроса</Trans>
-          </CustomFormLabel>
-          <Box sx={{ 
-            backgroundColor: '#fff', 
-            borderRadius: 2,
-            overflow: 'hidden'
-          }}>
-            <RichTextEditor
-              value={localText}
-              onChange={handleTextChange}
-              placeholder={_(msg`Введите вопрос, на который должен ответить кандидат`)}
-            />
-          </Box>
-          {variant === 'create' && (
-            <Typography variant="caption" sx={{ color: '#666', mt: 1, display: 'block' }}>
-              <Trans>Вы можете использовать форматирование: жирный, курсив, списки и ссылки</Trans>
-            </Typography>
-          )}
-        </Box>
-      )}
-
       
       {/* Экспертный режим: дополнительные параметры */}
       {expertMode && showTypeSelector && (
@@ -567,81 +537,13 @@ const QuestionFormItem = React.memo(({
           </Box>
 
           {/* Варианты вопросов */}
-          {(!question.variants || question.variants.length === 0) ? (
-            // Кнопка для включения режима вариантов
-            <Box mb={3}>
-              <Button
-                variant="outlined"
-                color="secondary"
-                startIcon={<IconPlus size={20} />}
-                onClick={() => {
-                  const defaultVariant: QuestionVariantDraft = {
-                    text: question.text || "",
-                    referenceAnswer: question.referenceAnswer,
-                    attachments: question.attachments || [],
-                    options: question.options || [],
-                    position: 1,
-                  };
-                  const emptyVariant: QuestionVariantDraft = {
-                    text: "",
-                    referenceAnswer: null,
-                    attachments: [],
-                    options: questionType === 'choice' ? [
-                      { label: "", isCorrect: false },
-                      { label: "", isCorrect: false }
-                    ] : [],
-                    position: 2,
-                  };
-                  onUpdate(index, "variants", [defaultVariant, emptyVariant]);
-                }}
-                sx={{ mb: 1 }}
-              >
-                <Trans>Добавить варианты вопроса (защита от списывания)</Trans>
-              </Button>
-              <Typography variant="caption" color="text.secondary" display="block">
-                <Trans>
-                  Создайте несколько формулировок этого вопроса. 
-                  Каждому кандидату будет показан случайный вариант.
-                </Trans>
-              </Typography>
-            </Box>
-          ) : (
-            // Редактор вариантов
-            <Box 
-              mb={3}
-              sx={{ 
-                p: 2.5, 
-                borderRadius: 2, 
-                border: '2px solid',
-                borderColor: 'secondary.main',
-                background: 'linear-gradient(to right, #fff3e0 0%, #f5f5f5 100%)'
-              }}
-            >
-              <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="subtitle2" fontWeight={700} color="secondary.main">
-                  <Trans>🔀 Варианты вопроса (рандомные)</Trans>
-                </Typography>
-                <Button
-                  variant="text"
-                  size="small"
-                  color="error"
-                  onClick={() => {
-                    if (window.confirm(_(msg`Удалить все варианты и вернуться к обычному режиму?`))) {
-                      onUpdate(index, "variants", undefined);
-                    }
-                  }}
-                >
-                  <Trans>Удалить варианты</Trans>
-                </Button>
-              </Stack>
-              
-              <QuestionVariantsEditor
-                question={question}
-                questionIndex={index}
-                onUpdateQuestion={onUpdate}
-              />
-            </Box>
-          )}
+          <Box mb={3}>
+            <QuestionVariantsEditor
+              question={question}
+              questionIndex={index}
+              onUpdateQuestion={onUpdate}
+            />
+          </Box>
 
           {/* Участвует в оценке знаний */}
           <Box 
@@ -698,8 +600,8 @@ const QuestionFormItem = React.memo(({
             <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
           </Box>
 
-          {/* Варианты ответа (скрыты если есть варианты вопросов) */}
-          {(!question.variants || question.variants.length === 0) && questionType === 'choice' && (() => {
+          {/* Варианты ответа - теперь в вариантах вопроса */}
+          {false && questionType === 'choice' && (() => {
             // Валидация для подсветки чекбоксов
             const affectsKnowledge = question.affectsKnowledge !== false;
             const isRedFlag = question.isRedFlag || false;
@@ -717,8 +619,8 @@ const QuestionFormItem = React.memo(({
             );
           })()}
 
-          {/* Эталонный ответ (только для open вопросов, скрыт если есть варианты) */}
-          {(!question.variants || question.variants.length === 0) && questionType === 'open' && (
+          {/* Эталонный ответ - теперь в вариантах вопроса */}
+          {false && questionType === 'open' && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>Эталонный ответ</Trans>
@@ -750,8 +652,8 @@ const QuestionFormItem = React.memo(({
             </Box>
           )}
 
-          {/* Вложения к вопросу (скрыты если есть варианты) */}
-          {(!question.variants || question.variants.length === 0) && question.id && (
+          {/* Вложения к вопросу - теперь в вариантах вопроса */}
+          {false && question.id && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>📎 Вложения</Trans>

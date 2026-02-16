@@ -153,6 +153,14 @@ export default function HRVacancyCreatePage() {
       type: "text",
       maxTime: templateData.questionTime,
       position: questions.length,
+      // Всегда создаём один пустой вариант
+      variants: [{
+        text: "",
+        referenceAnswer: null,
+        attachments: [],
+        options: [],
+        position: 1,
+      }],
     };
     setQuestions([...questions, newQuestion]);
   };
@@ -160,8 +168,26 @@ export default function HRVacancyCreatePage() {
   const createVacancyWithTemplate = async () => {
     if (!token || !vacancyData.title) return;
 
+    // ✅ Нормализация вопросов - убедиться что у каждого есть variants
+    const normalizedQuestions = questions.map(q => {
+      // Если вариантов нет - создаём один из существующих данных
+      if (!q.variants || q.variants.length === 0) {
+        return {
+          ...q,
+          variants: [{
+            text: q.text || "",
+            referenceAnswer: q.referenceAnswer || null,
+            attachments: q.attachments || [],
+            options: q.options || [],
+            position: 1,
+          }]
+        };
+      }
+      return q;
+    });
+
     // ✅ Валидация вопросов перед сохранением
-    const validation = validateQuestions(questions);
+    const validation = validateQuestions(normalizedQuestions);
 
     if (!validation.isValid) {
       setError(validation.errorMessage);
@@ -188,7 +214,7 @@ export default function HRVacancyCreatePage() {
           companyVideoUrl: vacancyData.companyVideoUrl || null,
           templateTitle: _(msg`Тест для вакансии: ${vacancyData.title}`),
           templateDescription: _(msg`Тест для вакансии "${vacancyData.title}"`),
-          questions: questions,
+          questions: normalizedQuestions,
           companyId: currentCompanyId, // Добавляем ID компании
         }),
       });

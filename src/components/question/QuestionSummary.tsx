@@ -14,9 +14,14 @@ interface QuestionSummaryProps {
 export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) => {
   const questionType = question.questionType || 'open';
   const inputMode = question.inputMode || question.type || 'text';
-  const options = question.options || [];
+  
+  // Берём данные из первого варианта вопроса (теперь вопрос всегда в вариантах)
+  const firstVariant = question.variants?.[0];
+  const options = firstVariant?.options || question.options || [];
+  const referenceAnswer = firstVariant?.referenceAnswer || question.referenceAnswer;
+  
   const affectsKnowledge = question.affectsKnowledge !== false;
-  const hasReference = !!question.referenceAnswer;
+  const hasReference = !!referenceAnswer;
   const isRedFlag = question.isRedFlag || false;
   const isChoice = questionType === 'choice';
   const isAudio = inputMode === 'text';
@@ -133,7 +138,7 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
                   <Trans>🤖 Система оценивает ответ <b>строго по эталону</b> → 0-10 баллов</Trans>
                   <br />
                   <Typography variant="caption" component="span" sx={{ pl: 0, opacity: 0.8 }}>
-                    <Trans>Эталонный ответ добавляется в анализ: "{question.referenceAnswer?.substring(0, 50)}{question.referenceAnswer && question.referenceAnswer.length > 50 ? '...' : ''}" — система будет сравнивать с ним</Trans>
+                    <Trans>Эталонный ответ добавляется в анализ: "{referenceAnswer?.substring(0, 50)}{referenceAnswer && referenceAnswer.length > 50 ? '...' : ''}" — система будет сравнивать с ним</Trans>
                   </Typography>
                 </>
               ) : (

@@ -154,16 +154,13 @@ export function validateQuestionVariants(question: QuestionDraft): {
 } {
   const errors: string[] = [];
   
+  // Теперь вопрос ВСЕГДА должен иметь минимум 1 вариант
   if (!question.variants || question.variants.length === 0) {
-    return { isValid: true, errors: [] };
+    errors.push('Вопрос должен иметь хотя бы 1 вариант');
+    return { isValid: false, errors };
   }
   
   const variantsCount = question.variants.length;
-  
-  // Минимум 1 вариант
-  if (variantsCount < 1) {
-    errors.push('Необходим хотя бы 1 вариант');
-  }
   
   // Максимум 10 вариантов
   if (variantsCount > 10) {
@@ -245,7 +242,12 @@ export function calculateQuestionTokens(question: QuestionDraft): {
   const questionType = question.questionType || 'open';
   const inputMode = question.inputMode || question.type || 'text';
   const affectsKnowledge = question.affectsKnowledge !== false;
-  const hasReference = !!question.referenceAnswer;
+  
+  // Берём данные из первого варианта вопроса (теперь вопрос всегда в вариантах)
+  const firstVariant = question.variants?.[0];
+  const referenceAnswer = firstVariant?.referenceAnswer || question.referenceAnswer;
+  const hasReference = !!referenceAnswer;
+  
   const isRedFlag = question.isRedFlag || false;
   
   if (questionType === 'choice') {

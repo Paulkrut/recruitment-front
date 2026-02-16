@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Stack,
@@ -8,8 +8,9 @@ import {
   Paper,
   Collapse,
   Divider,
-  Alert,
   Chip,
+  Tooltip,
+  TextField,
 } from "@mui/material";
 import {
   IconPlus,
@@ -17,6 +18,7 @@ import {
   IconGripVertical,
   IconChevronDown,
   IconChevronUp,
+  IconHelp,
 } from "@tabler/icons-react";
 import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import RichTextEditor from "@/components/RichTextEditor";
@@ -40,7 +42,25 @@ export function QuestionVariantsEditor({
 }: QuestionVariantsEditorProps) {
   const variants = question.variants || [];
   const questionType = question.questionType || 'open';
-  const [expandedVariants, setExpandedVariants] = useState<Set<number>>(new Set([0]));
+  // По умолчанию все варианты свёрнуты
+  const [expandedVariants, setExpandedVariants] = useState<Set<number>>(new Set());
+
+  // Если вариантов нет - создаём один пустой
+  useEffect(() => {
+    if (variants.length === 0) {
+      const emptyVariant: QuestionVariantDraft = {
+        text: "",
+        referenceAnswer: null,
+        attachments: [],
+        options: questionType === 'choice' ? [
+          { label: "", isCorrect: false },
+          { label: "", isCorrect: false }
+        ] : [],
+        position: 1,
+      };
+      onUpdateQuestion(questionIndex, "variants", [emptyVariant]);
+    }
+  }, []); // Только при монтировании
 
   // Добавить новый вариант
   const handleAddVariant = () => {
@@ -96,25 +116,34 @@ export function QuestionVariantsEditor({
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6" fontWeight={600}>
-          Варианты вопроса ({variants.length}/10)
-        </Typography>
-        <Button
-          variant="outlined"
-          size="small"
-          startIcon={<IconPlus size={18} />}
-          onClick={handleAddVariant}
-          disabled={variants.length >= 10}
-        >
-          Добавить вариант
-        </Button>
+        {variants.length >= 2 ? (
+          <Typography variant="h6" fontWeight={600}>
+            Варианты вопроса ({variants.length}/10)
+          </Typography>
+        ) : (
+          <Box /> // Пустой элемент для выравнивания
+        )}
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<IconPlus size={18} />}
+            onClick={handleAddVariant}
+            disabled={variants.length >= 10}
+          >
+            Добавить вариант
+          </Button>
+          <Tooltip 
+            title="Для режима вариантов нужно минимум 2 варианта. Кандидатам будет показан случайный вариант из списка."
+            arrow
+            placement="left"
+          >
+            <IconButton size="small" sx={{ color: 'primary.main' }}>
+              <IconHelp size={20} />
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Stack>
-
-      {variants.length < 2 && (
-        <Alert severity="warning" sx={{ mb: 2 }}>
-          Для режима вариантов нужно минимум 2 варианта. Кандидатам будет показан случайный вариант.
-        </Alert>
-      )}
 
       <Stack spacing={2}>
         {variants.map((variant, variantIndex) => (
@@ -129,23 +158,75 @@ export function QuestionVariantsEditor({
             }}
           >
             {/* Заголовок варианта */}
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <IconButton size="small" sx={{ cursor: 'grab' }}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={expandedVariants.has(variantIndex) ? 2 : 1}>
+              <Stack 
+                direction="row" 
+                alignItems="center" 
+                spacing={1} 
+                flex={1} 
+                sx={{ 
+                  minWidth: 0,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    opacity: 0.7
+                  }
+                }}
+                onClick={() => toggleVariant(variantIndex)}
+              >
+                <IconButton size="small" sx={{ cursor: 'grab', flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
                   <IconGripVertical size={18} />
                 </IconButton>
-                <Chip 
-                  label={`Вариант ${variantIndex + 1}`} 
-                  size="small" 
-                  color="primary"
-                  variant="outlined"
-                />
-              </Stack>
-              
-              <Stack direction="row" spacing={1}>
+                {!expandedVariants.has(variantIndex) && (
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary" 
+                      sx={{ 
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: 1.4,
+                        mb: 0.5
+                      }}
+                    >
+                      {variant.text ? variant.text.replace(/<[^>]*>/g, '') : 'Текст не заполнен'}
+                    </Typography>
+                    {/* Индикаторы в заголовке */}
+                    <Stack direction="row" spacing={0.5} sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+                      {variant.attachments && variant.attachments.length > 0 && (
+                        <Chip 
+                          label={`📎 Вложений: ${variant.attachments.length}`} 
+                          size="small" 
+                          variant="outlined"
+                          sx={{ height: '24px' }}
+                        />
+                      )}
+                      {questionType === 'choice' && variant.options && variant.options.length > 0 && (
+                        <Chip 
+                          label={`Вариантов ответа: ${variant.options.length}`} 
+                          size="small" 
+                          variant="outlined"
+                          color="primary"
+                          sx={{ height: '24px' }}
+                        />
+                      )}
+                      {questionType === 'open' && variant.referenceAnswer && (
+                        <Chip 
+                          label="✓ Есть эталонный ответ" 
+                          size="small" 
+                          variant="outlined"
+                          color="success"
+                          sx={{ height: '24px' }}
+                        />
+                      )}
+                    </Stack>
+                  </Box>
+                )}
                 <IconButton 
-                  size="small" 
-                  onClick={() => toggleVariant(variantIndex)}
+                  size="small"
+                  sx={{ flexShrink: 0 }}
                 >
                   {expandedVariants.has(variantIndex) ? (
                     <IconChevronUp size={18} />
@@ -153,15 +234,17 @@ export function QuestionVariantsEditor({
                     <IconChevronDown size={18} />
                   )}
                 </IconButton>
-                <IconButton
-                  size="small"
-                  color="error"
-                  onClick={() => handleRemoveVariant(variantIndex)}
-                  disabled={variants.length === 1}
-                >
-                  <IconTrash size={18} />
-                </IconButton>
               </Stack>
+              
+              <IconButton
+                size="small"
+                color="error"
+                onClick={() => handleRemoveVariant(variantIndex)}
+                disabled={variants.length === 1}
+                sx={{ flexShrink: 0, ml: 1 }}
+              >
+                <IconTrash size={18} />
+              </IconButton>
             </Stack>
 
             <Collapse in={expandedVariants.has(variantIndex)}>
@@ -169,7 +252,7 @@ export function QuestionVariantsEditor({
                 {/* Текст варианта */}
                 <Box>
                   <CustomFormLabel htmlFor={`variant-text-${variantIndex}`}>
-                    Текст вопроса для варианта {variantIndex + 1}
+                    Текст вопроса
                   </CustomFormLabel>
                   <RichTextEditor
                     value={variant.text || ''}
@@ -184,10 +267,15 @@ export function QuestionVariantsEditor({
                     <CustomFormLabel htmlFor={`variant-reference-${variantIndex}`}>
                       Эталонный ответ (опционально)
                     </CustomFormLabel>
-                    <RichTextEditor
+                    <TextField
+                      id={`variant-reference-${variantIndex}`}
+                      fullWidth
+                      multiline
+                      rows={4}
                       value={variant.referenceAnswer || ''}
-                      onChange={(value) => handleUpdateVariant(variantIndex, 'referenceAnswer', value)}
+                      onChange={(e) => handleUpdateVariant(variantIndex, 'referenceAnswer', e.target.value)}
                       placeholder="Эталонный ответ для этого варианта..."
+                      variant="outlined"
                     />
                   </Box>
                 )}
@@ -226,25 +314,9 @@ export function QuestionVariantsEditor({
                 <Divider sx={{ my: 1 }} />
               </Stack>
             </Collapse>
-
-            {/* Краткая информация в свернутом виде */}
-            {!expandedVariants.has(variantIndex) && (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {variant.text ? 
-                  variant.text.replace(/<[^>]*>/g, '').substring(0, 100) + '...' : 
-                  'Текст не заполнен'
-                }
-              </Typography>
-            )}
           </Paper>
         ))}
       </Stack>
-
-      {variants.length === 0 && (
-        <Alert severity="info">
-          Нажмите "Добавить вариант" чтобы создать варианты вопроса
-        </Alert>
-      )}
     </Box>
   );
 }
