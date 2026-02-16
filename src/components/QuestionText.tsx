@@ -12,7 +12,7 @@ import React from 'react';
 import { Typography, Box } from '@mui/material';
 
 interface QuestionTextProps {
-  text: string;
+  text: string | null | undefined;
   variant?: 'body1' | 'body2' | 'h6';
   className?: string;
   sx?: any;
@@ -21,7 +21,8 @@ interface QuestionTextProps {
 /**
  * Проверяет, содержит ли текст HTML теги
  */
-function hasHtmlContent(text: string): boolean {
+function hasHtmlContent(text: string | null | undefined): boolean {
+  if (!text) return false;
   return /<(strong|b|em|i|a|br|ul|ol|li|p)\b[^>]*>/i.test(text);
 }
 
@@ -31,6 +32,19 @@ const QuestionText: React.FC<QuestionTextProps> = ({
   className,
   sx 
 }) => {
+  // Обработка пустого текста
+  if (!text) {
+    return (
+      <Typography 
+        variant={variant}
+        className={className}
+        sx={{ ...sx, fontStyle: 'italic', color: '#888' }}
+      >
+        [Текст вопроса отсутствует]
+      </Typography>
+    );
+  }
+
   const isHtml = hasHtmlContent(text);
 
   if (isHtml) {

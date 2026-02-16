@@ -26,6 +26,7 @@ import {
   IconKeyboard,
   IconRefresh,
   IconClock,
+  IconPlus,
 } from "@tabler/icons-react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
@@ -101,7 +102,7 @@ const QuestionFormItem = React.memo(({
       questionType === 'choice' ||                // Вопрос с вариантами
       !!question.referenceAnswer ||               // Есть эталонный ответ
       inputMode === 'typing' ||                   // Текстовый ответ (не видео)
-      question.useVariants === true               // Использование вариантов вопросов
+      (question.variants && question.variants.length > 1) // Множественные варианты (рандомные)
     );
   };
   
@@ -114,7 +115,6 @@ const QuestionFormItem = React.memo(({
     onUpdate(index, "type", 'text');
     onUpdate(index, "options", null);
     onUpdate(index, "referenceAnswer", undefined);
-    onUpdate(index, "useVariants", false);
     onUpdate(index, "variants", undefined);
   };
   
@@ -447,8 +447,8 @@ const QuestionFormItem = React.memo(({
         </Box>
       )}
 
-      {/* Текст вопроса (скрыт если используются варианты) */}
-      {!question.useVariants && (
+      {/* Текст вопроса (скрыт если есть варианты) */}
+      {(!question.variants || question.variants.length === 0) && (
         <Box>
           <CustomFormLabel 
             sx={{ 
@@ -566,83 +566,82 @@ const QuestionFormItem = React.memo(({
             </FormControl>
           </Box>
 
-          {/* Использовать варианты вопросов */}
-          <Box 
-            mb={3}
-            sx={{ 
-              p: 2.5, 
-              borderRadius: 2, 
-              border: '2px solid',
-              borderColor: 'secondary.main',
-              background: 'linear-gradient(to right, #fff3e0 0%, #f5f5f5 100%)'
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={question.useVariants || false}
-                  onChange={(e) => {
-                    const useVariants = e.target.checked;
-                    onUpdate(index, "useVariants", useVariants);
-                    
-                    // При включении создаем 2 пустых варианта если их нет
-                    if (useVariants && (!question.variants || question.variants.length === 0)) {
-                      const defaultVariant: QuestionVariantDraft = {
-                        text: question.text || "",
-                        referenceAnswer: question.referenceAnswer,
-                        attachments: question.attachments || [],
-                        options: question.options || [],
-                        position: 1,
-                      };
-                      const emptyVariant: QuestionVariantDraft = {
-                        text: "",
-                        referenceAnswer: null,
-                        attachments: [],
-                        options: questionType === 'choice' ? [
-                          { label: "", isCorrect: false },
-                          { label: "", isCorrect: false }
-                        ] : [],
-                        position: 2,
-                      };
-                      onUpdate(index, "variants", [defaultVariant, emptyVariant]);
+          {/* Варианты вопросов */}
+          {(!question.variants || question.variants.length === 0) ? (
+            // Кнопка для включения режима вариантов
+            <Box mb={3}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<IconPlus size={20} />}
+                onClick={() => {
+                  const defaultVariant: QuestionVariantDraft = {
+                    text: question.text || "",
+                    referenceAnswer: question.referenceAnswer,
+                    attachments: question.attachments || [],
+                    options: question.options || [],
+                    position: 1,
+                  };
+                  const emptyVariant: QuestionVariantDraft = {
+                    text: "",
+                    referenceAnswer: null,
+                    attachments: [],
+                    options: questionType === 'choice' ? [
+                      { label: "", isCorrect: false },
+                      { label: "", isCorrect: false }
+                    ] : [],
+                    position: 2,
+                  };
+                  onUpdate(index, "variants", [defaultVariant, emptyVariant]);
+                }}
+                sx={{ mb: 1 }}
+              >
+                <Trans>Добавить варианты вопроса (защита от списывания)</Trans>
+              </Button>
+              <Typography variant="caption" color="text.secondary" display="block">
+                <Trans>
+                  Создайте несколько формулировок этого вопроса. 
+                  Каждому кандидату будет показан случайный вариант.
+                </Trans>
+              </Typography>
+            </Box>
+          ) : (
+            // Редактор вариантов
+            <Box 
+              mb={3}
+              sx={{ 
+                p: 2.5, 
+                borderRadius: 2, 
+                border: '2px solid',
+                borderColor: 'secondary.main',
+                background: 'linear-gradient(to right, #fff3e0 0%, #f5f5f5 100%)'
+              }}
+            >
+              <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+                <Typography variant="subtitle2" fontWeight={700} color="secondary.main">
+                  <Trans>🔀 Варианты вопроса (рандомные)</Trans>
+                </Typography>
+                <Button
+                  variant="text"
+                  size="small"
+                  color="error"
+                  onClick={() => {
+                    if (window.confirm(_(msg`Удалить все варианты и вернуться к обычному режиму?`))) {
+                      onUpdate(index, "variants", undefined);
                     }
                   }}
-                  color="secondary"
-                />
-              }
-              label={
-                <Box>
-                  <Typography variant="body1" fontWeight={600}>
-                    <Trans>🔀 Использовать варианты вопросов (рандомные)</Trans>
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}>
-                    <Trans>
-                      Включите, если хотите создать несколько вариантов этого вопроса. 
-                      Каждому кандидату будет показан случайный вариант.
-                      Это усложняет возможность списывания.
-                    </Trans>
-                  </Typography>
-                </Box>
-              }
-              sx={{ alignItems: 'flex-start', m: 0 }}
-            />
-            
-            {/* Редактор вариантов */}
-            {question.useVariants && (
-              <Box mt={3} sx={{ 
-                p: 2, 
-                borderRadius: 2, 
-                background: 'white',
-                border: '1px solid #e0e0e0'
-              }}>
-                <QuestionVariantsEditor
-                  question={question}
-                  questionIndex={index}
-                  onUpdateQuestion={onUpdate}
-                />
-              </Box>
-            )}
-          </Box>
+                >
+                  <Trans>Удалить варианты</Trans>
+                </Button>
+              </Stack>
+              
+              <QuestionVariantsEditor
+                question={question}
+                questionIndex={index}
+                onUpdateQuestion={onUpdate}
+              />
+            </Box>
+          )}
 
           {/* Участвует в оценке знаний */}
           <Box 
@@ -699,8 +698,8 @@ const QuestionFormItem = React.memo(({
             <Box sx={{ flexGrow: 1, height: '1px', background: '#ddd' }} />
           </Box>
 
-          {/* Варианты ответа (скрыты если используются варианты вопросов) */}
-          {!question.useVariants && questionType === 'choice' && (() => {
+          {/* Варианты ответа (скрыты если есть варианты вопросов) */}
+          {(!question.variants || question.variants.length === 0) && questionType === 'choice' && (() => {
             // Валидация для подсветки чекбоксов
             const affectsKnowledge = question.affectsKnowledge !== false;
             const isRedFlag = question.isRedFlag || false;
@@ -718,8 +717,8 @@ const QuestionFormItem = React.memo(({
             );
           })()}
 
-          {/* Эталонный ответ (только для open вопросов, скрыт если используются варианты) */}
-          {!question.useVariants && questionType === 'open' && (
+          {/* Эталонный ответ (только для open вопросов, скрыт если есть варианты) */}
+          {(!question.variants || question.variants.length === 0) && questionType === 'open' && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>Эталонный ответ</Trans>
@@ -751,8 +750,8 @@ const QuestionFormItem = React.memo(({
             </Box>
           )}
 
-          {/* Вложения к вопросу (скрыты если используются варианты) */}
-          {!question.useVariants && question.id && (
+          {/* Вложения к вопросу (скрыты если есть варианты) */}
+          {(!question.variants || question.variants.length === 0) && question.id && (
             <Box mb={3}>
               <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
                 <Trans>📎 Вложения</Trans>

@@ -71,7 +71,7 @@ export interface QuestionDraft {
   attachments?: QuestionAttachment[];
   
   // ✅ НОВОЕ: Поддержка вариантов вопросов
-  useVariants?: boolean;
+  // 1 вариант = обычный вопрос, 2+ = рандомный
   variants?: QuestionVariantDraft[];
 }
 
@@ -94,8 +94,8 @@ export function validateChoiceQuestion(question: QuestionDraft): QuestionValidat
   const isRedFlag = question.isRedFlag || false;
   const errors: string[] = [];
   
-  // ✅ НОВОЕ: Если есть варианты - проверяем каждый
-  if (question.useVariants && question.variants && question.variants.length > 0) {
+  // ✅ Если есть варианты - проверяем каждый
+  if (question.variants && question.variants.length > 0) {
     let allVariantsValid = true;
     
     question.variants.forEach((variant, index) => {
@@ -154,15 +154,15 @@ export function validateQuestionVariants(question: QuestionDraft): {
 } {
   const errors: string[] = [];
   
-  if (!question.useVariants || !question.variants) {
+  if (!question.variants || question.variants.length === 0) {
     return { isValid: true, errors: [] };
   }
   
   const variantsCount = question.variants.length;
   
-  // Минимум 2 варианта если включен режим вариантов
-  if (variantsCount < 2) {
-    errors.push('Для режима вариантов нужно минимум 2 варианта');
+  // Минимум 1 вариант
+  if (variantsCount < 1) {
+    errors.push('Необходим хотя бы 1 вариант');
   }
   
   // Максимум 10 вариантов
