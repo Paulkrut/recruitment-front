@@ -850,108 +850,25 @@ const QuestionFormItem = React.memo(({
         </Box>
       )}
 
-      {/* Обычный режим (не экспертный) - простой редактор */}
+      {/* Обычный режим (не экспертный) - только текст вопроса */}
       {(!expertMode || !showTypeSelector) && (
         <Box mt={3}>
-          {/* Текст вопроса */}
-          <Box mb={3}>
-            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-              <Trans>Текст вопроса для кандидата</Trans>
-            </CustomFormLabel>
-            <RichTextEditor
-              value={question.variants?.[0]?.text || ''}
-              onChange={(value) => {
-                const updatedVariants = [...(question.variants || [])];
-                if (updatedVariants[0]) {
-                  updatedVariants[0] = { ...updatedVariants[0], text: value };
-                } else {
-                  updatedVariants[0] = { text: value, position: 1, options: [], attachments: [], referenceAnswer: null };
-                }
-                onUpdate(index, 'variants', updatedVariants);
-              }}
-              placeholder={_(msg`Введите текст вопроса для кандидата...`)}
-            />
-          </Box>
-
-          {/* Эталонный ответ (для открытых вопросов) */}
-          {questionType === 'open' && (
-            <Box mb={3}>
-              <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-                <Trans>Эталонный ответ (опционально)</Trans>
-              </CustomFormLabel>
-              <Typography variant="caption" color="text.secondary" display="block" mb={1}>
-                <Trans>
-                  Эталон нужен для точной оценки. ИИ сравнит ответ кандидата с эталоном.
-                  {question.isRedFlag && (
-                    <span style={{ color: '#d32f2f', fontWeight: 600 }}>
-                      {' '}⚠️ Для критического вопроса эталон обязателен!
-                    </span>
-                  )}
-                </Trans>
-              </Typography>
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                value={question.variants?.[0]?.referenceAnswer || ''}
-                onChange={(e) => {
-                  const updatedVariants = [...(question.variants || [])];
-                  if (updatedVariants[0]) {
-                    updatedVariants[0] = { ...updatedVariants[0], referenceAnswer: e.target.value };
-                  } else {
-                    updatedVariants[0] = { text: '', position: 1, options: [], attachments: [], referenceAnswer: e.target.value };
-                  }
-                  onUpdate(index, 'variants', updatedVariants);
-                }}
-                placeholder={_(msg`Эталонный ответ...`)}
-              />
-            </Box>
-          )}
-
-          {/* Варианты ответов (для choice вопросов) */}
-          {questionType === 'choice' && (
-            <Box mb={3}>
-              <QuestionOptionsEditor
-                question={question}
-                options={question.variants?.[0]?.options || []}
-                onOptionsChange={(newOptions) => {
-                  const updatedVariants = [...(question.variants || [])];
-                  if (updatedVariants[0]) {
-                    updatedVariants[0] = { ...updatedVariants[0], options: newOptions };
-                  } else {
-                    updatedVariants[0] = { text: '', position: 1, options: newOptions, attachments: [], referenceAnswer: null };
-                  }
-                  onUpdate(index, 'variants', updatedVariants);
-                }}
-                hasValidationError={false}
-              />
-            </Box>
-          )}
-
-          {/* Прикрепленные файлы */}
-          <Box mb={3}>
-            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
-              <Trans>Прикрепленные файлы</Trans>
-            </CustomFormLabel>
-            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
-              <Trans>
-                Вы можете прикрепить видео, аудио, изображения или документы к вопросу. Кандидат увидит их при прохождении интервью.
-              </Trans>
-            </Typography>
-            <QuestionAttachmentUploader
-              questionId={question.id || 0}
-              existingAttachments={question.variants?.[0]?.attachments as any || []}
-              onAttachmentsChange={(newAttachments) => {
-                const updatedVariants = [...(question.variants || [])];
-                if (updatedVariants[0]) {
-                  updatedVariants[0] = { ...updatedVariants[0], attachments: newAttachments as any };
-                } else {
-                  updatedVariants[0] = { text: '', position: 1, options: [], attachments: newAttachments as any, referenceAnswer: null };
-                }
-                onUpdate(index, 'variants', updatedVariants);
-              }}
-            />
-          </Box>
+          <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+            <Trans>Текст вопроса для кандидата</Trans>
+          </CustomFormLabel>
+          <RichTextEditor
+            value={question.variants?.[0]?.text || ''}
+            onChange={(value) => {
+              const updatedVariants = [...(question.variants || [])];
+              if (updatedVariants[0]) {
+                updatedVariants[0] = { ...updatedVariants[0], text: value };
+              } else {
+                updatedVariants[0] = { text: value, position: 1, options: [], attachments: [], referenceAnswer: null };
+              }
+              onUpdate(index, 'variants', updatedVariants);
+            }}
+            placeholder={_(msg`Введите текст вопроса для кандидата...`)}
+          />
         </Box>
       )}
     </Paper>
