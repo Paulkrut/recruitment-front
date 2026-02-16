@@ -117,38 +117,38 @@ const QuestionFormItem = React.memo(({
     onUpdate(index, "type", 'text');
     onUpdate(index, "options", null);
     onUpdate(index, "referenceAnswer", undefined);
-    onUpdate(index, "variants", undefined);
+    
+    // Оставляем только первый вариант (или создаем пустой), очищая экспертные поля
+    const firstVariant = question.variants?.[0];
+    if (firstVariant) {
+      // Если есть варианты - оставляем только первый с очищенными экспертными полями
+      onUpdate(index, "variants", [{
+        text: firstVariant.text || '',
+        position: 1,
+        referenceAnswer: null,
+        options: [],
+        attachments: firstVariant.attachments || [],
+      }]);
+    } else {
+      // Если вариантов нет - создаем один пустой
+      onUpdate(index, "variants", [{
+        text: '',
+        position: 1,
+        referenceAnswer: null,
+        options: [],
+        attachments: [],
+      }]);
+    }
   };
   
   // 🔥 Локальный state для мгновенного отклика без задержек
-  const [localText, setLocalText] = React.useState(() => convertPlainTextToHtml(question.text));
   const [localMaxTime, setLocalMaxTime] = React.useState(question.maxTime);
-  const textTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const maxTimeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
   // Синхронизируем локальный state с props
   React.useEffect(() => {
-    setLocalText(convertPlainTextToHtml(question.text));
-  }, [question.text]);
-
-  React.useEffect(() => {
     setLocalMaxTime(question.maxTime);
   }, [question.maxTime]);
-
-  // Debounced update - обновляем родительский state через 300ms после остановки печати
-  const handleTextChange = (newValue: string) => {
-    setLocalText(newValue); // Мгновенно обновляем локальный state
-    
-    // Отменяем предыдущий таймер
-    if (textTimeoutRef.current) {
-      clearTimeout(textTimeoutRef.current);
-    }
-    
-    // Устанавливаем новый таймер
-    textTimeoutRef.current = setTimeout(() => {
-      onUpdate(index, "text", newValue);
-    }, 300);
-  };
 
   // Debounced update для времени - обновляем через 500ms после остановки движения слайдера
   const handleMaxTimeChange = (newValue: number) => {
@@ -168,9 +168,6 @@ const QuestionFormItem = React.memo(({
   // Очищаем таймеры при размонтировании
   React.useEffect(() => {
     return () => {
-      if (textTimeoutRef.current) {
-        clearTimeout(textTimeoutRef.current);
-      }
       if (maxTimeTimeoutRef.current) {
         clearTimeout(maxTimeTimeoutRef.current);
       }
@@ -850,6 +847,111 @@ const QuestionFormItem = React.memo(({
 
           {/* 📋 САММОРИ: Поведение вопроса */}
           <QuestionSummary question={question} />
+        </Box>
+      )}
+
+      {/* Обычный режим (не экспертный) - простой редактор */}
+      {(!expertMode || !showTypeSelector) && (
+        <Box mt={3}>
+          {/* Текст вопроса */}
+          <Box mb={3}>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+              <Trans>Текст вопроса для кандидата</Trans>
+            </CustomFormLabel>
+            <RichTextEditor
+              value={question.variants?.[0]?.text || ''}
+              onChange={(value) => {
+                const updatedVariants = [...(question.variants || [])];
+                if (updatedVariants[0]) {
+                  updatedVariants[0] = { ...updatedVariants[0], text: value };
+                } else {
+                  updatedVariants[0] = { text: value, position: 1, options: [], attachments: [], referenceAnswer: null };
+                }
+                onUpdate(index, 'variants', updatedVariants);
+              }}
+              placeholder={_(msg`Введите текст вопроса для кандидата...`)}
+            />
+          </Box>
+
+          {/* Эталонный ответ (для открытых вопросов) */}
+          {questionType === 'open' && (
+            <Box mb={3}>
+              <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+                <Trans>Эталонный ответ (опционально)</Trans>
+              </CustomFormLabel>
+              <Typography variant="caption" color="text.secondary" display="block" mb={1}>
+                <Trans>
+                  Эталон нужен для точной оценки. ИИ сравнит ответ кандидата с эталоном.
+                  {question.isRedFlag && (
+                    <span style={{ color: '#d32f2f', fontWeight: 600 }}>
+                      {' '}⚠️ Для критического вопроса эталон обязателен!
+                    </span>
+                  )}
+                </Trans>
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                value={question.variants?.[0]?.referenceAnswer || ''}
+                onChange={(e) => {
+                  const updatedVariants = [...(question.variants || [])];
+                  if (updatedVariants[0]) {
+                    updatedVariants[0] = { ...updatedVariants[0], referenceAnswer: e.target.value };
+                  } else {
+                    updatedVariants[0] = { text: '', position: 1, options: [], attachments: [], referenceAnswer: e.target.value };
+                  }
+                  onUpdate(index, 'variants', updatedVariants);
+                }}
+                placeholder={_(msg`Эталонный ответ...`)}
+              />
+            </Box>
+          )}
+
+          {/* Варианты ответов (для choice вопросов) */}
+          {questionType === 'choice' && (
+            <Box mb={3}>
+              <QuestionOptionsEditor
+                question={question}
+                options={question.variants?.[0]?.options || []}
+                onOptionsChange={(newOptions) => {
+                  const updatedVariants = [...(question.variants || [])];
+                  if (updatedVariants[0]) {
+                    updatedVariants[0] = { ...updatedVariants[0], options: newOptions };
+                  } else {
+                    updatedVariants[0] = { text: '', position: 1, options: newOptions, attachments: [], referenceAnswer: null };
+                  }
+                  onUpdate(index, 'variants', updatedVariants);
+                }}
+                hasValidationError={false}
+              />
+            </Box>
+          )}
+
+          {/* Прикрепленные файлы */}
+          <Box mb={3}>
+            <CustomFormLabel sx={{ fontSize: '1rem', fontWeight: 600, mb: 1 }}>
+              <Trans>Прикрепленные файлы</Trans>
+            </CustomFormLabel>
+            <Typography variant="caption" color="text.secondary" display="block" mb={2}>
+              <Trans>
+                Вы можете прикрепить видео, аудио, изображения или документы к вопросу. Кандидат увидит их при прохождении интервью.
+              </Trans>
+            </Typography>
+            <QuestionAttachmentUploader
+              questionId={question.id || 0}
+              existingAttachments={question.variants?.[0]?.attachments as any || []}
+              onAttachmentsChange={(newAttachments) => {
+                const updatedVariants = [...(question.variants || [])];
+                if (updatedVariants[0]) {
+                  updatedVariants[0] = { ...updatedVariants[0], attachments: newAttachments as any };
+                } else {
+                  updatedVariants[0] = { text: '', position: 1, options: [], attachments: newAttachments as any, referenceAnswer: null };
+                }
+                onUpdate(index, 'variants', updatedVariants);
+              }}
+            />
+          </Box>
         </Box>
       )}
     </Paper>
