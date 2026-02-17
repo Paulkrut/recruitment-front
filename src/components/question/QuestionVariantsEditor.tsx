@@ -131,7 +131,7 @@ export function QuestionVariantsEditor({
             onClick={handleAddVariant}
             disabled={variants.length >= 10}
           >
-            Добавить вариант
+            Добавить вариант вопроса
           </Button>
           <Tooltip 
             title="Для режима вариантов нужно минимум 2 варианта. Кандидатам будет показан случайный вариант из списка."
