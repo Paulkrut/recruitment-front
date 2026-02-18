@@ -68,9 +68,10 @@ const TEMPLATE_VARIABLES = [
 
 interface Props {
   vacancyId: number;
+  onSettingsLoad?: (autoInviteEnabled: boolean) => void;
 }
 
-export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
+export default function VacancyHhAutomationSettings({ vacancyId, onSettingsLoad }: Props) {
   const { _ } = useLingui();
   
   const [loading, setLoading] = useState(true);
@@ -116,8 +117,10 @@ export default function VacancyHhAutomationSettings({ vacancyId }: Props) {
             messageTemplate: "Здравствуйте, {firstName}!\n\nК сожалению, мы не получили от вас результаты интервью в установленные сроки.\nСпасибо за интерес к нашей вакансии!\n\nС уважением, {companyName}",
           },
         };
-        setSettings(data.settings || defaultSettings);
+        const resolvedSettings = data.settings || defaultSettings;
+        setSettings(resolvedSettings);
         setIsFromHh(data.isFromHh || false);
+        onSettingsLoad?.(resolvedSettings.autoInvite?.enabled || false);
       } else {
         throw new Error(data.message || 'Ошибка загрузки настроек');
       }

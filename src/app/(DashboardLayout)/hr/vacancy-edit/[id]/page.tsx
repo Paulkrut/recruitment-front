@@ -190,6 +190,17 @@ export default function HRVacancyEditPage() {
     }
   }, [isLoadingData]);
 
+  // Скролл к якорю (#questions и др.) после загрузки данных
+  useEffect(() => {
+    if (!isLoadingData && typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash.slice(1);
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 150);
+    }
+  }, [isLoadingData]);
+
   const loadVacancyData = async () => {
     if (!token || !vacancyId) return;
 
@@ -768,7 +779,7 @@ export default function HRVacancyEditPage() {
           
           <Divider sx={{ my: 0 }} />
           {/* Questions */}
-          <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
+          <Card id="questions" sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden' }}>
             <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
               <Stack spacing={3}>
                 <Box display="flex" alignItems="center" gap={2} mb={2}>

@@ -76,6 +76,8 @@ interface VacancyRow {
   candidatesInProgress?: number;
   questionsCount?: number; // Количество вопросов в интервью
   hhCity?: string; // Город из HH для вакансий из HeadHunter
+  autoInviteEnabled?: boolean | null; // null = не HH-вакансия
+  interviewActive?: boolean | null; // null если нет шаблона
 }
 
 interface Template {
@@ -247,73 +249,50 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
               >
                 <TableCell>
                   <Box>
-                    <Box display="flex" alignItems="center" gap={1}>
+                    {/* Чипы на отдельной строке */}
+                    <Box display="flex" alignItems="center" gap={0.5} flexWrap="wrap" mb={0.5}>
                       {vacancy.source === 'headhunter' && (
                         <Tooltip title={_(msg`Вакансия из HH.ru`)}>
-                          <Chip
-                            label="HH"
-                            size="small"
-                            sx={{
-                              height: 20,
-                              fontSize: '0.65rem',
-                              fontWeight: 700,
-                              backgroundColor: '#D6001C',
-                              color: 'white',
-                              '& .MuiChip-label': { px: 0.75 }
-                            }}
-                          />
+                          <Chip label="HH" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#D6001C', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
+                        </Tooltip>
+                      )}
+                      {vacancy.source === 'headhunter' && vacancy.autoInviteEnabled === true && (
+                        <Tooltip title={_(msg`Автоприглашения включены`)}>
+                          <Chip label="⚡ авто" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 600, backgroundColor: 'transparent', color: 'success.main', border: '1px solid', borderColor: 'success.light', '& .MuiChip-label': { px: 0.6 } }} />
+                        </Tooltip>
+                      )}
+                      {vacancy.source === 'headhunter' && vacancy.autoInviteEnabled === false && (
+                        <Tooltip title={_(msg`Автоприглашения выключены — включите, чтобы кандидаты получали ссылку на интервью автоматически`)}>
+                          <Chip label="⚡ авто-выкл" size="small" onClick={() => router.push(`/hr/vacancies/${vacancy.id}?tab=4`)} sx={{ height: 18, fontSize: '0.6rem', fontWeight: 600, backgroundColor: 'transparent', color: 'text.disabled', border: '1px dashed', borderColor: 'divider', cursor: 'pointer', '& .MuiChip-label': { px: 0.6 }, '&:hover': { color: 'warning.main', borderColor: 'warning.main' } }} />
+                        </Tooltip>
+                      )}
+                      {vacancy.interviewActive === false && (
+                        <Tooltip title={_(msg`Интервью выключено — кандидаты не могут проходить собеседование`)}>
+                          <Chip label="интервью выкл" size="small" sx={{ height: 18, fontSize: '0.6rem', color: 'text.disabled', backgroundColor: 'transparent', border: '1px dashed', borderColor: 'divider', '& .MuiChip-label': { px: 0.6 } }} />
                         </Tooltip>
                       )}
                       {vacancy.status === 'deleted' && (
-                        <Chip
-                          label="🗑️"
-                          size="small"
-                          color="error"
-                          sx={{
-                            height: 20,
-                            width: 24,
-                            fontSize: '0.75rem',
-                            '& .MuiChip-label': { px: 0.5 }
-                          }}
-                        />
+                        <Chip label="🗑️ удалено" size="small" color="error" sx={{ height: 18, fontSize: '0.6rem', '& .MuiChip-label': { px: 0.6 } }} />
                       )}
                       {vacancy.status === 'archived' && (
-                        <Chip
-                          label="📦"
-                          size="small"
-                          color="default"
-                          sx={{
-                            height: 20,
-                            width: 24,
-                            fontSize: '0.75rem',
-                            '& .MuiChip-label': { px: 0.5 }
-                          }}
-                        />
+                        <Chip label="📦 архив" size="small" color="default" sx={{ height: 18, fontSize: '0.6rem', '& .MuiChip-label': { px: 0.6 } }} />
                       )}
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight={600}
-                        color={vacancy.status === 'active' ? 'primary.main' : 'text.disabled'}
-                        sx={{
-                          cursor: 'pointer',
-                          '&:hover': {
-                            color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary',
-                            textDecoration: 'underline'
-                          },
-                          transition: 'all 0.2s ease'
-                        }}
-                        onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
-                      >
-                        {truncateText(vacancy.title, 50)} 
-                        {vacancy.source === 'headhunter' && vacancy.hhCity && (
-                          <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.75rem' }}>
-                            {' '}({vacancy.hhCity})
-                          </span>
-                        )}
-                      </Typography>
                     </Box>
+                    {/* Название */}
+                    <Typography
+                      variant="subtitle2"
+                      fontWeight={600}
+                      color={vacancy.status === 'active' ? 'primary.main' : 'text.disabled'}
+                      sx={{ cursor: 'pointer', '&:hover': { color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary', textDecoration: 'underline' }, transition: 'all 0.2s ease' }}
+                      onClick={() => router.push(`/hr/vacancies/${vacancy.id}`)}
+                    >
+                      {truncateText(vacancy.title, 50)}
+                      {vacancy.source === 'headhunter' && vacancy.hhCity && (
+                        <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.75rem' }}> ({vacancy.hhCity})</span>
+                      )}
+                    </Typography>
                     {vacancy.description && (
-                      <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
+                      <Typography variant="caption" color="textSecondary" sx={{ mt: 0.25, display: 'block' }}>
                         {truncateHtml(vacancy.description, 60)}
                       </Typography>
                     )}
@@ -535,105 +514,63 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
         '&:hover': { transform: 'translateY(-2px)', boxShadow: 4 },
       }}
     >
-      {/* Верхняя часть: название и статус */}
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
-        <Box display="flex" alignItems="center" gap={1} flexGrow={1} flexWrap="wrap">
+      {/* Верхняя часть: чипы, название, прогресс */}
+      <Box mb={1}>
+        {/* Строка чипов */}
+        <Box display="flex" alignItems="center" gap={0.5} flexWrap="wrap" mb={0.75}>
           {vacancy.source === 'headhunter' && (
             <Tooltip title={_(msg`Вакансия из HH.ru`)}>
-              <Chip
-                label="HH"
-                size="small"
-                sx={{
-                  height: 20,
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  backgroundColor: '#D6001C',
-                  color: 'white',
-                  '& .MuiChip-label': { px: 0.75 }
-                }}
-              />
+              <Chip label="HH" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#D6001C', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
             </Tooltip>
           )}
           {hasNoQuestions && (
             <Tooltip title={_(msg`Вакансия не работает! Добавьте вопросы для интервью`)}>
-              <Chip
-                label="⚠️ Нет вопросов"
-                size="small"
-                sx={{
-                  height: 20,
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  backgroundColor: '#d32f2f',
-                  color: 'white',
-                  animation: 'pulse 2s ease-in-out infinite',
-                  '@keyframes pulse': {
-                    '0%, 100%': { opacity: 1 },
-                    '50%': { opacity: 0.7 },
-                  },
-                  '& .MuiChip-label': { px: 0.75 }
-                }}
-              />
+              <Chip label="⚠️ нет вопросов" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#d32f2f', color: 'white', animation: 'pulse 2s ease-in-out infinite', '@keyframes pulse': { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.7 } }, '& .MuiChip-label': { px: 0.6 } }} />
             </Tooltip>
           )}
-          {!hasNoQuestions && vacancy.questionsCount && (
+          {!hasNoQuestions && !!vacancy.questionsCount && (
             <Tooltip title={_(msg`Вопросов в интервью: ${vacancy.questionsCount}`)}>
-              <Chip
-                label={`✅ ${vacancy.questionsCount} ${vacancy.questionsCount === 1 ? 'вопрос' : vacancy.questionsCount < 5 ? 'вопроса' : 'вопросов'}`}
-                size="small"
-                sx={{
-                  height: 20,
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  backgroundColor: '#2e7d32',
-                  color: 'white',
-                  '& .MuiChip-label': { px: 0.75 }
-                }}
-              />
+              <Chip label={`✅ ${vacancy.questionsCount} ${vacancy.questionsCount === 1 ? 'вопрос' : vacancy.questionsCount! < 5 ? 'вопроса' : 'вопросов'}`} size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#2e7d32', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
+            </Tooltip>
+          )}
+          {vacancy.source === 'headhunter' && vacancy.autoInviteEnabled === true && (
+            <Tooltip title={_(msg`Автоприглашения включены — новые кандидаты из HH получают ссылку автоматически`)}>
+              <Chip label="⚡ авто" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 600, backgroundColor: 'transparent', color: 'success.main', border: '1px solid', borderColor: 'success.light', '& .MuiChip-label': { px: 0.6 } }} />
+            </Tooltip>
+          )}
+          {vacancy.source === 'headhunter' && vacancy.autoInviteEnabled === false && (
+            <Tooltip title={_(msg`Автоприглашения выключены — включите, чтобы кандидаты получали ссылку на интервью автоматически`)}>
+              <Chip label="⚡ авто-выкл" size="small" onClick={() => router.push(`/hr/vacancies/${vacancy.id}?tab=4`)} sx={{ height: 18, fontSize: '0.6rem', fontWeight: 600, backgroundColor: 'transparent', color: 'text.disabled', border: '1px dashed', borderColor: 'divider', cursor: 'pointer', '& .MuiChip-label': { px: 0.6 }, '&:hover': { color: 'warning.main', borderColor: 'warning.main' } }} />
+            </Tooltip>
+          )}
+          {vacancy.interviewActive === false && (
+            <Tooltip title={_(msg`Интервью выключено — кандидаты не могут проходить собеседование`)}>
+              <Chip label="интервью выкл" size="small" sx={{ height: 18, fontSize: '0.6rem', color: 'text.disabled', backgroundColor: 'transparent', border: '1px dashed', borderColor: 'divider', '& .MuiChip-label': { px: 0.6 } }} />
             </Tooltip>
           )}
           {vacancy.status === 'deleted' && (
-            <Chip
-              label="🗑️ Удалено"
-              size="small"
-              color="error"
-              sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
-            />
+            <Chip label="🗑️ удалено" size="small" color="error" sx={{ height: 18, fontSize: '0.6rem', '& .MuiChip-label': { px: 0.6 } }} />
           )}
           {vacancy.status === 'archived' && (
-            <Chip
-              label="📦 Архив"
-              size="small"
-              color="default"
-              sx={{ height: 20, fontSize: '0.65rem', fontWeight: 700 }}
-            />
+            <Chip label="📦 архив" size="small" color="default" sx={{ height: 18, fontSize: '0.6rem', '& .MuiChip-label': { px: 0.6 } }} />
           )}
+        </Box>
+        {/* Название и прогресс */}
+        <Box display="flex" alignItems="flex-start" justifyContent="space-between" gap={1}>
           <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
             <Typography
               variant="h6"
               fontWeight={700}
-              sx={{
-                flexGrow: 1,
-                cursor: 'pointer',
-                color: vacancy.status === 'active' ? 'primary.main' : 'text.disabled',
-                transition: 'color 0.2s',
-                '&:hover': { color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary', textDecoration: 'underline' },
-              }}
+              sx={{ cursor: 'pointer', color: vacancy.status === 'active' ? 'primary.main' : 'text.disabled', transition: 'color 0.2s', '&:hover': { color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary', textDecoration: 'underline' } }}
             >
               {vacancy.title}
               {vacancy.source === 'headhunter' && vacancy.hhCity && (
-                <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.875rem' }}>
-                  {' '}({vacancy.hhCity})
-                </span>
+                <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.875rem' }}> ({vacancy.hhCity})</span>
               )}
             </Typography>
           </Link>
+          <Chip label={getProgressLabel(percent)} size="small" color={getProgressColor(percent) as any} sx={{ fontWeight: 600, flexShrink: 0 }} />
         </Box>
-        <Chip
-          label={getProgressLabel(percent)}
-          size="small"
-          color={getProgressColor(percent) as any}
-          sx={{ fontWeight: 600 }}
-        />
       </Box>
 
       {/* Информация о создании */}

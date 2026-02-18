@@ -27,6 +27,10 @@ import {
   Select,
   MenuItem,
   InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import {
   IconBrandHipchat,
@@ -42,6 +46,10 @@ import {
   IconSearch,
   IconArrowUp,
   IconArrowDown,
+  IconRobot,
+  IconSend,
+  IconSparkles,
+  IconPlayerPlay,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
@@ -131,6 +139,14 @@ export default function HhIntegrationPage() {
   
   // Для polling после импорта
   const [importedVacancies, setImportedVacancies] = useState<number[]>([]);
+
+  // Модальное окно после успешного импорта
+  const [showNextStepsModal, setShowNextStepsModal] = useState(false);
+  const [importResult, setImportResult] = useState<{
+    newImports: number;
+    reSyncs: number;
+    importedDetails: Array<{ local_id: number; title: string }>;
+  } | null>(null);
 
   // Загружаем вакансии когда подключение активно
   useEffect(() => {
@@ -354,20 +370,16 @@ export default function HhIntegrationPage() {
         const newImports = data.details.filter((d: any) => d.status === 'success' && !d.is_resync).length;
         const reSyncs = data.details.filter((d: any) => d.status === 'success' && d.is_resync).length;
         
-        let successMessage = '';
-        if (newImports > 0 && reSyncs > 0) {
-          successMessage = _(msg`Импортировано новых: ${newImports}, пересинхронизировано: ${reSyncs}. Загрузка кандидатов начата...`);
-        } else if (newImports > 0) {
-          successMessage = _(msg`Успешно импортировано: ${newImports} вакансий. Загрузка кандидатов начата...`);
-        } else if (reSyncs > 0) {
-          successMessage = _(msg`Пересинхронизировано: ${reSyncs} вакансий. Загрузка кандидатов начата...`);
-        }
-        
         if (data.failed > 0) {
-          successMessage += _(msg` Ошибок: ${data.failed}`);
+          setSuccess(_(msg`Импортировано: ${newImports + reSyncs}. Ошибок: ${data.failed}`));
         }
-        
-        setSuccess(successMessage);
+
+        // Открываем модальное окно следующих шагов
+        const importedDetails = data.details
+          .filter((d: any) => d.status === 'success')
+          .map((d: any) => ({ local_id: d.local_id, title: d.title || '' }));
+        setImportResult({ newImports, reSyncs, importedDetails });
+        setShowNextStepsModal(true);
         
         // Собираем ID импортированных HhVacancy для polling
         const importedHhVacancyIds = data.details
@@ -1330,6 +1342,271 @@ export default function HhIntegrationPage() {
           </Grid>
       </Box> {/* Закрывает Box sx={{ position: 'relative' }} */}
       </Box> {/* Закрывает основной Box на строке 495 */}
+
+      {/* === МОДАЛЬНОЕ ОКНО СЛЕДУЮЩИХ ШАГОВ ПОСЛЕ ИМПОРТА === */}
+      <Dialog
+        open={showNextStepsModal}
+        onClose={() => setShowNextStepsModal(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{ sx: { borderRadius: 3 } }}
+      >
+        <DialogTitle sx={{ pb: 1, pt: 3, px: 3 }}>
+          <Box display="flex" alignItems="center" gap={1.5}>
+            <Box
+              sx={{
+                width: 44,
+                height: 44,
+                borderRadius: '50%',
+                bgcolor: 'success.light',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <IconCheck size={24} color="white" />
+            </Box>
+            <Box>
+              <Typography variant="h6" fontWeight={700}>
+                {importResult && importResult.newImports > 0
+                  ? _(msg`🎉 Вакансии импортированы!`)
+                  : _(msg`✅ Вакансии синхронизированы!`)
+                }
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {importResult && (
+                  <>
+                    {importResult.newImports > 0 && <Trans>{importResult.newImports} новых · </Trans>}
+                    {importResult.reSyncs > 0 && <Trans>{importResult.reSyncs} обновлено</Trans>}
+                  </>
+                )}
+              </Typography>
+            </Box>
+          </Box>
+        </DialogTitle>
+
+        <DialogContent sx={{ px: 3, pt: 2 }}>
+          <Typography variant="body1" color="text.secondary" mb={3}>
+            <Trans>Кандидаты из HH.ru загружаются в фоне. Пока они загружаются — настройте автоматические собеседования.</Trans>
+          </Typography>
+
+          {/* Шаги */}
+          <Box display="flex" flexDirection="column" gap={2}>
+            {/* Шаг 1 */}
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  flexShrink: 0,
+                }}
+              >
+                1
+              </Box>
+              <Box flex={1}>
+                <Typography variant="body1" fontWeight={600} gutterBottom>
+                  <Trans>Сгенерировать вопросы для интервью</Trans>
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={1.5}>
+                  <Trans>AI создаст профильные вопросы под каждую вакансию — релевантные требованиям и опыту кандидата. Займёт меньше минуты.</Trans>
+                </Typography>
+                <Box display="flex" gap={1} flexWrap="wrap">
+                  {importResult?.importedDetails.slice(0, 4).map((v) => (
+                    <Chip
+                      key={v.local_id}
+                      label={v.title || `#${v.local_id}`}
+                      size="small"
+                      variant="outlined"
+                      component={Link}
+                      href={`/hr/vacancies/${v.local_id}?tab=3`}
+                      onClick={() => setShowNextStepsModal(false)}
+                      clickable
+                    />
+                  ))}
+                  {(importResult?.importedDetails.length ?? 0) > 4 && (
+                    <Chip label={`+${(importResult?.importedDetails.length ?? 0) - 4}`} size="small" variant="outlined" />
+                  )}
+                </Box>
+              </Box>
+            </Box>
+
+            {/* Шаг 2 */}
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 700,
+                  fontSize: '0.875rem',
+                  flexShrink: 0,
+                }}
+              >
+                2
+              </Box>
+              <Box flex={1}>
+                <Typography variant="body1" fontWeight={600} gutterBottom>
+                  <Trans>Пригласить кандидатов на интервью</Trans>
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={1.5}>
+                  <Trans>Приглашения настраиваются отдельно для каждой вакансии — зайдите в нужную и выберите способ:</Trans>
+                </Typography>
+
+                {/* Два варианта в рамках одного шага */}
+                <Box display="flex" flexDirection="column" gap={1}>
+                  {/* Автоприглашения — рекомендуемый */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 1.5,
+                      p: 1.5,
+                      borderRadius: 1.5,
+                      border: '2px solid',
+                      borderColor: 'primary.main',
+                      bgcolor: 'primary.50',
+                      position: 'relative',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        mt: 0.25,
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <IconPlayerPlay size={14} />
+                    </Box>
+                    <Box flex={1}>
+                      <Box display="flex" alignItems="center" gap={1} mb={0.25}>
+                        <Typography variant="body2" fontWeight={700}>
+                          <Trans>Автоприглашения</Trans>
+                        </Typography>
+                        <Chip label={_(msg`Рекомендуем`)} color="primary" size="small" sx={{ height: 18, fontSize: '0.65rem', fontWeight: 600 }} />
+                      </Box>
+                      <Typography variant="caption" color="text.secondary">
+                        <Trans>Все новые кандидаты нужного статуса из HH <strong>сами получат ссылку на интервью</strong>. Настройте один раз — система работает без вас.</Trans>
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Разделитель */}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Divider sx={{ flex: 1 }} />
+                    <Typography variant="caption" color="text.disabled"><Trans>или</Trans></Typography>
+                    <Divider sx={{ flex: 1 }} />
+                  </Box>
+
+                  {/* Ручные приглашения */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 1.5,
+                      p: 1.5,
+                      borderRadius: 1.5,
+                      border: '1px solid',
+                      borderColor: 'divider',
+                      bgcolor: 'background.paper',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        mt: 0.25,
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        bgcolor: 'grey.100',
+                        color: 'text.secondary',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <IconSend size={14} />
+                    </Box>
+                    <Box flex={1}>
+                      <Typography variant="body2" fontWeight={600} color="text.secondary" mb={0.25}>
+                        <Trans>Разовая рассылка</Trans>
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        <Trans>Выберите кандидатов вакансии вручную и пригласите одним кликом.</Trans>
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, pb: 3, pt: 1, gap: 1, flexDirection: 'column', alignItems: 'stretch' }}>
+          <Button
+            variant="contained"
+            size="large"
+            fullWidth
+            startIcon={<IconRobot size={20} />}
+            component={Link}
+            href="/hr/vacancies"
+            onClick={() => setShowNextStepsModal(false)}
+            sx={{ fontWeight: 600 }}
+          >
+            <Trans>Перейти к вакансиям и настроить интервью</Trans>
+          </Button>
+          <Button
+            variant="text"
+            fullWidth
+            onClick={() => setShowNextStepsModal(false)}
+            sx={{ color: 'text.secondary' }}
+          >
+            <Trans>Закрыть, настрою позже</Trans>
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* === КОНЕЦ МОДАЛЬНОГО ОКНА === */}
+
     </PageContainer>
   );
 }

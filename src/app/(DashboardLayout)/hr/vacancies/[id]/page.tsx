@@ -2,10 +2,10 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress, Menu, MenuItem
+  Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress, Menu, MenuItem, Badge
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot, IconSettings
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot, IconSettings, IconSend
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -52,6 +52,7 @@ import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { isValidInternationalPhone, normalizePhoneForBackend } from '@/utils/phoneUtils';
 import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
 import VacancyInterviewSettings from './VacancyInterviewSettings';
+import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -494,6 +495,93 @@ export default function HRVacancyDetailPage() {
     [candidates]
   );
 
+  // Состояние автоприглашений для индикатора в табе
+  const [autoInviteEnabled, setAutoInviteEnabled] = useState<boolean | null>(null);
+  const [vacancyIsFromHh, setVacancyIsFromHh] = useState<boolean>(false);
+
+  // Генерация вопросов прямо на табе вопросов
+  const [genOpen, setGenOpen] = useState(false);
+  const [genCount, setGenCount] = useState(5);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationProgress, setGenerationProgress] = useState<{ status: string; message: string; elapsed_time?: number } | null>(null);
+  const [showQuestionsSuccessModal, setShowQuestionsSuccessModal] = useState(false);
+
+  const handleGenCountChange = (value: number) => setGenCount(Math.max(1, Math.min(20, value)));
+
+  const generateQuestionsOnTab = async () => {
+    if (!title) return;
+    setIsGenerating(true);
+    setGenerationProgress({ status: 'starting', message: 'Запуск генерации...' });
+    try {
+      const startRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-async`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: genCount, vacancyTitle: title, vacancyDescription: data?.description }),
+      });
+      if (!startRes.ok) throw new Error('Ошибка запуска генерации');
+      const { jobId } = await startRes.json();
+
+      const pollInterval = setInterval(async () => {
+        try {
+          const statusRes = await apiFetch(`${API_BASE}/api/admin/templates/generate-questions-status/${jobId}`);
+          if (!statusRes.ok) throw new Error('Ошибка получения статуса');
+          const statusData = await statusRes.json();
+          setGenerationProgress({ status: statusData.status, message: statusData.message || 'Генерация...', elapsed_time: statusData.elapsed_time });
+
+          if (statusData.status === 'completed') {
+            clearInterval(pollInterval);
+            const wasEmpty = !questions || questions.length === 0;
+
+            // Сохраняем сгенерированные вопросы в вакансию
+            const generatedTexts: string[] = statusData.questions || [];
+            if (generatedTexts.length > 0) {
+              // Текущие вопросы + новые (добавляем к существующим)
+              const existingQuestions = (data?.questions || []).map((q: any, i: number) => ({
+                ...q,
+                variants: q.variants?.length ? q.variants : [{ text: q.text || '', referenceAnswer: null, attachments: [], options: [], position: 1 }],
+              }));
+              const newQuestions = generatedTexts.map((text: string, i: number) => ({
+                text,
+                position: existingQuestions.length + i,
+                maxTime: 180,
+                variants: [{ text, referenceAnswer: null, attachments: [], options: [], position: 1 }],
+              }));
+              await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/with-template`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  title: data?.title || '',
+                  description: data?.description || '',
+                  questions: [...existingQuestions, ...newQuestions],
+                }),
+              });
+            }
+
+            // Перезагружаем данные вакансии
+            const refreshRes = await apiFetch(`${API_BASE}/api/admin/vacancies/${id}/full`);
+            const refreshData = await refreshRes.json();
+            setData(refreshData);
+            setGenOpen(false);
+            setIsGenerating(false);
+            setGenerationProgress(null);
+            if (wasEmpty) setShowQuestionsSuccessModal(true);
+          } else if (statusData.status === 'failed') {
+            clearInterval(pollInterval);
+            setIsGenerating(false);
+            setGenerationProgress(null);
+          }
+        } catch (e) {
+          clearInterval(pollInterval);
+          setIsGenerating(false);
+          setGenerationProgress(null);
+        }
+      }, 2000);
+    } catch (e) {
+      setIsGenerating(false);
+      setGenerationProgress(null);
+    }
+  };
+
   // Получаем параметры из URL
   const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
 
@@ -558,6 +646,18 @@ export default function HRVacancyDetailPage() {
       }
     });
 
+    // Загружаем настройки HH-автоматизации для индикатора на табе
+    apiFetch(`${API_BASE}/api/admin/vacancies/${id}/hh-settings`)
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.success) {
+          // Если settings null — значит ещё не настраивали, autoInvite выключен по умолчанию
+          setAutoInviteEnabled(d.settings?.autoInvite?.enabled ?? false);
+          setVacancyIsFromHh(d.isFromHh ?? false);
+        }
+      })
+      .catch(() => {});
+
     // Загружаем информацию о публичной ссылке
     apiFetch(`${API_BASE}/api/admin/vacancies/${id}/public-info`)
       .then(r => r.json())
@@ -584,6 +684,21 @@ export default function HRVacancyDetailPage() {
     hour: '2-digit',
     minute: '2-digit'
   }) : '';
+
+  // HH-кандидаты, которым ещё нужно отправить приглашение:
+  // — источник headhunter
+  // — приглашение ещё не отправлено
+  // — ещё не начали и не завершили тест
+  // — не в финальных стадиях воронки (rejected/hired)
+  const FINAL_CANDIDATE_STATUSES = ['rejected', 'hired'];
+  const uninvitedCount = vacancyIsFromHh
+    ? candidates.filter((c: any) =>
+        c.source === 'headhunter' &&
+        !c.invitationSentAt &&
+        !c.interviewStatus &&
+        !FINAL_CANDIDATE_STATUSES.includes(c.candidateStatus)
+      ).length
+    : 0;
 
   // --- Шапка ---
   const header = (
@@ -859,8 +974,88 @@ export default function HRVacancyDetailPage() {
           <TabList onChange={(_, v) => setTab(v)} aria-label="vacancy tabs">
             <Tab icon={<IconUsers size={20}/>} iconPosition="start" label={_(msg`Кандидаты (${candidates.length})`)} value="1" />
             <Tab icon={<IconBriefcase size={20}/>} iconPosition="start" label={_(msg`Описание`)} value="2" />
-            <Tab icon={<IconFileText size={20}/>} iconPosition="start" label={_(msg`Вопросы (${(questions||[]).length})`)} value="3" />
-            <Tab icon={<IconRobot size={20}/>} iconPosition="start" label={_(msg`Автоматизация HH`)} value="4" />
+            <Tab
+              icon={
+                <Badge
+                  variant="dot"
+                  color="warning"
+                  invisible={(questions||[]).length > 0}
+                  sx={{ '& .MuiBadge-dot': { width: 8, height: 8 } }}
+                >
+                  <IconFileText size={20}/>
+                </Badge>
+              }
+              iconPosition="start"
+              label={
+                <Box display="flex" alignItems="center" gap={0.5}>
+                  {_(msg`Вопросы (${(questions||[]).length})`)}
+                  {(questions||[]).length === 0 && (
+                    <Tooltip title={_(msg`Добавьте вопросы — без них кандидаты не смогут пройти интервью`)}>
+                      <Box component="span" sx={{ color: 'warning.main', fontSize: '1rem', lineHeight: 1, ml: 0.25 }}>!</Box>
+                    </Tooltip>
+                  )}
+                </Box>
+              }
+              value="3"
+            />
+            <Tab
+              icon={
+                <Badge
+                  variant="dot"
+                  color="error"
+                  invisible={!vacancyIsFromHh || autoInviteEnabled !== false}
+                  sx={{
+                    '& .MuiBadge-dot': {
+                      width: 8,
+                      height: 8,
+                      ...(vacancyIsFromHh && autoInviteEnabled === false && uninvitedCount > 0 ? {
+                        animation: 'pulse 1.8s ease-in-out infinite',
+                        '@keyframes pulse': {
+                          '0%': { opacity: 1, transform: 'scale(1)' },
+                          '50%': { opacity: 0.4, transform: 'scale(1.4)' },
+                          '100%': { opacity: 1, transform: 'scale(1)' },
+                        },
+                      } : {}),
+                    },
+                  }}
+                >
+                  <IconRobot size={20}/>
+                </Badge>
+              }
+              iconPosition="start"
+              label={
+                <Box display="flex" alignItems="center" gap={0.5}>
+                  {_(msg`Автоматизация HH`)}
+                  {vacancyIsFromHh && autoInviteEnabled === false && (
+                    uninvitedCount > 0 ? (
+                      <Tooltip title={_(msg`${uninvitedCount} кандидатов ещё не получили приглашение — включите автоприглашения`)}>
+                        <Box
+                          component="span"
+                          sx={{
+                            color: 'error.main',
+                            fontSize: '0.72rem',
+                            fontWeight: 600,
+                            lineHeight: 1,
+                            ml: 0.25,
+                            bgcolor: 'error.50',
+                            px: 0.6,
+                            py: 0.2,
+                            borderRadius: 1,
+                          }}
+                        >
+                          ⚡ {uninvitedCount} ждут
+                        </Box>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={_(msg`Автоприглашения выключены — кандидаты не получат ссылку на интервью автоматически`)}>
+                        <Box component="span" sx={{ color: 'text.disabled', fontSize: '0.75rem', lineHeight: 1, ml: 0.25 }}>выкл</Box>
+                      </Tooltip>
+                    )
+                  )}
+                </Box>
+              }
+              value="4"
+            />
             <Tab icon={<IconSettings size={20}/>} iconPosition="start" label={_(msg`Настройки`)} value="5" />
           </TabList>
         </Box>
@@ -1231,56 +1426,200 @@ export default function HRVacancyDetailPage() {
           </Grid>
         </TabPanel>
         <TabPanel value="3" sx={{p:0}}>
-          {/* Вопросы теста — отдельная карточка */}
           <Grid container spacing={4}>
             <Grid item xs={12}>
-              <Card sx={{ background: '#fff', color: 'text.primary', position: 'relative', overflow: 'hidden', boxShadow: 1 }}>
-                <CardContent sx={{ position: 'relative', zIndex: 1, p: 4 }}>
-                  <Box display="flex" alignItems="center" gap={2} mb={2}>
-                    <IconFileText size={28} color="#1976d2" />
-                    <Typography variant="h6" fontWeight="700" color="text.primary"><Trans>Вопросы теста</Trans></Typography>
-                  </Box>
-                  <Typography variant="body1" sx={{ opacity: 0.9, mb: 1, color: 'text.primary' }}>{template?.title || _(msg`Без шаблона`)}</Typography>
-                  {template?.description && (
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        mb: 1,
-                        opacity: 0.9,
-                        color: 'text.secondary',
-                        whiteSpace: 'pre-wrap',
-                        wordBreak: 'break-word'
-                      }}
-                    >
-                      {template.description}
+              {(questions||[]).length === 0 ? (
+                /* Empty state */
+                <Card sx={{ boxShadow: 1 }}>
+                  <CardContent sx={{ p: 5, textAlign: 'center' }}>
+                    <Box sx={{ fontSize: '3rem', mb: 2 }}>🎯</Box>
+                    <Typography variant="h5" fontWeight={700} mb={1}>
+                      <Trans>Вопросы для интервью ещё не добавлены</Trans>
                     </Typography>
-                  )}
-                  <Divider sx={{ my: 2, borderColor: '#eee' }} />
-                  <Typography variant="subtitle2" sx={{ mb: 1, color: 'text.secondary' }}><Trans>Вопросы:</Trans></Typography>
-                  <Box sx={{ maxHeight: 320, overflowY: 'auto', mb: 2 }}>
-                    {(questions||[]).length === 0 ? (
-                      <Typography variant="body2" sx={{ opacity: 0.7, color: 'text.secondary' }}><Trans>Вопросы не добавлены</Trans></Typography>
-                    ) : (
-                      (questions||[]).map((q:any, index:number)=>(
+                    <Typography variant="body1" color="text.secondary" mb={4} sx={{ maxWidth: 480, mx: 'auto' }}>
+                      <Trans>Добавьте вопросы — и кандидаты смогут проходить автоматическое собеседование. AI сгенерирует профильные вопросы под вашу вакансию за минуту.</Trans>
+                    </Typography>
+                    <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap">
+                      <Button
+                        variant="contained"
+                        size="large"
+                        startIcon={<IconRobot size={20} />}
+                        onClick={() => setGenOpen(true)}
+                        sx={{ fontWeight: 600, px: 4 }}
+                      >
+                        <Trans>Сгенерировать с AI</Trans>
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size="large"
+                        startIcon={<IconEdit size={20} />}
+                        component={Link}
+                        href={`/hr/vacancy-edit/${id}#questions`}
+                        sx={{ fontWeight: 600, px: 4 }}
+                      >
+                        <Trans>Добавить вручную</Trans>
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              ) : (
+                /* Список вопросов */
+                <Card sx={{ boxShadow: 1 }}>
+                  <CardContent sx={{ p: 4 }}>
+                    <Box display="flex" alignItems="center" gap={2} mb={3}>
+                      <IconFileText size={28} color="#1976d2" />
+                      <Typography variant="h6" fontWeight={700}><Trans>Вопросы теста</Trans></Typography>
+                      <Chip label={(questions||[]).length} size="small" color="primary" />
+                      <Box flex={1} />
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<IconRobot size={16} />}
+                        onClick={() => setGenOpen(true)}
+                      >
+                        <Trans>Добавить ещё с AI</Trans>
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<IconEdit size={16} />}
+                        component={Link}
+                        href={`/hr/vacancy-edit/${id}#questions`}
+                      >
+                        <Trans>Редактировать</Trans>
+                      </Button>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      {(questions||[]).map((q:any, index:number) => (
                         <Box
                           key={q.position}
-                          sx={{ mb: 1, p: 1, borderRadius: 1, background: '#f5f5f5', cursor: 'pointer' }}
-                          onClick={() => {
-                            const newSearchParams = new URLSearchParams(window.location.search);
-                            newSearchParams.set('scrollToQuestion', q.position.toString());
-                            router.push(`${window.location.pathname}?${newSearchParams.toString()}`);
-                          }}
+                          sx={{ p: 1.5, borderRadius: 1, bgcolor: '#f5f5f5', display: 'flex', gap: 1.5, alignItems: 'flex-start' }}
                           data-question-id={q.position}
                         >
-                          <Typography variant="body2" sx={{ color: 'text.primary', fontWeight: 500 }}>{q.position+1}. {q.text}</Typography>
+                          <Typography variant="body2" color="text.disabled" sx={{ fontWeight: 600, minWidth: 24 }}>
+                            {index + 1}.
+                          </Typography>
+                          <Typography variant="body2" color="text.primary">{q.variants?.[0]?.text || q.text}</Typography>
                         </Box>
-                      ))
-                    )}
-                  </Box>
-                </CardContent>
-              </Card>
+                      ))}
+                    </Box>
+                  </CardContent>
+                </Card>
+              )}
             </Grid>
           </Grid>
+
+          {/* Модалка генерации */}
+          <GenerateQuestionsDialog
+            open={genOpen}
+            onClose={() => { setGenOpen(false); setIsGenerating(false); setGenerationProgress(null); }}
+            genCount={genCount}
+            onGenCountChange={handleGenCountChange}
+            onGenerate={generateQuestionsOnTab}
+            isGenerating={isGenerating}
+            generationProgress={generationProgress}
+            error={null}
+          />
+
+          {/* Модалка успешной генерации */}
+          <Dialog
+            open={showQuestionsSuccessModal}
+            onClose={() => setShowQuestionsSuccessModal(false)}
+            maxWidth="sm"
+            fullWidth
+            PaperProps={{ sx: { borderRadius: 3 } }}
+          >
+            <DialogTitle sx={{ pt: 3, px: 3, pb: 1 }}>
+              <Box display="flex" alignItems="center" gap={1.5}>
+                <Box sx={{ width: 44, height: 44, borderRadius: '50%', bgcolor: 'success.light', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <IconRobot size={24} color="white" />
+                </Box>
+                <Box>
+                  <Typography variant="h6" fontWeight={700}><Trans>🎉 Вопросы сгенерированы!</Trans></Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <Trans>{(questions||[]).length} вопросов добавлено</Trans>
+                  </Typography>
+                </Box>
+              </Box>
+            </DialogTitle>
+            <DialogContent sx={{ px: 3, pt: 2 }}>
+              <Typography variant="body1" color="text.secondary" mb={3}>
+                <Trans>Просмотрите вопросы — AI старался, но вы лучше знаете специфику. При необходимости отредактируйте.</Trans>
+              </Typography>
+
+              {/* Подсказка про экспертный режим */}
+              <Alert
+                severity="info"
+                icon={<IconSettings size={18} />}
+                sx={{ mb: 3 }}
+              >
+                <Typography variant="body2" fontWeight={600} gutterBottom>
+                  <Trans>Экспертный режим вопросов</Trans>
+                </Typography>
+                <Typography variant="body2">
+                  <Trans>В редакторе вакансии есть экспертный режим — там можно задать время на ответ, тип вопроса, режим ввода и другие тонкие настройки интервью.</Trans>
+                </Typography>
+              </Alert>
+
+              {/* Следующий шаг */}
+              <Box
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  border: '2px solid',
+                  borderColor: 'primary.main',
+                  bgcolor: 'primary.50',
+                  position: 'relative',
+                }}
+              >
+                <Chip
+                  label={_(msg`Следующий шаг`)}
+                  color="primary"
+                  size="small"
+                  sx={{ position: 'absolute', top: -10, left: 12, fontWeight: 600 }}
+                />
+                <Box display="flex" gap={1.5} alignItems="flex-start" mt={0.5}>
+                  <Box sx={{ width: 32, height: 32, borderRadius: '50%', bgcolor: 'primary.main', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <IconSend size={16} />
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" fontWeight={700} mb={0.5}>
+                      <Trans>Пригласить кандидатов на интервью</Trans>
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      <Trans>Перейдите на вкладку «Кандидаты» и разошлите приглашения — или настройте автоприглашения на вкладке «Автоматизация HH», чтобы новые кандидаты приглашались сами.</Trans>
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </DialogContent>
+            <DialogActions sx={{ px: 3, pb: 3, pt: 1, gap: 1, flexDirection: 'column', alignItems: 'stretch' }}>
+              <Box display="flex" gap={1}>
+                <Button
+                  variant="contained"
+                  sx={{ flex: 1, fontWeight: 600 }}
+                  onClick={() => { setShowQuestionsSuccessModal(false); setTab('4'); }}
+                >
+                  <Trans>⚡ Настроить автоприглашения</Trans>
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{ flex: 1 }}
+                  onClick={() => { setShowQuestionsSuccessModal(false); setTab('1'); }}
+                >
+                  <Trans>👥 Перейти к кандидатам</Trans>
+                </Button>
+              </Box>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setShowQuestionsSuccessModal(false)}
+                sx={{ color: 'text.secondary', borderColor: 'divider' }}
+              >
+                <Trans>Сначала проверю вопросы</Trans>
+              </Button>
+            </DialogActions>
+          </Dialog>
         </TabPanel>
         <TabPanel value="4" sx={{p:0}}>
           {/* Автоматизация HH */}
@@ -1291,7 +1630,10 @@ export default function HRVacancyDetailPage() {
                 <Typography color="text.primary">{title}</Typography>
                 <Typography color="text.primary"><Trans>Автоматизация HH</Trans></Typography>
               </Breadcrumbs>
-              <VacancyHhAutomationSettings vacancyId={Number(id)} />
+              <VacancyHhAutomationSettings
+                vacancyId={Number(id)}
+                onSettingsLoad={(enabled) => setAutoInviteEnabled(enabled)}
+              />
             </Grid>
           </Grid>
         </TabPanel>
