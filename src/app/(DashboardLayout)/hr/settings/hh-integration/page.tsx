@@ -21,18 +21,12 @@ import {
   Switch,
   FormControlLabel,
   TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Checkbox,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   InputAdornment,
-  Stepper,
-  Step,
-  StepLabel,
 } from "@mui/material";
 import {
   IconBrandHipchat,
@@ -43,10 +37,8 @@ import {
   IconDownload,
   IconUsers,
   IconBriefcase,
-  IconChevronDown,
   IconExternalLink,
   IconClock,
-  IconShield,
   IconSearch,
   IconArrowUp,
   IconArrowDown,
@@ -140,35 +132,15 @@ export default function HhIntegrationPage() {
   // Для polling после импорта
   const [importedVacancies, setImportedVacancies] = useState<number[]>([]);
 
-  // Stepper состояние
-  const [activeStep, setActiveStep] = useState(0);
-
-  const steps = [
-    { label: _(msg`Статусы`), icon: '📊' },
-    { label: _(msg`Вакансии и импорт`), icon: '📋' },
-  ];
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  // Загружаем вакансии при переходе на шаги 1 (Статусы) или 2 (Вакансии)
+  // Загружаем вакансии когда подключение активно
   useEffect(() => {
-    if (status?.isConnected && status.hasValidToken && (activeStep === 0 || activeStep === 1)) {
+    if (status?.isConnected && status.hasValidToken) {
       if (hhVacanciesFromApi.length === 0 && !loadingHhVacancies && !hhVacanciesError) {
         loadHhVacanciesFromApi();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, status?.isConnected, status?.hasValidToken]);
+  }, [status?.isConnected, status?.hasValidToken]);
 
   // Фильтры и сортировка
   const [searchQuery, setSearchQuery] = useState("");
@@ -304,7 +276,11 @@ export default function HhIntegrationPage() {
       const response = await apiFetch(`${API_BASE}/api/hh/vacancies/list`);
       if (response.ok) {
       const data = await response.json();
-        setHhVacanciesFromApi(data.vacancies || []);
+        const vacancies = data.vacancies || [];
+        setHhVacanciesFromApi(vacancies);
+        
+        // Авто-выбираем все вакансии для импорта
+        setSelectedVacancyIds(new Set(vacancies.map((v: any) => v.id)));
         
         // Устанавливаем доступные статусы
         if (data.available_statuses && data.available_statuses.length > 0) {
@@ -769,9 +745,9 @@ export default function HhIntegrationPage() {
                             : 'warning'
                         }
                         sx={{
-                          mb: 3,
+                          mb: 2,
                           position: 'relative',
-                          zIndex: 11, // Выше оверлея
+                          zIndex: 11,
                           boxShadow: 3,
                         }}
                         action={
@@ -801,159 +777,74 @@ export default function HhIntegrationPage() {
                         <Typography variant="body2" mt={0.5}>
                           {status.tokenMessage}
                         </Typography>
-                        {status.tokenStatus === 'disconnected_with_data' && (
-                          <Typography variant="caption" display="block" mt={1} color="text.secondary">
-                            <Trans>Данные от HH.ru ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов)
-                            сохранены и доступны для просмотра. Для получения новых обновлений подключитесь заново.</Trans>
-                          </Typography>
-                        )}
-                        {(status.tokenStatus === 'revoked' || status.tokenStatus === 'refresh_failed') && (
-                          <Typography variant="caption" display="block" mt={1} color="text.secondary">
-                            <Trans>Это может произойти если вы отозвали доступ к приложению в настройках HH.ru.</Trans>
-                          <Trans>Ваши данные ({status.stats?.totalVacancies || 0} вакансий, {status.stats?.totalCandidates || 0} кандидатов)
-                            сохранены.</Trans> <Trans>Переавторизуйтесь для продолжения работы.</Trans>
-                          </Typography>
-                        )}
                       </Alert>
                     )}
 
-                    <Grid container spacing={2} mb={3}>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary"><Trans>Компания</Trans></Typography>
-                        <Typography variant="body1" fontWeight="bold">
-                          {status.companyName || _(msg`Не указано`)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary"><Trans>ID работодателя</Trans></Typography>
-                        <Typography variant="body1" fontWeight="bold">
-                          {status.employerId || _(msg`Не указано`)}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary"><Trans>Последняя синхронизация</Trans></Typography>
-                        <Typography variant="body1">
-                          {status.lastSyncAt
-                            ? new Date(status.lastSyncAt).toLocaleString('ru-RU')
-                            : _(msg`Еще не выполнялась`)
-                          }
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Typography variant="body2" color="text.secondary"><Trans>Токен действует до</Trans></Typography>
-                        <Typography variant="body1">
-                          {status.tokenExpiresAt
-                            ? new Date(status.tokenExpiresAt).toLocaleString('ru-RU')
-                            : _(msg`Не указано`)
-                          }
-                        </Typography>
-                      </Grid>
-                    </Grid>
-
-                    {/* Статистика */}
-                    {status.stats && (
-                      <Box mb={3}>
-                        <Typography variant="h6" gutterBottom><Trans>Статистика</Trans></Typography>
-                        <Grid container spacing={2}>
-                          <Grid item xs={4}>
-                            <Box textAlign="center">
-                              <Typography variant="h4" color="primary">
-                                {status.stats.totalVacancies}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary"><Trans>Вакансий</Trans></Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={4}>
-                            <Box textAlign="center">
-                              <Typography variant="h4" color="secondary">
-                                {status.stats.totalCandidates}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary"><Trans>Кандидатов</Trans></Typography>
-                            </Box>
-                          </Grid>
-                          <Grid item xs={4}>
-                            <Box textAlign="center">
-                              <Typography variant="h4" color="success.main">
-                                {status.stats.newCandidatesToday}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary"><Trans>Новых сегодня</Trans></Typography>
-                            </Box>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    )}
-
-                    {/* Лимиты HeadHunter.ru */}
-                    {status.hhLimits && (
-                      <Box mb={3}>
-                        <Alert
-                          severity={
-                            status.hhLimits.left.resumeView > 500 ? "success" :
-                            status.hhLimits.left.resumeView > 100 ? "warning" : "error"
-                          }
-                          icon={<IconShield size={20} />}
-                        >
-                          <Typography variant="subtitle2" gutterBottom>
-                            <Trans>Дневной лимит просмотра резюме на {status.hhLimits.source}:</Trans>
+                    {/* Компактная сводка */}
+                    <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+                      <Typography variant="body2" color="text.secondary">
+                        {status.companyName || _(msg`Не указано`)}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">·</Typography>
+                      {status.stats && (
+                        <>
+                          <Typography variant="body2">
+                            <strong>{status.stats.totalVacancies}</strong> <Trans>вакансий</Trans>
                           </Typography>
-                          <Grid container spacing={2} mt={0.5}>
-                            <Grid item xs={12} md={6}>
-                              <Box textAlign="center">
-                                <Typography
-                                  variant="h3"
-                                  color={
-                                    status.hhLimits.left.resumeView > 500 ? "success.main" :
-                                    status.hhLimits.left.resumeView > 100 ? "warning.main" : "error.main"
-                                  }
-                                >
-                                  {status.hhLimits.left.resumeView}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block"><Trans>Осталось просмотров резюме</Trans></Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                  <Trans>из {status.hhLimits.limits.resumeView} на сегодня
-                                </Trans></Typography>
-                              </Box>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                              <Box textAlign="center">
-                                <Typography variant="h4" color="text.secondary">
-                                  {status.hhLimits.spend.resumeView}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary" display="block"><Trans>Потрачено сегодня</Trans></Typography>
-                              </Box>
-                            </Grid>
-                          </Grid>
-                          <Typography variant="caption" color="text.secondary" mt={1} display="block"><Trans>⏰ Лимит менеджера HeadHunter.ru на все вакансии, обнуляется в 00:00</Trans></Typography>
-
-                          {status.resumeQueueCount !== undefined && status.resumeQueueCount > 0 && (
-                            <Box
-                              sx={{
-                                mt: 2,
-                                pt: 2,
-                                borderTop: '1px solid',
-                                borderColor: 'divider'
-                              }}
-                            >
-                              <Typography variant="body2" color="text.primary">
-                                📋 В очереди на загрузку резюме: <strong>{status.resumeQueueCount}</strong> {status.resumeQueueCount === 1 ? _(msg`кандидат`) : status.resumeQueueCount < 5 ? _(msg`кандидата`) : _(msg`кандидатов`)}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 0.5 }}><Trans>Кандидаты из HeadHunter.ru ожидают загрузки резюме из HH для AI скрининга</Trans></Typography>
-                            </Box>
+                          <Typography variant="body2" color="text.secondary">·</Typography>
+                          <Typography variant="body2">
+                            <strong>{status.stats.totalCandidates}</strong> <Trans>кандидатов</Trans>
+                          </Typography>
+                          {status.stats.newCandidatesToday > 0 && (
+                            <>
+                              <Typography variant="body2" color="text.secondary">·</Typography>
+                              <Chip label={`+${status.stats.newCandidatesToday} сегодня`} color="success" size="small" />
+                            </>
                           )}
-                        </Alert>
-                      </Box>
-                    )}
-
-                    <Divider sx={{ my: 2 }} />
-
-                    {/* Кнопки управления */}
-                    <Box display="flex" gap={2} flexWrap="wrap">
+                          <Typography variant="body2" color="text.secondary">·</Typography>
+                        </>
+                      )}
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={status.autoSync}
+                            onChange={(e) => updateAutoSync(e.target.checked)}
+                            size="small"
+                          />
+                        }
+                        label={<Typography variant="body2"><Trans>Автосинхронизация</Trans></Typography>}
+                        sx={{ m: 0 }}
+                      />
+                      {status.hhLimits && (
+                        <>
+                          <Typography variant="body2" color="text.secondary">·</Typography>
+                          <Typography
+                            variant="body2"
+                            color={
+                              status.hhLimits.left.resumeView > 500 ? "success.main" :
+                              status.hhLimits.left.resumeView > 100 ? "warning.main" : "error.main"
+                            }
+                          >
+                            <Trans>Лимит резюме: {status.hhLimits.left.resumeView}/{status.hhLimits.limits.resumeView}</Trans>
+                          </Typography>
+                        </>
+                      )}
+                      {status.resumeQueueCount !== undefined && status.resumeQueueCount > 0 && (
+                        <>
+                          <Typography variant="body2" color="text.secondary">·</Typography>
+                          <Typography variant="body2">
+                            📋 <Trans>В очереди: {status.resumeQueueCount}</Trans>
+                          </Typography>
+                        </>
+                      )}
+                      <Box sx={{ flex: '1 1 auto' }} />
                       <Button
                         variant="outlined"
                         color="error"
                         onClick={disconnectHh}
                         disabled={!status.hasValidToken}
-                        startIcon={<IconX />}
+                        startIcon={<IconX size={16} />}
+                        size="small"
                       >
                         <Trans>Отключить</Trans>
                       </Button>
@@ -964,596 +855,477 @@ export default function HhIntegrationPage() {
             </Card>
           </Grid>
 
-          {/* Настройки автоматической синхронизации */}
-          {status?.isConnected && (
-            <Grid item xs={12}>
-              <Accordion>
-                <AccordionSummary expandIcon={<IconChevronDown />}>
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <IconSettings />
-                    <Typography variant="h6"><Trans>Настройки синхронизации</Trans></Typography>
-                  </Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={status.autoSync}
-                          onChange={(e) => updateAutoSync(e.target.checked)}
-                        />
-                      }
-                      label={_(msg`Автоматическая синхронизация`)}
-                    />
-
-                    <Typography variant="body2" color="text.secondary" mt={1}><Trans>При включении данные будут автоматически обновляться каждые 2 часа</Trans></Typography>
-
-                    {status.autoSync && (
-                      <Alert severity="info" sx={{ mt: 2 }}>
-                        <Typography variant="body2">
-                          <IconShield size={16} style={{ marginRight: 8, verticalAlign: 'middle' }} />
-                          <Trans>Автоматическая синхронизация выполняется в фоновом режиме.
-                          Следующая синхронизация запланирована на {
-                            new Date(Date.now() + 2 * 60 * 60 * 1000).toLocaleString('ru-RU')
-                          }</Trans>
-                        </Typography>
-                      </Alert>
-                    )}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-          )}
-
-          {/* === STEPPER ДЛЯ НАСТРОЙКИ HH ИНТЕГРАЦИИ === */}
+          {/* === НАСТРОЙКА ИМПОРТА ВАКАНСИЙ === */}
           {status?.isConnected && status.hasValidToken && (
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  {/* Stepper Navigation */}
-                  <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-                    {steps.map((step, index) => (
-                      <Step key={step.label}>
-                        <StepLabel
-                          onClick={() => setActiveStep(index)}
+                  {/* Статусы по умолчанию — компактные чипы */}
+                  {!loadingHhVacancies && availableStatuses.length > 0 && (
+                    <Box display="flex" alignItems="center" gap={1} flexWrap="wrap" mb={2}>
+                      <Typography variant="body2" color="text.secondary" sx={{ mr: 0.5 }}>
+                        <Trans>Загружать статусы:</Trans>
+                      </Typography>
+                      {availableStatuses.map((st) => (
+                        <Chip
+                          key={st.id}
+                          label={`${st.name} (${st.total_count || 0})`}
+                          variant={defaultStatuses.has(st.id) ? "filled" : "outlined"}
+                          color={defaultStatuses.has(st.id) ? "primary" : "default"}
+                          size="small"
+                          onClick={() => {
+                            const newSet = new Set(defaultStatuses);
+                            if (newSet.has(st.id)) {
+                              newSet.delete(st.id);
+                            } else {
+                              newSet.add(st.id);
+                            }
+                            setDefaultStatuses(newSet);
+                          }}
                           sx={{ cursor: 'pointer' }}
-                        >
-                          {step.icon} {step.label}
-                        </StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
+                        />
+                      ))}
+                    </Box>
+                  )}
 
-                  {/* Step Content */}
-                  <Box sx={{ minHeight: '400px' }}>
-                    {/* ШАГ 0: СТАТУСЫ */}
-                    {activeStep === 0 && (
-                      <Box>
-                        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                          📊 <Trans>Выберите статусы кандидатов для синхронизации</Trans>
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" mb={3}>
-                          <Trans>Выберите какие статусы кандидатов загружать из HH.ru. Эти настройки будут применены ко всем выбранным вакансиям (можно настроить индивидуально для каждой).</Trans>
-                        </Typography>
-                        
-                        {!loadingHhVacancies && availableStatuses.length > 0 ? (
-                          <Box display="flex" gap={2} flexWrap="wrap">
-                            {availableStatuses.map((status) => (
-                              <Box
-                                key={status.id}
-                                sx={{
-                                  border: 1,
-                                  borderColor: 'divider',
-                                  borderRadius: 1,
-                                  p: 1.5,
-                                  minWidth: 140,
-                                  bgcolor: defaultStatuses.has(status.id) ? 'primary.50' : 'background.paper'
-                                }}
-                              >
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={defaultStatuses.has(status.id)}
-                                      onChange={(e) => {
-                                        const newSet = new Set(defaultStatuses);
-                                        if (e.target.checked) {
-                                          newSet.add(status.id);
-                                        } else {
-                                          newSet.delete(status.id);
-                                        }
-                                        setDefaultStatuses(newSet);
-                                      }}
-                                      size="small"
-                                    />
-                                  }
-                                  label={
-                                    <Box>
-                                      <Typography variant="body2" fontWeight={600}>
-                                        {status.name}
-                                      </Typography>
-                                      <Typography variant="caption" color="text.secondary">
-                                        <Trans>{status.total_count || 0} кандидатов</Trans>
-                                      </Typography>
-                                    </Box>
-                                  }
-                                  sx={{ m: 0 }}
-                                />
-                              </Box>
-                            ))}
-                          </Box>
-                        ) : loadingHhVacancies ? (
-                          <Box display="flex" justifyContent="center" py={4}>
-                            <CircularProgress />
-                          </Box>
-                        ) : (
-                          <Alert severity="info">
-                            <Trans>Загрузка статусов... Нажмите "Далее" чтобы продолжить</Trans>
-                          </Alert>
-                        )}
-                      </Box>
-                    )}
+                  {/* Загрузка вакансий */}
+                  {loadingHhVacancies && (
+                    <Box display="flex" flexDirection="column" alignItems="center" py={4}>
+                      <CircularProgress sx={{ mb: 2 }} />
+                      <Typography variant="body2" color="text.secondary">
+                        <Trans>Загрузка вакансий из HH.ru...</Trans>
+                      </Typography>
+                    </Box>
+                  )}
 
-                    {/* ШАГ 2: ВАКАНСИИ */}
-                    {/* ШАГ 1: ВАКАНСИИ */}
-                    {activeStep === 1 && (
-                      <Box>
-                        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-                          📋 <Trans>Выберите вакансии для импорта</Trans>
-                        </Typography>
+                  {!loadingHhVacancies && hhVacanciesError && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {hhVacanciesError}
+                    </Alert>
+                  )}
 
-                    {loadingHhVacancies && (
-                      <Box display="flex" flexDirection="column" alignItems="center" py={4}>
-                        <CircularProgress sx={{ mb: 2 }} />
-                        <Typography variant="body2" color="text.secondary">
-                          <Trans>Загрузка вакансий из HH.ru...</Trans>
-                        </Typography>
-                      </Box>
-                    )}
+                  {!loadingHhVacancies && hhVacanciesFromApi.length === 0 && !hhVacanciesError && (
+                    <Alert severity="info">
+                      <Trans>Вакансии не найдены. Создайте вакансии в HH.ru или обновите список.</Trans>
+                    </Alert>
+                  )}
 
-                    {!loadingHhVacancies && hhVacanciesError && (
-                      <Alert severity="error" sx={{ mb: 2 }}>
-                        {hhVacanciesError}
-                      </Alert>
-                    )}
-
-                    {!loadingHhVacancies && hhVacanciesFromApi.length === 0 && !hhVacanciesError && (
-                      <Alert severity="info">
-                        <Trans>Вакансии не найдены. Создайте вакансии в HH.ru или обновите список.</Trans>
-                      </Alert>
-                    )}
-
-                    {!loadingHhVacancies && hhVacanciesFromApi.length > 0 && (
-                      <Box>
-                        {/* === ФИЛЬТРЫ И СОРТИРОВКА === */}
-                        <Card sx={{ mb: 2, p: 2 }}>
-                          <Grid container spacing={2} alignItems="center">
-                            {/* Поиск */}
-                            <Grid item xs={12} md={4}>
-                              <TextField
-                                fullWidth
-                                        size="small"
-                                placeholder={_(msg`Поиск по названию...`)}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                InputProps={{
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      <IconSearch size={18} />
-                                    </InputAdornment>
-                                  ),
-                                }}
-                              />
-                            </Grid>
-
-                            {/* Фильтр по статусу HH */}
-                            <Grid item xs={12} sm={6} md={2}>
-                              <FormControl fullWidth size="small">
-                                <InputLabel><Trans>Статус на HH</Trans></InputLabel>
-                                <Select
-                                  value={filterStatus}
-                                  label={_(msg`Статус на HH`)}
-                                  onChange={(e) => setFilterStatus(e.target.value)}
-                                >
-                                  <MenuItem value="all"><Trans>Все</Trans></MenuItem>
-                                  <MenuItem value="active"><Trans>Активные</Trans></MenuItem>
-                                  <MenuItem value="archived"><Trans>Архивные</Trans></MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Grid>
-
-                            {/* Фильтр по импорту */}
-                            <Grid item xs={12} sm={6} md={2}>
-                              <FormControl fullWidth size="small">
-                                <InputLabel><Trans>Импорт</Trans></InputLabel>
-                                <Select
-                                  value={filterImported}
-                                  label={_(msg`Импорт`)}
-                                  onChange={(e) => setFilterImported(e.target.value)}
-                                >
-                                  <MenuItem value="all"><Trans>Все</Trans></MenuItem>
-                                  <MenuItem value="imported"><Trans>Импортированы</Trans></MenuItem>
-                                  <MenuItem value="not_imported"><Trans>Не импортированы</Trans></MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Grid>
-
-                            {/* Сортировка */}
-                            <Grid item xs={12} sm={12} md={4}>
-                              <FormControl fullWidth size="small">
-                                <InputLabel><Trans>Сортировка</Trans></InputLabel>
-                                <Select
-                                  value={sortBy}
-                                  label={_(msg`Сортировка`)}
-                                  onChange={(e) => setSortBy(e.target.value)}
-                                >
-                                  <MenuItem value="date_desc">
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                      <IconArrowDown size={16} />
-                                      <Trans>Дата создания (новые)</Trans>
-                                  </Box>
-                                  </MenuItem>
-                                  <MenuItem value="date_asc">
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                      <IconArrowUp size={16} />
-                                      <Trans>Дата создания (старые)</Trans>
-                                </Box>
-                                  </MenuItem>
-                                  <MenuItem value="name_asc">
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                      <IconArrowUp size={16} />
-                                      <Trans>Название (А-Я)</Trans>
-                              </Box>
-                                  </MenuItem>
-                                  <MenuItem value="name_desc">
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                      <IconArrowDown size={16} />
-                                      <Trans>Название (Я-А)</Trans>
-                                    </Box>
-                                  </MenuItem>
-                                  <MenuItem value="responses_desc">
-                                    <Box display="flex" alignItems="center" gap={1}>
-                                      <IconArrowDown size={16} />
-                                      <Trans>По откликам (больше)</Trans>
-                                    </Box>
-                                  </MenuItem>
-                                </Select>
-                              </FormControl>
-                            </Grid>
-
-                            {/* Счетчик */}
-                            <Grid item xs={12}>
-                              <Typography variant="caption" color="text.secondary">
-                                <Trans>Найдено вакансий: {filteredVacancies.length} из {hhVacanciesFromApi.length}</Trans>
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </Card>
-
-                        {/* === ВЕРХНИЕ КНОПКИ === */}
-                                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={
-                                  selectedVacancyIds.size > 0 &&
-                                  selectedVacancyIds.size === hhVacanciesFromApi.length
-                                }
-                                indeterminate={
-                                  selectedVacancyIds.size > 0 &&
-                                  selectedVacancyIds.size < hhVacanciesFromApi.length
-                                }
-                                onChange={handleSelectAllVacancies}
-                              />
-                            }
-                            label={_(msg`Выбрать все`)}
-                          />
-                          <Box display="flex" gap={1}>
-                                  <Button
-                              variant="outlined"
-                              onClick={loadHhVacanciesFromApi}
-                              startIcon={<IconRefresh />}
-                                    size="small"
-                            >
-                              <Trans>Обновить</Trans>
-                            </Button>
-                            <Button
-                                    variant="contained"
-                              color="primary"
-                              disabled={selectedVacancyIds.size === 0 || importing}
-                              startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
-                              onClick={handleImportSelected}
-                            >
-                              {importing
-                                ? _(msg`Импортируем...`)
-                                : hasImportedInSelection()
-                                  ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
-                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
-                              }
-                                  </Button>
-                          </Box>
-                                </Box>
-
-                        <Grid container spacing={2}>
-                          {filteredVacancies.map((vacancy) => {
-                            const isImported = vacancy.imported;
-                            const isSelected = selectedVacancyIds.has(vacancy.id);
-
-                            return (
-                              <Grid item xs={12} key={vacancy.id}>
-                                <Card
-                                  variant="outlined"
-                                  sx={{
-                                    bgcolor: isSelected ? "primary.50" : "inherit",
-                                    cursor: "pointer",
-                                    border: isSelected ? 2 : 1,
-                                    borderColor: isSelected ? "primary.main" : "divider",
-                                  }}
-                                  onClick={() => handleToggleVacancySelection(vacancy.id)}
-                                >
-                                  <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
-                                    <Box display="flex" alignItems="start" gap={2}>
-                                      <Switch
-                                        checked={isSelected}
-                                        onChange={() => handleToggleVacancySelection(vacancy.id)}
-                                        onClick={(e) => e.stopPropagation()}
-                                        size="small"
-                                      />
-                                      <Box flex={1}>
-                                        {/* Название с индикатором статуса HH */}
-                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                                          <Box
-                                            sx={{
-                                              width: 6,
-                                              height: 6,
-                                              borderRadius: "50%",
-                                              bgcolor: vacancy.status === "active" ? "success.main" : "grey.400",
-                                              flexShrink: 0,
-                                            }}
-                                          />
-                                          <Typography
-                                            variant="caption"
-                                            sx={{
-                                              color: vacancy.status === "active" ? "success.main" : "grey.600",
-                                              fontWeight: 600,
-                                              textTransform: "uppercase",
-                                              fontSize: "0.65rem",
-                                            }}
-                                          >
-                                            {vacancy.status === "active" ? "HH" : "HH архив"}
-                                          </Typography>
-                                          <Typography variant="body2" component="span" fontWeight={600} sx={{ ml: 0.5 }}>
-                                            {vacancy.name}
-                                          </Typography>
-                                          
-                                          {/* Бейджи рядом с названием */}
-                                          {isImported && (
-                                    <Chip
-                                              label={_(msg`✅ Импортирована`)}
-                                              color="success"
-                                      size="small"
-                                              sx={{ height: 20, fontSize: '0.7rem' }}
-                                    />
-                                          )}
-                                  </Box>
-
-                                        {/* Компактная информация в одну строку */}
-                                        <Box display="flex" gap={1.5} alignItems="center" flexWrap="wrap" mb={0.5}>
-                                          <Typography variant="caption" color="text.secondary">
-                                            📍 {vacancy.area}
-                                          </Typography>
-                                          <Typography variant="caption" color="text.secondary">
-                                            💼 {vacancy.responses} откл.
-                                          </Typography>
-                                          <Typography variant="caption" color="text.secondary">
-                                            📅 {new Date(vacancy.created_at).toLocaleDateString("ru-RU")}
-                                          </Typography>
-                                          {vacancy.salary_from && (
-                                            <Typography variant="caption" color="text.secondary">
-                                              💰 {vacancy.salary_from.toLocaleString()} - {vacancy.salary_to?.toLocaleString() || '...'} {vacancy.currency || 'RUR'}
-                                            </Typography>
-                                          )}
-                                          <Typography variant="caption" color="text.secondary">
-                                            HH: {vacancy.id}
-                                          </Typography>
-                                        </Box>
-
-                                        {/* Прогресс синхронизации (компактно) */}
-                                {vacancy.candidates_sync_status === 'syncing' && (
-                                          <Box display="flex" alignItems="center" gap={1} mb={0.5}>
-                                            <CircularProgress size={12} />
-                                            <Typography variant="caption" color="primary">
-                                              <Trans>Синхронизация: {vacancy.candidates_synced || 0}/{vacancy.candidates_total || 0}</Trans>
-                                      </Typography>
-                                  </Box>
-                                )}
-
-                                        {vacancy.candidates_sync_status === 'synced' && vacancy.candidates_synced > 0 && (
-                                          <Typography variant="caption" color="success.main">
-                                            ✅ <Trans>Загружено {vacancy.candidates_synced} кандидатов</Trans>
-                                      </Typography>
-                                )}
-
-                                {vacancy.candidates_sync_status === 'error' && (
-                                          <Typography variant="caption" color="error.main">
-                                            ❌ <Trans>Ошибка синхронизации</Trans>
-                                    </Typography>
-                                        )}
-
-                                        {/* Кнопки управления (компактно) */}
-                                        <Box display="flex" gap={0.5} flexWrap="wrap" mt={1}>
-                                          {/* Кнопка перехода к вакансии */}
-                                          {isImported && vacancy.local_vacancy_id && (
-                                            <Button
-                                              size="small"
-                                              variant="outlined"
-                                              component={Link}
-                                              href={`/hr/vacancies/${vacancy.local_vacancy_id}`}
-                                              onClick={(e) => e.stopPropagation()}
-                                              sx={{ minWidth: 'auto', px: 1 }}
-                                            >
-                                              <Trans>Открыть</Trans>
-                                            </Button>
-                                          )}
-                                          
-                                          {/* Кнопка настройки статусов */}
-                                          <Button
-                                            size="small"
-                                            variant="text"
-                                            startIcon={<IconSettings size={14} />}
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              toggleVacancyExpanded(vacancy.id);
-                                            }}
-                                            sx={{ minWidth: 'auto', px: 1 }}
-                                          >
-                                            <Trans>
-                                              {expandedVacancies.has(vacancy.id) ? "Скрыть" : "Статусы"}
-                                            </Trans>
-                                          </Button>
-                                        </Box>
-
-                                        {/* Раскрывающийся блок настройки статусов */}
-                                        {expandedVacancies.has(vacancy.id) && (
-                                          <Box 
-                                            mt={2} 
-                                            p={2} 
-                                            bgcolor="grey.50" 
-                                            borderRadius={1}
-                                            onClick={(e) => e.stopPropagation()}
-                                          >
-                                                <Typography variant="body2" fontWeight="bold" mb={1}>
-                                                  <Trans>Статусы для этой вакансии:</Trans>
-                                                </Typography>
-                                                <Box display="flex" gap={1} flexWrap="wrap">
-                                                  {(vacancy.available_statuses || []).map((status: any) => {
-                                                    const currentStatuses = getStatusesForVacancy(vacancy.id);
-                                                    const isChecked = currentStatuses.has(status.id);
-
-                                                    return (
-                                                      <Box
-                                                        key={status.id}
-                                                        sx={{
-                                                          border: 1,
-                                                          borderColor: 'divider',
-                                                          borderRadius: 1,
-                                                          p: 1,
-                                                          minWidth: 120,
-                                                          bgcolor: isChecked ? 'primary.50' : 'background.paper'
-                                                        }}
-                                                        onClick={(e) => e.stopPropagation()}
-                                                      >
-                                                        <FormControlLabel
-                                                          control={
-                                                            <Switch
-                                                              checked={isChecked}
-                                                              onChange={(e) => {
-                                                                e.stopPropagation();
-                                                                toggleStatusForVacancy(vacancy.id, status.id);
-                                                              }}
-                                                              onClick={(e) => e.stopPropagation()}
-                                                              size="small"
-                                                            />
-                                                          }
-                                                          label={
-                                                            <Box>
-                                                              <Typography variant="body2" fontWeight={600}>
-                                                                {status.name}
-                                                              </Typography>
-                                                              <Typography variant="caption" color="text.secondary">
-                                                                {status.count || 0}
-                                                              </Typography>
-                                                            </Box>
-                                                          }
-                                                          sx={{ m: 0 }}
-                                                        />
-                                                      </Box>
-                                                    );
-                                                  })}
-                                                </Box>
-                                              </Box>
-                                            )}
-                                      </Box>
-                              </Box>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                            );
-                          })}
-                    </Grid>
-
-                        {/* === НИЖНИЕ КНОПКИ === */}
-                        <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={
-                                  selectedVacancyIds.size > 0 &&
-                                  selectedVacancyIds.size === hhVacanciesFromApi.length
-                                }
-                                indeterminate={
-                                  selectedVacancyIds.size > 0 &&
-                                  selectedVacancyIds.size < hhVacanciesFromApi.length
-                                }
-                                onChange={handleSelectAllVacancies}
-                              />
-                            }
-                            label={_(msg`Выбрать все`)}
-                          />
-                          <Box display="flex" gap={1}>
-                            <Button
-                              variant="outlined"
-                              onClick={loadHhVacanciesFromApi}
-                              startIcon={<IconRefresh />}
+                  {!loadingHhVacancies && hhVacanciesFromApi.length > 0 && (
+                    <Box>
+                      {/* === ФИЛЬТРЫ И СОРТИРОВКА === */}
+                      <Card sx={{ mb: 2, p: 2 }}>
+                        <Grid container spacing={2} alignItems="center">
+                          <Grid item xs={12} md={4}>
+                            <TextField
+                              fullWidth
                               size="small"
-                            >
-                              <Trans>Обновить список</Trans>
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              disabled={selectedVacancyIds.size === 0 || importing}
-                              startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
-                              onClick={handleImportSelected}
-                            >
-                              {importing
-                                ? _(msg`Импортируем...`)
-                                : hasImportedInSelection()
-                                  ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
-                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
+                              placeholder={_(msg`Поиск по названию...`)}
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    <IconSearch size={18} />
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </Grid>
+
+                          <Grid item xs={12} sm={6} md={2}>
+                            <FormControl fullWidth size="small">
+                              <InputLabel><Trans>Статус на HH</Trans></InputLabel>
+                              <Select
+                                value={filterStatus}
+                                label={_(msg`Статус на HH`)}
+                                onChange={(e) => setFilterStatus(e.target.value)}
+                              >
+                                <MenuItem value="all"><Trans>Все</Trans></MenuItem>
+                                <MenuItem value="active"><Trans>Активные</Trans></MenuItem>
+                                <MenuItem value="archived"><Trans>Архивные</Trans></MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={12} sm={6} md={2}>
+                            <FormControl fullWidth size="small">
+                              <InputLabel><Trans>Импорт</Trans></InputLabel>
+                              <Select
+                                value={filterImported}
+                                label={_(msg`Импорт`)}
+                                onChange={(e) => setFilterImported(e.target.value)}
+                              >
+                                <MenuItem value="all"><Trans>Все</Trans></MenuItem>
+                                <MenuItem value="imported"><Trans>Импортированы</Trans></MenuItem>
+                                <MenuItem value="not_imported"><Trans>Не импортированы</Trans></MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={12} sm={12} md={4}>
+                            <FormControl fullWidth size="small">
+                              <InputLabel><Trans>Сортировка</Trans></InputLabel>
+                              <Select
+                                value={sortBy}
+                                label={_(msg`Сортировка`)}
+                                onChange={(e) => setSortBy(e.target.value)}
+                              >
+                                <MenuItem value="date_desc">
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    <IconArrowDown size={16} />
+                                    <Trans>Дата создания (новые)</Trans>
+                                  </Box>
+                                </MenuItem>
+                                <MenuItem value="date_asc">
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    <IconArrowUp size={16} />
+                                    <Trans>Дата создания (старые)</Trans>
+                                  </Box>
+                                </MenuItem>
+                                <MenuItem value="name_asc">
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    <IconArrowUp size={16} />
+                                    <Trans>Название (А-Я)</Trans>
+                                  </Box>
+                                </MenuItem>
+                                <MenuItem value="name_desc">
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    <IconArrowDown size={16} />
+                                    <Trans>Название (Я-А)</Trans>
+                                  </Box>
+                                </MenuItem>
+                                <MenuItem value="responses_desc">
+                                  <Box display="flex" alignItems="center" gap={1}>
+                                    <IconArrowDown size={16} />
+                                    <Trans>По откликам (больше)</Trans>
+                                  </Box>
+                                </MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+
+                          <Grid item xs={12}>
+                            <Typography variant="caption" color="text.secondary">
+                              <Trans>Найдено вакансий: {filteredVacancies.length} из {hhVacanciesFromApi.length}</Trans>
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Card>
+
+                      {/* Подсказка когда ничего не выбрано */}
+                      {selectedVacancyIds.size === 0 && (
+                        <Alert severity="info" sx={{ mb: 2 }} icon={false}>
+                          <Typography variant="body2">
+                            👆 <Trans>Нажмите на вакансию, чтобы выбрать её для импорта. Можно выбрать сразу несколько.</Trans>
+                          </Typography>
+                        </Alert>
+                      )}
+
+                      {/* === ВЕРХНИЕ КНОПКИ === */}
+                      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={
+                                selectedVacancyIds.size > 0 &&
+                                selectedVacancyIds.size === hhVacanciesFromApi.length
                               }
-                            </Button>
-                          </Box>
+                              indeterminate={
+                                selectedVacancyIds.size > 0 &&
+                                selectedVacancyIds.size < hhVacanciesFromApi.length
+                              }
+                              onChange={handleSelectAllVacancies}
+                            />
+                          }
+                          label={_(msg`Выбрать все`)}
+                        />
+                        <Box display="flex" gap={1} alignItems="center">
+                          <Button
+                            variant="outlined"
+                            onClick={loadHhVacanciesFromApi}
+                            startIcon={<IconRefresh />}
+                            size="small"
+                          >
+                            <Trans>Обновить</Trans>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={selectedVacancyIds.size === 0 || importing}
+                            startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
+                            onClick={handleImportSelected}
+                          >
+                            {importing
+                              ? _(msg`Импортируем...`)
+                              : hasImportedInSelection()
+                                ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
+                                : selectedVacancyIds.size === 0
+                                  ? _(msg`Выберите вакансии ↑`)
+                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
+                            }
+                          </Button>
                         </Box>
                       </Box>
-                    )}
-                      </Box>
-                    )}
-                  </Box>
 
-                  {/* Navigation Buttons */}
-                  {activeStep < steps.length && (
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, borderTop: 1, borderColor: 'divider', mt: 4 }}>
-                      <Button
-                        color="inherit"
-                        disabled={activeStep === 0}
-                        onClick={handleBack}
-                        sx={{ mr: 1 }}
-                      >
-                        <Trans>Назад</Trans>
-                      </Button>
-                      <Box sx={{ flex: '1 1 auto' }} />
-                      {activeStep < steps.length - 1 && (
-                        <Button onClick={handleNext} variant="contained">
-                          <Trans>Далее</Trans>
-                        </Button>
-                      )}
+                      <Grid container spacing={2}>
+                        {filteredVacancies.map((vacancy) => {
+                          const isImported = vacancy.imported;
+                          const isSelected = selectedVacancyIds.has(vacancy.id);
+
+                          return (
+                            <Grid item xs={12} key={vacancy.id}>
+                              <Card
+                                variant="outlined"
+                                sx={{
+                                  bgcolor: isSelected ? "primary.50" : "inherit",
+                                  cursor: "pointer",
+                                  border: isSelected ? 2 : 1,
+                                  borderColor: isSelected ? "primary.main" : "divider",
+                                  transition: 'all 0.15s ease',
+                                  '&:hover': {
+                                    borderColor: isSelected ? "primary.main" : "primary.light",
+                                    boxShadow: isSelected ? 2 : 1,
+                                    bgcolor: isSelected ? "primary.50" : "action.hover",
+                                  },
+                                }}
+                                onClick={() => handleToggleVacancySelection(vacancy.id)}
+                              >
+                                <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
+                                  <Box display="flex" alignItems="start" gap={1.5}>
+                                    <Checkbox
+                                      checked={isSelected}
+                                      onChange={() => handleToggleVacancySelection(vacancy.id)}
+                                      onClick={(e) => e.stopPropagation()}
+                                      size="small"
+                                      sx={{ mt: -0.5 }}
+                                    />
+                                    <Box flex={1}>
+                                      <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                        <Box
+                                          sx={{
+                                            width: 6,
+                                            height: 6,
+                                            borderRadius: "50%",
+                                            bgcolor: vacancy.status === "active" ? "success.main" : "grey.400",
+                                            flexShrink: 0,
+                                          }}
+                                        />
+                                        <Typography
+                                          variant="caption"
+                                          sx={{
+                                            color: vacancy.status === "active" ? "success.main" : "grey.600",
+                                            fontWeight: 600,
+                                            textTransform: "uppercase",
+                                            fontSize: "0.65rem",
+                                          }}
+                                        >
+                                          {vacancy.status === "active" ? "HH" : "HH архив"}
+                                        </Typography>
+                                        <Typography variant="body2" component="span" fontWeight={600} sx={{ ml: 0.5 }}>
+                                          {vacancy.name}
+                                        </Typography>
+                                        
+                                        {isImported && (
+                                          <Chip
+                                            label={_(msg`✅ Импортирована`)}
+                                            color="success"
+                                            size="small"
+                                            sx={{ height: 20, fontSize: '0.7rem' }}
+                                          />
+                                        )}
+                                      </Box>
+
+                                      <Box display="flex" gap={1.5} alignItems="center" flexWrap="wrap" mb={0.5}>
+                                        <Typography variant="caption" color="text.secondary">
+                                          📍 {vacancy.area}
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                          💼 {vacancy.responses} откл.
+                                        </Typography>
+                                        <Typography variant="caption" color="text.secondary">
+                                          📅 {new Date(vacancy.created_at).toLocaleDateString("ru-RU")}
+                                        </Typography>
+                                        {vacancy.salary_from && (
+                                          <Typography variant="caption" color="text.secondary">
+                                            💰 {vacancy.salary_from.toLocaleString()} - {vacancy.salary_to?.toLocaleString() || '...'} {vacancy.currency || 'RUR'}
+                                          </Typography>
+                                        )}
+                                        <Typography variant="caption" color="text.secondary">
+                                          HH: {vacancy.id}
+                                        </Typography>
+                                      </Box>
+
+                                      {vacancy.candidates_sync_status === 'syncing' && (
+                                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                                          <CircularProgress size={12} />
+                                          <Typography variant="caption" color="primary">
+                                            <Trans>Синхронизация: {vacancy.candidates_synced || 0}/{vacancy.candidates_total || 0}</Trans>
+                                          </Typography>
+                                        </Box>
+                                      )}
+
+                                      {vacancy.candidates_sync_status === 'synced' && vacancy.candidates_synced > 0 && (
+                                        <Typography variant="caption" color="success.main">
+                                          ✅ <Trans>Загружено {vacancy.candidates_synced} кандидатов</Trans>
+                                        </Typography>
+                                      )}
+
+                                      {vacancy.candidates_sync_status === 'error' && (
+                                        <Typography variant="caption" color="error.main">
+                                          ❌ <Trans>Ошибка синхронизации</Trans>
+                                        </Typography>
+                                      )}
+
+                                      <Box display="flex" gap={0.5} flexWrap="wrap" mt={1}>
+                                        {isImported && vacancy.local_vacancy_id && (
+                                          <Button
+                                            size="small"
+                                            variant="outlined"
+                                            component={Link}
+                                            href={`/hr/vacancies/${vacancy.local_vacancy_id}`}
+                                            onClick={(e) => e.stopPropagation()}
+                                            sx={{ minWidth: 'auto', px: 1 }}
+                                          >
+                                            <Trans>Открыть</Trans>
+                                          </Button>
+                                        )}
+                                        
+                                        <Button
+                                          size="small"
+                                          variant="text"
+                                          startIcon={<IconSettings size={14} />}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleVacancyExpanded(vacancy.id);
+                                          }}
+                                          sx={{ minWidth: 'auto', px: 1 }}
+                                        >
+                                          <Trans>
+                                            {expandedVacancies.has(vacancy.id) ? "Скрыть" : "Статусы"}
+                                          </Trans>
+                                        </Button>
+                                      </Box>
+
+                                      {expandedVacancies.has(vacancy.id) && (
+                                        <Box 
+                                          mt={2} 
+                                          p={2} 
+                                          bgcolor="grey.50" 
+                                          borderRadius={1}
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
+                                          <Typography variant="body2" fontWeight="bold" mb={1}>
+                                            <Trans>Статусы для этой вакансии:</Trans>
+                                          </Typography>
+                                          <Box display="flex" gap={1} flexWrap="wrap">
+                                            {(vacancy.available_statuses || []).map((st: any) => {
+                                              const currentStatuses = getStatusesForVacancy(vacancy.id);
+                                              const isChecked = currentStatuses.has(st.id);
+
+                                              return (
+                                                <Box
+                                                  key={st.id}
+                                                  sx={{
+                                                    border: 1,
+                                                    borderColor: 'divider',
+                                                    borderRadius: 1,
+                                                    p: 1,
+                                                    minWidth: 120,
+                                                    bgcolor: isChecked ? 'primary.50' : 'background.paper'
+                                                  }}
+                                                  onClick={(e) => e.stopPropagation()}
+                                                >
+                                                  <FormControlLabel
+                                                    control={
+                                                      <Switch
+                                                        checked={isChecked}
+                                                        onChange={(e) => {
+                                                          e.stopPropagation();
+                                                          toggleStatusForVacancy(vacancy.id, st.id);
+                                                        }}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        size="small"
+                                                      />
+                                                    }
+                                                    label={
+                                                      <Box>
+                                                        <Typography variant="body2" fontWeight={600}>
+                                                          {st.name}
+                                                        </Typography>
+                                                        <Typography variant="caption" color="text.secondary">
+                                                          {st.count || 0}
+                                                        </Typography>
+                                                      </Box>
+                                                    }
+                                                    sx={{ m: 0 }}
+                                                  />
+                                                </Box>
+                                              );
+                                            })}
+                                          </Box>
+                                        </Box>
+                                      )}
+                                    </Box>
+                                  </Box>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+
+                      {/* === НИЖНИЕ КНОПКИ === */}
+                      <Box mt={3} display="flex" justifyContent="space-between" alignItems="center">
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={
+                                selectedVacancyIds.size > 0 &&
+                                selectedVacancyIds.size === hhVacanciesFromApi.length
+                              }
+                              indeterminate={
+                                selectedVacancyIds.size > 0 &&
+                                selectedVacancyIds.size < hhVacanciesFromApi.length
+                              }
+                              onChange={handleSelectAllVacancies}
+                            />
+                          }
+                          label={_(msg`Выбрать все`)}
+                        />
+                        <Box display="flex" gap={1} alignItems="center">
+                          <Button
+                            variant="outlined"
+                            onClick={loadHhVacanciesFromApi}
+                            startIcon={<IconRefresh />}
+                            size="small"
+                          >
+                            <Trans>Обновить список</Trans>
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={selectedVacancyIds.size === 0 || importing}
+                            startIcon={importing ? <CircularProgress size={20} /> : <IconDownload />}
+                            onClick={handleImportSelected}
+                          >
+                            {importing
+                              ? _(msg`Импортируем...`)
+                              : hasImportedInSelection()
+                                ? _(msg`Пересинхронизировать выбранные (${selectedVacancyIds.size})`)
+                                : selectedVacancyIds.size === 0
+                                  ? _(msg`Выберите вакансии ↑`)
+                                  : _(msg`Импортировать выбранные (${selectedVacancyIds.size})`)
+                            }
+                          </Button>
+                        </Box>
+                      </Box>
                     </Box>
                   )}
                 </CardContent>
               </Card>
             </Grid>
           )}
-          {/* === КОНЕЦ STEPPER === */}
+          {/* === КОНЕЦ НАСТРОЙКИ ИМПОРТА === */}
 
           </Grid>
       </Box> {/* Закрывает Box sx={{ position: 'relative' }} */}
