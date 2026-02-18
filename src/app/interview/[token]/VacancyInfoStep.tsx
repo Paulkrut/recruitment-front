@@ -1,6 +1,8 @@
 "use client";
-import { useEffect } from "react";
-import { Box, Button, Typography, Paper, Chip, Stack, Divider } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Button, Typography, Paper, Chip, Stack, Divider, Collapse, IconButton } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Icon } from "@iconify/react";
 import { Trans, msg } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
@@ -42,6 +44,7 @@ interface VacancyInfoStepProps {
     company?: string;
     description?: string;
     companyVideoUrl?: string;
+    descriptionExpandedByDefault?: boolean;
   } | null;
   candidate: {
     firstName?: string;
@@ -56,6 +59,14 @@ export default function VacancyInfoStep({
   onContinue,
 }: VacancyInfoStepProps) {
   const { _ } = useLingui();
+  const [descriptionExpanded, setDescriptionExpanded] = useState(true);
+
+  // Синхронизируем начальное состояние когда данные вакансии загрузились
+  useEffect(() => {
+    if (vacancy?.descriptionExpandedByDefault !== undefined) {
+      setDescriptionExpanded(vacancy.descriptionExpandedByDefault);
+    }
+  }, [vacancy?.descriptionExpandedByDefault]);
 
   // Логируем что получили
   useEffect(() => {
@@ -190,30 +201,72 @@ export default function VacancyInfoStep({
         {/* Vacancy Description */}
         {vacancy?.description && (
           <Box sx={{ mb: 4 }}>
-            <Typography
-              variant="subtitle1"
-              sx={{
-                fontWeight: 700,
-                color: "#1a1a1a",
-                mb: 1.5,
-              }}
-            >
-              <Trans>Описание вакансии</Trans>
-            </Typography>
             <Box
               sx={{
-                color: "#555",
-                lineHeight: 1.7,
-                fontSize: "0.875rem",
-                '& p': { margin: '0 0 1em 0' },
-                '& ul, & ol': { margin: '0 0 1em 0', paddingLeft: '1.5em' },
-                '& li': { marginBottom: '0.5em' },
-                '& strong': { fontWeight: 600 },
-                '& a': { color: '#1976d2', textDecoration: 'none' },
-                '& a:hover': { textDecoration: 'underline' },
+                p: 2,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                bgcolor: 'background.paper',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  bgcolor: 'action.hover',
+                  borderColor: 'primary.main',
+                  boxShadow: 1,
+                },
               }}
-              dangerouslySetInnerHTML={{ __html: vacancy.description }}
-            />
+              onClick={() => setDescriptionExpanded(!descriptionExpanded)}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: descriptionExpanded ? 2 : 0 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#1a1a1a' }}>
+                    <Trans>Описание вакансии</Trans>
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    ({descriptionExpanded ? _(msg`нажмите, чтобы свернуть`) : _(msg`нажмите, чтобы развернуть`)})
+                  </Typography>
+                </Box>
+                <IconButton size="small" sx={{ pointerEvents: 'none' }}>
+                  {descriptionExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </IconButton>
+              </Box>
+
+              {!descriptionExpanded && (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{
+                    mt: 1,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: vacancy.description.replace(/<[^>]*>/g, ' ').substring(0, 200) + '...',
+                  }}
+                />
+              )}
+
+              <Collapse in={descriptionExpanded}>
+                <Box
+                  sx={{
+                    color: '#555',
+                    lineHeight: 1.7,
+                    fontSize: '0.875rem',
+                    '& p': { margin: '0 0 1em 0' },
+                    '& ul, & ol': { margin: '0 0 1em 0', paddingLeft: '1.5em' },
+                    '& li': { marginBottom: '0.5em' },
+                    '& strong': { fontWeight: 600 },
+                    '& a': { color: '#1976d2', textDecoration: 'none' },
+                    '& a:hover': { textDecoration: 'underline' },
+                  }}
+                  dangerouslySetInnerHTML={{ __html: vacancy.description }}
+                />
+              </Collapse>
+            </Box>
           </Box>
         )}
 
