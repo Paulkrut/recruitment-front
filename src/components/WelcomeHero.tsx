@@ -8,7 +8,6 @@ import {
   Button,
   Grid,
   Stack,
-  IconButton,
   Paper,
 } from "@mui/material";
 import {
@@ -16,11 +15,11 @@ import {
   IconUsers,
   IconFileText,
   IconArrowRight,
-  IconBriefcase,
+  IconEye,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { useLingui } from '@lingui/react';
-import { msg, Trans } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
 
 interface WelcomeHeroProps {
   hasHhIntegration?: boolean;
@@ -44,7 +43,7 @@ export default function WelcomeHero({
         borderRadius: 3,
       }}
     >
-      <Box sx={{ maxWidth: 900, width: '100%' }}>
+      <Box sx={{ maxWidth: 1000, width: '100%' }}>
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 2 }}>
@@ -67,15 +66,11 @@ export default function WelcomeHero({
           </Typography>
         </Box>
 
-        {/* Main Cards */}
+        {/* Three Cards */}
         <Grid container spacing={3}>
           {/* HH Import Card */}
-          <Grid item xs={12} md={6}>
-            <Link
-              href={'/hr/settings/hh-integration'}
-              passHref
-              legacyBehavior
-            >
+          <Grid item xs={12} md={4}>
+            <Link href={'/hr/settings/hh-integration'} passHref legacyBehavior>
               <Card
                 component="a"
                 elevation={0}
@@ -95,114 +90,101 @@ export default function WelcomeHero({
                   },
                 }}
               >
-              <CardContent sx={{ p: 4 }}>
-                <Box sx={{ textAlign: 'center' }}>
-                  {/* Icon */}
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 3,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mx: 'auto',
-                      mb: 3,
-                      background: hasHhIntegration
-                        ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                        : 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
-                    }}
-                  >
-                    <Typography
+                <CardContent sx={{ p: 4 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Paper
+                      elevation={0}
                       sx={{
-                        fontSize: '2rem',
-                        fontWeight: 900,
-                        color: 'white',
-                        fontFamily: '"Arial Black", sans-serif',
-                        letterSpacing: '-2px'
+                        width: 80,
+                        height: 80,
+                        borderRadius: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mx: 'auto',
+                        mb: 3,
+                        background: 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
                       }}
                     >
-                      HH
+                      <Typography
+                        sx={{
+                          fontSize: '2rem',
+                          fontWeight: 900,
+                          color: 'white',
+                          fontFamily: '"Arial Black", sans-serif',
+                          letterSpacing: '-2px'
+                        }}
+                      >
+                        HH
+                      </Typography>
+                    </Paper>
+
+                    <Typography variant="h5" fontWeight={700} gutterBottom>
+                      {hasHhIntegration ? (
+                        <Trans>Импортировать вакансии</Trans>
+                      ) : (
+                        <Trans>Подключить HeadHunter</Trans>
+                      )}
                     </Typography>
-                  </Paper>
 
-                  {/* Title */}
-                  <Typography variant="h5" fontWeight={700} gutterBottom>
-                    {hasHhIntegration ? (
-                      <Trans>Импортировать вакансии</Trans>
-                    ) : (
-                      <Trans>Подключить HeadHunter</Trans>
-                    )}
-                  </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, minHeight: 48 }}>
+                      {hasHhIntegration ? (
+                        <Trans>Загрузите вакансии и кандидатов из вашего аккаунта HH.ru</Trans>
+                      ) : (
+                        <Trans>Подключите HeadHunter и импортируйте вакансии с кандидатами автоматически</Trans>
+                      )}
+                    </Typography>
 
-                  {/* Description */}
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3, minHeight: 48 }}
-                  >
-                    {hasHhIntegration ? (
-                      <Trans>Загрузите вакансии и кандидатов из вашего аккаунта HH.ru</Trans>
-                    ) : (
-                      <Trans>Подключите HeadHunter и импортируйте вакансии с кандидатами автоматически</Trans>
-                    )}
-                  </Typography>
+                    <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconFileText size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Импорт вакансий</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconUsers size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Импорт кандидатов</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconArrowRight size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Синхронизация откликов</Trans>
+                        </Typography>
+                      </Box>
+                    </Stack>
 
-                  {/* Features */}
-                  <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconFileText size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>Импорт вакансий</Trans>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconUsers size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>Импорт кандидатов</Trans>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconArrowRight size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>Синхронизация откликов</Trans>
-                      </Typography>
-                    </Box>
-                  </Stack>
-
-                  {/* Button */}
-                  <Button
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    endIcon={<IconArrowRight size={20} />}
-                    component="span"
-                    sx={{
-                      background: hasHhIntegration
-                        ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                        : 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
-                      fontWeight: 600,
-                      py: 1.5,
-                      '&:hover': {
-                        boxShadow: '0 8px 20px rgba(214, 0, 28, 0.3)',
-                      },
-                    }}
-                  >
-                    {hasHhIntegration ? (
-                      <Trans>Импортировать</Trans>
-                    ) : (
-                      <Trans>Подключить HH</Trans>
-                    )}
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      fullWidth
+                      endIcon={<IconArrowRight size={20} />}
+                      component="span"
+                      sx={{
+                        background: 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
+                        fontWeight: 600,
+                        py: 1.5,
+                        '&:hover': {
+                          boxShadow: '0 8px 20px rgba(214, 0, 28, 0.3)',
+                        },
+                      }}
+                    >
+                      {hasHhIntegration ? (
+                        <Trans>Импортировать вакансии</Trans>
+                      ) : (
+                        <Trans>Подключить HH</Trans>
+                      )}
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
             </Link>
           </Grid>
 
           {/* Create Manually Card */}
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Link href="/hr/vacancy-create" passHref legacyBehavior>
               <Card
                 component="a"
@@ -223,88 +205,177 @@ export default function WelcomeHero({
                   },
                 }}
               >
-              <CardContent sx={{ p: 4 }}>
-                <Box sx={{ textAlign: 'center' }}>
-                  {/* Icon */}
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 3,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mx: 'auto',
-                      mb: 3,
-                      background: 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)',
-                    }}
-                  >
-                    <IconPlus size={40} color="#667eea" />
-                  </Paper>
+                <CardContent sx={{ p: 4 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mx: 'auto',
+                        mb: 3,
+                        background: 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)',
+                      }}
+                    >
+                      <IconPlus size={40} color="#667eea" />
+                    </Paper>
 
-                  {/* Title */}
-                  <Typography variant="h5" fontWeight={700} gutterBottom>
-                    <Trans>Создать вручную</Trans>
-                  </Typography>
+                    <Typography variant="h5" fontWeight={700} gutterBottom>
+                      <Trans>Создать вручную</Trans>
+                    </Typography>
 
-                  {/* Description */}
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3, minHeight: 48 }}
-                  >
-                    <Trans>Создайте новую вакансию с нуля и настройте вопросы для интервью</Trans>
-                  </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, minHeight: 48 }}>
+                      <Trans>Создайте новую вакансию с нуля и настройте вопросы для интервью</Trans>
+                    </Typography>
 
-                  {/* Features */}
-                  <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconFileText size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>Гибкая настройка вакансии</Trans>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconUsers size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>AI генерация вопросов</Trans>
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <IconArrowRight size={18} color="#667eea" />
-                      <Typography variant="body2" color="text.secondary">
-                        <Trans>Публичная ссылка для кандидатов</Trans>
-                      </Typography>
-                    </Box>
-                  </Stack>
+                    <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconFileText size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Гибкая настройка вакансии</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconUsers size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>AI генерация вопросов</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconArrowRight size={18} color="#667eea" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Публичная ссылка для кандидатов</Trans>
+                        </Typography>
+                      </Box>
+                    </Stack>
 
-                  {/* Button */}
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    fullWidth
-                    endIcon={<IconArrowRight size={20} />}
-                    component="span"
-                    sx={{
-                      borderWidth: 2,
-                      borderColor: 'primary.main',
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      py: 1.5,
-                      '&:hover': {
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      fullWidth
+                      endIcon={<IconArrowRight size={20} />}
+                      component="span"
+                      sx={{
                         borderWidth: 2,
-                        borderColor: 'primary.dark',
-                        backgroundColor: 'primary.main',
-                        color: 'white',
-                      },
-                    }}
-                  >
-                    <Trans>Создать вакансию</Trans>
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
+                        borderColor: 'primary.main',
+                        color: 'primary.main',
+                        fontWeight: 600,
+                        py: 1.5,
+                        '&:hover': {
+                          borderWidth: 2,
+                          borderColor: 'primary.dark',
+                          backgroundColor: 'primary.main',
+                          color: 'white',
+                        },
+                      }}
+                    >
+                      <Trans>Создать вакансию</Trans>
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
+            </Link>
+          </Grid>
+
+          {/* Demo Card */}
+          <Grid item xs={12} md={4}>
+            <Link href="/hr/vacancies" passHref legacyBehavior>
+              <Card
+                component="a"
+                elevation={0}
+                sx={{
+                  height: '100%',
+                  border: '2px solid',
+                  borderColor: 'divider',
+                  borderRadius: 3,
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  textDecoration: 'none',
+                  display: 'block',
+                  '&:hover': {
+                    borderColor: '#11998e',
+                    boxShadow: '0 8px 30px rgba(17, 153, 142, 0.15)',
+                    transform: 'translateY(-4px)',
+                  },
+                }}
+              >
+                <CardContent sx={{ p: 4 }}>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: 3,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mx: 'auto',
+                        mb: 3,
+                        background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+                      }}
+                    >
+                      <IconEye size={40} color="white" />
+                    </Paper>
+
+                    <Typography variant="h5" fontWeight={700} gutterBottom>
+                      <Trans>Посмотреть пример</Trans>
+                    </Typography>
+
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3, minHeight: 48 }}>
+                      <Trans>В системе уже есть демо-вакансия с кандидатами и результатами интервью</Trans>
+                    </Typography>
+
+                    <Stack spacing={1} sx={{ mb: 3, textAlign: 'left' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconFileText size={18} color="#11998e" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Готовая вакансия с вопросами</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconUsers size={18} color="#11998e" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Демо-кандидаты с ответами</Trans>
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <IconArrowRight size={18} color="#11998e" />
+                        <Typography variant="body2" color="text.secondary">
+                          <Trans>Реальные результаты интервью</Trans>
+                        </Typography>
+                      </Box>
+                    </Stack>
+
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      fullWidth
+                      endIcon={<IconArrowRight size={20} />}
+                      component="span"
+                      sx={{
+                        borderWidth: 2,
+                        borderColor: '#11998e',
+                        color: '#11998e',
+                        fontWeight: 600,
+                        py: 1.5,
+                        '&:hover': {
+                          borderWidth: 2,
+                          borderColor: '#0d7a6e',
+                          backgroundColor: '#11998e',
+                          color: 'white',
+                        },
+                      }}
+                    >
+                      <Trans>Открыть пример</Trans>
+                    </Button>
+                  </Box>
+                </CardContent>
+              </Card>
             </Link>
           </Grid>
         </Grid>
@@ -319,4 +390,3 @@ export default function WelcomeHero({
     </Box>
   );
 }
-

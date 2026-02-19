@@ -251,6 +251,11 @@ function VacancyTable({ vacancies, templates, onEdit, onDelete, onRestore, onArc
                   <Box>
                     {/* Чипы на отдельной строке */}
                     <Box display="flex" alignItems="center" gap={0.5} flexWrap="wrap" mb={0.5}>
+                      {vacancy.source === 'demo' && (
+                        <Tooltip title={_(msg`Демо-вакансия — создана автоматически для знакомства с системой`)}>
+                          <Chip label="Демо" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#11998e', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
+                        </Tooltip>
+                      )}
                       {vacancy.source === 'headhunter' && (
                         <Tooltip title={_(msg`Вакансия из HH.ru`)}>
                           <Chip label="HH" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#D6001C', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
@@ -518,6 +523,11 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
       <Box mb={1}>
         {/* Строка чипов */}
         <Box display="flex" alignItems="center" gap={0.5} flexWrap="wrap" mb={0.75}>
+          {vacancy.source === 'demo' && (
+            <Tooltip title={_(msg`Демо-вакансия — создана автоматически для знакомства с системой`)}>
+              <Chip label="Демо" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#11998e', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
+            </Tooltip>
+          )}
           {vacancy.source === 'headhunter' && (
             <Tooltip title={_(msg`Вакансия из HH.ru`)}>
               <Chip label="HH" size="small" sx={{ height: 18, fontSize: '0.6rem', fontWeight: 700, backgroundColor: '#D6001C', color: 'white', '& .MuiChip-label': { px: 0.6 } }} />
