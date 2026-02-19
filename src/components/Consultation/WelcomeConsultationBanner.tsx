@@ -59,9 +59,13 @@ const WelcomeConsultationBanner: React.FC<WelcomeConsultationBannerProps> = ({
     return null;
   }
 
-  // Если уже есть бронирование - показываем информацию о встрече
+  // Если уже есть бронирование - показываем информацию о встрече (только если ещё не прошло)
   if (existingBooking) {
     const meetingDate = new Date(existingBooking.meeting_time);
+
+    if (meetingDate < new Date()) {
+      return null;
+    }
     const formattedDate = meetingDate.toLocaleDateString('ru-RU', {
       day: 'numeric',
       month: 'long',
