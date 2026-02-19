@@ -50,6 +50,7 @@ import {
   IconTable,
   IconRestore,
   IconArchive,
+  IconArrowRight,
 } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import SetupReminderBanner from "@/components/SetupReminderBanner";
@@ -1025,13 +1026,55 @@ export default function HRVacanciesPage() {
         )}
 
         {filtered.length === 0 && (
-          <Box textAlign="center" py={4}>
+          <Box textAlign="center" py={6}>
             <Typography variant="h6" color="textSecondary" gutterBottom>
               {search ? _(msg`Вакансии не найдены`) : _(msg`Нет вакансий`)}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="body2" color="textSecondary" mb={4}>
               {search ? _(msg`Попробуйте изменить поисковый запрос`) : _(msg`Создайте первую вакансию, чтобы начать работу`)}
             </Typography>
+            {!search && statusFilter === 'active' && (
+              <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap">
+                <Link href="/hr/settings/hh-integration" passHref legacyBehavior>
+                  <Button
+                    component="a"
+                    variant="contained"
+                    size="large"
+                    endIcon={<IconArrowRight size={20} />}
+                    sx={{
+                      background: 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
+                      fontWeight: 600,
+                      px: 3,
+                      '&:hover': { boxShadow: '0 8px 20px rgba(214, 0, 28, 0.3)' },
+                    }}
+                  >
+                    <Trans>Импортировать из HH</Trans>
+                  </Button>
+                </Link>
+                <Link href="/hr/vacancy-create" passHref legacyBehavior>
+                  <Button
+                    component="a"
+                    variant="outlined"
+                    size="large"
+                    endIcon={<IconArrowRight size={20} />}
+                    sx={{
+                      borderWidth: 2,
+                      borderColor: 'primary.main',
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      px: 3,
+                      '&:hover': {
+                        borderWidth: 2,
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                      },
+                    }}
+                  >
+                    <Trans>Создать вручную</Trans>
+                  </Button>
+                </Link>
+              </Box>
+            )}
           </Box>
         )}
         
