@@ -105,7 +105,8 @@ export default function HRDashboard() {
   // Stepper logic
   const hasCompany = companies.length > 0;
   const hasColleagues = hasCompany && companies.some((c:any) => c.role === 'HR_LEAD' || c.role === 'HR');
-  const hasVacancy = data && data.openVacancies && data.openVacancies.length > 0;
+  const hasVacancy = data && data.openVacancies &&
+    data.openVacancies.filter((v: any) => v.source !== 'demo').length > 0;
   const hasCandidate = data && data.overdueCandidates && data.overdueCandidates.length > 0;
   const hasSelectedCompany = !!currentCompany;
   const steps = [
