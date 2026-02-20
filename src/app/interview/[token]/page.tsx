@@ -93,7 +93,7 @@ export default function CandidateInterviewPage() {
   });
 
   /* ---------------- state ---------------- */
-  const [prepared, setPrepared] = useState<{total:number;durationSec:number;status:string}|null>(null);
+  const [prepared, setPrepared] = useState<{total:number;durationSec:number;status:string;questionTypes?:{audio:number;text:number;choice:number}}|null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [total, setTotal] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -1936,6 +1936,9 @@ export default function CandidateInterviewPage() {
         <VacancyInfoStep
           vacancy={vacancyData}
           candidate={candidateData}
+          total={prepared.total}
+          durationSec={prepared.durationSec}
+          questionTypes={prepared.questionTypes}
           onContinue={() => {
             console.log('🚀 Continue to interview clicked, adding skipVacancyInfo=true');
             router.replace(`/interview/${token}?skipVacancyInfo=true`);

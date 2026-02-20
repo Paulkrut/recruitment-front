@@ -79,20 +79,11 @@ export default function EquipmentCheckScreen({
         flexShrink: 0
       }}>
         {stepperComp}
-        <Typography variant="h4" gutterBottom>
-          <Trans>Подготовка к интервью</Trans>
+        <Typography variant="h5" fontWeight={700} gutterBottom>
+          <Trans>Проверьте камеру и микрофон</Trans>
         </Typography>
-        <Typography sx={{ mb: 2 }}>
-          <Trans>Интервью займёт примерно {min} минут — {prepared.total} основных вопросов, плюс могут появиться уточняющие (для них время выделится автоматически).</Trans>
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          <Trans>Формат простой: отвечайте последовательно, один вопрос за другим. Поставить на паузу, вернуться назад или пропустить вопрос не получится — так устроена система, чтобы сохранить естественный ход беседы.</Trans>
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          <Trans>Совет: не перегружайте страницу во время прохождения. Если что-то пошло не так — просто напишите нам, и мы всё решим.</Trans>
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          <strong><Trans>Готовы? Начинайте, когда будете в комфортной обстановке.</Trans></strong>
+        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+          <Trans>Убедитесь что вас хорошо слышно — и можно начинать. Вопросы идут один за другим, отвечайте в удобном темпе. Если что-то пойдёт не так — напишите нам, всё решим.</Trans>
         </Typography>
         <Box sx={{ mt: 2 }}>
           <FormControlLabel
@@ -120,10 +111,12 @@ export default function EquipmentCheckScreen({
             }
             label={
               <Typography variant="body2">
-                <Trans>Согласие на запись видео. Запись с камерой может повысить доверие работодателя и помочь ему лучше оценить ваши коммуникативные навыки.</Trans>
-                <Typography component="span" sx={{ color: 'text.secondary', fontSize: '0.85em', display: 'block', mt: 0.5 }}>
-                  <Trans>(Снимите галочку — будет только аудио)</Trans>
-                </Typography>
+                <>
+                  <Trans>Включить камеру</Trans>
+                  <Typography component="span" sx={{ color: 'text.secondary', fontSize: '0.8em', display: 'block' }}>
+                    <Trans>Работодатель сможет лучше познакомиться с вами</Trans>
+                  </Typography>
+                </>
               </Typography>
             }
             sx={{ alignItems: 'flex-start', mb: 1 }}
