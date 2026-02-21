@@ -1033,7 +1033,7 @@ msgstr ""
 msgid "✅ Нанят"
 msgstr "✅ Hired"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:248
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:252
 msgid "✅ Настройки сохранены"
 msgstr ""
 
@@ -2064,7 +2064,7 @@ msgstr ""
 msgid "📝 Краткий итог"
 msgstr "📝 Brief Summary"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:377
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:386
 msgid "📝 Обычное"
 msgstr ""
 
@@ -2302,7 +2302,7 @@ msgstr "🤖 AI Resume Analysis"
 msgid "🤖 Автоматизация AI Скрининга"
 msgstr "🤖 AI Screening Automation"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:206
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:210
 msgid "🤖 Автоматизация HH для этой вакансии"
 msgstr ""
 
@@ -2334,7 +2334,7 @@ msgstr ""
 msgid "🤖 Система оценивает ответ <0>строго по эталону</0> → 0-10 баллов"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:372
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:381
 msgid "🤖 Умное"
 msgstr ""
 
@@ -2896,7 +2896,7 @@ msgstr ""
 msgid "Автоматическая загрузка ваших вакансий"
 msgstr "Automatic Loading of Your Vacancies"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:421
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:430
 msgid "Автоматическая отправка напоминаний кандидатам, которые еще не прошли интервью"
 msgstr ""
 
@@ -2960,7 +2960,7 @@ msgstr ""
 #~ msgid "Автоматические интервью"
 #~ msgstr "Automatic Interviews"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:474
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:483
 msgid "Автоматические отказы"
 msgstr ""
 
@@ -2972,7 +2972,7 @@ msgstr "Automatic request via interview interface"
 msgid "Автоматический отказ"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:477
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:486
 msgid "Автоматический отказ кандидатам, которые не прошли интервью в установленные сроки"
 msgstr ""
 
@@ -3812,7 +3812,7 @@ msgstr "Enabling Interview"
 #~ msgid "Включено"
 #~ msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:489
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:498
 msgid "Включить автоматические отказы"
 msgstr ""
 
@@ -3820,7 +3820,7 @@ msgstr ""
 #~ msgid "Включить автоприглашение"
 #~ msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:267
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:271
 msgid "Включить автоприглашение для этой вакансии"
 msgstr ""
 
@@ -3828,7 +3828,7 @@ msgstr ""
 msgid "Включить камеру"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:433
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:442
 msgid "Включить повторные приглашения"
 msgstr ""
 
@@ -5511,9 +5511,9 @@ msgstr "Here you can set test parameters for candidates"
 #~ msgid "Здесь появится история писем и уведомлений кандидату (в будущем)."
 #~ msgstr "The history of emails and notifications to the candidate will appear here (in the future)."
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:395
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:462
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:535
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:404
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:471
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:544
 msgid "Здравствуйте, {firstName}!..."
 msgstr ""
 
@@ -5783,7 +5783,7 @@ msgstr ""
 #~ msgid "Индивидуальные настройки для этой вакансии"
 #~ msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:209
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:213
 msgid "Индивидуальные настройки или глобальные по умолчанию"
 msgstr ""
 
@@ -7028,11 +7028,11 @@ msgstr "Settings"
 msgid "Настройки HR"
 msgstr "HR Settings"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:255
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:259
 msgid "Настройки автоприглашения"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:277
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:281
 msgid "Настройки внутренних статусов"
 msgstr ""
 
@@ -8063,7 +8063,7 @@ msgstr ""
 msgid "отказать"
 msgstr "reject"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:500
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:509
 msgid "Отказать через (дней)"
 msgstr ""
 
@@ -8190,8 +8190,8 @@ msgid "Отменено"
 msgstr "Canceled"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:908
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:225
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:554
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:229
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:563
 msgid "Отменить"
 msgstr "Cancel"
 
@@ -8248,7 +8248,7 @@ msgstr "Send interview invitation via HH.ru"
 msgid "Отправить сообщение"
 msgstr "Send Message"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:444
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:453
 msgid "Отправить через (дней)"
 msgstr ""
 
@@ -8987,15 +8987,15 @@ msgstr "Reauthorize"
 #~ msgid "Переводить в стадию"
 #~ msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:337
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:340
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:509
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:512
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:341
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:344
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:518
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:521
 msgid "Переводить в стадию HH"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:312
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:315
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:316
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:319
 msgid "Переводить во внутренний статус"
 msgstr ""
 
@@ -9044,7 +9044,7 @@ msgstr "Proceed to Payment"
 msgid "Перейти сейчас"
 msgstr "Go Now"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:399
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:408
 msgid "Переменные:"
 msgstr ""
 
@@ -9209,7 +9209,7 @@ msgstr "Repeat AI Analysis"
 msgid "Повторная попытка..."
 msgstr "Retrying..."
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:418
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:427
 msgid "Повторные приглашения"
 msgstr ""
 
@@ -9758,8 +9758,8 @@ msgstr ""
 msgid "Пригласить сотрудника"
 msgstr "Invite Employee"
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:283
 #: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:287
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:291
 msgid "Приглашать из внутренних статусов"
 msgstr ""
 
@@ -10718,7 +10718,7 @@ msgstr ""
 #~ msgid "Синхронизация раз в час"
 #~ msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:331
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:335
 msgid "Синхронизация с HeadHunter"
 msgstr ""
 
@@ -11169,8 +11169,8 @@ msgstr "Company Employees"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/VacancyInterviewSettings.tsx:432
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:583
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:896
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:234
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:563
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:238
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:572
 msgid "Сохранение..."
 msgstr "Saving..."
 
@@ -11186,8 +11186,8 @@ msgstr "Saved!"
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:583
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:896
 #: src/app/(DashboardLayout)/layout/vertical/header/Profile.tsx:331
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:234
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:563
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:238
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:572
 msgid "Сохранить"
 msgstr "Save"
 
@@ -11385,6 +11385,10 @@ msgstr "Link Copied to Clipboard"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:778
 msgid "Ссылка скопирована!"
 msgstr "Link copied!"
+
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:356
+msgid "Стадии из ваших реальных кандидатов в HH"
+msgstr ""
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:195
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:198
@@ -11609,15 +11613,15 @@ msgstr ""
 msgid "Текст вопроса для кандидата"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:453
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:462
 msgid "Текст напоминания"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:526
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:535
 msgid "Текст отказа"
 msgstr ""
 
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:386
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:395
 msgid "Текст приглашения"
 msgstr ""
 
@@ -11853,7 +11857,7 @@ msgstr "Type"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:298
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:301
-#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:358
+#: src/components/hr/hh-integration/VacancyHhAutomationSettings.tsx:367
 msgid "Тип приглашения"
 msgstr "Invitation Type"
 

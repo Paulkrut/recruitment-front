@@ -82,6 +82,7 @@ export default function VacancyHhAutomationSettings({ vacancyId, onSettingsLoad 
   const [settings, setSettings] = useState<VacancyHhSettings | null>(null);
   const [isFromHh, setIsFromHh] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
+  const [dynamicHhStages, setDynamicHhStages] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
     loadSettings();
@@ -101,7 +102,7 @@ export default function VacancyHhAutomationSettings({ vacancyId, onSettingsLoad 
             enabled: false,
             fromInternalStages: ['new'],
             toInternalStage: 'contacted',
-            toHhStageId: 'assessment',
+            toHhStageId: 'interview',
             invitationType: 'ai',
             messageTemplate: "Здравствуйте, {firstName}!\n\nСпасибо за отклик на вакансию \"{vacancyTitle}\".\nПриглашаем вас пройти видео-интервью: {interviewLink}\n\nС уважением, {companyName}",
           },
@@ -120,6 +121,9 @@ export default function VacancyHhAutomationSettings({ vacancyId, onSettingsLoad 
         const resolvedSettings = data.settings || defaultSettings;
         setSettings(resolvedSettings);
         setIsFromHh(data.isFromHh || false);
+        if (Array.isArray(data.availableHhStages) && data.availableHhStages.length > 0) {
+          setDynamicHhStages(data.availableHhStages);
+        }
         onSettingsLoad?.(resolvedSettings.autoInvite?.enabled || false);
       } else {
         throw new Error(data.message || 'Ошибка загрузки настроек');
@@ -336,17 +340,22 @@ export default function VacancyHhAutomationSettings({ vacancyId, onSettingsLoad 
                 <FormControl fullWidth size="small">
                   <InputLabel><Trans>Переводить в стадию HH</Trans></InputLabel>
                   <Select
-                    value={settings.autoInvite?.toHhStageId || 'assessment'}
+                    value={settings.autoInvite?.toHhStageId || 'interview'}
                     label={_(msg`Переводить в стадию HH`)}
                     onChange={(e) => handleChange('autoInvite.toHhStageId', e.target.value)}
                   >
-                    {HH_STAGES.map((stage) => (
+                    {(dynamicHhStages.length > 0 ? dynamicHhStages : HH_STAGES).map((stage) => (
                       <MenuItem key={stage.id} value={stage.id}>
                         {stage.name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
+                {dynamicHhStages.length > 0 && (
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                    <Trans>Стадии из ваших реальных кандидатов в HH</Trans>
+                  </Typography>
+                )}
               </Grid>
 
               <Grid item xs={12} md={6}>
