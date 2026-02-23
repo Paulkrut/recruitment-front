@@ -10,16 +10,8 @@ import {
   TextField,
   Divider,
   Chip,
-  Rating,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Stepper,
   Step,
   StepLabel,
@@ -93,15 +85,6 @@ export default function InterviewResultsScreen({
             {/* Компонент для автоматического удаления данных */}
             <ForgetMeAuto candidateToken={token} />
 
-            {feedbackData.feedback.average_score > 0 && (
-              <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <Typography variant="h5" gutterBottom>
-                  <Trans>Общая оценка</Trans>: {feedbackData.feedback.average_score}/10
-                </Typography>
-                <Rating value={feedbackData.feedback.average_score / 2} readOnly size="large" />
-              </Box>
-            )}
-
             <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
               <Trans>📝 Краткий итог</Trans>
             </Typography>
@@ -117,49 +100,6 @@ export default function InterviewResultsScreen({
             <Typography paragraph>
               {feedbackData.feedback.feedback}
             </Typography>
-
-            {feedbackData.feedback.scores_table && (
-              <>
-                <Divider sx={{ my: 3 }} />
-                <Typography variant="h6" gutterBottom>
-                  <Trans>📊 Таблица оценок</Trans>
-                </Typography>
-                {Array.isArray(feedbackData.feedback.scores_table) && feedbackData.feedback.scores_table.length > 0 ? (
-                  <TableContainer component={Paper} sx={{ bgcolor: 'grey.50' }}>
-                    <Table size="small">
-                      <TableHead>
-                        <TableRow>
-                          <TableCell><strong><Trans>Вопрос</Trans></strong></TableCell>
-                          <TableCell align="center"><strong><Trans>Оценка</Trans></strong></TableCell>
-                          <TableCell><strong><Trans>Комментарий</Trans></strong></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {feedbackData.feedback.scores_table.map((row: any, index: number) => (
-                          <TableRow key={index}>
-                            <TableCell>{row.question}</TableCell>
-                            <TableCell align="center">
-                              <Chip
-                                label={`${row.score}/10`}
-                                color={row.score >= 8 ? 'success' : row.score >= 6 ? 'warning' : 'error'}
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell>{row.comment}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                ) : (
-                  <Box sx={{ bgcolor: 'grey.50', p: 2, borderRadius: 1 }}>
-                    <Typography component="pre" sx={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                      {feedbackData.feedback.scores_table}
-                    </Typography>
-                  </Box>
-                )}
-              </>
-            )}
 
             {feedbackData.feedback.strengths && feedbackData.feedback.strengths.length > 0 && (
               <>
