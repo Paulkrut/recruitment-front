@@ -1499,7 +1499,7 @@ export default function HRVacancyDetailPage() {
                           <Typography variant="body2" color="text.disabled" sx={{ fontWeight: 600, minWidth: 24 }}>
                             {index + 1}.
                           </Typography>
-                          <Typography variant="body2" color="text.primary">{q.variants?.[0]?.text || q.text}</Typography>
+                          <Typography variant="body2" color="text.primary" dangerouslySetInnerHTML={{ __html: q.variants?.[0]?.text || q.text || '' }} />
                         </Box>
                       ))}
                     </Box>
