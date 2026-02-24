@@ -471,6 +471,13 @@ export default function HRVacancyEditPage() {
               maxTime: templateData.questionTime,
               position: questions.length + i,
               affectsKnowledge: true,
+              variants: [{
+                text: text,
+                referenceAnswer: null,
+                attachments: [],
+                options: [],
+                position: 1,
+              }],
             }));
 
             setQuestions([...questions, ...newQuestions]);
