@@ -290,8 +290,19 @@ export default function HRVacancyCreatePage() {
             const newQuestions = (statusData.questions || []).map((text: string, i: number) => ({
               text: text,
               type: "text",
+              inputMode: "text",
+              questionType: "open",
+              options: [],
               maxTime: templateData.questionTime,
               position: questions.length + i,
+              affectsKnowledge: true,
+              variants: [{
+                text: text,
+                referenceAnswer: null,
+                attachments: [],
+                options: [],
+                position: 1,
+              }],
             }));
 
             setQuestions([...questions, ...newQuestions]);
