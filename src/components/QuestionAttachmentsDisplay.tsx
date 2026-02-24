@@ -49,9 +49,33 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
     return `${apiUrl}${url}`;
   };
 
+  // Определяем MIME-тип по расширению файла для кросс-браузерной совместимости
+  const getMimeType = (filename: string, mediaType: 'audio' | 'video'): string => {
+    const ext = filename.split('.').pop()?.toLowerCase() ?? '';
+    const audioMimes: Record<string, string> = {
+      mp3: 'audio/mpeg',
+      wav: 'audio/wav',
+      ogg: 'audio/ogg',
+      m4a: 'audio/mp4',
+      aac: 'audio/aac',
+      flac: 'audio/flac',
+      webm: 'audio/webm',
+    };
+    const videoMimes: Record<string, string> = {
+      mp4: 'video/mp4',
+      webm: 'video/webm',
+      ogg: 'video/ogg',
+      mov: 'video/quicktime',
+      avi: 'video/x-msvideo',
+      mkv: 'video/x-matroska',
+    };
+    const map = mediaType === 'audio' ? audioMimes : videoMimes;
+    return map[ext] ?? (mediaType === 'audio' ? 'audio/mpeg' : 'video/mp4');
+  };
+
   const renderAttachment = (attachment: Attachment) => {
     const fullUrl = getFullUrl(attachment.url);
-    
+
     switch (attachment.type) {
       case 'image':
         return (
@@ -103,8 +127,10 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
                 maxWidth: '280px',
                 borderRadius: '8px'
               }}
-              src={fullUrl}
-            />
+            >
+              <source src={fullUrl} type={getMimeType(attachment.filename, 'video')} />
+              Ваш браузер не поддерживает воспроизведение видео.
+            </video>
             {showDescription && attachment.description && (
               <Typography
                 variant="caption"
@@ -132,8 +158,10 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
                 maxWidth: '280px',
                 borderRadius: '8px'
               }}
-              src={fullUrl}
-            />
+            >
+              <source src={fullUrl} type={getMimeType(attachment.filename, 'audio')} />
+              Ваш браузер не поддерживает воспроизведение аудио.
+            </audio>
             {showDescription && attachment.description && (
               <Typography
                 variant="caption"
