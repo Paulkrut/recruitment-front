@@ -38,6 +38,27 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, filename = 'audio', mime
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [canPlay, setCanPlay] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownload = useCallback(async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch(src);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(src, '_blank');
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [src, filename]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -213,8 +234,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, filename = 'audio', mime
 
         {/* Скачать */}
         <Tooltip title="Скачать файл">
-          <IconButton size="small" component="a" href={src} download={filename} sx={{ flexShrink: 0 }}>
-            <DownloadIcon fontSize="small" />
+          <IconButton size="small" onClick={handleDownload} disabled={isDownloading} sx={{ flexShrink: 0 }}>
+            {isDownloading ? <CircularProgress size={16} /> : <DownloadIcon fontSize="small" />}
           </IconButton>
         </Tooltip>
       </Box>
