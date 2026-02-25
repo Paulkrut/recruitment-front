@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -22,6 +22,7 @@ interface EquipmentCheckScreenProps {
   stepperComp?: React.ReactNode;
   cameraEnabled: boolean;
   pdnConsent: boolean;
+  textOnly?: boolean;
   onCameraToggle: (enabled: boolean) => void;
   onPdnConsentChange: (checked: boolean) => void;
   onStartInterview: () => void;
@@ -35,6 +36,7 @@ export default function EquipmentCheckScreen({
   stepperComp,
   cameraEnabled,
   pdnConsent,
+  textOnly = false,
   onCameraToggle,
   onPdnConsentChange,
   onStartInterview,
@@ -44,6 +46,10 @@ export default function EquipmentCheckScreen({
   const [micLevel, setMicLevel] = useState(0);
   const [micReady, setMicReady] = useState(false);
   const [debugError, setDebugError] = useState<string>("");
+
+  useEffect(() => {
+    if (textOnly) setMicReady(true);
+  }, [textOnly]);
   const [testStream, setTestStream] = useState<MediaStream | null>(null);
 
   const handleToggleCameraClick = () => {
@@ -80,10 +86,13 @@ export default function EquipmentCheckScreen({
       }}>
         {stepperComp}
         <Typography variant="h5" fontWeight={700} gutterBottom>
-          <Trans>Проверьте камеру и микрофон</Trans>
+          {textOnly ? <Trans>Готовы к интервью?</Trans> : <Trans>Проверьте камеру и микрофон</Trans>}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
-          <Trans>Убедитесь что вас хорошо слышно — и можно начинать. Вопросы идут один за другим, отвечайте в удобном темпе. Если что-то пойдёт не так — напишите нам, всё решим.</Trans>
+          {textOnly
+            ? <Trans>Все вопросы этого интервью — текстовые. Камера и микрофон не понадобятся. Вопросы идут один за другим, отвечайте в удобном темпе.</Trans>
+            : <Trans>Убедитесь что вас хорошо слышно — и можно начинать. Вопросы идут один за другим, отвечайте в удобном темпе. Если что-то пойдёт не так — напишите нам, всё решим.</Trans>
+          }
         </Typography>
         <Box sx={{ mt: 2 }}>
           <FormControlLabel
@@ -96,31 +105,34 @@ export default function EquipmentCheckScreen({
             }
             label={
               <Typography variant="body2">
-                <Trans>Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии</Trans>. <a href="/privacy-policy" target="_blank"><Trans>Политика ПДн</Trans></a>.{' '}<Trans>Медиа хранятся до 60 дней</Trans>.
+                <Trans>Соглашаюсь на обработку моих персональных данных для прохождения интервью и оценки соответствия вакансии</Trans>. <a href="/privacy-policy" target="_blank"><Trans>Политика ПДн</Trans></a>.{' '}
+                {!textOnly && <Trans>Медиа хранятся до 60 дней</Trans>}
               </Typography>
             }
             sx={{ alignItems: 'center', mb: 1 }}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={cameraEnabled}
-                onChange={(e) => onCameraToggle(e.target.checked)}
-                color="primary"
-              />
-            }
-            label={
-              <Typography variant="body2">
-                <>
-                  <Trans>Включить камеру</Trans>
-                  <Typography component="span" sx={{ color: 'text.secondary', fontSize: '0.8em', display: 'block' }}>
-                    <Trans>Работодатель сможет лучше познакомиться с вами</Trans>
-                  </Typography>
-                </>
-              </Typography>
-            }
-            sx={{ alignItems: 'flex-start', mb: 1 }}
-          />
+          {!textOnly && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={cameraEnabled}
+                  onChange={(e) => onCameraToggle(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label={
+                <Typography variant="body2">
+                  <>
+                    <Trans>Включить камеру</Trans>
+                    <Typography component="span" sx={{ color: 'text.secondary', fontSize: '0.8em', display: 'block' }}>
+                      <Trans>Работодатель сможет лучше познакомиться с вами</Trans>
+                    </Typography>
+                  </>
+                </Typography>
+              }
+              sx={{ alignItems: 'flex-start', mb: 1 }}
+            />
+          )}
         </Box>
       </Box>
 
@@ -134,18 +146,20 @@ export default function EquipmentCheckScreen({
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        {/* Webcam Component */}
-        <ProductionWebcamComponent
-          cameraEnabled={cameraEnabled}
-          onCameraToggle={handleToggleCameraClick}
-          onStreamReady={handleStreamReady}
-          onMicLevelChange={setMicLevel}
-          onMicReady={setMicReady}
-          onError={setDebugError}
-        />
+        {/* Webcam Component — только для аудио/видео интервью */}
+        {!textOnly && (
+          <ProductionWebcamComponent
+            cameraEnabled={cameraEnabled}
+            onCameraToggle={handleToggleCameraClick}
+            onStreamReady={handleStreamReady}
+            onMicLevelChange={setMicLevel}
+            onMicReady={setMicReady}
+            onError={setDebugError}
+          />
+        )}
 
         {/* Mic Level Indicator */}
-        {micReady && (
+        {!textOnly && micReady && (
           <Box sx={{
             mt: 3,
             p: 2,
@@ -215,7 +229,7 @@ export default function EquipmentCheckScreen({
         boxShadow: '0 -4px 12px rgba(0,0,0,0.1)',
       }}>
         {/* Debug Block */}
-        {(debugError || !pdnConsent) && (
+        {!textOnly && (debugError || !pdnConsent) && (
           <Box sx={{
             mb: 1.5,
             p: 1.5,
@@ -257,8 +271,15 @@ export default function EquipmentCheckScreen({
           </Box>
         )}
 
+        {/* Подсказка при textOnly — нет ПДн согласия */}
+        {textOnly && !pdnConsent && (
+          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'warning.main', fontSize: '12px', textAlign: 'center' }}>
+            <Trans>⚠️ Примите соглашение на обработку ПДн</Trans>
+          </Typography>
+        )}
+
         {/* Mic Check Status */}
-        {pdnConsent && !micReady && !debugError && (
+        {!textOnly && pdnConsent && !micReady && !debugError && (
           <Typography
             variant="caption"
             sx={{
@@ -274,7 +295,7 @@ export default function EquipmentCheckScreen({
         )}
 
         {/* Silent Mic Warning */}
-        {micReady && micLevel < 1 && pdnConsent && !debugError && (
+        {!textOnly && micReady && micLevel < 1 && pdnConsent && !debugError && (
           <Typography
             variant="caption"
             sx={{

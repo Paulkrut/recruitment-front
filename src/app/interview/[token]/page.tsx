@@ -2102,6 +2102,7 @@ export default function CandidateInterviewPage() {
             stepperComp={stepperComp}
           cameraEnabled={cameraEnabled}
             pdnConsent={pdnConsent}
+            textOnly={!!(prepared.questionTypes && prepared.questionTypes.audio === 0)}
             onCameraToggle={setCameraEnabled}
             onPdnConsentChange={setPdnConsent}
             onStartInterview={startInterview}
