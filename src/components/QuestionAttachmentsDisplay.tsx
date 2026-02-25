@@ -9,13 +9,11 @@ import {
   Typography
 } from '@mui/material';
 import {
-  Image as ImageIcon,
-  PlayArrow as PlayIcon,
-  VolumeUp as AudioIcon,
   Description as DocumentIcon,
   Close as CloseIcon,
   GetApp as DownloadIcon
 } from '@mui/icons-material';
+import AudioPlayer from './AudioPlayer';
 
 interface Attachment {
   id: string;
@@ -151,17 +149,11 @@ const QuestionAttachmentsDisplay: React.FC<QuestionAttachmentsDisplayProps> = ({
       case 'audio':
         return (
           <Box sx={{ mb: 1 }}>
-            <audio
-              controls
-              style={{
-                width: '100%',
-                maxWidth: '280px',
-                borderRadius: '8px'
-              }}
-            >
-              <source src={fullUrl} type={getMimeType(attachment.filename, 'audio')} />
-              Ваш браузер не поддерживает воспроизведение аудио.
-            </audio>
+            <AudioPlayer
+              src={fullUrl}
+              filename={attachment.filename}
+              mimeType={getMimeType(attachment.filename, 'audio')}
+            />
             {showDescription && attachment.description && (
               <Typography
                 variant="caption"
