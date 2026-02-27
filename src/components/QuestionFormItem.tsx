@@ -113,8 +113,8 @@ const QuestionFormItem = React.memo(({
     onUpdate(index, "affectsKnowledge", true);
     onUpdate(index, "isRedFlag", false);
     onUpdate(index, "questionType", 'open');
-    onUpdate(index, "inputMode", 'text');
-    onUpdate(index, "type", 'text');
+    onUpdate(index, "inputMode", 'audio');
+    onUpdate(index, "type", 'audio');
     onUpdate(index, "options", null);
     onUpdate(index, "referenceAnswer", undefined);
     
@@ -199,8 +199,8 @@ const QuestionFormItem = React.memo(({
     } else if (value === 'video') {
       // Видео/Аудио ответ
       onUpdate(index, "questionType", 'open');
-      onUpdate(index, "inputMode", 'text');
-      onUpdate(index, "type", 'text');
+      onUpdate(index, "inputMode", 'audio');
+      onUpdate(index, "type", 'audio');
       onUpdate(index, "options", null); // Убираем варианты
     } else if (value === 'typing') {
       // Текстовый ответ

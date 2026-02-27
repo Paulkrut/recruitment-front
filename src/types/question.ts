@@ -282,7 +282,7 @@ export function calculateQuestionTokens(question: QuestionDraft): {
       return { tokens: 150, description: '~150 токенов (только Red Flag проверка)' };
     }
     
-    if (inputMode === 'text') {
+    if (inputMode === 'audio' || inputMode === 'text') {
       return { tokens: 0, description: '0 токенов на оценку (только Whisper транскрибация)' };
     } else {
       return { tokens: 0, description: '0 токенов' };
