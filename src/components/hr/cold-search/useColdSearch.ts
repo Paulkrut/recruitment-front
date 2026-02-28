@@ -5,6 +5,8 @@ import { ColdCandidate, ColdSearchJob } from './types';
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
 const API_URL = (path: string) => `${API_BASE}${path}`;
 
+const RUNNING_STATUSES = ['pending', 'searching', 'prescoring', 'scoring'];
+
 export function useColdSearch(vacancyId: number) {
   const [job, setJob] = useState<ColdSearchJob | null>(null);
   const [candidates, setCandidates] = useState<ColdCandidate[]>([]);
@@ -12,6 +14,14 @@ export function useColdSearch(vacancyId: number) {
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollTimerRef.current) {
+      clearInterval(pollTimerRef.current);
+      pollTimerRef.current = null;
+    }
+  }, []);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -20,18 +30,26 @@ export function useColdSearch(vacancyId: number) {
       if (data.success) {
         setJob(data.job ?? null);
         setCandidates(data.candidates ?? []);
+        // Если job завершён — останавливаем polling
+        if (!data.job || !RUNNING_STATUSES.includes(data.job.status)) {
+          stopPolling();
+        }
       }
     } catch {
       setError('Ошибка загрузки статуса');
     } finally {
       setLoading(false);
     }
-  }, [vacancyId]);
+  }, [vacancyId, stopPolling]);
+
+  // Polling каждые 5 секунд — fallback и обновление кандидатов пока идёт поиск
+  const startPolling = useCallback(() => {
+    stopPolling();
+    pollTimerRef.current = setInterval(fetchStatus, 5000);
+  }, [fetchStatus, stopPolling]);
 
   const connectSse = useCallback((jobId: number) => {
-    if (eventSourceRef.current) {
-      eventSourceRef.current.close();
-    }
+    eventSourceRef.current?.close();
 
     const token = typeof window !== 'undefined'
       ? localStorage.getItem('recruitment_token') || ''
@@ -50,40 +68,42 @@ export function useColdSearch(vacancyId: number) {
       const data = JSON.parse(e.data);
       setJob((prev) => prev ? { ...prev, ...data } : prev);
       es.close();
-      // После завершения — перезагружаем кандидатов
+      stopPolling();
+      // Финальная загрузка кандидатов после завершения
       fetchStatus();
     });
 
     es.addEventListener('error', () => {
-      es.close();
+      // SSE упал (таймаут/сеть) — EventSource сам переподключится через retry мс.
+      // Polling подхватит обновления пока SSE восстанавливается.
     });
-
-    es.addEventListener('heartbeat', () => {
-      // keep-alive, ничего не делаем
-    });
-  }, [fetchStatus]);
+  }, [fetchStatus, stopPolling]);
 
   // Начальная загрузка
   useEffect(() => {
     fetchStatus();
   }, [fetchStatus]);
 
-  // Если job running — подключаемся к SSE
+  // Если job running — SSE + polling
   useEffect(() => {
     if (!job) return;
 
-    const isRunning = ['pending', 'searching', 'prescoring', 'scoring'].includes(job.status);
+    const isRunning = RUNNING_STATUSES.includes(job.status);
 
     if (isRunning) {
       connectSse(job.id);
+      startPolling();
     } else {
       eventSourceRef.current?.close();
+      stopPolling();
     }
 
     return () => {
       eventSourceRef.current?.close();
+      stopPolling();
     };
-  }, [job?.id, job?.status, connectSse]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [job?.id, job?.status]);
 
   const startSearch = useCallback(async (searchHints: string) => {
     setStarting(true);
@@ -97,6 +117,7 @@ export function useColdSearch(vacancyId: number) {
       if (data.success) {
         setJob(data.job);
         connectSse(data.job.id);
+        startPolling();
       } else {
         setError(data.error || 'Не удалось запустить поиск');
       }
@@ -105,7 +126,7 @@ export function useColdSearch(vacancyId: number) {
     } finally {
       setStarting(false);
     }
-  }, [vacancyId, connectSse]);
+  }, [vacancyId, connectSse, startPolling]);
 
   return {
     job,
