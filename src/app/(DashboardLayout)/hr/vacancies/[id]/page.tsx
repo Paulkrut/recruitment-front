@@ -5,7 +5,7 @@ import {
   Box, Card, CardContent, Typography, Button, Chip, Divider, CircularProgress, Grid, Alert, Fab, Tooltip, ToggleButtonGroup, ToggleButton, Switch, FormControlLabel, LinearProgress, Menu, MenuItem, Badge
 } from "@mui/material";
 import {
-  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot, IconSettings, IconSend
+  IconBriefcase, IconFileText, IconUsers, IconEdit, IconArrowsDiff, IconTrash, IconRestore, IconArchive, IconDownload, IconRobot, IconSettings, IconSend, IconUserSearch
 } from "@tabler/icons-react";
 import DataTable from "@/components/DataTable";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -52,6 +52,7 @@ import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { isValidInternationalPhone, normalizePhoneForBackend } from '@/utils/phoneUtils';
 import VacancyHhAutomationSettings from '@/components/hr/hh-integration/VacancyHhAutomationSettings';
 import VacancyInterviewSettings from './VacancyInterviewSettings';
+import ColdSearchTab from '@/components/hr/cold-search/ColdSearchTab';
 import GenerateQuestionsDialog from "@/components/GenerateQuestionsDialog";
 
 
@@ -1057,6 +1058,7 @@ export default function HRVacancyDetailPage() {
               value="4"
             />
             <Tab icon={<IconSettings size={20}/>} iconPosition="start" label={_(msg`Настройки`)} value="5" />
+            <Tab icon={<IconUserSearch size={20}/>} iconPosition="start" label={_(msg`Холодный поиск`)} value="6" />
           </TabList>
         </Box>
         <TabPanel value="1" sx={{p:0}}>
@@ -1649,6 +1651,9 @@ export default function HRVacancyDetailPage() {
               <VacancyInterviewSettings vacancyId={Number(id)} />
             </Grid>
           </Grid>
+        </TabPanel>
+        <TabPanel value="6" sx={{p:0}}>
+          <ColdSearchTab vacancyId={Number(id)} />
         </TabPanel>
       </TabContext>
       {/* Диалоги и QR-код — как было */}
