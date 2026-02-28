@@ -8,7 +8,8 @@ const API_URL = (path: string) => `${API_BASE}${path}`;
 const RUNNING_STATUSES = ['pending', 'searching', 'prescoring', 'scoring'];
 
 export function useColdSearch(vacancyId: number) {
-  const [job, setJob] = useState<ColdSearchJob | null>(null);
+  const [jobs, setJobs] = useState<ColdSearchJob[]>([]);
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   const [candidates, setCandidates] = useState<ColdCandidate[]>([]);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
@@ -23,31 +24,55 @@ export function useColdSearch(vacancyId: number) {
     }
   }, []);
 
-  const fetchStatus = useCallback(async () => {
+  // Загрузить кандидатов для конкретного job
+  const fetchJobCandidates = useCallback(async (jobId: number) => {
     try {
-      const res = await apiFetch(API_URL(`/api/cold-search/vacancy/${vacancyId}/status`));
+      const res = await apiFetch(API_URL(`/api/cold-search/job/${jobId}/candidates`));
       const data = await res.json();
       if (data.success) {
-        setJob(data.job ?? null);
         setCandidates(data.candidates ?? []);
-        // Если job завершён — останавливаем polling
-        if (!data.job || !RUNNING_STATUSES.includes(data.job.status)) {
-          stopPolling();
-        }
+        // Обновляем статус job в списке
+        setJobs((prev) => prev.map((j) => j.id === jobId ? { ...j, ...data.job } : j));
       }
     } catch {
-      setError('Ошибка загрузки статуса');
+      // silent
+    }
+  }, []);
+
+  // Загрузить список всех job для вакансии + кандидатов выбранного
+  const fetchJobs = useCallback(async (selectJobId?: number) => {
+    try {
+      const res = await apiFetch(API_URL(`/api/cold-search/vacancy/${vacancyId}/jobs`));
+      const data = await res.json();
+      if (data.success && data.jobs) {
+        const jobList: ColdSearchJob[] = data.jobs;
+        setJobs(jobList);
+
+        if (jobList.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // Выбираем job: явно указанный → последний
+        const targetId = selectJobId ?? jobList[0].id;
+        setSelectedJobId(targetId);
+        await fetchJobCandidates(targetId);
+      }
+    } catch {
+      setError('Ошибка загрузки');
     } finally {
       setLoading(false);
     }
-  }, [vacancyId, stopPolling]);
+  }, [vacancyId, fetchJobCandidates]);
 
-  // Polling каждые 5 секунд — fallback и обновление кандидатов пока идёт поиск
-  const startPolling = useCallback(() => {
-    stopPolling();
-    pollTimerRef.current = setInterval(fetchStatus, 5000);
-  }, [fetchStatus, stopPolling]);
+  // Переключить активную сессию
+  const selectJob = useCallback(async (jobId: number) => {
+    setSelectedJobId(jobId);
+    setCandidates([]);
+    await fetchJobCandidates(jobId);
+  }, [fetchJobCandidates]);
 
+  // SSE для отслеживания прогресса запущенного job
   const connectSse = useCallback((jobId: number) => {
     eventSourceRef.current?.close();
 
@@ -61,38 +86,55 @@ export function useColdSearch(vacancyId: number) {
 
     es.addEventListener('progress', (e) => {
       const data = JSON.parse(e.data);
-      setJob((prev) => prev ? { ...prev, ...data } : prev);
+      setJobs((prev) => prev.map((j) => j.id === jobId ? { ...j, ...data } : j));
     });
 
-    es.addEventListener('complete', (e) => {
-      const data = JSON.parse(e.data);
-      setJob((prev) => prev ? { ...prev, ...data } : prev);
+    es.addEventListener('complete', () => {
       es.close();
       stopPolling();
-      // Финальная загрузка кандидатов после завершения
-      fetchStatus();
+      fetchJobCandidates(jobId);
+      fetchJobs();
     });
 
     es.addEventListener('error', () => {
-      // SSE упал (таймаут/сеть) — EventSource сам переподключится через retry мс.
-      // Polling подхватит обновления пока SSE восстанавливается.
+      // EventSource переподключится автоматически по retry
     });
-  }, [fetchStatus, stopPolling]);
+  }, [fetchJobCandidates, fetchJobs, stopPolling]);
+
+  // Polling — обновляет статус и кандидатов пока job работает
+  const startPolling = useCallback((jobId: number) => {
+    stopPolling();
+    pollTimerRef.current = setInterval(async () => {
+      await fetchJobCandidates(jobId);
+      // Если job завершился — остановить polling
+      setJobs((prev) => {
+        const job = prev.find((j) => j.id === jobId);
+        if (job && !RUNNING_STATUSES.includes(job.status)) {
+          stopPolling();
+        }
+        return prev;
+      });
+    }, 5000);
+  }, [fetchJobCandidates, stopPolling]);
 
   // Начальная загрузка
   useEffect(() => {
-    fetchStatus();
-  }, [fetchStatus]);
+    fetchJobs();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vacancyId]);
 
-  // Если job running — SSE + polling
+  // Подключить SSE + polling для running job
   useEffect(() => {
-    if (!job) return;
+    const runningJob = jobs.find((j) => RUNNING_STATUSES.includes(j.status));
 
-    const isRunning = RUNNING_STATUSES.includes(job.status);
-
-    if (isRunning) {
-      connectSse(job.id);
-      startPolling();
+    if (runningJob) {
+      // Переключаемся на активный job автоматически
+      if (selectedJobId !== runningJob.id) {
+        setSelectedJobId(runningJob.id);
+        fetchJobCandidates(runningJob.id);
+      }
+      connectSse(runningJob.id);
+      startPolling(runningJob.id);
     } else {
       eventSourceRef.current?.close();
       stopPolling();
@@ -103,7 +145,7 @@ export function useColdSearch(vacancyId: number) {
       stopPolling();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [job?.id, job?.status]);
+  }, [jobs.map((j) => `${j.id}:${j.status}`).join(',')]);
 
   const startSearch = useCallback(async (searchHints: string) => {
     setStarting(true);
@@ -115,9 +157,13 @@ export function useColdSearch(vacancyId: number) {
       });
       const data = await res.json();
       if (data.success) {
-        setJob(data.job);
-        connectSse(data.job.id);
-        startPolling();
+        // Добавляем новый job в начало списка и выбираем его
+        const newJob: ColdSearchJob = data.job;
+        setJobs((prev) => [newJob, ...prev]);
+        setSelectedJobId(newJob.id);
+        setCandidates([]);
+        connectSse(newJob.id);
+        startPolling(newJob.id);
       } else {
         setError(data.error || 'Не удалось запустить поиск');
       }
@@ -128,13 +174,20 @@ export function useColdSearch(vacancyId: number) {
     }
   }, [vacancyId, connectSse, startPolling]);
 
+  const selectedJob = jobs.find((j) => j.id === selectedJobId) ?? null;
+  const activeJob = jobs.find((j) => RUNNING_STATUSES.includes(j.status)) ?? null;
+
   return {
-    job,
+    jobs,
+    selectedJob,
+    activeJob,
+    selectedJobId,
     candidates,
     loading,
     starting,
     error,
     startSearch,
-    refetch: fetchStatus,
+    selectJob,
+    refetch: () => fetchJobs(selectedJobId ?? undefined),
   };
 }

@@ -20,6 +20,9 @@ export interface ColdSearchJob {
   progress: ColdSearchProgress;
   params_expanded: boolean;
   error: string | null;
+  search_hints: string | null;
+  hh_filters: Record<string, unknown> | null;
+  created_at: string;
   updated_at: string;
 }
 
