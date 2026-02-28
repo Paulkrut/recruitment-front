@@ -5484,8 +5484,8 @@ msgstr "Launch AI Analysis"
 #~ msgstr "Launch AI Analysis for All"
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:80
-msgid "Запустить поиск"
-msgstr ""
+#~ msgid "Запустить поиск"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:298
 msgid "Заранее"
@@ -6400,10 +6400,9 @@ msgstr "Candidates Will Appear After Completing Interview"
 #~ msgid "Кандидаты чувствуют персональный подход"
 #~ msgstr ""
 
-#. placeholder {0}: candidates.length > 0 ? ` (${candidates.length})` : ''
 #: src/components/hr/cold-search/ColdSearchTab.tsx:74
-msgid "Кандидаты{0}"
-msgstr ""
+#~ msgid "Кандидаты{0}"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:726
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:938
@@ -12314,8 +12313,8 @@ msgid "Холодный поиск"
 msgstr ""
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:119
-msgid "Холодный поиск кандидатов"
-msgstr ""
+#~ msgid "Холодный поиск кандидатов"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:770
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:173

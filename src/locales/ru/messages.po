@@ -5484,8 +5484,8 @@ msgstr "Запустить AI-анализ"
 #~ msgstr "Запустить AI-анализ для всех"
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:80
-msgid "Запустить поиск"
-msgstr "Запустить поиск"
+#~ msgid "Запустить поиск"
+#~ msgstr "Запустить поиск"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:298
 msgid "Заранее"
@@ -6400,10 +6400,9 @@ msgstr "Кандидаты появятся после прохождения и
 #~ msgid "Кандидаты чувствуют персональный подход"
 #~ msgstr "Кандидаты чувствуют персональный подход"
 
-#. placeholder {0}: candidates.length > 0 ? ` (${candidates.length})` : ''
 #: src/components/hr/cold-search/ColdSearchTab.tsx:74
-msgid "Кандидаты{0}"
-msgstr "Кандидаты{0}"
+#~ msgid "Кандидаты{0}"
+#~ msgstr "Кандидаты{0}"
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:726
 #: src/app/(DashboardLayout)/hr/vacancies/page.tsx:938
@@ -12314,8 +12313,8 @@ msgid "Холодный поиск"
 msgstr "Холодный поиск"
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:119
-msgid "Холодный поиск кандидатов"
-msgstr "Холодный поиск кандидатов"
+#~ msgid "Холодный поиск кандидатов"
+#~ msgstr "Холодный поиск кандидатов"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:770
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:173
