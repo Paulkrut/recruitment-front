@@ -13,6 +13,7 @@ import { useColdSearch } from './useColdSearch';
 import ColdSearchProgress from './ColdSearchProgress';
 import ColdCandidateCard from './ColdCandidateCard';
 import CandidateResumeModal from './CandidateResumeModal';
+import JobFunnelView from './JobFunnelView';
 import { ColdCandidate, ColdSearchJob } from './types';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
@@ -261,6 +262,11 @@ function SessionPanel({
         <Alert severity="warning" sx={{ mb: 2 }}>
           Параметры поиска были расширены — строгие фильтры (опыт, период, зарплата, статус поиска работы) сняты из-за нехватки кандидатов.
         </Alert>
+      )}
+
+      {/* Воронка поиска — показываем когда есть данные */}
+      {(job.status === 'complete' || (job.queries_log ?? []).length > 0) && (
+        <JobFunnelView job={job} />
       )}
 
       {job.status === 'failed' && job.error && (

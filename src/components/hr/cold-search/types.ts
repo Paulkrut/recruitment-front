@@ -14,10 +14,26 @@ export interface ColdSearchProgress {
   total: number;
 }
 
+export interface ColdSearchQueryLog {
+  text: string;
+  strategy: string;
+  expanded: boolean;
+  hh_found: number;
+  new_added: number;
+}
+
+export interface ColdSearchFiltersLog {
+  expanded: boolean;
+  active_filters: Record<string, unknown>;
+  removed_filters: Record<string, unknown>;
+}
+
 export interface ColdSearchJob {
   id: number;
   status: ColdSearchJobStatus;
   progress: ColdSearchProgress;
+  queries_log: ColdSearchQueryLog[];
+  filters_log: ColdSearchFiltersLog[];
   params_expanded: boolean;
   error: string | null;
   search_hints: string | null;
