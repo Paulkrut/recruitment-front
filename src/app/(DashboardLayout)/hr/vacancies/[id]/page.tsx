@@ -1058,7 +1058,7 @@ export default function HRVacancyDetailPage() {
               value="4"
             />
             <Tab icon={<IconSettings size={20}/>} iconPosition="start" label={_(msg`Настройки`)} value="5" />
-            <Tab icon={<IconUserSearch size={20}/>} iconPosition="start" label={_(msg`Холодный поиск`)} value="6" />
+            <Tab icon={<IconUserSearch size={20}/>} iconPosition="start" label={_(msg`Холодный поиск Beta`)} value="6" />
           </TabList>
         </Box>
         <TabPanel value="1" sx={{p:0}}>

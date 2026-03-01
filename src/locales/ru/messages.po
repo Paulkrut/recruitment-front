@@ -12309,8 +12309,12 @@ msgstr "Функционал в разработке: добавление HR-п
 #~ msgstr "Функция в разработке"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1061
-msgid "Холодный поиск"
-msgstr "Холодный поиск"
+#~ msgid "Холодный поиск"
+#~ msgstr "Холодный поиск"
+
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1061
+msgid "Холодный поиск Beta"
+msgstr "Холодный поиск Beta"
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:119
 #~ msgid "Холодный поиск кандидатов"

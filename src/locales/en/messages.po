@@ -12309,7 +12309,11 @@ msgstr "Functionality in development: adding HR users, assigning roles."
 #~ msgstr "Feature in Development"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1061
-msgid "Холодный поиск"
+#~ msgid "Холодный поиск"
+#~ msgstr ""
+
+#: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1061
+msgid "Холодный поиск Beta"
 msgstr ""
 
 #: src/components/hr/cold-search/ColdSearchTab.tsx:119
