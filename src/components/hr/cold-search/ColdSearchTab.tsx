@@ -43,8 +43,12 @@ function JobTooltipContent({ job }: { job: ColdSearchJob }) {
     };
     rows.push({ label: 'Опыт', value: expMap[filters.experience as string] ?? String(filters.experience) });
   }
-  if (Array.isArray(filters.area) && filters.area.length > 0) {
-    rows.push({ label: 'Город', value: (filters.area as string[]).join(', ') });
+  const areaLabels = filters.area_labels as string[] | undefined;
+  const areaIds    = filters.area as number[] | undefined;
+  if (areaLabels && areaLabels.length > 0) {
+    rows.push({ label: 'Город', value: areaLabels.join(', ') });
+  } else if (areaIds && areaIds.length > 0 && !(areaIds.length === 1 && areaIds[0] === 113)) {
+    rows.push({ label: 'Город (ID)', value: areaIds.join(', ') });
   }
   if (filters.salary) {
     rows.push({ label: 'Зарплата', value: `от ${filters.salary.toLocaleString()} ₽` });

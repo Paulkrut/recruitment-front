@@ -17,9 +17,13 @@ export interface ColdSearchProgress {
 export interface ColdSearchQueryLog {
   text: string;
   strategy: string;
+  search_field: string | null;
+  tier: 1 | 2 | 3 | 4;
+  domain_level: number;
   expanded: boolean;
   hh_found: number;
   new_added: number;
+  filters: Record<string, unknown>;
 }
 
 export interface ColdSearchFiltersLog {
@@ -70,4 +74,12 @@ export interface ColdCandidate {
   resume_data: Record<string, unknown> | null;
   found_at: string;
   scored_at: string | null;
+  source_query: {
+    query_index: number;
+    text: string | null;
+    strategy: string | null;
+    search_field: string | null;
+    tier: number | null;
+    domain_level: number;
+  } | null;
 }

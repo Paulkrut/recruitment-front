@@ -138,6 +138,31 @@ export default function ColdCandidateCard({ candidate, onClick }: Props) {
                 {candidate.pre_score_comment}
               </Typography>
             )}
+
+            {/* Источник поиска (debug) */}
+            {candidate.source_query?.text && (
+              <Tooltip
+                title={
+                  <Box sx={{ maxWidth: 320, fontSize: 12 }}>
+                    <Box sx={{ fontWeight: 700, mb: 0.5 }}>Запрос #{(candidate.source_query.query_index ?? 0) + 1} к HH</Box>
+                    <Box sx={{ fontFamily: 'monospace', mb: 0.5, wordBreak: 'break-word' }}>{candidate.source_query.text}</Box>
+                    {candidate.source_query.tier != null && <Box>тир: <b>{candidate.source_query.tier}</b></Box>}
+                    {candidate.source_query.domain_level > 0 && <Box>групп домена: <b>{candidate.source_query.domain_level}</b></Box>}
+                    {candidate.source_query.strategy && <Box>стратегия: <b>{candidate.source_query.strategy}</b></Box>}
+                    {candidate.source_query.search_field && <Box>поле: <b>{candidate.source_query.search_field}</b></Box>}
+                  </Box>
+                }
+              >
+                <Typography
+                  variant="caption"
+                  color="text.disabled"
+                  display="block"
+                  sx={{ mt: 0.5, cursor: 'help', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
+                >
+                  🔍 #{(candidate.source_query.query_index ?? 0) + 1}: {candidate.source_query.text}
+                </Typography>
+              </Tooltip>
+            )}
           </Box>
         </CardContent>
       </CardActionArea>

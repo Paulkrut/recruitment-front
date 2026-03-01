@@ -291,6 +291,19 @@ export default function CandidateResumeModal({ candidate, onClose }: Props) {
         )}
       </DialogContent>
 
+      {/* Debug: источник поиска */}
+      {candidate.source_query?.text && (
+        <Box sx={{ px: 3, pb: 1, pt: 0 }}>
+          <Typography variant="caption" color="text.disabled">
+            🔍 Найден запросом #{(candidate.source_query.query_index ?? 0) + 1}
+            {candidate.source_query.strategy ? ` (${candidate.source_query.strategy})` : ''}
+            {candidate.source_query.search_field ? ` · поле: ${candidate.source_query.search_field}` : ''}
+            {': '}
+            <Box component="span" sx={{ fontFamily: 'monospace' }}>{candidate.source_query.text}</Box>
+          </Typography>
+        </Box>
+      )}
+
       <DialogActions sx={{ px: 3, py: 2, gap: 1 }}>
         <Button
           variant="contained"

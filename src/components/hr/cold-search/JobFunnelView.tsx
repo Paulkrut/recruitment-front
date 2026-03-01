@@ -8,18 +8,60 @@ import {
   IconChevronDown, IconChevronUp, IconSearch,
   IconFilter, IconBrain, IconStar, IconInfoCircle,
 } from '@tabler/icons-react';
-import { ColdSearchFiltersLog, ColdSearchJob } from './types';
+import { ColdSearchFiltersLog, ColdSearchJob, ColdSearchQueryLog } from './types';
 
 interface Props {
   job: ColdSearchJob;
 }
 
 const strategyLabel: Record<string, string> = {
-  title:    'по названию',
-  synonym:  'по синониму',
-  skills:   'по навыкам',
-  fallback: 'запасной',
-  unknown:  '',
+  // tier-1 (идеальный: must-have + домен)
+  ideal_skills:       'навыки: must-have + домен',
+  ideal_title:        'заголовок: must-have + домен',
+  ideal_experience:   'опыт: must-have + домен',
+  ideal_broad:        'все поля: must-have + домен',
+  // tier-2 (строгий: только must-have)
+  must_have_skills:      'навыки: must-have',
+  must_have_title:       'заголовок: must-have',
+  must_have_experience:  'опыт: must-have',
+  must_have_broad:       'все поля: must-have',
+  // tier-3 (косвенные синонимы)
+  relaxed_skills:     'навыки: синонимы',
+  relaxed_experience: 'опыт: синонимы',
+  relaxed_synonyms:   'все поля: синонимы + роль',
+  relaxed_broad:      'все поля: синонимы',
+  // tier-4 (fallback)
+  fallback_role:      'заголовок: только роль',
+  fallback_domain:    'все поля: роль + домен',
+  fallback_broad:     'все поля: роль + контекст',
+  // legacy
+  title:      'заголовок',
+  skills:     'навыки',
+  experience: 'опыт',
+  broad:      'широкий',
+  synonym:    'синоним',
+  fallback:   'запасной',
+  unknown:    '',
+};
+
+const tierLabel: Record<number, string> = {
+  1: 'идеальный (must-have + домен)',
+  2: 'строгий (must-have без домена)',
+  3: 'синонимы must-have',
+  4: 'запасной (без must-have)',
+};
+
+const tierColor: Record<number, string> = {
+  1: '#1976d2',
+  2: '#7b1fa2',
+  3: '#e65100',
+  4: '#757575',
+};
+
+const searchFieldLabel: Record<string, string> = {
+  name:       'в должности',
+  skills:     'в навыках',
+  experience: 'в опыте',
 };
 
 export default function JobFunnelView({ job }: Props) {
@@ -76,30 +118,7 @@ export default function JobFunnelView({ job }: Props) {
             unit="кандидатов найдено"
             detail={log.length > 0 ? `${log.length} запросов, ${totalHhFound} резюме получено от HH` : undefined}
           >
-            {log.length > 0 && (
-              <Table size="small" sx={{ mt: 0.5 }}>
-                <TableBody>
-                  {log.map((q, i) => (
-                    <TableRow key={i} sx={{ '& td': { py: 0.25, px: 0.5, border: 0, fontSize: '0.72rem' } }}>
-                      <TableCell sx={{ color: 'text.secondary', whiteSpace: 'nowrap' }}>
-                        {strategyLabel[q.strategy] || q.strategy}
-                        {q.expanded && (
-                          <Chip label="расширен" size="small" color="warning" sx={{ ml: 0.5, height: 14, fontSize: '0.6rem' }} />
-                        )}
-                      </TableCell>
-                      <TableCell sx={{ maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        <Tooltip title={q.text} placement="top">
-                          <span>«{q.text}»</span>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell sx={{ color: 'text.secondary', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        {q.hh_found} резюме → +{q.new_added} новых
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
+            <TieredQueryLog log={log} />
             {job.params_expanded && (
               <Typography variant="caption" color="warning.main" sx={{ display: 'block', mt: 0.5 }}>
                 ⚠ Параметры расширены — строгие фильтры сняты из-за нехватки кандидатов
@@ -184,6 +203,122 @@ function formatFilterValue(key: string, value: unknown): string {
   if (key === 'job_search_status') return (value as string[]).join(', ');
   if (key === 'area') return (value as number[]).join(', ');
   return String(value);
+}
+
+function TieredQueryLog({ log }: { log: ColdSearchQueryLog[] }) {
+  // Группируем по тирам; поддерживаем старые записи без tier (tier=1)
+  const groups: Record<number, ColdSearchQueryLog[]> = {};
+  for (const q of log) {
+    const t = q.tier ?? 1;
+    if (!groups[t]) groups[t] = [];
+    groups[t].push(q);
+  }
+  const tiers = Object.keys(groups).map(Number).sort();
+  const usedTiers = tiers.filter(t => (groups[t] ?? []).some(q => q.new_added > 0));
+
+  return (
+    <Box>
+      {tiers.map((tier) => {
+        const queries  = groups[tier] ?? [];
+        const wasUsed  = queries.some(q => q.new_added > 0);
+        const color    = tierColor[tier] ?? '#757575';
+        const label    = tierLabel[tier] ?? `tier ${tier}`;
+        return (
+          <Box key={tier} sx={{ mb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.5 }}>
+              <Chip
+                label={`Tier ${tier}: ${label}`}
+                size="small"
+                sx={{ height: 18, fontSize: '0.62rem', bgcolor: color, color: '#fff', fontWeight: 700 }}
+              />
+              {!wasUsed && (
+                <Typography variant="caption" color="text.disabled" sx={{ fontStyle: 'italic' }}>
+                  не выполнялся (предыдущий tier дал достаточно кандидатов)
+                </Typography>
+              )}
+              {wasUsed && usedTiers.length > 1 && tier > Math.min(...usedTiers) && (
+                <Typography variant="caption" color="warning.main" sx={{ fontStyle: 'italic' }}>
+                  ⚠ tier-{tier} запущен — строгих запросов не хватило
+                </Typography>
+              )}
+            </Box>
+            {wasUsed && queries.map((q, i) => <QueryLogRow key={i} q={q} />)}
+          </Box>
+        );
+      })}
+    </Box>
+  );
+}
+
+function QueryLogRow({ q }: { q: ColdSearchQueryLog }) {
+  const [open, setOpen] = useState(false);
+  const f = q.filters ?? {};
+
+  const filterChips: string[] = [];
+  if (f.experience) filterChips.push(`опыт: ${experienceLabels[f.experience as string] ?? f.experience}`);
+  if (f.salary)     filterChips.push(`зп от ${Number(f.salary).toLocaleString('ru')} ₽`);
+  if (f.period)     filterChips.push(`период: ${f.period} дн`);
+  if (f.age_from)   filterChips.push(`возраст от ${f.age_from}`);
+  if (f.age_to)     filterChips.push(`до ${f.age_to}`);
+  if (f.schedule)   filterChips.push(`график: ${f.schedule}`);
+
+  const areaLabels = f.area_labels as string[] | undefined;
+  const areaIds    = f.area as number[] | undefined;
+  if (areaLabels?.length)                                        filterChips.push(`город: ${areaLabels.join(', ')}`);
+  else if (areaIds?.length && !(areaIds.length === 1 && areaIds[0] === 113)) filterChips.push(`area: ${areaIds.join(', ')}`);
+
+  const statusArr = f.job_search_status as string[] | undefined;
+  if (statusArr?.length) filterChips.push(`статус: ${statusArr.join(', ')}`);
+
+  const roles = f.professional_role as number[] | undefined;
+  if (roles?.length) filterChips.push(`роль: ${roles.join(', ')}`);
+
+  return (
+    <Box sx={{ mb: 0.75, pl: 0.5, borderLeft: '2px solid', borderColor: q.expanded ? 'warning.main' : 'primary.light' }}>
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', flexWrap: 'wrap' }}
+        onClick={() => setOpen(v => !v)}
+      >
+        <Typography variant="caption" color="text.secondary" sx={{ minWidth: 70 }}>
+          {strategyLabel[q.strategy] || q.strategy}
+        </Typography>
+        {q.search_field && (
+          <Chip label={searchFieldLabel[q.search_field] ?? q.search_field} size="small" variant="outlined"
+            sx={{ height: 14, fontSize: '0.6rem', borderColor: 'primary.light', color: 'primary.main' }} />
+        )}
+        {q.domain_level > 0 && (
+          <Chip
+            label={`домен ×${q.domain_level}`}
+            size="small" variant="outlined"
+            sx={{ height: 14, fontSize: '0.6rem', borderColor: '#7b1fa2', color: '#7b1fa2' }}
+          />
+        )}
+        {q.expanded && <Chip label="расширен" size="small" color="warning" sx={{ height: 14, fontSize: '0.6rem' }} />}
+        {!q.expanded && q.new_added === 0 && (
+          <Chip label="0 новых" size="small" variant="outlined" sx={{ height: 14, fontSize: '0.6rem', color: 'text.disabled', borderColor: 'divider' }} />
+        )}
+        <Tooltip title={q.text} placement="top">
+          <Typography variant="caption" sx={{ maxWidth: 240, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            «{q.text}»
+          </Typography>
+        </Tooltip>
+        <Typography variant="caption" color="text.secondary" sx={{ ml: 'auto', whiteSpace: 'nowrap' }}>
+          {q.hh_found} из HH → +{q.new_added} новых
+        </Typography>
+        <IconButton size="small" sx={{ p: 0 }}>
+          {open ? <IconChevronUp size={12} /> : <IconChevronDown size={12} />}
+        </IconButton>
+      </Box>
+      <Collapse in={open}>
+        <Box sx={{ mt: 0.5, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+          <Chip label={`text: «${q.text}»`} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.62rem', maxWidth: 300 }} />
+          {filterChips.map((chip, i) => (
+            <Chip key={i} label={chip} size="small" variant="outlined" sx={{ height: 18, fontSize: '0.62rem' }} />
+          ))}
+        </Box>
+      </Collapse>
+    </Box>
+  );
 }
 
 function FiltersBlock({ fl }: { fl: ColdSearchFiltersLog }) {
