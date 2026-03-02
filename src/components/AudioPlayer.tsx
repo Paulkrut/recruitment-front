@@ -11,7 +11,9 @@ import {
   ErrorOutline as ErrorIcon,
   VolumeUp as VolumeIcon,
   VolumeOff as MuteIcon,
+  OpenInNew as OpenInNewIcon
 } from '@mui/icons-material';
+import Link from "next/link";
 
 interface AudioPlayerProps {
   src: string;
@@ -150,6 +152,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, filename = 'audio', mime
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
+      <>
     <Box
       sx={{
         display: 'flex',
@@ -271,6 +274,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ src, filename = 'audio', mime
         </Box>
       )}
     </Box>
+        <Typography sx={{my: 1}}>
+        <Link href={src} target={'_blank'}>
+          <>Ссылка на аудио</>
+          <OpenInNewIcon sx={{fontSize: '12px', ml: .3}}/>
+        </Link>
+        </Typography>
+      </>
   );
 };
 
