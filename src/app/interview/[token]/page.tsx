@@ -1150,7 +1150,7 @@ export default function CandidateInterviewPage() {
     setChat((p) => {
       const cp = [...p];
       // Заменяем typing индикатор на новый вопрос
-      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now() };
+      cp[typingIdx] = { role: "bot", text: d.question.text, timestamp: Date.now(), attachments: d.question.attachments || [] };
       return cp;
     });
     setLoadingNextQuestion(false);
