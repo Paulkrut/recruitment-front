@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import {
   Box,
@@ -171,6 +171,55 @@ export default function CandidateInterviewPage() {
 
   const chatRef = useRef<HTMLDivElement | null>(null);
   const chatScrollRef = useRef<HTMLDivElement | null>(null);
+
+  // Трекинг потери фокуса окна во время интервью
+  const focusLeaveTimeRef = useRef<number | null>(null);
+
+  const reportFocusLost = useCallback(async (seconds: number) => {
+    if (!token || seconds <= 0) return;
+    try {
+      await fetch(`${API_BASE}/api/public/interview/${token}/tab-focus`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ seconds }),
+      });
+    } catch { /* silent */ }
+  }, [token]);
+
+  useEffect(() => {
+    // Трекинг только во время активного интервью
+    if (!question || result) return;
+
+    const handleHide = () => {
+      if (document.visibilityState === 'hidden') {
+        focusLeaveTimeRef.current = Date.now();
+      } else if (document.visibilityState === 'visible' && focusLeaveTimeRef.current) {
+        const seconds = Math.round((Date.now() - focusLeaveTimeRef.current) / 1000);
+        focusLeaveTimeRef.current = null;
+        reportFocusLost(seconds);
+      }
+    };
+
+    const handleBeforeUnload = () => {
+      if (focusLeaveTimeRef.current) {
+        const seconds = Math.round((Date.now() - focusLeaveTimeRef.current) / 1000);
+        if (seconds > 0 && token) {
+          navigator.sendBeacon(
+            `${API_BASE}/api/public/interview/${token}/tab-focus`,
+            JSON.stringify({ seconds })
+          );
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleHide);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleHide);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [question, result, token, reportFocusLost]);
 
   // Helper: удаление последнего сообщения пользователя из чата
   const removeLastUserMessage = () => {

@@ -48,6 +48,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import CommentIcon from '@mui/icons-material/Comment';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -969,6 +970,18 @@ export default function CandidateDetailPage() {
                               }
                               return '-';
                             })()}
+                          </Typography>
+                        </Grid>
+                      )}
+                      {(sessionDetail.tabFocusLostCount > 0) && (
+                        <Grid item xs={12} sm={6} md={3}>
+                          <Typography variant="body2" color="warning.main">
+                            <VisibilityOffIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} />
+                            <b><Trans>Покидал окно:</Trans></b>{' '}
+                            {sessionDetail.tabFocusLostCount} {sessionDetail.tabFocusLostCount === 1 ? _(msg`раз`) : _(msg`раз`)},{' '}
+                            {Math.floor(sessionDetail.tabFocusLostSeconds / 60) > 0
+                              ? _(msg`${Math.floor(sessionDetail.tabFocusLostSeconds / 60)} мин ${sessionDetail.tabFocusLostSeconds % 60} сек`)
+                              : _(msg`${sessionDetail.tabFocusLostSeconds} сек`)}
                           </Typography>
                         </Grid>
                       )}
