@@ -63,6 +63,13 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
   const [hasAudio, setHasAudio] = useState<boolean>(false);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number | null>(null);
+  // Refs для надёжного управления потоками (state устаревает в замыканиях)
+  const isInitializingRef = useRef(false);   // защита от параллельных вызовов
+  const callIdRef = useRef(0);               // отмена устаревших getUserMedia
+  const cameraEnabledRef = useRef(cameraEnabled); // актуальное значение внутри async
+  const activeStreamRef = useRef<MediaStream | null>(null);  // поток из initializeMedia
+  const webcamStreamRef = useRef<MediaStream | null>(null);  // поток из react-webcam
+  useEffect(() => { cameraEnabledRef.current = cameraEnabled; }, [cameraEnabled]);
 
   // Production константы
   const GUM_TIMEOUT = 20000; // 20 секунд как у BigBlueButton
@@ -165,7 +172,16 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
 
   // Основная функция инициализации (упрощенная)
   const initializeMedia = useCallback(async () => {
-    if (isInitializing) return;
+    // Используем ref вместо state — state устаревает в замыканиях useCallback
+    if (isInitializingRef.current) return;
+    isInitializingRef.current = true;
+    const myCallId = callIdRef.current; // зафиксировали ID до первого await
+
+    // Останавливаем предыдущий поток initializeMedia перед новым запросом
+    if (activeStreamRef.current) {
+      activeStreamRef.current.getTracks().forEach(t => t.stop());
+      activeStreamRef.current = null;
+    }
 
     setIsInitializing(true);
     setIsReady(false);
@@ -190,17 +206,31 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
 
           const stream = await promiseTimeout(GUM_TIMEOUT, gumPromise) as MediaStream;
 
-          const videoTracks = stream.getVideoTracks();
+          // Вызов устарел (пришёл новый) — сразу останавливаем и выходим
+          if (myCallId !== callIdRef.current) {
+            stream.getTracks().forEach(track => track.stop());
+            return;
+          }
+
+          // Пока ждали — пользователь мог выключить камеру
+          if (!cameraEnabledRef.current) {
+            stream.getVideoTracks().forEach(track => track.stop());
+          }
+
+          const videoTracks = stream.getVideoTracks().filter(t => t.readyState === 'live');
           const audioTracks = stream.getAudioTracks();
 
-          setHasVideo(videoTracks.length > 0);
-          setHasAudio(audioTracks.length > 0);
-
           // Если нужно видео, но его нет - пробуем дальше
-          if (cameraEnabled && videoTracks.length === 0 && i < strategies.length - 1) {
+          if (cameraEnabledRef.current && videoTracks.length === 0 && i < strategies.length - 1) {
             stream.getTracks().forEach(track => track.stop());
             continue;
           }
+
+          // Сохраняем поток для возможности остановки
+          activeStreamRef.current = stream;
+
+          setHasVideo(videoTracks.length > 0);
+          setHasAudio(audioTracks.length > 0);
 
           // Настраиваем анализ аудио
           if (audioTracks.length > 0) {
@@ -236,10 +266,11 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
       const localizedError = getLocalizedError(error);
       onError(`❌ ${localizedError}`);
     } finally {
+      isInitializingRef.current = false;
       setIsInitializing(false);
     }
   }, [
-    isInitializing, cameraEnabled, createStrategies,
+    cameraEnabled, createStrategies,
     setupAudioAnalysis, onStreamReady, onMicReady, onError
   ]);
 
@@ -260,19 +291,30 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
     }, 500);
   }, [initializeMedia]);
 
+  // При выключении камеры — явно останавливаем оба потока
+  useEffect(() => {
+    if (!cameraEnabled) {
+      activeStreamRef.current?.getVideoTracks().forEach(t => t.stop());
+      webcamStreamRef.current?.getTracks().forEach(t => t.stop());
+      webcamStreamRef.current = null;
+    }
+  }, [cameraEnabled]);
+
   // Инициализация
   useEffect(() => {
+    // Инвалидируем предыдущий вызов чтобы не было гонки
+    callIdRef.current++;
+    isInitializingRef.current = false;
     initializeMedia();
 
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, [cameraEnabled]);
 
   // Обработчики react-webcam
   const handleUserMedia = useCallback((stream: MediaStream) => {
+    webcamStreamRef.current = stream; // сохраняем для надёжной остановки
     if (!isReady) {
       const videoTracks = stream.getVideoTracks();
       const audioTracks = stream.getAudioTracks();
