@@ -270,7 +270,7 @@ msgstr "{0} months ago"
 
 #. placeholder {0}: Math.floor(sessionDetail.tabFocusLostSeconds / 60)
 #. placeholder {1}: sessionDetail.tabFocusLostSeconds % 60
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:983
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:997
 msgid "{0} мин {1} сек"
 msgstr ""
 
@@ -290,7 +290,7 @@ msgid "{0} обновлено"
 msgstr ""
 
 #. placeholder {0}: sessionDetail.tabFocusLostSeconds
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:984
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:998
 msgid "{0} сек"
 msgstr ""
 
@@ -593,7 +593,7 @@ msgstr "<0>Notifications:</0> HR Clients will be notified of the request"
 #~ msgstr ""
 
 #. placeholder {0}: a.aiComment
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1036
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1051
 msgid "<0>Характеристика:</0> {0}"
 msgstr ""
 
@@ -1097,7 +1097,7 @@ msgstr ""
 msgid "✅ С резюме"
 msgstr "✅ With Resume"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1469
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1484
 msgid "✅ Сильные стороны (по мнению AI)"
 msgstr "✅ Strengths (according to AI)"
 
@@ -1730,7 +1730,7 @@ msgstr "🎯 How to Work with This Page?"
 msgid "🎯 Области для развития"
 msgstr "🎯 Areas for Development"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1480
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1495
 msgid "🎯 Области для развития (по мнению AI)"
 msgstr "🎯 Areas for Development (According to AI)"
 
@@ -1833,7 +1833,7 @@ msgstr ""
 #~ msgid "💡 Проверить режим можно в правом верхнем углу на сайте hh.ru"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1462
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1477
 #: src/app/interview/[token]/InterviewResultsScreen.tsx:94
 msgid "💡 Развивающая обратная связь"
 msgstr "💡 Developmental Feedback"
@@ -1885,7 +1885,7 @@ msgstr "💬 Generating Comment with Recommendation"
 msgid "💬 Оставьте комментарий о прохождении интервью"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1538
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1553
 msgid "💭 Мнение кандидата о результатах интервью"
 msgstr "💭 Candidate Opinion on Interview Results"
 
@@ -2071,7 +2071,7 @@ msgstr ""
 #~ msgid "📚 Участвует в оценке знаний (totalScore)"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1457
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1472
 #: src/app/interview/[token]/InterviewResultsScreen.tsx:85
 msgid "📝 Краткий итог"
 msgstr "📝 Brief Summary"
@@ -2103,7 +2103,7 @@ msgstr "📝 Forming Developmental Feedback..."
 msgid "📞 На связи"
 msgstr "📞 In Touch"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1323
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1338
 msgid "📤 Отправить приглашение"
 msgstr "📤 Send Invitation"
 
@@ -2170,7 +2170,7 @@ msgstr "📧 Check the specified email - we have sent a confirmation of receipt 
 #~ msgid "📷 Найдено камер: {0}"
 #~ msgstr "📷 Cameras Found: {0}"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1336
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1351
 msgid "🔄 Загрузить из HH"
 msgstr "🔄 Load from HH"
 
@@ -2244,7 +2244,7 @@ msgstr "🔗 Test Invitations"
 msgid "🔗 Сгенерировать общую ссылку"
 msgstr "🔗 Generate Public Link"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1399
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1414
 msgid "🔗 Ссылка на интервью отправлена"
 msgstr "🔗 Interview link sent"
 
@@ -3168,7 +3168,7 @@ msgstr "Archive"
 msgid "Архивные"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1054
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1069
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:106
 msgid "Аудио"
 msgstr "Audio"
@@ -3647,7 +3647,7 @@ msgstr "Enter Your Position"
 #~ msgid "Введите вопрос, на который должен ответить кандидат"
 #~ msgstr "Enter the Question the Candidate Must Answer"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1289
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1304
 msgid "Введите заметку или комментарий..."
 msgstr "Enter a note or comment..."
 
@@ -3722,7 +3722,7 @@ msgstr "Enter Full Regulation Text..."
 msgid "Введите текст вопроса для кандидата..."
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1209
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1224
 msgid "Введите текст резюме"
 msgstr "Enter resume text"
 
@@ -3778,7 +3778,7 @@ msgstr ""
 msgid "Версия"
 msgstr "Version"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1060
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1075
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:112
 msgid "Видео"
 msgstr "Video"
@@ -3998,7 +3998,7 @@ msgstr "Question {0} of {1}"
 
 #. placeholder {0}: idx+1
 #. placeholder {0}: index + 1
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1003
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1018
 #: src/utils/pdfExportWithFont.ts:252
 msgid "Вопрос {0}:"
 msgstr "Question {0}:"
@@ -4158,7 +4158,7 @@ msgstr ""
 
 #. placeholder {0}: a.createdAt || '-'
 #. placeholder {0}: answer.createdAt
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1063
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1078
 #: src/utils/pdfExportWithFont.ts:297
 msgid "Время ответа: {0}"
 msgstr "Response Time: {0}"
@@ -4199,7 +4199,7 @@ msgstr "All"
 msgid "Все ({count})"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1423
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1438
 msgid "Все автоматические и ручные действия, совершённые с этим кандидатом"
 msgstr ""
 
@@ -4312,11 +4312,11 @@ msgstr "Total: {totalCandidates}"
 msgid "Вспомнили пароль? "
 msgstr "Remembered your password? "
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1201
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1216
 msgid "Вставьте или введите текст резюме кандидата..."
 msgstr "Paste or enter candidate's resume text..."
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1269
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1284
 msgid "Вставьте текст резюме и нажмите \"Сохранить\""
 msgstr "Paste the resume text and click \"Save\""
 
@@ -4448,7 +4448,7 @@ msgstr ""
 msgid "Выберите кандидатов вакансии вручную и пригласите одним кликом."
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1555
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1570
 msgid "Выберите кандидатов для сравнения (минимум 1):"
 msgstr "Select Candidates for Comparison (minimum 1):"
 
@@ -5094,7 +5094,7 @@ msgstr "Add questions for testing candidates. You can create them manually or us
 msgid "Добавьте ссылку на видео о компании. Поддерживаются: YouTube, Vimeo, Rutube, VK Video"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1196
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1211
 msgid "Добавьте текст резюме"
 msgstr "Add resume text"
 
@@ -5328,7 +5328,7 @@ msgstr ""
 msgid "Загрузить"
 msgstr "Load"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1190
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1205
 msgid "Загрузить из HeadHunter.ru"
 msgstr "Load from HeadHunter.ru"
 
@@ -5356,7 +5356,7 @@ msgstr "Loading Resume"
 msgid "Загрузка резюме из HH.ru"
 msgstr "Loading Resume from HH.ru"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1086
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1101
 msgid "Загрузка резюме..."
 msgstr "Loading Resume..."
 
@@ -5364,7 +5364,7 @@ msgstr "Loading Resume..."
 #~ msgid "Загрузка статусов... Нажмите \"Далее\" чтобы продолжить"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1336
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1351
 #: src/app/(DashboardLayout)/hr/page.tsx:150
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:235
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:243
@@ -5396,11 +5396,11 @@ msgstr "Close"
 msgid "Закрыть, настрою позже"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1295
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1310
 msgid "Заметка хранится только локально в браузере (MVP)."
 msgstr "Note stored only locally in browser (MVP)."
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1283
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1298
 msgid "Заметки HR"
 msgstr "HR Notes"
 
@@ -6069,7 +6069,7 @@ msgstr ""
 msgid "История действий"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1419
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1434
 msgid "История действий с кандидатом"
 msgstr ""
 
@@ -6079,7 +6079,7 @@ msgstr ""
 msgid "История и статистика"
 msgstr "History and Statistics"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1306
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1321
 msgid "История коммуникаций"
 msgstr "Communication History"
 
@@ -6092,7 +6092,7 @@ msgstr "Operations History"
 msgid "История платежей"
 msgstr "Payment History"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1096
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1111
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:160
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:163
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:941
@@ -6238,11 +6238,11 @@ msgstr "Candidate"
 msgid "Кандидат добавлен успешно!"
 msgstr "Candidate Added Successfully!"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1506
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1521
 msgid "Кандидат еще не запросил обратную связь"
 msgstr "Candidate has not yet requested feedback"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1543
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1558
 msgid "Кандидат еще не оставил свое мнение о результатах"
 msgstr "Candidate has not yet left their opinion about the results"
 
@@ -6600,7 +6600,7 @@ msgstr "Brief Test Description for Employees"
 msgid "Критерий"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1016
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1031
 msgid "Критический вопрос - ответ не соответствует требованиям"
 msgstr ""
 
@@ -6675,7 +6675,7 @@ msgstr "Any Person Can Book an Interview by Providing Their Data."
 msgid "Масштабируемость"
 msgstr "Scalability"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1028
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1043
 msgid "Материалы к вопросу"
 msgstr ""
 
@@ -6695,7 +6695,7 @@ msgstr "Assessment Metrics"
 msgid "Метрики оценки:"
 msgstr "Evaluation Metrics:"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1043
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1058
 #: src/components/hr/TypingMetricsDisplay.tsx:83
 msgid "Метрики печати"
 msgstr ""
@@ -6720,15 +6720,15 @@ msgstr "Minimum 3 Characters"
 msgid "Мнение кандидата"
 msgstr "Candidate Opinion"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1520
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1535
 msgid "Мнение кандидата о своей оценке"
 msgstr "Candidate Opinion on Their Assessment"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1544
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1559
 msgid "Мнение появится после того, как кандидат получит обратную связь"
 msgstr "Opinion Will Appear After Candidate Receives Feedback"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1111
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1126
 msgid "Можно загрузить из HH"
 msgstr "Can be loaded from HH"
 
@@ -7457,7 +7457,7 @@ msgstr ""
 #~ msgid "Неправильный ответ пометит кандидата специальным флагом"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1034
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1049
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:102
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:131
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:132
@@ -7546,13 +7546,13 @@ msgstr ""
 msgid "нет ответа"
 msgstr "no answer"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1033
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1048
 #: src/components/question/QuestionOptionsEditor.tsx:55
 #: src/utils/pdfExportWithFont.ts:269
 msgid "Нет ответа"
 msgstr "No Answer"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1067
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1082
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:120
 msgid "Нет ответов"
 msgstr "No Answers"
@@ -7799,11 +7799,11 @@ msgstr "Feedback Sent to Your Email!"
 #~ msgid "Обратная связь пока не готова"
 #~ msgstr "Feedback Not Ready Yet"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1507
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1522
 msgid "Обратная связь появится после того, как кандидат нажмет соответствующую кнопку на странице результатов"
 msgstr "Feedback will appear after the candidate clicks the corresponding button on the results page"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1437
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1452
 msgid "Обратная связь, полученная кандидатом"
 msgstr "Feedback Received by Candidate"
 
@@ -7825,7 +7825,7 @@ msgid "Общая оценка: {0}"
 msgstr "Overall Score: {0}"
 
 #. placeholder {0}: feedback.average_score
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1451
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1466
 msgid "Общая оценка: {0}/10"
 msgstr "Overall Score: {0}/10"
 
@@ -8023,7 +8023,7 @@ msgstr "Answer"
 msgid "Ответ сотрудника:"
 msgstr "Employee Response:"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1033
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1048
 #: src/utils/pdfExportWithFont.ts:265
 msgid "Ответ:"
 msgstr "Answer:"
@@ -8053,7 +8053,7 @@ msgstr ""
 msgid "Ответы"
 msgstr "Responses"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:993
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1008
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:94
 #: src/utils/pdfExportWithFont.ts:245
 msgid "Ответы на вопросы"
@@ -8191,8 +8191,8 @@ msgid "Отлично (8-10)"
 msgstr "Excellent (8-10)"
 
 #: src/app/(DashboardLayout)/hr/billing/page.tsx:314
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1264
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1569
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1279
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1584
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:258
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/invitations/page.tsx:338
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:731
@@ -8273,7 +8273,7 @@ msgid "Отправить отзыв"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:538
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1310
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1325
 msgid "Отправить приглашение на интервью в HH.ru"
 msgstr "Send interview invitation via HH.ru"
 
@@ -8286,7 +8286,7 @@ msgid "Отправить через (дней)"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:547
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1323
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1338
 #: src/app/auth/forgot-password/page.tsx:167
 #: src/app/interview/[token]/ActiveInterviewScreen.tsx:771
 #: src/app/interview/[token]/ActiveInterviewScreen.tsx:876
@@ -8352,7 +8352,7 @@ msgstr ""
 msgid "Оффер"
 msgstr "Offer"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1010
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1025
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:231
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:774
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:777
@@ -8392,7 +8392,7 @@ msgstr ""
 #~ msgid "Оценка по компетенциям"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1034
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1049
 msgid "Оценка:"
 msgstr ""
 
@@ -8701,12 +8701,12 @@ msgstr ""
 msgid "Ошибка при загрузке запросов"
 msgstr "Error loading requests"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1179
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1194
 #: src/utils/errorTranslator.tsx:37
 msgid "Ошибка при загрузке резюме"
 msgstr "Error Loading Resume"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1184
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1199
 msgid "Ошибка при загрузке резюме из HeadHunter.ru"
 msgstr "Error Loading Resume from HeadHunter.ru"
 
@@ -8759,7 +8759,7 @@ msgstr "Error Processing Request"
 msgid "Ошибка при открытии формы оплаты"
 msgstr "Error Opening Payment Form"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1498
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1513
 msgid "Ошибка при отображении обратной связи"
 msgstr "Error Displaying Feedback"
 
@@ -8823,8 +8823,8 @@ msgstr "Error Saving"
 #~ msgid "Ошибка при сохранении настроек"
 #~ msgstr "Error Saving Settings"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1239
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1244
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1254
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1259
 msgid "Ошибка при сохранении резюме"
 msgstr "Error saving resume"
 
@@ -9458,7 +9458,7 @@ msgstr "Search: {0}"
 msgid "Пока нет данных для отображения"
 msgstr "No Data to Display Yet"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1349
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1364
 msgid "Пока нет коммуникаций с кандидатом"
 msgstr "No communications with candidate yet"
 
@@ -9500,9 +9500,13 @@ msgstr "Shows the total number of candidates who completed the interview and are
 msgid "Показывать описание вакансии развернутым по умолчанию"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:980
-msgid "Покидал окно:"
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:991
+msgid "Покидал окно"
 msgstr ""
+
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:980
+#~ msgid "Покидал окно:"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/billing/transactions/page.tsx:124
 msgid "Покупка"
@@ -10212,8 +10216,7 @@ msgstr ""
 msgid "Работы выполняются"
 msgstr "Work in Progress"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:981
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:981
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:995
 msgid "раз"
 msgstr ""
 
@@ -10340,7 +10343,7 @@ msgstr "Editing"
 msgid "Редактирование вакансии"
 msgstr "Vacancy Editing"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1196
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1211
 msgid "Редактирование резюме"
 msgstr "Editing Resume"
 
@@ -10366,7 +10369,7 @@ msgstr "Edit Folder"
 msgid "Редактировать регламент"
 msgstr "Edit Regulation"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1148
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1163
 msgid "Редактировать резюме"
 msgstr "Edit Resume"
 
@@ -10434,11 +10437,11 @@ msgstr "Test results will be analyzed, and you will receive feedback from your m
 msgid "Резюме"
 msgstr "Resume"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1103
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1118
 msgid "Резюме доступно"
 msgstr "Resume Available"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1176
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1191
 msgid "Резюме загружено из HeadHunter.ru"
 msgstr "Resume Loaded from HeadHunter.ru"
 
@@ -10446,11 +10449,11 @@ msgstr "Resume Loaded from HeadHunter.ru"
 msgid "Резюме загружено из HH.ru"
 msgstr "Resume Loaded from HH.ru"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1080
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1095
 msgid "Резюме кандидата"
 msgstr "Candidate Resume"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1154
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1169
 msgid "Резюме отсутствует в базе"
 msgstr "Resume Not in Database"
 
@@ -10458,7 +10461,7 @@ msgstr "Resume Not in Database"
 msgid "Резюме успешно загружено из HeadHunter.ru"
 msgstr "Resume Successfully Loaded from HeadHunter.ru"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1236
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1251
 #: src/utils/errorTranslator.tsx:31
 msgid "Резюме успешно сохранено"
 msgstr "Resume saved successfully"
@@ -11215,7 +11218,7 @@ msgstr "Company Employees"
 msgid "Сохранение..."
 msgstr "Saving..."
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1293
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1308
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:99
 msgid "Сохранено!"
 msgstr "Saved!"
@@ -11241,7 +11244,7 @@ msgstr "Save (demo)"
 msgid "Сохранить все настройки"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1292
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1307
 msgid "Сохранить заметку"
 msgstr "Save Note"
 
@@ -11253,7 +11256,7 @@ msgstr "Save Changes"
 #~ msgid "Сохранить настройки"
 #~ msgstr "Save Settings"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1250
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1265
 msgid "Сохранить резюме"
 msgstr "Save Resume"
 
@@ -11325,7 +11328,7 @@ msgid "Сравнение кандидатов"
 msgstr "Candidate Comparison"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:581
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1574
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1589
 msgid "Сравнить"
 msgstr "Compare"
 
@@ -11342,7 +11345,7 @@ msgstr "Compare Selected"
 msgid "Сравнить с другими"
 msgstr "Compare with Others"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1553
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1568
 msgid "Сравнить с другими кандидатами"
 msgstr "Compare with Other Candidates"
 
@@ -12575,7 +12578,7 @@ msgstr "This is a mandatory requirement under applicable US privacy laws (CCPA, 
 msgid "Это поле обязательно для заполнения"
 msgstr "This field is required"
 
-#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1446
+#: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1461
 msgid "Это та же обратная связь, которую видит кандидат после интервью"
 msgstr "This is the same feedback the candidate sees after the interview"
 
