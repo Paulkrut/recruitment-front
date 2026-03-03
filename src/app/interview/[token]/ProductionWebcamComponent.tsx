@@ -56,6 +56,7 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
 }) => {
   const { _ } = useLingui();
   const webcamRef = useRef<Webcam>(null);
+  const [veiled, setVeiled] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
   const [hasVideo, setHasVideo] = useState<boolean>(false);
@@ -316,24 +317,54 @@ const ProductionWebcamComponent: React.FC<ProductionWebcamComponentProps> = ({
         maxWidth: '90vw'
       }}>
         {cameraEnabled && hasVideo ? (
-          <Webcam
-            ref={webcamRef}
-            audio={true}
-            width="100%"
-            height="100%"
-            videoConstraints={{
-              width: { ideal: 640 },
-              height: { ideal: 480 },
-              facingMode: 'user'
-            }}
-            onUserMedia={handleUserMedia}
-            onUserMediaError={handleUserMediaError}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover'
-            }}
-          />
+          <>
+            <Webcam
+              ref={webcamRef}
+              audio={true}
+              width="100%"
+              height="100%"
+              videoConstraints={{
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                facingMode: 'user'
+              }}
+              onUserMedia={handleUserMedia}
+              onUserMediaError={handleUserMediaError}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover'
+              }}
+            />
+            {/* Вуаль — скрывает изображение пока кандидат сам не нажмёт */}
+            {veiled && (
+              <Box
+                onClick={() => setVeiled(false)}
+                sx={{
+                  position: 'absolute',
+                  inset: 0,
+                  backdropFilter: 'blur(20px)',
+                  bgcolor: 'rgba(0,0,0,0.45)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1.5,
+                  cursor: 'pointer',
+                  zIndex: 5,
+                  transition: 'opacity 0.3s',
+                }}
+              >
+                <VideocamIcon sx={{ fontSize: 48, color: 'rgba(255,255,255,0.8)' }} />
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 500, textAlign: 'center', px: 3 }}>
+                  <Trans>Нажмите чтобы увидеть себя</Trans>
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', textAlign: 'center', px: 4 }}>
+                  <Trans>Камера и микрофон уже работают — это только превью</Trans>
+                </Typography>
+              </Box>
+            )}
+          </>
         ) : (
           <Box sx={{
             width: '100%',
