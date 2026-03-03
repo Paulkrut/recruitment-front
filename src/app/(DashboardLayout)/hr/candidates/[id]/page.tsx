@@ -975,14 +975,29 @@ export default function CandidateDetailPage() {
                       )}
                       {(sessionDetail.tabFocusLostCount > 0) && (
                         <Grid item xs={12} sm={6} md={3}>
-                          <Typography variant="body2" color="warning.main">
-                            <VisibilityOffIcon fontSize="small" sx={{verticalAlign:'middle',mr:0.5}} />
-                            <b><Trans>Покидал окно:</Trans></b>{' '}
-                            {sessionDetail.tabFocusLostCount} {sessionDetail.tabFocusLostCount === 1 ? _(msg`раз`) : _(msg`раз`)},{' '}
-                            {Math.floor(sessionDetail.tabFocusLostSeconds / 60) > 0
-                              ? _(msg`${Math.floor(sessionDetail.tabFocusLostSeconds / 60)} мин ${sessionDetail.tabFocusLostSeconds % 60} сек`)
-                              : _(msg`${sessionDetail.tabFocusLostSeconds} сек`)}
-                          </Typography>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            <Box sx={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: 1,
+                              bgcolor: '#fff3e0',
+                              border: '1px solid #ffb74d',
+                            }}>
+                              <VisibilityOffIcon sx={{ fontSize: 14, color: '#e65100' }} />
+                              <Typography variant="caption" sx={{ color: '#e65100', fontWeight: 600, lineHeight: 1 }}>
+                                <Trans>Покидал окно</Trans>
+                              </Typography>
+                            </Box>
+                            <Typography variant="body2" color="text.secondary">
+                              {sessionDetail.tabFocusLostCount} {_(msg`раз`)},{' '}
+                              {Math.floor(sessionDetail.tabFocusLostSeconds / 60) > 0
+                                ? _(msg`${Math.floor(sessionDetail.tabFocusLostSeconds / 60)} мин ${sessionDetail.tabFocusLostSeconds % 60} сек`)
+                                : _(msg`${sessionDetail.tabFocusLostSeconds} сек`)}
+                            </Typography>
+                          </Box>
                         </Grid>
                       )}
                     </Grid>
