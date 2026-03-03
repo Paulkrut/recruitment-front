@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import {
   Box, Button, TextField, Typography, CircularProgress,
-  Alert, Tab, Tooltip, IconButton, Chip, Divider,
+  Alert, Tab, Tooltip, IconButton, Divider,
 } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -26,54 +26,120 @@ function formatTabLabel(job: ColdSearchJob): string {
   return `Поиск от ${date.toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' })}`;
 }
 
+const EXP_MAP: Record<string, string> = {
+  noExperience: 'без опыта',
+  between1And3: '1–3 года',
+  between3And6: '3–6 лет',
+  moreThan6:    '6+ лет',
+};
+const STATUS_MAP: Record<string, string> = {
+  pending:    'в очереди',
+  searching:  'поиск кандидатов',
+  prescoring: 'AI прескоринг',
+  scoring:    'детальный скоринг',
+  complete:   'завершён',
+  failed:     'ошибка',
+};
+const GENDER_MAP: Record<string, string> = {
+  male:   'мужской',
+  female: 'женский',
+};
+
+function TooltipRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <Box sx={{ display: 'flex', gap: 0.75, mb: 0.5, alignItems: 'flex-start' }}>
+      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        {label}:
+      </Typography>
+      <Typography variant="caption" sx={{ color: '#fff', wordBreak: 'break-word' }}>
+        {value}
+      </Typography>
+    </Box>
+  );
+}
+
 function JobTooltipContent({ job }: { job: ColdSearchJob }) {
   const filters = job.hh_filters ?? {};
+  const p = job.progress;
 
-  const rows: { label: string; value: string }[] = [];
-
-  if (job.search_hints) {
-    rows.push({ label: 'Условия', value: job.search_hints });
-  }
-  if (filters.experience) {
-    const expMap: Record<string, string> = {
-      noExperience: 'без опыта',
-      between1And3: '1–3 года',
-      between3And6: '3–6 лет',
-      moreThan6: '6+ лет',
-    };
-    rows.push({ label: 'Опыт', value: expMap[filters.experience as string] ?? String(filters.experience) });
-  }
   const areaLabels = filters.area_labels as string[] | undefined;
   const areaIds    = filters.area as number[] | undefined;
-  if (areaLabels && areaLabels.length > 0) {
-    rows.push({ label: 'Город', value: areaLabels.join(', ') });
-  } else if (areaIds && areaIds.length > 0 && !(areaIds.length === 1 && areaIds[0] === 113)) {
-    rows.push({ label: 'Город (ID)', value: areaIds.join(', ') });
-  }
-  if (filters.salary) {
-    rows.push({ label: 'Зарплата', value: `от ${filters.salary.toLocaleString()} ₽` });
-  }
-  if (filters.age_from || filters.age_to) {
-    const from = filters.age_from ? `от ${filters.age_from}` : '';
-    const to = filters.age_to ? `до ${filters.age_to}` : '';
-    rows.push({ label: 'Возраст', value: [from, to].filter(Boolean).join(' ') });
-  }
-  if (filters.period) {
-    rows.push({ label: 'Период резюме', value: `последние ${filters.period} дн.` });
-  }
+  const expValues  = filters.experience
+    ? (Array.isArray(filters.experience) ? filters.experience as string[] : [filters.experience as string])
+    : [];
+  const gender     = filters.gender as string | undefined;
 
-  if (rows.length === 0) {
-    return <Typography variant="caption">Условия не заданы</Typography>;
-  }
+  const createdDate = new Date(job.created_at);
+  const dateStr = createdDate.toLocaleString('ru', {
+    day: '2-digit', month: '2-digit', year: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+  });
 
   return (
-    <Box sx={{ p: 0.5, maxWidth: 320 }}>
-      {rows.map(({ label, value }) => (
-        <Box key={label} sx={{ mb: 0.5 }}>
-          <Typography variant="caption" color="text.secondary">{label}: </Typography>
-          <Typography variant="caption">{value}</Typography>
-        </Box>
-      ))}
+    <Box sx={{ p: 0.75, minWidth: 220, maxWidth: 340 }}>
+      {/* Дата и статус */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.55)' }}>
+          {dateStr}
+        </Typography>
+        <Typography
+          variant="caption"
+          sx={{
+            color: job.status === 'complete' ? '#69d98c' : job.status === 'failed' ? '#ff7b7b' : '#ffd666',
+            fontWeight: 600,
+          }}
+        >
+          {STATUS_MAP[job.status] ?? job.status}
+        </Typography>
+      </Box>
+
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.12)', mb: 1 }} />
+
+      {/* Условия поиска */}
+      {job.search_hints && (
+        <TooltipRow label="Запрос" value={job.search_hints} />
+      )}
+      {expValues.length > 0 && (
+        <TooltipRow label="Опыт" value={expValues.map(e => EXP_MAP[e] ?? e).join(', ')} />
+      )}
+      {areaLabels && areaLabels.length > 0 ? (
+        <TooltipRow label="Регион" value={areaLabels.join(', ')} />
+      ) : areaIds && areaIds.length > 0 && !(areaIds.length === 1 && String(areaIds[0]) === '113') ? (
+        <TooltipRow label="Регион ID" value={areaIds.join(', ')} />
+      ) : null}
+      {gender && <TooltipRow label="Пол" value={GENDER_MAP[gender] ?? gender} />}
+      {(filters.age_from || filters.age_to) && (
+        <TooltipRow
+          label="Возраст"
+          value={[
+            filters.age_from ? `от ${filters.age_from}` : '',
+            filters.age_to  ? `до ${filters.age_to}`  : '',
+          ].filter(Boolean).join(' ')}
+        />
+      )}
+      {filters.salary && (
+        <TooltipRow label="Зарплата" value={`от ${Number(filters.salary).toLocaleString('ru')} ₽`} />
+      )}
+      {filters.period && (
+        <TooltipRow label="Период" value={`последние ${filters.period} дн.`} />
+      )}
+
+      {/* Результаты */}
+      {p && (p.found > 0 || p.scored > 0) && (
+        <>
+          <Divider sx={{ borderColor: 'rgba(255,255,255,0.12)', my: 1 }} />
+          <TooltipRow label="Собрано из HH" value={String(p.found)} />
+          {p.prescored > 0 && (
+            <TooltipRow label="Прескоринг" value={`${p.prescored} из ${p.found}`} />
+          )}
+          {p.scored > 0 && (
+            <TooltipRow label="Оценено AI" value={String(p.scored)} />
+          )}
+          {p.skipped > 0 && (
+            <TooltipRow label="Пропущено" value={String(p.skipped)} />
+          )}
+        </>
+      )}
     </Box>
   );
 }
