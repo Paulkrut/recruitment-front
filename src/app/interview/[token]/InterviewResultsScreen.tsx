@@ -24,7 +24,6 @@ interface InterviewResultsScreenProps {
   feedbackData: any;
   token: string;
   isMobile: boolean;
-  stepperComp?: React.ReactNode;
   onSendEmailClick?: (email: string) => Promise<void>;
 }
 
@@ -32,7 +31,6 @@ export default function InterviewResultsScreen({
   feedbackData,
   token,
   isMobile,
-  stepperComp,
   onSendEmailClick,
 }: InterviewResultsScreenProps) {
   const { _ } = useLingui();
@@ -66,8 +64,6 @@ export default function InterviewResultsScreen({
       width: '100%',
       px: { xs: 2, sm: 3, md: 4 }
     }}>
-      {stepperComp}
-
       <Box sx={{ flex: 1, mt: 3, display: 'flex', flexDirection: 'column' }}>
         <Card sx={{ mb: 3 }}>
           <CardContent>

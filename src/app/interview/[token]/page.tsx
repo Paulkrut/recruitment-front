@@ -1770,7 +1770,6 @@ export default function CandidateInterviewPage() {
           feedbackData={feedbackData}
           token={token as string}
           isMobile={isMobile}
-          stepperComp={stepperComp}
           onSendEmailClick={sendFeedbackToEmail}
       />;
     }
@@ -1790,7 +1789,6 @@ export default function CandidateInterviewPage() {
         px: { xs: 0, sm: 2, md: 4 }
       }}>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-          {stepperComp}
           <Typography variant="h4" gutterBottom>
             {finalScreenSettings?.title || <Trans>Спасибо за прохождение интервью!</Trans>}
           </Typography>
@@ -1957,7 +1955,6 @@ export default function CandidateInterviewPage() {
           feedbackData={feedbackData}
           token={token as string}
           isMobile={isMobile}
-          stepperComp={stepperComp}
           onSendEmailClick={sendFeedbackToEmail}
       />;
       }
@@ -1977,7 +1974,6 @@ export default function CandidateInterviewPage() {
           px: { xs: 0, sm: 2, md: 4 }
         }}>
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            {stepperComp}
             <Typography variant="h4" gutterBottom>
               {finalScreenSettings?.title || <Trans>Спасибо за прохождение интервью!</Trans>}
             </Typography>
