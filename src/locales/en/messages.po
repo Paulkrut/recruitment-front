@@ -1007,7 +1007,7 @@ msgstr "✅ Request Successfully Sent!"
 msgid "✅ Импортирована"
 msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:215
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:228
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:207
 msgid "✅ Камера и микрофон подключены"
 msgstr "✅ Camera and Microphone Connected"
@@ -1016,7 +1016,7 @@ msgstr "✅ Camera and Microphone Connected"
 msgid "✅ Камера и микрофон подключены успешно!"
 msgstr "✅ Camera and Microphone Connected Successfully!"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:217
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:230
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:209
 msgid "✅ Камера подключена"
 msgstr "✅ Camera Connected"
@@ -1064,7 +1064,7 @@ msgstr "✅ Invitation sent to HH.ru"
 msgid "✅ Проверка требований: правильный выбор = OK, неправильный = 🚩 Red Flag (без балла)"
 msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:218
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:231
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:210
 msgid "✅ Продолжаем только с микрофоном"
 msgstr "✅ Continuing with microphone only"
@@ -1831,7 +1831,7 @@ msgstr "💡 Developmental Feedback"
 msgid "💡 Рекомендации для развития"
 msgstr "💡 Development Recommendations"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:496
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:552
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:472
 msgid "💡 Рекомендация"
 msgstr "💡 Recommendation"
@@ -2172,7 +2172,7 @@ msgstr "🔄 Load from HH"
 msgid "🔄 Переписать"
 msgstr "🔄 Rerecord"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:178
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:190
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:174
 msgid "🔄 Подключение к камере и микрофону..."
 msgstr "🔄 Connecting to Camera and Microphone..."
@@ -5146,7 +5146,7 @@ msgstr "Access Denied"
 #~ msgid "Доступ к базовым шаблонам интервью"
 #~ msgstr "Access to Basic Interview Templates"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:75
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:77
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:75
 msgid "Доступ к камере запрещен. Разрешите доступ в настройках браузера."
 msgstr "Camera Access Denied. Allow access in browser settings."
@@ -5414,7 +5414,7 @@ msgstr "HR Notes"
 msgid "Запись не содержит данных. Попробуйте ещё раз."
 msgstr "Recording contains no data. Please try again."
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:497
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:553
 msgid "Запись с камерой может повысить доверие работодателя и помочь ему лучше оценить ваши коммуникативные навыки."
 msgstr ""
 
@@ -6173,29 +6173,33 @@ msgstr "Which plan to choose for my company?"
 #~ msgid "Камера {0}"
 #~ msgstr "Camera {0}"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:79
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:81
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:79
 msgid "Камера занята другим приложением. Закройте все приложения, которые могут её использовать."
 msgstr "Camera is busy with another application. Close all applications that may be using it."
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:77
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:388
+msgid "Камера и микрофон уже работают — это только превью"
+msgstr ""
+
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:79
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:77
 msgid "Камера не найдена. Проверьте подключение камеры."
 msgstr "Camera Not Found. Check camera connection."
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:468
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:524
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:445
 msgid "Камера недоступна"
 msgstr "Camera Unavailable"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:469
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:525
 #: src/app/interview/[token]/WebcamComponent.tsx:118
 #: src/app/interview/[token]/WebcamComponent.tsx:167
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:446
 msgid "Камера отключена"
 msgstr "Camera Disabled"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:468
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:524
 #: src/app/interview/[token]/WebcamComponent.tsx:166
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:445
 msgid "Камера подключена"
@@ -6643,7 +6647,7 @@ msgstr ""
 msgid "Логотип"
 msgstr "Logo"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:121
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:123
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:118
 msgid "Любая камера"
 msgstr "Any Camera"
@@ -6685,12 +6689,12 @@ msgstr "Evaluation Metrics:"
 msgid "Метрики печати"
 msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:481
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:537
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:458
 msgid "Микрофон недоступен"
 msgstr "Microphone unavailable"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:481
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:537
 #: src/app/interview/[token]/WebcamComponent.tsx:175
 #: src/app/test/[token]/page.tsx:722
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:458
@@ -6836,6 +6840,10 @@ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/settings/hh-integration/page.tsx:1031
 msgid "Нажмите на вакансию, чтобы выбрать её для импорта. Можно выбрать сразу несколько."
+msgstr ""
+
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:385
+msgid "Нажмите чтобы увидеть себя"
 msgstr ""
 
 #: src/app/interview/apply/[token]/page.tsx:420
@@ -7055,7 +7063,7 @@ msgstr ""
 #~ msgid "Настройки из \"Настройки → Интеграция с HH → Автоматизация\""
 #~ msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:81
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:83
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:81
 msgid "Настройки камеры не поддерживаются."
 msgstr "Camera Settings Not Supported."
@@ -7381,7 +7389,7 @@ msgstr ""
 msgid "Неизвестная камера"
 msgstr "Unknown Camera"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:85
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:87
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:85
 msgid "неизвестная ошибка"
 msgstr "unknown error"
@@ -8623,7 +8631,7 @@ msgstr "Payment System Error"
 #~ msgid "Ошибка подключения"
 #~ msgstr "Connection Error"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:86
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:88
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:86
 msgid "Ошибка подключения камеры: {errorMessage}"
 msgstr "Camera Connection Error: {errorMessage}"
@@ -9279,13 +9287,13 @@ msgstr ""
 msgid "Подключение к камере..."
 msgstr "Connecting to Camera..."
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:468
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:524
 #: src/app/interview/[token]/WebcamComponent.tsx:166
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:445
 msgid "Подключение камеры..."
 msgstr "Connecting Camera..."
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:481
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:537
 #: src/app/interview/[token]/WebcamComponent.tsx:175
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:458
 msgid "Подключение микрофона..."
@@ -9610,7 +9618,7 @@ msgstr "Try"
 
 #: src/app/(DashboardLayout)/hr/billing/payment-success/page.tsx:124
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:705
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:381
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:437
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:360
 msgid "Попробовать снова"
 msgstr "Try Again"
@@ -9693,7 +9701,7 @@ msgstr "HH.ru Resume View Limit Exceeded"
 msgid "Превышено время ожидания генерации"
 msgstr "Generation Timeout Exceeded"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:83
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:85
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:83
 msgid "Превышено время ожидания подключения камеры."
 msgstr "Camera connection timeout exceeded."
@@ -10009,7 +10017,7 @@ msgstr "Continuation: {0} of {1}"
 msgid "Продолжить"
 msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:390
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:446
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:369
 msgid "Продолжить с микрофоном"
 msgstr "Continue with Microphone"
@@ -11428,7 +11436,7 @@ msgstr "Stage Deleted. {0}"
 msgid "Стадия: {0}"
 msgstr ""
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:109
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:111
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:108
 msgid "Стандартные настройки"
 msgstr "Standard Settings"
@@ -11906,8 +11914,8 @@ msgstr "Token is invalid. Re-authorization required."
 msgid "Токен успешно обновлён"
 msgstr "Token Successfully Updated"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:96
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:127
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:98
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:129
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:96
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:123
 msgid "Только микрофон"
@@ -12217,7 +12225,7 @@ msgstr "User Management"
 msgid "Управление стадией"
 msgstr "Stage Management"
 
-#: src/app/interview/[token]/ProductionWebcamComponent.tsx:115
+#: src/app/interview/[token]/ProductionWebcamComponent.tsx:117
 #: src/app/test/[token]/ProductionWebcamComponent.tsx:113
 msgid "Упрощенные настройки"
 msgstr "Simplified Settings"
