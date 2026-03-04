@@ -26,7 +26,7 @@ export class CandidatesSheetBuilder {
     currentRow = TableBuilder.addEmptyRow(sheet, currentRow);
 
     // Таблица кандидатов
-    const headers = ['№', 'Имя', 'Email', 'Телефон', 'Балл', 'Статус', 'Дата создания', 'Дата прохождения'];
+    const headers = ['№', 'Имя', 'Email', 'Телефон', 'Балл', '🚩', 'Статус', 'Дата создания', 'Дата прохождения'];
     const headerRow = sheet.getRow(currentRow++);
     headerRow.values = headers;
     ExcelStyleHelper.applyHeaderStyle(headerRow);
@@ -51,12 +51,16 @@ export class CandidatesSheetBuilder {
         ? new Date(candidate.completedAt).toLocaleDateString('ru-RU')
         : '-';
 
+      const redFlagCount = candidate.redFlagCount ?? 0;
+      const redFlagCell = redFlagCount > 0 ? `🚩 ${redFlagCount}` : '—';
+
       row.values = [
         index + 1,
         candidate.name,
         candidate.email || '-',
         candidate.phone || '-',
         score,
+        redFlagCell,
         status,
         createdDate,
         completedDate
@@ -67,13 +71,23 @@ export class CandidatesSheetBuilder {
         ExcelStyleHelper.applyScoreColor(row.getCell(5), candidate.score);
       }
 
+      // Красная заливка ячейки с флагами
+      if (redFlagCount > 0) {
+        row.getCell(6).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFE0E0' },
+        };
+        row.getCell(6).font = { bold: true, color: { argb: 'FFCC0000' } };
+      }
+
       // Перенос текста
       row.alignment = { vertical: 'top', wrapText: true };
       row.height = 20;
     });
 
     // Установка ширины колонок
-    ExcelStyleHelper.setColumnWidths(sheet, [8, 25, 25, 18, 10, 18, 15, 15]);
+    ExcelStyleHelper.setColumnWidths(sheet, [8, 25, 25, 18, 10, 10, 18, 15, 15]);
 
     // Добавляем рамки
     if (data.candidates.length > 0) {
@@ -82,7 +96,7 @@ export class CandidatesSheetBuilder {
         currentRow - data.candidates.length,
         1,
         currentRow - 1,
-        8
+        9
       );
     }
   }

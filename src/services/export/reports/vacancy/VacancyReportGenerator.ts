@@ -3,6 +3,7 @@ import { VacancyReportData } from './types';
 import { VacancyReportDataService } from './VacancyReportDataService';
 import { SummarySheetBuilder } from './SummarySheetBuilder';
 import { CandidatesSheetBuilder } from './CandidatesSheetBuilder';
+import { RedFlagsSheetBuilder } from './RedFlagsSheetBuilder';
 
 /**
  * Главный генератор отчёта по вакансии
@@ -30,7 +31,10 @@ export class VacancyReportGenerator {
       // 4. Страница 2: Список кандидатов
       CandidatesSheetBuilder.build(workbook, data);
 
-      // 5. Скачиваем файл
+      // 5. Страница 3: Красные флаги
+      RedFlagsSheetBuilder.build(workbook, data);
+
+      // 6. Скачиваем файл
       await this.downloadWorkbook(workbook, data.vacancy.title);
 
     } catch (error) {

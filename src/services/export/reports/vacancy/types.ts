@@ -9,6 +9,12 @@ export interface VacancyInfo {
   createdAt: string;
 }
 
+export interface RedFlagDetail {
+  question_id: number;
+  question_text: string;
+  answer_text: string;
+}
+
 export interface CandidateData {
   id: number;
   name: string;
@@ -20,6 +26,8 @@ export interface CandidateData {
   sessionId?: number;
   sessionStatus?: string;
   completedAt?: string;
+  redFlagCount?: number;
+  redFlagDetails?: RedFlagDetail[];
 }
 
 export interface ScoreDistribution {
