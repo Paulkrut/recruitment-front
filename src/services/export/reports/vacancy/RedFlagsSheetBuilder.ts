@@ -3,6 +3,20 @@ import { VacancyReportData } from './types';
 import { ExcelStyleHelper } from '../../shared/ExcelStyleHelper';
 import { TableBuilder } from '../../shared/TableBuilder';
 
+/** Убирает HTML-теги и декодирует базовые HTML-сущности */
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, ' ')          // теги → пробел
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s{2,}/g, ' ')           // схлопываем двойные пробелы
+    .trim();
+}
+
 /**
  * Построитель листа «Красные флаги» (страница 3)
  */
@@ -101,9 +115,9 @@ export class RedFlagsSheetBuilder {
         const score = candidate.score !== null ? candidate.score.toFixed(1) : '—';
 
         row.values = [
-          index === 0 ? candidate.name : '',  // имя только в первой строке кандидата
+          index === 0 ? candidate.name : '',
           index === 0 ? score : '',
-          flag.question_text,
+          stripHtml(flag.question_text),
           flag.answer_text || '(пустой ответ)',
         ];
 
