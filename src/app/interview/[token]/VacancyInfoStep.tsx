@@ -220,7 +220,6 @@ export default function VacancyInfoStep({
           size="large"
           fullWidth
           onClick={onContinue}
-          endIcon={<Icon icon="mdi:arrow-right" width={20} height={20} />}
           sx={{
             py: 1.5,
             bgcolor: "#2196f3",
