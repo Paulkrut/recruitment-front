@@ -41,6 +41,7 @@ import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import BulkActionsToolbar from './BulkActionsToolbar';
 import { extractHhCandidateIds } from './candidateUtils';
+import { CANDIDATE_STATUS_CONFIG, getCandidateStatusItem } from '@/constants/candidateStatuses';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -818,17 +819,8 @@ export default function CandidatesList({
   };
 
   const getCandidateStageLabel = (status: string) => {
-    switch (status) {
-      case 'new': return _(msg`Новый`);
-      case 'screening': return _(msg`AI Скрининг`);
-      case 'contacted': return _(msg`Связались`);
-      case 'testing': return _(msg`Тестирование`);
-      case 'finalist': return _(msg`Финалист`);
-      case 'offer': return _(msg`Оффер`);
-      case 'hired': return _(msg`Принят`);
-      case 'rejected': return _(msg`Отклонён`);
-      default: return status;
-    }
+    const item = getCandidateStatusItem(status);
+    return item ? `${item.icon} ${_(item.label)}` : status;
   };
 
   const getCandidateStageColor = (status: string): "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" => {

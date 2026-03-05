@@ -9,6 +9,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
+import { CANDIDATE_STATUS_CONFIG, getCandidateStatusItem } from '@/constants/candidateStatuses';
 
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -199,14 +200,11 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
                 onChange={(e) => handleLocalChange('status', e.target.value)}
               >
                 <MenuItem value=""><Trans>Все</Trans></MenuItem>
-                <MenuItem value="new"><Trans>Новый</Trans></MenuItem>
-                <MenuItem value="screening"><Trans>AI Скрининг</Trans></MenuItem>
-                <MenuItem value="contacted"><Trans>Связались</Trans></MenuItem>
-                <MenuItem value="testing"><Trans>Тестирование</Trans></MenuItem>
-                <MenuItem value="finalist"><Trans>Финалист</Trans></MenuItem>
-                <MenuItem value="offer"><Trans>Оффер</Trans></MenuItem>
-                <MenuItem value="hired"><Trans>Принят</Trans></MenuItem>
-                <MenuItem value="rejected"><Trans>Отклонён</Trans></MenuItem>
+                {CANDIDATE_STATUS_CONFIG.map((s) => (
+                  <MenuItem key={s.value} value={s.value}>
+                    {s.icon} {_(s.label)}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -466,17 +464,10 @@ export default function CandidateFilters({ filters, onFilterChange, vacancyId, v
           )}
           {filters.status && viewMode === 'list' && (
             <Chip
-              label={_(msg`Стадия: ${
-                filters.status === 'new' ? _(msg`Новый`) :
-                filters.status === 'screening' ? _(msg`AI Скрининг`) :
-                filters.status === 'contacted' ? _(msg`Связались`) :
-                filters.status === 'testing' ? _(msg`Тестирование`) :
-                filters.status === 'finalist' ? _(msg`Финалист`) :
-                filters.status === 'offer' ? _(msg`Оффер`) :
-                filters.status === 'hired' ? _(msg`Принят`) :
-                filters.status === 'rejected' ? _(msg`Отклонён`) :
-                filters.status
-              }`)}
+              label={(() => {
+                const item = getCandidateStatusItem(filters.status);
+                return item ? `${_(msg`Стадия`)}: ${item.icon} ${_(item.label)}` : `${_(msg`Стадия`)}: ${filters.status}`;
+              })()}
               size="small"
               onDelete={() => handleRemoveFilter('status')}
             />

@@ -60,6 +60,7 @@ import Rating from '@mui/material/Rating';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import { CANDIDATE_STATUS_CONFIG } from '@/constants/candidateStatuses';
 import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEventsTimeline';
 import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
@@ -99,18 +100,7 @@ function getStatusLabel(status: string, _: any) {
   }
 }
 
-// Доступные статусы кандидата для изменения
-const CANDIDATE_STATUSES = [
-  { value: 'new', label: (l: any) => l(msg`Новый`), icon: '🆕' },
-  { value: 'screening', label: (l: any) => l(msg`Скрининг`), icon: '🔍' },
-  { value: 'contacted', label: (l: any) => l(msg`Связались`), icon: '📞' },
-  { value: 'testing', label: (l: any) => l(msg`Тестирование`), icon: '📝' },
-  { value: 'interview', label: (l: any) => l(msg`Интервью`), icon: '💼' },
-  { value: 'offer', label: (l: any) => l(msg`Оффер`), icon: '📋' },
-  { value: 'hired', label: (l: any) => l(msg`Нанят`), icon: '✅' },
-  { value: 'rejected', label: (l: any) => l(msg`Отклонён`), icon: '❌' },
-  { value: 'withdrawn', label: (l: any) => l(msg`Отказался`), icon: '🚫' },
-];
+// Используем единый конфиг стадий (CANDIDATE_STATUS_CONFIG из @/constants/candidateStatuses)
 
 export default function CandidateDetailPage() {
   const { _, i18n } = useLingui();
@@ -485,9 +475,9 @@ export default function CandidateDetailPage() {
                     open={Boolean(statusMenuAnchor)}
                     onClose={() => setStatusMenuAnchor(null)}
                   >
-                    {CANDIDATE_STATUSES.map((status) => (
-                      <MenuItem 
-                        key={status.value} 
+                    {CANDIDATE_STATUS_CONFIG.map((status) => (
+                      <MenuItem
+                        key={status.value}
                         onClick={() => handleChangeStatus(status.value)}
                         selected={status.value === candidateStatus}
                         disabled={changingStatus}
@@ -495,7 +485,7 @@ export default function CandidateDetailPage() {
                         <ListItemIcon sx={{ minWidth: 32 }}>
                           <Typography fontSize="1.2rem">{status.icon}</Typography>
                         </ListItemIcon>
-                        <ListItemText>{status.label(_)}</ListItemText>
+                        <ListItemText>{_(status.label)}</ListItemText>
                       </MenuItem>
                     ))}
                   </Menu>
