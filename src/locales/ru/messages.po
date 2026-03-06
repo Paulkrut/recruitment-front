@@ -4759,8 +4759,8 @@ msgid "Дата добавления"
 msgstr "Дата добавления"
 
 #: src/app/(DashboardLayout)/hr/candidates/page.tsx:238
-msgid "Дата завершения"
-msgstr "Дата завершения"
+#~ msgid "Дата завершения"
+#~ msgstr "Дата завершения"
 
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:470
 msgid "Дата запроса"
@@ -4773,6 +4773,10 @@ msgstr "Дата интервью"
 #: src/app/forget-me/page.tsx:279
 msgid "Дата интервью (приблизительно)"
 msgstr "Дата интервью (приблизительно)"
+
+#: src/app/(DashboardLayout)/hr/candidates/page.tsx:238
+msgid "Дата начала интервью"
+msgstr "Дата начала интервью"
 
 #: src/app/(DashboardLayout)/hr/forget-me-requests/page.tsx:478
 msgid "Дата обработки"
