@@ -235,7 +235,7 @@ function EnhancedCandidateTable({
               <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Дата создания</Trans></Typography>
             </SortableHeader>
             <SortableHeader field="finishedAt">
-              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Дата завершения</Trans></Typography>
+              <Typography sx={{ color: 'white', fontWeight: 'bold' }}><Trans>Дата начала интервью</Trans></Typography>
             </SortableHeader>
             <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}><Trans>Действия</Trans></TableCell>
           </TableRow>
@@ -371,13 +371,13 @@ function EnhancedCandidateTable({
                 </Box>
               </TableCell>
               <TableCell>
-                {candidate.finishedAt ? (
+                {candidate.startedAt ? (
                   <Box>
                     <Typography variant="body2" fontWeight="bold">
-                      {formatDateToLocal(candidate.finishedAt)}
+                      {formatDateToLocal(candidate.startedAt)}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {getTimeAgo(candidate.finishedAt, i18n)}
+                      {getTimeAgo(candidate.startedAt, i18n)}
                     </Typography>
                   </Box>
                 ) : (
