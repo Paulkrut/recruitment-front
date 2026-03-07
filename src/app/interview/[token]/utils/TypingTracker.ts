@@ -2,7 +2,7 @@
  * TypingTracker - утилита для отслеживания метрик печати
  * 
  * Измеряет:
- * - Скорость печати (начиная со 2-го символа)
+ * - Скорость печати (начиная с 1-го символа)
  * - Паузы (более 3 секунд без печати)
  * - Исправления (backspace)
  * - Временную линию печати
@@ -32,7 +32,7 @@ export class TypingTracker {
   private readonly PAUSE_THRESHOLD_MS = 3000; // 3 секунды
   
   /**
-   * Начать отслеживание (автоматически вызывается со 2-го символа)
+   * Начать отслеживание (автоматически вызывается при первом нажатии клавиши)
    */
   start() {
     if (!this.isTracking) {
@@ -50,12 +50,9 @@ export class TypingTracker {
   onKeyPress(key: string, currentLength: number) {
     const now = new Date();
     
-    // Начинаем отслеживание со 2-го символа
-    if (!this.isTracking && currentLength >= 1) {
+    if (!this.isTracking) {
       this.start();
     }
-    
-    if (!this.isTracking) return;
     
     // Проверяем паузу (более 3 секунд без печати)
     if (this.lastKeyTime) {
