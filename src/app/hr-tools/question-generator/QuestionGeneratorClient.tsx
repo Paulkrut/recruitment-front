@@ -13,6 +13,7 @@ import {
   Collapse,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
 import { useQuestionGenerator, Question } from "../hooks/useHrTool";
@@ -238,6 +239,17 @@ export default function QuestionGeneratorClient() {
       description="Создайте профессиональные вопросы для собеседования за 30 секунд. Просто опишите вакансию — AI сгенерирует релевантные вопросы."
       icon="mdi:chat-question"
       iconColor="#2196F3"
+      ctaLabel="Хотите автоматизировать найм целиком?"
+      ctaTitle="SofiHR — платформа для найма от заявки до оффера"
+      ctaDescription="HeadHunter-интеграция, AI-интервью, рейтинг кандидатов, красные флаги, аналитика по воронке и экспорт в Excel. Первые 10 интервью бесплатно."
+      ctaButtonText="Начать бесплатно →"
+      ctaFeatures={[
+        { icon: "mdi:robot", text: "AI-интервью по вашим вопросам" },
+        { icon: "mdi:chart-bar", text: "Автоматический рейтинг кандидатов" },
+        { icon: "mdi:flag", text: "Красные флаги в ответах" },
+        { icon: "mdi:headhunter", text: "Интеграция с HeadHunter" },
+        { icon: "mdi:video", text: "Видеозапись и аналитика" },
+      ]}
     >
       {/* Input form */}
       <Paper
@@ -245,7 +257,7 @@ export default function QuestionGeneratorClient() {
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
           mb: 4,
         }}
@@ -273,10 +285,13 @@ export default function QuestionGeneratorClient() {
                 sx={{
                   cursor: "pointer",
                   bgcolor: selectedTemplate === template.id ? "#2196F3" : "transparent",
-                  color: selectedTemplate === template.id ? "#fff" : "#666",
-                  borderColor: selectedTemplate === template.id ? "#2196F3" : "#e0e0e0",
+                  color: selectedTemplate === template.id ? "#fff" : "#555",
+                  borderColor: selectedTemplate === template.id ? "#2196F3" : "#aaa",
+                  fontWeight: selectedTemplate === template.id ? 600 : 400,
                   "&:hover": {
-                    bgcolor: selectedTemplate === template.id ? "#1976D2" : "#f5f5f5",
+                    bgcolor: selectedTemplate === template.id ? "#1976D2" : "#e8f0fe",
+                    borderColor: selectedTemplate === template.id ? "#1976D2" : "#2196F3",
+                    color: selectedTemplate === template.id ? "#fff" : "#1976D2",
                   },
                 }}
               />
@@ -309,6 +324,8 @@ export default function QuestionGeneratorClient() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderRadius: 2,
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#bbb" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#2196F3" },
               },
             }}
           />
@@ -399,6 +416,8 @@ export default function QuestionGeneratorClient() {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
                     bgcolor: "#fafafa",
+                    "& .MuiOutlinedInput-notchedOutline": { borderColor: "#bbb" },
+                    "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#2196F3" },
                   },
                 }}
               />
@@ -468,6 +487,70 @@ export default function QuestionGeneratorClient() {
           {error}
         </Alert>
       </Collapse>
+
+      {/* Inline contextual nudge — появляется сразу при получении результата */}
+      {data?.questions && data.questions.length > 0 && (
+        <Box
+          sx={{
+            mb: 2,
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 3,
+            border: "1px solid #b8cfe8",
+            bgcolor: "#eef6ff",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, flex: 1, minWidth: 0 }}>
+            <Box
+              sx={{
+                mt: 0.25,
+                width: 36,
+                height: 36,
+                borderRadius: 2,
+                bgcolor: "#2196F3",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Icon icon="mdi:robot-excited" width={20} height={20} color="#fff" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.3 }}>
+                Вопросы готовы — следующий шаг
+              </Typography>
+              <Typography sx={{ fontSize: "0.83rem", color: "#555", mt: 0.4, lineHeight: 1.5 }}>
+                Запустите AI-интервью в SofiHR: кандидат отвечает сам, система выставляет баллы и подсвечивает красные флаги
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            component={Link}
+            href="/auth/register"
+            variant="contained"
+            size="small"
+            sx={{
+              bgcolor: "#2196F3",
+              color: "#fff",
+              textTransform: "none",
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              borderRadius: 2,
+              flexShrink: { xs: 1, sm: 0 },
+              alignSelf: { xs: "stretch", sm: "auto" },
+              "&:hover": { bgcolor: "#1976D2" },
+            }}
+          >
+            Запустить AI-интервью по этим вопросам →
+          </Button>
+        </Box>
+      )}
 
       {/* Result */}
       {data?.questions && data.questions.length > 0 && (

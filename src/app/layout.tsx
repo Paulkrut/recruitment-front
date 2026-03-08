@@ -102,8 +102,6 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#1976d2" />
         <meta name="msapplication-TileColor" content="#1976d2" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

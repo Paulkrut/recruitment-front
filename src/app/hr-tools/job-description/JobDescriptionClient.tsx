@@ -18,6 +18,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
 import { useJobDescription } from "../hooks/useHrTool";
@@ -60,6 +61,17 @@ export default function JobDescriptionClient() {
       description="Сгенерируйте полное описание вакансии за минуту. Укажите должность — получите готовый текст для публикации."
       icon="mdi:file-document-edit"
       iconColor="#4CAF50"
+      ctaLabel="Хотите автоматизировать найм целиком?"
+      ctaTitle="SofiHR — платформа для найма от заявки до оффера"
+      ctaDescription="Публикуйте вакансии на HeadHunter, автоматически собирайте отклики и проводите AI-интервью с каждым кандидатом. Первые 10 интервью бесплатно."
+      ctaButtonText="Начать бесплатно →"
+      ctaFeatures={[
+        { icon: "mdi:headhunter", text: "Публикация на HeadHunter" },
+        { icon: "mdi:account-multiple", text: "Автосбор откликов" },
+        { icon: "mdi:robot", text: "AI-интервью" },
+        { icon: "mdi:chart-bar", text: "Рейтинг кандидатов" },
+        { icon: "mdi:flag", text: "Красные флаги" },
+      ]}
     >
       {/* Input form */}
       <Paper
@@ -67,7 +79,7 @@ export default function JobDescriptionClient() {
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
           mb: 4,
         }}
@@ -205,6 +217,42 @@ export default function JobDescriptionClient() {
           {error}
         </Alert>
       </Collapse>
+
+      {/* Inline nudge */}
+      {!!data && (
+        <Box
+          sx={{
+            mb: 2,
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 3,
+            border: "1px solid #c8e6c9",
+            bgcolor: "#f1f8f1",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, flex: 1, minWidth: 0 }}>
+            <Box sx={{ mt: 0.25, width: 36, height: 36, borderRadius: 2, bgcolor: "#4CAF50", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Icon icon="mdi:briefcase-plus" width={20} height={20} color="#fff" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.3 }}>
+                Описание готово — следующий шаг
+              </Typography>
+              <Typography sx={{ fontSize: "0.83rem", color: "#555", mt: 0.4, lineHeight: 1.5 }}>
+                Опубликуйте через SofiHR: HH-интеграция, автосбор откликов и AI-интервью с каждым
+              </Typography>
+            </Box>
+          </Box>
+          <Button component={Link} href="/auth/register" variant="contained" size="small"
+            sx={{ bgcolor: "#4CAF50", color: "#fff", textTransform: "none", fontWeight: 600, px: 2.5, py: 1, borderRadius: 2, flexShrink: { xs: 1, sm: 0 }, alignSelf: { xs: "stretch", sm: "auto" }, "&:hover": { bgcolor: "#388E3C" } }}>
+            Опубликовать через SofiHR →
+          </Button>
+        </Box>
+      )}
 
       {/* Result */}
       {data && (

@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
+import Link from "next/link";
 import ResultDisplay from "../components/ResultDisplay";
 import { useResumeAnalyzer, ResumeAnalysisResponse, ResumeMatchResponse } from "../hooks/useHrTool";
 
@@ -117,6 +118,17 @@ export default function ResumeAnalyzerClient() {
       description="Получите AI-анализ резюме кандидата за минуту. Можно сравнить с вакансией и узнать процент соответствия."
       icon="mdi:account-search"
       iconColor="#FF9800"
+      ctaLabel="Хотите автоматизировать найм целиком?"
+      ctaTitle="SofiHR — платформа для найма от заявки до оффера"
+      ctaDescription="Собирайте кандидатов с HeadHunter, автоматически анализируйте резюме, сравнивайте по единым критериям и проводите AI-интервью. Первые 10 интервью бесплатно."
+      ctaButtonText="Начать бесплатно →"
+      ctaFeatures={[
+        { icon: "mdi:headhunter", text: "Интеграция с HeadHunter" },
+        { icon: "mdi:account-search", text: "AI-анализ всех резюме" },
+        { icon: "mdi:chart-bar", text: "Рейтинг кандидатов" },
+        { icon: "mdi:robot", text: "AI-интервью" },
+        { icon: "mdi:microsoft-excel", text: "Экспорт в Excel" },
+      ]}
     >
       {/* Input form */}
       <Paper
@@ -124,7 +136,7 @@ export default function ResumeAnalyzerClient() {
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
           mb: 4,
         }}
@@ -267,6 +279,70 @@ export default function ResumeAnalyzerClient() {
           {error}
         </Alert>
       </Collapse>
+
+      {/* Inline nudge — появляется при получении результата */}
+      {!!data && (
+        <Box
+          sx={{
+            mb: 2,
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 3,
+            border: "1px solid #ffe0b2",
+            bgcolor: "#fff8f0",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, flex: 1, minWidth: 0 }}>
+            <Box
+              sx={{
+                mt: 0.25,
+                width: 36,
+                height: 36,
+                borderRadius: 2,
+                bgcolor: "#FF9800",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Icon icon="mdi:account-group" width={20} height={20} color="#fff" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.3 }}>
+                Резюме проанализировано — следующий шаг
+              </Typography>
+              <Typography sx={{ fontSize: "0.83rem", color: "#555", mt: 0.4, lineHeight: 1.5 }}>
+                В SofiHR можно сравнивать всех кандидатов по единым критериям с автоматическим рейтингом
+              </Typography>
+            </Box>
+          </Box>
+          <Button
+            component={Link}
+            href="/auth/register"
+            variant="contained"
+            size="small"
+            sx={{
+              bgcolor: "#FF9800",
+              color: "#fff",
+              textTransform: "none",
+              fontWeight: 600,
+              px: 2.5,
+              py: 1,
+              borderRadius: 2,
+              flexShrink: { xs: 1, sm: 0 },
+              alignSelf: { xs: "stretch", sm: "auto" },
+              "&:hover": { bgcolor: "#F57C00" },
+            }}
+          >
+            Сравнить кандидатов в SofiHR →
+          </Button>
+        </Box>
+      )}
 
       {/* Result - Match Response */}
       {data && isMatchResponse(data) && (

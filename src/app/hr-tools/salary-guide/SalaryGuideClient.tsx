@@ -16,6 +16,7 @@ import {
   Chip,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
 import { useSalaryGuide } from "../hooks/useHrTool";
@@ -133,6 +134,17 @@ export default function SalaryGuideClient() {
       description="Узнайте актуальный уровень зарплат для любой позиции. Данные по рынку труда России 2025-2026."
       icon="mdi:cash-multiple"
       iconColor="#E91E63"
+      ctaLabel="Хотите автоматизировать найм целиком?"
+      ctaTitle="SofiHR — платформа для найма от заявки до оффера"
+      ctaDescription="Открывайте вакансии, собирайте кандидатов с HeadHunter и проводите AI-интервью. Рейтинг, аналитика и экспорт в Excel. Первые 10 интервью бесплатно."
+      ctaButtonText="Начать бесплатно →"
+      ctaFeatures={[
+        { icon: "mdi:headhunter", text: "Интеграция с HeadHunter" },
+        { icon: "mdi:robot", text: "AI-интервью" },
+        { icon: "mdi:chart-bar", text: "Рейтинг кандидатов" },
+        { icon: "mdi:flag", text: "Красные флаги" },
+        { icon: "mdi:microsoft-excel", text: "Экспорт в Excel" },
+      ]}
     >
       {/* Input form */}
       <Paper
@@ -140,7 +152,7 @@ export default function SalaryGuideClient() {
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
           mb: 4,
         }}
@@ -294,6 +306,42 @@ export default function SalaryGuideClient() {
           {error}
         </Alert>
       </Collapse>
+
+      {/* Inline nudge */}
+      {!!data && (
+        <Box
+          sx={{
+            mb: 2,
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 3,
+            border: "1px solid #f8bbd0",
+            bgcolor: "#fff5f8",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, flex: 1, minWidth: 0 }}>
+            <Box sx={{ mt: 0.25, width: 36, height: 36, borderRadius: 2, bgcolor: "#E91E63", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Icon icon="mdi:briefcase-search" width={20} height={20} color="#fff" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.3 }}>
+                Вилка готова — следующий шаг
+              </Typography>
+              <Typography sx={{ fontSize: "0.83rem", color: "#555", mt: 0.4, lineHeight: 1.5 }}>
+                Откройте вакансию в SofiHR, подключите HH и автоматически собирайте кандидатов
+              </Typography>
+            </Box>
+          </Box>
+          <Button component={Link} href="/auth/register" variant="contained" size="small"
+            sx={{ bgcolor: "#E91E63", color: "#fff", textTransform: "none", fontWeight: 600, px: 2.5, py: 1, borderRadius: 2, flexShrink: { xs: 1, sm: 0 }, alignSelf: { xs: "stretch", sm: "auto" }, "&:hover": { bgcolor: "#C2185B" } }}>
+            Открыть вакансию в SofiHR →
+          </Button>
+        </Box>
+      )}
 
       {/* Result */}
       {data && (

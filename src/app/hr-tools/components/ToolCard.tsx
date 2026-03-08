@@ -27,7 +27,7 @@ export default function ToolCard({
     <Card
       sx={{
         height: "100%",
-        border: "1px solid #e0e0e0",
+        border: "1px solid #d0d0d0",
         borderRadius: 3,
         transition: "all 0.3s ease",
         opacity: comingSoon ? 0.6 : 1,

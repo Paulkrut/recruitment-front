@@ -16,6 +16,7 @@ import {
   Divider,
 } from "@mui/material";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
 import { useAiDetector, AiDetectorResponse } from "../hooks/useHrTool";
@@ -121,6 +122,17 @@ export default function AiDetectorClient() {
       description="Проверьте, было ли резюме создано с помощью ChatGPT или других AI-ассистентов"
       icon="mdi:robot-confused"
       iconColor="#9C27B0"
+      ctaLabel="Хотите автоматизировать найм целиком?"
+      ctaTitle="SofiHR — платформа для найма от заявки до оффера"
+      ctaDescription="HeadHunter-интеграция, AI-интервью, рейтинг кандидатов, красные флаги и аналитика по воронке. Первые 10 интервью бесплатно."
+      ctaButtonText="Начать бесплатно →"
+      ctaFeatures={[
+        { icon: "mdi:headhunter", text: "Интеграция с HeadHunter" },
+        { icon: "mdi:robot", text: "AI-интервью" },
+        { icon: "mdi:chart-bar", text: "Рейтинг кандидатов" },
+        { icon: "mdi:flag", text: "Красные флаги в ответах" },
+        { icon: "mdi:video", text: "Видеозапись интервью" },
+      ]}
     >
       {/* Input form */}
       <Paper
@@ -128,7 +140,7 @@ export default function AiDetectorClient() {
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
           mb: 4,
         }}
@@ -220,6 +232,42 @@ export default function AiDetectorClient() {
         </Alert>
       )}
 
+      {/* Inline nudge */}
+      {!!data && (
+        <Box
+          sx={{
+            mb: 2,
+            p: { xs: 2.5, md: 3 },
+            borderRadius: 3,
+            border: "1px solid #e1bee7",
+            bgcolor: "#fdf3ff",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            alignItems: { xs: "stretch", sm: "center" },
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, flex: 1, minWidth: 0 }}>
+            <Box sx={{ mt: 0.25, width: 36, height: 36, borderRadius: 2, bgcolor: "#9C27B0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <Icon icon="mdi:account-check" width={20} height={20} color="#fff" />
+            </Box>
+            <Box>
+              <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.3 }}>
+                Проверка завершена — следующий шаг
+              </Typography>
+              <Typography sx={{ fontSize: "0.83rem", color: "#555", mt: 0.4, lineHeight: 1.5 }}>
+                В SofiHR можно провести живое AI-интервью и убедиться в реальных знаниях кандидата
+              </Typography>
+            </Box>
+          </Box>
+          <Button component={Link} href="/auth/register" variant="contained" size="small"
+            sx={{ bgcolor: "#9C27B0", color: "#fff", textTransform: "none", fontWeight: 600, px: 2.5, py: 1, borderRadius: 2, flexShrink: { xs: 1, sm: 0 }, alignSelf: { xs: "stretch", sm: "auto" }, "&:hover": { bgcolor: "#7B1FA2" } }}>
+            Проверить кандидата в SofiHR →
+          </Button>
+        </Box>
+      )}
+
       {/* Results */}
       {data && (
         <ResultDisplay
@@ -291,7 +339,7 @@ export default function AiDetectorClient() {
             sx={{
               p: 3,
               borderRadius: 3,
-              border: "1px solid #e0e0e0",
+              border: "1px solid #b8cfe8",
               mb: 3,
             }}
           >
@@ -310,7 +358,7 @@ export default function AiDetectorClient() {
               sx={{
                 p: 3,
                 borderRadius: 3,
-                border: "1px solid #e0e0e0",
+                border: "1px solid #b8cfe8",
                 mb: 3,
               }}
             >
@@ -353,7 +401,7 @@ export default function AiDetectorClient() {
               sx={{
                 p: 3,
                 borderRadius: 3,
-                border: "1px solid #e0e0e0",
+                border: "1px solid #b8cfe8",
                 mb: 3,
               }}
             >
@@ -386,7 +434,7 @@ export default function AiDetectorClient() {
               sx={{
                 p: 3,
                 borderRadius: 3,
-                border: "1px solid #e0e0e0",
+                border: "1px solid #b8cfe8",
                 mb: 3,
               }}
             >

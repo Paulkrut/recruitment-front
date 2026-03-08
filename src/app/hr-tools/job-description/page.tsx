@@ -108,6 +108,9 @@ export default function JobDescriptionPage() {
         </div>
       </div>
 
+      {/* Client Component - Форма генератора */}
+      <JobDescriptionClient />
+
       {/* How it works - Pure HTML для SEO */}
       <div style={{ backgroundColor: '#fff', paddingTop: '48px', paddingBottom: '48px' }}>
         <div style={{ 
@@ -200,9 +203,6 @@ export default function JobDescriptionPage() {
           </div>
         </div>
       </div>
-
-      {/* Client Component - Форма генератора */}
-      <JobDescriptionClient />
 
       {/* Benefits Section - Pure HTML для SEO */}
       <div style={{ backgroundColor: '#f8f9fa', paddingTop: '48px', paddingBottom: '48px' }}>

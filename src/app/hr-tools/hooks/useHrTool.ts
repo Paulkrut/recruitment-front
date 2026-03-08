@@ -234,3 +234,45 @@ export function useAiDetector() {
   });
 }
 
+export interface ScorecardRequest {
+  position: string;
+  level: string;
+  interviewType: string;
+  competencies?: string;
+  jobDescription?: string;
+}
+
+export interface ScorecardCriterion {
+  id: number;
+  name: string;
+  category: "hard_skills" | "soft_skills" | "motivation" | "culture";
+  description: string;
+  strongSignal: string;
+  weakSignal: string;
+  maxScore: number;
+}
+
+export interface ScorecardLegendItem {
+  range: string;
+  label: string;
+  recommendation: "hire" | "consider" | "doubt" | "reject";
+}
+
+export interface ScorecardResponse {
+  position: string;
+  interviewType: string;
+  summary: string;
+  criteria: ScorecardCriterion[];
+  redFlags: string[];
+  finalSection: {
+    totalMaxScore: number;
+    legend: ScorecardLegendItem[];
+  };
+}
+
+export function useInterviewScorecard() {
+  return useHrTool<ScorecardRequest, ScorecardResponse>({
+    endpoint: "/generate-scorecard",
+  });
+}
+

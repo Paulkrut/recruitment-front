@@ -11,6 +11,8 @@ interface ResultDisplayProps {
   downloadFilename?: string;
   onRegenerate?: () => void;
   regenerating?: boolean;
+  onDownloadDocx?: () => void;
+  downloadingDocx?: boolean;
 }
 
 export default function ResultDisplay({
@@ -21,6 +23,8 @@ export default function ResultDisplay({
   downloadFilename = "result.txt",
   onRegenerate,
   regenerating = false,
+  onDownloadDocx,
+  downloadingDocx = false,
 }: ResultDisplayProps) {
   const [copied, setCopied] = React.useState(false);
   const [downloaded, setDownloaded] = React.useState(false);
@@ -58,7 +62,7 @@ export default function ResultDisplay({
         sx={{
           p: { xs: 3, md: 4 },
           borderRadius: 3,
-          border: "1px solid #e0e0e0",
+          border: "1px solid #b8cfe8",
           bgcolor: "#fff",
         }}
       >
@@ -70,7 +74,7 @@ export default function ResultDisplay({
             justifyContent: "space-between",
             mb: 3,
             pb: 2,
-            borderBottom: "1px solid #f0f0f0",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -92,10 +96,7 @@ export default function ResultDisplay({
               <Tooltip title="Копировать">
                 <IconButton
                   onClick={handleCopy}
-                  sx={{
-                    bgcolor: "#f5f5f5",
-                    "&:hover": { bgcolor: "#e0e0e0" },
-                  }}
+                  sx={{ bgcolor: "#f5f5f5", "&:hover": { bgcolor: "#e0e0e0" } }}
                 >
                   <Icon
                     icon={copied ? "mdi:check" : "mdi:content-copy"}
@@ -107,21 +108,35 @@ export default function ResultDisplay({
               </Tooltip>
             )}
 
+            {onDownloadDocx && (
+              <Tooltip title="Скачать Word (DOCX)">
+                <IconButton
+                  onClick={onDownloadDocx}
+                  disabled={downloadingDocx}
+                  sx={{
+                    bgcolor: "#e3f2fd",
+                    "&:hover": { bgcolor: "#bbdefb" },
+                    "&:disabled": { bgcolor: "#f5f5f5" },
+                  }}
+                >
+                  {downloadingDocx ? (
+                    <Box sx={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <Icon icon="mdi:loading" width={18} height={18} color="#1565C0" style={{ animation: "spin 1s linear infinite" }} />
+                    </Box>
+                  ) : (
+                    <Icon icon="mdi:file-word" width={20} height={20} color="#1565C0" />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
+
             {downloadText && (
               <Tooltip title="Скачать TXT">
                 <IconButton
                   onClick={handleDownload}
-                  sx={{
-                    bgcolor: "#f5f5f5",
-                    "&:hover": { bgcolor: "#e0e0e0" },
-                  }}
+                  sx={{ bgcolor: "#f5f5f5", "&:hover": { bgcolor: "#e0e0e0" } }}
                 >
-                  <Icon
-                    icon="mdi:download"
-                    width={20}
-                    height={20}
-                    color="#666"
-                  />
+                  <Icon icon="mdi:download" width={20} height={20} color="#666" />
                 </IconButton>
               </Tooltip>
             )}

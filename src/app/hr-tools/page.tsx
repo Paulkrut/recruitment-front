@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
 import Link from "next/link";
 import ToolCard from "./components/ToolCard";
 import SofiHRLogo from "@/components/shared/SofiHRLogo";
-import { BackButton, RegisterButton, CTAButton } from "./components/ClientButtons";
+import { BackButton, RegisterButton, HrToolsCTA } from "./components/ClientButtons";
 import { HeroBadge, StepCard } from "./components/HeroComponents";
 
 // SEO Metadata
@@ -97,6 +97,15 @@ const tools = [
     description:
       "Узнайте актуальный уровень зарплат для любой позиции. Данные по рынку труда России 2025-2026.",
     href: "/hr-tools/salary-guide",
+  },
+  {
+    id: "interview-scorecard",
+    icon: "mdi:clipboard-check-multiple",
+    iconColor: "#009688",
+    title: "Оценочный лист",
+    description:
+      "Создайте структурированный scorecard для собеседования. AI сгенерирует критерии, сигналы и red flags под вашу вакансию.",
+    href: "/hr-tools/interview-scorecard",
   },
   {
     id: "ai-detector",
@@ -205,7 +214,7 @@ export default function HrToolsPage() {
               </div>
 
               <h1 style={{
-                fontSize: '2.5rem',
+                fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
                 fontWeight: 800,
                 color: '#1a1a2e',
                 marginBottom: '16px',
@@ -304,27 +313,42 @@ export default function HrToolsPage() {
           <Box sx={{ textAlign: "center" }}>
             <Typography
               sx={{
-                fontSize: { xs: "1.5rem", md: "2rem" },
-                fontWeight: 700,
-                color: "#fff",
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                letterSpacing: 1.5,
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.5)",
                 mb: 2,
               }}
             >
-              Хотите больше возможностей?
+              Хотите автоматизировать найм целиком?
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: "1.4rem", md: "1.8rem" },
+                fontWeight: 700,
+                color: "#fff",
+                mb: 1.5,
+                lineHeight: 1.3,
+              }}
+            >
+              SofiHR — платформа для найма от заявки до оффера
             </Typography>
             <Typography
               sx={{
                 fontSize: "1rem",
                 color: "rgba(255,255,255,0.7)",
                 mb: 4,
-                maxWidth: 500,
+                maxWidth: 520,
                 mx: "auto",
+                lineHeight: 1.6,
               }}
             >
-              Попробуйте полную платформу SofiHR: AI-интервью, автоматизация HeadHunter,
-              аналитика кандидатов и многое другое.
+              Эти инструменты — часть большой системы. Подключите HeadHunter, проводите AI-интервью
+              и получайте рейтинг кандидатов автоматически.
             </Typography>
-            <CTAButton />
+
+            <HrToolsCTA />
           </Box>
         </Container>
       </Box>
@@ -453,7 +477,7 @@ export default function HrToolsPage() {
             }}
           >
             <Typography sx={{ fontSize: "0.85rem", color: "#999" }}>
-              © 2025 SofiHR. Все права защищены.
+              © 2026 SofiHR. Все права защищены.
             </Typography>
             <Box sx={{ display: "flex", gap: 3 }}>
               <Link
