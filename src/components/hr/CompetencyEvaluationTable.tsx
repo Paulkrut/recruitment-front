@@ -42,6 +42,24 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
   const { _ } = useLingui();
   const [expandedRows, setExpandedRows] = React.useState<Set<string>>(new Set());
 
+  const competencyLabels: Record<string, string> = {
+    motivation: _(msg`Мотивация к вакансии`),
+    speech_culture: _(msg`Культура речи`),
+    client_orientation: _(msg`Клиентоориентированность`),
+    stress_resistance: _(msg`Стрессоустойчивость`),
+    responsibility: _(msg`Ответственность`),
+    system_thinking: _(msg`Системное мышление`),
+  };
+
+  const competencyIcons: Record<string, string> = {
+    motivation: '🚀',
+    speech_culture: '💬',
+    client_orientation: '🤝',
+    stress_resistance: '🛡️',
+    responsibility: '✅',
+    system_thinking: '🧠',
+  };
+
   const toggleRow = (key: string) => {
     setExpandedRows(prev => {
       const newSet = new Set(prev);
@@ -88,22 +106,63 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
 
   // Проверка на недостаточность данных
   if (metrics.insufficient_data) {
+    const coveredDimensions = metrics.covered_dimensions || [];
+    const missingDimensions = metrics.missing_dimensions || [];
+    const verificationNeeded = metrics.recommendation?.verification_needed || [];
+
     return (
       <Alert severity="warning" icon={<WarningIcon />}>
         <Typography variant="body1" fontWeight={600} gutterBottom>
           <Trans>⚠️ Недостаточно данных для объективной оценки</Trans>
         </Typography>
         <Typography variant="body2">
-          <Trans>
-            Кандидат предоставил слишком мало информации в ответах на вопросы интервью. 
-            Для полноценного анализа компетенций необходимо минимум 3 развернутых ответа (более 20 слов каждый).
-          </Trans>
+          {metrics.reason || _(msg`Система не нашла достаточно оснований для уверенной fit-оценки.`)}
         </Typography>
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          <Trans>
-            Рекомендация: Проведите дополнительное интервью или попросите кандидата дать более развернутые ответы.
-          </Trans>
-        </Typography>
+
+        {metrics.fit_confidence && (
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <Trans>Уверенность системы:</Trans> {metrics.fit_confidence}
+          </Typography>
+        )}
+
+        {coveredDimensions.length > 0 && (
+          <Box sx={{ mt: 1.5 }}>
+            <Typography variant="body2" fontWeight={600}>
+              <Trans>Удалось частично оценить:</Trans>
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 0.5 }} flexWrap="wrap">
+              {coveredDimensions.map((dimension, idx) => (
+                <Chip key={idx} label={competencyLabels[dimension] || dimension} size="small" color="info" />
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        {missingDimensions.length > 0 && (
+          <Box sx={{ mt: 1.5 }}>
+            <Typography variant="body2" fontWeight={600}>
+              <Trans>Не хватило данных по:</Trans>
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 0.5 }} flexWrap="wrap">
+              {missingDimensions.map((dimension, idx) => (
+                <Chip key={idx} label={competencyLabels[dimension] || dimension} size="small" color="warning" />
+              ))}
+            </Stack>
+          </Box>
+        )}
+
+        {verificationNeeded.length > 0 && (
+          <Box sx={{ mt: 1.5 }}>
+            <Typography variant="body2" fontWeight={600}>
+              <Trans>Что стоит проверить дополнительно:</Trans>
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 0.5 }} flexWrap="wrap">
+              {verificationNeeded.map((dimension, idx) => (
+                <Chip key={idx} label={competencyLabels[dimension] || dimension} size="small" color="default" />
+              ))}
+            </Stack>
+          </Box>
+        )}
       </Alert>
     );
   }
@@ -119,26 +178,6 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
   };
   const recommendation = metrics.recommendation;
   const summaryTable = metrics.summary_table;
-
-  // Маппинг названий компетенций
-  const competencyLabels: Record<string, string> = {
-    motivation: _(msg`Мотивация к вакансии`),
-    speech_culture: _(msg`Культура речи`),
-    client_orientation: _(msg`Клиентоориентированность`),
-    stress_resistance: _(msg`Стрессоустойчивость`),
-    responsibility: _(msg`Ответственность`),
-    system_thinking: _(msg`Системное мышление`),
-  };
-
-  // Маппинг иконок для компетенций
-  const competencyIcons: Record<string, string> = {
-    motivation: '🚀',
-    speech_culture: '💬',
-    client_orientation: '🤝',
-    stress_resistance: '🛡️',
-    responsibility: '✅',
-    system_thinking: '🧠',
-  };
 
   // Функция для определения цвета по оценке
   const getScoreColor = (score: number): 'success' | 'warning' | 'error' => {
@@ -239,6 +278,23 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                   />
                 </Box>
               </Box>
+              {metrics.fit_confidence && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  <Trans>Уверенность системы:</Trans> {metrics.fit_confidence}
+                </Typography>
+              )}
+              {summaryTable.evaluated_competencies !== undefined && summaryTable.total_competencies !== undefined && (
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  <Trans>Оценено компетенций:</Trans> {summaryTable.evaluated_competencies}/{summaryTable.total_competencies}
+                </Typography>
+              )}
+              {summaryTable.evaluated_competencies !== undefined &&
+                summaryTable.total_competencies !== undefined &&
+                summaryTable.evaluated_competencies < summaryTable.total_competencies && (
+                  <Typography variant="caption" color="warning.main" sx={{ display: 'block', mt: 0.75 }}>
+                    <Trans>Оценка построена не по всем компетенциям.</Trans>
+                  </Typography>
+                )}
             </Box>
             
             {summaryTable.key_strengths && summaryTable.key_strengths.length > 0 && (

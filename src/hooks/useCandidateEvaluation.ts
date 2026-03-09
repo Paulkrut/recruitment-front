@@ -47,6 +47,8 @@ export interface Recommendation {
 
 export interface SummaryTable {
   average_score: number;
+  evaluated_competencies?: number;
+  total_competencies?: number;
   key_strengths: string[];
   key_risks: string[];
 }
@@ -75,6 +77,10 @@ export interface RetentionForecast {
 
 export interface NewMetrics {
   insufficient_data: boolean;
+  fit_confidence?: 'high' | 'medium' | 'low';
+  reason?: string;
+  covered_dimensions?: string[];
+  missing_dimensions?: string[];
   competencies: {
     motivation?: CompetencyScore;
     speech_culture?: CompetencyScore;
