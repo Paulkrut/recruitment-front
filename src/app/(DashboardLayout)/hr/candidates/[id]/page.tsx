@@ -1016,7 +1016,14 @@ export default function CandidateDetailPage() {
                     </Typography>
                     
                     {/* Accordion для длинных списков */}
-                    {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => (
+                    {sessionDetail.answers && sessionDetail.answers.length > 0 ? sessionDetail.answers.map((a:any, idx:number) => {
+                      const questionBadges = Array.isArray(a.questionMeta?.badges)
+                        ? a.questionMeta.badges
+                        : Array.isArray(a.questionMeta?.labels)
+                          ? a.questionMeta.labels.map((label:string) => ({ label, tooltip: label }))
+                          : [];
+
+                      return (
                       <Accordion key={a.id} defaultExpanded={false} sx={{background:'#f5f5f5', color:'#333', mb:2}}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon sx={{color:'#1976d2'}} />}>
                           <Stack direction="row" alignItems="center" spacing={2} flexWrap="wrap" sx={{ width: '100%' }}>
@@ -1025,6 +1032,26 @@ export default function CandidateDetailPage() {
                                 <Trans>Вопрос {idx+1}:</Trans>
                               </Typography>{' '}
                               <QuestionText text={a.question} variant="body2" sx={{ display: 'inline' }} />
+                              {questionBadges.length > 0 && (
+                                <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mt: 1 }}>
+                                  {questionBadges.map((badge: { label: string; tooltip?: string }, badgeIdx: number) => (
+                                    <Tooltip key={`${a.id}-${badge.label}-${badgeIdx}`} title={badge.tooltip || badge.label} arrow>
+                                      <Chip
+                                        label={badge.label}
+                                        size="small"
+                                        variant="outlined"
+                                        sx={{
+                                          bgcolor: '#fff',
+                                          borderColor: '#cfd8dc',
+                                          '& .MuiChip-label': {
+                                            px: 1.25,
+                                          },
+                                        }}
+                                      />
+                                    </Tooltip>
+                                  ))}
+                                </Stack>
+                              )}
                             </Box>
                             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                               {a.score !== undefined && a.score !== null && (
@@ -1050,6 +1077,14 @@ export default function CandidateDetailPage() {
                                 📎 <Trans>Материалы к вопросу</Trans>
                               </Typography>
                               <QuestionAttachmentsDisplay attachments={a.questionAttachments} />
+                            </Box>
+                          )}
+                          {a.referenceAnswer && (
+                            <Box sx={{ mb: 2, p: 2, bgcolor: '#f7faf7', borderRadius: 1, border: '1px solid #c8e6c9' }}>
+                              <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: '#2e7d32' }}>
+                                <Trans>Эталонный ответ</Trans>
+                              </Typography>
+                              <QuestionText text={a.referenceAnswer} variant="body2" />
                             </Box>
                           )}
                           <Typography variant="body2" sx={{mb:1}}><b><Trans>Ответ:</Trans></b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
@@ -1085,7 +1120,8 @@ export default function CandidateDetailPage() {
                           <Typography variant="caption" sx={{opacity:0.7}}><Trans>Время ответа: {a.createdAt || '-'}</Trans></Typography>
                         </AccordionDetails>
                       </Accordion>
-                    )) : (
+                      );
+                    }) : (
                       <Typography color="text.secondary"><Trans>Нет ответов</Trans></Typography>
                     )}
                   </CardContent>
