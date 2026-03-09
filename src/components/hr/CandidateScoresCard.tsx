@@ -11,12 +11,16 @@ interface CandidateScoresCardProps {
   interviewScore?: number; // Оценка по вопросам (существующая totalScore)
   competencyScore?: number; // Средняя оценка по компетенциям (новая из metrics)
   questionsCount?: number; // Количество вопросов
+  fitEvaluated?: boolean;
+  fitReason?: string;
 }
 
 export default function CandidateScoresCard({ 
   interviewScore, 
   competencyScore,
-  questionsCount 
+  questionsCount,
+  fitEvaluated = true,
+  fitReason,
 }: CandidateScoresCardProps) {
   const { _ } = useLingui();
 
@@ -118,7 +122,7 @@ export default function CandidateScoresCard({
               </Box>
             </Stack>
             
-            {competencyScore !== undefined && competencyScore !== null ? (
+            {competencyScore !== undefined && competencyScore !== null && fitEvaluated ? (
               <>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
                   <Typography variant="h4" fontWeight={700} color={getScoreColor(competencyScore) + '.main'}>
@@ -146,9 +150,14 @@ export default function CandidateScoresCard({
                 </Typography>
               </>
             ) : (
-              <Typography variant="body2" color="text.secondary">
-                <Trans>Анализ компетенций не проведён</Trans>
-              </Typography>
+              <>
+                <Typography variant="h5" fontWeight={700} color="text.secondary">
+                  <Trans>Не оценён</Trans>
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  {fitReason || _(msg`Недостаточно данных для уверенной fit-оценки`)}
+                </Typography>
+              </>
             )}
           </Box>
         </Grid>

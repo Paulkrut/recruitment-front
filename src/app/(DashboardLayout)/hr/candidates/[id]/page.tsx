@@ -294,6 +294,12 @@ export default function CandidateDetailPage() {
   const competencyScore = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics 
     ? (aiMetrics as NewMetrics).summary_table?.average_score 
     : undefined;
+  const fitEvaluated = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics
+    ? (((aiMetrics as NewMetrics).summary_table?.evaluated_competencies ?? 0) > 0)
+    : false;
+  const fitReason = aiMetrics && typeof aiMetrics === 'object' && 'reason' in aiMetrics
+    ? (aiMetrics as NewMetrics).reason
+    : undefined;
 
   const interviewLink = candidateToken ? `${window.location.origin}/interview/${candidateToken}` : null;
 
@@ -608,6 +614,8 @@ export default function CandidateDetailPage() {
                 interviewScore={sessionDetail?.result?.totalScore}
                 competencyScore={competencyScore}
                 questionsCount={sessionDetail?.answers?.length}
+                fitEvaluated={fitEvaluated}
+                fitReason={fitReason}
               />
             </Box>
 
