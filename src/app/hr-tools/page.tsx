@@ -108,6 +108,15 @@ const tools = [
     href: "/hr-tools/interview-scorecard",
   },
   {
+    id: "job-description-instruction-generator",
+    icon: "mdi:file-document-multiple-outline",
+    iconColor: "#0D9488",
+    title: "Должностная инструкция",
+    description:
+      "Соберите шаблон должностной инструкции: обязанности, права, ответственность, требования, KPI и Word-экспорт под конкретную роль.",
+    href: "/hr-tools/job-description-instruction-generator",
+  },
+  {
     id: "ai-detector",
     icon: "mdi:robot-confused",
     iconColor: "#673AB7",

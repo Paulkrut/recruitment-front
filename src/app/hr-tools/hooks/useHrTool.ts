@@ -276,3 +276,35 @@ export function useInterviewScorecard() {
   });
 }
 
+export interface JobInstructionRequest {
+  position: string;
+  level: string;
+  department?: string;
+  reportsTo?: string;
+  mainTasks?: string;
+  requirements?: string;
+  companyContext?: string;
+}
+
+export interface JobInstructionResponse {
+  title: string;
+  purpose: string;
+  department: string;
+  reportsTo: string;
+  summary: string;
+  responsibilities: string[];
+  functions: string[];
+  rights: string[];
+  responsibilityAreas: string[];
+  requirements: string[];
+  kpis: string[];
+  interactions: string[];
+  fullText: string;
+}
+
+export function useJobInstructionGenerator() {
+  return useHrTool<JobInstructionRequest, JobInstructionResponse>({
+    endpoint: "/generate-job-instruction",
+  });
+}
+
