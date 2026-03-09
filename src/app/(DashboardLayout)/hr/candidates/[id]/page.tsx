@@ -290,12 +290,21 @@ export default function CandidateDetailPage() {
   const aiMetrics = evalData?.metrics;
   const aiUpdatedAt = evalData?.updatedAt;
   
-  // Вычисляем оценку по компетенциям (средняя из новой структуры)
-  const competencyScore = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics 
-    ? (aiMetrics as NewMetrics).summary_table?.average_score 
+  const hasMeasuredCriteria = (criteria?: Array<{ status: string }>) => {
+    if (!criteria || criteria.length === 0) return false;
+    return criteria.some((criterion) => ['yes', 'partial', 'no'].includes(criterion.status));
+  };
+
+  // Вычисляем fit для нового и старого формата metrics.
+  const competencyScore = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics
+    ? (aiMetrics as NewMetrics).summary_table?.average_score
     : undefined;
   const fitEvaluated = aiMetrics && typeof aiMetrics === 'object' && 'summary_table' in aiMetrics
-    ? (((aiMetrics as NewMetrics).summary_table?.evaluated_competencies ?? 0) > 0)
+    ? (
+        (aiMetrics as NewMetrics).summary_table?.evaluated_competencies !== undefined
+          ? (((aiMetrics as NewMetrics).summary_table?.evaluated_competencies ?? 0) > 0)
+          : Object.values((aiMetrics as NewMetrics).competencies ?? {}).some((value) => hasMeasuredCriteria(value?.criteria))
+      )
     : false;
   const fitReason = aiMetrics && typeof aiMetrics === 'object' && 'reason' in aiMetrics
     ? (aiMetrics as NewMetrics).reason
