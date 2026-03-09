@@ -195,6 +195,16 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
     return _(msg`Требует улучшения`);
   };
 
+  const hasMeasuredCriteria = (criteria?: Array<{ status: string }>): boolean => {
+    if (!criteria || criteria.length === 0) return false;
+    return criteria.some((criterion) => ['yes', 'partial', 'no'].includes(criterion.status));
+  };
+
+  const isFitEvaluated =
+    summaryTable?.evaluated_competencies !== undefined
+      ? summaryTable.evaluated_competencies > 0
+      : summaryTable !== undefined && Object.values(competencies).some((value) => hasMeasuredCriteria(value?.criteria));
+
   // Статус рекомендации
   const getRecommendationIcon = () => {
     if (!recommendation) return null;
@@ -265,19 +275,30 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
               <Typography variant="body2" color="text.secondary">
                 <Trans>Средняя Fit-оценка:</Trans>
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
-                <Typography variant="h4" fontWeight={700} color={getScoreColor(summaryTable.average_score) + '.main'}>
-                  {summaryTable.average_score.toFixed(1)}/10
-                </Typography>
-                <Box sx={{ flexGrow: 1 }}>
-                  <LinearProgress 
-                    variant="determinate" 
-                    value={summaryTable.average_score * 10} 
-                    color={getScoreColor(summaryTable.average_score)}
-                    sx={{ height: 10, borderRadius: 5 }}
-                  />
+              {isFitEvaluated ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
+                  <Typography variant="h4" fontWeight={700} color={getScoreColor(summaryTable.average_score) + '.main'}>
+                    {summaryTable.average_score.toFixed(1)}/10
+                  </Typography>
+                  <Box sx={{ flexGrow: 1 }}>
+                    <LinearProgress 
+                      variant="determinate" 
+                      value={summaryTable.average_score * 10} 
+                      color={getScoreColor(summaryTable.average_score)}
+                      sx={{ height: 10, borderRadius: 5 }}
+                    />
+                  </Box>
                 </Box>
-              </Box>
+              ) : (
+                <Box sx={{ mt: 1 }}>
+                  <Typography variant="h5" fontWeight={700} color="text.secondary">
+                    <Trans>Не оценён</Trans>
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                    {metrics.reason || _(msg`Недостаточно данных для уверенной fit-оценки.`)}
+                  </Typography>
+                </Box>
+              )}
               {metrics.fit_confidence && (
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                   <Trans>Уверенность системы:</Trans> {metrics.fit_confidence}
@@ -348,6 +369,7 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                 const { score, criteria, overall_comment, evidence, comment } = value;
                 const isExpanded = expandedRows.has(key);
                 const hasCriteria = criteria && criteria.length > 0;
+                const isCompetencyEvaluated = hasMeasuredCriteria(criteria);
                 
                 return (
                   <React.Fragment key={key}>
@@ -375,15 +397,31 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                       </TableCell>
                       <TableCell align="center">
                         <Stack alignItems="center" spacing={0.5}>
-                          <Chip
-                            label={`${score}/10`}
-                            color={getScoreColor(score)}
-                            size="medium"
-                            sx={{ fontWeight: 700, minWidth: 70 }}
-                          />
-                          <Typography variant="caption" color="text.secondary">
-                            {getScoreText(score)}
-                          </Typography>
+                          {isCompetencyEvaluated ? (
+                            <>
+                              <Chip
+                                label={`${score}/10`}
+                                color={getScoreColor(score)}
+                                size="medium"
+                                sx={{ fontWeight: 700, minWidth: 70 }}
+                              />
+                              <Typography variant="caption" color="text.secondary">
+                                {getScoreText(score)}
+                              </Typography>
+                            </>
+                          ) : (
+                            <>
+                              <Chip
+                                label={_(msg`Не оценено`)}
+                                color="default"
+                                size="medium"
+                                sx={{ fontWeight: 700, minWidth: 90 }}
+                              />
+                              <Typography variant="caption" color="text.secondary">
+                                <Trans>Недостаточно данных</Trans>
+                              </Typography>
+                            </>
+                          )}
                         </Stack>
                       </TableCell>
                       <TableCell colSpan={2}>
