@@ -179,6 +179,83 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
   const recommendation = metrics.recommendation;
   const summaryTable = metrics.summary_table;
 
+  const hasNonEmptyText = (value: unknown): value is string =>
+    typeof value === 'string' && value.trim().length > 0;
+
+  const normalizeValueItem = (item: unknown): { value: string; quote?: string } | null => {
+    if (hasNonEmptyText(item)) {
+      const trimmed = item.trim();
+      const match = trimmed.match(/^([^:]+):\s*[«"]?(.+?)[»"]?$/u);
+
+      if (match) {
+        return {
+          value: match[1].trim(),
+          quote: match[2].trim(),
+        };
+      }
+
+      return { value: trimmed };
+    }
+
+    if (!item || typeof item !== 'object') {
+      return null;
+    }
+
+    const value = hasNonEmptyText((item as { value?: unknown }).value)
+      ? (item as { value: string }).value.trim()
+      : '';
+    const quote = hasNonEmptyText((item as { quote?: unknown }).quote)
+      ? (item as { quote: string }).quote.trim()
+      : '';
+
+    if (!value && !quote) {
+      return null;
+    }
+
+    return {
+      value: value || quote,
+      quote: quote || undefined,
+    };
+  };
+
+  const valueItems = Array.isArray(additionalScores.values)
+    ? additionalScores.values
+        .map((item) => normalizeValueItem(item))
+        .filter((item): item is { value: string; quote?: string } => item !== null)
+    : [];
+
+  const showLearningAbility = Boolean(
+    additionalScores.learning_ability && (
+      additionalScores.learning_ability.score !== undefined &&
+      additionalScores.learning_ability.score !== null ||
+      hasNonEmptyText(additionalScores.learning_ability.comment)
+    )
+  );
+
+  const showTechnicalSkills = Boolean(
+    additionalScores.technical_skills && (
+      additionalScores.technical_skills.score === 'insufficient_info' ||
+      additionalScores.technical_skills.score !== undefined &&
+      additionalScores.technical_skills.score !== null ||
+      hasNonEmptyText(additionalScores.technical_skills.comment)
+    )
+  );
+
+  const showWritingQuality = Boolean(
+    additionalScores.writing_quality && (
+      additionalScores.writing_quality.score !== undefined &&
+      additionalScores.writing_quality.score !== null ||
+      hasNonEmptyText(additionalScores.writing_quality.comment) ||
+      additionalScores.writing_quality.details
+    )
+  );
+
+  const hasAdditionalScoresContent =
+    valueItems.length > 0 ||
+    showLearningAbility ||
+    showTechnicalSkills ||
+    showWritingQuality;
+
   // Функция для определения цвета по оценке
   const getScoreColor = (score: number): 'success' | 'warning' | 'error' => {
     if (score >= 8) return 'success';
@@ -504,25 +581,27 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
       </Card>
 
       {/* Дополнительные оценки */}
-      {additionalScores && Object.keys(additionalScores).length > 0 && (
+      {hasAdditionalScoresContent && (
         <Card sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom fontWeight={700}>
             <Trans>📌 Дополнительные оценки</Trans>
           </Typography>
           <Stack spacing={2} divider={<Divider />}>
             {/* Ценности */}
-            {additionalScores.values && additionalScores.values.length > 0 && (
+            {valueItems.length > 0 && (
               <Box>
                 <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                   <Trans>💎 Ценности кандидата:</Trans>
                 </Typography>
                 <Stack spacing={1}>
-                  {additionalScores.values.map((item, idx) => (
+                  {valueItems.map((item, idx) => (
                     <Box key={idx}>
                       <Chip label={item.value} size="small" color="primary" variant="outlined" />
-                      <Typography variant="caption" sx={{ ml: 1, fontStyle: 'italic', color: 'text.secondary' }}>
-                        "{item.quote}"
-                      </Typography>
+                      {item.quote && (
+                        <Typography variant="caption" sx={{ ml: 1, fontStyle: 'italic', color: 'text.secondary' }}>
+                          "{item.quote}"
+                        </Typography>
+                      )}
                     </Box>
                   ))}
                 </Stack>
@@ -530,7 +609,7 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
             )}
 
             {/* Обучаемость */}
-            {additionalScores.learning_ability && (
+            {showLearningAbility && (
               <Box>
                 <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                   <Trans>📚 Обучаемость:</Trans>
@@ -541,13 +620,15 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                     color={getScoreColor(Number(additionalScores.learning_ability.score))}
                     size="small"
                   />
-                  <Typography variant="body2">{additionalScores.learning_ability.comment}</Typography>
+                  {hasNonEmptyText(additionalScores.learning_ability?.comment) && (
+                    <Typography variant="body2">{additionalScores.learning_ability.comment}</Typography>
+                  )}
                 </Stack>
               </Box>
             )}
 
             {/* Технические навыки */}
-            {additionalScores.technical_skills && (
+            {showTechnicalSkills && (
               <Box>
                 <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                   <Trans>⚙️ Технические навыки:</Trans>
@@ -562,13 +643,15 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                       size="small"
                     />
                   )}
-                  <Typography variant="body2">{additionalScores.technical_skills.comment}</Typography>
+                  {hasNonEmptyText(additionalScores.technical_skills?.comment) && (
+                    <Typography variant="body2">{additionalScores.technical_skills.comment}</Typography>
+                  )}
                 </Stack>
               </Box>
             )}
 
             {/* Качество письменной речи */}
-            {additionalScores.writing_quality && (
+            {showWritingQuality && (
               <Box>
                 <Typography variant="subtitle2" fontWeight={600} gutterBottom>
                   <Trans>✍️ Качество письменной речи:</Trans>
@@ -579,7 +662,9 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
                     color={getScoreColor(Number(additionalScores.writing_quality.score))}
                     size="small"
                   />
-                  <Typography variant="body2">{additionalScores.writing_quality.comment}</Typography>
+                  {hasNonEmptyText(additionalScores.writing_quality?.comment) && (
+                    <Typography variant="body2">{additionalScores.writing_quality.comment}</Typography>
+                  )}
                 </Stack>
                 {additionalScores.writing_quality.details && (
                   <Box sx={{ mt: 1, pl: 2, borderLeft: '3px solid', borderColor: 'primary.main' }}>
