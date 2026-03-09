@@ -21,7 +21,7 @@ export interface CompetencyScore {
 
 export interface ValueItem {
   value: string;
-  quote: string;
+  quote?: string;
 }
 
 export interface AdditionalScore {
@@ -90,7 +90,7 @@ export interface NewMetrics {
     system_thinking?: CompetencyScore;
   };
   additional_scores?: {
-    values?: ValueItem[];
+    values?: Array<ValueItem | string>;
     learning_ability?: AdditionalScore;
     technical_skills?: AdditionalScore;
     writing_quality?: AdditionalScore;
