@@ -3490,8 +3490,8 @@ msgstr ""
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:678
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1270
 #: src/app/components/hr/OpenVacanciesCard.tsx:81
-#: src/app/interview/[token]/VacancyInfoStep.tsx:129
-#: src/app/interview/[token]/VacancyInfoStep.tsx:151
+#: src/app/interview/[token]/VacancyInfoStep.tsx:135
+#: src/app/interview/[token]/VacancyInfoStep.tsx:157
 msgid "Вакансия"
 msgstr "Vacancy"
 
@@ -3807,8 +3807,8 @@ msgstr "Video"
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1379
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:463
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:668
-#: src/app/interview/[token]/VacancyInfoStep.tsx:168
-#: src/app/interview/[token]/VacancyInfoStep.tsx:176
+#: src/app/interview/[token]/VacancyInfoStep.tsx:174
+#: src/app/interview/[token]/VacancyInfoStep.tsx:182
 #: src/app/interview/apply/[token]/page.tsx:491
 msgid "Видео о компании"
 msgstr ""
@@ -5995,7 +5995,7 @@ msgstr "Information"
 msgid "Информация для HR-клиентов о кандидатах, чьи данные были удалены с платформы"
 msgstr "Information for HR Clients about candidates whose data has been deleted from the platform"
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:147
+#: src/app/interview/[token]/VacancyInfoStep.tsx:153
 msgid "Информация о вакансии"
 msgstr ""
 
@@ -6177,7 +6177,7 @@ msgstr "Each employee will receive a unique set of questions. Slower but more re
 msgid "Как вам удобнее ответить?"
 msgstr ""
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:194
+#: src/app/interview/[token]/VacancyInfoStep.tsx:200
 msgid "Как всё устроено:"
 msgstr ""
 
@@ -6765,7 +6765,7 @@ msgstr "Can be loaded from HH"
 msgid "Можно ли перейти на другой тариф?"
 msgstr "Can I Switch to Another Plan?"
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:209
+#: src/app/interview/[token]/VacancyInfoStep.tsx:215
 msgid "Можно переснять ответ, если не понравился"
 msgstr ""
 
@@ -7981,7 +7981,7 @@ msgstr "Description"
 
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:445
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:644
-#: src/app/interview/[token]/VacancyInfoStep.tsx:255
+#: src/app/interview/[token]/VacancyInfoStep.tsx:261
 #: src/app/interview/apply/[token]/page.tsx:417
 msgid "Описание вакансии"
 msgstr "Vacancy Description"
@@ -10288,7 +10288,7 @@ msgstr ""
 #~ msgid "Развёрнутый отчёт"
 #~ msgstr "Detailed Report"
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:258
+#: src/app/interview/[token]/VacancyInfoStep.tsx:264
 msgid "развернуть"
 msgstr ""
 
@@ -10658,7 +10658,7 @@ msgstr ""
 msgid "Сбросить фильтр"
 msgstr "Reset Filter"
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:258
+#: src/app/interview/[token]/VacancyInfoStep.tsx:264
 msgid "свернуть"
 msgstr ""
 
@@ -12697,7 +12697,7 @@ msgstr ""
 #~ msgid "Эффективность AI-интервью"
 #~ msgstr "AI Interview Effectiveness"
 
-#: src/app/interview/[token]/VacancyInfoStep.tsx:238
+#: src/app/interview/[token]/VacancyInfoStep.tsx:244
 msgid "Я готов, начинаем →"
 msgstr ""
 
