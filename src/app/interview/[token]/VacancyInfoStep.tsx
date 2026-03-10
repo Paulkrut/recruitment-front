@@ -39,7 +39,7 @@ interface VacancyInfoStepProps {
   } | null;
   total?: number;
   durationSec?: number;
-  questionTypes?: { audio: number; text: number; choice: number };
+  questionTypes?: { audio: number; text: number; choice: number; flexible?: number };
   onContinue: () => void;
 }
 
@@ -67,13 +67,19 @@ export default function VacancyInfoStep({
 
   // Формируем описание типов вопросов
   const typeItems: { icon: string; label: string }[] = [];
-  const hasAudio = (questionTypes?.audio ?? 0) > 0;
+  const hasAudio = (questionTypes?.audio ?? 0) > 0 || (questionTypes?.flexible ?? 0) > 0;
 
   if (questionTypes) {
     if (questionTypes.audio > 0) {
       typeItems.push({
         icon: 'mdi:video-outline',
         label: `${questionTypes.audio} ${nQuestions(questionTypes.audio)} с видеоответом`,
+      });
+    }
+    if ((questionTypes.flexible ?? 0) > 0) {
+      typeItems.push({
+        icon: 'mdi:swap-horizontal',
+        label: `${questionTypes.flexible} ${nQuestions(questionTypes.flexible)}: можно ответить текстом или голосом/видео`,
       });
     }
     if (questionTypes.text > 0) {

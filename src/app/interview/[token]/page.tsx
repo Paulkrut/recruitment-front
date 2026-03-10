@@ -98,7 +98,7 @@ export default function CandidateInterviewPage() {
   });
 
   /* ---------------- state ---------------- */
-  const [prepared, setPrepared] = useState<{total:number;durationSec:number;status:string;questionTypes?:{audio:number;text:number;choice:number}}|null>(null);
+  const [prepared, setPrepared] = useState<{total:number;durationSec:number;status:string;questionTypes?:{audio:number;text:number;choice:number;flexible?:number}}|null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [total, setTotal] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -2219,7 +2219,7 @@ export default function CandidateInterviewPage() {
             stepperComp={stepperComp}
           cameraEnabled={cameraEnabled}
             pdnConsent={pdnConsent}
-            textOnly={!!(prepared.questionTypes && prepared.questionTypes.audio === 0)}
+            textOnly={!!(prepared.questionTypes && prepared.questionTypes.audio === 0 && (prepared.questionTypes.flexible ?? 0) === 0)}
             onCameraToggle={setCameraEnabled}
             onPdnConsentChange={setPdnConsent}
             onStartInterview={startInterview}
