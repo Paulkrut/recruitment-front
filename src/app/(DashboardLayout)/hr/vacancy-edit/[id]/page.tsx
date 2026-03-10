@@ -237,6 +237,13 @@ export default function HRVacancyEditPage() {
           questionType,
           inputMode: q.inputMode || q.type || 'text',
           type: q.inputMode || q.type || 'text',
+          allowedAnswerFormats: q.allowedAnswerFormats || (
+            questionType === 'choice'
+              ? ['choice']
+              : (q.inputMode || q.type || 'text') === 'typing'
+                ? ['typing']
+                : ['audio_video']
+          ),
           options: q.options || [],
           affectsKnowledge: q.affectsKnowledge !== undefined ? q.affectsKnowledge : true,
           variants,
@@ -278,6 +285,7 @@ export default function HRVacancyEditPage() {
       type: "text",
       inputMode: "text",
       questionType: "open",
+      allowedAnswerFormats: ["audio_video"],
       options: [],
       maxTime: templateData.questionTime,
       position: questions.length,

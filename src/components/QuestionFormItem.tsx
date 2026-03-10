@@ -30,7 +30,7 @@ import {
 } from "@tabler/icons-react";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
-import type { QuestionDraft, QuestionVariantDraft } from "@/types/question";
+import type { AnswerFormat, QuestionDraft, QuestionVariantDraft } from "@/types/question";
 import { QuestionOptionsEditor } from "@/components/question/QuestionOptionsEditor";
 import { QuestionSummary } from "@/components/question/QuestionSummary";
 import QuestionAttachmentUploader from "@/components/QuestionAttachmentUploader";
@@ -95,6 +95,13 @@ const QuestionFormItem = React.memo(({
   const questionType = question.questionType || 'open';
   const inputMode = question.inputMode || question.type || 'text';
   const options = question.options || [];
+  const allowedAnswerFormats: AnswerFormat[] = Array.isArray(question.allowedAnswerFormats) && question.allowedAnswerFormats.length > 0
+    ? question.allowedAnswerFormats
+    : questionType === 'choice'
+      ? ['choice']
+      : inputMode === 'typing'
+        ? ['typing']
+        : ['audio_video'];
   
   // Проверка наличия экспертных настроек (отличие от дефолта)
   const hasExpertSettings = () => {
@@ -115,6 +122,7 @@ const QuestionFormItem = React.memo(({
     onUpdate(index, "questionType", 'open');
     onUpdate(index, "inputMode", 'audio');
     onUpdate(index, "type", 'audio');
+    onUpdate(index, "allowedAnswerFormats", ['audio_video']);
     onUpdate(index, "options", null);
     onUpdate(index, "referenceAnswer", undefined);
     
@@ -174,20 +182,23 @@ const QuestionFormItem = React.memo(({
     };
   }, []);
 
-  // Helper функции для работы с единым режимом ответа
-  const getAnswerMode = (): 'video' | 'typing' | 'choice' => {
+  const getAnswerMode = (): 'video' | 'typing' | 'choice' | 'flexible' => {
     if (questionType === 'choice') {
       return 'choice';
+    }
+    if (allowedAnswerFormats.includes('audio_video') && allowedAnswerFormats.includes('typing')) {
+      return 'flexible';
     }
     return inputMode === 'typing' ? 'typing' : 'video';
   };
 
-  const handleAnswerModeChange = (value: 'video' | 'typing' | 'choice') => {
+  const handleAnswerModeChange = (value: 'video' | 'typing' | 'choice' | 'flexible') => {
     if (value === 'choice') {
       // Выбор из вариантов
       onUpdate(index, "questionType", 'choice');
       onUpdate(index, "inputMode", 'typing'); // Choice всегда typing (клик мышкой)
       onUpdate(index, "type", 'typing');
+      onUpdate(index, "allowedAnswerFormats", ['choice']);
       
       // Если нет вариантов — добавляем 2 пустых
       if (!options || options.length === 0) {
@@ -196,17 +207,25 @@ const QuestionFormItem = React.memo(({
           { label: '', isCorrect: false }
         ]);
       }
+    } else if (value === 'flexible') {
+      onUpdate(index, "questionType", 'open');
+      onUpdate(index, "inputMode", 'audio');
+      onUpdate(index, "type", 'audio');
+      onUpdate(index, "allowedAnswerFormats", ['audio_video', 'typing']);
+      onUpdate(index, "options", null);
     } else if (value === 'video') {
       // Видео/Аудио ответ
       onUpdate(index, "questionType", 'open');
       onUpdate(index, "inputMode", 'audio');
       onUpdate(index, "type", 'audio');
+      onUpdate(index, "allowedAnswerFormats", ['audio_video']);
       onUpdate(index, "options", null); // Убираем варианты
     } else if (value === 'typing') {
       // Текстовый ответ
       onUpdate(index, "questionType", 'open');
       onUpdate(index, "inputMode", 'typing');
       onUpdate(index, "type", 'typing');
+      onUpdate(index, "allowedAnswerFormats", ['typing']);
       onUpdate(index, "options", null); // Убираем варианты
     }
   };
@@ -466,16 +485,18 @@ const QuestionFormItem = React.memo(({
             </CustomFormLabel>
             <Typography variant="caption" color="text.secondary" display="block" mb={2}>
               <Trans>
-                Выберите как кандидат будет отвечать на вопрос. <b>Видео/Аудио</b> — запись с камеры (система оценит содержание).
+                Выберите, как кандидат будет отвечать на вопрос.
+                <b> Видео/Аудио</b> — запись с камеры или микрофона.
                 <b> Текстовый</b> — печать на клавиатуре.
-                <b> Выбор из вариантов</b> — клик мышкой (автопроверка правильности).
+                <b> Кандидат выбирает</b> — прямо в вопросе переключает между текстом и голосом.
+                <b> Выбор из вариантов</b> — клик мышкой с автопроверкой.
               </Trans>
             </Typography>
             <FormControl component="fieldset">
               <RadioGroup
                 row
                 value={getAnswerMode()}
-                onChange={(e) => handleAnswerModeChange(e.target.value as 'video' | 'typing' | 'choice')}
+                onChange={(e) => handleAnswerModeChange(e.target.value as 'video' | 'typing' | 'choice' | 'flexible')}
               >
                 <FormControlLabel
                   value="video"
@@ -507,6 +528,23 @@ const QuestionFormItem = React.memo(({
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           <Trans>Печать на клавиатуре</Trans>
+                        </Typography>
+                      </Box>
+                    </Box>
+                  }
+                  sx={{ mr: 3 }}
+                />
+                <FormControlLabel
+                  value="flexible"
+                  control={<Radio />}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box>
+                        <Typography variant="body2" fontWeight={600}>
+                          <Trans>⇄ Кандидат выбирает</Trans>
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          <Trans>В вопросе можно выбрать текст или голос</Trans>
                         </Typography>
                       </Box>
                     </Box>

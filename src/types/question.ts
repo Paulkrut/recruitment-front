@@ -14,6 +14,8 @@
  */
 export type QuestionType = 'open' | 'choice' | 'code';
 
+export type AnswerFormat = 'typing' | 'audio_video' | 'choice';
+
 /**
  * Режим ввода ответа
  */
@@ -62,6 +64,7 @@ export interface QuestionDraft {
   type: string; // Устаревшее поле для обратной совместимости (text/typing)
   questionType?: QuestionType;
   inputMode?: InputMode;
+  allowedAnswerFormats?: AnswerFormat[];
   options?: QuestionOption[];
   maxTime: number;
   position?: number;
@@ -191,6 +194,13 @@ export function validateQuestionVariants(question: QuestionDraft): {
         errors.push(`Вариант ${index + 1}: Red Flag для компетенционного вопроса требует эталонный ответ`);
       }
     });
+  }
+
+  if (question.questionType !== 'choice') {
+    const allowedFormats = question.allowedAnswerFormats || [];
+    if (allowedFormats.length === 0) {
+      errors.push('Для открытого вопроса нужно разрешить хотя бы один формат ответа');
+    }
   }
   
   return {

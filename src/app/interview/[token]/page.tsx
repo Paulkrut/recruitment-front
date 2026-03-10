@@ -49,6 +49,11 @@ interface Question {
   id: number;
   text: string;
   type: string;
+  inputMode?: string;
+  questionType?: 'open' | 'choice' | 'code';
+  options?: Array<{ label: string; isCorrect?: boolean }>;
+  allowedAnswerFormats?: ('typing' | 'audio_video' | 'choice')[];
+  attachments?: any[];
   maxTime?: number;
   position: number;
 }
@@ -110,6 +115,7 @@ export default function CandidateInterviewPage() {
   const [previousQuestionId, setPreviousQuestionId] = useState<number | null>(null);
   const [loadingNextQuestion, setLoadingNextQuestion] = useState(false);
   const [textAnswer, setTextAnswer] = useState(''); // Текстовый ответ для typing вопросов
+  const [selectedAnswerFormat, setSelectedAnswerFormat] = useState<'typing' | 'audio_video' | 'choice'>('audio_video');
   const textAnswerActionsRef = useRef<{ autoSubmit: () => void } | null>(null); // Ref для авто-отправки текста
   const videoRef = useRef<HTMLVideoElement|null>(null);
   const chatVideoRef = useRef<HTMLVideoElement|null>(null);
@@ -238,6 +244,20 @@ export default function CandidateInterviewPage() {
     });
   };
 
+  const handleAnswerFormatChange = useCallback((format: 'typing' | 'audio_video') => {
+    if (!question || recording || loadingNextQuestion || selectedAnswerFormat === format) {
+      return;
+    }
+
+    if (recordedBlob) {
+      setRecordedBlob(null);
+      removeLastUserMessage();
+    }
+
+    setTextAnswer('');
+    setSelectedAnswerFormat(format);
+  }, [question, recording, loadingNextQuestion, selectedAnswerFormat, recordedBlob]);
+
   // Определяем активный шаг: если есть результат ИЛИ интервью завершено (prepared.status === 'finished'), то шаг 3 (Финиш)
   const activeStep = (result || prepared?.status === 'finished') ? 3 : question ? 2 : prepared ? 1 : 0;
 
@@ -254,6 +274,48 @@ export default function CandidateInterviewPage() {
   const getQuestionNumber = (position: number) => {
     return Math.round(position) + 1;
   };
+
+  const getAllowedAnswerFormats = useCallback((questionData: Question | null): ('typing' | 'audio_video' | 'choice')[] => {
+    if (!questionData) {
+      return ['audio_video'];
+    }
+
+    if (Array.isArray(questionData.allowedAnswerFormats) && questionData.allowedAnswerFormats.length > 0) {
+      return questionData.allowedAnswerFormats;
+    }
+
+    if (questionData.questionType === 'choice') {
+      return ['choice'];
+    }
+
+    return (questionData.inputMode || questionData.type) === 'typing'
+      ? ['typing']
+      : ['audio_video'];
+  }, []);
+
+  const getDefaultAnswerFormat = useCallback((questionData: Question | null): 'typing' | 'audio_video' | 'choice' => {
+    const allowedFormats = getAllowedAnswerFormats(questionData);
+    if (questionData?.questionType === 'choice') {
+      return 'choice';
+    }
+
+    if (allowedFormats.includes('audio_video') && allowedFormats.includes('typing')) {
+      return 'audio_video';
+    }
+
+    const preferredMode = questionData?.inputMode || questionData?.type;
+    if (preferredMode === 'typing' && allowedFormats.includes('typing')) {
+      return 'typing';
+    }
+    if (allowedFormats.includes('audio_video')) {
+      return 'audio_video';
+    }
+    if (allowedFormats.includes('typing')) {
+      return 'typing';
+    }
+
+    return 'audio_video';
+  }, [getAllowedAnswerFormats]);
 
 
   const stepperComp = (
@@ -349,6 +411,12 @@ export default function CandidateInterviewPage() {
     }
     return clearCountdown;
   },[question?.id]); // Используем question?.id вместо question
+
+  useEffect(() => {
+    if (question) {
+      setSelectedAnswerFormat(getDefaultAnswerFormat(question));
+    }
+  }, [question?.id, question, getDefaultAnswerFormat]);
 
   // reset answered flag when question changes
   useEffect(()=>{
@@ -1145,6 +1213,7 @@ export default function CandidateInterviewPage() {
 
     const fd = new FormData();
     fd.append("questionId", String(question.id));
+    fd.append("answer_format", "audio_video");
     const key = isAudio ? 'audio' : 'video';
     const ext = (blob.type || '').includes('ogg') ? 'ogg' : 'webm';
     fd.append(key, new File([blob], `answer.${ext}`, { type: blob.type || (isAudio ? 'audio/webm' : 'video/webm') }));
@@ -1238,8 +1307,7 @@ export default function CandidateInterviewPage() {
     }
 
     // ВАЖНО: Если есть введенный текст для typing вопроса, отправляем его
-    const inputMode = (question as any)?.inputMode || question?.type;
-    const isTypingQuestion = inputMode === 'typing';
+    const isTypingQuestion = selectedAnswerFormat === 'typing';
     if (isTypingQuestion && textAnswer.trim().length >= 10) {
       console.log('Text answer found for typing question, submitting it automatically', {
         textLength: textAnswer.trim().length,
@@ -1278,6 +1346,9 @@ export default function CandidateInterviewPage() {
 
     const fd = new FormData();
     fd.append('questionId', String(question.id));
+    if (question.questionType !== 'choice') {
+      fd.append('answer_format', selectedAnswerFormat);
+    }
     fd.append('text',''); // Пустой текст
 
     console.log('Sending empty answer to server...');
@@ -1678,6 +1749,7 @@ export default function CandidateInterviewPage() {
     
     const fd = new FormData();
     fd.append("questionId", String(question.id));
+    fd.append("answer_format", "typing");
     fd.append("text_answer", data.text_answer);
     fd.append("typing_start_time", data.typing_start_time);
     fd.append("typing_end_time", data.typing_end_time);
@@ -2161,6 +2233,8 @@ export default function CandidateInterviewPage() {
       {/* Основной контент интервью - это блок срабатывает только когда question есть */}
       <ActiveInterviewScreen
           question={question}
+          availableAnswerFormats={getAllowedAnswerFormats(question)}
+          selectedAnswerFormat={selectedAnswerFormat}
           total={total}
           timeLeft={timeLeft}
           paused={paused}
@@ -2183,6 +2257,7 @@ export default function CandidateInterviewPage() {
           onSubmitAnswer={submitAnswer}
           onSubmitTextAnswer={submitTextAnswer}
           onSubmitChoiceAnswer={submitChoiceAnswer}
+          onAnswerFormatChange={handleAnswerFormatChange}
           onSkipQuestion={() => setSkipDialogOpen(true)}
           onPauseInterview={() => {}} // ❌ Pause dialog removed
           onUserInputChange={() => {}}

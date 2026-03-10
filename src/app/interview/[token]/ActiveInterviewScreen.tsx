@@ -41,6 +41,8 @@ interface Attachment {
 
 interface ActiveInterviewScreenProps {
   question: any;
+  availableAnswerFormats: ('typing' | 'audio_video' | 'choice')[];
+  selectedAnswerFormat: 'typing' | 'audio_video' | 'choice';
   total: number;
   timeLeft: number | null;
   paused: boolean;
@@ -73,6 +75,7 @@ interface ActiveInterviewScreenProps {
     choice_value: string;
     choice_label?: string;
   }) => void;
+  onAnswerFormatChange?: (format: 'typing' | 'audio_video') => void;
   onSkipQuestion: () => void;
   onPauseInterview: () => void;
   onUserInputChange: (value: string) => void;
@@ -91,6 +94,8 @@ interface ActiveInterviewScreenProps {
 
 export default function ActiveInterviewScreen({
   question,
+  availableAnswerFormats,
+  selectedAnswerFormat,
   total,
   timeLeft,
   paused,
@@ -113,6 +118,7 @@ export default function ActiveInterviewScreen({
   onSubmitAnswer,
   onSubmitTextAnswer,
   onSubmitChoiceAnswer,
+  onAnswerFormatChange,
   onSkipQuestion,
   onPauseInterview,
   onUserInputChange,
@@ -258,8 +264,11 @@ export default function ActiveInterviewScreen({
   const inputMode = question?.inputMode || question?.type;
   const questionType = question?.questionType || 'open';
   const isChoiceQuestion = questionType === 'choice';
-  const isTypingQuestion = inputMode === 'typing';
+  const isTypingQuestion = isChoiceQuestion
+    ? false
+    : selectedAnswerFormat === 'typing' || (selectedAnswerFormat !== 'audio_video' && inputMode === 'typing');
   const choiceOptions = Array.isArray(question?.options) ? question?.options : [];
+  const canSwitchAnswerFormat = !isChoiceQuestion && availableAnswerFormats.includes('typing') && availableAnswerFormats.includes('audio_video');
 
   const handleChoiceSelect = (value: string, label?: string) => {
     if (!onSubmitChoiceAnswer) return;
@@ -289,8 +298,6 @@ export default function ActiveInterviewScreen({
         flexShrink: 0,
         boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
       }}>
-        {stepperComp}
-        
         {/* Header */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -681,6 +688,58 @@ export default function ActiveInterviewScreen({
           flexDirection: isMobile ? 'column' : 'row',
           alignItems: 'center'
         }}>
+          {canSwitchAnswerFormat && (
+            <Box sx={{ width: '100%', mb: 1 }}>
+              <Typography variant="body2" sx={{ mb: 1, color: '#4a4a4a', fontWeight: 600 }}>
+                <Trans>Как вам удобнее ответить?</Trans>
+              </Typography>
+              <Stack direction="row" spacing={1} sx={{ width: '100%' }}>
+                <Button
+                  variant={isTypingQuestion ? 'contained' : 'outlined'}
+                  onClick={() => onAnswerFormatChange?.('typing')}
+                  disabled={recording || loadingNextQuestion}
+                  sx={{
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    minWidth: 0,
+                    px: 2.5,
+                    bgcolor: isTypingQuestion ? '#25d366' : undefined,
+                    borderColor: !isTypingQuestion ? '#bdbdbd' : undefined,
+                    color: isTypingQuestion ? '#fff' : '#4a4a4a',
+                    '&:hover': {
+                      bgcolor: isTypingQuestion ? '#128c7e' : '#f5f5f5',
+                      borderColor: '#25d366',
+                      color: isTypingQuestion ? '#fff' : '#1f1f1f',
+                    },
+                  }}
+                >
+                  <Trans>Текстом</Trans>
+                </Button>
+                <Button
+                  variant={!isTypingQuestion ? 'contained' : 'outlined'}
+                  onClick={() => onAnswerFormatChange?.('audio_video')}
+                  disabled={recording || loadingNextQuestion}
+                  sx={{
+                    borderRadius: '24px',
+                    textTransform: 'none',
+                    minWidth: 0,
+                    px: 2.5,
+                    bgcolor: !isTypingQuestion ? '#25d366' : undefined,
+                    borderColor: isTypingQuestion ? '#bdbdbd' : undefined,
+                    color: !isTypingQuestion ? '#fff' : '#4a4a4a',
+                    '&:hover': {
+                      bgcolor: !isTypingQuestion ? '#128c7e' : '#f5f5f5',
+                      borderColor: '#25d366',
+                      color: !isTypingQuestion ? '#fff' : '#1f1f1f',
+                    },
+                  }}
+                >
+                  <Trans>Голосом / видео</Trans>
+                </Button>
+              </Stack>
+            </Box>
+          )}
+
           {isChoiceQuestion ? (
             /* Choice вопросы - всегда показываем кнопки выбора (независимо от inputMode) */
             <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ width: '100%' }}>

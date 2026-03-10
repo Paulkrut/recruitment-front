@@ -24,6 +24,8 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
   const hasReference = !!referenceAnswer;
   const isRedFlag = question.isRedFlag || false;
   const isChoice = questionType === 'choice';
+  const allowedFormats = question.allowedAnswerFormats || (isChoice ? ['choice'] : inputMode === 'typing' ? ['typing'] : ['audio_video']);
+  const isFlexible = !isChoice && allowedFormats.includes('typing') && allowedFormats.includes('audio_video');
   const isAudio = inputMode === 'text';
   const isTyping = inputMode === 'typing';
   const correctOptions = options.filter(opt => opt.isCorrect);
@@ -99,7 +101,9 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
             {isChoice ? (
               <Trans>✅ Кликает мышкой на один из {options.length} вариантов ответа</Trans>
             ) : (
-              isTyping ? (
+              isFlexible ? (
+                <Trans>⇄ Сам выбирает в вопросе: ответить текстом или голосом/видео</Trans>
+              ) : isTyping ? (
                 <Trans>⌨️ Печатает текстовый ответ (измеряется скорость печати)</Trans>
               ) : (
                 <Trans>🎥 Записывает видео/аудио ответ (транскрибация в текст)</Trans>

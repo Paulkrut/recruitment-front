@@ -151,6 +151,9 @@ export default function HRVacancyCreatePage() {
     const newQuestion: QuestionDraft = {
       text: "",
       type: "text",
+      inputMode: "text",
+      questionType: "open",
+      allowedAnswerFormats: ["audio_video"],
       maxTime: templateData.questionTime,
       position: questions.length,
       // Всегда создаём один пустой вариант
