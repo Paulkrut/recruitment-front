@@ -1089,7 +1089,7 @@ export default function CandidateDetailPage() {
                           )}
                           <Typography variant="body2" sx={{mb:1}}><b><Trans>Ответ:</Trans></b> {a.text ? a.text : <i style={{color:'#888'}}><Trans>Нет ответа</Trans></i>}</Typography>
                           <Typography variant="body2" sx={{mb:1}}><b><Trans>Оценка:</Trans></b> {a.score !== undefined && a.score !== null ? a.score : <i style={{color:'#888'}}><Trans>нет</Trans></i>}</Typography>
-                          {a.aiComment && (
+                          {a.aiComment && a.questionMeta?.questionType !== 'choice' && (
                             <Typography variant="body2" sx={{mb:1}}><Trans><b>Характеристика:</b> {a.aiComment}</Trans></Typography>
                           )}
                           {/* Метрики печати для текстовых ответов */}
