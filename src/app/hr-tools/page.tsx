@@ -170,6 +170,15 @@ const tools = [
       "Создайте приказ о приёме на работу (форма Т-1) за минуту. Все обязательные поля и экспорт в Word.",
     href: "/hr-tools/job-order-generator",
   },
+  {
+    id: "transcription",
+    icon: "mdi:microphone-message",
+    iconColor: "#1565C0",
+    title: "Транскрибация",
+    description:
+      "Переведите аудио или видео в текст за минуту. AI распознает речь, исправит ошибки и выдаст готовый Word-документ.",
+    href: "/hr-tools/transcription",
+  },
 ];
 
 export default function HrToolsPage() {
