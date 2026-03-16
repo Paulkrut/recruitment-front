@@ -32,6 +32,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabPanel from '@mui/lab/TabPanel';
@@ -56,6 +57,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { exportCandidateToPDFWithFont } from '@/utils/pdfExportWithFont';
+import { exportCandidateToExcel } from '@/utils/exportCandidateToExcel';
 import Rating from '@mui/material/Rating';
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
@@ -125,6 +127,7 @@ export default function CandidateDetailPage() {
   const [resumeLoading, setResumeLoading] = useState(false);
   const [resumeData, setResumeData] = useState<any>(null);
   const [isEditingResume, setIsEditingResume] = useState(false);
+  const [exportingExcel, setExportingExcel] = useState(false);
   
   // Коммуникации
   const [communications, setCommunications] = useState<any[]>([]);
@@ -354,6 +357,28 @@ export default function CandidateDetailPage() {
     }
   };
 
+  // Функция экспорта в Excel
+  const handleExportExcel = async () => {
+    setExportingExcel(true);
+    try {
+      await exportCandidateToExcel({
+        candidateName: candidate,
+        email: candidateEmail,
+        phone: candidatePhone,
+        status: candidateStatus,
+        vacancyTitle: sessionDetail?.vacancy?.title || statusData?.vacancyTitle,
+        createdAt,
+        sessionDetail,
+        evalData,
+      });
+    } catch (error) {
+      console.error('Ошибка при экспорте Excel:', error);
+      setCopyMsg(_(msg`Ошибка при создании Excel`));
+    } finally {
+      setExportingExcel(false);
+    }
+  };
+
   // Отправка приглашения на интервью в HH
   const handleSendHhInvitation = async () => {
     if (!statusData?.hhCandidateId) {
@@ -570,6 +595,18 @@ export default function CandidateDetailPage() {
                     onClick={handleExportPDF}
                   >
                     PDF
+                  </Button>
+                </Tooltip>
+                <Tooltip title={_(msg`Полный экспорт в Excel (ответы, оценки, компетенции, видео-ссылки)`)}>
+                  <Button
+                    variant="outlined"
+                    color="success"
+                    size="small"
+                    startIcon={exportingExcel ? <CircularProgress size={16} /> : <GridOnIcon />}
+                    onClick={handleExportExcel}
+                    disabled={exportingExcel}
+                  >
+                    Excel
                   </Button>
                 </Tooltip>
               </Stack>
