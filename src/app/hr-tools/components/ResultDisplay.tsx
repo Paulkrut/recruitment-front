@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { Box, Typography, Paper, IconButton, Tooltip, Snackbar, Alert } from "@mui/material";
+import { Box, Typography, Paper, Button, IconButton, Tooltip, Snackbar, Alert } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 interface ResultDisplayProps {
@@ -92,8 +92,36 @@ export default function ResultDisplay({
 
           {/* Actions */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {onDownloadDocx && (
+              <Button
+                variant="contained"
+                onClick={onDownloadDocx}
+                disabled={downloadingDocx}
+                startIcon={
+                  downloadingDocx
+                    ? <Icon icon="mdi:loading" width={18} height={18} style={{ animation: "spin 1s linear infinite" }} />
+                    : <Icon icon="mdi:file-word" width={18} height={18} />
+                }
+                sx={{
+                  bgcolor: "#1B5E20",
+                  "&:hover": { bgcolor: "#2E7D32" },
+                  "&:disabled": { bgcolor: "#bdbdbd" },
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  px: 2.5,
+                  py: 1,
+                  borderRadius: 2,
+                  boxShadow: "0 2px 8px rgba(27,94,32,0.25)",
+                  textTransform: "none",
+                  letterSpacing: 0,
+                }}
+              >
+                {downloadingDocx ? "Формируется…" : "Скачать Word"}
+              </Button>
+            )}
+
             {copyText && (
-              <Tooltip title="Копировать">
+              <Tooltip title="Копировать текст">
                 <IconButton
                   onClick={handleCopy}
                   sx={{ bgcolor: "#f5f5f5", "&:hover": { bgcolor: "#e0e0e0" } }}
@@ -104,28 +132,6 @@ export default function ResultDisplay({
                     height={20}
                     color={copied ? "#4CAF50" : "#666"}
                   />
-                </IconButton>
-              </Tooltip>
-            )}
-
-            {onDownloadDocx && (
-              <Tooltip title="Скачать Word (DOCX)">
-                <IconButton
-                  onClick={onDownloadDocx}
-                  disabled={downloadingDocx}
-                  sx={{
-                    bgcolor: "#e3f2fd",
-                    "&:hover": { bgcolor: "#bbdefb" },
-                    "&:disabled": { bgcolor: "#f5f5f5" },
-                  }}
-                >
-                  {downloadingDocx ? (
-                    <Box sx={{ width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Icon icon="mdi:loading" width={18} height={18} color="#1565C0" style={{ animation: "spin 1s linear infinite" }} />
-                    </Box>
-                  ) : (
-                    <Icon icon="mdi:file-word" width={20} height={20} color="#1565C0" />
-                  )}
                 </IconButton>
               </Tooltip>
             )}
