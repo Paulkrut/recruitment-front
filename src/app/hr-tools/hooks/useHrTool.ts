@@ -308,3 +308,170 @@ export function useJobInstructionGenerator() {
   });
 }
 
+// ========================================
+// ОФФЕР
+// ========================================
+
+export interface OfferRequest {
+  candidateName: string;
+  position: string;
+  salary?: string;
+  startDate?: string;
+  probation?: string;
+  workFormat?: string;
+  bonuses?: string;
+  companyName?: string;
+}
+
+export interface OfferResponse {
+  title: string;
+  greeting: string;
+  introduction: string;
+  positionDetails: string;
+  compensationDetails: string;
+  conditions: string[];
+  benefits: string[];
+  nextSteps: string[];
+  closing: string;
+  fullText: string;
+}
+
+export function useOfferGenerator() {
+  return useHrTool<OfferRequest, OfferResponse>({
+    endpoint: "/generate-offer",
+  });
+}
+
+// ========================================
+// ДОПСОГЛАШЕНИЕ
+// ========================================
+
+export interface AdditionalAgreementRequest {
+  changeType: string;
+  employeeName: string;
+  position?: string;
+  currentConditions?: string;
+  newConditions: string;
+  effectiveDate?: string;
+  companyName?: string;
+}
+
+export interface AdditionalAgreementResponse {
+  title: string;
+  preamble: string;
+  clauses: string[];
+  effectiveDate: string;
+  signatures: string;
+  disclaimer: string;
+  fullText: string;
+}
+
+export function useAdditionalAgreementGenerator() {
+  return useHrTool<AdditionalAgreementRequest, AdditionalAgreementResponse>({
+    endpoint: "/generate-additional-agreement",
+  });
+}
+
+// ========================================
+// ТРУДОВОЙ ДОГОВОР
+// ========================================
+
+export interface EmploymentContractRequest {
+  employeeName: string;
+  position: string;
+  salary: string;
+  contractType?: string;
+  workFormat?: string;
+  schedule?: string;
+  probation?: string;
+  startDate?: string;
+  companyName?: string;
+  companyAddress?: string;
+}
+
+export interface EmploymentContractSection {
+  number: string;
+  title: string;
+  content: string;
+}
+
+export interface EmploymentContractResponse {
+  title: string;
+  contractNumber: string;
+  preamble: string;
+  sections: EmploymentContractSection[];
+  signatures: string;
+  disclaimer: string;
+  fullText: string;
+}
+
+export function useEmploymentContractGenerator() {
+  return useHrTool<EmploymentContractRequest, EmploymentContractResponse>({
+    endpoint: "/generate-employment-contract",
+  });
+}
+
+// ========================================
+// ДОГОВОР ГПХ
+// ========================================
+
+export interface GphContractRequest {
+  contractorType: string;
+  contractorName: string;
+  serviceDescription: string;
+  amount?: string;
+  deadline?: string;
+  companyName?: string;
+}
+
+export interface GphContractResponse {
+  title: string;
+  contractNumber: string;
+  preamble: string;
+  sections: EmploymentContractSection[];
+  signatures: string;
+  disclaimer: string;
+  fullText: string;
+}
+
+export function useGphContractGenerator() {
+  return useHrTool<GphContractRequest, GphContractResponse>({
+    endpoint: "/generate-gph-contract",
+  });
+}
+
+// ========================================
+// ПРИКАЗ О ПРИЁМЕ
+// ========================================
+
+export interface JobOrderRequest {
+  employeeName: string;
+  position: string;
+  department?: string;
+  salary?: string;
+  startDate?: string;
+  contractType?: string;
+  probation?: string;
+  workFormat?: string;
+  companyName?: string;
+}
+
+export interface JobOrderResponse {
+  title: string;
+  orderNumber: string;
+  orderDate: string;
+  companyName: string;
+  orderBody: string;
+  conditions: string[];
+  basis: string;
+  signatures: string;
+  disclaimer: string;
+  fullText: string;
+}
+
+export function useJobOrderGenerator() {
+  return useHrTool<JobOrderRequest, JobOrderResponse>({
+    endpoint: "/generate-job-order",
+  });
+}
+

@@ -125,6 +125,51 @@ const tools = [
       "Проверьте, было ли резюме создано с помощью ChatGPT. Получите вероятность и подозрительные фрагменты за 30 секунд.",
     href: "/hr-tools/ai-detector",
   },
+  {
+    id: "offer-generator",
+    icon: "mdi:email-check-outline",
+    iconColor: "#009688",
+    title: "Генератор оффера",
+    description:
+      "Создайте профессиональное письмо-оффер кандидату за минуту. Условия работы, компенсация и следующие шаги с экспортом в Word.",
+    href: "/hr-tools/offer-generator",
+  },
+  {
+    id: "additional-agreement-generator",
+    icon: "mdi:file-document-edit-outline",
+    iconColor: "#7B1FA2",
+    title: "Допсоглашение",
+    description:
+      "Сгенерируйте дополнительное соглашение к трудовому договору: изменение оклада, перевод на удалёнку, смена должности.",
+    href: "/hr-tools/additional-agreement-generator",
+  },
+  {
+    id: "employment-contract-generator",
+    icon: "mdi:file-sign",
+    iconColor: "#1565C0",
+    title: "Трудовой договор",
+    description:
+      "Составьте трудовой договор по ТК РФ: бессрочный или срочный, с испытательным сроком, для офиса или удалёнки.",
+    href: "/hr-tools/employment-contract-generator",
+  },
+  {
+    id: "gph-contract-generator",
+    icon: "mdi:handshake-outline",
+    iconColor: "#E65100",
+    title: "Договор ГПХ",
+    description:
+      "Сгенерируйте договор гражданско-правового характера: для физлиц, самозанятых или ИП по ГК РФ.",
+    href: "/hr-tools/gph-contract-generator",
+  },
+  {
+    id: "job-order-generator",
+    icon: "mdi:clipboard-text-clock-outline",
+    iconColor: "#2E7D32",
+    title: "Приказ о приёме",
+    description:
+      "Создайте приказ о приёме на работу (форма Т-1) за минуту. Все обязательные поля и экспорт в Word.",
+    href: "/hr-tools/job-order-generator",
+  },
 ];
 
 export default function HrToolsPage() {
