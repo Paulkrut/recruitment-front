@@ -153,6 +153,18 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
               </MuiLink>
               <MuiLink
                 component={Link}
+                href="/personal-data-consent"
+                sx={{
+                  color: 'rgba(255,255,255,0.6)',
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  '&:hover': { color: '#E91E63' },
+                }}
+              >
+                Согласие на ПД
+              </MuiLink>
+              <MuiLink
+                component={Link}
                 href="/forget-me"
                 sx={{
                   color: 'rgba(255,255,255,0.6)',

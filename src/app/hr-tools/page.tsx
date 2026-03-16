@@ -555,6 +555,12 @@ export default function HrToolsPage() {
               >
                 Условия использования
               </Link>
+              <Link
+                href="/personal-data-consent"
+                style={{ textDecoration: "none", color: "#666", fontSize: "0.85rem" }}
+              >
+                Согласие на ПД
+              </Link>
             </Box>
           </Box>
         </Container>

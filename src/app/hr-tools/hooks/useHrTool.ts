@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import { hasHrToolsConsent } from "../lib/consent";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -24,6 +25,11 @@ export function useHrTool<TRequest, TResponse>({
 
   const execute = useCallback(
     async (request: TRequest): Promise<TResponse | null> => {
+      if (!hasHrToolsConsent()) {
+        setError("Чтобы использовать инструмент, подтвердите согласие с документами под заголовком страницы.");
+        return null;
+      }
+
       setLoading(true);
       setError(null);
 
@@ -354,6 +360,11 @@ export interface AdditionalAgreementRequest {
   newConditions: string;
   effectiveDate?: string;
   companyName?: string;
+  mainContractDate?: string;
+  mainContractNumber?: string;
+  employerSignerName?: string;
+  employerSignerPosition?: string;
+  employerSignerAuthority?: string;
 }
 
 export interface AdditionalAgreementResponse {
@@ -364,6 +375,7 @@ export interface AdditionalAgreementResponse {
   signatures: string;
   disclaimer: string;
   fullText: string;
+  manualFields?: string[];
 }
 
 export function useAdditionalAgreementGenerator() {
@@ -387,6 +399,20 @@ export interface EmploymentContractRequest {
   startDate?: string;
   companyName?: string;
   companyAddress?: string;
+  // New AI fields
+  department?: string;
+  workplaceAddress?: string;
+  salaryPaymentDays?: string;
+  workingHours?: string;
+  employerSignerName?: string;
+  employerSignerPosition?: string;
+  employerSignerAuthority?: string;
+  fixedTermReason?: string;
+  fixedTermEndDate?: string;
+  equipmentProvision?: string;
+  remoteCompensation?: string;
+  officeDays?: string;
+  officeLocation?: string;
 }
 
 export interface EmploymentContractSection {
@@ -403,6 +429,7 @@ export interface EmploymentContractResponse {
   signatures: string;
   disclaimer: string;
   fullText: string;
+  manualFields?: string[];
 }
 
 export function useEmploymentContractGenerator() {
@@ -422,6 +449,11 @@ export interface GphContractRequest {
   amount?: string;
   deadline?: string;
   companyName?: string;
+  companyAddress?: string;
+  companySignerName?: string;
+  companySignerPosition?: string;
+  paymentTerms?: string;
+  startDate?: string;
 }
 
 export interface GphContractResponse {
@@ -432,6 +464,7 @@ export interface GphContractResponse {
   signatures: string;
   disclaimer: string;
   fullText: string;
+  manualFields?: string[];
 }
 
 export function useGphContractGenerator() {
@@ -454,6 +487,8 @@ export interface JobOrderRequest {
   probation?: string;
   workFormat?: string;
   companyName?: string;
+  directorName?: string;
+  hrSignerName?: string;
 }
 
 export interface JobOrderResponse {
@@ -467,6 +502,7 @@ export interface JobOrderResponse {
   signatures: string;
   disclaimer: string;
   fullText: string;
+  manualFields?: string[];
 }
 
 export function useJobOrderGenerator() {

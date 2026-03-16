@@ -48,6 +48,15 @@ const Footer = () => {
               >
                 <Trans>Условия использования</Trans>
               </Link>
+              <Link
+                href="/personal-data-consent"
+                target="_blank"
+                underline="none"
+                color="primary"
+                sx={{ fontSize: '14px' }}
+              >
+                <Trans>Согласие на ПД</Trans>
+              </Link>
             </Box>
           </Grid>
         </Grid>

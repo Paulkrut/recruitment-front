@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
+import { hasHrToolsConsent } from "../lib/consent";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -102,6 +103,11 @@ export default function TranscriptionClient() {
 
   const handleSubmit = async () => {
     if (!file) return;
+    if (!hasHrToolsConsent()) {
+      setError("Чтобы использовать инструмент, подтвердите согласие с документами под заголовком страницы.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setData(null);

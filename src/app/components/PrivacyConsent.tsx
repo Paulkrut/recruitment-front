@@ -41,24 +41,28 @@ export default function PrivacyConsent({
         />
         <Box>
           <Typography variant="body2" sx={{ mb: 1 }}><Trans>
-            Я даю согласие на обработку моих персональных данных в соответствии с{' '}
-            </Trans><Link 
-              href="/privacy-policy" 
-              target="_blank"
-              style={{ color: 'primary.main', textDecoration: 'none' }}
-            >
-              <Trans>Политикой конфиденциальности</Trans>
-            </Link><Trans>{' '}
-            и{' '}
+            Я подтверждаю согласие с{' '}
             </Trans><Link 
               href="/terms-of-service" 
               target="_blank"
               style={{ color: 'primary.main', textDecoration: 'none' }}
             >
-              <Trans>Условиями использования</Trans>
+              <Trans>Офертой</Trans>
+            </Link><Trans>, </Trans><Link 
+              href="/privacy-policy" 
+              target="_blank"
+              style={{ color: 'primary.main', textDecoration: 'none' }}
+            >
+              <Trans>Политикой конфиденциальности</Trans>
+            </Link><Trans>{' '}и{' '}</Trans><Link 
+              href="/personal-data-consent" 
+              target="_blank"
+              style={{ color: 'primary.main', textDecoration: 'none' }}
+            >
+              <Trans>Согласием на обработку персональных данных</Trans>
             </Link>
           </Typography>
-          <Typography variant="caption" color="text.secondary"><Trans>Согласие необходимо для использования системы. Вы можете отозвать согласие в любое время.</Trans></Typography>
+          <Typography variant="caption" color="text.secondary"><Trans>Полные формулировки о передаче данных российским технологическим партнёрам и ИИ-обработке содержатся в этих документах. Согласие можно отозвать в любое время.</Trans></Typography>
           {helperText && (
             <Typography variant="caption" color="error" sx={{ display: 'block', mt: 1 }}>
               {helperText}

@@ -18,7 +18,7 @@ export default function TermsOfServiceRU() {
           <Description sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
           <Typography variant="h3" gutterBottom fontWeight="bold">Условия использования</Typography>
           <Typography variant="h6" color="text.secondary">Система подбора персонала SofiHR</Typography>
-          <Chip label="Обновлено: 22.09.2025" color="primary" sx={{ mt: 2 }} />
+          <Chip label="Обновлено: 16.03.2026" color="primary" sx={{ mt: 2 }} />
         </Box>
 
         <Divider sx={{ mb: 4 }} />
@@ -114,6 +114,13 @@ export default function TermsOfServiceRU() {
                 secondary="AI-анализ и рейтингование"
               />
             </ListItem>
+            <ListItem>
+              <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
+              <ListItemText
+                primary="Бесплатные публичные HR-инструменты"
+                secondary="Генерация текстов, документов, транскрибация, анализ резюме и другие вспомогательные функции без регистрации"
+              />
+            </ListItem>
           </List>
         </Box>
 
@@ -194,6 +201,13 @@ export default function TermsOfServiceRU() {
             </ListItem>
             <ListItem>
               <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
+              <ListItemText
+                primary="Иметь законные основания на передачу данных"
+                secondary="Пользователь подтверждает, что вправе вводить, загружать и передавать через сервис соответствующие тексты, персональные данные и файлы"
+              />
+            </ListItem>
+            <ListItem>
+              <ListItemIcon><CheckCircle color="success" /></ListItemIcon>
               <ListItemText 
                 primary="Соблюдать технические требования"
                 secondary="Стабильное интернет-соединение, современный браузер"
@@ -235,6 +249,12 @@ export default function TermsOfServiceRU() {
           <Alert severity="warning" sx={{ mt: 2 }}>
             <strong>Важно:</strong> Система не несет ответственности за решения HR-менеджеров о найме или отказе в трудоустройстве.
           </Alert>
+          <Typography variant="body2" paragraph sx={{ mt: 2 }}>
+            Результаты, сформированные с помощью AI-моделей, шаблонов документов,
+            транскрибации и иных автоматизированных функций, носят справочный и
+            вспомогательный характер и не заменяют юридическую, кадровую или иную
+            профессиональную экспертизу пользователя.
+          </Typography>
         </Box>
 
         {/* Интеллектуальная собственность */}
@@ -302,6 +322,13 @@ export default function TermsOfServiceRU() {
           </List>
           <Typography variant="body2" paragraph sx={{ mt: 1 }}>
             Видео и аудио записи интервью используются исключительно для целей интервью и оценки соответствия вакансии и хранятся не более 60 календарных дней с даты завершения интервью. Подробно — в <Link href="/privacy-policy">Политике конфиденциальности</Link>.
+          </Typography>
+          <Typography variant="body2" paragraph sx={{ mt: 1 }}>
+            Для предоставления функциональности сервиса оператор вправе привлекать
+            российских технологических партнеров и обработчиков по поручению,
+            включая AI-, speech- и инфраструктурные сервисы. Общие правила такой
+            обработки закреплены в <Link href="/privacy-policy">Политике конфиденциальности</Link> и{" "}
+            <Link href="/personal-data-consent">Согласии на обработку персональных данных</Link>.
           </Typography>
           <Typography variant="body1" paragraph>
             Подробная информация о защите персональных данных содержится в{' '}

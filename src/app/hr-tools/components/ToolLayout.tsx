@@ -11,6 +11,8 @@ import {
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import SofiHRLogo from "@/components/shared/SofiHRLogo";
+import HrToolConsent from "./HrToolConsent";
+import { hasHrToolsConsent, setHrToolsConsent } from "../lib/consent";
 
 interface CtaFeature {
   icon: string;
@@ -42,6 +44,17 @@ export default function ToolLayout({
   ctaFeatures,
   ctaButtonText = "Начать бесплатно →",
 }: ToolLayoutProps) {
+  const [consentAccepted, setConsentAccepted] = React.useState(false);
+
+  React.useEffect(() => {
+    setConsentAccepted(hasHrToolsConsent());
+  }, []);
+
+  const handleConsentChange = React.useCallback((accepted: boolean) => {
+    setConsentAccepted(accepted);
+    setHrToolsConsent(accepted);
+  }, []);
+
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#fff" }}>
       {/* Header */}
@@ -204,6 +217,8 @@ export default function ToolLayout({
               <Icon icon="mdi:gift-outline" width={18} height={18} />
               Бесплатно, без регистрации
             </Box>
+
+            <HrToolConsent checked={consentAccepted} onChange={handleConsentChange} />
           </Paper>
 
           {/* Tool content */}

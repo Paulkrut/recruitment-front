@@ -7,6 +7,7 @@ import {
   Button,
   CircularProgress,
   Collapse,
+  Divider,
   FormControl,
   MenuItem,
   Paper,
@@ -22,6 +23,9 @@ import { JobOrderResponse, useJobOrderGenerator } from "../hooks/useHrTool";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+const inputSx = { "& .MuiOutlinedInput-root": { borderRadius: 2 } };
+const grid2 = { display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 3 };
+
 function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -33,26 +37,57 @@ function downloadBlob(blob: Blob, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-function TemplatePreview({ data }: { data: JobOrderResponse }) {
+function renderWithTokenHighlights(text: string) {
+  const parts = text.split(/({{manual:[a-zA-Z]+}})/g);
+  return parts.map((part, i) =>
+    /^{{manual:[a-zA-Z]+}}$/.test(part) ? (
+      <mark key={i} style={{ background: "#fef08a", borderRadius: 3, padding: "0 3px", fontWeight: 600 }}>
+        {part}
+      </mark>
+    ) : (
+      <React.Fragment key={i}>{part}</React.Fragment>
+    )
+  );
+}
+
+function SectionHeader({ icon, title, subtitle }: { icon: string; title: string; subtitle?: string }) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
+      <Box sx={{ width: 34, height: 34, borderRadius: 2, bgcolor: "#E8F5E9", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <Icon icon={icon} width={18} height={18} color="#2E7D32" />
+      </Box>
+      <Box>
+        <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#1a1a2e", lineHeight: 1.2 }}>{title}</Typography>
+        {subtitle && <Typography sx={{ fontSize: "0.78rem", color: "#64748b" }}>{subtitle}</Typography>}
+      </Box>
+    </Box>
+  );
+}
+
+function FormField({ label, helper, children }: { label: string; helper?: string; children: React.ReactNode }) {
+  return (
+    <Box>
+      <Typography sx={{ fontWeight: 600, fontSize: "0.88rem", color: "#1a1a2e", mb: 0.5 }}>{label}</Typography>
+      {helper && <Typography sx={{ fontSize: "0.77rem", color: "#94a3b8", mb: 0.7 }}>{helper}</Typography>}
+      {children}
+    </Box>
+  );
+}
+
+function JobOrderPreview({ data }: { data: JobOrderResponse }) {
+  const hasManual = (data.manualFields?.length ?? 0) > 0;
   return (
     <Paper elevation={0} sx={{ mt: 3, p: { xs: 2.5, md: 3 }, borderRadius: 3, border: "1px dashed #a5d6a7", bgcolor: "#f1f8e9" }}>
       <Typography sx={{ fontWeight: 700, color: "#1a1a2e", mb: 1 }}>Готовый шаблон документа</Typography>
-      <Typography sx={{ fontSize: "0.87rem", color: "#64748b", mb: 2 }}>
-        Этот шаблон уходит в Word-экспорт. Можно скачать и доработать на фирменном бланке.
-      </Typography>
-      <Box
-        sx={{
-          p: { xs: 2, md: 2.5 },
-          borderRadius: 2,
-          border: "1px solid #c8e6c9",
-          bgcolor: "#fff",
-          whiteSpace: "pre-wrap",
-          fontSize: "0.9rem",
-          lineHeight: 1.7,
-          color: "#334155",
-        }}
-      >
-        {data.fullText}
+      {hasManual && (
+        <Alert severity="warning" sx={{ mb: 2, borderRadius: 2, fontSize: "0.82rem" }}>
+          Жёлтым выделено <strong>{data.manualFields!.length}</strong> мест для ручного заполнения — они будут подсвечены в Word-файле.
+        </Alert>
+      )}
+      <Box sx={{ p: { xs: 2, md: 2.5 }, borderRadius: 2, border: "1px solid #c8e6c9", bgcolor: "#fff", fontSize: "0.9rem", lineHeight: 1.7, color: "#334155" }}>
+        <Typography component="div" sx={{ whiteSpace: "pre-wrap", fontSize: "inherit", lineHeight: "inherit", color: "inherit" }}>
+          {renderWithTokenHighlights(data.fullText)}
+        </Typography>
       </Box>
     </Paper>
   );
@@ -68,6 +103,8 @@ export default function JobOrderClient() {
   const [probation, setProbation] = React.useState("");
   const [workFormat, setWorkFormat] = React.useState("");
   const [companyName, setCompanyName] = React.useState("");
+  const [directorName, setDirectorName] = React.useState("");
+  const [hrSignerName, setHrSignerName] = React.useState("");
   const [docxDownloaded, setDocxDownloaded] = React.useState(false);
   const [docxError, setDocxError] = React.useState("");
   const [downloadingDocx, setDownloadingDocx] = React.useState(false);
@@ -88,6 +125,8 @@ export default function JobOrderClient() {
       probation: probation || undefined,
       workFormat: workFormat || undefined,
       companyName: companyName.trim() || undefined,
+      directorName: directorName.trim() || undefined,
+      hrSignerName: hrSignerName.trim() || undefined,
     });
   };
 
@@ -130,65 +169,75 @@ export default function JobOrderClient() {
       ]}
     >
       <Paper elevation={0} sx={{ p: { xs: 3, md: 4 }, borderRadius: 3, border: "1px solid #a5d6a7", bgcolor: "#fff", mb: 4 }}>
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 3 }}>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>ФИО сотрудника *</Typography>
-            <TextField fullWidth value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} placeholder="Иванов Иван Иванович" sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Должность *</Typography>
-            <TextField fullWidth value={position} onChange={(e) => setPosition(e.target.value)} placeholder="Менеджер по продажам, Frontend-разработчик..." sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Структурное подразделение</Typography>
-            <TextField fullWidth value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="Отдел продаж, IT-департамент" sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Оклад / ЗП</Typography>
-            <TextField fullWidth value={salary} onChange={(e) => setSalary(e.target.value)} placeholder="150 000 руб. gross" sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Дата начала работы</Typography>
-            <TextField fullWidth value={startDate} onChange={(e) => setStartDate(e.target.value)} placeholder="1 апреля 2026 г." sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Вид работы</Typography>
-            <FormControl fullWidth>
-              <Select value={contractType} onChange={(e) => setContractType(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
-                <MenuItem value="">Не указывать</MenuItem>
-                <MenuItem value="main">Основная работа</MenuItem>
-                <MenuItem value="part_time">Совместительство</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Испытательный срок</Typography>
-            <FormControl fullWidth>
-              <Select value={probation} onChange={(e) => setProbation(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
-                <MenuItem value="">Не указывать</MenuItem>
-                <MenuItem value="none">Без испытательного срока</MenuItem>
-                <MenuItem value="1">1 месяц</MenuItem>
-                <MenuItem value="2">2 месяца</MenuItem>
-                <MenuItem value="3">3 месяца</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-          <Box>
-            <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Формат работы</Typography>
-            <FormControl fullWidth>
-              <Select value={workFormat} onChange={(e) => setWorkFormat(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
-                <MenuItem value="">Не указывать</MenuItem>
-                <MenuItem value="office">Офис</MenuItem>
-                <MenuItem value="remote">Удалённая работа</MenuItem>
-                <MenuItem value="hybrid">Гибридный формат</MenuItem>
-              </Select>
-            </FormControl>
+
+        {/* Секция 1: Сотрудник */}
+        <Box sx={{ p: 2.5, borderRadius: 2, border: "1px solid #e8f5e9", bgcolor: "#f9fef9", mb: 3 }}>
+          <SectionHeader icon="mdi:account-plus-outline" title="Сотрудник" />
+          <Box sx={grid2}>
+            <FormField label="ФИО сотрудника *">
+              <TextField fullWidth value={employeeName} onChange={(e) => setEmployeeName(e.target.value)} placeholder="Иванов Иван Иванович" sx={inputSx} />
+            </FormField>
+            <FormField label="Должность *">
+              <TextField fullWidth value={position} onChange={(e) => setPosition(e.target.value)} placeholder="Менеджер по продажам" sx={inputSx} />
+            </FormField>
+            <FormField label="Структурное подразделение">
+              <TextField fullWidth value={department} onChange={(e) => setDepartment(e.target.value)} placeholder="Отдел продаж, IT-департамент" sx={inputSx} />
+            </FormField>
+            <FormField label="Оклад / ЗП">
+              <TextField fullWidth value={salary} onChange={(e) => setSalary(e.target.value)} placeholder="150 000 руб. gross" sx={inputSx} />
+            </FormField>
+            <FormField label="Дата начала работы">
+              <TextField fullWidth value={startDate} onChange={(e) => setStartDate(e.target.value)} placeholder="1 апреля 2026 г." sx={inputSx} />
+            </FormField>
+            <FormField label="Вид работы">
+              <FormControl fullWidth>
+                <Select value={contractType} onChange={(e) => setContractType(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
+                  <MenuItem value="">Не указывать</MenuItem>
+                  <MenuItem value="main">Основная работа</MenuItem>
+                  <MenuItem value="part_time">Совместительство</MenuItem>
+                </Select>
+              </FormControl>
+            </FormField>
+            <FormField label="Испытательный срок">
+              <FormControl fullWidth>
+                <Select value={probation} onChange={(e) => setProbation(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
+                  <MenuItem value="">Не указывать</MenuItem>
+                  <MenuItem value="none">Без испытательного срока</MenuItem>
+                  <MenuItem value="1">1 месяц</MenuItem>
+                  <MenuItem value="2">2 месяца</MenuItem>
+                  <MenuItem value="3">3 месяца</MenuItem>
+                </Select>
+              </FormControl>
+            </FormField>
+            <FormField label="Формат работы">
+              <FormControl fullWidth>
+                <Select value={workFormat} onChange={(e) => setWorkFormat(String(e.target.value))} displayEmpty sx={{ borderRadius: 2 }}>
+                  <MenuItem value="">Не указывать</MenuItem>
+                  <MenuItem value="office">Офис</MenuItem>
+                  <MenuItem value="remote">Удалённая работа</MenuItem>
+                  <MenuItem value="hybrid">Гибридный формат</MenuItem>
+                </Select>
+              </FormControl>
+            </FormField>
           </Box>
         </Box>
 
-        <Box sx={{ mt: 3 }}>
-          <Typography sx={{ fontWeight: 600, fontSize: "0.9rem", color: "#1a1a2e", mb: 1 }}>Название компании</Typography>
-          <TextField fullWidth value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder='ООО «Компания»' sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
+        <Divider sx={{ my: 3 }} />
+
+        {/* Секция 2: Реквизиты */}
+        <Box sx={{ p: 2.5, borderRadius: 2, border: "1px solid #e2e8f0", bgcolor: "#f8fafc", mb: 3 }}>
+          <SectionHeader icon="mdi:office-building-outline" title="Организация и подписанты" subtitle="Необязательно — пустые поля будут выделены жёлтым в Word-файле" />
+          <Box sx={grid2}>
+            <FormField label="Название организации">
+              <TextField fullWidth value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder='ООО «Компания»' sx={inputSx} />
+            </FormField>
+            <FormField label="ФИО руководителя" helper="Подписывает приказ">
+              <TextField fullWidth value={directorName} onChange={(e) => setDirectorName(e.target.value)} placeholder="Петров Пётр Петрович" sx={inputSx} />
+            </FormField>
+            <FormField label="ФИО кадрового специалиста" helper="Для ознакомления под роспись">
+              <TextField fullWidth value={hrSignerName} onChange={(e) => setHrSignerName(e.target.value)} placeholder="Сидорова Анна Ивановна" sx={inputSx} />
+            </FormField>
+          </Box>
         </Box>
 
         <Button
@@ -198,7 +247,7 @@ export default function JobOrderClient() {
           disabled={loading || !canSubmit}
           startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Icon icon="mdi:auto-fix" />}
           sx={{
-            mt: 4,
+            mt: 1,
             bgcolor: "#2E7D32",
             color: "#fff",
             textTransform: "none",
@@ -216,9 +265,7 @@ export default function JobOrderClient() {
       </Paper>
 
       <Collapse in={!!error}>
-        <Alert severity="error" sx={{ mb: 4, borderRadius: 2 }}>
-          {error}
-        </Alert>
+        <Alert severity="error" sx={{ mb: 4, borderRadius: 2 }}>{error}</Alert>
       </Collapse>
 
       {data && (
@@ -235,7 +282,7 @@ export default function JobOrderClient() {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {data.companyName && (
               <Typography sx={{ fontSize: "1rem", fontWeight: 600, color: "#64748b", textAlign: "center" }}>
-                {data.companyName}
+                {renderWithTokenHighlights(data.companyName)}
               </Typography>
             )}
             <Typography sx={{ fontSize: "1.2rem", fontWeight: 700, color: "#1a1a2e", textAlign: "center", mb: 1 }}>
@@ -243,12 +290,14 @@ export default function JobOrderClient() {
             </Typography>
             <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center", mb: 2 }}>
               <Typography sx={{ fontSize: "0.9rem", color: "#334155" }}>
-                № {data.orderNumber} от {data.orderDate}
+                {renderWithTokenHighlights(`${data.orderNumber} от ${data.orderDate}`)}
               </Typography>
             </Box>
 
             <Paper elevation={0} sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 3, border: "1px solid #c8e6c9", bgcolor: "#fff" }}>
-              <Typography sx={{ fontSize: "0.95rem", color: "#334155", lineHeight: 1.7 }}>{data.orderBody}</Typography>
+              <Typography component="div" sx={{ fontSize: "0.95rem", color: "#334155", lineHeight: 1.7 }}>
+                {renderWithTokenHighlights(data.orderBody)}
+              </Typography>
             </Paper>
 
             {data.conditions?.length > 0 && (
@@ -256,10 +305,8 @@ export default function JobOrderClient() {
                 <Typography sx={{ fontWeight: 700, color: "#1a1a2e", mb: 1.5 }}>Условия</Typography>
                 {data.conditions.map((c, i) => (
                   <Box key={i} sx={{ display: "flex", gap: 1, mb: 0.8 }}>
-                    <Typography sx={{ color: "#2E7D32", fontWeight: 700 }}>
-                      •
-                    </Typography>
-                    <Typography sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.6 }}>{c}</Typography>
+                    <Typography sx={{ color: "#2E7D32", fontWeight: 700 }}>•</Typography>
+                    <Typography component="div" sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.6 }}>{renderWithTokenHighlights(c)}</Typography>
                   </Box>
                 ))}
               </Paper>
@@ -267,16 +314,16 @@ export default function JobOrderClient() {
 
             {data.basis && (
               <Paper elevation={0} sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 3, border: "1px solid #e0e0e0", bgcolor: "#fafafa" }}>
-                <Typography sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.7, fontStyle: "italic" }}>
-                  {data.basis}
+                <Typography component="div" sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.7, fontStyle: "italic" }}>
+                  {renderWithTokenHighlights(data.basis)}
                 </Typography>
               </Paper>
             )}
 
             {data.signatures && (
               <Paper elevation={0} sx={{ p: { xs: 2.5, md: 3 }, borderRadius: 3, border: "1px solid #e0e0e0", bgcolor: "#fafafa" }}>
-                <Typography sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
-                  {data.signatures}
+                <Typography component="div" sx={{ fontSize: "0.93rem", color: "#334155", lineHeight: 1.8, whiteSpace: "pre-wrap" }}>
+                  {renderWithTokenHighlights(data.signatures)}
                 </Typography>
               </Paper>
             )}
@@ -287,20 +334,16 @@ export default function JobOrderClient() {
               </Typography>
             )}
 
-            <TemplatePreview data={data} />
+            <JobOrderPreview data={data} />
           </Box>
         </ResultDisplay>
       )}
 
       <Snackbar open={docxDownloaded} autoHideDuration={2500} onClose={() => setDocxDownloaded(false)} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-        <Alert severity="success" sx={{ width: "100%" }}>
-          Word-файл скачан
-        </Alert>
+        <Alert severity="success" sx={{ width: "100%" }}>Word-файл скачан</Alert>
       </Snackbar>
       <Snackbar open={!!docxError} autoHideDuration={3500} onClose={() => setDocxError("")} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
-        <Alert severity="error" sx={{ width: "100%" }}>
-          {docxError}
-        </Alert>
+        <Alert severity="error" sx={{ width: "100%" }}>{docxError}</Alert>
       </Snackbar>
     </ToolLayout>
   );
