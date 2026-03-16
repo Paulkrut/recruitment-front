@@ -51,135 +51,163 @@ export const metadata: Metadata = {
   },
 };
 
-// Конфигурация инструментов
-const tools = [
+const toolSections = [
   {
-    id: "question-generator",
-    icon: "mdi:chat-question",
-    iconColor: "#2196F3",
-    title: "Генератор вопросов",
+    id: "hiring",
+    eyebrow: "Подбор и интервью",
+    title: "Самые частые HR-задачи",
     description:
-      "Создайте профессиональные вопросы для собеседования за 30 секунд. Просто опишите вакансию — AI сгенерирует релевантные вопросы.",
-    href: "/hr-tools/question-generator",
+      "Инструменты для подготовки интервью, анализа кандидатов и быстрой обработки материалов собеседования.",
+    tools: [
+      {
+        id: "question-generator",
+        icon: "mdi:chat-question",
+        iconColor: "#2196F3",
+        title: "Генератор вопросов",
+        description:
+          "Создайте профессиональные вопросы для собеседования за 30 секунд. Просто опишите вакансию — AI сгенерирует релевантные вопросы.",
+        href: "/hr-tools/question-generator",
+      },
+      {
+        id: "resume-analyzer",
+        icon: "mdi:account-search",
+        iconColor: "#FF9800",
+        title: "Анализатор резюме",
+        description:
+          "Получите AI-анализ резюме кандидата за минуту. Можно сравнить с вакансией и узнать процент соответствия.",
+        href: "/hr-tools/resume-analyzer",
+      },
+      {
+        id: "transcription",
+        icon: "mdi:microphone-message",
+        iconColor: "#1565C0",
+        title: "Транскрибация",
+        description:
+          "Переведите аудио или видео в текст за минуту. AI распознает речь, исправит ошибки и выдаст готовый Word-документ.",
+        href: "/hr-tools/transcription",
+      },
+      {
+        id: "interview-scorecard",
+        icon: "mdi:clipboard-check-multiple",
+        iconColor: "#009688",
+        title: "Оценочный лист",
+        description:
+          "Создайте структурированный scorecard для собеседования. AI сгенерирует критерии, сигналы и red flags под вашу вакансию.",
+        href: "/hr-tools/interview-scorecard",
+      },
+      {
+        id: "reply-generator",
+        icon: "mdi:email-edit",
+        iconColor: "#9C27B0",
+        title: "Ответ кандидату",
+        description:
+          "Создайте профессиональный ответ кандидату — приглашение или вежливый отказ. За 10 секунд.",
+        href: "/hr-tools/reply-generator",
+      },
+      {
+        id: "ai-detector",
+        icon: "mdi:robot-confused",
+        iconColor: "#673AB7",
+        title: "Детектор AI в резюме",
+        description:
+          "Проверьте, было ли резюме создано с помощью ChatGPT. Получите вероятность и подозрительные фрагменты за 30 секунд.",
+        href: "/hr-tools/ai-detector",
+      },
+    ],
   },
   {
-    id: "job-description",
-    icon: "mdi:file-document-edit",
-    iconColor: "#4CAF50",
-    title: "Генератор вакансии",
+    id: "vacancy",
+    eyebrow: "Вакансия и оффер",
+    title: "Подготовка найма и коммуникации",
     description:
-      "Сгенерируйте полное описание вакансии за минуту. Укажите должность — получите готовый текст для публикации.",
-    href: "/hr-tools/job-description",
+      "Помогают собрать вакансию, оформить предложение кандидату и быстрее согласовать условия.",
+    tools: [
+      {
+        id: "job-description",
+        icon: "mdi:file-document-edit",
+        iconColor: "#4CAF50",
+        title: "Генератор вакансии",
+        description:
+          "Сгенерируйте полное описание вакансии за минуту. Укажите должность — получите готовый текст для публикации.",
+        href: "/hr-tools/job-description",
+      },
+      {
+        id: "job-description-instruction-generator",
+        icon: "mdi:file-document-multiple-outline",
+        iconColor: "#0D9488",
+        title: "Должностная инструкция",
+        description:
+          "Соберите шаблон должностной инструкции: обязанности, права, ответственность, требования, KPI и Word-экспорт под конкретную роль.",
+        href: "/hr-tools/job-description-instruction-generator",
+      },
+      {
+        id: "offer-generator",
+        icon: "mdi:email-check-outline",
+        iconColor: "#009688",
+        title: "Генератор оффера",
+        description:
+          "Создайте профессиональное письмо-оффер кандидату за минуту. Условия работы, компенсация и следующие шаги с экспортом в Word.",
+        href: "/hr-tools/offer-generator",
+      },
+      {
+        id: "salary-guide",
+        icon: "mdi:cash-multiple",
+        iconColor: "#E91E63",
+        title: "Зарплатный гид",
+        description:
+          "Узнайте актуальный уровень зарплат для любой позиции. Данные по рынку труда России 2025-2026.",
+        href: "/hr-tools/salary-guide",
+      },
+    ],
   },
   {
-    id: "resume-analyzer",
-    icon: "mdi:account-search",
-    iconColor: "#FF9800",
-    title: "Анализатор резюме",
+    id: "legal",
+    eyebrow: "Юридический пакет",
+    title: "Кадровые документы в Word",
     description:
-      "Получите AI-анализ резюме кандидата за минуту. Можно сравнить с вакансией и узнать процент соответствия.",
-    href: "/hr-tools/resume-analyzer",
-  },
-  {
-    id: "reply-generator",
-    icon: "mdi:email-edit",
-    iconColor: "#9C27B0",
-    title: "Ответ кандидату",
-    description:
-      "Создайте профессиональный ответ кандидату — приглашение или вежливый отказ. За 10 секунд.",
-    href: "/hr-tools/reply-generator",
-  },
-  {
-    id: "salary-guide",
-    icon: "mdi:cash-multiple",
-    iconColor: "#E91E63",
-    title: "Зарплатный гид",
-    description:
-      "Узнайте актуальный уровень зарплат для любой позиции. Данные по рынку труда России 2025-2026.",
-    href: "/hr-tools/salary-guide",
-  },
-  {
-    id: "interview-scorecard",
-    icon: "mdi:clipboard-check-multiple",
-    iconColor: "#009688",
-    title: "Оценочный лист",
-    description:
-      "Создайте структурированный scorecard для собеседования. AI сгенерирует критерии, сигналы и red flags под вашу вакансию.",
-    href: "/hr-tools/interview-scorecard",
-  },
-  {
-    id: "job-description-instruction-generator",
-    icon: "mdi:file-document-multiple-outline",
-    iconColor: "#0D9488",
-    title: "Должностная инструкция",
-    description:
-      "Соберите шаблон должностной инструкции: обязанности, права, ответственность, требования, KPI и Word-экспорт под конкретную роль.",
-    href: "/hr-tools/job-description-instruction-generator",
-  },
-  {
-    id: "ai-detector",
-    icon: "mdi:robot-confused",
-    iconColor: "#673AB7",
-    title: "Детектор AI в резюме",
-    description:
-      "Проверьте, было ли резюме создано с помощью ChatGPT. Получите вероятность и подозрительные фрагменты за 30 секунд.",
-    href: "/hr-tools/ai-detector",
-  },
-  {
-    id: "offer-generator",
-    icon: "mdi:email-check-outline",
-    iconColor: "#009688",
-    title: "Генератор оффера",
-    description:
-      "Создайте профессиональное письмо-оффер кандидату за минуту. Условия работы, компенсация и следующие шаги с экспортом в Word.",
-    href: "/hr-tools/offer-generator",
-  },
-  {
-    id: "additional-agreement-generator",
-    icon: "mdi:file-document-edit-outline",
-    iconColor: "#7B1FA2",
-    title: "Допсоглашение",
-    description:
-      "Сгенерируйте дополнительное соглашение к трудовому договору: изменение оклада, перевод на удалёнку, смена должности.",
-    href: "/hr-tools/additional-agreement-generator",
-  },
-  {
-    id: "employment-contract-generator",
-    icon: "mdi:file-sign",
-    iconColor: "#1565C0",
-    title: "Трудовой договор",
-    description:
-      "Составьте трудовой договор по ТК РФ: бессрочный или срочный, с испытательным сроком, для офиса или удалёнки.",
-    href: "/hr-tools/employment-contract-generator",
-  },
-  {
-    id: "gph-contract-generator",
-    icon: "mdi:handshake-outline",
-    iconColor: "#E65100",
-    title: "Договор ГПХ",
-    description:
-      "Сгенерируйте договор гражданско-правового характера: для физлиц, самозанятых или ИП по ГК РФ.",
-    href: "/hr-tools/gph-contract-generator",
-  },
-  {
-    id: "job-order-generator",
-    icon: "mdi:clipboard-text-clock-outline",
-    iconColor: "#2E7D32",
-    title: "Приказ о приёме",
-    description:
-      "Создайте приказ о приёме на работу (форма Т-1) за минуту. Все обязательные поля и экспорт в Word.",
-    href: "/hr-tools/job-order-generator",
-  },
-  {
-    id: "transcription",
-    icon: "mdi:microphone-message",
-    iconColor: "#1565C0",
-    title: "Транскрибация",
-    description:
-      "Переведите аудио или видео в текст за минуту. AI распознает речь, исправит ошибки и выдаст готовый Word-документ.",
-    href: "/hr-tools/transcription",
+      "Документы для оформления сотрудника и изменений условий работы. Подходят как шаблон и база для юрпроверки.",
+    tools: [
+      {
+        id: "employment-contract-generator",
+        icon: "mdi:file-sign",
+        iconColor: "#1565C0",
+        title: "Трудовой договор",
+        description:
+          "Составьте трудовой договор по ТК РФ: бессрочный или срочный, с испытательным сроком, для офиса или удалёнки.",
+        href: "/hr-tools/employment-contract-generator",
+      },
+      {
+        id: "additional-agreement-generator",
+        icon: "mdi:file-document-edit-outline",
+        iconColor: "#7B1FA2",
+        title: "Допсоглашение",
+        description:
+          "Сгенерируйте дополнительное соглашение к трудовому договору: изменение оклада, перевод на удалёнку, смена должности.",
+        href: "/hr-tools/additional-agreement-generator",
+      },
+      {
+        id: "gph-contract-generator",
+        icon: "mdi:handshake-outline",
+        iconColor: "#E65100",
+        title: "Договор ГПХ",
+        description:
+          "Сгенерируйте договор гражданско-правового характера: для физлиц, самозанятых или ИП по ГК РФ.",
+        href: "/hr-tools/gph-contract-generator",
+      },
+      {
+        id: "job-order-generator",
+        icon: "mdi:clipboard-text-clock-outline",
+        iconColor: "#2E7D32",
+        title: "Приказ о приёме",
+        description:
+          "Создайте приказ о приёме на работу (форма Т-1) за минуту. Все обязательные поля и экспорт в Word.",
+        href: "/hr-tools/job-order-generator",
+      },
+    ],
   },
 ];
+
+const tools = toolSections.flatMap((section) => section.tools);
 
 export default function HrToolsPage() {
   // JSON-LD для главной страницы HR инструментов
@@ -302,13 +330,54 @@ export default function HrToolsPage() {
 
       {/* Tools Grid */}
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
-        <Grid container spacing={3}>
-          {tools.map((tool) => (
-            <Grid item xs={12} sm={6} md={4} key={tool.id}>
-              <ToolCard {...tool} />
-            </Grid>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 6, md: 8 } }}>
+          {toolSections.map((section) => (
+            <Box key={section.id}>
+              <Box sx={{ mb: 3.5 }}>
+                <Typography
+                  sx={{
+                    fontSize: "0.78rem",
+                    fontWeight: 700,
+                    letterSpacing: 1.2,
+                    textTransform: "uppercase",
+                    color: "#1976d2",
+                    mb: 1,
+                  }}
+                >
+                  {section.eyebrow}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: { xs: "1.4rem", md: "1.8rem" },
+                    fontWeight: 700,
+                    color: "#1a1a2e",
+                    mb: 1,
+                  }}
+                >
+                  {section.title}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "1rem",
+                    color: "#667085",
+                    lineHeight: 1.6,
+                    maxWidth: 760,
+                  }}
+                >
+                  {section.description}
+                </Typography>
+              </Box>
+
+              <Grid container spacing={3}>
+                {section.tools.map((tool) => (
+                  <Grid item xs={12} sm={6} md={4} key={tool.id}>
+                    <ToolCard {...tool} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Box>
       </Container>
 
       {/* How it works */}
