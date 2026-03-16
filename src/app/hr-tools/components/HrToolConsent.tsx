@@ -26,27 +26,21 @@ export default function HrToolConsent({ checked, onChange }: HrToolConsentProps)
           onChange={(e) => onChange(e.target.checked)}
           sx={{ mt: -0.5, ml: -1 }}
         />
-        <Box>
-          <Typography sx={{ fontSize: "0.88rem", color: "#334155", lineHeight: 1.6 }}>
-            Нажимая кнопку инструмента, я подтверждаю согласие с{" "}
-            <MuiLink component={Link} href="/terms-of-service" target="_blank" underline="hover">
-              Офертой
-            </MuiLink>
-            ,{" "}
-            <MuiLink component={Link} href="/privacy-policy" target="_blank" underline="hover">
-              Политикой конфиденциальности
-            </MuiLink>{" "}
-            и{" "}
-            <MuiLink component={Link} href="/personal-data-consent" target="_blank" underline="hover">
-              Согласием на обработку персональных данных
-            </MuiLink>
-            .
-          </Typography>
-          <Typography sx={{ mt: 0.5, fontSize: "0.78rem", color: "#64748b", lineHeight: 1.6 }}>
-            Полные формулировки о передаче данных российским технологическим партнерам,
-            ИИ-обработке и правах пользователя содержатся в этих документах.
-          </Typography>
-        </Box>
+        <Typography sx={{ fontSize: "0.88rem", color: "#334155", lineHeight: 1.6 }}>
+          Нажимая кнопку инструмента, я подтверждаю согласие с{" "}
+          <MuiLink component={Link} href="/terms-of-service" target="_blank" underline="hover">
+            Офертой
+          </MuiLink>
+          ,{" "}
+          <MuiLink component={Link} href="/privacy-policy" target="_blank" underline="hover">
+            Политикой конфиденциальности
+          </MuiLink>{" "}
+          и{" "}
+          <MuiLink component={Link} href="/personal-data-consent" target="_blank" underline="hover">
+            Согласием на обработку персональных данных
+          </MuiLink>
+          .
+        </Typography>
       </Box>
     </Box>
   );
