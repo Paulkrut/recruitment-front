@@ -231,9 +231,11 @@ export function validateQuestions(questions: QuestionDraft[]): {
   
   const isValid = invalidQuestions.length === 0;
   
+  const allErrors = invalidQuestions.flatMap(q => q.errors);
+  const firstError = allErrors[0] || '';
   const errorMessage = isValid
     ? ''
-    : `Ошибка валидации: ${invalidQuestions.length} вопрос(ов) требуют исправлений. Проверьте вопросы с вариантами ответов, оценкой знаний или Red Flag.`;
+    : `Ошибка валидации (${invalidQuestions.length} вопр.): ${firstError}`;
   
   return {
     isValid,

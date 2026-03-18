@@ -474,11 +474,12 @@ export default function HRVacancyEditPage() {
               text: text,
               type: "text",
               inputMode: "text",
-              questionType: "open",
+              questionType: "open" as const,
               options: [],
               maxTime: templateData.questionTime,
               position: questions.length + i,
               affectsKnowledge: true,
+              allowedAnswerFormats: ['audio_video' as const],
               variants: [{
                 text: text,
                 referenceAnswer: null,
