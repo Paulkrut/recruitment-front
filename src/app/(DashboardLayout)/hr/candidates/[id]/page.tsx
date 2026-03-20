@@ -580,21 +580,6 @@ export default function CandidateDetailPage() {
                     </Button>
                   </Tooltip>
                 )}
-                {/* Кнопка отправки приглашения в HH */}
-                {statusData?.hhCandidateId && (
-                  <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      size="small"
-                      onClick={handleSendHhInvitation}
-                      disabled={sendingHhInvitation}
-                      startIcon={sendingHhInvitation ? <CircularProgress size={16} /> : <MailOutlineIcon />}
-                    >
-                      {sendingHhInvitation ? <Trans>Отправка...</Trans> : <Trans>HH</Trans>}
-                    </Button>
-                  </Tooltip>
-                )}
                 <Tooltip title={_(msg`Скопировать ссылку на интервью`)}>
                   <IconButton color="primary" onClick={copyInterviewUrl}><ContentCopyIcon /></IconButton>
                 </Tooltip>
@@ -1431,24 +1416,6 @@ export default function CandidateDetailPage() {
                           startIcon={<IconExternalLink size={16} />}
                         >
                           HH.ru
-                        </Button>
-                      </Tooltip>
-                    )}
-                    {statusData?.hhCandidateId && (
-                      <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          onClick={handleSendHhInvitation}
-                          disabled={sendingHhInvitation}
-                          startIcon={
-                            sendingHhInvitation
-                              ? <CircularProgress size={16} />
-                              : <MailOutlineIcon />
-                          }
-                        >
-                          {sendingHhInvitation ? <Trans>Отправка...</Trans> : <Trans>📤 Отправить приглашение</Trans>}
                         </Button>
                       </Tooltip>
                     )}
