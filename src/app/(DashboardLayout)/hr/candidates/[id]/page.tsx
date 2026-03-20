@@ -20,7 +20,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription, IconRobot, IconChevronDown } from "@tabler/icons-react";
+import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription, IconRobot, IconChevronDown, IconExternalLink } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
 import { apiFetch } from "@/utils/api";
 
@@ -563,6 +563,23 @@ export default function CandidateDetailPage() {
                 </Stack>
               </Box>
               <Stack direction="row" spacing={1}>
+                {/* Ссылка на резюме в HH */}
+                {statusData?.hhResumeId && (
+                  <Tooltip title={_(msg`Открыть резюме на HeadHunter.ru`)}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      component="a"
+                      href={`https://hh.ru/resume/${statusData.hhResumeId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      startIcon={<IconExternalLink size={16} />}
+                    >
+                      HH.ru
+                    </Button>
+                  </Tooltip>
+                )}
                 {/* Кнопка отправки приглашения в HH */}
                 {statusData?.hhCandidateId && (
                   <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
@@ -1401,6 +1418,22 @@ export default function CandidateDetailPage() {
                     <Typography variant="h6" fontWeight="700"><Trans>История коммуникаций</Trans></Typography>
                   </Stack>
                   <Stack direction="row" spacing={1}>
+                    {statusData?.hhResumeId && (
+                      <Tooltip title={_(msg`Открыть резюме на HeadHunter.ru`)}>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          size="small"
+                          component="a"
+                          href={`https://hh.ru/resume/${statusData.hhResumeId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          startIcon={<IconExternalLink size={16} />}
+                        >
+                          HH.ru
+                        </Button>
+                      </Tooltip>
+                    )}
                     {statusData?.hhCandidateId && (
                       <Tooltip title={_(msg`Отправить приглашение на интервью в HH.ru`)}>
                         <Button
