@@ -151,6 +151,12 @@ export interface SalaryGuideRequest {
   city: string;
   level: string;
   experience?: number;
+  industry?: string;
+  workFormat?: string;
+  companyType?: string;
+  responsibilityLevel?: string;
+  englishLevel?: string;
+  specialization?: string;
 }
 
 export interface SalaryGuideResponse {
@@ -164,6 +170,8 @@ export interface SalaryGuideResponse {
     currency: string;
     type: string;
   };
+  competitiveOfficeMedian: number | null;
+  confidence: number;
   trend: {
     direction: "growing" | "stable" | "declining";
     percentChange: number;
@@ -174,12 +182,24 @@ export interface SalaryGuideResponse {
     median: number;
     diffPercent: number;
   }>;
-  factors: Array<{
+  higherFactors: Array<{
     name: string;
     impact: string;
     description: string;
   }>;
+  lowerFactors: Array<{
+    name: string;
+    impact: string;
+    description: string;
+  }>;
+  whyThisRange: string;
   marketInsight: string;
+  locationLogic?: string;
+  roleAnalysis: {
+    roleSummary: string;
+    marketSegment: string;
+    ambiguities: string[];
+  };
   disclaimer: string;
 }
 
