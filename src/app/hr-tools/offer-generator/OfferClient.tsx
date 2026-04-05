@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
+import HrToolConsent from "../components/HrToolConsent";
 import ResultDisplay from "../components/ResultDisplay";
 import { OfferResponse, useOfferGenerator } from "../hooks/useHrTool";
 
@@ -157,6 +158,7 @@ export default function OfferClient() {
           <TextField fullWidth value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="ООО «Компания»" sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }} />
         </Box>
 
+        <HrToolConsent />
         <Button
           variant="contained" size="large" onClick={handleSubmit} disabled={loading || !canSubmit}
           startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Icon icon="mdi:auto-fix" />}

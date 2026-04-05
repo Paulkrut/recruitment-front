@@ -22,6 +22,7 @@ import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
 import Link from "next/link";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useResumeAnalyzer, ResumeAnalysisResponse, ResumeMatchResponse } from "../hooks/useHrTool";
 
 export default function ResumeAnalyzerClient() {
@@ -239,6 +240,7 @@ export default function ResumeAnalyzerClient() {
         </Collapse>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

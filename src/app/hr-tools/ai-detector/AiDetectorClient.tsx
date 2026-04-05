@@ -19,6 +19,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useAiDetector, AiDetectorResponse } from "../hooks/useHrTool";
 
 export default function AiDetectorClient() {
@@ -182,6 +183,7 @@ export default function AiDetectorClient() {
         </Box>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

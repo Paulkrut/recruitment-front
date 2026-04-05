@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useQuestionGenerator, Question } from "../hooks/useHrTool";
 
 // Шаблоны вакансий
@@ -452,6 +453,7 @@ export default function QuestionGeneratorClient() {
         </Box>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

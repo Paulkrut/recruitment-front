@@ -19,6 +19,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useSalaryGuide } from "../hooks/useHrTool";
 
 const cities = [
@@ -450,6 +451,7 @@ export default function SalaryGuideClient() {
         </Box>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

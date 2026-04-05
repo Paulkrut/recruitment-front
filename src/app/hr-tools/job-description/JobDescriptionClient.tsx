@@ -21,6 +21,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useJobDescription } from "../hooks/useHrTool";
 
 const levels = [
@@ -182,6 +183,7 @@ export default function JobDescriptionClient() {
         </Box>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

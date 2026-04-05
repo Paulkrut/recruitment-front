@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { useReplyGenerator } from "../hooks/useHrTool";
 
 export default function ReplyGeneratorClient() {
@@ -201,6 +202,7 @@ export default function ReplyGeneratorClient() {
         </Box>
 
         {/* Submit button */}
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"

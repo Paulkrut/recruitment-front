@@ -26,7 +26,7 @@ export function useHrTool<TRequest, TResponse>({
   const execute = useCallback(
     async (request: TRequest): Promise<TResponse | null> => {
       if (!hasHrToolsConsent()) {
-        setError("Чтобы использовать инструмент, подтвердите согласие с документами под заголовком страницы.");
+        setError("Поставьте галочку согласия под формой.");
         return null;
       }
 

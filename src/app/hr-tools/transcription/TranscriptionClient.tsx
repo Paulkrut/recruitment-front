@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
+import HrToolConsent from "../components/HrToolConsent";
 import { hasHrToolsConsent } from "../lib/consent";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -104,7 +105,7 @@ export default function TranscriptionClient() {
   const handleSubmit = async () => {
     if (!file) return;
     if (!hasHrToolsConsent()) {
-      setError("Чтобы использовать инструмент, подтвердите согласие с документами под заголовком страницы.");
+      setError("Поставьте галочку согласия под формой.");
       return;
     }
 
@@ -219,6 +220,7 @@ export default function TranscriptionClient() {
           )}
         </Box>
 
+        <HrToolConsent />
         <Button
           variant="contained" size="large" onClick={handleSubmit}
           disabled={loading || !file}

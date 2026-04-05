@@ -9,6 +9,7 @@ import {
 import { Icon } from "@iconify/react";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import { EmploymentContractResponse, useEmploymentContractGenerator } from "../hooks/useHrTool";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
@@ -446,6 +447,7 @@ export default function EmploymentContractClient() {
           </Box>
         )}
 
+        <HrToolConsent />
         <Button
           variant="contained" size="large" onClick={handleSubmit}
           disabled={loading || !canSubmit}

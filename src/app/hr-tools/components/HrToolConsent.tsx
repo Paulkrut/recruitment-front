@@ -3,45 +3,43 @@
 import * as React from "react";
 import { Box, Checkbox, Link as MuiLink, Typography } from "@mui/material";
 import Link from "next/link";
+import { hasHrToolsConsent, setHrToolsConsent } from "../lib/consent";
 
-interface HrToolConsentProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-}
+export default function HrToolConsent() {
+  const [checked, setChecked] = React.useState(false);
 
-export default function HrToolConsent({ checked, onChange }: HrToolConsentProps) {
+  React.useEffect(() => {
+    setChecked(hasHrToolsConsent());
+  }, []);
+
+  const handleChange = (val: boolean) => {
+    setChecked(val);
+    setHrToolsConsent(val);
+  };
+
   return (
-    <Box
-      sx={{
-        mt: 3,
-        p: 2,
-        borderRadius: 2,
-        border: "1px solid #e2e8f0",
-        bgcolor: "#f8fafc",
-      }}
-    >
-      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}>
-        <Checkbox
-          checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
-          sx={{ mt: -0.5, ml: -1 }}
-        />
-        <Typography sx={{ fontSize: "0.88rem", color: "#334155", lineHeight: 1.6 }}>
-          Нажимая кнопку инструмента, я подтверждаю согласие с{" "}
-          <MuiLink component={Link} href="/terms-of-service" target="_blank" underline="hover">
-            Офертой
-          </MuiLink>
-          ,{" "}
-          <MuiLink component={Link} href="/privacy-policy" target="_blank" underline="hover">
-            Политикой конфиденциальности
-          </MuiLink>{" "}
-          и{" "}
-          <MuiLink component={Link} href="/personal-data-consent" target="_blank" underline="hover">
-            Согласием на обработку персональных данных
-          </MuiLink>
-          .
-        </Typography>
-      </Box>
+    <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1, my: 1.5 }}>
+      <Checkbox
+        checked={checked}
+        onChange={(e) => handleChange(e.target.checked)}
+        size="small"
+        sx={{ mt: -0.3, ml: -1, flexShrink: 0 }}
+      />
+      <Typography sx={{ fontSize: "0.82rem", color: "#64748b", lineHeight: 1.5 }}>
+        Подтверждаю согласие с{" "}
+        <MuiLink component={Link} href="/terms-of-service" target="_blank" underline="hover">
+          Офертой
+        </MuiLink>
+        ,{" "}
+        <MuiLink component={Link} href="/privacy-policy" target="_blank" underline="hover">
+          Политикой конфиденциальности
+        </MuiLink>{" "}
+        и{" "}
+        <MuiLink component={Link} href="/personal-data-consent" target="_blank" underline="hover">
+          Согласием на обработку ПД
+        </MuiLink>
+        .
+      </Typography>
     </Box>
   );
 }

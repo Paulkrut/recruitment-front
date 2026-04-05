@@ -20,6 +20,7 @@ import { Icon } from "@iconify/react";
 import Link from "next/link";
 import ToolLayout from "../components/ToolLayout";
 import ResultDisplay from "../components/ResultDisplay";
+import HrToolConsent from "../components/HrToolConsent";
 import {
   JobInstructionResponse,
   useJobInstructionGenerator,
@@ -385,6 +386,7 @@ export default function InterviewInstructionClient() {
           <Chip label="Word-шаблон" sx={{ bgcolor: "#E0F2F1", color: "#0D9488", fontWeight: 600 }} />
         </Box>
 
+        <HrToolConsent />
         <Button
           variant="contained"
           size="large"
