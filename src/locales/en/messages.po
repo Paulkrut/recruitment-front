@@ -585,8 +585,8 @@ msgid "<0>При старте:</0> когда сотрудник начнёт п
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:289
-msgid "<0>Примечание:</0> Изменение настроек не влияет на уже начатые тесты. Список регламентов можно изменить только при создании теста."
-msgstr "<0>Note:</0> Changing settings does not affect tests already in progress. The list of regulations can only be changed when creating a test."
+#~ msgid "<0>Примечание:</0> Изменение настроек не влияет на уже начатые тесты. Список регламентов можно изменить только при создании теста."
+#~ msgstr "<0>Note:</0> Changing settings does not affect tests already in progress. The list of regulations can only be changed when creating a test."
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:742
 #~ msgid "<0>Резюме:</0> {aiSummary}"
@@ -629,6 +629,7 @@ msgstr ""
 msgid "= 3 флага"
 msgstr ""
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:320
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:556
 msgid "~{estimatedMinutes} мин"
 msgstr ""
@@ -2499,8 +2500,8 @@ msgstr "10 per page"
 #~ msgstr "15 Minutes per Interview"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:242
-msgid "1м"
-msgstr "1m"
+#~ msgid "1м"
+#~ msgstr "1m"
 
 #: src/app/forget-me/page.tsx:209
 msgid "2️⃣ <0>Найдите внизу страницы</0> текст \"удаление своих персональных данных\""
@@ -2515,8 +2516,8 @@ msgid "20 на странице"
 msgstr "20 per page"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:243
-msgid "2м"
-msgstr "2m"
+#~ msgid "2м"
+#~ msgstr "2m"
 
 #: src/app/forget-me/page.tsx:212
 msgid "3️⃣ <0>Нажмите на ссылку</0> и подтвердите удаление"
@@ -2527,12 +2528,12 @@ msgid "3 на странице"
 msgstr "3 per page"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:241
-msgid "30с"
-msgstr "30s"
+#~ msgid "30с"
+#~ msgstr "30s"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:244
-msgid "3м"
-msgstr "3m"
+#~ msgid "3м"
+#~ msgstr "3m"
 
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:585
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:760
@@ -2553,8 +2554,8 @@ msgstr "5 per page"
 #~ msgstr "500 Interviews"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:245
-msgid "5м"
-msgstr "5m"
+#~ msgid "5м"
+#~ msgstr "5m"
 
 #: src/components/hr/CandidateScoresCard.tsx:145
 #~ msgid "6 компетенций: мотивация, речь, клиентоориентированность..."
@@ -3718,7 +3719,7 @@ msgstr "Enter company name"
 msgid "Введите название стадии"
 msgstr "Enter Stage Name"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:104
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:116
 msgid "Введите название теста"
 msgstr "Enter test name"
 
@@ -3775,7 +3776,7 @@ msgstr "Up"
 msgid "Вернитесь сюда и нажмите"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:155
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:168
 msgid "Вернуться к списку"
 msgstr "Back to List"
 
@@ -4060,9 +4061,10 @@ msgid "Вопросов в интервью: {0}"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:216
-msgid "Вопросов на каждый регламент: {questionsPerRegulation}"
-msgstr "Questions per Regulation: {questionsPerRegulation}"
+#~ msgid "Вопросов на каждый регламент: {questionsPerRegulation}"
+#~ msgstr "Questions per Regulation: {questionsPerRegulation}"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:277
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:510
 msgid "Вопросов на регламент: <0>{questionsPerRegulation}</0>"
 msgstr ""
@@ -4074,6 +4076,7 @@ msgstr ""
 msgid "Вопросов: {0}"
 msgstr "Questions: {0}"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:315
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:551
 msgid "Вопросов: {totalQuestions}"
 msgstr ""
@@ -4100,6 +4103,10 @@ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:172
 msgid "Вопросы будут созданы автоматически в зависимости от режима генерации:"
+msgstr ""
+
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:269
+msgid "Вопросы генерируются при старте теста — каждый сотрудник получит уникальный набор. Защита от списывания."
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:502
@@ -4171,6 +4178,7 @@ msgstr "Restore Vacancy?"
 msgid "Восстановление пароля"
 msgstr "Password Recovery"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:291
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:527
 msgid "Время на вопрос: <0>{maxTimePerQuestion} сек</0>"
 msgstr ""
@@ -4180,8 +4188,8 @@ msgid "Время на один вопрос"
 msgstr "Time per Question"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:231
-msgid "Время на один вопрос: {maxTimePerQuestion} секунд"
-msgstr "Time per Question: {maxTimePerQuestion} seconds"
+#~ msgid "Время на один вопрос: {maxTimePerQuestion} секунд"
+#~ msgstr "Time per Question: {maxTimePerQuestion} seconds"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:126
 #~ msgid "Время на ответ (сек)"
@@ -4303,8 +4311,8 @@ msgid "Все регламенты"
 msgstr "All Regulations"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:210
-msgid "Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее."
-msgstr "All employees will receive the same questions. Faster but more predictable."
+#~ msgid "Все сотрудники получат одинаковые вопросы. Быстрее, но предсказуемее."
+#~ msgstr "All employees will receive the same questions. Faster but more predictable."
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:396
 msgid "Все стадии"
@@ -4722,7 +4730,7 @@ msgstr "Flexible plans for companies of any size. Start with a free trial period
 #~ msgid "Гибкие тарифы"
 #~ msgstr "Flexible Plans"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:164
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:176
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:144
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:498
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:316
@@ -4884,15 +4892,16 @@ msgstr "I consent to the processing of personal data in accordance with the <0>P
 #~ msgid "Двусторонняя синхронизация"
 #~ msgstr ""
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:334
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:636
 msgid "Дедлайн задан"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:259
-msgid "Дедлайн и напоминания"
-msgstr ""
+#~ msgid "Дедлайн и напоминания"
+#~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:262
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:340
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:642
 msgid "Дедлайн прохождения"
 msgstr ""
@@ -5232,6 +5241,7 @@ msgstr ""
 #~ msgid "Дополнительные вопросы"
 #~ msgstr "Additional Questions"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:332
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:634
 msgid "Дополнительные настройки"
 msgstr ""
@@ -5322,7 +5332,7 @@ msgstr "all time"
 msgid "За всё время:"
 msgstr "All Time:"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:284
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:371
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:673
 msgid "За сколько дней до дедлайна отправить напоминание"
 msgstr ""
@@ -5597,13 +5607,14 @@ msgstr "Launch AI Analysis"
 #~ msgid "Запустить поиск"
 #~ msgstr ""
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:254
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:487
 msgid "Заранее"
 msgstr "In Advance"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:205
-msgid "Заранее (вопросы генерируются при создании теста)"
-msgstr "In Advance (questions generated when creating test)"
+#~ msgid "Заранее (вопросы генерируются при создании теста)"
+#~ msgstr "In Advance (questions generated when creating test)"
 
 #: src/app/auth/forgot-password/page.tsx:196
 #: src/app/auth/login/page.i18n-example.tsx:273
@@ -5684,7 +5695,11 @@ msgstr "Of which {0} paid{1}"
 msgid "Избегание конфликтных ситуаций"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:161
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:381
+msgid "Изменение настроек не влияет на уже начатые тесты."
+msgstr ""
+
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:174
 msgid "Изменение настроек теста"
 msgstr "Changing Test Settings"
 
@@ -6254,12 +6269,12 @@ msgstr ""
 "📧 Please contact your manager or HR manager to top up the balance."
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:250
-msgid "Каждый вопрос должен быть отвечен в течение указанного времени"
-msgstr "Each Question Must Be Answered Within the Specified Time"
+#~ msgid "Каждый вопрос должен быть отвечен в течение указанного времени"
+#~ msgstr "Each Question Must Be Answered Within the Specified Time"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:211
-msgid "Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее."
-msgstr "Each employee will receive a unique set of questions. Slower but more reliable."
+#~ msgid "Каждый сотрудник получит уникальный набор вопросов. Медленнее, но надёжнее."
+#~ msgstr "Each employee will receive a unique set of questions. Slower but more reliable."
 
 #: src/app/interview/[token]/ActiveInterviewScreen.tsx:694
 msgid "Как вам удобнее ответить?"
@@ -6709,9 +6724,10 @@ msgid "Контакты"
 msgstr "Contacts"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:195
-msgid "Краткое описание теста для сотрудников"
-msgstr "Brief Test Description for Employees"
+#~ msgid "Краткое описание теста для сотрудников"
+#~ msgstr "Brief Test Description for Employees"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:211
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:342
 msgid "Краткое описание теста для сотрудников (необязательно)"
 msgstr ""
@@ -6962,6 +6978,10 @@ msgstr "amounting to {0}₽"
 msgid "На этот email будет отправлен пароль"
 msgstr "The password will be sent to this email"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:233
+msgid "Набор регламентов задаётся при создании теста и не может быть изменён."
+msgstr ""
+
 #: src/components/hr/TypingMetricsDisplay.tsx:149
 msgid "нажатий Backspace"
 msgstr ""
@@ -7067,7 +7087,7 @@ msgstr "Regulation Name"
 msgid "Название стадии"
 msgstr "Stage Name"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:180
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:197
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:328
 msgid "Название теста"
 msgstr "Test Name"
@@ -7107,7 +7127,7 @@ msgstr "Message"
 msgid "Напоминание"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:278
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:365
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:667
 msgid "Напоминание за (дней)"
 msgstr ""
@@ -7144,7 +7164,7 @@ msgstr "For example: example@mail.ru"
 msgid "Например: Frontend-разработчик"
 msgstr "For example: Frontend Developer"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:185
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:202
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:333
 msgid "Например: Тест на знание политики безопасности"
 msgstr "For example: Security Policy Knowledge Test"
@@ -7184,6 +7204,7 @@ msgstr "Equipment Setup"
 #~ msgid "Настройка синхронизации вакансии"
 #~ msgstr "Vacancy Synchronization Setup"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:242
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:470
 #: src/app/(DashboardLayout)/hr/settings/page.tsx:137
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:1060
@@ -8039,6 +8060,7 @@ msgstr ""
 #~ msgid "Обязанности"
 #~ msgstr ""
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:256
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:489
 msgid "Одинаковые вопросы для всех"
 msgstr ""
@@ -8101,7 +8123,7 @@ msgstr "Operation"
 
 #: src/app/(DashboardLayout)/hr/billing/transactions/page.tsx:238
 #: src/app/(DashboardLayout)/hr/candidates/compare/page.tsx:689
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:189
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:205
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:336
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:565
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:597
@@ -8179,6 +8201,7 @@ msgstr "Paid Interviews"
 msgid "Основная информация"
 msgstr "Basic Information"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:189
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:326
 msgid "Основное"
 msgstr ""
@@ -8187,7 +8210,7 @@ msgstr ""
 #~ msgid "Основные настройки"
 #~ msgstr "Main Settings"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:268
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:349
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:651
 msgid "Оставьте пустым для бессрочного теста. После дедлайна тест блокируется."
 msgstr ""
@@ -8402,7 +8425,7 @@ msgstr ""
 #: src/app/(DashboardLayout)/hr/billing/page.tsx:314
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1359
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1662
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:296
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:385
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:827
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:895
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:690
@@ -8524,7 +8547,7 @@ msgstr ""
 msgid "Отправляем..."
 msgstr "Sending..."
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:273
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:360
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:662
 msgid "Отправлять email-напоминания"
 msgstr ""
@@ -8952,7 +8975,7 @@ msgstr "Error Loading Resume from HeadHunter.ru"
 #~ msgid "Ошибка при загрузке резюме: {0}"
 #~ msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:96
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:108
 msgid "Ошибка при загрузке теста"
 msgstr "Error loading test"
 
@@ -9058,7 +9081,7 @@ msgstr "Error creating link"
 msgid "Ошибка при создании теста"
 msgstr "Error Creating Test"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:129
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:141
 msgid "Ошибка при сохранении"
 msgstr "Error Saving"
 
@@ -9071,7 +9094,7 @@ msgstr "Error Saving"
 msgid "Ошибка при сохранении резюме"
 msgstr "Error saving resume"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:133
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:145
 msgid "Ошибка при сохранении теста"
 msgstr "Error Saving Test"
 
@@ -10048,13 +10071,14 @@ msgstr "With {hiresPerMonth} {0}"
 msgid "При переносе кандидата на эту стадию автоматически запускается:"
 msgstr "When Moving a Candidate to This Stage, the Following is Automatically Started:"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:261
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:494
 msgid "При старте"
 msgstr "At Start"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:206
-msgid "При старте (вопросы генерируются для каждого сотрудника индивидуально)"
-msgstr "At Start (questions generated individually for each employee)"
+#~ msgid "При старте (вопросы генерируются для каждого сотрудника индивидуально)"
+#~ msgstr "At Start (questions generated individually for each employee)"
 
 #: src/app/(DashboardLayout)/hr/page.tsx:116
 msgid "Пригласите кандидата"
@@ -10616,6 +10640,7 @@ msgstr ""
 #~ msgid "Регламентов: {0}"
 #~ msgstr "Regulations: {0}"
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:220
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:350
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:225
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:319
@@ -10656,7 +10681,7 @@ msgid "Редактирование резюме"
 msgstr "Editing Resume"
 
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/components/RegulationTestTabs.tsx:43
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:169
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:178
 #: src/app/(DashboardLayout)/hr/regulation-tests/page.tsx:362
 #: src/app/(DashboardLayout)/hr/regulations/page.tsx:532
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/page.tsx:865
@@ -10685,10 +10710,9 @@ msgstr "Edit Resume"
 msgid "Редактировать стадию"
 msgstr "Edit Stage"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:141
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:151
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:161
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:172
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:156
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:166
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:174
 msgid "Редактировать тест"
 msgstr "Edit Test"
 
@@ -10696,8 +10720,7 @@ msgstr "Edit Test"
 #~ msgid "Режим генерации"
 #~ msgstr "Generation Mode"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:199
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:202
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:245
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:473
 msgid "Режим генерации вопросов"
 msgstr "Question Generation Mode"
@@ -11553,7 +11576,7 @@ msgstr "Employees"
 msgid "Сотрудники компании"
 msgstr "Company Employees"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:303
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:394
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/VacancyInterviewSettings.tsx:432
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:599
 #: src/app/(DashboardLayout)/hr/vacancy-edit/[id]/page.tsx:912
@@ -11592,7 +11615,7 @@ msgstr ""
 msgid "Сохранить заметку"
 msgstr "Save Note"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:303
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:394
 msgid "Сохранить изменения"
 msgstr "Save Changes"
 
@@ -12113,7 +12136,7 @@ msgstr "Subject is required"
 msgid "Тест"
 msgstr ""
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:256
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:192
 msgid "Тест активен"
 msgstr "Test active"
 
@@ -12129,9 +12152,13 @@ msgstr "Test for Vacancy \"{0}\""
 msgid "Тест для вакансии: {0}"
 msgstr "Test for Vacancy: {0}"
 
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:92
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:104
 msgid "Тест не найден"
 msgstr "Test Not Found"
+
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:192
+msgid "Тест неактивен"
+msgstr ""
 
 #: src/app/interview/[token]/page.tsx:75
 msgid "Тест оборудования"
@@ -12200,7 +12227,7 @@ msgid "Тестов: {0}"
 msgstr "Tests: {0}"
 
 #: src/app/(DashboardLayout)/hr/billing/transactions/page.tsx:240
-#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:167
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:177
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/questions/page.tsx:147
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:499
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:317
@@ -12609,6 +12636,7 @@ msgstr ""
 #~ msgid "Умные приглашения"
 #~ msgstr ""
 
+#: src/app/(DashboardLayout)/hr/regulation-tests/[id]/edit/page.tsx:263
 #: src/app/(DashboardLayout)/hr/regulation-tests/create/page.tsx:496
 msgid "Уникальные вопросы для каждого"
 msgstr ""
