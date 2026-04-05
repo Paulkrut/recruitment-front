@@ -379,7 +379,7 @@ export default function TestOverviewPage() {
       await navigator.clipboard.writeText(link);
       setSnackbar({ open: true, message: 'Ссылка скопирована', severity: 'success' });
     } catch {
-      setSnackbar({ open: true, message: link, severity: 'info' });
+      setSnackbar({ open: true, message: link, severity: 'success' });
     }
   };
 
