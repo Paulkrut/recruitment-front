@@ -70,9 +70,9 @@ export default function WelcomeHero({
         <Grid container spacing={3}>
           {/* HH Import Card */}
           <Grid item xs={12} md={4}>
-            <Link href={'/hr/settings/hh-integration'} passHref legacyBehavior>
               <Card
-                component="a"
+                component={Link}
+                href="/hr/settings/hh-integration"
                 elevation={0}
                 sx={{
                   height: '100%',
@@ -180,14 +180,13 @@ export default function WelcomeHero({
                   </Box>
                 </CardContent>
               </Card>
-            </Link>
           </Grid>
 
           {/* Create Manually Card */}
           <Grid item xs={12} md={4}>
-            <Link href="/hr/vacancy-create" passHref legacyBehavior>
               <Card
-                component="a"
+                component={Link}
+                href="/hr/vacancy-create"
                 elevation={0}
                 sx={{
                   height: '100%',
@@ -278,14 +277,13 @@ export default function WelcomeHero({
                   </Box>
                 </CardContent>
               </Card>
-            </Link>
           </Grid>
 
           {/* Demo Card */}
           <Grid item xs={12} md={4}>
-            <Link href="/hr/vacancies" passHref legacyBehavior>
               <Card
-                component="a"
+                component={Link}
+                href="/hr/vacancies"
                 elevation={0}
                 sx={{
                   height: '100%',
@@ -376,7 +374,6 @@ export default function WelcomeHero({
                   </Box>
                 </CardContent>
               </Card>
-            </Link>
           </Grid>
         </Grid>
 

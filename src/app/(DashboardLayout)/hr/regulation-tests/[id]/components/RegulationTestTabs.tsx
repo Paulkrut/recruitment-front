@@ -4,8 +4,7 @@ import { usePathname } from 'next/navigation';
 import { Tabs, Tab, Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import EditIcon from '@mui/icons-material/Edit';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import MailIcon from '@mui/icons-material/Mail';
+import PeopleIcon from '@mui/icons-material/People';
 import QuizIcon from '@mui/icons-material/Quiz';
 import { useLingui } from '@lingui/react';
 import { msg } from '@lingui/macro';
@@ -25,8 +24,7 @@ export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) 
   const getCurrentTab = () => {
     if (pathname.includes('/edit')) return 'edit';
     if (pathname.includes('/questions')) return 'questions';
-    if (pathname.includes('/results')) return 'results';
-    if (pathname.includes('/invitations')) return 'invitations';
+    if (pathname.includes('/results') || pathname.includes('/invitations')) return 'results';
     return 'edit';
   };
 
@@ -52,16 +50,10 @@ export default function RegulationTestTabs({ testId }: RegulationTestTabsProps) 
           value="questions"
         />
         <Tab
-          icon={<AssessmentIcon />}
+          icon={<PeopleIcon />}
           iconPosition="start"
-          label={_(msg`Результаты`)}
+          label={_(msg`Участники`)}
           value="results"
-        />
-        <Tab
-          icon={<MailIcon />}
-          iconPosition="start"
-          label={_(msg`Приглашения`)}
-          value="invitations"
         />
       </Tabs>
     </Box>

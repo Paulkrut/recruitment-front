@@ -584,9 +584,7 @@ export default function CandidateDetailPage() {
                   <IconButton color="primary" onClick={copyInterviewUrl}><ContentCopyIcon /></IconButton>
                 </Tooltip>
                 <Tooltip title={_(msg`Открыть интервью`)}>
-                  <Link href={interviewLink || '#'} target="_blank" rel="noopener" passHref legacyBehavior>
-                    <Button variant="contained" color="primary" size="small" component="a"><Trans>Интервью</Trans></Button>
-                  </Link>
+                  <Button component={Link} href={interviewLink || '#'} target="_blank" rel="noopener" variant="contained" color="primary" size="small"><Trans>Интервью</Trans></Button>
                 </Tooltip>
                 <Tooltip title={_(msg`Экспорт в PDF`)}>
                   <Button

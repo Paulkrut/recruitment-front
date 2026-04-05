@@ -30,8 +30,8 @@ import PageContainer from '@/app/components/container/PageContainer';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LinkIcon from '@mui/icons-material/Link';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import QuizIcon from '@mui/icons-material/Quiz';
 import ClearIcon from '@mui/icons-material/Clear';
 import { apiFetch } from '@/utils/api';
 import { useLingui } from '@lingui/react';
@@ -98,12 +98,12 @@ export default function RegulationTestsPage() {
       // Загружаем тесты
       const testsResponse = await apiFetch(`${API_BASE}/api/regulation-tests`);
       const testsData = await testsResponse.json();
-      setTests(testsData);
+      setTests(Array.isArray(testsData) ? testsData : []);
 
       // Загружаем список всех регламентов для фильтра
       const regulationsResponse = await apiFetch(`${API_BASE}/api/regulations`);
       const regulationsData = await regulationsResponse.json();
-      setRegulations(regulationsData);
+      setRegulations(Array.isArray(regulationsData) ? regulationsData : []);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -159,15 +159,14 @@ export default function RegulationTestsPage() {
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4"><Trans>📋 Тесты на знание регламентов</Trans></Typography>
-        <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
-          <Button
-            component="a"
-            variant="contained"
-            startIcon={<AddIcon />}
-          >
-            <Trans>Создать тест</Trans>
-          </Button>
-        </Link>
+        <Button
+          component={Link}
+          href="/hr/regulation-tests/create"
+          variant="contained"
+          startIcon={<AddIcon />}
+        >
+          <Trans>Создать тест</Trans>
+        </Button>
       </Box>
 
       {/* Filter */}
@@ -224,7 +223,6 @@ export default function RegulationTestsPage() {
               <TableRow>
                 <TableCell><Trans>Название</Trans></TableCell>
                 <TableCell><Trans>Регламенты</Trans></TableCell>
-                <TableCell><Trans>Режим генерации</Trans></TableCell>
                 <TableCell><Trans>Прогресс</Trans></TableCell>
                 <TableCell><Trans>Средний балл</Trans></TableCell>
                 <TableCell><Trans>Статус</Trans></TableCell>
@@ -234,13 +232,13 @@ export default function RegulationTestsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                     <Typography color="text.secondary"><Trans>Загрузка...</Trans></Typography>
                   </TableCell>
                 </TableRow>
               ) : filteredTests.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                     {selectedRegulationId ? (
                       <>
                         <Typography color="text.secondary" gutterBottom><Trans>Нет тестов для выбранного регламента</Trans></Typography>
@@ -254,51 +252,65 @@ export default function RegulationTestsPage() {
                         </Button>
                       </>
                     ) : (
-                      <>
-                        <Typography color="text.secondary"><Trans>Тесты не созданы</Trans></Typography>
-                        <Link href="/hr/regulation-tests/create" passHref legacyBehavior>
-                          <Button
-                            component="a"
-                            variant="outlined"
-                            startIcon={<AddIcon />}
-                            sx={{ mt: 2 }}
-                          >
-                            <Trans>Создать первый тест</Trans>
-                          </Button>
-                        </Link>
-                      </>
+                      <Box>
+                        <QuizIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 1 }} />
+                        <Typography color="text.secondary" gutterBottom><Trans>Тесты не созданы</Trans></Typography>
+                        <Typography variant="caption" color="text.disabled" display="block" sx={{ mb: 2 }}>
+                          <Trans>Создайте тест, чтобы проверить знания сотрудников по регламентам</Trans>
+                        </Typography>
+                        <Button
+                          component={Link}
+                          href="/hr/regulation-tests/create"
+                          variant="contained"
+                          startIcon={<AddIcon />}
+                        >
+                          <Trans>Создать первый тест</Trans>
+                        </Button>
+                      </Box>
                     )}
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredTests.map((test) => (
-                  <TableRow key={test.id} hover>
+                  <TableRow key={test.id} hover sx={{ cursor: 'pointer' }} onClick={() => router.push(`/hr/regulation-tests/${test.id}/results`)}>
                     <TableCell>
                       <Box>
-                        <Typography variant="subtitle2" fontWeight={600}>
+                        <MuiLink
+                          component={Link}
+                          href={`/hr/regulation-tests/${test.id}/results`}
+                          underline="hover"
+                          color="inherit"
+                          sx={{ fontWeight: 600 }}
+                          onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                        >
                           {test.title}
-                        </Typography>
+                        </MuiLink>
                         {test.description && (
-                          <Typography variant="caption" color="text.secondary">
+                          <Typography variant="caption" color="text.secondary" display="block">
                             {test.description}
                           </Typography>
                         )}
                       </Box>
                     </TableCell>
                     <TableCell>
-                      <Chip
-                        label={test.regulationsCount + ' ' +  _(msg`шт.`)}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Chip
-                        label={test.questionGenerationMode === 'pre_generated' ? _(msg`Заранее`) : _(msg`При старте`)}
-                        size="small"
-                        color={test.questionGenerationMode === 'on_start' ? 'success' : 'default'}
-                      />
+                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                        {test.regulations.slice(0, 3).map((reg) => (
+                          <Chip
+                            key={reg.id}
+                            label={reg.title}
+                            size="small"
+                            variant="outlined"
+                          />
+                        ))}
+                        {test.regulations.length > 3 && (
+                          <Chip
+                            label={`+${test.regulations.length - 3}`}
+                            size="small"
+                            variant="outlined"
+                            color="primary"
+                          />
+                        )}
+                      </Box>
                     </TableCell>
                     <TableCell>
                       <Box sx={{ minWidth: 120 }}>
@@ -322,7 +334,7 @@ export default function RegulationTestsPage() {
                         <Chip
                           label={`${test.avgScore.toFixed(1)}%`}
                           size="small"
-                          color="primary"
+                          color={test.avgScore >= 70 ? 'success' : test.avgScore >= 40 ? 'warning' : 'error'}
                         />
                       ) : (
                         <Typography variant="caption" color="text.secondary">
@@ -337,39 +349,27 @@ export default function RegulationTestsPage() {
                         color={test.isActive ? 'success' : 'default'}
                       />
                     </TableCell>
-                    <TableCell align="right">
-                      <Tooltip title={_(msg`Результаты`)}>
-                        <Link href={`/hr/regulation-tests/${test.id}/results`} passHref legacyBehavior>
-                          <IconButton
-                            component="a"
-                            size="small"
-                          >
-                            <AssessmentIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
-                      </Tooltip>
-                      <Tooltip title={_(msg`Приглашения`)}>
-                        <Link href={`/hr/regulation-tests/${test.id}/invitations`} passHref legacyBehavior>
-                          <IconButton
-                            component="a"
-                            size="small"
-                          >
-                            <LinkIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
+                    <TableCell align="right" onClick={(e) => e.stopPropagation()}>
+                      <Tooltip title={_(msg`Участники`)}>
+                        <IconButton
+                          component={Link}
+                          href={`/hr/regulation-tests/${test.id}/results`}
+                          size="small"
+                        >
+                          <AssessmentIcon fontSize="small" />
+                        </IconButton>
                       </Tooltip>
                       <Tooltip title={_(msg`Редактировать`)}>
-                        <Link href={`/hr/regulation-tests/${test.id}/edit`} passHref legacyBehavior>
-                          <IconButton
-                            component="a"
-                            size="small"
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Link>
+                        <IconButton
+                          component={Link}
+                          href={`/hr/regulation-tests/${test.id}/edit`}
+                          size="small"
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
                       </Tooltip>
                       <Tooltip title={_(msg`Удалить`)}>
-                        <IconButton size="small" onClick={() => handleDelete(test.id)}>
+                        <IconButton size="small" color="error" onClick={() => handleDelete(test.id)}>
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>

@@ -47,6 +47,8 @@ interface TestInfo {
   description: string;
   questionsPerRegulation: number;
   timeLimitMinutes: number;
+  deadlineAt: string | null;
+  isDeadlineExpired: boolean;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || 'http://recruitment.test';
@@ -65,6 +67,7 @@ export default function RegulationTestPage() {
   const [testInfo, setTestInfo] = useState<TestInfo | null>(null);
   const [invitationType, setInvitationType] = useState<string>('');
   const [employeeEmail, setEmployeeEmail] = useState('');
+  const [employeeName, setEmployeeName] = useState('');
 
   // Форма регистрации (для general invitations)
   const [name, setName] = useState('');
@@ -92,7 +95,14 @@ export default function RegulationTestPage() {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [timerStarted, setTimerStarted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [finishing, setFinishing] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  // Ref на актуальную версию handleAutoSubmit — обновляется при каждом рендере,
+  // чтобы эффект авто-сабмита всегда вызывал функцию со свежими
+  // recording / audioBlob / mediaRecorder.
+  const handleAutoSubmitRef = useRef<() => void>(() => {});
+  // Guard: предотвращает двойной вызов авто-сабмита (React Strict Mode, race conditions).
+  const autoSubmitCalledRef = useRef(false);
 
   // Результаты
   const [finished, setFinished] = useState(false);
@@ -112,15 +122,17 @@ export default function RegulationTestPage() {
     loadInvitation();
   }, [token]);
 
-  // Таймер для текущего вопроса
+  // Таймер для текущего вопроса — только управляет счётчиком, без side-effects.
+  // Side-effects запрещены внутри setTimeLeft updater (React вызывает его дважды в Strict Mode).
   useEffect(() => {
     if (timeLeft !== null && timeLeft > 0 && sessionId && timerStarted) {
       intervalRef.current = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev === null || prev <= 1) {
-            // Время вышло - автоотправка
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            handleAutoSubmit();
+            if (intervalRef.current) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+            }
             return 0;
           }
           return prev - 1;
@@ -128,10 +140,23 @@ export default function RegulationTestPage() {
       }, 1000);
 
       return () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
       };
     }
   }, [timeLeft, sessionId, timerStarted, currentQuestionIndex]);
+
+  // Авто-сабмит когда таймер достиг 0.
+  // Отдельный эффект — вызывается после рендера, не в updater.
+  // autoSubmitCalledRef защищает от двойного вызова (Strict Mode / race conditions).
+  useEffect(() => {
+    if (timeLeft === 0 && timerStarted && sessionId && !autoSubmitCalledRef.current) {
+      autoSubmitCalledRef.current = true;
+      handleAutoSubmitRef.current();
+    }
+  }, [timeLeft, timerStarted, sessionId]);
 
   const loadInvitation = async () => {
     try {
@@ -159,6 +184,7 @@ export default function RegulationTestPage() {
       setTestInfo(data.test);
       setInvitationType(data.type);
       setEmployeeEmail(data.employeeEmail || '');
+      setEmployeeName(data.employeeName || '');
       setLoading(false);
     } catch (error) {
       console.error('Error loading invitation:', error);
@@ -310,23 +336,27 @@ export default function RegulationTestPage() {
   }, [mediaRecorder]);
 
   const handleAutoSubmit = () => {
-    console.log('Auto-submitting due to timeout');
+    console.log('Auto-submitting due to timeout (recording:', recording, ', hasBlob:', !!audioBlob, ')');
 
     // Если идёт запись - останавливаем и ждём blob
     if (recording && mediaRecorder) {
       console.log('Recording in progress, stopping...');
 
-      // Создаём одноразовый обработчик для автоотправки после остановки
+      // Создаём одноразовый обработчик для автоотправки после остановки.
+      // Blob передаём напрямую в handleSubmitAnswer, чтобы избежать stale closure.
       const originalOnStop = mediaRecorder.onstop;
       mediaRecorder.onstop = (event) => {
-        // Вызываем оригинальный обработчик (который создаёт blob)
+        // Вызываем оригинальный обработчик (который создаёт blob через setAudioBlob)
         if (originalOnStop) originalOnStop.call(mediaRecorder, event);
 
-        // Ждём создания blob и отправляем
+        // После onstop blob уже в chunks — собираем его самостоятельно для прямой передачи
         setTimeout(() => {
-          console.log('Blob created after auto-stop, submitting...');
-          handleSubmitAnswer();
-        }, 200);
+          // Читаем blob из DOM-события: нет надёжного способа,
+          // поэтому берём его из стейта через short delay (blob уже установлен через setAudioBlob).
+          // Передаём сигнал через ref, который обновляется после рендера.
+          console.log('Blob created after auto-stop, calling latest handleAutoSubmit...');
+          handleAutoSubmitRef.current();
+        }, 300);
       };
 
       handleStopRecording();
@@ -340,6 +370,9 @@ export default function RegulationTestPage() {
       handleSubmitEmptyAnswer();
     }
   };
+
+  // Обновляем ref при каждом рендере — интервал таймера будет вызывать актуальную версию
+  handleAutoSubmitRef.current = handleAutoSubmit;
 
   const handleSubmitEmptyAnswer = async () => {
     console.log('Submitting empty answer (timeout or skipped)');
@@ -498,6 +531,7 @@ export default function RegulationTestPage() {
     setAudioBlob(null);
     setMediaRecorder(null);
     setTimerStarted(false);
+    autoSubmitCalledRef.current = false; // сброс guard для следующего вопроса
 
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
@@ -511,6 +545,7 @@ export default function RegulationTestPage() {
   };
 
   const handleFinishTest = async () => {
+    setFinishing(true);
     try {
       const response = await fetch(
         `${API_BASE}/api/public/regulation-tests/session/${sessionId}/finish`,
@@ -528,7 +563,14 @@ export default function RegulationTestPage() {
           return;
         }
 
-        const errorMessage = errorData.message || _(msg`Не удалось завершить тест`);
+        // 400 session_not_active — сессия уже была завершена (например, при двойном вызове).
+        // Просто показываем экран завершения без ошибки.
+        if (response.status === 400 && errorData.error === 'regulation_test.session_not_active') {
+          setFinished(true);
+          return;
+        }
+
+        const errorMessage = errorData.message || errorData.error || _(msg`Не удалось завершить тест`);
         throw new Error(errorMessage);
       }
 
@@ -586,6 +628,14 @@ export default function RegulationTestPage() {
               {testInfo.description}
             </Typography>
 
+            {testInfo.deadlineAt && (
+              <Alert severity={testInfo.isDeadlineExpired ? 'error' : 'info'} sx={{ mb: 2 }}>
+                {testInfo.isDeadlineExpired
+                  ? _(msg`Срок прохождения теста истёк (${new Date(testInfo.deadlineAt).toLocaleDateString('ru-RU')})`)
+                  : _(msg`Срок прохождения: до ${new Date(testInfo.deadlineAt).toLocaleDateString('ru-RU')}`)}
+              </Alert>
+            )}
+
             {invitationType === 'general' && (
               <Box sx={{ mt: 3 }}>
                 <TextField
@@ -637,7 +687,7 @@ export default function RegulationTestPage() {
             {invitationType === 'named' && employeeEmail && (
               <>
                 <Alert severity="info" sx={{ mt: 3 }}>
-                  <Trans>Вы приглашены на тестирование как: <strong>{employeeEmail}</strong></Trans>
+                  <Trans>Вы приглашены на тестирование как: <strong>{employeeName || employeeEmail}</strong></Trans>
                 </Alert>
 
                 {/* Согласие на обработку ПДн для именного приглашения */}
@@ -682,7 +732,7 @@ export default function RegulationTestPage() {
                 }
                 setCurrentStep(1);
               }}
-              disabled={!pdnConsent || (invitationType === 'general' && (!name || !email))}
+              disabled={!pdnConsent || (invitationType === 'general' && (!name || !email)) || testInfo.isDeadlineExpired}
               sx={{ mt: 3 }}
             >
               <Trans>Далее</Trans>
@@ -866,7 +916,13 @@ export default function RegulationTestPage() {
 
             {/* 6. Кнопки управления */}
             <Stack direction={isMobile ? 'column' : 'row'} spacing={2} justifyContent="center">
-              {!recording && !audioBlob && (
+              {finishing && (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={20} />
+                  <Typography variant="body2" color="text.secondary"><Trans>Завершение теста...</Trans></Typography>
+                </Box>
+              )}
+              {!finishing && !recording && !audioBlob && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -882,7 +938,7 @@ export default function RegulationTestPage() {
                 ><Trans>🎤 Начать ответ</Trans></Button>
               )}
 
-              {recording && (
+              {!finishing && recording && (
                 <Button
                   variant="contained"
                   color="error"
@@ -898,7 +954,7 @@ export default function RegulationTestPage() {
                 ><Trans>⏹ Остановить запись</Trans></Button>
               )}
 
-              {audioBlob && (
+              {!finishing && audioBlob && (
                 <>
                   <Button
                     variant="outlined"
@@ -906,7 +962,12 @@ export default function RegulationTestPage() {
                     onClick={() => {
                       setAudioBlob(null);
                       setMediaRecorder(null);
-                      // Сразу запускаем новую запись
+                      // Если время вышло — даём 60 сек на перезапись
+                      if (!timeLeft || timeLeft <= 0) {
+                        autoSubmitCalledRef.current = false; // сброс guard для нового таймера
+                        setTimeLeft(60);
+                        setTimerStarted(true);
+                      }
                       setTimeout(() => handleStartRecording(), 100);
                     }}
                     disabled={submitting}

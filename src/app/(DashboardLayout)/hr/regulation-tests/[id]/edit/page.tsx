@@ -39,6 +39,9 @@ interface RegulationTest {
   questionsPerRegulation: number;
   maxTimePerQuestion: number;
   isActive: boolean;
+  deadlineAt: string | null;
+  reminderEnabled: boolean;
+  reminderDaysBefore: number;
 }
 
 export default function EditTestPage() {
@@ -59,6 +62,9 @@ export default function EditTestPage() {
   const [questionsPerRegulation, setQuestionsPerRegulation] = useState(5);
   const [maxTimePerQuestion, setMaxTimePerQuestion] = useState(120);
   const [isActive, setIsActive] = useState(true);
+  const [deadlineAt, setDeadlineAt] = useState('');
+  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [reminderDaysBefore, setReminderDaysBefore] = useState(3);
 
   useEffect(() => {
     if (testId) {
@@ -79,6 +85,9 @@ export default function EditTestPage() {
         setQuestionsPerRegulation(data.questionsPerRegulation);
         setMaxTimePerQuestion(data.maxTimePerQuestion);
         setIsActive(data.isActive);
+        setDeadlineAt(data.deadlineAt || '');
+        setReminderEnabled(data.reminderEnabled ?? false);
+        setReminderDaysBefore(data.reminderDaysBefore ?? 3);
       } else {
         setError(_(msg`Тест не найден`));
       }
@@ -107,6 +116,9 @@ export default function EditTestPage() {
           questionsPerRegulation,
           maxTimePerQuestion,
           isActive,
+          deadlineAt: deadlineAt || null,
+          reminderEnabled,
+          reminderDaysBefore,
         }),
       });
 
@@ -140,9 +152,7 @@ export default function EditTestPage() {
         <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
-        <Link href="/hr/regulation-tests" passHref legacyBehavior>
-          <Button component="a" variant="outlined"><Trans>Вернуться к списку</Trans></Button>
-        </Link>
+        <Button component={Link} href="/hr/regulation-tests" variant="outlined"><Trans>Вернуться к списку</Trans></Button>
       </PageContainer>
     );
   }
@@ -246,6 +256,35 @@ export default function EditTestPage() {
             label={_(msg`Тест активен`)}
           />
 
+          <Typography variant="h6" sx={{ mt: 2 }}><Trans>Дедлайн и напоминания</Trans></Typography>
+
+          <TextField
+            label={_(msg`Дедлайн прохождения`)}
+            type="datetime-local"
+            fullWidth
+            value={deadlineAt}
+            onChange={(e) => setDeadlineAt(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            helperText={_(msg`Оставьте пустым для бессрочного теста. После дедлайна тест блокируется.`)}
+          />
+
+          <FormControlLabel
+            control={<Switch checked={reminderEnabled} onChange={(e) => setReminderEnabled(e.target.checked)} disabled={!deadlineAt} />}
+            label={_(msg`Отправлять email-напоминания`)}
+          />
+
+          {reminderEnabled && deadlineAt && (
+            <TextField
+              label={_(msg`Напоминание за (дней)`)}
+              type="number"
+              fullWidth
+              value={reminderDaysBefore}
+              onChange={(e) => setReminderDaysBefore(parseInt(e.target.value) || 1)}
+              InputProps={{ inputProps: { min: 1, max: 30 } }}
+              helperText={_(msg`За сколько дней до дедлайна отправить напоминание`)}
+            />
+          )}
+
           <Alert severity="info">
             <Typography variant="body2"><Trans>
               <strong>Примечание:</strong> Изменение настроек не влияет на уже начатые тесты. Список регламентов можно изменить только при создании теста.
@@ -254,9 +293,7 @@ export default function EditTestPage() {
         </Box>
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
-          <Link href="/hr/regulation-tests" passHref legacyBehavior>
-            <Button component="a" variant="outlined"><Trans>Отмена</Trans></Button>
-          </Link>
+          <Button component={Link} href="/hr/regulation-tests" variant="outlined"><Trans>Отмена</Trans></Button>
 
           <Button
             variant="contained"

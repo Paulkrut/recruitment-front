@@ -568,18 +568,28 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
         </Box>
         {/* Название и прогресс */}
         <Box display="flex" alignItems="flex-start" justifyContent="space-between" gap={1}>
-          <Link href={`/hr/vacancies/${vacancy.id}`} passHref style={{ textDecoration: 'none', flexGrow: 1 }}>
-            <Typography
-              variant="h6"
-              fontWeight={700}
-              sx={{ cursor: 'pointer', color: vacancy.status === 'active' ? 'primary.main' : 'text.disabled', transition: 'color 0.2s', '&:hover': { color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary', textDecoration: 'underline' } }}
-            >
-              {vacancy.title}
-              {vacancy.source === 'headhunter' && vacancy.hhCity && (
-                <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.875rem' }}> ({vacancy.hhCity})</span>
-              )}
-            </Typography>
-          </Link>
+          <Typography
+            component={Link}
+            href={`/hr/vacancies/${vacancy.id}`}
+            variant="h6"
+            fontWeight={700}
+            sx={{
+              textDecoration: 'none',
+              flexGrow: 1,
+              cursor: 'pointer',
+              color: vacancy.status === 'active' ? 'primary.main' : 'text.disabled',
+              transition: 'color 0.2s',
+              '&:hover': {
+                color: vacancy.status === 'active' ? 'primary.dark' : 'text.secondary',
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            {vacancy.title}
+            {vacancy.source === 'headhunter' && vacancy.hhCity && (
+              <span style={{ color: '#757575', fontWeight: 400, fontSize: '0.875rem' }}> ({vacancy.hhCity})</span>
+            )}
+          </Typography>
           <Chip label={getProgressLabel(percent)} size="small" color={getProgressColor(percent) as any} sx={{ fontWeight: 600, flexShrink: 0 }} />
         </Box>
       </Box>
@@ -606,25 +616,24 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
             '& .MuiAlert-message': { width: '100%' }
           }}
           action={
-            <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
-              <Button
-                component="a"
-                color="inherit"
-                size="small"
-                variant="outlined"
-                sx={{
-                  fontWeight: 700,
+            <Button
+              component={Link}
+              href={`/hr/vacancy-edit/${vacancy.id}`}
+              color="inherit"
+              size="small"
+              variant="outlined"
+              sx={{
+                fontWeight: 700,
+                borderColor: 'white',
+                color: 'white',
+                '&:hover': {
                   borderColor: 'white',
-                  color: 'white',
-                  '&:hover': {
-                    borderColor: 'white',
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
-                  }
-                }}
-              >
-                <Trans>Настроить</Trans>
-              </Button>
-            </Link>
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }
+              }}
+            >
+              <Trans>Настроить</Trans>
+            </Button>
           }
         >
           <Typography variant="body2" fontWeight={700}>
@@ -703,21 +712,17 @@ function VacancyCard({ vacancy, templates, onEdit, onDelete, onRestore, onArchiv
       {/* Кнопки действий */}
       <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
         <Tooltip title={_(msg`Просмотреть`)}>
-          <Link href={`/hr/vacancies/${vacancy.id}`} passHref legacyBehavior>
-            <IconButton size="small" color="primary" component="a">
-              <IconEye size={18} />
-            </IconButton>
-          </Link>
+          <IconButton component={Link} href={`/hr/vacancies/${vacancy.id}`} size="small" color="primary">
+            <IconEye size={18} />
+          </IconButton>
         </Tooltip>
         
         {vacancy.status === 'active' && (
           <>
             <Tooltip title={_(msg`Редактировать`)}>
-              <Link href={`/hr/vacancy-edit/${vacancy.id}`} passHref legacyBehavior>
-                <IconButton size="small" color="warning" component="a">
-                  <IconEdit size={18} />
-                </IconButton>
-              </Link>
+              <IconButton component={Link} href={`/hr/vacancy-edit/${vacancy.id}`} size="small" color="warning">
+                <IconEdit size={18} />
+              </IconButton>
             </Tooltip>
             <Tooltip title={_(msg`В архив`)}>
               <IconButton size="small" color="default" onClick={() => onArchive(vacancy.id)}>
@@ -946,15 +951,14 @@ export default function HRVacanciesPage() {
                 </ToggleButton>
               </Tooltip>
             </ToggleButtonGroup>
-            <Link href="/hr/vacancy-create" passHref legacyBehavior>
-              <Button
-                variant="contained"
-                startIcon={<IconPlus size={20} />}
-                component="a"
-              >
-                <Trans>Создать вакансию</Trans>
-              </Button>
-            </Link>
+            <Button
+              variant="contained"
+              startIcon={<IconPlus size={20} />}
+              component={Link}
+              href="/hr/vacancy-create"
+            >
+              <Trans>Создать вакансию</Trans>
+            </Button>
           </Box>
         </Box>
 
@@ -1035,44 +1039,42 @@ export default function HRVacanciesPage() {
             </Typography>
             {!search && statusFilter === 'active' && (
               <Box display="flex" gap={2} justifyContent="center" flexWrap="wrap">
-                <Link href="/hr/settings/hh-integration" passHref legacyBehavior>
-                  <Button
-                    component="a"
-                    variant="contained"
-                    size="large"
-                    endIcon={<IconArrowRight size={20} />}
-                    sx={{
-                      background: 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
-                      fontWeight: 600,
-                      px: 3,
-                      '&:hover': { boxShadow: '0 8px 20px rgba(214, 0, 28, 0.3)' },
-                    }}
-                  >
-                    <Trans>Импортировать из HH</Trans>
-                  </Button>
-                </Link>
-                <Link href="/hr/vacancy-create" passHref legacyBehavior>
-                  <Button
-                    component="a"
-                    variant="outlined"
-                    size="large"
-                    endIcon={<IconArrowRight size={20} />}
-                    sx={{
+                <Button
+                  component={Link}
+                  href="/hr/settings/hh-integration"
+                  variant="contained"
+                  size="large"
+                  endIcon={<IconArrowRight size={20} />}
+                  sx={{
+                    background: 'linear-gradient(135deg, #D6001C 0%, #FF4D6D 100%)',
+                    fontWeight: 600,
+                    px: 3,
+                    '&:hover': { boxShadow: '0 8px 20px rgba(214, 0, 28, 0.3)' },
+                  }}
+                >
+                  <Trans>Импортировать из HH</Trans>
+                </Button>
+                <Button
+                  component={Link}
+                  href="/hr/vacancy-create"
+                  variant="outlined"
+                  size="large"
+                  endIcon={<IconArrowRight size={20} />}
+                  sx={{
+                    borderWidth: 2,
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    fontWeight: 600,
+                    px: 3,
+                    '&:hover': {
                       borderWidth: 2,
-                      borderColor: 'primary.main',
-                      color: 'primary.main',
-                      fontWeight: 600,
-                      px: 3,
-                      '&:hover': {
-                        borderWidth: 2,
-                        backgroundColor: 'primary.main',
-                        color: 'white',
-                      },
-                    }}
-                  >
-                    <Trans>Создать вручную</Trans>
-                  </Button>
-                </Link>
+                      backgroundColor: 'primary.main',
+                      color: 'white',
+                    },
+                  }}
+                >
+                  <Trans>Создать вручную</Trans>
+                </Button>
               </Box>
             )}
           </Box>

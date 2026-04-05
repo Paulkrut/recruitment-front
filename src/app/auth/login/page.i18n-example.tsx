@@ -212,19 +212,19 @@ export default function LoginPageI18n() {
               </Box>
 
               <Box textAlign="right" mb={3}>
-                <Link href="/auth/forgot-password" passHref legacyBehavior>
-                  <MuiLink 
-                    variant="body2" 
-                    sx={{ 
-                      color: "#667eea",
-                      textDecoration: "none",
-                      "&:hover": { textDecoration: "underline" }
-                    }}
-                  >
-                    {/* ✅ ШАГ 8: Переводим ссылки */}
-                    <Trans>Забыли пароль?</Trans>
-                  </MuiLink>
-                </Link>
+                <MuiLink
+                  component={Link}
+                  href="/auth/forgot-password"
+                  variant="body2"
+                  sx={{
+                    color: "#667eea",
+                    textDecoration: "none",
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                >
+                  {/* ✅ ШАГ 8: Переводим ссылки */}
+                  <Trans>Забыли пароль?</Trans>
+                </MuiLink>
               </Box>
 
               {/* ✅ ШАГ 9: Переводим текст кнопок */}
@@ -260,18 +260,18 @@ export default function LoginPageI18n() {
               <Typography variant="body2" color="text.secondary">
                 {/* ✅ ШАГ 10: Переводим составной текст */}
                 <Trans>Нет аккаунта?</Trans>{" "}
-                <Link href="/auth/register" passHref legacyBehavior>
-                  <MuiLink
-                    sx={{
-                      color: "#667eea",
-                      fontWeight: 600,
-                      textDecoration: "none",
-                      "&:hover": { textDecoration: "underline" }
-                    }}
-                  >
-                    <Trans>Зарегистрироваться</Trans>
-                  </MuiLink>
-                </Link>
+                <MuiLink
+                  component={Link}
+                  href="/auth/register"
+                  sx={{
+                    color: "#667eea",
+                    fontWeight: 600,
+                    textDecoration: "none",
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                >
+                  <Trans>Зарегистрироваться</Trans>
+                </MuiLink>
               </Typography>
             </Box>
           </CardContent>

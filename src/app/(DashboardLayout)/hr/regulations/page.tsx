@@ -501,16 +501,19 @@ export default function RegulationsPage() {
                         </TableCell>
                         <TableCell>
                           {regulation.testsCount !== undefined && regulation.testsCount > 0 ? (
-                            <NextLink href={`/hr/regulation-tests?regulationId=${regulation.id}`} passHref legacyBehavior>
-                              <Link underline="hover" sx={{ cursor: 'pointer' }}>
-                                <Chip 
-                                  label={regulation.testsCount} 
-                                  size="small" 
-                                  color="primary" 
-                                  sx={{ cursor: 'pointer' }}
-                                />
-                              </Link>
-                            </NextLink>
+                            <Link
+                              component={NextLink}
+                              href={`/hr/regulation-tests?regulationId=${regulation.id}`}
+                              underline="hover"
+                              sx={{ cursor: 'pointer' }}
+                            >
+                              <Chip
+                                label={regulation.testsCount}
+                                size="small"
+                                color="primary"
+                                sx={{ cursor: 'pointer' }}
+                              />
+                            </Link>
                           ) : (
                             <Typography variant="body2" color="text.secondary">—</Typography>
                           )}
