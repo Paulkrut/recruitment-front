@@ -1086,7 +1086,7 @@ export default function CandidatesList({
                                   <Box component="ul" sx={{ m: 0, pl: 2, fontSize: '0.75rem' }}>
                                     {r.redFlagQuestions.slice(0, 5).map((q: any, idx: number) => (
                                       <li key={idx}>
-                                        <Trans>Вопрос {q.position}: {q.text}</Trans>
+                                        Вопрос {q.position}: {(q.text || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()}
                                       </li>
                                     ))}
                                     {r.redFlagQuestions.length > 5 && (
