@@ -33,6 +33,7 @@ interface FormData {
   name: string;
   position: string;
   company: string;
+  inn: string;
   email: string;
   phone: string;
 }
@@ -41,6 +42,7 @@ interface FormErrors {
   name?: string;
   position?: string;
   company?: string;
+  inn?: string;
   email?: string;
   phone?: string;
   general?: string;
@@ -54,6 +56,7 @@ export default function RegisterPage() {
     name: "",
     position: "",
     company: "",
+    inn: "",
     email: "",
     phone: "",
   });
@@ -81,6 +84,16 @@ export default function RegisterPage() {
     // Валидация компании
     if (!formData.company.trim()) {
       newErrors.company = _(msg`Введите название компании`);
+    }
+
+    // Валидация ИНН
+    if (!formData.inn.trim()) {
+      newErrors.inn = _(msg`Введите ИНН компании`);
+    } else {
+      const digits = formData.inn.replace(/\D/g, '');
+      if (digits.length !== 10 && digits.length !== 12) {
+        newErrors.inn = _(msg`ИНН должен содержать 10 или 12 цифр`);
+      }
     }
 
     // Валидация email
@@ -133,6 +146,7 @@ export default function RegisterPage() {
           name: formData.name.trim(),
           position: formData.position.trim(),
           company: formData.company.trim(),
+          inn: formData.inn.replace(/\D/g, ''),
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim() ? normalizePhoneForBackend(formData.phone) : null,
           marketing_opt_in: marketing
@@ -262,6 +276,21 @@ export default function RegisterPage() {
                 helperText={errors.company}
                 placeholder={_(msg`ООО «Ваша компания»`)}
                 disabled={loading}
+              />
+
+              {/* ИНН */}
+              <TextField
+                label={_(msg`ИНН компании`)}
+                variant="outlined"
+                fullWidth
+                required
+                value={formData.inn}
+                onChange={(e) => handleInputChange("inn", e.target.value)}
+                error={!!errors.inn}
+                helperText={errors.inn || _(msg`10 цифр для юрлиц, 12 для ИП`)}
+                placeholder="1234567890"
+                disabled={loading}
+                inputProps={{ maxLength: 12, inputMode: "numeric" }}
               />
 
               {/* Email */}
