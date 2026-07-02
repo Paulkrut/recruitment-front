@@ -4,6 +4,7 @@ import { Trans } from '@lingui/macro';
 import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { apiFetch } from "@/utils/api";
+import { sanitizeInterviewToken } from "@/utils/interviewToken";
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
@@ -19,7 +20,8 @@ export default function HhRedirectPage() {
     }
 
     const code = searchParams.get("code");
-    const state = searchParams.get("state");
+    const stateRaw = searchParams.get("state");
+    const state = stateRaw ? sanitizeInterviewToken(stateRaw) ?? stateRaw : null;
     const error = searchParams.get("error");
     const type = searchParams.get("type"); // 'oauth' | 'candidate' | null (API integration)
 
