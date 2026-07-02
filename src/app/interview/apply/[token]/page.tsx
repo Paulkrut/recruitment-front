@@ -14,6 +14,7 @@ import { msg, Trans } from '@lingui/macro';
 import InternationalPhoneInput from '@/components/InternationalPhoneInput';
 import { normalizePhoneForBackend, isValidInternationalPhone } from '@/utils/phoneUtils';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import { sanitizeInterviewToken } from '@/utils/interviewToken';
 import InterviewBlockedScreen from '../../components/InterviewBlockedScreen';
 
 
@@ -62,7 +63,8 @@ export default function PublicApplyPage() {
   const { _, i18n } = useLingui();
   const router = useRouter();
 
-  const { token } = useParams<{ token: string }>();
+  const { token: rawToken } = useParams<{ token: string }>();
+  const token = sanitizeInterviewToken(rawToken);
   const searchParams = useSearchParams();
   const [vacancyInfo, setVacancyInfo] = useState<VacancyInfo | null>(null);
   const [loading, setLoading] = useState(true);

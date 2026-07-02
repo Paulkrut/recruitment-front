@@ -1,9 +1,40 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { sanitizeInterviewToken } from '@/utils/interviewToken';
+
+/** iOS/HH: к URL прилипает следующее слово — режем до 64 hex и редиректим */
+function getCleanInterviewPath(pathname: string): string | null {
+  const applyMatch = pathname.match(/^\/interview\/apply\/([^/?#]+)/);
+  if (applyMatch) {
+    const clean = sanitizeInterviewToken(applyMatch[1]);
+    if (clean && clean !== applyMatch[1]) {
+      return pathname.replace(`/interview/apply/${applyMatch[1]}`, `/interview/apply/${clean}`);
+    }
+    return null;
+  }
+
+  const interviewMatch = pathname.match(/^\/interview\/([^/?#]+)/);
+  if (interviewMatch && interviewMatch[1] !== 'apply') {
+    const clean = sanitizeInterviewToken(interviewMatch[1]);
+    if (clean && clean !== interviewMatch[1]) {
+      return pathname.replace(`/interview/${interviewMatch[1]}`, `/interview/${clean}`);
+    }
+  }
+
+  return null;
+}
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get('host') || '';
-  
+  const { pathname } = request.nextUrl;
+
+  const cleanPath = getCleanInterviewPath(pathname);
+  if (cleanPath) {
+    const url = request.nextUrl.clone();
+    url.pathname = cleanPath;
+    return NextResponse.redirect(url, 307);
+  }
+
   // Определяем язык по домену
   let locale = 'ru';
   if (hostname.includes('.com') || hostname.includes('en.')) {

@@ -43,6 +43,7 @@ import InterviewBlockedScreen from "../components/InterviewBlockedScreen";
 import { useLingui } from '@lingui/react';
 import { msg, Trans } from '@lingui/macro';
 import { getErrorMessage } from '@/utils/errorTranslator';
+import { sanitizeInterviewToken } from '@/utils/interviewToken';
 
 
 interface Question {
@@ -74,7 +75,8 @@ export default function CandidateInterviewPage() {
   const { _, i18n } = useLingui();
   const steps = [_(msg`Подготовка`), _(msg`Тест оборудования`), _(msg`Ответы`), _(msg`Финиш`)];
 
-  const { token } = useParams<{ token: string }>();
+  const { token: rawToken } = useParams<{ token: string }>();
+  const token = sanitizeInterviewToken(rawToken);
   const searchParams = useSearchParams();
   const router = useRouter();
   const theme = useTheme();
