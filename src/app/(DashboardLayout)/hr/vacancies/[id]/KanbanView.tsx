@@ -77,6 +77,7 @@ interface KanbanViewProps {
     source?: string;
     search?: string;
     minScore?: number;
+    interviewStatus?: string;
     aiAnalysisStatus?: string;
     hasResume?: string;
     hhStage?: string;
