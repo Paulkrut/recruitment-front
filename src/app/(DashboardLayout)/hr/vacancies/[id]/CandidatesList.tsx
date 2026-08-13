@@ -46,6 +46,40 @@ import { CANDIDATE_STATUS_CONFIG, getCandidateStatusItem } from '@/constants/can
 
 const API_BASE = process.env.NEXT_PUBLIC_RECRUITMENT_API || "http://recruitment.test";
 
+function appendCandidateListFilters(queryParams: URLSearchParams, filters: any) {
+  if (!filters) return;
+  if (filters.source) queryParams.append('source', filters.source);
+  if (filters.status) queryParams.append('status', filters.status);
+  if (filters.interviewStatus) queryParams.append('interviewStatus', filters.interviewStatus);
+  if (filters.search) queryParams.append('search', filters.search);
+  if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+  if (filters.testScore) queryParams.append('testScore', filters.testScore);
+  if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent);
+  if (filters.redFlag) queryParams.append('redFlag', filters.redFlag);
+  if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
+  if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
+  if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
+  if (filters.datePreset && filters.datePreset !== 'custom') queryParams.append('datePreset', filters.datePreset);
+  if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
+  if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
+}
+
+function buildCandidatesListQuery(
+  page: number,
+  rowsPerPage: number,
+  sortBy: string,
+  sortOrder: string,
+  filters: any,
+): URLSearchParams {
+  const queryParams = new URLSearchParams();
+  queryParams.append('page', (page + 1).toString());
+  queryParams.append('perPage', rowsPerPage.toString());
+  queryParams.append('sortBy', sortBy);
+  queryParams.append('sortOrder', sortOrder);
+  appendCandidateListFilters(queryParams, filters);
+  return queryParams;
+}
+
 interface CandidatesListProps {
   vacancyId: string;
   filters: any;
@@ -133,30 +167,7 @@ export default function CandidatesList({
     const loadCandidates = async () => {
       setLoading(true);
       try {
-        const queryParams = new URLSearchParams();
-
-        // Пагинация
-        queryParams.append('page', (page + 1).toString()); // Backend uses 1-based page
-        queryParams.append('perPage', rowsPerPage.toString());
-
-        // Сортировка
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-
-        // Фильтры
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        if (filters.testScore) queryParams.append('testScore', filters.testScore); // Новый фильтр
-        if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent); // Фильтр по приглашениям
-        if (filters.redFlag) queryParams.append('redFlag', filters.redFlag); // Фильтр по red flags
-        if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
-        if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
-        if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
-        if (filters.datePreset && filters.datePreset !== 'custom') queryParams.append('datePreset', filters.datePreset);
-        if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
-        if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const response = await apiFetch(
           `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`
@@ -189,24 +200,7 @@ export default function CandidatesList({
     // Запускаем полинг каждые 5 секунд
     const pollInterval = setInterval(async () => {
       try {
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
-        if (filters.testScore) queryParams.append('testScore', filters.testScore);
-        if (filters.invitationSent) queryParams.append('invitationSent', filters.invitationSent);
-        if (filters.redFlag) queryParams.append('redFlag', filters.redFlag);
-        if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
-        if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
-        if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
-        if (filters.datePreset && filters.datePreset !== 'custom') queryParams.append('datePreset', filters.datePreset);
-        if (filters.dateFrom) queryParams.append('dateFrom', filters.dateFrom);
-        if (filters.dateTo) queryParams.append('dateTo', filters.dateTo);
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const response = await apiFetch(
           `${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`
@@ -293,15 +287,7 @@ export default function CandidatesList({
       if (response.ok) {
         onSnackbar(_(msg`Резюме загружено из HH.ru`));
         // Перезагружаем список кандидатов
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
@@ -315,15 +301,7 @@ export default function CandidatesList({
           onSnackbar(error.error || _(msg`Ошибка загрузки резюме`));
         }
         // Откатываем оптимистичное обновление
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
@@ -334,15 +312,7 @@ export default function CandidatesList({
       console.error('Error loading resume from HH:', error);
       onSnackbar(_(msg`Ошибка загрузки резюме`));
       // Откатываем оптимистичное обновление
-      const queryParams = new URLSearchParams();
-      queryParams.append('page', (page + 1).toString());
-      queryParams.append('perPage', rowsPerPage.toString());
-      queryParams.append('sortBy', sortBy);
-      queryParams.append('sortOrder', sortOrder);
-      if (filters.source) queryParams.append('source', filters.source);
-      if (filters.status) queryParams.append('status', filters.status);
-      if (filters.search) queryParams.append('search', filters.search);
-      if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+      const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
       const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
       const result = await reloadResponse.json();
@@ -387,15 +357,7 @@ export default function CandidatesList({
         }
 
         // Перезагружаем список кандидатов для получения актуальных данных
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result2 = await reloadResponse.json();
@@ -413,15 +375,7 @@ export default function CandidatesList({
             setHhTokenDialogOpen(true);
 
             // Откатываем оптимистичное обновление
-            const queryParams = new URLSearchParams();
-            queryParams.append('page', (page + 1).toString());
-            queryParams.append('perPage', rowsPerPage.toString());
-            queryParams.append('sortBy', sortBy);
-            queryParams.append('sortOrder', sortOrder);
-            if (filters.source) queryParams.append('source', filters.source);
-            if (filters.status) queryParams.append('status', filters.status);
-            if (filters.search) queryParams.append('search', filters.search);
-            if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+            const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
             const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
             const result = await reloadResponse.json();
@@ -434,15 +388,7 @@ export default function CandidatesList({
         const error = await response.json();
         onSnackbar(error.error || _(msg`Ошибка отправки на скрининг`));
         // Откатываем оптимистичное обновление
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const result = await reloadResponse.json();
@@ -453,15 +399,7 @@ export default function CandidatesList({
       console.error('Error sending to AI screening:', error);
       onSnackbar(_(msg`Ошибка отправки на скрининг`));
       // Откатываем оптимистичное обновление
-      const queryParams = new URLSearchParams();
-      queryParams.append('page', (page + 1).toString());
-      queryParams.append('perPage', rowsPerPage.toString());
-      queryParams.append('sortBy', sortBy);
-      queryParams.append('sortOrder', sortOrder);
-      if (filters.source) queryParams.append('source', filters.source);
-      if (filters.status) queryParams.append('status', filters.status);
-      if (filters.search) queryParams.append('search', filters.search);
-      if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+      const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
       const reloadResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
       const result = await reloadResponse.json();
@@ -480,6 +418,7 @@ export default function CandidatesList({
         filters: {
           source: filters.source || null,
           status: filters.status || null,
+          interviewStatus: filters.interviewStatus || null,
           search: filters.search || null,
           minScore: filters.minScore || null,
         }
@@ -513,15 +452,7 @@ export default function CandidatesList({
         onSnackbar(_(msg`✅ Перемещено ${result.updated} кандидатов`));
 
         // Обновляем список с правильными параметрами пагинации и фильтрации
-        const queryParams = new URLSearchParams();
-        queryParams.append('page', (page + 1).toString());
-        queryParams.append('perPage', rowsPerPage.toString());
-        queryParams.append('sortBy', sortBy);
-        queryParams.append('sortOrder', sortOrder);
-        if (filters.source) queryParams.append('source', filters.source);
-        if (filters.status) queryParams.append('status', filters.status);
-        if (filters.search) queryParams.append('search', filters.search);
-        if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+        const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
         const updatedResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
         const updatedData = await updatedResponse.json();
@@ -652,15 +583,7 @@ export default function CandidatesList({
             }
 
             // Обновляем список кандидатов
-            const queryParams = new URLSearchParams();
-            queryParams.append('page', (page + 1).toString());
-            queryParams.append('perPage', rowsPerPage.toString());
-            queryParams.append('sortBy', sortBy);
-            queryParams.append('sortOrder', sortOrder);
-            if (filters.source) queryParams.append('source', filters.source);
-            if (filters.status) queryParams.append('status', filters.status);
-            if (filters.search) queryParams.append('search', filters.search);
-            if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+            const queryParams = buildCandidatesListQuery(page, rowsPerPage, sortBy, sortOrder, filters);
 
             const refreshResponse = await apiFetch(`${API_BASE}/api/admin/vacancies/${vacancyId}/candidates?${queryParams.toString()}`);
             const refreshData = await refreshResponse.json();
@@ -716,6 +639,7 @@ export default function CandidatesList({
             filters: {
               source: filters.source,
               status: filters.status,
+              interviewStatus: filters.interviewStatus,
               search: filters.search,
               minScore: filters.minScore,
             }
