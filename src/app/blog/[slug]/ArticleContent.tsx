@@ -83,6 +83,30 @@ export default function ArticleContent({ article }: { article: Article }) {
   );
 }
 
+/** Поддержка inline-ссылок в тексте: [текст](url) */
+function renderInline(text: string): React.ReactNode {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return parts.map((part, i) => {
+    const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (m) {
+      return (
+        <a
+          key={i}
+          href={m[2]}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: '#2196F3', fontWeight: 600, textDecoration: 'none' }}
+          onMouseEnter={(e) => (e.currentTarget.style.textDecoration = 'underline')}
+          onMouseLeave={(e) => (e.currentTarget.style.textDecoration = 'none')}
+        >
+          {m[1]}
+        </a>
+      );
+    }
+    return <React.Fragment key={i}>{part}</React.Fragment>;
+  });
+}
+
 function Block({ block, color }: { block: ArticleBlock; color: string }) {
   switch (block.type) {
     case 'h2':
@@ -94,7 +118,7 @@ function Block({ block, color }: { block: ArticleBlock; color: string }) {
     case 'p':
       return (
         <Typography sx={{ fontSize: '1rem', color: '#444', lineHeight: 1.85, mb: 2.5 }}>
-          {block.text}
+          {renderInline(block.text)}
         </Typography>
       );
     case 'quote':
