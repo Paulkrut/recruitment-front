@@ -120,5 +120,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.3,
     },
+    {
+      url: `${BASE_URL}/partners/plusvibe`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
   ];
 }
