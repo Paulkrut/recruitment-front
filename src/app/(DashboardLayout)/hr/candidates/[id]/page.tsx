@@ -666,6 +666,36 @@ export default function CandidateDetailPage() {
             </Box>
 
             {/* ═══════════════════════════════════════════ */}
+            {/* 🎯 FIT-ОЦЕНКА */}
+            {/* ═══════════════════════════════════════════ */}
+            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{
+                  mb: 2,
+                  pb: 1.5,
+                  borderBottom: '3px solid',
+                  borderColor: 'success.main',
+                }}>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
+                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
+                      <Trans>Fit-оценка</Trans>
+                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip
+                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)}
+                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'}
+                        size="small"
+                      />
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
+                    </Stack>
+                  </Stack>
+                </Box>
+                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+              </Box>
+            )}
+
+            {/* ═══════════════════════════════════════════ */}
             {/* 🧠 ОЦЕНКА ЗНАНИЙ */}
             {/* ═══════════════════════════════════════════ */}
             {(sessionDetail?.result?.summary || sessionDetail?.result?.totalScore !== undefined || (evalData && (aiSummary || aiStrengths || aiWeaknesses || (aiMetrics && typeof aiMetrics === 'object' && !('competencies' in aiMetrics))))) && (
@@ -883,36 +913,6 @@ export default function CandidateDetailPage() {
                     )}
                   </CardContent>
                 </Card>
-              </Box>
-            )}
-
-            {/* ═══════════════════════════════════════════ */}
-            {/* 🎯 FIT-ОЦЕНКА */}
-            {/* ═══════════════════════════════════════════ */}
-            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
-              <Box sx={{ mb: 4 }}>
-                <Box sx={{ 
-                  mb: 2, 
-                  pb: 1.5, 
-                  borderBottom: '3px solid',
-                  borderColor: 'success.main',
-                }}>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
-                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
-                      <Trans>Fit-оценка</Trans>
-                    </Typography>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Chip 
-                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)} 
-                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} 
-                        size="small" 
-                      />
-                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
-                    </Stack>
-                  </Stack>
-                </Box>
-                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
               </Box>
             )}
 
