@@ -77,6 +77,7 @@ interface KanbanViewProps {
     source?: string;
     search?: string;
     minScore?: number;
+    interviewStatus?: string;
     aiAnalysisStatus?: string;
     hasResume?: string;
     hhStage?: string;
@@ -854,6 +855,7 @@ export default function KanbanView({
       if (filters.source) queryParams.append('source', filters.source);
       if (filters.search) queryParams.append('search', filters.search);
       if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+      if (filters.interviewStatus) queryParams.append('interviewStatus', filters.interviewStatus);
       if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
       if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
       if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);
@@ -895,6 +897,7 @@ export default function KanbanView({
       if (filters.source) queryParams.append('source', filters.source);
       if (filters.search) queryParams.append('search', filters.search);
       if (filters.minScore) queryParams.append('minScore', filters.minScore.toString());
+      if (filters.interviewStatus) queryParams.append('interviewStatus', filters.interviewStatus);
       if (filters.aiAnalysisStatus) queryParams.append('aiAnalysisStatus', filters.aiAnalysisStatus);
       if (filters.hasResume) queryParams.append('hasResume', filters.hasResume);
       if (filters.hhStage) queryParams.append('hhStage', filters.hhStage);

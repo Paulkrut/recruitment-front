@@ -43,6 +43,7 @@ export default function FooterSection({ onContactClick }: FooterSectionProps) {
         { label: 'Отзывы', href: '#testimonials' },
         { label: 'Тарифы', href: '#pricing' },
         { label: 'Сотрудничество', href: '#partners' },
+        { label: 'Блог', href: '/blog' },
       ],
     },
     {
