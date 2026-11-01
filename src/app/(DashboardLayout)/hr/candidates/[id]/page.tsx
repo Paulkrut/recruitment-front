@@ -122,6 +122,7 @@ export default function CandidateDetailPage() {
   const [statusMenuAnchor, setStatusMenuAnchor] = useState<null | HTMLElement>(null);
   const [changingStatus, setChangingStatus] = useState(false);
   const [allCandidates, setAllCandidates] = useState<any[]>([]);
+  const [compareCandidatesLoading, setCompareCandidatesLoading] = useState(false);
   const [selectedCompare, setSelectedCompare] = useState<number[]>([]);
   const [resumeText, setResumeText] = useState<string | null>(null);
   const [resumeLoading, setResumeLoading] = useState(false);
@@ -254,18 +255,24 @@ export default function CandidateDetailPage() {
   // PDF экспорт
   // Удалить функцию exportPDF
 
-  useEffect(() => {
-    if (!token || !statusData?.vacancyId) return;
-    // Получаем кандидатов этой вакансии для сравнения
-    apiFetch(`${API_BASE}/api/admin/vacancies/${statusData.vacancyId}/candidates`).then(r=>r.json()).then(data => {
-      // API теперь возвращает { data: [], total: ... } или старый формат []
+  const openCompareDialog = async () => {
+    setCompareOpen(true);
+    if (allCandidates.length > 0 || compareCandidatesLoading || !token || !statusData?.vacancyId) return;
+
+    setCompareCandidatesLoading(true);
+    try {
+      const response = await apiFetch(`${API_BASE}/api/admin/vacancies/${statusData.vacancyId}/candidates`);
+      if (!response.ok) throw new Error('Failed to load comparison candidates');
+      const data = await response.json();
+      // API возвращает { data: [], total: ... } или старый формат []
       const candidates = Array.isArray(data) ? data : (data.data || []);
       setAllCandidates(candidates);
-    }).catch(() => {
-      // В случае ошибки устанавливаем пустой массив
+    } catch {
       setAllCandidates([]);
-    });
-  }, [token, statusData]);
+    } finally {
+      setCompareCandidatesLoading(false);
+    }
+  };
 
   if (!token)
     return (
@@ -619,7 +626,7 @@ export default function CandidateDetailPage() {
                 </Button>
               </Tooltip>
               <Tooltip title={_(msg`Сравнить с другими`)}>
-                <Button variant="outlined" color="primary" startIcon={<IconArrowsDiff size={20}/>} onClick={()=>setCompareOpen(true)}>
+                <Button variant="outlined" color="primary" startIcon={<IconArrowsDiff size={20}/>} onClick={openCompareDialog}>
                   <Trans>Сравнить</Trans>
                 </Button>
               </Tooltip>
@@ -664,6 +671,36 @@ export default function CandidateDetailPage() {
                 fitReason={fitReason}
               />
             </Box>
+
+            {/* ═══════════════════════════════════════════ */}
+            {/* 🎯 FIT-ОЦЕНКА */}
+            {/* ═══════════════════════════════════════════ */}
+            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{
+                  mb: 2,
+                  pb: 1.5,
+                  borderBottom: '3px solid',
+                  borderColor: 'success.main',
+                }}>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
+                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
+                      <Trans>Fit-оценка</Trans>
+                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip
+                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)}
+                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'}
+                        size="small"
+                      />
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
+                    </Stack>
+                  </Stack>
+                </Box>
+                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+              </Box>
+            )}
 
             {/* ═══════════════════════════════════════════ */}
             {/* 🧠 ОЦЕНКА ЗНАНИЙ */}
@@ -883,36 +920,6 @@ export default function CandidateDetailPage() {
                     )}
                   </CardContent>
                 </Card>
-              </Box>
-            )}
-
-            {/* ═══════════════════════════════════════════ */}
-            {/* 🎯 FIT-ОЦЕНКА */}
-            {/* ═══════════════════════════════════════════ */}
-            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
-              <Box sx={{ mb: 4 }}>
-                <Box sx={{ 
-                  mb: 2, 
-                  pb: 1.5, 
-                  borderBottom: '3px solid',
-                  borderColor: 'success.main',
-                }}>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
-                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
-                      <Trans>Fit-оценка</Trans>
-                    </Typography>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Chip 
-                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)} 
-                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'} 
-                        size="small" 
-                      />
-                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
-                    </Stack>
-                  </Stack>
-                </Box>
-                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
               </Box>
             )}
 
@@ -1646,6 +1653,11 @@ export default function CandidateDetailPage() {
           <DialogTitle><Trans>Сравнить с другими кандидатами</Trans></DialogTitle>
           <DialogContent sx={{ pt: '16px !important' }}>
             <Typography variant="body2" sx={{mb:2}}><Trans>Выберите кандидатов для сравнения (минимум 1):</Trans></Typography>
+            {compareCandidatesLoading && (
+              <Box sx={{ py: 2, textAlign: 'center' }}>
+                <CircularProgress size={24} />
+              </Box>
+            )}
             <Stack spacing={1}>
               {Array.isArray(allCandidates) && allCandidates.filter(c=>c.id!==candId).map(c=>(
                 <FormControlLabel

@@ -341,6 +341,32 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
         </Alert>
       )}
 
+      {/* Критические риски */}
+      {criticalRisks && Object.values(criticalRisks).some(v => v === true) && (
+        <Alert severity="error" icon={<ErrorIcon />}>
+          <Typography variant="subtitle2" fontWeight={600} gutterBottom>
+            <Trans>🚨 Обнаружены критические риски:</Trans>
+          </Typography>
+          <Stack spacing={0.5}>
+            {criticalRisks?.short_term_plans && (
+              <Typography variant="body2">• <Trans>Планируемый срок работы менее 1 года</Trans></Typography>
+            )}
+            {criticalRisks?.avoids_conflicts && (
+              <Typography variant="body2">• <Trans>Избегание конфликтных ситуаций</Trans></Typography>
+            )}
+            {criticalRisks?.excessive_parasites && (
+              <Typography variant="body2">• <Trans>Слова-паразиты более 40% в речи</Trans></Typography>
+            )}
+            {criticalRisks?.no_client_experience && (
+              <Typography variant="body2">• <Trans>Отсутствие опыта прямого контакта с клиентами</Trans></Typography>
+            )}
+            {criticalRisks?.unwilling_routine && (
+              <Typography variant="body2">• <Trans>Неготовность к рутинной работе</Trans></Typography>
+            )}
+          </Stack>
+        </Alert>
+      )}
+
       {/* Fit-оценка */}
       {summaryTable && (
         <Card sx={{ p: 3, bgcolor: 'grey.50' }}>
@@ -677,32 +703,6 @@ export default function CompetencyEvaluationTable({ metrics }: CompetencyEvaluat
             )}
           </Stack>
         </Card>
-      )}
-
-      {/* Критические риски */}
-      {criticalRisks && Object.values(criticalRisks).some(v => v === true) && (
-        <Alert severity="error" icon={<ErrorIcon />}>
-          <Typography variant="subtitle2" fontWeight={600} gutterBottom>
-            <Trans>🚨 Обнаружены критические риски:</Trans>
-          </Typography>
-          <Stack spacing={0.5}>
-            {criticalRisks?.short_term_plans && (
-              <Typography variant="body2">• <Trans>Планируемый срок работы менее 1 года</Trans></Typography>
-            )}
-            {criticalRisks?.avoids_conflicts && (
-              <Typography variant="body2">• <Trans>Избегание конфликтных ситуаций</Trans></Typography>
-            )}
-            {criticalRisks?.excessive_parasites && (
-              <Typography variant="body2">• <Trans>Слова-паразиты более 40% в речи</Trans></Typography>
-            )}
-            {criticalRisks?.no_client_experience && (
-              <Typography variant="body2">• <Trans>Отсутствие опыта прямого контакта с клиентами</Trans></Typography>
-            )}
-            {criticalRisks?.unwilling_routine && (
-              <Typography variant="body2">• <Trans>Неготовность к рутинной работе</Trans></Typography>
-            )}
-          </Stack>
-        </Alert>
       )}
     </Stack>
   );
