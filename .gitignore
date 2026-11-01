@@ -40,6 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Runtime deployment artifacts and one-off deployment helpers
+/logs/
+/tmp_front_deploy.sh
+
 # lingui compiled catalogs
 src/locales/**/*.js
 src/locales/**/*.js.map
