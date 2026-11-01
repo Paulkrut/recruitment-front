@@ -80,11 +80,11 @@ build_new_version() {
 
     export TERM=dumb
     export YARN_ENABLE_PROGRESS_BARS=0
-    yarn install
+    corepack yarn@1.22.22 install --frozen-lockfile --non-interactive
     
     # Сборка с ограничением памяти (критично для серверов с 4GB RAM)
     print_status "Building with memory limit..."
-    NODE_OPTIONS='--max-old-space-size=2048' yarn build
+    NODE_OPTIONS='--max-old-space-size=2048' corepack yarn@1.22.22 build
 
     # Проверка успешности сборки
     if [ ! -d ".next" ]; then
