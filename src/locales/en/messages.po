@@ -751,13 +751,13 @@ msgstr "⏸️ Paused"
 #~ msgid "⏸️ Пауза"
 #~ msgstr ""
 
-#: src/app/interview/[token]/ActiveInterviewScreen.tsx:908
-msgid "⏹️ Остановить запись"
-msgstr "⏹️ Stop Recording"
-
 #: src/app/test/[token]/page.tsx:954
 msgid "⏹ Остановить запись"
 msgstr "⏹ Stop Recording"
+
+#: src/app/interview/[token]/ActiveInterviewScreen.tsx:908
+msgid "⏹️ Остановить запись"
+msgstr "⏹️ Stop Recording"
 
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidateFilters.tsx:185
 #: src/app/(DashboardLayout)/hr/vacancies/[id]/CandidatesList.tsx:1039
