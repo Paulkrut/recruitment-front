@@ -54,6 +54,16 @@ export const QuestionSummary: React.FC<QuestionSummaryProps> = ({ question }) =>
       </Typography>
       
       <Stack spacing={2} sx={{ color: 'text.primary' }}>
+        {question.isBasicCondition && (
+          <Box>
+            <Typography variant="body2" fontWeight={600} mb={0.5} color="primary">
+              <Trans>Отображение в отчёте: базовое условие вакансии</Trans>
+            </Typography>
+            <Typography variant="body2" sx={{ pl: 2.5 }}>
+              <Trans>Ответ попадёт в блок «Базовые условия» режима «По компетенциям». Статус берётся из существующей проверки вариантов ответа или Red Flag. Без проверенного результата — «Требует уточнения». Новых AI-вызовов и дополнительного балла нет.</Trans>
+            </Typography>
+          </Box>
+        )}
         {/* Ошибка валидации */}
         {hasValidationError && (
           <Box 

@@ -107,6 +107,7 @@ const QuestionFormItem = React.memo(({
   const hasExpertSettings = () => {
     return (
       question.affectsKnowledge === false ||     // Выключена оценка знаний
+      question.isBasicCondition === true ||      // Базовое условие вакансии
       question.isRedFlag === true ||              // Включен Red Flag
       questionType === 'choice' ||                // Вопрос с вариантами
       !!question.referenceAnswer ||               // Есть эталонный ответ
@@ -118,6 +119,7 @@ const QuestionFormItem = React.memo(({
   // Сброс в дефолтные настройки
   const resetToDefault = () => {
     onUpdate(index, "affectsKnowledge", true);
+    onUpdate(index, "isBasicCondition", false);
     onUpdate(index, "isRedFlag", false);
     onUpdate(index, "questionType", 'open');
     onUpdate(index, "inputMode", 'audio');
@@ -620,6 +622,27 @@ const QuestionFormItem = React.memo(({
                         <> Для открытых: только сохранение для FIT/retention.</>
                       )}
                     </Trans>
+                  </Typography>
+                </Box>
+              }
+            />
+          </Box>
+
+          <Box mb={3} sx={{ p: 2.5, borderRadius: 2, border: '1px solid', borderColor: 'divider' }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={question.isBasicCondition === true}
+                  onChange={(e) => onUpdate(index, "isBasicCondition", e.target.checked)}
+                />
+              }
+              label={
+                <Box>
+                  <Typography variant="body2" fontWeight={600}>
+                    <Trans>Базовое условие вакансии</Trans>
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    <Trans>Показывать вопрос в блоке «Базовые условия» отчёта по компетенциям. Используются существующие результаты проверки ответа; дополнительные AI-проверки не запускаются. Настройки оценки знаний и Red Flag не меняются.</Trans>
                   </Typography>
                 </Box>
               }

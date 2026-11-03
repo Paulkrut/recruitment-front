@@ -246,6 +246,7 @@ export default function HRVacancyEditPage() {
           ),
           options: q.options || [],
           affectsKnowledge: q.affectsKnowledge !== undefined ? q.affectsKnowledge : true,
+          isBasicCondition: q.isBasicCondition === true,
           variants,
         };
       }));
@@ -264,7 +265,7 @@ export default function HRVacancyEditPage() {
           // Проверяем что affectsKnowledge явно установлен в false
           const notAffects = q.affectsKnowledge === false;
           
-          return hasRef || hasFlag || isChoice || notAffects;
+          return hasRef || hasFlag || isChoice || notAffects || q.isBasicCondition === true;
         });
         
         if (hasExpertFeatures) {

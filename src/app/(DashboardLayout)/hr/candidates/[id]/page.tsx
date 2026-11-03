@@ -19,6 +19,8 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  FormControl,
+  Select,
 } from "@mui/material";
 import { IconUsers, IconMail, IconPhone, IconArrowLeft, IconLink, IconCheck, IconClock, IconEdit, IconCopy, IconEye, IconArrowsDiff, IconMoodHappy, IconFileDescription, IconRobot, IconChevronDown, IconExternalLink } from "@tabler/icons-react";
 import PageContainer from "@/app/components/container/PageContainer";
@@ -67,6 +69,7 @@ import CandidateEventsTimeline from '@/components/hr/hh-integration/CandidateEve
 import TypingMetricsDisplay from '@/components/hr/TypingMetricsDisplay';
 import CompetencyEvaluationTable from '@/components/hr/CompetencyEvaluationTable';
 import CandidateScoresCard from '@/components/hr/CandidateScoresCard';
+import CandidateEvidenceView from '@/components/hr/CandidateEvidenceView';
 import RetentionForecastTable from '@/components/hr/RetentionForecastTable';
 import QuestionAttachmentsDisplay from '@/components/QuestionAttachmentsDisplay';
 import QuestionText from '@/components/QuestionText';
@@ -117,6 +120,17 @@ export default function CandidateDetailPage() {
   // HR заметки (MVP: localStorage)
   const [hrNote, setHrNote] = useState<string>("");
   const [tab, setTab] = useState('results');
+  const [resultsView, setResultsView] = useState<'standard' | 'competencies'>('standard');
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('candidate_results_view');
+      if (saved === 'standard' || saved === 'competencies') setResultsView(saved);
+    } catch { /* Storage can be unavailable in a restricted browser. */ }
+  }, []);
+  const changeResultsView = (view: 'standard' | 'competencies') => {
+    setResultsView(view);
+    try { localStorage.setItem('candidate_results_view', view); } catch { /* Keep the in-memory selection. */ }
+  };
   const [sendingHhInvitation, setSendingHhInvitation] = useState(false);
   const [compareOpen, setCompareOpen] = useState(false);
   const [statusMenuAnchor, setStatusMenuAnchor] = useState<null | HTMLElement>(null);
@@ -648,6 +662,36 @@ export default function CandidateDetailPage() {
             </Tabs>
           </Box>
           <TabPanel value="results" sx={{p:0}}>
+            <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2} sx={{ mb: 3 }}>
+              <Typography component="label" htmlFor="candidate-results-view"><Trans>Вид результатов</Trans></Typography>
+              <FormControl size="small" sx={{ minWidth: 190 }}>
+                <Select
+                  value={resultsView}
+                  inputProps={{ id: 'candidate-results-view', 'aria-label': _(msg`Вид результатов`) }}
+                  onChange={event => changeResultsView(event.target.value as 'standard' | 'competencies')}
+                >
+                  <MenuItem value="standard"><Trans>Стандартный</Trans></MenuItem>
+                  <MenuItem value="competencies"><Trans>По компетенциям</Trans></MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+            {resultsView === 'competencies' && <>
+              <Box sx={{ mb: 3 }}>
+                <CandidateScoresCard
+                  interviewScore={sessionDetail?.result?.totalScore}
+                  competencyScore={competencyScore}
+                  questionsCount={sessionDetail?.answers?.length}
+                  fitEvaluated={fitEvaluated}
+                  fitReason={fitReason}
+                />
+              </Box>
+              <CandidateEvidenceView
+                metrics={aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics ? aiMetrics as NewMetrics : null}
+                session={sessionDetail}
+                evaluationStatus={aiStatus}
+              />
+            </>}
+            <Box sx={{ display: resultsView === 'standard' ? 'block' : 'none' }}>
             {/* ═══════════════════════════════════════════ */}
             {/* 📊 ИТОГОВЫЕ ПОКАЗАТЕЛИ */}
             {/* ═══════════════════════════════════════════ */}
@@ -671,36 +715,6 @@ export default function CandidateDetailPage() {
                 fitReason={fitReason}
               />
             </Box>
-
-            {/* ═══════════════════════════════════════════ */}
-            {/* 🎯 FIT-ОЦЕНКА */}
-            {/* ═══════════════════════════════════════════ */}
-            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
-              <Box sx={{ mb: 4 }}>
-                <Box sx={{
-                  mb: 2,
-                  pb: 1.5,
-                  borderBottom: '3px solid',
-                  borderColor: 'success.main',
-                }}>
-                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
-                    <Typography variant="h5" fontWeight="700" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <span style={{ fontSize: '1.5rem' }}>🎯</span>
-                      <Trans>Fit-оценка</Trans>
-                    </Typography>
-                    <Stack direction="row" alignItems="center" spacing={2}>
-                      <Chip
-                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)}
-                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'}
-                        size="small"
-                      />
-                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
-                    </Stack>
-                  </Stack>
-                </Box>
-                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
-              </Box>
-            )}
 
             {/* ═══════════════════════════════════════════ */}
             {/* 🧠 ОЦЕНКА ЗНАНИЙ */}
@@ -924,6 +938,26 @@ export default function CandidateDetailPage() {
             )}
 
             {/* ═══════════════════════════════════════════ */}
+            {/* 🎯 FIT-ОЦЕНКА */}
+            {evalData && aiMetrics && typeof aiMetrics === 'object' && 'competencies' in aiMetrics && (
+              <Box sx={{ mb: 4 }}>
+                <Box sx={{ mb: 2, pb: 1.5, borderBottom: '3px solid', borderColor: 'success.main' }}>
+                  <Stack direction="row" alignItems="center" justifyContent="space-between" flexWrap="wrap" gap={2}>
+                    <Typography variant="h5" fontWeight="700"><Trans>Fit-оценка</Trans></Typography>
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <Chip
+                        label={aiStatus === 'done' ? _(msg`Оценка завершена`) : aiStatus === 'pending' ? _(msg`Обрабатывается`) : _(msg`Нет данных`)}
+                        color={aiStatus==='done'?'success':aiStatus==='pending'?'warning':'default'}
+                        size="small"
+                      />
+                      {aiUpdatedAt && <Typography variant="caption" sx={{ opacity: 0.7 }}><Trans>Обновлено: {aiUpdatedAt}</Trans></Typography>}
+                    </Stack>
+                  </Stack>
+                </Box>
+                <CompetencyEvaluationTable metrics={aiMetrics as NewMetrics} />
+              </Box>
+            )}
+
             {/* 📈 ПРОГНОЗ УДЕРЖАНИЯ */}
             {/* ═══════════════════════════════════════════ */}
             {evalData && aiMetrics && typeof aiMetrics === 'object' && 'retention_forecast' in aiMetrics && (
@@ -945,6 +979,7 @@ export default function CandidateDetailPage() {
 
             {/* ═══════════════════════════════════════════ */}
             {/* 📝 ДЕТАЛИ ИНТЕРВЬЮ */}
+            </Box>
             {/* ═══════════════════════════════════════════ */}
             {sessionDetail && (
               <Box sx={{ mb: 3 }}>

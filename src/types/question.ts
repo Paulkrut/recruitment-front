@@ -71,6 +71,7 @@ export interface QuestionDraft {
   referenceAnswer?: string | null;
   isRedFlag?: boolean;
   affectsKnowledge?: boolean;
+  isBasicCondition?: boolean;
   attachments?: QuestionAttachment[];
   
   // ✅ НОВОЕ: Поддержка вариантов вопросов
