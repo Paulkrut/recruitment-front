@@ -82,6 +82,7 @@ export interface NewMetrics {
   covered_dimensions?: string[];
   missing_dimensions?: string[];
   competencies: {
+    [key: string]: CompetencyScore | undefined;
     motivation?: CompetencyScore;
     speech_culture?: CompetencyScore;
     client_orientation?: CompetencyScore;

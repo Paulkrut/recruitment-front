@@ -3,13 +3,13 @@
 import { Alert, Box, Card, CardContent, Chip, Stack, Typography } from '@mui/material';
 import { msg, Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
-import type { NewMetrics, CompetencyCriterion } from '@/hooks/useCandidateEvaluation';
+import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 import QuestionText from '@/components/QuestionText';
-import { getBasicConditions, getOverallConditionStatus, getCompetencyEvidence, getVerificationTopics, type ScreeningQuestion } from './candidateEvidence';
+import { getBasicConditions, getOverallConditionStatus, getCompetencySummaries, getTechnicalKnowledge, getVerificationTopics, type EvidenceSession, type SummaryEvidence } from './candidateEvidence';
 
 export default function CandidateEvidenceView({ metrics, session, evaluationStatus }: {
   metrics?: NewMetrics | null;
-  session?: { questions?: ScreeningQuestion[]; answers?: ScreeningQuestion[] } | null;
+  session?: EvidenceSession | null;
   evaluationStatus?: string;
 }) {
   const { _ } = useLingui();
@@ -21,46 +21,56 @@ export default function CandidateEvidenceView({ metrics, session, evaluationStat
     responsibility: _(msg`Ответственность`),
     system_thinking: _(msg`Системное мышление`),
   };
-  const competencies = getCompetencyEvidence(metrics);
+  const competencies = getCompetencySummaries(metrics, session);
+  const knowledge = getTechnicalKnowledge(session);
   const topics = getVerificationTopics(metrics);
   const conditions = getBasicConditions(session);
   const overall = getOverallConditionStatus(conditions.map(item => item.status));
   const colors = { confirmed: 'success', mismatch: 'error', unverified: 'warning' } as const;
-  const renderCriterion = (criterion: CompetencyCriterion, index: number) => (
-    <Box key={`${criterion.name}-${index}`} sx={{ pl: 2, borderLeft: '2px solid', borderColor: 'divider' }}>
-      <Typography variant="body2" fontWeight={600}>{criterion.name}</Typography>
-      <Typography variant="caption" color="text.secondary">
-        {criterion.status === 'yes' ? _(msg`Подтверждено`) : criterion.status === 'no' ? _(msg`Не подтверждено`) : criterion.status === 'partial' ? _(msg`Частично`) : _(msg`Не проверено`)}
-      </Typography>
-      {criterion.evidence && <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', mt: 0.5 }}>{criterion.evidence}</Typography>}
-      {criterion.comment && <Typography variant="body2" color="text.secondary">{criterion.comment}</Typography>}
-      {!criterion.evidence && <Typography variant="caption" color="text.secondary"><Trans>Цитата или доказательство не сохранены</Trans></Typography>}
-    </Box>
-  );
+  const renderEvidence = (items: SummaryEvidence[]) => <Box component="ul" sx={{ m: 0, pl: 2.5 }}>
+    {items.map((item, index) => <Box component="li" key={index} sx={{ mb: 0.75 }}>
+      {item.text && <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{item.literal ? `«${item.text}»` : item.text}</Typography>}
+      {item.comment && <Typography variant="body2" color="text.secondary">{item.comment}</Typography>}
+    </Box>)}
+  </Box>;
 
   return <Stack spacing={3} sx={{ mb: 4 }}>
     {evaluationStatus !== 'done' && <Alert severity="info"><Trans>Оценка ещё не завершена. Доступные результаты могут быть неполными.</Trans></Alert>}
     {metrics?.insufficient_data && <Alert severity="warning">{metrics.reason || _(msg`Недостаточно данных для уверенной оценки компетенций`)}</Alert>}
     <Typography variant="h5" fontWeight={700}><Trans>Оценка по компетенциям</Trans></Typography>
     {competencies.length === 0 && <Alert severity="info"><Trans>Нет сохранённых данных по компетенциям</Trans></Alert>}
-    {competencies.map(({ key, competency, positives, concerns, unchecked }) => <Card key={key} variant="outlined"><CardContent>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} mb={2}>
+    {competencies.map(({ key, score, conclusion, positives, concerns, incomplete }) => <Card key={key} variant="outlined"><CardContent>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} mb={1.5}>
         <Typography variant="h6">{labels[key] || key}</Typography>
-        {[...positives, ...concerns].length > 0 && Number.isFinite(competency.score)
-          ? <Chip label={`${competency.score}/10`} variant="outlined" />
-          : <Chip label={_(msg`Не проверено`)} variant="outlined" />}
+        <Typography fontWeight={600}>{score !== undefined ? `${score}/10` : _(msg`Нет оценки`)}</Typography>
       </Stack>
-      {(competency.overall_comment || competency.comment) && <Typography sx={{ mb: 2 }}>{competency.overall_comment || competency.comment}</Typography>}
-      <Stack spacing={1.5}>
-        <Typography variant="subtitle2" color="success.main"><Trans>Подтверждённые критерии</Trans></Typography>
-        {positives.length ? positives.map(renderCriterion) : <Typography variant="body2" color="text.secondary"><Trans>Нет сохранённых подтверждений</Trans></Typography>}
-        <Typography variant="subtitle2" color="warning.main"><Trans>Риски и частичные подтверждения</Trans></Typography>
-        {concerns.length ? concerns.map(renderCriterion) : <Typography variant="body2" color="text.secondary"><Trans>Замечания по критериям не сохранены</Trans></Typography>}
-        {unchecked.length > 0 && <><Typography variant="subtitle2"><Trans>Не проверено</Trans></Typography>{unchecked.map(renderCriterion)}</>}
-        {!competency.criteria?.length && <Alert severity="info"><Trans>Детализация по критериям отсутствует в сохранённой оценке</Trans></Alert>}
-        {!competency.criteria?.length && competency.evidence?.map((evidence, index) => <Typography key={index} variant="body2">{evidence}</Typography>)}
+      <Typography variant="body2" sx={{ mb: 1.5, whiteSpace: 'pre-wrap' }}><strong><Trans>Вывод:</Trans></strong>{' '}{conclusion || _(msg`Общий вывод не сохранён.`)}</Typography>
+      <Stack spacing={1}>
+        <Typography variant="subtitle2" color="success.main">{positives.length > 0 && positives.every(item => item.literal) ? _(msg`Плюсы`) : _(msg`Плюсы (подтверждения)`)}</Typography>
+        {positives.length ? renderEvidence(positives) : <Typography variant="body2" color="text.secondary"><Trans>Подтверждения не сохранены.</Trans></Typography>}
+        <Typography variant="subtitle2" color="warning.main">{concerns.length > 0 && concerns.every(item => item.literal) ? _(msg`Минусы`) : _(msg`Минусы (основания и замечания)`)}</Typography>
+        {concerns.length ? renderEvidence(concerns) : <Typography variant="body2" color="text.secondary"><Trans>Основания для минусов не сохранены.</Trans></Typography>}
+        {incomplete && <Typography variant="caption" color="text.secondary"><Trans>Данных недостаточно для полного вывода.</Trans></Typography>}
       </Stack>
     </CardContent></Card>)}
+    <Card variant="outlined"><CardContent>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} mb={1.5}>
+        <Typography variant="h6"><Trans>Технические знания</Trans></Typography>
+        <Typography fontWeight={600}>{knowledge.score !== undefined ? `${knowledge.score}/10` : _(msg`Нет оценки`)}</Typography>
+      </Stack>
+      <Typography variant="body2" sx={{ mb: 1.5 }}><strong><Trans>Вывод:</Trans></strong>{' '}
+        {knowledge.assessedCount > 0
+          ? <Trans>Итоговая оценка рассчитана по {knowledge.assessedCount} оценённым ответам из {knowledge.totalAnswers}.</Trans>
+          : <Trans>Оценённые ответы на вопросы знаний не сохранены.</Trans>}
+        {knowledge.unscoredCount > 0 && <> <Trans>{knowledge.unscoredCount} ответов без оценки не отнесены к плюсам или минусам.</Trans></>}
+      </Typography>
+      <Stack spacing={1}>
+        <Typography variant="subtitle2" color="success.main">{knowledge.positives.length ? _(msg`Плюсы`) : _(msg`Плюсы (подтверждения)`)}</Typography>
+        {knowledge.positives.length ? renderEvidence(knowledge.positives) : <Typography variant="body2" color="text.secondary"><Trans>Подтверждения не сохранены.</Trans></Typography>}
+        <Typography variant="subtitle2" color="warning.main">{knowledge.concerns.length ? _(msg`Минусы`) : _(msg`Минусы (основания и замечания)`)}</Typography>
+        {knowledge.concerns.length ? renderEvidence(knowledge.concerns) : <Typography variant="body2" color="text.secondary"><Trans>Основания для минусов не сохранены.</Trans></Typography>}
+      </Stack>
+    </CardContent></Card>
     <Card variant="outlined"><CardContent>
       <Typography variant="h5" fontWeight={700} gutterBottom><Trans>Гигиенические вопросы (Базовый скрининг)</Trans></Typography>
       <Alert severity={colors[overall]}>
