@@ -7,7 +7,9 @@ export interface ScreeningQuestion {
   question?: string;
   text?: string | null;
   isBasicCondition?: boolean;
-  questionMeta?: { isBasicCondition?: boolean; questionType?: string; isRedFlagQuestion?: boolean };
+  questionMeta?: { isBasicCondition?: boolean; questionType?: string; isRedFlagQuestion?: boolean; affectsKnowledge?: boolean };
+  score?: number | null;
+  aiComment?: string | null;
   hasRedFlag?: boolean;
   processingStatus?: string;
   isCorrect?: boolean | null;
@@ -58,6 +60,112 @@ export function getCompetencyEvidence(metrics?: NewMetrics | null) {
       unchecked: criteria.filter(criterion => !['yes', 'no', 'partial'].includes(criterion.status)),
     };
   });
+}
+
+export interface SummaryEvidence {
+  text: string;
+  comment?: string;
+  literal: boolean;
+  score?: number;
+}
+
+export interface CompetencySummary {
+  key: string;
+  score?: number;
+  conclusion?: string;
+  positives: SummaryEvidence[];
+  concerns: SummaryEvidence[];
+  // Legacy evidence has no polarity; do not invent strengths or weaknesses.
+  evidence: SummaryEvidence[];
+  incomplete: boolean;
+}
+
+export interface EvidenceSession {
+  questions?: ScreeningQuestion[];
+  answers?: ScreeningQuestion[];
+  result?: { totalScore?: number | null } | null;
+}
+
+const cleanText = (value: unknown) => typeof value === 'string' ? value.trim() : '';
+const finiteScore = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+
+export function getCompetencySummaries(metrics?: NewMetrics | null, session?: EvidenceSession | null): CompetencySummary[] {
+  const answers = (session?.answers ?? []).map(answer => cleanText(answer.text)).filter(Boolean);
+  const toEvidence = (text: unknown, comment?: unknown): SummaryEvidence | undefined => {
+    const evidence = cleanText(text);
+    const explanation = cleanText(comment);
+    if (!evidence && !explanation) return undefined;
+    return {
+      text: evidence,
+      comment: explanation || undefined,
+      // Only mark an entire saved fragment as literal if it exists verbatim in an answer.
+      literal: !!evidence && answers.some(answer => answer.includes(evidence)),
+    };
+  };
+  const deduplicate = (items: Array<SummaryEvidence | undefined>): SummaryEvidence[] => {
+    const seen = new Set<string>();
+    return items.filter((item): item is SummaryEvidence => {
+      if (!item) return false;
+      const key = `${item.text}|${item.comment ?? ''}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  };
+  return getCompetencyEvidence(metrics).map(({ key, competency, positives, concerns, unchecked }) => {
+    const criteria = competency.criteria;
+    const assessed = [...positives, ...concerns].length > 0;
+    const legacy = !criteria?.length;
+    const conclusion = cleanText(competency.overall_comment) || cleanText(competency.comment);
+    const evidence = legacy ? deduplicate((competency.evidence ?? []).map(text => toEvidence(text))) : [];
+    const fallbackConclusion = conclusion || (evidence.length
+      ? evidence.slice(0, 3).map(item => conciseFragment(item.text)).filter(Boolean).join('\n')
+      : undefined);
+    return {
+      key,
+      score: finiteScore(competency.score) && (assessed || (legacy && !!(conclusion || evidence.length)))
+        ? competency.score : undefined,
+      conclusion: fallbackConclusion,
+      positives: deduplicate(positives.map(item => toEvidence(item.evidence, item.comment))),
+      concerns: deduplicate(concerns.map(item => toEvidence(item.evidence, item.comment))),
+      evidence: [],
+      incomplete: !!metrics?.insufficient_data || unchecked.length > 0 || !assessed,
+    };
+  });
+}
+
+const MAX_SUMMARY_FRAGMENT = 240;
+const MAX_SUMMARY_ITEMS = 5;
+
+function conciseFragment(value: unknown): string {
+  const text = cleanText(value).replace(/\\s+/g, ' ');
+  if (text.length <= MAX_SUMMARY_FRAGMENT) return text;
+  const fragment = text.slice(0, MAX_SUMMARY_FRAGMENT);
+  const sentenceEnd = Math.max(fragment.lastIndexOf('. '), fragment.lastIndexOf('! '), fragment.lastIndexOf('? '));
+  const boundary = sentenceEnd > MAX_SUMMARY_FRAGMENT * 0.55 ? sentenceEnd + 1 : fragment.lastIndexOf(' ');
+  return `${fragment.slice(0, boundary > 0 ? boundary : MAX_SUMMARY_FRAGMENT).trimEnd()}…`;
+}
+
+export function getTechnicalKnowledge(session?: EvidenceSession | null) {
+  const answers = (session?.answers ?? []).filter(answer => answer.questionMeta?.affectsKnowledge === true);
+  const positives: SummaryEvidence[] = [];
+  const concerns: SummaryEvidence[] = [];
+  for (const answer of answers) {
+    if (!finiteScore(answer.score)) continue;
+    const text = conciseFragment(answer.aiComment);
+    if (!text) continue;
+    const evidence = { text, literal: false, score: answer.score };
+    if (answer.score >= 8) positives.push(evidence);
+    else if (answer.score < 6) concerns.push(evidence);
+  }
+  return {
+    score: finiteScore(session?.result?.totalScore) ? session.result.totalScore : undefined,
+    totalAnswers: answers.length,
+    positives: positives.slice(0, MAX_SUMMARY_ITEMS),
+    concerns: concerns.slice(0, MAX_SUMMARY_ITEMS),
+    assessedCount: answers.filter(answer => finiteScore(answer.score)).length,
+    unscoredCount: answers.filter(answer => !finiteScore(answer.score)).length,
+  };
 }
 
 export function getVerificationTopics(metrics?: NewMetrics | null): Array<CompetencyCriterion & { competency: string }> {

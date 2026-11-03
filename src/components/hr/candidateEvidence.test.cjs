@@ -7,7 +7,72 @@ const source = fs.readFileSync(path.join(__dirname, 'candidateEvidence.ts'), 'ut
 const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
 const implementation = { exports: {} };
 new Function('exports', 'require', 'module', compiled)(implementation.exports, require, implementation);
-const { getConditionStatus, getBasicConditions, getOverallConditionStatus, getCompetencyEvidence, getVerificationTopics } = implementation.exports;
+const { getConditionStatus, getBasicConditions, getOverallConditionStatus, getCompetencyEvidence, getCompetencySummaries, getTechnicalKnowledge, getVerificationTopics } = implementation.exports;
+
+test('summary flattens arbitrary competencies without criterion names or unchecked lists', () => {
+  const metrics = { competencies: { custom_competency: { score: 6.5, overall_comment: 'Общий вывод', criteria: [
+    { name: 'Внутренний критерий', status: 'yes', evidence: 'Помогаю коллегам', comment: 'Рабочий пример' },
+    { name: 'Риск', status: 'partial', evidence: 'Косвенное подтверждение', comment: 'Нужно уточнить' },
+    { name: 'Не оценивали', status: 'not_checked', evidence: 'Не выдавать за минус' },
+  ] } } };
+  const [summary] = getCompetencySummaries(metrics, { answers: [{ text: 'Я помогаю коллегам. Помогаю коллегам каждый день.' }] });
+  assert.equal(summary.key, 'custom_competency');
+  assert.equal(summary.score, 6.5);
+  assert.equal(summary.conclusion, 'Общий вывод');
+  assert.deepEqual(summary.positives, [{ text: 'Помогаю коллегам', comment: 'Рабочий пример', literal: true }]);
+  assert.equal(summary.concerns[0].literal, false);
+  assert.deepEqual(summary.evidence, []);
+  assert.equal(summary.incomplete, true);
+  assert.equal(JSON.stringify(summary).includes('Внутренний критерий'), false);
+  assert.equal(JSON.stringify(summary).includes('Не выдавать за минус'), false);
+});
+
+test('missing assessment does not present placeholder zero as assessed or invent legacy polarity', () => {
+  const metrics = { competencies: {
+    speech_culture: { score: 0, criteria: [{ status: 'not_checked' }], overall_comment: 'Нет материала' },
+    legacy: { score: 8, evidence: ['Сохранённый текст'], comment: 'Старый вывод' },
+    empty: { score: 0 },
+    assessed_zero: { score: 0, criteria: [{ status: 'no', evidence: '', comment: 'Нет рабочего примера' }] },
+  } };
+  const summaries = getCompetencySummaries(metrics);
+  assert.equal(summaries[0].score, undefined);
+  assert.equal(summaries[1].score, 8);
+  assert.deepEqual(summaries[1].positives, []);
+  assert.deepEqual(summaries[1].concerns, []);
+  assert.equal(summaries[1].conclusion, 'Старый вывод');
+  assert.deepEqual(summaries[1].evidence, []);
+  assert.equal(summaries[2].score, undefined);
+  assert.equal(summaries[3].score, 0);
+  assert.equal(summaries[3].concerns[0].comment, 'Нет рабочего примера');
+  assert.deepEqual(getCompetencySummaries(null), []);
+});
+
+test('knowledge summarizes scored comments using project thresholds and keeps unscored answers neutral', () => {
+  const knowledge = getTechnicalKnowledge({ result: { totalScore: 7.4 }, answers: [
+    { id: 901, text: 'Полный ответ не должен попасть в сводку', score: 8, aiComment: 'Уверенно объяснил решение.', questionMeta: { affectsKnowledge: true } },
+    { id: 902, score: 5.9, aiComment: 'Не смог обосновать выбор.', questionMeta: { affectsKnowledge: true } },
+    { id: 903, score: 6, aiComment: 'Промежуточная оценка.', questionMeta: { affectsKnowledge: true } },
+    { id: 904, score: 10, aiComment: 'Исключённый ответ.', questionMeta: { affectsKnowledge: false } },
+    { id: 905, score: 0 },
+    { id: 906, score: null, aiComment: 'Без оценки.', questionMeta: { affectsKnowledge: true } },
+  ] });
+  assert.equal(knowledge.score, 7.4);
+  assert.equal(knowledge.assessedCount, 3);
+  assert.equal(knowledge.unscoredCount, 1);
+  assert.deepEqual(knowledge.positives.map(item => item.text), ['Уверенно объяснил решение.']);
+  assert.deepEqual(knowledge.concerns.map(item => item.text), ['Не смог обосновать выбор.']);
+  assert.equal(JSON.stringify(knowledge).includes('Полный ответ'), false);
+  assert.equal(JSON.stringify(knowledge).includes('Промежуточная оценка'), false);
+  assert.equal(JSON.stringify(knowledge).includes('Без оценки.'), false);
+  assert.deepEqual(getTechnicalKnowledge({ answers: knowledge.positives }).positives, []);
+});
+
+test('knowledge comments are bounded to concise fragments', () => {
+  const longComment = `${'Очень подробное замечание '.repeat(30)}Финал.`;
+  const knowledge = getTechnicalKnowledge({ answers: [{ score: 2, aiComment: longComment, questionMeta: { affectsKnowledge: true } }] });
+  assert.ok(knowledge.concerns[0].text.length <= 241);
+  assert.ok(knowledge.concerns[0].text.endsWith('…'));
+});
 
 test('no red flag alone, pending choice and unvalidated open answer require clarification', () => {
   assert.equal(getConditionStatus({ hasRedFlag: false }), 'unverified');
