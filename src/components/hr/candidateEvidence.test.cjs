@@ -38,12 +38,21 @@ test('aggregate respects mismatch precedence and does not confirm an empty list'
   assert.equal(getOverallConditionStatus(['mismatch', 'unverified']), 'mismatch');
 });
 
+test('interview agenda prioritizes evidenced negatives, deduplicates and stays short', () => {
+  const partial = { name: 'Пример', status: 'partial', evidence: 'Описание' };
+  const no = { name: 'Опыт', status: 'no', evidence: 'Нет примера' };
+  const metrics = { competencies: { motivation: { criteria: [partial, no, no, { name: 'Без доказательств', status: 'no', evidence: ' ' }, { name: 'Риск 2', status: 'no', evidence: 'Ответ 2' }, { name: 'Риск 3', status: 'no', evidence: 'Ответ 3' }] } } };
+  const topics = getVerificationTopics(metrics);
+  assert.equal(topics.length, 3);
+  assert.deepEqual(topics.map(topic => topic.name), ['Опыт', 'Риск 2', 'Риск 3']);
+});
+
 test('criterion evidence is preserved and verification topics use only existing concerns', () => {
   const yes = { name: 'Подтверждено', status: 'yes', evidence: 'Цитата', comment: 'Комментарий' };
   const no = { name: 'Не подтверждено', status: 'no', evidence: 'Ответ', comment: 'Проверить опыт' };
   const unchecked = { name: 'Не проверено', status: 'not_checked', evidence: '', comment: '' };
   const metrics = { competencies: { motivation: { score: 7, criteria: [yes, no, unchecked] } } };
   assert.deepEqual(getCompetencyEvidence(metrics)[0].positives, [yes]);
-  assert.deepEqual(getVerificationTopics(metrics), [{ ...no, competency: 'motivation' }, { ...unchecked, competency: 'motivation' }]);
+  assert.deepEqual(getVerificationTopics(metrics), [{ ...no, competency: 'motivation' }]);
   assert.deepEqual(getCompetencyEvidence({}), []);
 });

@@ -25,11 +25,6 @@ export default function CandidateEvidenceView({ metrics, session, evaluationStat
   const topics = getVerificationTopics(metrics);
   const conditions = getBasicConditions(session);
   const overall = getOverallConditionStatus(conditions.map(item => item.status));
-  const statusLabels = {
-    confirmed: _(msg`Подтверждено`),
-    mismatch: _(msg`Есть несоответствие`),
-    unverified: _(msg`Требует уточнения`),
-  };
   const colors = { confirmed: 'success', mismatch: 'error', unverified: 'warning' } as const;
   const renderCriterion = (criterion: CompetencyCriterion, index: number) => (
     <Box key={`${criterion.name}-${index}`} sx={{ pl: 2, borderLeft: '2px solid', borderColor: 'divider' }}>
@@ -67,24 +62,33 @@ export default function CandidateEvidenceView({ metrics, session, evaluationStat
       </Stack>
     </CardContent></Card>)}
     <Card variant="outlined"><CardContent>
-      <Typography variant="h5" fontWeight={700} gutterBottom><Trans>Базовые условия</Trans></Typography>
-      <Alert severity={colors[overall]} sx={{ mb: 2 }}>{overall === 'confirmed' ? _(msg`Замечаний не выявлено`) : overall === 'mismatch' ? _(msg`Есть несоответствия`) : _(msg`Требует уточнения`)}</Alert>
-      {conditions.length === 0 && <Typography color="text.secondary"><Trans>Вопросы базовых условий не отмечены или ещё не загружены</Trans></Typography>}
-      <Stack spacing={2}>{conditions.map(({ question, answer, status }, index) => <Box key={question.questionId ?? question.id ?? index}>
-        <QuestionText text={question.question || (session?.questions ? question.text : '') || ''} variant="body2" />
-        <Chip label={statusLabels[status]} size="small" color={colors[status]} sx={{ my: 1 }} />
-        <Typography variant="body2"><Trans>Ответ:</Trans> {answer?.text || _(msg`Нет текстового ответа`)}</Typography>
-        {answer?.basicConditionCheck?.explanation
-          ? <Typography variant="caption" color="text.secondary">{answer.basicConditionCheck.explanation}</Typography>
-          : status === 'unverified' && <Typography variant="caption" color="text.secondary"><Trans>Нет подтверждённого результата проверки этого условия</Trans></Typography>}
-      </Box>)}</Stack>
+      <Typography variant="h5" fontWeight={700} gutterBottom><Trans>Гигиенические вопросы (Базовый скрининг)</Trans></Typography>
+      <Alert severity={colors[overall]}>
+        <Typography variant="body2" fontWeight={600}>
+          {overall === 'confirmed' ? _(msg`Пройдены. Замечаний нет.`) : overall === 'mismatch' ? _(msg`Есть несоответствия`) : _(msg`Требует уточнения`)}
+        </Typography>
+        <Typography variant="body2">
+          {conditions.length === 0
+            ? _(msg`Вопросы базовых условий не отмечены или ещё не загружены`)
+            : overall === 'confirmed'
+              ? _(msg`Кандидат подтвердил все отмеченные базовые условия вакансии.`)
+              : overall === 'mismatch'
+                ? _(msg`Не все базовые условия вакансии подтверждены. Несоответствия можно проверить в деталях интервью.`)
+                : _(msg`По части базовых условий нет проверенного результата. Уточните их на интервью.`)}
+        </Typography>
+      </Alert>
     </CardContent></Card>
     <Card variant="outlined"><CardContent>
       <Typography variant="h5" fontWeight={700} gutterBottom><Trans>Темы для проверки на интервью</Trans></Typography>
       <Stack spacing={2}>{topics.length ? topics.map((topic, index) => <Box key={`${topic.competency}-${index}`}>
-        <Typography variant="subtitle2">{labels[topic.competency] || topic.competency}</Typography>
-        {renderCriterion(topic, index)}
-      </Box>) : <Typography color="text.secondary"><Trans>Темы для уточнения по сохранённым критериям отсутствуют</Trans></Typography>}</Stack>
+        <Typography variant="subtitle1" fontWeight={600} color="error.main">{topic.name}</Typography>
+        <Typography variant="caption" color="text.secondary">{labels[topic.competency] || topic.competency}</Typography>
+        {topic.comment && <Typography variant="body2" sx={{ mt: 0.5 }}>{topic.comment}</Typography>}
+        <Typography variant="body2" fontWeight={600} sx={{ mt: 1 }}><Trans>Цитата или подтверждение из ответа:</Trans></Typography>
+        <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>{topic.evidence}</Typography>
+        <Typography variant="body2" fontWeight={600} sx={{ mt: 1 }}><Trans>Что проверить на интервью:</Trans></Typography>
+        <Typography variant="body2"><Trans>Попросить привести конкретный рабочий пример по теме «{topic.name}»: ситуация, действия кандидата и результат. Уточнить выявленное замечание на практическом кейсе.</Trans></Typography>
+      </Box>) : <Typography color="text.secondary"><Trans>Существенные минусы с подтверждениями для дополнительной проверки не сохранены.</Trans></Typography>}</Stack>
     </CardContent></Card>
     {(session?.answers ?? []).some(answer => answer.hasRedFlag) && <Card variant="outlined"><CardContent>
       <Typography variant="h5" fontWeight={700} gutterBottom><Trans>Сработавшие красные флаги</Trans></Typography>

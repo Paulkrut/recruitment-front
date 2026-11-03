@@ -61,5 +61,17 @@ export function getCompetencyEvidence(metrics?: NewMetrics | null) {
 }
 
 export function getVerificationTopics(metrics?: NewMetrics | null): Array<CompetencyCriterion & { competency: string }> {
-  return getCompetencyEvidence(metrics).flatMap(item => [...item.concerns, ...item.unchecked].map(criterion => ({ ...criterion, competency: item.key })));
+  // Interview agenda is a short list of evidenced weaknesses, not all unchecked criteria.
+  const seen = new Set<string>();
+  return getCompetencyEvidence(metrics)
+    .flatMap(item => item.concerns.map(criterion => ({ ...criterion, competency: item.key })))
+    .filter(criterion => !!criterion.evidence?.trim())
+    .sort((a, b) => Number(b.status === 'no') - Number(a.status === 'no'))
+    .filter(criterion => {
+      const key = `${criterion.name.trim().toLowerCase()}|${criterion.evidence?.trim().toLowerCase()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 3);
 }
