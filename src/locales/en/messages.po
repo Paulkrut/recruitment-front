@@ -293,10 +293,9 @@ msgstr ""
 msgid "{0} обновлено"
 msgstr ""
 
-#. placeholder {0}: knowledge.unscoredCount
 #: src/components/hr/CandidateEvidenceView.tsx:63
-msgid "{0} ответов без оценки не отнесены к плюсам или минусам."
-msgstr ""
+#~ msgid "{0} ответов без оценки не отнесены к плюсам или минусам."
+#~ msgstr ""
 
 #. placeholder {0}: sessionDetail.tabFocusLostSeconds
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1084
@@ -4117,7 +4116,7 @@ msgstr ""
 msgid "Вопросы ({0})"
 msgstr "Questions ({0})"
 
-#: src/components/hr/CandidateEvidenceView.tsx:80
+#: src/components/hr/CandidateEvidenceView.tsx:88
 msgid "Вопросы базовых условий не отмечены или ещё не загружены"
 msgstr ""
 
@@ -4669,8 +4668,7 @@ msgstr "Select Candidates"
 msgid "Выбрать тариф"
 msgstr "Select Plan"
 
-#: src/components/hr/CandidateEvidenceView.tsx:45
-#: src/components/hr/CandidateEvidenceView.tsx:59
+#: src/components/hr/CandidateEvidenceView.tsx:44
 msgid "Вывод:"
 msgstr ""
 
@@ -4763,7 +4761,7 @@ msgstr "Flexible plans for companies of any size. Start with a free trial period
 #~ msgid "Гибкие тарифы"
 #~ msgstr "Flexible Plans"
 
-#: src/components/hr/CandidateEvidenceView.tsx:73
+#: src/components/hr/CandidateEvidenceView.tsx:81
 msgid "Гигиенические вопросы (Базовый скрининг)"
 msgstr ""
 
@@ -4851,7 +4849,7 @@ msgstr "Next"
 #~ msgid "Данных недостаточно для полного вывода по компетенции."
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:51
+#: src/components/hr/CandidateEvidenceView.tsx:53
 msgid "Данных недостаточно для полного вывода."
 msgstr ""
 
@@ -5368,7 +5366,7 @@ msgstr "Has Opinion"
 #~ msgid "Есть несоответствие"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:76
+#: src/components/hr/CandidateEvidenceView.tsx:84
 msgid "Есть несоответствия"
 msgstr ""
 
@@ -6314,11 +6312,9 @@ msgstr "Interview Summary"
 #~ msgid "Итоговая оценка интервью"
 #~ msgstr ""
 
-#. placeholder {0}: knowledge.assessedCount
-#. placeholder {1}: knowledge.totalAnswers
 #: src/components/hr/CandidateEvidenceView.tsx:61
-msgid "Итоговая оценка рассчитана по {0} оценённым ответам из {1}."
-msgstr ""
+#~ msgid "Итоговая оценка рассчитана по {0} оценённым ответам из {1}."
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:707
 msgid "Итоговые показатели"
@@ -6503,7 +6499,7 @@ msgstr "Candidate Sent for AI Screening"
 #~ msgid "Кандидат печатает текст"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:82
+#: src/components/hr/CandidateEvidenceView.tsx:90
 msgid "Кандидат подтвердил все отмеченные базовые условия вакансии."
 msgstr ""
 
@@ -6654,7 +6650,7 @@ msgstr ""
 #~ msgid "Клиентов рекомендуют SofiHR"
 #~ msgstr "Clients Recommend SofiHR"
 
-#: src/components/hr/CandidateEvidenceView.tsx:19
+#: src/components/hr/CandidateEvidenceView.tsx:20
 #: src/components/hr/CompetencyEvaluationTable.tsx:48
 msgid "Клиентоориентированность"
 msgstr ""
@@ -6841,7 +6837,7 @@ msgstr "Critical"
 msgid "Кто создал"
 msgstr "Who Created"
 
-#: src/components/hr/CandidateEvidenceView.tsx:18
+#: src/components/hr/CandidateEvidenceView.tsx:22
 #: src/components/hr/CompetencyEvaluationTable.tsx:47
 msgid "Культура речи"
 msgstr ""
@@ -6943,14 +6939,14 @@ msgid "Минимум 3 символа"
 msgstr "Minimum 3 Characters"
 
 #: src/components/hr/CandidateEvidenceView.tsx:49
-#: src/components/hr/CandidateEvidenceView.tsx:68
+#: src/components/hr/CandidateEvidenceView.tsx:74
 msgid "Минусы"
 msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:49
 #: src/components/hr/CandidateEvidenceView.tsx:68
-msgid "Минусы (основания и замечания)"
-msgstr ""
+#~ msgid "Минусы (основания и замечания)"
+#~ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:661
 msgid "Мнение кандидата"
@@ -6996,7 +6992,7 @@ msgstr "motivation"
 msgid "Мотивация"
 msgstr "Motivation"
 
-#: src/components/hr/CandidateEvidenceView.tsx:17
+#: src/components/hr/CandidateEvidenceView.tsx:19
 #: src/components/hr/CompetencyEvaluationTable.tsx:46
 msgid "Мотивация к вакансии"
 msgstr ""
@@ -7414,7 +7410,7 @@ msgstr "Our manager will contact you after reviewing your responses."
 msgid "Не авторизован"
 msgstr "Not Authorized"
 
-#: src/components/hr/CandidateEvidenceView.tsx:84
+#: src/components/hr/CandidateEvidenceView.tsx:92
 msgid "Не все базовые условия вакансии подтверждены. Несоответствия можно проверить в деталях интервью."
 msgstr ""
 
@@ -7664,6 +7660,16 @@ msgstr ""
 msgid "Недостаточно данных для анализа"
 msgstr "Insufficient Data for Analysis"
 
+#: src/components/hr/CandidateEvidenceView.tsx:47
+#: src/components/hr/CandidateEvidenceView.tsx:72
+msgid "Недостаточно данных для оценки сильных сторон"
+msgstr ""
+
+#: src/components/hr/CandidateEvidenceView.tsx:50
+#: src/components/hr/CandidateEvidenceView.tsx:75
+msgid "Недостаточно данных для оценки слабых сторон"
+msgstr ""
+
 #: src/components/hr/CandidateScoresCard.tsx:158
 msgid "Недостаточно данных для уверенной fit-оценки"
 msgstr ""
@@ -7672,7 +7678,7 @@ msgstr ""
 msgid "Недостаточно данных для уверенной fit-оценки."
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:37
+#: src/components/hr/CandidateEvidenceView.tsx:58
 msgid "Недостаточно данных для уверенной оценки компетенций"
 msgstr ""
 
@@ -7853,8 +7859,8 @@ msgstr "No Answers"
 msgid "Нет открытых вакансий"
 msgstr "No Open Vacancies"
 
-#: src/components/hr/CandidateEvidenceView.tsx:43
-#: src/components/hr/CandidateEvidenceView.tsx:57
+#: src/components/hr/CandidateEvidenceView.tsx:42
+#: src/components/hr/CandidateEvidenceView.tsx:66
 msgid "Нет оценки"
 msgstr ""
 
@@ -7879,14 +7885,14 @@ msgid "Нет слабых вопросов"
 msgstr "No Weak Questions"
 
 #: src/components/hr/CandidateEvidenceView.tsx:39
-msgid "Нет сохранённых данных по компетенциям"
-msgstr ""
+#~ msgid "Нет сохранённых данных по компетенциям"
+#~ msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:56
 #~ msgid "Нет сохранённых подтверждений"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:105
+#: src/components/hr/CandidateEvidenceView.tsx:117
 msgid "Нет текстового ответа"
 msgstr ""
 
@@ -8170,8 +8176,8 @@ msgid "общение"
 msgstr "communication"
 
 #: src/components/hr/CandidateEvidenceView.tsx:45
-msgid "Общий вывод не сохранён."
-msgstr ""
+#~ msgid "Общий вывод не сохранён."
+#~ msgstr ""
 
 #: src/components/hr/CompetencyEvaluationTable.tsx:466
 msgid "Общий комментарий"
@@ -8336,8 +8342,8 @@ msgstr "Paid Interviews"
 
 #: src/components/hr/CandidateEvidenceView.tsx:50
 #: src/components/hr/CandidateEvidenceView.tsx:69
-msgid "Основания для минусов не сохранены."
-msgstr ""
+#~ msgid "Основания для минусов не сохранены."
+#~ msgstr ""
 
 #: src/utils/pdfExportWithFont.ts:198
 msgid "Основная информация"
@@ -8752,8 +8758,8 @@ msgid "Оффер"
 msgstr "Offer"
 
 #: src/components/hr/CandidateEvidenceView.tsx:62
-msgid "Оценённые ответы на вопросы знаний не сохранены."
-msgstr ""
+#~ msgid "Оценённые ответы на вопросы знаний не сохранены."
+#~ msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:68
 #~ msgid "Оценённые ответы с отметкой участия в проверке знаний не сохранены или ещё не загружены."
@@ -8761,6 +8767,12 @@ msgstr ""
 
 #: src/components/hr/CompetencyEvaluationTable.tsx:412
 msgid "Оценено компетенций:"
+msgstr ""
+
+#. placeholder {0}: knowledge.assessedCount
+#. placeholder {1}: knowledge.totalAnswers
+#: src/components/hr/CandidateEvidenceView.tsx:65
+msgid "Оценено ответов: {0} из {1}"
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1138
@@ -8777,7 +8789,7 @@ msgstr "Rating"
 msgid "Оценка AI"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:36
+#: src/components/hr/CandidateEvidenceView.tsx:57
 msgid "Оценка ещё не завершена. Доступные результаты могут быть неполными."
 msgstr ""
 
@@ -8811,7 +8823,7 @@ msgstr ""
 msgid "Оценка ответов на вопросы (знания, навыки, опыт)"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:38
+#: src/components/hr/CandidateEvidenceView.tsx:59
 msgid "Оценка по компетенциям"
 msgstr ""
 
@@ -9666,15 +9678,15 @@ msgstr "Payments"
 msgid "Плохо"
 msgstr "Poor"
 
-#: src/components/hr/CandidateEvidenceView.tsx:47
-#: src/components/hr/CandidateEvidenceView.tsx:66
+#: src/components/hr/CandidateEvidenceView.tsx:46
+#: src/components/hr/CandidateEvidenceView.tsx:71
 msgid "Плюсы"
 msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:47
 #: src/components/hr/CandidateEvidenceView.tsx:66
-msgid "Плюсы (подтверждения)"
-msgstr ""
+#~ msgid "Плюсы (подтверждения)"
+#~ msgstr ""
 
 #: src/app/maintenance/page.tsx:159
 msgid "По вопросам обращайтесь к администратору"
@@ -9692,7 +9704,7 @@ msgstr ""
 msgid "По откликам (больше)"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:85
+#: src/components/hr/CandidateEvidenceView.tsx:93
 msgid "По части базовых условий нет проверенного результата. Уточните их на интервью."
 msgstr ""
 
@@ -9843,8 +9855,8 @@ msgstr "Purchase Confirmation"
 
 #: src/components/hr/CandidateEvidenceView.tsx:48
 #: src/components/hr/CandidateEvidenceView.tsx:67
-msgid "Подтверждения не сохранены."
-msgstr ""
+#~ msgid "Подтверждения не сохранены."
+#~ msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:50
 #~ msgid "Подтверждения сильных сторон не сохранены."
@@ -10147,7 +10159,7 @@ msgid "Попробуйте изменить фильтры"
 msgstr "Try changing filters"
 
 #. placeholder {0}: topic.name
-#: src/components/hr/CandidateEvidenceView.tsx:98
+#: src/components/hr/CandidateEvidenceView.tsx:109
 msgid "Попросить привести конкретный рабочий пример по теме «{0}»: ситуация, действия кандидата и результат. Уточнить выявленное замечание на практическом кейсе."
 msgstr ""
 
@@ -10625,7 +10637,7 @@ msgstr "An error occurred while deleting data. Please contact us through the fee
 msgid "Произошла ошибка при удалении стадии"
 msgstr "An Error Occurred While Deleting Stage"
 
-#: src/components/hr/CandidateEvidenceView.tsx:76
+#: src/components/hr/CandidateEvidenceView.tsx:84
 msgid "Пройдены. Замечаний нет."
 msgstr ""
 
@@ -11803,6 +11815,10 @@ msgstr "Company Employees"
 msgid "Сохранение..."
 msgstr "Saving..."
 
+#: src/components/hr/CandidateEvidenceView.tsx:69
+msgid "Сохранённые комментарии к оценённым ответам"
+msgstr ""
+
 #: src/components/hr/CandidateEvidenceView.tsx:54
 #~ msgid "Сохранённые подтверждения без разделения на плюсы и минусы"
 #~ msgstr ""
@@ -11908,7 +11924,7 @@ msgstr ""
 msgid "Способ ответа кандидата"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:102
+#: src/components/hr/CandidateEvidenceView.tsx:114
 msgid "Сработавшие красные флаги"
 msgstr ""
 
@@ -12203,7 +12219,7 @@ msgstr "stress"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:818
 #: src/components/EvaluationResult.tsx:48
-#: src/components/hr/CandidateEvidenceView.tsx:20
+#: src/components/hr/CandidateEvidenceView.tsx:21
 #: src/components/hr/CompetencyEvaluationTable.tsx:49
 #: src/utils/pdfExportWithFont.ts:445
 msgid "Стрессоустойчивость"
@@ -12234,7 +12250,7 @@ msgstr "Overall Score"
 #~ msgid "Суммарная оценка:"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:99
+#: src/components/hr/CandidateEvidenceView.tsx:111
 msgid "Существенные минусы с подтверждениями для дополнительной проверки не сохранены."
 msgstr ""
 
@@ -12375,7 +12391,7 @@ msgstr "Subject must contain at least 5 characters"
 msgid "Тема обязательна для заполнения"
 msgstr "Subject is required"
 
-#: src/components/hr/CandidateEvidenceView.tsx:90
+#: src/components/hr/CandidateEvidenceView.tsx:98
 msgid "Темы для проверки на интервью"
 msgstr ""
 
@@ -12505,7 +12521,7 @@ msgstr "Regulation Tests"
 msgid "Тесты сотрудников - безлимит"
 msgstr "Employee Tests - Unlimited"
 
-#: src/components/hr/CandidateEvidenceView.tsx:56
+#: src/components/hr/CandidateEvidenceView.tsx:63
 msgid "Технические знания"
 msgstr ""
 
@@ -12631,7 +12647,7 @@ msgstr "Needs Improvement"
 msgid "Требует усиления"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:76
+#: src/components/hr/CandidateEvidenceView.tsx:84
 msgid "Требует уточнения"
 msgstr ""
 
@@ -13055,7 +13071,7 @@ msgstr "Fill Color:"
 #~ msgid "Цитата или доказательство не сохранены"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:95
+#: src/components/hr/CandidateEvidenceView.tsx:104
 msgid "Цитата или подтверждение из ответа:"
 msgstr ""
 
@@ -13103,7 +13119,7 @@ msgstr "What is included in support for different plans?"
 msgid "Что даст интеграция:"
 msgstr "What Integration Will Provide:"
 
-#: src/components/hr/CandidateEvidenceView.tsx:97
+#: src/components/hr/CandidateEvidenceView.tsx:108
 msgid "Что проверить на интервью:"
 msgstr ""
 
