@@ -9,6 +9,15 @@ const implementation = { exports: {} };
 new Function('exports', 'require', 'module', compiled)(implementation.exports, require, implementation);
 const { getConditionStatus, getBasicConditions, getOverallConditionStatus, getCompetencyEvidence, getCompetencySummaries, getTechnicalKnowledge, getVerificationTopics } = implementation.exports;
 
+test('document report includes four FIT cards plus separate knowledge and excludes hidden topics', () => {
+  const { getReportCompetencySummaries } = implementation.exports;
+  const competency = { score: 7, criteria: [{ name: 'Риск', status: 'no', evidence: 'Подтверждение' }] };
+  const metrics = { competencies: Object.fromEntries(['motivation', 'client_orientation', 'stress_resistance', 'speech_culture', 'responsibility', 'system_thinking'].map(key => [key, competency])) };
+  assert.deepEqual(getReportCompetencySummaries(metrics).map(item => item.key), ['motivation', 'client_orientation', 'stress_resistance', 'speech_culture']);
+  assert.equal(getCompetencySummaries(metrics).length, 6);
+  assert.equal(getVerificationTopics({ competencies: { responsibility: competency, system_thinking: competency } }).length, 0);
+});
+
 test('summary flattens arbitrary competencies without criterion names or unchecked lists', () => {
   const metrics = { competencies: { custom_competency: { score: 6.5, overall_comment: 'Общий вывод', criteria: [
     { name: 'Внутренний критерий', status: 'yes', evidence: 'Помогаю коллегам', comment: 'Рабочий пример' },

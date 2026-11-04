@@ -5,7 +5,7 @@ import { msg, Trans } from '@lingui/macro';
 import { useLingui } from '@lingui/react';
 import type { NewMetrics } from '@/hooks/useCandidateEvaluation';
 import QuestionText from '@/components/QuestionText';
-import { getBasicConditions, getOverallConditionStatus, getCompetencySummaries, getTechnicalKnowledge, getVerificationTopics, type EvidenceSession, type SummaryEvidence } from './candidateEvidence';
+import { getBasicConditions, getOverallConditionStatus, getReportCompetencySummaries, getTechnicalKnowledge, getVerificationTopics, type EvidenceSession, type SummaryEvidence } from './candidateEvidence';
 
 export default function CandidateEvidenceView({ metrics, session, evaluationStatus }: {
   metrics?: NewMetrics | null;
@@ -18,10 +18,8 @@ export default function CandidateEvidenceView({ metrics, session, evaluationStat
     speech_culture: _(msg`Культура речи`),
     client_orientation: _(msg`Клиентоориентированность`),
     stress_resistance: _(msg`Стрессоустойчивость`),
-    responsibility: _(msg`Ответственность`),
-    system_thinking: _(msg`Системное мышление`),
   };
-  const competencies = getCompetencySummaries(metrics, session);
+  const competencies = getReportCompetencySummaries(metrics, session);
   const knowledge = getTechnicalKnowledge(session);
   const topics = getVerificationTopics(metrics);
   const conditions = getBasicConditions(session);

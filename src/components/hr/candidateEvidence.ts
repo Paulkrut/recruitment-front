@@ -168,10 +168,17 @@ export function getTechnicalKnowledge(session?: EvidenceSession | null) {
   };
 }
 
+const REPORT_COMPETENCIES = ['motivation', 'client_orientation', 'stress_resistance', 'speech_culture'];
+
+export function getReportCompetencySummaries(metrics?: NewMetrics | null, session?: EvidenceSession | null): CompetencySummary[] {
+  return getCompetencySummaries(metrics, session).filter(summary => REPORT_COMPETENCIES.includes(summary.key));
+}
+
 export function getVerificationTopics(metrics?: NewMetrics | null): Array<CompetencyCriterion & { competency: string }> {
   // Interview agenda is a short list of evidenced weaknesses, not all unchecked criteria.
   const seen = new Set<string>();
   return getCompetencyEvidence(metrics)
+    .filter(item => REPORT_COMPETENCIES.includes(item.key))
     .flatMap(item => item.concerns.map(criterion => ({ ...criterion, competency: item.key })))
     .filter(criterion => !!criterion.evidence?.trim())
     .sort((a, b) => Number(b.status === 'no') - Number(a.status === 'no'))
