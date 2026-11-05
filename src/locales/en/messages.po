@@ -7411,7 +7411,11 @@ msgid "Не авторизован"
 msgstr "Not Authorized"
 
 #: src/components/hr/CandidateEvidenceView.tsx:92
-msgid "Не все базовые условия вакансии подтверждены. Несоответствия можно проверить в деталях интервью."
+#~ msgid "Не все базовые условия вакансии подтверждены. Несоответствия можно проверить в деталях интервью."
+#~ msgstr ""
+
+#: src/components/hr/CandidateEvidenceView.tsx:92
+msgid "Не все базовые условия вакансии подтверждены. Несоответствия перечислены ниже."
 msgstr ""
 
 #: src/app/(DashboardLayout)/hr/vacancy-create/page.tsx:207
@@ -7755,6 +7759,10 @@ msgstr ""
 #~ msgid "Неправильный ответ пометит кандидата специальным флагом"
 #~ msgstr ""
 
+#: src/components/hr/CandidateEvidenceView.tsx:101
+msgid "Несоответствия"
+msgstr ""
+
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1170
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:102
 #: src/app/(DashboardLayout)/hr/sessions/[id]/page.tsx:131
@@ -7845,6 +7853,7 @@ msgid "нет ответа"
 msgstr "no answer"
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1169
+#: src/components/hr/CandidateEvidenceView.tsx:107
 #: src/components/question/QuestionOptionsEditor.tsx:55
 #: src/utils/pdfExportWithFont.ts:269
 msgid "Нет ответа"
@@ -7892,7 +7901,7 @@ msgstr "No Weak Questions"
 #~ msgid "Нет сохранённых подтверждений"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:117
+#: src/components/hr/CandidateEvidenceView.tsx:137
 msgid "Нет текстового ответа"
 msgstr ""
 
@@ -8395,6 +8404,7 @@ msgstr ""
 
 #: src/app/(DashboardLayout)/hr/candidates/[id]/page.tsx:1169
 #: src/app/(DashboardLayout)/hr/regulation-tests/[id]/results/page.tsx:934
+#: src/components/hr/CandidateEvidenceView.tsx:107
 #: src/utils/pdfExportWithFont.ts:265
 msgid "Ответ:"
 msgstr "Answer:"
@@ -10159,7 +10169,7 @@ msgid "Попробуйте изменить фильтры"
 msgstr "Try changing filters"
 
 #. placeholder {0}: topic.name
-#: src/components/hr/CandidateEvidenceView.tsx:109
+#: src/components/hr/CandidateEvidenceView.tsx:129
 msgid "Попросить привести конкретный рабочий пример по теме «{0}»: ситуация, действия кандидата и результат. Уточнить выявленное замечание на практическом кейсе."
 msgstr ""
 
@@ -11924,7 +11934,7 @@ msgstr ""
 msgid "Способ ответа кандидата"
 msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:114
+#: src/components/hr/CandidateEvidenceView.tsx:134
 msgid "Сработавшие красные флаги"
 msgstr ""
 
@@ -12250,7 +12260,7 @@ msgstr "Overall Score"
 #~ msgid "Суммарная оценка:"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:111
+#: src/components/hr/CandidateEvidenceView.tsx:131
 msgid "Существенные минусы с подтверждениями для дополнительной проверки не сохранены."
 msgstr ""
 
@@ -12391,7 +12401,7 @@ msgstr "Subject must contain at least 5 characters"
 msgid "Тема обязательна для заполнения"
 msgstr "Subject is required"
 
-#: src/components/hr/CandidateEvidenceView.tsx:98
+#: src/components/hr/CandidateEvidenceView.tsx:118
 msgid "Темы для проверки на интервью"
 msgstr ""
 
@@ -12648,6 +12658,7 @@ msgid "Требует усиления"
 msgstr ""
 
 #: src/components/hr/CandidateEvidenceView.tsx:84
+#: src/components/hr/CandidateEvidenceView.tsx:101
 msgid "Требует уточнения"
 msgstr ""
 
@@ -13071,7 +13082,7 @@ msgstr "Fill Color:"
 #~ msgid "Цитата или доказательство не сохранены"
 #~ msgstr ""
 
-#: src/components/hr/CandidateEvidenceView.tsx:104
+#: src/components/hr/CandidateEvidenceView.tsx:124
 msgid "Цитата или подтверждение из ответа:"
 msgstr ""
 
@@ -13119,7 +13130,7 @@ msgstr "What is included in support for different plans?"
 msgid "Что даст интеграция:"
 msgstr "What Integration Will Provide:"
 
-#: src/components/hr/CandidateEvidenceView.tsx:108
+#: src/components/hr/CandidateEvidenceView.tsx:128
 msgid "Что проверить на интервью:"
 msgstr ""
 

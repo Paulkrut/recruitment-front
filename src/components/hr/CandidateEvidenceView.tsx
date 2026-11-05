@@ -89,10 +89,30 @@ export default function CandidateEvidenceView({ metrics, session, evaluationStat
             : overall === 'confirmed'
               ? _(msg`Кандидат подтвердил все отмеченные базовые условия вакансии.`)
               : overall === 'mismatch'
-                ? _(msg`Не все базовые условия вакансии подтверждены. Несоответствия можно проверить в деталях интервью.`)
+                ? _(msg`Не все базовые условия вакансии подтверждены. Несоответствия перечислены ниже.`)
                 : _(msg`По части базовых условий нет проверенного результата. Уточните их на интервью.`)}
         </Typography>
       </Alert>
+      {(['mismatch', 'unverified'] as const).map(status => {
+        const items = conditions.filter(item => item.status === status);
+        if (!items.length) return null;
+        return <Box key={status} sx={{ mt: 2, minWidth: 0, overflowWrap: 'anywhere' }}>
+          <Typography variant="subtitle2" color={colors[status] + '.main'} sx={{ mb: 1 }}>
+            {status === 'mismatch' ? _(msg`Несоответствия`) : _(msg`Требует уточнения`)}
+          </Typography>
+          <Stack component="ul" spacing={1.5} sx={{ m: 0, pl: 2.5 }}>
+            {items.map(({ question, answer }, index) => <Box component="li" key={question.questionId ?? question.id ?? index}>
+              <QuestionText text={session?.questions ? question.text : question.question} variant="body2" />
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                <Trans>Ответ:</Trans>{' '}{answer?.text?.trim() || _(msg`Нет ответа`)}
+              </Typography>
+              {answer?.basicConditionCheck?.explanation?.trim() && <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                {answer.basicConditionCheck.explanation}
+              </Typography>}
+            </Box>)}
+          </Stack>
+        </Box>;
+      })}
     </CardContent></Card>
     <Card variant="outlined"><CardContent>
       <Typography variant="h6" fontWeight={700} gutterBottom><Trans>Темы для проверки на интервью</Trans></Typography>
