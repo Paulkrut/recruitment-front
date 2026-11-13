@@ -177,8 +177,8 @@ export default function ActiveInterviewScreen({
   };
   
   const handleTextSubmit = () => {
-    if (textAnswer.trim().length < 10) {
-      alert('Ответ слишком короткий. Минимум 10 символов.');
+    if (textAnswer.trim().length < 2) {
+      alert('Ответ слишком короткий. Минимум 2 символа.');
       return;
     }
     
@@ -214,7 +214,7 @@ export default function ActiveInterviewScreen({
       hasTracker: !!tracker.current
     });
     
-    if (textAnswer.trim().length < 10) {
+    if (textAnswer.trim().length < 2) {
       console.warn('Auto-submit skipped: text too short');
       return;
     }
